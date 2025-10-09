@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ficha de Personagem</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <nav class="navbar">
+      <div class="nav-links">
+        <a href="#" class="active">Personagens</a>
+        <a href="#">Campanhas</a>
+        <a href="#">Ameaças</a>
+      </div>
+      <img src="img/perfil.png" alt="perfil" class="perfil-img" />
+    </nav>
+  </header>
+
+  <!-- INFORMAÇÕES DO PERSONAGEM -->
+  <section class="info-personagem">
+    <div class="info-esquerda">
+      <img src="img/personagem.png" alt="Foto do personagem" class="foto-personagem" />
+    </div>
+    <div class="info-direita">
+      <div class="linha-info">
+        <div class="campo">
+          <label>PERSONAGEM</label>
+          <input type="text" placeholder="" />
+        </div>
+        <div class="campo">
+          <label>JOGADOR</label>
+          <input type="text" placeholder="" />
+        </div>
+      </div>
+      <div class="linha-info">
+        <div class="campo">
+          <label>ANTECEDENTE</label>
+          <input type="text" placeholder="" />
+        </div>
+        <div class="campo">
+          <label>CLASSE'S</label>
+          <input type="text" placeholder="" />
+        </div>
+        <div class="campo">
+          <label>RAÇA</label>
+          <input type="text" placeholder="" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="container">
+    <!-- LADO ESQUERDO -->
+    <section class="lado-esquerdo">
+      <div class="atributos">
+        <div class="atributos-header">
+          <h3>Atributos</h3>
+        </div>
+
+        <div class="hexagrama">
+          <img src="img/atributos.png" alt="Atributos" class="hex-overlay" />
+          <span class="editar-hex">✏️</span>
+
+          <div class="num n1">0</div>
+          <div class="num n2">0</div>
+          <div class="num n3">0</div>
+          <div class="num n4">0</div>
+          <div class="num n5">0</div>
+          <div class="num n6">0</div>
+        </div>
+
+        <!-- NÍVEL / CLASSES / XP / MARCO / METROS -->
+        <div class="ficha-compacta">
+
+          <!-- CONTROLES: Inspiração e Proficiência lado a lado com labels abaixo -->
+          <div class="controls-inline">
+            <div class="control-group">
+              <div class="inspiracao-box" title="Inspiração">
+                <button id="inspiraLeft" aria-label="Diminuir inspiração">◀</button>
+                <span id="inspiraValor">0</span>
+                <button id="inspiraRight" aria-label="Aumentar inspiração">▶</button>
+              </div>
+              <div class="control-label">Inspiração</div>
+            </div>
+
+            <div class="control-group">
+              <div class="proficiencia-box" title="Proficiência">
+                <span>Prof.</span>
+                <span id="proficienciaValor">0</span>
+              </div>
+              <div class="control-label">
+                Proficiência
+              </div>
+            </div>
+          </div>
+
+          <!-- Linha 1: Nível grande e box da classe em destaque -->
+          <div class="linha linha-top">
+            <div class="nivel-destaque">
+              <div class="nivel-titulo">NÍVEL</div>
+              <div id="nivelFoco" class="nivel-valor">0</div>
+            </div>
+
+            <div class="classe-focus" id="classeFocus" title="Abrir lista de classes">
+              <div>
+                <div class="classe-nome" id="classeFocusNome">—</div>
+                <div class="classe-nivel" id="classeFocusNivel">0</div>
+              </div>
+              <button class="classe-btn" aria-label="Abrir classes">Classes</button>
+            </div>
+          </div>
+
+          <!-- Linha 2: XP / Marco -->
+          <div class="linha linha-xp">
+            <div class="xp-box">
+              <div class="xp-top">
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <span class="xp-label">XP</span>
+                  <!-- input editável apenas para XP atual -->
+                  <input id="xpAtual" type="number" min="0" value="0" class="xp-atual-input" />
+                  <span id="xpTotalText" class="xp-total-text">/ 0</span>
+                </div>
+              </div>
+
+              <div class="xp-bar-outer" aria-hidden="true">
+                <div class="xp-bar-inner" id="xpBar" style="width:0%"></div>
+              </div>
+            </div>
+
+            <div class="marco-box">
+              <label>Marco</label>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="marcoAtual" type="number" min="0" value="0" class="marco-input" />
+                <input id="marcoMax" type="number" readonly class="marco-input marco-max" />
+              </div>
+              <div class="marco-bar-outer" aria-hidden="true">
+                <div id="marcoBar" class="marco-bar-inner" style="width:0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Linha 3: Metros / Quadrados -->
+          <div class="linha linha-metros">
+            <div class="metros-box">
+              <label>Metros (m)</label>
+              <input type="number" id="metros" min="0" value="0" />
+            </div>
+            <div class="quadrados-box">
+              <label>Quadrados (q)</label>
+              <input type="number" id="quadrados" readonly />
+            </div>
+          </div>
+
+        </div>
+
+        <div class="barras">
+          <p>Vida: <span>17 / 17</span></p>
+          <p>Dano: <span>4</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CENTRO -->
+    <section class="lado-centro">
+      <h3>Perícias</h3>
+      <ul class="pericias">
+        <li><img src="img/dado.png" alt="dado"> Acrobacia (AGI) (+0)</li>
+        <li><img src="img/dado.png" alt="dado"> Atletismo (FOR) (+0)</li>
+        <li><img src="img/dado.png" alt="dado"> Furtividade (AGI) (+0)</li>
+        <li><img src="img/dado.png" alt="dado"> Investigação (INT) (+0)</li>
+      </ul>
+    </section>
+
+    <!-- DIREITA -->
+    <section class="lado-direito">
+      <div class="abas">
+        <button class="ativa">Combate</button>
+        <button>Habilidades</button>
+        <button>Rituais</button>
+        <button>Inventário</button>
+        <button>Descrição</button>
+      </div>
+      <div class="conteudo">
+        <p>Você ainda não possui ataques</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- PAINEL: lista completa de classes -->
+  <div id="painelClasses" class="painel-classes" aria-hidden="true">
+    <div class="painel-inner">
+      <div class="painel-header">
+        <h4>Classes</h4>
+        <button id="fecharPainel">✖</button>
+      </div>
+      <div id="listaClasses" class="lista-classes"></div>
+    </div>
+  </div>
+
+  <!-- script externo -->
+  <script src="vida.js"></script>
+</body>
+</html>
