@@ -144,6 +144,7 @@
           </div>
 
           <!-- Linha 3: Metros / Quadrados -->
+           
           <div class="linha linha-metros">
             <div class="metros-box">
               <label>Metros (m)</label>
@@ -155,11 +156,63 @@
             </div>
           </div>
 
+          <div class="vida-container">
+  <h3 id="btnVida">VIDA</h3>
+  <div class="vida-bar">
+    <div class="vida-fill" id="vida-fill"></div>
+    <div class="vida-text">
+      <button class="vida-btn menos5">«</button>
+      <button class="vida-btn menos1"><</button>
+      <span id="vida-atual">17</span>/<span id="vida-total">17</span>
+      <button class="vida-btn mais1">></button>
+      <button class="vida-btn mais5">»</button>
+    </div>
+  </div>
+
+  <!-- Container das classes (inicialmente escondido) -->
+  <div class="classes-lista-container" style="display:none; margin-top:8px;">
+    <ul id="classesLista" style="list-style:none; padding:0; margin:0;"></ul>
+  </div>
+</div>
+
+<div class="barras-secundarias">
+  <div class="barra-secundaria">
+  <h3>VIDA TEMPORÁRIA</h3>
+  <div class="vida-bar">
+    <div class="vida-fill" id="vida-temp-fill"></div>
+    <div class="vida-text">
+      <button class="vida-btn menos5">«</button>
+      <button class="vida-btn menos1"><</button>
+      <span id="vida-temp-atual" contenteditable="true">0</span>
+      <span id="vida-temp-total" style="display:none;">100</span>
+      <button class="vida-btn mais1">></button>
+      <button class="vida-btn mais5">»</button>
+    </div>
+  </div>
+</div>
+
+<div class="barra-secundaria">
+  <h3>DANO NECRÓTICO</h3>
+  <div class="vida-bar">
+    <div class="vida-fill" id="dano-necro-fill" style="background-color: purple;"></div>
+    <div class="vida-text">
+      <button class="vida-btn menos5">«</button>
+      <button class="vida-btn menos1"><</button>
+      <span id="dano-necro-atual" contenteditable="true">0</span>
+      <span id="dano-necro-total" style="display:none;">100</span>
+      <button class="vida-btn mais1">></button>
+      <button class="vida-btn mais5">»</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+
         </div>
 
-        <div class="barras">
-          <p>Vida: <span>17 / 17</span></p>
-          <p>Dano: <span>4</span></p>
+        
+
         </div>
       </div>
     </section>
@@ -202,6 +255,6 @@
   </div>
 
   <!-- script externo -->
-  <script src="vida.js"></script>
+  <script src="Atributos.js"></script>
 </body>
 </html>
