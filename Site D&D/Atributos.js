@@ -184,6 +184,7 @@ function salvarEdicaoAtributos() {
     n.dataset.attrValue = String(val);
     n.textContent = String(val);
   });
+  atualizarVidTSconst();
 }
 
 function onNumKeyDown(e) {
@@ -199,7 +200,10 @@ function onNumBlur(e) {
   if (isNaN(val) || val < 0) val = 0;
   n.dataset.attrValue = String(val);
   n.textContent = String(val);
+  // garante recalculo da VidaTConst caso a Constituição tenha sido alterada
+  atualizarVidTSconst();
 }
+
 
 // ======================================
 // Eventos do hexágono e lápis
@@ -421,11 +425,13 @@ function atualizarTudo() {
   atualizarNivelFoco();
   atualizarQuadrados();
   atualizarProficiencia();
+  
 }
 
 // ======================================
 // Inicialização
 // ======================================
+
 function init() {
   if (classeFocusEl) classeFocusEl.addEventListener('click', (e) => abrirPainelEm(e));
   if (fecharPainelBtn) fecharPainelBtn.addEventListener('click', fecharPainel);
@@ -448,9 +454,21 @@ function init() {
   hexOverlay && (hexOverlay.src = 'img/atributos.png');
   mostrarAtributosNaTela();
   atualizarTudo();
+  
+  
 }
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    if (window.VidaTConst) {
+      vidaTotal = window.VidaTConst;
+      vidaTotalEl.textContent = String(vidaTotal);
+      atualizarBarra();
+    }
+  }, 100);
+  init();
+  atualizarVidTSconst(); 
+});
 
-init();
 /// ======================================
 // Tipos de dados por dado
 // ======================================
@@ -525,8 +543,92 @@ btnVida.addEventListener('click', () => {
 // ======================================
 // Armazenamento de valores por classe/dado
 // ======================================
-const valoresSalvos = new Map(); 
-// chave: `${nomeClasse}-${indice}` (para múltiplos níveis), valor: número selecionado
+const valoresSalvos = new Map(); // já existia
+
+// mapeamento do índice sequencial (valVid1, valVid2, ...) para cada chave de classe-nível
+const chaveParaVidIndex = new Map();
+// array que guarda os valores atuais dos valVid (index 0 => valVid1)
+const valVidArray = [];
+
+// variável global (no window) que será a soma de todos os valVid
+window.VidTSconst = 0;
+
+function atualizarVidTSconst() {
+  const soma = valVidArray.reduce((s, v) => s + (Number(v) || 0), 0);
+  window.VidTSconst = soma;
+  // opcional: mostra no console para debug
+  console.log('VidTSconst atualizado =', window.VidTSconst);
+}
+
+// helper para atualizar valVid (sincroniza array + variável global window.valVidN)
+function setValVid(index, valor) {
+  const idx = Number(index) - 1;
+  valVidArray[idx] = Number(valor) || 0;
+  // expõe como variáveis nominais (valVid1, valVid2, ...)
+  window['valVid' + String(index)] = Number(valor) || 0;
+  atualizarVidTSconst();
+}
+
+// ======================================
+// Helpers para Constituição e Vida Total
+// ======================================
+
+function getConstitutionScore() {
+  const el = document.querySelector('.hexagrama .n1');
+  let score = 10; // fallback
+  if (el) {
+    // preferimos dataset (quando o valor foi salvo/formatado), senão o texto
+    score = parseInt(el.dataset?.attrValue ?? el.textContent ?? '10', 10) || 10;
+  }
+  return score;
+}
+
+function calcularConMod() {
+  // Reaproveita sua função existente calcularModificador
+  return calcularModificador(getConstitutionScore());
+}
+
+// Atualiza VidTSconst (soma dos valVid) e calcula VidaTConst somando o conMod * níveis
+// Função segura para recalcular VidTSconst e VidaTConst e atualizar a UI sem quebrar barras
+function atualizarVidTSconst() {
+  // 1) soma dos valVid
+  const soma = Array.isArray(valVidArray)
+    ? valVidArray.reduce((s, v) => s + (Number(v) || 0), 0)
+    : 0;
+  window.VidTSconst = soma;
+
+  // 2) modificador de Constituição e níveis totais
+  const conMod = typeof calcularConMod === 'function' ? calcularConMod() : 0;
+  const totalNiveis = typeof somaNiveis === 'function' ? somaNiveis() : 0;
+
+  // 3) vida total recalculada
+  const novaVidaTotal = Number(window.VidTSconst) + Number(conMod * totalNiveis);
+  window.VidaTConst = novaVidaTotal;
+
+  // 4) atualiza o total na tela
+  const vidaTotalSpan = document.getElementById('vida-total');
+  if (vidaTotalSpan) vidaTotalSpan.textContent = String(novaVidaTotal);
+
+  // 5) ajusta a largura do fill, sem alterar o valor atual
+  const vidaAtEl = document.getElementById('vida-atual');
+  const vidaFillEl = document.getElementById('vida-fill');
+  if (!vidaAtEl || !vidaFillEl) return;
+
+  // lê o valor atual (não sobrescreve!)
+  let atualNum = parseInt(vidaAtEl.textContent, 10);
+  if (isNaN(atualNum)) atualNum = 0;
+
+  // limita entre 0 e o novo total
+  atualNum = Math.min(atualNum, novaVidaTotal);
+  atualNum = Math.max(atualNum, 0);
+
+  // aplica apenas à barra
+  const pct = (novaVidaTotal > 0) ? (atualNum / novaVidaTotal) * 100 : 0;
+  vidaFillEl.style.width = `${pct}%`;
+}
+
+
+
 
 // ======================================
 // Renderizar classes selecionadas
@@ -534,6 +636,10 @@ const valoresSalvos = new Map();
 function renderizarClasses() {
   classesLista.innerHTML = '';
   const selecionadas = obterClassesSelecionadas();
+
+  // contagem sequencial de valVid (sempre recomeça a numeração ao renderizar)
+  let vidCounter = 1;
+  chaveParaVidIndex.clear();
 
   selecionadas.forEach(classe => {
     for (let i = 1; i <= classe.nivel; i++) {
@@ -543,6 +649,10 @@ function renderizarClasses() {
       li.style.gap = '8px';
 
       const chave = `${classe.nome}-${i}`; // identifica nível da classe
+
+      // guarda o índice deste chave -> vidIndex
+      const vidIndex = vidCounter++;
+      chaveParaVidIndex.set(chave, vidIndex);
 
       // NOME da classe à esquerda
       const spanNome = document.createElement('span');
@@ -579,17 +689,21 @@ function renderizarClasses() {
         select.appendChild(option);
       });
 
-      // Valor numérico à direita
+      // Valor numérico à direita (agora com id valVid{n})
       const spanValor = document.createElement('span');
       spanValor.classList.add('valor-dado');
+      spanValor.id = `valVid${vidIndex}`;
       spanValor.style.minWidth = '20px';
       spanValor.style.fontWeight = 'bold';
 
-      // Se já houver valor salvo, usa ele
+      // Se já houver valor salvo, usa ele; caso contrário '-' e registra 0 no array
       if (valoresSalvos.has(chave)) {
-        spanValor.textContent = valoresSalvos.get(chave);
+        const v = Number(valoresSalvos.get(chave)) || 0;
+        spanValor.textContent = v;
+        setValVid(vidIndex, v);
       } else {
         spanValor.textContent = '-';
+        setValVid(vidIndex, 0);
       }
 
       // Clicar no dado rola valor aleatório
@@ -598,14 +712,25 @@ function renderizarClasses() {
         const aleatorio = valores[Math.floor(Math.random() * valores.length)];
         spanValor.textContent = aleatorio;
         valoresSalvos.set(chave, aleatorio);
+
+        // atualiza valVid correspondente
+        setValVid(vidIndex, aleatorio);
+
+        // reset do select (pedido seu: quando rola, dropdown limpa)
         select.value = '';
       });
 
       // Selecionar valor no dropdown
       select.addEventListener('change', () => {
         if (select.value !== '') {
-          spanValor.textContent = select.value;
-          valoresSalvos.set(chave, select.value);
+          const escolhido = Number(select.value);
+          spanValor.textContent = escolhido;
+          valoresSalvos.set(chave, escolhido);
+
+          // atualiza valVid correspondente
+          setValVid(vidIndex, escolhido);
+
+          // reset do select (vai para placeholder)
           select.value = '';
         }
       });
@@ -619,7 +744,21 @@ function renderizarClasses() {
       classesLista.appendChild(li);
     }
   });
+
+  // caso tenha diminuído o número de itens, garantimos que valVidArray coincida
+  // (se vidCounter-1 < valVidArray.length, cortamos)
+  const expectedLength = vidCounter - 1;
+  if (valVidArray.length > expectedLength) {
+    valVidArray.length = expectedLength;
+    // atualiza variáveis nominais na window (remove extras)
+    for (let i = expectedLength + 1; i <= valVidArray.length + 10; i++) {
+      // não forçar remoção agressiva; quem renderizar novamente recriará
+    }
+    
+  }
+  atualizarVidTSconst();
 }
+
 
 
 
@@ -634,7 +773,17 @@ const vidaFillEl = document.getElementById('vida-fill');
 let vidaAtual = parseInt(vidaAtualEl.textContent, 10);
 let vidaTotal = parseInt(vidaTotalEl.textContent, 10);
 
+// Garante que o total siga o valor recalculado global (VidaTConst)
+function sincronizarVidaTotal() {
+  if (window.VidaTConst && vidaTotal !== window.VidaTConst) {
+    vidaTotal = window.VidaTConst;
+    vidaTotalEl.textContent = String(vidaTotal);
+  }
+}
+
+
 function atualizarBarra() {
+   sincronizarVidaTotal();
   if (vidaAtual < 0) vidaAtual = 0;
   if (vidaAtual > vidaTotal) vidaAtual = vidaTotal;
 
@@ -642,13 +791,6 @@ function atualizarBarra() {
   vidaFillEl.style.width = `${porcentagem}%`;
   vidaAtualEl.textContent = vidaAtual;
 }
-
-document.querySelector('.menos1').onclick = () => { vidaAtual -= 1; atualizarBarra(); }
-document.querySelector('.menos5').onclick = () => { vidaAtual -= 5; atualizarBarra(); }
-document.querySelector('.mais1').onclick = () => { vidaAtual += 1; atualizarBarra(); }
-document.querySelector('.mais5').onclick = () => { vidaAtual += 5; atualizarBarra(); }
-
-atualizarBarra();
 
 // ======================================
 // Funções de controle de barras
@@ -687,49 +829,60 @@ function criarControleBarraEditavel(atualElId, totalElId, fillElId, temMax = tru
   const totalEl = totalElId ? document.getElementById(totalElId) : null;
   const fillEl = document.getElementById(fillElId);
 
-  let atual = parseInt(atualEl.textContent, 10);
-  let total = temMax ? parseInt(totalEl.textContent, 10) : atual;
+  // pega valor atual do DOM (em vez de confiar em uma var local fixa)
+  function lerAtual() {
+    const v = parseInt(atualEl.textContent, 10);
+    return isNaN(v) ? 0 : v;
+  }
+  function lerTotal() {
+    if (!temMax || !totalEl) return lerAtual();
+    const t = parseInt(totalEl.textContent, 10);
+    return isNaN(t) ? 0 : t;
+  }
 
   function atualizar() {
+    let atual = lerAtual();
+    let total = lerTotal();
+
     if (atual < 0) atual = 0;
+    if (temMax && total < 0) total = 0;
     if (temMax && atual > total) atual = total;
 
-    if (temMax) {
-      if (total < 0) total = 0;
-      if (atual > total) atual = total;
-      totalEl.textContent = total;
+    // Não sobrescrever totalEl se for a vida principal (vida-total), pois VidaTConst o controla
+    if (temMax && totalEl && totalEl.id !== 'vida-total') {
+      totalEl.textContent = String(total);
     }
 
-    fillEl.style.width = temMax ? (atual / total) * 100 + '%' : '100%';
-    atualEl.textContent = atual;
+    // evita divisão por zero
+    const pct = (temMax && total > 0) ? (atual / total) * 100 : (temMax ? 0 : 100);
+    fillEl.style.width = pct + '%';
+    atualEl.textContent = String(atual);
   }
 
   const container = fillEl.parentElement;
-  container.querySelectorAll('.menos1')[0].onclick = () => { atual -= 1; atualizar(); };
-  container.querySelectorAll('.menos5')[0].onclick = () => { atual -= 5; atualizar(); };
-  container.querySelectorAll('.mais1')[0].onclick = () => { atual += 1; atualizar(); };
-  container.querySelectorAll('.mais5')[0].onclick = () => { atual += 5; atualizar(); };
+  // usa os botões do container (primeiro conjunto correspondente a essa barra)
+  const btnsMenos1 = container.querySelectorAll('.menos1');
+  const btnsMenos5 = container.querySelectorAll('.menos5');
+  const btnsMais1 = container.querySelectorAll('.mais1');
+  const btnsMais5 = container.querySelectorAll('.mais5');
 
-  atualEl.addEventListener('input', () => {
-    const val = parseInt(atualEl.textContent, 10);
-    if (!isNaN(val)) {
-      atual = val;
-      atualizar();
-    }
-  });
+  if (btnsMenos1[0]) btnsMenos1[0].onclick = () => { atualEl.textContent = String((parseInt(atualEl.textContent,10)||0) - 1); atualizar(); };
+  if (btnsMenos5[0]) btnsMenos5[0].onclick = () => { atualEl.textContent = String((parseInt(atualEl.textContent,10)||0) - 5); atualizar(); };
+  if (btnsMais1[0]) btnsMais1[0].onclick = () => { atualEl.textContent = String((parseInt(atualEl.textContent,10)||0) + 1); atualizar(); };
+  if (btnsMais5[0]) btnsMais5[0].onclick = () => { atualEl.textContent = String((parseInt(atualEl.textContent,10)||0) + 5); atualizar(); };
 
-  if (temMax && totalEl) {
-    totalEl.addEventListener('input', () => {
-      const val = parseInt(totalEl.textContent, 10);
-      if (!isNaN(val)) {
-        total = val;
-        atualizar();
-      }
-    });
+  // reage se o usuário editar manualmente o campo atual (contenteditable)
+  atualEl.addEventListener('input', () => atualizar());
+
+  // se o total for editável e não for a vida principal, atualiza quando o total mudar
+  if (temMax && totalEl && totalEl.id !== 'vida-total') {
+    totalEl.addEventListener('input', () => atualizar());
   }
 
+  // inicializa a aparência
   atualizar();
 }
+
 
 // Aplicação para barras
 criarControleBarraEditavel('vida-atual', 'vida-total', 'vida-fill', true);
@@ -766,71 +919,3 @@ criarControleBarraEditavel('vida-temp-atual', 'vida-temp-total', 'vida-temp-fill
 
 // Dano necrótico
 criarControleBarraEditavel('dano-necro-atual', 'dano-necro-total', 'dano-necro-fill', true);
-// ======================================
-// Cálculo da vida total do personagem
-// ======================================
-
-// Obter modificador de Constituição
-function obterModConstituicao() {
-  // Ajuste o seletor conforme onde está o valor de Constituição
-  const conEl = document.querySelector('.num.n4'); 
-  if (!conEl) return 0;
-  const valor = parseInt(conEl.dataset.attrValue || conEl.textContent || '0', 10);
-  return calcularModificador(valor);
-}
-
-// Recalcular vida total com base nos valores sorteados ou escolhidos
-function calcularVidaTotal() {
-  const selecionadas = obterClassesSelecionadas();
-  let total = 0;
-  const modCon = obterModConstituicao();
-
-  // Soma todos os valores salvos manualmente (dados rolados ou escolhidos)
-  selecionadas.forEach(classe => {
-    for (let i = 1; i <= classe.nivel; i++) {
-      const chave = `${classe.nome}-${i}`;
-      if (valoresSalvos.has(chave)) {
-        const valorDado = parseInt(valoresSalvos.get(chave), 10);
-        total += valorDado + modCon;
-      }
-    }
-  });
-
-  // Atualiza o total de vida na tela
-  const vidaTotalEl = document.getElementById('vidaTotal');
-  if (vidaTotalEl) vidaTotalEl.textContent = total;
-
-  // Garante que a barra e vida atual se ajustem
-  if (typeof vidaAtual !== 'undefined' && vidaAtual > total) vidaAtual = total;
-  if (typeof atualizarBarra === 'function') atualizarBarra();
-}
-
-// ======================================
-// Atualizar total ao alterar dados ou atributos
-// ======================================
-document.addEventListener('input', calcularVidaTotal);
-document.addEventListener('blur', calcularVidaTotal, true);
-
-// ======================================
-// Eventos de rolagem e seleção dos dados
-// (mantenha dentro da função renderizarClasses)
-// ======================================
-
-// Dentro de renderizarClasses(), ajuste os dois eventos:
-imgDado.addEventListener('click', () => {
-  const valores = DADOS[classe.dado];
-  const aleatorio = valores[Math.floor(Math.random() * valores.length)];
-  spanValor.textContent = aleatorio;
-  valoresSalvos.set(chave, aleatorio);
-  select.value = '';
-  calcularVidaTotal(); // <<< recalcula total
-});
-
-select.addEventListener('change', () => {
-  if (select.value !== '') {
-    spanValor.textContent = select.value;
-    valoresSalvos.set(chave, select.value);
-    select.value = '';
-    calcularVidaTotal(); // <<< recalcula total
-  }
-});
