@@ -210,16 +210,92 @@
   </div>
 </div>
 
+
 </div>
-
-
+<!-- INÍCIO: BLOCO ARMADURA (SUBSTITUIR) -->
+<div class="armadura-area">
+  <div class="armadura-card">
+    <div class="armadura-grid">
+      <!-- ESCUDO + INICIATIVA (coluna esquerda) -->
+      <div class="escudo-col">
+        <div class="escudo-wrap">
+          <img src="img/escudoArmad.png" alt="escudo" class="escudo-img" />
+          <div class="armadura-valor" id="armaduraValor">12</div>
         </div>
 
-        
-
+        <div class="iniciativa-block">
+          <div class="iniciativa-label">INICIATIVA</div>
+          <div class="iniciativa-valor" id="iniciativaValor">0</div>
         </div>
       </div>
-    </section>
+
+      <!-- FÓRMULA (coluna central) -->
+      <div class="formula-col">
+        <div class="armadura-titulo">CLASSE DE ARMADURA</div>
+
+        <!-- fórmula em uma linha (horizontal) -->
+        <div class="inline-formula">
+          <span class="formula-eq">=</span>
+          <span class="formula-text">10</span>
+          <span class="formula-plus">+</span>
+          <span class="formula-attr">AGI</span>
+          <span class="formula-plus">+</span>
+
+          <!-- primeiro zero + label -->
+          <div class="zero-pair">
+            <span class="zero-num">0</span>
+            <span class="zero-label">Equip.</span>
+          </div>
+
+          <span class="formula-plus">+</span>
+
+          <!-- segundo zero + label -->
+          <div class="zero-pair">
+            <span class="zero-num">0</span>
+            <span class="zero-label">Outros.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TIPO DE ARMADURA (fica na linha abaixo, por área do grid) -->
+      <div class="tipo-col">
+        <div class="tipo-titulo">Tipo de armadura</div>
+        <div class="armadura-tag pesado">Pesado</div>
+      </div>
+    </div>
+
+    <!-- detalhes abaixo -->
+    <div class="armadura-details">
+      <div class="linha-detail">
+        <div class="label-detail">PROTEÇÃO</div>
+        <input type="text" class="input-detail" placeholder="" />
+      </div>
+      <div class="linha-detail">
+        <div class="label-detail">RESISTÊNCIAS</div>
+        <input type="text" class="input-detail" placeholder="" />
+      </div>
+      <div class="linha-detail">
+        <div class="label-detail">IMUNIDADE</div>
+        <input type="text" class="input-detail" placeholder="" />
+      </div>
+      <div class="linha-detail">
+        <div class="label-detail">FRAQUEZA</div>
+        <input type="text" class="input-detail" placeholder="" />
+      </div>
+      <div class="linha-detail profs">
+        <div class="label-detail">PROFICIÊNCIAS</div>
+        <input type="text" class="input-detail" placeholder="Armas simples e proteções leves" />
+      </div>
+    </div>
+  </div>
+</div>
+<!-- FIM: BLOCO ARMADURA -->
+
+
+</div>
+</div>
+ </div>
+</section>
 
     <!-- MEIO -->
     <section class="lado-centro">

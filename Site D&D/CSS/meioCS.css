@@ -1,0 +1,28 @@
+
+/* CENTRO */
+.lado-centro {
+  width: 40%;
+  background-color: #121212;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.pericias {
+  list-style: none;
+  padding: 0;
+}
+
+.pericias li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+  background-color: #1f1f1f;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+
+.pericias img {
+  width: 20px;
+  height: 20px;
+}
