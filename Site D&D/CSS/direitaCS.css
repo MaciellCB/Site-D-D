@@ -60,6 +60,11 @@
 .card { background: #1f1f1f; border-radius: 8px; padding: 10px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.03); }
 .card-header { display:flex; justify-content:space-between; align-items:center; }
 .caret { display:inline-block; width:22px; text-align:center; margin-right:8px; color:#9c27b0; font-size:18px; vertical-align:middle; }
+
+/* Ajuste do caret para usar ᐱ / ᐯ e tamanho */
+.caret { font-size:20px; line-height:1; color:#9c27b0; }
+
+/* título do card */
 .card-title { font-weight:800; font-size:16px; color:#fff; white-space:normal; word-break:break-word; overflow:hidden; display:block; max-width: 100%; }
 .card-sub { font-size:12px; color:#bdbdbd; }
 
@@ -85,10 +90,14 @@
 /* spell header */
 .spell-header { padding:12px; align-items:flex-start; border-bottom: 2px solid rgba(156,39,176,0.08); }
 .spell-left { display:flex; align-items:center; gap:8px; cursor:pointer; min-width:0; }
-.spell-title { font-size:18px; font-weight:800; color:#fff; }
+
+/* Deixa o nome por extenso (não truncar) */
+.spell-title { font-size:18px; font-weight:800; color:#fff; white-space:normal; word-break:break-word; }
+
+/* right side do header da magia */
 .spell-right { display:flex; align-items:center; gap:12px; }
 
-/* level number (caixa pequena) */
+/* level number (caixa pequena) - mantido definindo estilo caso precise, mas não usado no header principal */
 .spell-level-num {
   min-width:36px;
   height:36px;
@@ -108,7 +117,17 @@
 .dice-img { width:18px; height:18px; }
 
 /* pill (usado para Escola) */
-.pill { display:inline-block; margin-bottom:10px; padding:6px 10px; background:#fff; color:#111; font-weight:700; border-radius:6px; }
+.pill { display:inline-flex; align-items:center; gap:8px; margin-bottom:10px; padding:6px 10px; background:#fff; color:#111; font-weight:700; border-radius:6px; }
+
+/* pequeno badge dentro do pill para o nível */
+.pill .pill-level {
+  background:#111;
+  color:#ddd;
+  padding:4px 8px;
+  border-radius:6px;
+  font-weight:800;
+  font-size:13px;
+}
 
 /* spell attributes */
 .spell-attrs { margin-top:8px; color:#ddd; display:grid; grid-template-columns: 1fr 1fr; gap:6px; }
@@ -151,7 +170,7 @@
   z-index:2;
 }
 
-/* modal (novo ritual) */
+/* modal (nova magia) */
 .spell-modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); display:flex; align-items:flex-start; justify-content:center; padding:40px; z-index:10000; }
 .spell-modal { background:#0f0f0f; border-radius:8px; width:760px; max-height:90vh; overflow:auto; padding:18px; border:1px solid rgba(255,255,255,0.04); }
 .spell-modal .modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
@@ -299,3 +318,110 @@ a.editar-item, a.editar-hab, a.editar-spell { color:#2e7d32; text-decoration:non
   .spell-modal { width: calc(100% - 40px); padding:12px; }
 }
 
+/* Esconde o catálogo embutido dentro da aba Magias */
+.lado-direito .spells-wrapper > .catalog-list.card {
+  display: none;
+}
+
+/* ==================== Ajustes específicos para Minhas Magias ==================== */
+
+/* checkbox menor para 'ativar magias' */
+.check-ativar input[type="checkbox"] { display:none; }
+.check-ativar .square-check {
+  width:20px;
+  height:20px;
+  border-radius:4px;
+  border:1px solid rgba(255,255,255,0.06);
+  display:inline-block;
+  line-height:20px;
+  text-align:center;
+  font-weight:800;
+}
+.check-ativar input[type="checkbox"]:checked + .square-check {
+  background:#9c27b0;
+  border-color:#9c27b0;
+}
+.check-ativar .square-check::after {
+  content:'✓';
+  color:transparent;
+  display:block;
+  line-height:20px;
+  font-size:14px;
+}
+.check-ativar input[type="checkbox"]:checked + .square-check::after { color:#fff; }
+
+/* garante que o header da magia clique só na parte apropriada */
+.spell-left { min-width:0; flex:1; }
+
+/* evita truncar nomes de magias */
+.spell-card .spell-title { white-space:normal; }
+
+/* top padding do bloco de magias */
+.spells-wrapper { position:relative; }
+
+/* ====== Estilos para a tag de classe (pequena, à direita do bloco superior) ====== */
+
+/* apresentação simples da classe já salva no card */
+.class-box-display {
+  min-width:84px;
+  height:32px;
+  background:#111;
+  border:1px solid rgba(255,255,255,0.04);
+  border-radius:6px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  color:#ddd;
+  padding:4px 8px;
+  box-sizing:border-box;
+}
+
+/* estilos para o seletor de classe dentro do modal (expandível) */
+.class-select-root { position:relative; }
+.class-select-toggle {
+  min-width:130px;
+  height:36px;
+  background:#111;
+  border:1px solid rgba(255,255,255,0.04);
+  border-radius:6px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:6px 10px;
+  cursor:pointer;
+  color:#ddd;
+  font-weight:700;
+}
+.class-select-toggle .caret-small { color:#9c27b0; margin-left:6px; font-size:14px; }
+
+/* opções (dropdown) */
+.class-select-options {
+  position:absolute;
+  right:0;
+  top:44px;
+  background:#121212;
+  border:1px solid rgba(255,255,255,0.04);
+  border-radius:8px;
+  padding:8px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+  z-index: 12000;
+  min-width:160px;
+}
+.class-select-options button {
+  display:block;
+  width:100%;
+  background:transparent;
+  border:none;
+  color:#ddd;
+  text-align:left;
+  padding:8px 10px;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:700;
+}
+.class-select-options button:hover { background:rgba(156,39,176,0.06); color:#fff; }
+
+/* pequena label dentro do modal abaixo do toggle */
+.class-select-label { font-size:12px; color:#cfcfcf; margin-top:6px; font-weight:700; text-align:right; }
