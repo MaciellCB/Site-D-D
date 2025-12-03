@@ -1,10 +1,10 @@
-// DireitaJS.js (Atualizado: Filtro de Truque adicionado e correções de nível 0)
+// DireitaJS.js (Atualizado: Modal Nova Arma com layout e multi-select dropdowns)
 
 const state = {
   activeTab: 'Combate',
   dtMagias: 12,
   inventory: [
-    { id: 1, name: 'Bastão', type: 'Arma', damage: '1d6/1d8', crit: 'x2', equip: true, isEquipable: true, expanded: false, description: 'Bastão robusto' },
+    { id: 1, name: 'Bastão', type: 'Arma', damage: '1d6/1d8', crit: '20', multiplicador: '2', equip: true, isEquipable: true, expanded: false, description: 'Bastão robusto', proficiency: 'Armas Simples', tipoArma: 'Corpo a Corpo', empunhadura: 'Uma mao', caracteristicas: ['Leve'] , damageTypes: ['Contundente'], alcance: '1.5m' },
     { id: 2, name: 'Escudo Grande de Aço', type: 'Proteção', defense: '+2', equip: false, isEquipable: true, expanded: true, description: 'Escudo pesado.' },
     { id: 3, name: 'Mochila', type: 'Geral', equip: false, isEquipable: false, expanded: false, description: 'Carrega coisas.' }
   ],
@@ -113,12 +113,21 @@ function setActiveTab(tabName) {
 
 /* ---------------- INVENTÁRIO ---------------- */
 function formatInventoryItem(item) {
-  const metaInline = item.type === 'Arma'
-    ? `Dano: <strong>${item.damage || '-'}</strong>`
-    : item.type === 'Proteção'
-      ? `Defesa: <strong>${item.defense || '-'}</strong>`
-      : `${item.type}`;
+  let metaParts = [];
+  if (item.type === 'Arma') {
+    if (item.damage) metaParts.push(`Dano: <strong>${item.damage}</strong>`);
+    if (item.damageTypes && item.damageTypes.length) metaParts.push(`Tipo: ${item.damageTypes.join(', ')}`);
+    if (item.proficiency) metaParts.push(`Prof.: ${item.proficiency}`);
+    if (item.tipoArma) metaParts.push(`${item.tipoArma}`);
+    if (item.empunhadura) metaParts.push(`${item.empunhadura}`);
+    if (item.caracteristicas && item.caracteristicas.length) metaParts.push(`Prop.: ${item.caracteristicas.join(', ')}`);
+  } else if (item.type === 'Proteção') {
+    metaParts.push(`Defesa: <strong>${item.defense || '-'}</strong>`);
+  } else {
+    metaParts.push(`${item.type}`);
+  }
 
+  const metaInline = metaParts.join(' • ');
   const checked = item.isEquipable && item.equip ? 'checked' : '';
   return `
     <div class="card item-card ${item.expanded ? 'expanded' : ''}" data-id="${item.id}">
@@ -126,7 +135,7 @@ function formatInventoryItem(item) {
         <div class="left" data-id="${item.id}">
           <span class="caret">${item.expanded ? '▾' : '▸'}</span>
           <div class="title-block">
-            <div class="card-title">${item.name}</div>
+            <div class="card-title">${escapeHtml(item.name)}</div>
             <div class="card-sub mini-sub">${metaInline}</div>
           </div>
         </div>
@@ -135,7 +144,7 @@ function formatInventoryItem(item) {
         </div>
       </div>
       <div class="card-body" style="${item.expanded ? '' : 'display:none;'}">
-        ${item.description ? `<p>${item.description}</p>` : ''}
+        ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ''}
         <div style="margin-top:10px;">
           <a href="#" class="remover-item" data-id="${item.id}">Remover</a>
           <a href="#" class="editar-item" data-id="${item.id}" style="float:right;color:#2e7d32">Editar</a>
@@ -195,16 +204,12 @@ function bindInventoryCardEvents() {
       const id = Number(el.getAttribute('data-id'));
       const it = state.inventory.find(i => i.id === id);
       if (!it) return;
-      const novoNome = prompt('Editar nome do item', it.name);
-      if (novoNome !== null) it.name = novoNome.trim() || it.name;
-      const novaDesc = prompt('Editar descrição', it.description || '');
-      if (novaDesc !== null) it.description = novaDesc;
-      renderInventory();
+      openItemModal(it);
     });
   });
 
   const botAdd = document.getElementById('botAddItem');
-  if (botAdd) botAdd.addEventListener('click', () => { const novoId = uid(); state.inventory.unshift({ id: novoId, name: 'Item Novo', type: 'Geral', equip: false, isEquipable: false, expanded: true, description: '' }); renderInventory(); });
+  if (botAdd) botAdd.addEventListener('click', () => { openItemModal(null); });
 
   const filtro = document.getElementById('filterItens');
   if (filtro) filtro.addEventListener('input', (e) => {
@@ -223,6 +228,383 @@ function renderCombat() {
   conteudoEl.innerHTML = html;
   bindInventoryCardEvents();
 }
+
+/* ---------------- Modal Nova Arma (layout conforme imagem) ---------------- */
+
+const PROFICIENCIAS = ['Armas Simples','Armas Marciais','Arma de Fogo'];
+const TIPOS = ['Corpo a Corpo','A Distancia','Misto'];
+const EMPUNHADURAS = ['Uma mao','Duas Maos','Versátil'];
+const CARACTERISTICAS = ['Agil','Alcance','Arremesso','Distância','Especial','Leve','Munição','Pesada','Recarga','Montaria','Rede'];
+const TIPOS_DANO = ['Contundente','Cortante','Perfurante','Ácido','Elétrico','Gélido','Ígneo','Trovejante','Energético','Necrótico','Psíquico','Radiante','Venenoso'];
+
+function openItemModal(existingItem = null) {
+  // Remove overlay anterior se existir
+  const existingOverlay = document.querySelector('.spell-modal-overlay');
+  if (existingOverlay) existingOverlay.remove();
+
+  const modal = document.createElement('div');
+  modal.className = 'spell-modal-overlay';
+  modal.style.zIndex = '11000';
+
+  const pre = existingItem || {};
+  const nameVal = escapeHtml(pre.name || 'Nova Arma');
+  const damageVal = escapeHtml(pre.damage || '');
+  const critVal = escapeHtml(pre.crit || '20');
+  const multVal = escapeHtml(pre.multiplicador || '2');
+  const alcanceVal = escapeHtml(pre.alcance || (pre.alcance === 0 ? '0' : '1.5m'));
+  const descVal = escapeHtml(pre.description || '');
+  const profSelected = pre.proficiency || '';
+  const tipoSelected = pre.tipoArma || '';
+  const empSelected = pre.empunhadura || '';
+  const carSelected = pre.caracteristicas || [];
+  const dmgTypesSelected = pre.damageTypes || [];
+  // pre.moreDmgList pode existir (array), senão criar vazio
+  const preMore = Array.isArray(pre.moreDmgList) ? pre.moreDmgList : (pre.moreDmg ? [pre.moreDmg] : []);
+
+  modal.innerHTML = `
+    <div class="spell-modal" style="width:920px; max-width:calc(100% - 40px);">
+      <div class="modal-header" style="align-items:flex-start;">
+        <h3 style="margin:0;">Nova Arma</h3>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button id="btnListaPadrao" class="btn-add" style="background:#9c27b0;border:none;padding:8px 14px; font-weight:800;">Lista Padrao<br/>de Itens</button>
+          <button class="modal-close">✖</button>
+        </div>
+      </div>
+
+      <div class="modal-body" style="display:block;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:12px; align-items:start;">
+          <div style="grid-column: 1 / span 4;">
+            <label>Nome*</label>
+            <input id="item-name" type="text" value="${nameVal}" />
+          </div>
+
+          <div>
+            <label>Proficiência</label>
+            <div id="prof-pills" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+              ${PROFICIENCIAS.map(p => `<button type="button" class="pill single-select prof-pill" data-val="${escapeHtml(p)}">${escapeHtml(p)}</button>`).join('')}
+            </div>
+          </div>
+
+          <div>
+            <label>Tipo</label>
+            <div id="tipo-pills" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+              ${TIPOS.map(p => `<button type="button" class="pill single-select tipo-pill" data-val="${escapeHtml(p)}">${escapeHtml(p)}</button>`).join('')}
+            </div>
+          </div>
+
+          <div>
+            <label>Empunhadura</label>
+            <div id="emp-pills" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+              ${EMPUNHADURAS.map(p => `<button type="button" class="pill single-select emp-pill" data-val="${escapeHtml(p)}">${escapeHtml(p)}</button>`).join('')}
+            </div>
+          </div>
+
+          <div style="grid-column: 4 / span 1;">
+            <label>Caracteristica</label>
+            <div id="car-field" class="multi-select-field" style="margin-top:6px; position:relative;">
+              <div id="car-display" style="min-height:36px;padding:8px;border-radius:6px;background:#111;border:1px solid rgba(255,255,255,0.03);color:#ddd;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
+                <span id="car-placeholder">${carSelected && carSelected.length ? escapeHtml(carSelected.join(', ')) : 'Selecione...'}</span>
+                <span style="color:#9c27b0;font-weight:800;">▾</span>
+              </div>
+              <div id="car-panel" class="panel" style="display:none; position:absolute; right:0; left:0; top:46px; z-index:12000;">
+                ${CARACTERISTICAS.map(c => `
+                  <label style="display:block; padding:6px 6px; border-radius:6px; cursor:pointer;">
+                    <input type="checkbox" class="car-checkbox" value="${escapeHtml(c)}" style="margin-right:8px;" /> ${escapeHtml(c)}
+                  </label>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+
+          <div style="grid-column: 1 / span 1;">
+            <label>Critico</label>
+            <input id="item-crit" type="text" value="${critVal}" />
+          </div>
+
+          <div style="grid-column: 2 / span 1;">
+            <label>Multiplicador</label>
+            <input id="item-mult" type="text" value="${multVal}" />
+          </div>
+
+          <div style="grid-column: 3 / span 1;">
+            <label>Alcance</label>
+            <input id="item-range" type="text" value="${alcanceVal}" />
+          </div>
+
+          <div style="grid-column: 1 / span 2;">
+            <label>Dano</label>
+            <input id="item-damage" type="text" value="${damageVal}" />
+          </div>
+
+          <div style="grid-column: 3 / span 2;">
+            <label>Tipo de dano</label>
+            <div id="dmg-field" class="multi-select-field" style="margin-top:6px; position:relative;">
+              <div id="dmg-display" style="min-height:36px;padding:8px;border-radius:6px;background:#111;border:1px solid rgba(255,255,255,0.03);color:#ddd;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
+                <span id="dmg-placeholder">${dmgTypesSelected && dmgTypesSelected.length ? escapeHtml(dmgTypesSelected.join(', ')) : 'Selecione...'}</span>
+                <span style="color:#9c27b0;font-weight:800;">▾</span>
+              </div>
+              <div id="dmg-panel" class="panel" style="display:none; position:absolute; right:0; left:0; top:46px; z-index:12000;">
+                ${TIPOS_DANO.map(c => `
+                  <label style="display:block; padding:6px 6px; border-radius:6px; cursor:pointer;">
+                    <input type="checkbox" class="dmg-checkbox" value="${escapeHtml(c)}" style="margin-right:8px;" /> ${escapeHtml(c)}
+                  </label>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+
+          <div style="grid-column:1 / span 3;">
+            <label>Mais Danos</label>
+            <div id="more-dmg-root" style="margin-top:6px;">
+              <!-- linhas dinâmicas serão inseridas aqui -->
+            </div>
+          </div>
+          <div style="grid-column:4 / span 1; display:flex; align-items:flex-end; justify-content:flex-end;">
+            <button id="add-more-dmg" class="add-dmg-btn">+</button>
+          </div>
+
+          <div style="grid-column:1 / span 4;">
+            <label>Descrição <small style="color:#bbb"> (utilize negrito para aplicar a cor roxo)</small></label>
+            <textarea id="item-desc" style="min-height:160px;">${descVal}</textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions" style="display:flex;gap:8px;justify-content:flex-end;padding:12px;">
+        <button class="btn-add btn-save-item">${existingItem ? 'Salvar' : 'Adicionar'}</button>
+        <button class="btn-add btn-cancel">Cancelar</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  // Pre-seleção das pills
+  modal.querySelectorAll('.prof-pill').forEach(p => {
+    if (profSelected && p.getAttribute('data-val') === profSelected) p.classList.add('active');
+    p.addEventListener('click', () => {
+      modal.querySelectorAll('.prof-pill').forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+    });
+  });
+  modal.querySelectorAll('.tipo-pill').forEach(p => {
+    if (tipoSelected && p.getAttribute('data-val') === tipoSelected) p.classList.add('active');
+    p.addEventListener('click', () => {
+      modal.querySelectorAll('.tipo-pill').forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+    });
+  });
+  modal.querySelectorAll('.emp-pill').forEach(p => {
+    if (empSelected && p.getAttribute('data-val') === empSelected) p.classList.add('active');
+    p.addEventListener('click', () => {
+      modal.querySelectorAll('.emp-pill').forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+    });
+  });
+
+  // multi-selects (características / tipos de dano)
+  const carPanel = modal.querySelector('#car-panel');
+  const carPlaceholder = modal.querySelector('#car-placeholder');
+  const carCheckboxes = carPanel.querySelectorAll('.car-checkbox');
+  carCheckboxes.forEach(cb => { if (carSelected && carSelected.indexOf(cb.value) !== -1) cb.checked = true; });
+  function updateCarPlaceholder() {
+    const vals = Array.from(carPanel.querySelectorAll('.car-checkbox:checked')).map(x => x.value);
+    carPlaceholder.textContent = vals.length ? vals.join(', ') : 'Selecione...';
+  }
+  updateCarPlaceholder();
+
+  const dmgPanel = modal.querySelector('#dmg-panel');
+  const dmgPlaceholder = modal.querySelector('#dmg-placeholder');
+  const dmgCheckboxes = dmgPanel.querySelectorAll('.dmg-checkbox');
+  dmgCheckboxes.forEach(cb => { if (dmgTypesSelected && dmgTypesSelected.indexOf(cb.value) !== -1) cb.checked = true; });
+  function updateDmgPlaceholder() {
+    const vals = Array.from(dmgPanel.querySelectorAll('.dmg-checkbox:checked')).map(x => x.value);
+    dmgPlaceholder.textContent = vals.length ? vals.join(', ') : 'Selecione...';
+  }
+  updateDmgPlaceholder();
+
+  carCheckboxes.forEach(cb => cb.addEventListener('change', updateCarPlaceholder));
+  dmgCheckboxes.forEach(cb => cb.addEventListener('change', updateDmgPlaceholder));
+
+  modal.querySelector('#car-display').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = carPanel.style.display === 'block';
+    dmgPanel.style.display = 'none';
+    carPanel.style.display = open ? 'none' : 'block';
+  });
+  modal.querySelector('#dmg-display').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = dmgPanel.style.display === 'block';
+    carPanel.style.display = 'none';
+    dmgPanel.style.display = open ? 'none' : 'block';
+  });
+
+  // ------------------- Mais Dano: funções para adicionar/remover linhas -------------------
+  const moreRoot = modal.querySelector('#more-dmg-root');
+
+  function createDamageRow(dmgText = '', dmgType = '') {
+    const row = document.createElement('div');
+    row.className = 'damage-row';
+
+    // Dano input
+    const inputDmg = document.createElement('input');
+    inputDmg.type = 'text';
+    inputDmg.placeholder = 'Ex: 1d6 fogo';
+    inputDmg.value = dmgText;
+    inputDmg.style.flex = '1';
+
+    // Tipo select (simples select com TIPOS_DANO)
+    const selectType = document.createElement('select');
+    selectType.className = 'dmg-type';
+    const emptyOpt = document.createElement('option');
+    emptyOpt.value = '';
+    emptyOpt.textContent = 'Tipo (opcional)';
+    selectType.appendChild(emptyOpt);
+    TIPOS_DANO.forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t;
+      opt.textContent = t;
+      if (t === dmgType) opt.selected = true;
+      selectType.appendChild(opt);
+    });
+
+    // Remove button
+    const rem = document.createElement('button');
+    rem.type = 'button';
+    rem.className = 'remove-dmg';
+    rem.textContent = '✖';
+    rem.title = 'Remover';
+    rem.addEventListener('click', (e) => {
+      e.preventDefault();
+      row.remove();
+    });
+
+    row.appendChild(inputDmg);
+    row.appendChild(selectType);
+    row.appendChild(rem);
+
+    return row;
+  }
+
+  // inicializa com preMore (se houver)
+  if (preMore && preMore.length) {
+    preMore.forEach(m => {
+      // se m for string no formato "X / Tipo" tenta separar, senão deixa tudo no input
+      let val = String(m);
+      let type = '';
+      // tentativa simples de extrair tipo entre parênteses ou depois de " - "
+      // (não obrigatório)
+      const splitByDash = val.split(' - ');
+      if (splitByDash.length === 2) { val = splitByDash[0]; type = splitByDash[1]; }
+      const row = createDamageRow(val, type);
+      moreRoot.appendChild(row);
+    });
+  }
+
+  // adiciona a linha principal também se houver valor padrão no input de Dano
+  const mainDamageInput = modal.querySelector('#item-damage');
+  if (mainDamageInput && mainDamageInput.value) {
+    // Não transformar em row — este input é o dano principal. As linhas extras ficam em moreRoot.
+  }
+
+  // botão de adicionar linha
+  const btnAddMore = modal.querySelector('#add-more-dmg');
+  btnAddMore.addEventListener('click', (ev) => {
+    ev.preventDefault();
+    const r = createDamageRow('', '');
+    moreRoot.appendChild(r);
+    // scroll para o final do container
+    moreRoot.scrollTop = moreRoot.scrollHeight;
+  });
+
+  // fechar painéis ao clicar fora
+  function onDocClick(e) {
+    if (!modal.contains(e.target)) {
+      carPanel.style.display = 'none';
+      dmgPanel.style.display = 'none';
+    }
+  }
+  document.addEventListener('click', onDocClick);
+
+  // Close handlers
+  function closeModal() {
+    document.removeEventListener('click', onDocClick);
+    modal.remove();
+  }
+  modal.querySelector('.modal-close').addEventListener('click', closeModal);
+  modal.querySelector('.btn-cancel').addEventListener('click', (ev) => { ev.preventDefault(); closeModal(); });
+
+  // Botão Lista Padrão (placeholder)
+  const btnLista = modal.querySelector('#btnListaPadrao');
+  if (btnLista) {
+    btnLista.addEventListener('click', (ev) => { ev.preventDefault(); btnLista.style.transform = 'scale(0.98)'; setTimeout(()=>btnLista.style.transform='','120'); });
+  }
+
+  // Save handler: coleta campos e linhas de dano extra
+  modal.querySelector('.btn-save-item').addEventListener('click', (ev) => {
+    ev.preventDefault();
+
+    const name = modal.querySelector('#item-name').value.trim() || 'Sem nome';
+    const damage = modal.querySelector('#item-damage').value.trim() || '';
+    const crit = modal.querySelector('#item-crit').value.trim() || '20';
+    const multiplicador = modal.querySelector('#item-mult').value.trim() || '2';
+    const alcance = modal.querySelector('#item-range').value.trim() || '1.5m';
+    const description = modal.querySelector('#item-desc').value.trim() || '';
+
+    const profEl = modal.querySelector('#prof-pills .pill.active');
+    const proficiency = profEl ? profEl.getAttribute('data-val') : '';
+
+    const tipoEl = modal.querySelector('#tipo-pills .pill.active');
+    const tipoArma = tipoEl ? tipoEl.getAttribute('data-val') : '';
+
+    const empEl = modal.querySelector('#emp-pills .pill.active');
+    const empunhadura = empEl ? empEl.getAttribute('data-val') : '';
+
+    const caracteristicas = Array.from(modal.querySelectorAll('#car-panel .car-checkbox:checked')).map(x => x.value);
+    const damageTypes = Array.from(modal.querySelectorAll('#dmg-panel .dmg-checkbox:checked')).map(x => x.value);
+
+    // coleta linhas extras
+    const extraRows = Array.from(moreRoot.querySelectorAll('.damage-row'));
+    const moreDmgList = extraRows.map(r => {
+      const d = r.querySelector('input[type="text"]').value.trim();
+      const t = r.querySelector('select').value;
+      if (!d && !t) return null;
+      if (d && t) return `${d} - ${t}`;
+      return d || t;
+    }).filter(Boolean);
+
+    const novo = {
+      id: existingItem ? existingItem.id : uid(),
+      name: name,
+      type: 'Arma',
+      damage: damage,
+      crit: crit,
+      multiplicador: multiplicador,
+      alcance: alcance,
+      moreDmgList: moreDmgList,
+      moreDmg: moreDmgList.join(' | '),
+      description: description,
+      isEquipable: true,
+      equip: existingItem ? !!existingItem.equip : false,
+      expanded: true,
+      proficiency: proficiency,
+      tipoArma: tipoArma,
+      empunhadura: empunhadura,
+      caracteristicas: caracteristicas,
+      damageTypes: damageTypes
+    };
+
+    if (existingItem) {
+      state.inventory = state.inventory.map(i => i.id === novo.id ? { ...i, ...novo } : i);
+    } else {
+      state.inventory.unshift(novo);
+    }
+
+    closeModal();
+    renderInventory();
+  });
+}
+
 
 /* ---------------- HABILIDADES ---------------- */
 function renderAbilities() {
@@ -589,7 +971,6 @@ function openSpellCatalogOverlay(parentModal = null) {
   const overlay = document.createElement('div');
   overlay.className = 'catalog-overlay-large';
 
-  // ATUALIZADO: Array de filtros incluindo "Truque (0º)"
   const filters = [
     { label: 'Todos', val: 'all' },
     { label: 'Truque (0º)', val: '0' }
@@ -642,7 +1023,6 @@ function openSpellCatalogOverlay(parentModal = null) {
       overlay.querySelectorAll('.catalog-card-item').forEach(card => {
         if (filter === 'all') { card.style.display = ''; return; }
         const lvl = card.getAttribute('data-level') || '';
-        // ATUALIZADO: Compara string com string, lidando com '0' corretamente
         card.style.display = (String(lvl) === String(filter)) ? '' : 'none';
       });
     });
@@ -705,13 +1085,11 @@ function openSpellCatalogOverlay(parentModal = null) {
 }
 
 function formatCatalogSpellCard(c) {
-  // Helper para componentes
   const v = c.components?.V ? 'V' : '';
   const s = c.components?.S ? 'S' : '';
   const m = c.components?.M ? 'M' : '';
   const comps = [v,s,m].filter(x=>x).join(' ') || '-';
 
-  // ATUALIZADO: data-level recebe o valor seguro (mesmo que seja 0)
   return `
     <div class="catalog-card-item card" data-id="${c.id}" data-level="${(c.levelNumber !== undefined && c.levelNumber !== null) ? c.levelNumber : ''}">
       <div class="catalog-card-header" style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
@@ -762,7 +1140,7 @@ function formatCatalogSpellCard(c) {
   `;
 }
 
-// ... Restante do código (Abas, Habilidades, etc.) permanece igual ...
+/* ---------------- HABILIDADES CATALOG / NOVA HABILIDADE (igual antes) ---------------- */
 function openAbilityCatalogOverlay() {
   const existing = document.querySelector('.catalog-overlay-large-abilities');
   if (existing) {
@@ -1025,6 +1403,7 @@ function openNewAbilityModal(existingAbility = null) {
   });
 }
 
+/* ---------------- DESCRIÇÃO ---------------- */
 function renderDescription() {
   const d = state.description;
   conteudoEl.innerHTML = `
@@ -1085,6 +1464,7 @@ function initAbas() {
 document.addEventListener('DOMContentLoaded', initAbas);
 
 function escapeHtml(str) {
+  if (str === 0) return '0';
   if (!str) return '';
   return String(str).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
 }

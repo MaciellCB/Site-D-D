@@ -540,3 +540,178 @@ a.editar-item, a.editar-hab, a.editar-spell { color:#2e7d32; text-decoration:non
   .ability-class-btn { font-size:14px; padding:6px 8px; }
   .ability-sub-btn { padding:6px 10px; font-size:13px; border-radius:18px; }
 }
+
+
+/* ==================== AJUSTES VISUAIS PARA MODAL NOVA ARMA ==================== */
+
+/* overlay e modal (ajustes finos) */
+.spell-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding:32px;
+  z-index:11000;
+}
+
+.spell-modal {
+  width: 920px;
+  max-width: calc(100% - 48px);
+  background: #1f1f1f;         /* slightly lighter than background */
+  border-radius: 6px;
+  padding: 18px;
+  box-sizing: border-box;
+  border: 1px solid rgba(0,0,0,0.45);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  color: #e6e6e6;
+}
+
+/* header */
+.spell-modal .modal-header {
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+  margin-bottom:12px;
+}
+.spell-modal .modal-header h3 {
+  margin:0;
+  font-size:22px;
+  font-weight:800;
+  color:#fff;
+}
+
+/* botão 'Lista Padrao' no header */
+.spell-modal #btnListaPadrao {
+  background: #9c27b0;
+  border: none;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight:800;
+  text-align:center;
+  line-height:1.05;
+}
+
+/* corpo */
+.spell-modal .modal-body { padding-top:4px; }
+
+/* labels e inputs */
+.spell-modal label { display:block; font-weight:700; color:#ddd; font-size:13px; margin-bottom:6px; }
+.spell-modal input[type="text"], .spell-modal input[type="number"], .spell-modal textarea {
+  background: #0f0f0f;
+  border: 1px solid rgba(255,255,255,0.04);
+  color: #eee;
+  padding: 8px 10px;
+  border-radius:6px;
+  box-sizing:border-box;
+  width:100%;
+}
+
+/* grid do form (ajuste fino) */
+.spell-modal .modal-body > div[style*="display:grid"] {
+  gap:12px;
+}
+
+/* pills (seleção única) */
+.spell-modal .pill {
+  background:#0f0f0f;
+  color:#ddd;
+  padding:8px 10px;
+  border-radius:6px;
+  border:1px solid rgba(255,255,255,0.03);
+  cursor:pointer;
+  font-weight:800;
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,0.4);
+}
+.spell-modal .pill.active {
+  background: #111;
+  border-color:#9c27b0;
+  color:#fff;
+  box-shadow: 0 6px 18px rgba(156,39,176,0.08);
+}
+
+/* multi-select field display */
+.spell-modal .multi-select-field > div {
+  min-height:36px;
+  padding:8px;
+  border-radius:6px;
+  background:#0f0f0f;
+  border:1px solid rgba(255,255,255,0.03);
+  color:#ddd;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  cursor:pointer;
+}
+
+/* painel interno do multi-select */
+.spell-modal .multi-select-field .panel {
+  background:#121212;
+  border:1px solid rgba(255,255,255,0.03);
+  padding:8px;
+  border-radius:6px;
+  margin-top:6px;
+  max-height:220px;
+  overflow:auto;
+}
+
+/* linhas de dano extra */
+.spell-modal .damage-row {
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin-top:8px;
+}
+.spell-modal .damage-row input[type="text"] {
+  flex:1 1 240px;
+}
+.spell-modal .damage-row .dmg-type {
+  width:220px;
+  flex:0 0 220px;
+}
+.spell-modal .damage-row .remove-dmg {
+  background:transparent;
+  border:none;
+  color:#f55;
+  font-weight:800;
+  cursor:pointer;
+  padding:6px 8px;
+  border-radius:6px;
+}
+
+/* botão + de adicionar dano */
+.spell-modal .add-dmg-btn {
+  background:#9c27b0;
+  color:#fff;
+  border:none;
+  padding:8px 10px;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:800;
+}
+
+/* ações do modal */
+.spell-modal .modal-actions {
+  border-top:1px solid rgba(255,255,255,0.03);
+  margin-top:12px;
+  padding-top:12px;
+  background:transparent;
+  display:flex;
+  justify-content:flex-end;
+  gap:12px;
+}
+
+/* botão Adicionar/Cancelar */
+.spell-modal .btn-add { padding:10px 14px; border-radius:6px; font-weight:800; }
+.spell-modal .btn-add.btn-save-item { background:#9c27b0; color:#fff; border:none; }
+.spell-modal .btn-add.btn-cancel { background:transparent; color:#ddd; border:1px solid rgba(255,255,255,0.03); }
+
+/* responsivo */
+@media (max-width: 980px) {
+  .spell-modal { width: calc(100% - 32px); padding:12px; }
+  .spell-modal .damage-row { flex-direction:column; align-items:stretch; }
+  .spell-modal .damage-row .dmg-type { width:100%; }
+}
