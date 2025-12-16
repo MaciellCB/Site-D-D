@@ -485,9 +485,7 @@
   background-color: #121212; /* levemente mais claro que antes para contraste */
 }
 
-/* central/direita ajustadas */
-.lado-centro { width: 33%; }
-.lado-direito { width: 32%; }
+
 
 /* lápis: deslocado um pouco para a direita do container */
 .editar-hex {

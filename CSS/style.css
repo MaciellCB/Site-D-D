@@ -42,3 +42,107 @@ header {
   gap: 20px;
   align-items: stretch; /* garante que colunas fiquem com mesma altura */
 }
+
+/* CONTEÚDO */
+.container {
+  display: flex;
+  min-height: calc(100vh - 60px); /* Garante altura mínima */
+  
+  /* MUDANÇA 1: Padding lateral zero faz encostar nas bordas */
+  padding: 20px 0; 
+  
+  /* MUDANÇA 2: Gap reduzido (era 20px, agora 8px) para aproximar as colunas */
+  gap: 8px; 
+  
+  align-items: stretch;
+  width: 100%;
+  box-sizing: border-box; /* Garante que o padding não estoure a largura */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #0a0a0a;
+  color: white;
+  width: 100vw;      /* Garante largura total */
+  overflow-x: hidden; /* Evita rolagem lateral indesejada */
+}
+
+/* HEADER */
+header {
+  background-color: black;
+  padding: 10px 20px;
+  width: 100%;
+  box-sizing: border-box; /* Garante que o padding não estoure a largura */
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  margin-right: 20px;
+  font-weight: bold;
+}
+
+.nav-links a.active {
+  border-bottom: 2px solid #9c27b0;
+}
+
+.perfil-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+/* CONTEÚDO PRINCIPAL */
+.container {
+  display: flex;
+  
+  /* Altura mínima para preencher a tela menos o header */
+  min-height: calc(100vh - 60px); 
+  
+  /* --- MUDANÇAS CRÍTICAS AQUI --- */
+  width: 100% !important;
+  max-width: 100% !important;
+  
+  /* 20px em cima/baixo e 0px nas laterais */
+  padding: 20px 0 !important; 
+  
+  /* Diminui a distância entre as colunas (coloquei 4px para ficarem bem próximas) */
+  gap: 4px !important; 
+  
+  align-items: stretch; 
+  box-sizing: border-box;
+}
+
+/* Garante que as colunas não tenham margens externas empurrando as bordas */
+.lado-esquerdo, 
+.lado-centro, 
+.lado-direito {
+  margin-left: 5px !important;
+  margin-right: 5px !important;
+}
+
+/* Defina um tamanho fixo para a esquerda e impeça que ela cresça */
+.lado-esquerdo {
+  /* O primeiro 0 impede de crescer, o segundo 0 impede de encolher demais */
+  /* 280px é a largura base. Aumente ou diminua esse número conforme necessário */
+  flex: 0 0 280px !important; 
+  width: 390px !important;
+  max-width: 390px !important;
+  margin-left: 12px !important;
+}
+
+/* Garante que o centro e a direita ocupem o resto do espaço disponível */
+.lado-centro, 
+.lado-direito {
+  flex: 1; 
+}
+
+

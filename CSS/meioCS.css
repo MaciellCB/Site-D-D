@@ -263,3 +263,127 @@
 .pericia-item.header-row .col-outros {
   font-size: 10px;
 }
+
+
+
+/* ==================== SANIDADE E ESTRESSE ==================== */
+
+.sanidade-wrapper {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-height: 50px;
+}
+
+/* Imagens usadas como botões */
+.btn-sanidade-img {
+  width: 100%; /* Ajuste a largura conforme sua imagem */
+  max-width: 280px;
+  cursor: pointer;
+  transition: transform 0.1s;
+  display: block;
+}
+
+.btn-sanidade-img:hover {
+  filter: brightness(1.1);
+  transform: scale(1.02);
+}
+
+/* O Painel Aberto */
+.sanidade-panel {
+  width: 100%;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex; /* Flex para organizar */
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Linha de um contador */
+.sanidade-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative; /* Para o tooltip */
+}
+
+.sanidade-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ccc;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: help; /* Indica que tem info */
+}
+
+/* Input numérico */
+.sanidade-input {
+  background: #0f0f0f;
+  border: 1px solid #444;
+  color: #fff;
+  border-radius: 6px;
+  padding: 6px;
+  width: 60px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.sanidade-input:focus {
+  border-color: #9c27b0;
+  outline: none;
+}
+
+/* Rodapé do Estresse */
+.estresse-footer {
+  font-size: 11px;
+  color: #888;
+  margin-top: 4px;
+  cursor: help;
+  border-bottom: 1px dashed #444;
+}
+
+/* ================= TOOLTIPS (Caixas flutuantes) ================= */
+
+/* Tooltip Genérico (aparece no hover de elementos com atributo data-tooltip) */
+[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #000;
+  border: 1px solid #444;
+  color: #ddd;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: pre-wrap; /* Permite quebra de linha */
+  z-index: 1000;
+  width: 180px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+  pointer-events: none;
+}
+
+/* Tooltip específico do rodapé (pode precisar de ajuste de posição) */
+.estresse-footer[data-tooltip]:hover::after {
+  width: 220px;
+  bottom: -40px; /* Aparece embaixo */
+  top: auto;
+  transform: translateX(-50%);
+}

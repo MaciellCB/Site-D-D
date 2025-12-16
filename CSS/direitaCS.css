@@ -1,32 +1,25 @@
 /* direitaCS.css (mesmo arquivo) */
 /* Nenhuma alteração de estilo necessária para este passo, apenas mantendo a referência */
 
-.lado-direito {
-  width: 35%;
-  background-color: #171717;
-  border-radius: 8px;
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  min-height: 680px;
-  color: #e6e6e6;
-}
+
 
 /* Abas */
 .abas {
   display: grid;
-  grid-template-columns: repeat(3, auto);
-  gap: 18px;
+  grid-template-columns: repeat(3, 1fr); /* 3 colunas iguais */
+  gap: 10px;
   margin-bottom: 14px;
   align-items: center;
-  align-content: start;
 }
-.abas button:nth-child(1) { grid-column: 1; grid-row: 1; }
-.abas button:nth-child(2) { grid-column: 2; grid-row: 1; }
-.abas button:nth-child(3) { grid-column: 1; grid-row: 2; }
-.abas button:nth-child(4) { grid-column: 2; grid-row: 2; }
-.abas button:nth-child(5) { grid-column: 3; grid-row: 2; }
+
+/* Organização visual dos botões no Grid */
+.abas button:nth-child(1) { grid-column: 1; grid-row: 1; } /* Combate */
+.abas button:nth-child(2) { grid-column: 2; grid-row: 1; } /* Mag. Preparadas */
+.abas button:nth-child(6) { grid-column: 3; grid-row: 2; } /* Descrição */
+.abas button:nth-child(4) { grid-column: 1; grid-row: 2; } /* Magias */
+.abas button:nth-child(5) { grid-column: 2; grid-row: 2; } /* Inventário */
+
+.abas button:nth-child(3) { grid-column: 3; grid-row: 1; } /* Habilidades */
 
 .abas button {
   background-color: transparent;
@@ -55,7 +48,17 @@
   width: 60%;
 }
 
-.conteudo { background-color: transparent; padding: 0; color: #e6e6e6; overflow:auto; flex: 1 1 auto; }
+.conteudo { 
+background-color: transparent;
+padding: 0;
+color: #e6e6e6;
+flex: 1 0 auto;              /* Permite expandir o pai */
+overflow: visible !important; /* Remove scroll interno */
+height: auto !important;      /* Remove limite de altura */
+  flex: 1; 
+  display: flex;
+  flex-direction: column;  
+}
 
 /* cards base */
 .card { background: #1f1f1f; border-radius: 8px; padding: 10px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.03); }
@@ -312,12 +315,7 @@ a.editar-item, a.editar-hab, a.editar-spell { color:#2e7d32; text-decoration:non
 /* corpo do card */
 .catalog-card-body { margin-top:10px; color:#ddd; display:block; }
 
-/* pequenas adaptações responsivas */
-@media (max-width: 1100px) {
-  .lado-direito { width: 100%; order: 3; margin-top:12px; }
-  .catalog-large { width: calc(100% - 40px); }
-  .spell-modal { width: calc(100% - 40px); padding:12px; }
-}
+
 
 /* Esconde o catálogo embutido dentro da aba Magias */
 .lado-direito .spells-wrapper > .catalog-list.card {
@@ -714,4 +712,637 @@ a.editar-item, a.editar-hab, a.editar-spell { color:#2e7d32; text-decoration:non
   .spell-modal { width: calc(100% - 32px); padding:12px; }
   .spell-modal .damage-row { flex-direction:column; align-items:stretch; }
   .spell-modal .damage-row .dmg-type { width:100%; }
+}
+
+
+/* direitaCS.css - Adições */
+
+/* Header com Abas Grandes (Item Arma Armadura) */
+.modal-tabs-header {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.modal-tab-btn {
+  background: transparent;
+  border: none;
+  color: #777;
+  font-size: 28px;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 0.2s;
+  position: relative;
+}
+
+.modal-tab-btn:hover {
+  color: #aaa;
+}
+
+/* Estado Ativo: Branco com sublinhado ou destaque roxo */
+.modal-tab-btn.active {
+  color: #fff;
+  /* Borda roxa "Item" style conforme imagem 38c236.png */
+  /* A imagem mostra um box roxo ao redor ou texto roxo. Vamos usar o estilo da imagem 2: Box roxo outline */
+}
+
+/* Ajuste específico para parecer com a seleção da imagem */
+.modal-tab-btn.active {
+  color: #9c27b0; 
+  border: 2px solid #9c27b0;
+  padding: 4px 12px;
+  border-radius: 4px;
+}
+/* Os inativos não têm borda */
+.modal-tab-btn:not(.active) {
+  padding: 4px 12px; /* Mantém espaçamento para não pular */
+  border: 2px solid transparent;
+}
+
+/* Container de Pills (botões de seleção) */
+.pills-container {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+
+.label-dropdown-trigger {
+  font-weight: 700;
+  color: #ddd;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  background: #0f0f0f;
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 6px;
+  padding: 4px 8px;
+  box-sizing: border-box;
+}
+.label-dropdown-trigger:hover {
+  border-color: #9c27b0;
+}
+.purple-caret {
+  color: #9c27b0;
+  font-size: 14px;
+}
+
+/* Selects escuros (para Vantagem, Desvantagem, Sintonização) */
+.dark-select {
+  width: 100%;
+  padding: 8px;
+  background: #0f0f0f;
+  border: 1px solid rgba(255,255,255,0.04);
+  color: #eee;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+.dark-select:focus {
+  border-color: #9c27b0;
+  outline: none;
+}
+
+
+.extra-dmg-row .multi-select-field > .display {
+  min-height: 36px;
+  padding: 8px;
+  border-radius: 6px;
+  background: #0f0f0f;
+  border: 1px solid rgba(255,255,255,0.03);
+  color: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.extra-dmg-input {
+  width: 100%;
+  padding: 8px;
+  background: #0f0f0f;
+  border: 1px solid rgba(255,255,255,0.04);
+  color: #eee;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.extra-dmg-input {
+  width: 100%;
+  padding: 8px;
+  background: #0f0f0f;
+  border: 1px solid rgba(255,255,255,0.04);
+  color: #eee;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+/* --- Estilos do Novo Card de Inventário (Estilo Maça Flamejante) --- */
+
+/* Ajuste do triângulo do header */
+.caret-triangle {
+  color: #9c27b0;
+  font-size: 14px;
+  margin-right: 10px;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+.caret-triangle.down {
+  transform: rotate(0deg); /* O caractere já aponta pra baixo, ou ajuste conforme o char */
+  color: #9c27b0;
+}
+
+/* Ícone de dado no header à direita do título */
+.header-icon {
+  margin-left: auto; 
+  padding-left: 10px;
+  font-size: 18px;
+  color: #eee;
+}
+
+/* Linha de Tags (Roxo, topo do body) */
+.item-tags-line {
+  color: #9c27b0; /* Roxo vibrante */
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(156, 39, 176, 0.2);
+}
+
+/* Grid de Estatísticas (Critico, Mult, Alcance) */
+
+
+
+/* Utilitários de Texto */
+.purple-label {
+  color: #9c27b0;
+  font-weight: 700; /* Sempre negrito para destacar o rótulo */
+  font-size: 13px;  /* Tamanho fixo padronizado */
+  line-height: 1.4;
+}
+
+.white-val {
+  color: #e0e0e0;
+  font-weight: 400; /* Sempre normal (remove o negrito excessivo) */
+  font-size: 13px;  /* Tamanho igual ao rótulo */
+  line-height: 1.4;
+}
+
+.white-val.bold {
+  font-weight: 400; 
+  font-size: 13px; 
+}
+
+.separator {
+  display: inline-block;
+  margin: 0 6px;
+  width: 1px;
+  height: 12px;
+  background-color: rgba(255, 255, 255, 0.2);
+  vertical-align: middle;
+}
+
+
+/* Rodapé de Ações */
+.item-actions-footer {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.remover-item {
+  color: #d32f2f !important; /* Vermelho */
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.editar-item {
+  color: #388e3c !important; /* Verde */
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+/* --- ESCONDER SCROLLBAR (Manter funcionalidade) --- */
+
+/* Alvo principal: O container de conteúdo da direita */
+.lado-direito .conteudo {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+  overflow: visible !important; 
+  /* Remove a rolagem interna */
+  height: auto !important;
+  /* Impede o flexbox de tentar espremer o conteúdo na tela */
+  flex: none !important;
+}
+
+.lado-direito .conteudo::-webkit-scrollbar { 
+  display: none;  /* Safari e Chrome */
+}
+
+/* Alvo secundário: Listas específicas caso tenham scroll interno */
+.inventory-list,
+.abilities-list,
+.spells-list,
+.catalog-large-list, 
+.spell-modal {
+-ms-overflow-style: none;
+scrollbar-width: none;
+height: auto !important;
+overflow: visible !important;
+display: flex;
+flex-direction: column;
+}
+
+.inventory-list::-webkit-scrollbar,
+.abilities-list::-webkit-scrollbar,
+.spells-list::-webkit-scrollbar,
+.catalog-large-list::-webkit-scrollbar,
+.spell-modal::-webkit-scrollbar { 
+  display: none; 
+}
+
+/* direitaCS.css - Correção Definitiva do Fundo */
+
+
+
+/* Conteúdo interno */
+.conteudo {
+  background-color: transparent;
+  padding: 0;
+  color: #e6e6e6;
+  
+  /* Força o conteúdo a ocupar espaço físico e empurrar o pai */
+  display: block !important; 
+  height: auto !important;
+  overflow: visible !important;
+  flex: none !important; /* Impede o flexbox de tentar encolher isso */
+}
+
+/* Garante que as listas não tenham scroll interno e empurrem a página */
+.inventory-list,
+.abilities-list,
+.spells-list {
+  display: block;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* --- TRAVAMENTO DE SCROLL DO FUNDO --- */
+body.no-scroll {
+  overflow: hidden !important; /* Impede a rolagem da página principal */
+  height: 100vh; /* Garante que a altura não estoure */
+}
+
+/* Garante que o modal tenha scroll independente se for muito grande */
+.spell-modal-overlay {
+  overflow-y: auto; /* Permite scroll no overlay se necessário */
+}
+
+/* O modal em si não precisa de scroll, o overlay cuida disso,
+   mas mantemos caso o conteúdo interno precise */
+.spell-modal {
+  max-height: none; /* Remove limite para deixar o overlay controlar o scroll */
+  height: auto;
+  margin: 40px auto; /* Margem para cima/baixo para dar espaço ao rolar */
+}
+
+/* Atualização para a descrição dos Itens (Inventário) */
+.item-description-text {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  color: #ccc;
+  font-size: 13px;
+  font-weight: 400; /* Garante que a descrição também seja normal */
+  line-height: 1.5;
+  text-align: left;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Regra Genérica para Magias (tag p) e Habilidades (divs soltas no body) */
+.card-body p, 
+.card-body > div {
+  word-break: break-word;     /* Faz o texto ir para baixo se for muito longo */
+  overflow-wrap: break-word;
+  max-width: 100%;            /* Impede que o texto estoure a largura do card */
+  white-space: pre-wrap;      /* Respeita quebras de linha */
+}
+
+
+/* --- AUMENTAR ÁREA DE DESCRIÇÃO DA MAGIA --- */
+
+/* Aplica especificamente ao ID da descrição da Magia */
+#modal-desc {
+  min-height: 300px; /* Define uma altura inicial bem grande */
+  height: auto;
+}
+
+/* Regra geral para todas as textareas dentro de modais */
+.spell-modal textarea {
+  resize: vertical; /* Habilita o "puxador" no canto inferior direito para crescer a área */
+  font-family: inherit; /* Mantém a fonte consistente */
+  line-height: 1.5;
+}
+
+.lado-direito {
+
+  flex: 1 !important;
+  width: auto !important; 
+  background-color: #171717;
+  border-radius: 5px;
+  padding: 12px;
+  padding-bottom: 60px; 
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  color: #e6e6e6;
+  height: fit-content !important; 
+  min-height: 100vh; 
+  max-height: none !important;
+  overflow: visible !important;
+  flex-shrink: 0; 
+}
+
+
+.lado-direito {
+  /* Aumentei de 330px para 400px (meio termo) */
+  flex: 0 0 400px !important; 
+  width: 400px !important;
+  max-width: 400px !important;
+
+  /* Restante das configurações iguais */
+  background-color: #171717;
+  border-radius: 5px;
+  padding: 12px;
+  padding-bottom: 60px; 
+  
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  color: #e6e6e6;
+  
+  height: fit-content !important; 
+  min-height: 100vh; 
+  max-height: none !important;
+  overflow: visible !important;
+  flex-shrink: 0;
+}
+
+
+
+/* Reduzir o espaço entre Critico / Mult / Alcance */
+.item-stats-row {
+  display: flex;
+  gap: 16px; /* Espaçamento uniforme */
+  margin-bottom: 6px;
+  font-size: 13px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Reduzir espaço entre Dano e Tipo */
+.item-data-row {
+  margin-bottom: 4px;
+  font-size: 13px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px; /* Espaço pequeno e consistente entre label e valor */
+}
+
+/* Ajustar o Header do card para ficar mais compacto */
+.card-header.compact {
+  padding: 4px 2px;
+}
+
+.card {
+  padding: 8px; /* Menos borda interna no card */
+  margin-bottom: 10px;
+}
+
+/* Diminuir a fonte das Tags .desc-grid label {(Armas Simples, etc) */
+.item-tags-line {
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+
+/* ==================== ESTILOS DA ABA DESCRIÇÃO ==================== */
+
+.desc-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 5px;
+}
+
+.desc-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Espaço entre o label e o textarea */
+}
+
+/* Estilo do Título (Label) - Texto Branco e Negrito */
+.desc-item label {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 15px;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+/* Estilo do Campo de Texto (Textarea) */
+.desc-item textarea {
+  background-color: #161616; /* Fundo bem escuro quase preto */
+  border: 1px solid #333;    /* Borda sutil cinza escuro */
+  border-radius: 6px;
+  color: #ccc;               /* Cor do texto digitado */
+  padding: 12px 14px;
+  font-family: inherit;      /* Mantém a fonte do sistema */
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;          /* Permite redimensionar altura */
+  min-height: 100px;         /* Altura inicial gordinha */
+  outline: none;
+  transition: border-color 0.2s, background-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Efeito ao clicar no campo */
+.desc-item textarea:focus {
+  border-color: #9c27b0;     /* Borda roxa ao focar */
+  background-color: #1a1a1a; /* Fundo levemente mais claro */
+}
+
+/* Cor do texto de ajuda (Placeholder) */
+.desc-item textarea::placeholder {
+  color: #555; /* Cinza escuro para o texto de exemplo */
+}
+
+/* Botão de Salvar */
+.desc-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.desc-actions .btn-save {
+  background: #9c27b0;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-weight: 800;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  transition: background 0.2s;
+}
+
+.desc-actions .btn-save:hover {
+  background: #7b1fa2;
+}
+
+
+/* ==================== ESTILOS DA ABA DESCRIÇÃO ==================== */
+
+.desc-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 5px;
+}
+
+/* Labels dentro do grid */
+.desc-grid label {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 5px;
+  letter-spacing: 0.5px;
+  display: block;
+}
+
+/* Estilo dos Textareas */
+.desc-grid textarea {
+  background-color: #1f1f1f; /* Cor escura baseada na imagem/tema */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: #ccc;
+  padding: 12px 14px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  
+  /* Comportamento de redimensionamento */
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical; /* Permite usuário puxar na vertical se quiser */
+  overflow: hidden; /* Esconde barra de rolagem para o efeito auto-grow funcionar bem */
+  min-height: 80px; /* Altura inicial mínima */
+  
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+/* Efeito ao clicar/focar */
+.desc-grid textarea:focus {
+  border-color: #9c27b0;
+  background-color: #252525;
+  outline: none;
+}
+
+.desc-grid textarea::placeholder {
+  color: #555;
+}
+
+/* Removemos a classe .desc-actions e o botão pois é salvo automático agora */
+
+
+/* ==================== ESTILOS DA ABA DESCRIÇÃO ==================== */
+
+.desc-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 5px;
+}
+
+/* Labels dentro do grid */
+.desc-grid label {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 5px;
+  letter-spacing: 0.5px;
+  display: block;
+}
+
+/* Estilo dos Textareas */
+.desc-grid textarea {
+  background-color: #1f1f1f; /* Cor escura do tema */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: #ccc;
+  padding: 12px 14px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  
+  /* Comportamento de redimensionamento e Scroll */
+  width: 100%;
+  box-sizing: border-box;
+  
+  resize: vertical;  /* Só permite mover na vertical */
+  overflow-y: auto;  /* PERMITE SCROLL se você diminuir a caixa */
+  
+  min-height: 80px;  /* Altura inicial mínima */
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+/* Efeito ao clicar/focar */
+.desc-grid textarea:focus {
+  border-color: #9c27b0;
+  background-color: #252525;
+  outline: none;
+}
+
+.desc-grid textarea::placeholder {
+  color: #555;
+}
+
+/* ==================== SCROLLBAR PERSONALIZADA (DESCRIÇÃO) ==================== */
+
+/* Largura da barra de rolagem */
+.desc-grid textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* O "trilho" (fundo) da barra - Transparente para sumir com o branco */
+.desc-grid textarea::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+/* A "pegada" (parte que mexe) - Cinza escuro discreto */
+.desc-grid textarea::-webkit-scrollbar-thumb {
+  background-color: #333; 
+  border-radius: 4px;
+  border: 1px solid #1f1f1f; /* Cria um pequeno espaço visual */
+}
+
+/* Ao passar o mouse na barra */
+.desc-grid textarea::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
 }

@@ -31,16 +31,17 @@ const classes = [
   { key: 'artifice', nome: 'Artífice', nivel: 0 },
   { key: 'barbaro', nome: 'Bárbaro', nivel: 0 },
   { key: 'bardo', nome: 'Bardo', nivel: 0 },
+  { key: 'blood hunter', nome: 'Blood Hunter', nivel: 0 },
   { key: 'bruxo', nome: 'Bruxo', nivel: 0 },
   { key: 'clerigo', nome: 'Clérigo', nivel: 0 },
   { key: 'druida', nome: 'Druida', nivel: 0 },
   { key: 'feiticeiro', nome: 'Feiticeiro', nivel: 0 },
-  { key: 'patrulheiro', nome: 'Patrulheiro', nivel: 0 },
   { key: 'guerreiro', nome: 'Guerreiro', nivel: 0 },
   { key: 'ladino', nome: 'Ladino', nivel: 0 },
   { key: 'mago', nome: 'Mago', nivel: 0 },
   { key: 'monge', nome: 'Monge', nivel: 0 },
-  { key: 'paladino', nome: 'Paladino', nivel: 0 }
+  { key: 'paladino', nome: 'Paladino', nivel: 0 },
+  { key: 'patrulheiro', nome: 'Patrulheiro', nivel: 0 }
 ];
 
 // ======================================
@@ -499,6 +500,7 @@ function obterClassesSelecionadas() {
         dado = 'd12'; break;
       case 'guerreiro':
       case 'paladino':
+      case "blood hunter":
         dado = 'd10'; break;
       case 'bardo':
       case 'clerigo':
