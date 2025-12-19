@@ -1,0 +1,24 @@
+[
+  {
+    "id": "s1",
+    "name": "Globo de Luz",
+    "levelNumber": 0,
+    "school": "Evocação",
+    "spellClass": "Mago, Bardo, Feiticeiro",
+    "damage": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "attrs": { "execucao": "1 ação", "alcance": "36m", "duracao": "1 min" },
+    "description": "Você cria quatro luzes do tamanho de tochas."
+  },
+  {
+    "id": "s2",
+    "name": "Cura Ferimentos",
+    "levelNumber": 1,
+    "school": "Abjuração",
+    "spellClass": "Clérigo, Bardo, Druida, Paladino",
+    "damage": "1d8 + Mod",
+    "components": { "V": true, "S": true, "M": false },
+    "attrs": { "execucao": "1 ação", "alcance": "Toque", "duracao": "Instantânea" },
+    "description": "Uma criatura que você toca recupera pontos de vida."
+  }
+]

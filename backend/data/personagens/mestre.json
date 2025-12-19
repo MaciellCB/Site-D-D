@@ -1,0 +1,11 @@
+{
+  "nome": "Mestre",
+  "senha": "admin",
+  "inventory": [],
+  "spells": [],
+  "abilities": [],
+  "description": {
+    "historia": "O início de tudo..."
+  },
+  "activeTab": "Descrição"
+}

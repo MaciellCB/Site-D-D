@@ -1,0 +1,171 @@
+{
+  "nome": "Pessoa1",
+  "senha": "123",
+  "activeTab": "Magias",
+  "spellDCConfig": {
+    "selectedAttr": "int",
+    "extraMod": 0,
+    "lastKnownLevel": 0
+  },
+  "dtMagias": 8,
+  "inventory": [],
+  "abilities": [],
+  "description": {
+    "anotacoes": "",
+    "aparencia": "",
+    "personalidade": "",
+    "objetivo": "",
+    "ideais": "",
+    "vinculos": "",
+    "fraquezas": "",
+    "historia": ""
+  },
+  "spells": [],
+  "abilityCatalog": [],
+  "spellCatalog": [],
+  "pericias": {
+    "Atletismo": {
+      "atributo": "FOR",
+      "treinado": false,
+      "outros": 0
+    },
+    "Acrobacia": {
+      "atributo": "DEX",
+      "treinado": false,
+      "outros": 0
+    },
+    "Furtividade": {
+      "atributo": "DEX",
+      "treinado": false,
+      "outros": 0
+    },
+    "Prestidigitação": {
+      "atributo": "DEX",
+      "treinado": false,
+      "outros": 0
+    },
+    "Arcanismo": {
+      "atributo": "INT",
+      "treinado": false,
+      "outros": 244444444
+    },
+    "História": {
+      "atributo": "INT",
+      "treinado": false,
+      "outros": 0
+    },
+    "Investigação": {
+      "atributo": "INT",
+      "treinado": false,
+      "outros": 0
+    },
+    "Natureza": {
+      "atributo": "INT",
+      "treinado": false,
+      "outros": 0
+    },
+    "Religião": {
+      "atributo": "INT",
+      "treinado": false,
+      "outros": 0
+    },
+    "Intuição": {
+      "atributo": "SAB",
+      "treinado": false,
+      "outros": 0
+    },
+    "Lidar com animais": {
+      "atributo": "SAB",
+      "treinado": false,
+      "outros": 0
+    },
+    "Medicina": {
+      "atributo": "SAB",
+      "treinado": false,
+      "outros": 0
+    },
+    "Percepção": {
+      "atributo": "SAB",
+      "treinado": false,
+      "outros": 0
+    },
+    "Sobrevivência": {
+      "atributo": "SAB",
+      "treinado": false,
+      "outros": 0
+    },
+    "Atuação": {
+      "atributo": "CAR",
+      "treinado": false,
+      "outros": 0
+    },
+    "Enganação": {
+      "atributo": "CAR",
+      "treinado": false,
+      "outros": 0
+    },
+    "Intimidação": {
+      "atributo": "CAR",
+      "treinado": false,
+      "outros": 0
+    },
+    "Persuasão": {
+      "atributo": "CAR",
+      "treinado": false,
+      "outros": 0
+    },
+    "Salvaguarda (Força)": {
+      "atributo": "FOR",
+      "treinado": false,
+      "outros": 0
+    },
+    "Salvaguarda (Destreza)": {
+      "atributo": "DEX",
+      "treinado": false,
+      "outros": 0
+    },
+    "Salvaguarda (Constituição)": {
+      "atributo": "CON",
+      "treinado": false,
+      "outros": 0
+    },
+    "Salvaguarda (Inteligência)": {
+      "atributo": "INT",
+      "treinado": false,
+      "outros": 0
+    },
+    "Salvaguarda (Sabedoria)": {
+      "atributo": "SAB",
+      "treinado": false,
+      "outros": 0
+    },
+    "Salvaguarda (Carisma)": {
+      "atributo": "CAR",
+      "treinado": false,
+      "outros": 0
+    }
+  },
+  "sanidade": {
+    "estresse": 0,
+    "vazio": 0
+  },
+  "atributos": {
+    "n1": 10,
+    "n2": 10,
+    "n3": 10,
+    "n4": 10,
+    "n5": 10,
+    "n6": 10
+  },
+  "niveisClasses": {
+    "barbaro": 0,
+    "artifice": 0
+  },
+  "xp": "0",
+  "inspiracao": 0,
+  "vidaDadosSalvos": {},
+  "marco": 0,
+  "vidaAtual": 0,
+  "vidaTempAtual": 21,
+  "danoNecroAtual": 86
+}

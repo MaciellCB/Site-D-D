@@ -1,0 +1,58 @@
+[
+  {
+    "id": "a1",
+    "name": "Misturar Elixir",
+    "category": "Alquimista",
+    "class": "Artífice",
+    "subclass": "Alquimista",
+    "description": "Cria elixires de suporte e cura."
+  },
+  {
+    "id": "a2",
+    "name": "Armadura Compacta",
+    "category": "Armeiro",
+    "class": "Artífice",
+    "subclass": "Armeiro",
+    "description": "Fortalece armadura e concede habilidades defensivas."
+  },
+  {
+    "id": "a3",
+    "name": "Grito Frenético",
+    "category": "Bárbaro",
+    "class": "Bárbaro",
+    "subclass": "Caminho do Berserker",
+    "description": "Aumenta dano por alguns turnos."
+  },
+  {
+    "id": "a4",
+    "name": "Palavra Encantada",
+    "category": "Bardo",
+    "class": "Bardo",
+    "subclass": "Colégio do Conhecimento",
+    "description": "Concede bônus em testes de conhecimento."
+  },
+  {
+    "id": "a5",
+    "name": "Marca do Caçador",
+    "category": "Patrulheiro",
+    "class": "Patrulheiro",
+    "subclass": "Caçador",
+    "description": "Marca inimigo para dano adicional."
+  },
+  {
+    "id": "t1",
+    "name": "Mente Afiada",
+    "category": "Talentos",
+    "class": "Talentos",
+    "subclass": "",
+    "description": "Você recebe +1 em inteligência em testes específicos."
+  },
+  {
+    "id": "b1",
+    "name": "Antecedente: Nobre",
+    "category": "Antecedentes",
+    "class": "Antecedentes",
+    "subclass": "",
+    "description": "Vínculos e recursos sociais."
+  }
+]

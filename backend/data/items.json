@@ -1,0 +1,63 @@
+[
+  {
+    "id": "i1",
+    "name": "Espada Curta",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d6",
+    "damageType": "Perfurante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Leve", "Sutil"],
+    "description": "Uma espada leve e rápida."
+  },
+  {
+    "id": "i2",
+    "name": "Arco Longo",
+    "category": "Armas",
+    "subcategory": "A distancia",
+    "type": "Arma",
+    "damage": "1d8",
+    "damageType": "Perfurante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Duas Maos",
+    "alcance": "45m/180m",
+    "caracteristicas": ["Pesada", "Duas Mãos"],
+    "description": "Um arco grande usado para tiros longos."
+  },
+  {
+    "id": "i3",
+    "name": "Cota de Malha",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "16",
+    "proficiency": "Pesada",
+    "tipoItem": "Armadura",
+    "minStrength": "13",
+    "disadvantageSkill": "Furtividade",
+    "description": "Feita de anéis de metal entrelaçados."
+  },
+  {
+    "id": "i4",
+    "name": "Escudo de Aço",
+    "category": "Armaduras",
+    "subcategory": "Escudos",
+    "type": "Proteção",
+    "defense": "+2",
+    "proficiency": "Escudo",
+    "tipoItem": "Escudo",
+    "description": "Um escudo padrão."
+  },
+  {
+    "id": "i5",
+    "name": "Corda de Seda (15m)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "Corda resistente e leve."
+  }
+]
