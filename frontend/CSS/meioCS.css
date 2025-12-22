@@ -530,3 +530,14 @@
 .sanidade-row#row-vazio {
   margin-bottom: -5px; /* Puxa o botão de fechar para mais perto */
 }
+
+/* Remove setas de incremento/decremento dos inputs numéricos */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+input[type=number] {
+  -moz-appearance: textfield; /* Para Firefox */
+}

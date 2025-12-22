@@ -223,30 +223,30 @@ function setActiveTab(tabName) {
 function formatInventoryItem(item) {
   let subTitle = '';
   let rightSideHtml = '';
-  const caretSymbol = item.expanded ? '▾' : '▸'; 
+  const caretSymbol = item.expanded ? '▾' : '▸';
 
   // 1. Configuração do Cabeçalho por Tipo
   if (item.type === 'Arma') {
     subTitle = [item.proficiency, item.tipoArma].filter(Boolean).join(' • ');
-    
+
     // Cálculo do Dano Total (Base + Extras)
     let dmgParts = [];
     if (item.damage && item.damage !== '0' && item.damage.trim() !== '') {
-        dmgParts.push(item.damage);
+      dmgParts.push(item.damage);
     }
     if (item.moreDmgList && Array.isArray(item.moreDmgList)) {
-        item.moreDmgList.forEach(m => {
-            if(m.dano) dmgParts.push(m.dano);
-        });
+      item.moreDmgList.forEach(m => {
+        if (m.dano) dmgParts.push(m.dano);
+      });
     }
     const finalDamage = dmgParts.join(' + ') || '-';
-    
+
     // LÓGICA DE FONTE DINÂMICA: Quanto mais caracteres, menor a fonte (mínimo 11px, máximo 18px)
     let dmgFontSize = 18;
     if (finalDamage.length > 5) {
-        dmgFontSize = Math.max(11, 18 - (finalDamage.length - 5) * 0.6);
+      dmgFontSize = Math.max(11, 18 - (finalDamage.length - 5) * 0.6);
     }
-    
+
     rightSideHtml = `
        <div class="card-meta spell-damage" style="display: flex; align-items: center; gap: 6px; flex-shrink: 0; margin-top: -2px;">
          <span style="font-weight: 800; color: #9c27b0; font-size: ${dmgFontSize}px; white-space: nowrap; transition: font-size 0.2s;">
@@ -267,7 +267,7 @@ function formatInventoryItem(item) {
 
   } else {
     subTitle = item.type || 'Item Geral';
-    rightSideHtml = ''; 
+    rightSideHtml = '';
   }
 
   const checked = item.equip ? 'checked' : '';
@@ -368,20 +368,20 @@ function renderInventory() {
   `;
   conteudoEl.innerHTML = html;
   bindInventoryCardEvents();
+  aplicarEnterNosInputs(conteudoEl);
 }
 
 function bindInventoryCardEvents() {
   document.querySelectorAll('.item-card').forEach(card => {
     const id = Number(card.getAttribute('data-id'));
     const header = card.querySelector('.card-header');
-    
-    // CORRIGIDO: Evento no header para expandir (exceto controles da direita)
+
     header.addEventListener('click', (ev) => {
       if (ev.target.closest('.right') || ev.target.closest('.header-equip') || ev.target.closest('.item-equip-checkbox')) return;
-      const it = state.inventory.find(x => x.id === id); 
+      const it = state.inventory.find(x => x.id === id);
       it.expanded = !it.expanded;
       renderActiveTab();
-      saveStateToServer(); // <--- SALVAR AO EXPANDIR
+      saveStateToServer();
     });
   });
 
@@ -390,12 +390,32 @@ function bindInventoryCardEvents() {
       ev.stopPropagation();
       const id = Number(ev.target.getAttribute('data-id'));
       const item = state.inventory.find(x => x.id === id);
+
+      if (item && ev.target.checked) {
+        // LÓGICA DE EXCLUSIVIDADE
+        if (item.type === 'Proteção' || item.type === 'protecao') {
+          const isEscudo = item.tipoItem?.toLowerCase() === 'escudo' || item.proficiency?.toLowerCase() === 'escudo';
+
+          state.inventory.forEach(i => {
+            if (i.id !== id && (i.type === 'Proteção' || i.type === 'protecao')) {
+              const otherIsEscudo = i.tipoItem?.toLowerCase() === 'escudo' || i.proficiency?.toLowerCase() === 'escudo';
+
+              // Se eu equipei uma armadura, desequipa a outra armadura.
+              // Se eu equipei um escudo, desequipa o outro escudo.
+              if (isEscudo === otherIsEscudo) {
+                i.equip = false;
+              }
+            }
+          });
+        }
+      }
+
       if (item) {
         item.equip = ev.target.checked;
-        saveStateToServer(); // <--- SALVAR AO EQUIPAR
-        
-        // Atualiza apenas a aba ativa para não pular
+        saveStateToServer();
         renderActiveTab();
+        // Notifica a Esquerda para recalcular a CA
+        window.dispatchEvent(new CustomEvent('sheet-updated'));
       }
     });
     ch.addEventListener('click', ev => ev.stopPropagation());
@@ -407,30 +427,33 @@ function bindInventoryCardEvents() {
       const id = Number(el.getAttribute('data-id'));
       state.inventory = state.inventory.filter(i => i.id !== id);
       renderActiveTab();
-      saveStateToServer(); // <--- SALVAR AO REMOVER
+      saveStateToServer();
+      window.dispatchEvent(new CustomEvent('sheet-updated'));
     });
   });
+
   document.querySelectorAll('.editar-item').forEach(el => {
     el.addEventListener('click', (ev) => {
       ev.preventDefault();
       const id = Number(el.getAttribute('data-id'));
       const it = state.inventory.find(i => i.id === id);
-      if (!it) return;
-      openItemModal(it);
+      if (it) openItemModal(it);
     });
   });
 
   const botAdd = document.getElementById('botAddItem');
-  if (botAdd) botAdd.addEventListener('click', () => { openItemModal(null); });
+  if (botAdd) botAdd.onclick = () => openItemModal(null);
 
   const filtro = document.getElementById('filterItens');
-  if (filtro) filtro.addEventListener('input', (e) => {
-    const q = e.target.value.toLowerCase();
-    document.querySelectorAll('.item-card').forEach(card => {
-      const title = card.querySelector('.card-title').textContent.toLowerCase();
-      card.style.display = title.includes(q) ? '' : 'none';
-    });
-  });
+  if (filtro) {
+    filtro.oninput = (e) => {
+      const q = e.target.value.toLowerCase();
+      document.querySelectorAll('.item-card').forEach(card => {
+        const title = card.querySelector('.card-title').textContent.toLowerCase();
+        card.style.display = title.includes(q) ? '' : 'none';
+      });
+    };
+  }
 }
 
 function renderCombat() {
@@ -482,7 +505,7 @@ const EMPUNHADURAS = ['Uma mao', 'Duas Maos', 'Versátil'];
 const CARACTERISTICAS_ARMA = ['Agil', 'Alcance', 'Arremesso', 'Distância', 'Especial', 'Leve', 'Munição', 'Pesada', 'Recarga', 'Montaria', 'Rede'];
 const TIPOS_DANO = ['Contundente', 'Cortante', 'Perfurante', 'Ácido', 'Elétrico', 'Gélido', 'Ígneo', 'Trovejante', 'Energético', 'Necrótico', 'Psíquico', 'Radiante', 'Venenoso'];
 
-const PROFICIENCIAS_ARMADURA = ['Leve', 'Media', 'Pesada', 'Escudo'];
+const PROFICIENCIAS_ARMADURA = ['Leve', 'Media', 'Pesada'];
 const TIPOS_ARMADURA = ['Armadura', 'Escudo'];
 const ATRIBUTOS_DND = ['Força', 'Destreza', 'Constituição', 'Inteligência', 'Sabedoria', 'Carisma'];
 const PERICIAS_LISTA = [
@@ -1004,6 +1027,7 @@ function openItemModal(existingItem = null) {
     closeMe();
     renderInventory();
     saveStateToServer();
+    window.dispatchEvent(new CustomEvent('sheet-updated'));
   });
 }
 
@@ -1494,7 +1518,7 @@ function openSpellModal(existingSpell = null) {
 function openSpellCatalogOverlay(parentModal = null) {
   const existing = document.querySelector('.catalog-overlay-large');
   if (existing) { existing.remove(); return; }
-  
+
   const overlay = document.createElement('div');
   overlay.className = 'catalog-overlay-large';
 
@@ -1502,7 +1526,7 @@ function openSpellCatalogOverlay(parentModal = null) {
     { label: 'Todos', val: 'all' },
     { label: 'Truque (0º)', val: '0' }
   ];
-  for(let i=1; i<=9; i++) {
+  for (let i = 1; i <= 9; i++) {
     filters.push({ label: `${i}º Círculo`, val: String(i) });
   }
 
@@ -1604,7 +1628,7 @@ function openSpellCatalogOverlay(parentModal = null) {
       const card = header.closest('.catalog-card-item');
       const body = card.querySelector('.catalog-card-body');
       const toggle = card.querySelector('.catalog-card-toggle');
-      
+
       const isHidden = body.style.display === 'none';
       body.style.display = isHidden ? 'block' : 'none';
       toggle.textContent = isHidden ? '▾' : '▸';
@@ -1713,7 +1737,7 @@ function renderPreparedSpells() {
       ${magiasHTML}
     </div>
   `;
-  
+
   conteudoEl.innerHTML = html;
 
   // --- Lógica de Filtro em Tempo Real ---
@@ -1749,7 +1773,7 @@ function renderPreparedSpells() {
         const hab = state.abilities.find(h => h.id === id);
         if (hab) {
           hab.active = ev.target.checked;
-          renderPreparedSpells(); 
+          renderPreparedSpells();
           saveStateToServer();
         }
       });
@@ -1789,29 +1813,29 @@ function renderPreparedSpells() {
 const ITEM_CATEGORIES = ['Armas', 'Armaduras', 'Utensílios', 'Conjuntos', 'Provisão'];
 
 const ITEM_SUBCATEGORIES = {
-    'Armas': ['Corpo-a-corpo', 'A distancia', 'Munição', 'Fora de epoca'],
-    'Armaduras': ['Armaduras', 'Escudos'],
-    'Utensílios': ['Utensílios gerais'],
-    'Conjuntos': ['Kits', 'Pacotes', 'Ferramentas'],
-    'Provisão': ['Comida', 'Transporte', 'Hospedagem']
+  'Armas': ['Corpo-a-corpo', 'A distancia', 'Munição', 'Fora de epoca'],
+  'Armaduras': ['Armaduras', 'Escudos'],
+  'Utensílios': ['Utensílios gerais'],
+  'Conjuntos': ['Kits', 'Pacotes', 'Ferramentas'],
+  'Provisão': ['Comida', 'Transporte', 'Hospedagem']
 };
 
 window.openItemCatalogOverlay = () => {
-    const existing = document.querySelector('.catalog-overlay-large-items');
-    if (existing) existing.remove();
+  const existing = document.querySelector('.catalog-overlay-large-items');
+  if (existing) existing.remove();
 
-    let activeCat = 'Armas';
-    let activeSub = 'Corpo-a-corpo';
+  let activeCat = 'Armas';
+  let activeSub = 'Corpo-a-corpo';
 
-    const overlay = document.createElement('div');
-    overlay.className = 'catalog-overlay-large catalog-overlay-large-items';
+  const overlay = document.createElement('div');
+  overlay.className = 'catalog-overlay-large catalog-overlay-large-items';
 
-    // Gera botões de categorias principais
-    const catsHtml = ITEM_CATEGORIES.map((c, i) => 
-        `<button class="ability-class-btn ${i===0?'active':''}" data-cat="${c}">${c}</button>`
-    ).join('');
+  // Gera botões de categorias principais
+  const catsHtml = ITEM_CATEGORIES.map((c, i) =>
+    `<button class="ability-class-btn ${i === 0 ? 'active' : ''}" data-cat="${c}">${c}</button>`
+  ).join('');
 
-    overlay.innerHTML = `
+  overlay.innerHTML = `
       <div class="catalog-large" role="dialog" aria-modal="true" style="width:980px; max-width:calc(100% - 40px);">
         <div class="catalog-large-header" style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
           <h3>Lista Padrão de Itens</h3>
@@ -1834,76 +1858,76 @@ window.openItemCatalogOverlay = () => {
       </div>
     `;
 
-    document.body.appendChild(overlay);
+  document.body.appendChild(overlay);
+  checkScrollLock();
+
+  // Evento Fechar
+  overlay.querySelector('.catalog-large-close').addEventListener('click', () => {
+    overlay.remove();
     checkScrollLock();
+  });
 
-    // Evento Fechar
-    overlay.querySelector('.catalog-large-close').addEventListener('click', () => { 
-        overlay.remove(); 
-        checkScrollLock();
-    });
+  // Renderiza as subcategorias (pills)
+  function renderSubs() {
+    const row = overlay.querySelector('#item-subs-row');
+    const subs = ITEM_SUBCATEGORIES[activeCat] || [];
 
-    // Renderiza as subcategorias (pills)
-    function renderSubs() {
-        const row = overlay.querySelector('#item-subs-row');
-        const subs = ITEM_SUBCATEGORIES[activeCat] || [];
-        
-        if (subs.length === 0) {
-             row.style.display = 'none';
-        } else {
-             row.style.display = 'flex';
-             row.innerHTML = subs.map(s => 
-                `<button class="ability-sub-btn ${s === activeSub ? 'active' : ''}" data-sub="${s}">${s}</button>`
-             ).join('');
-        }
-
-        row.querySelectorAll('.ability-sub-btn').forEach(btn => {
-            btn.onclick = () => {
-                activeSub = btn.dataset.sub;
-                renderSubs();
-                renderList();
-            };
-        });
+    if (subs.length === 0) {
+      row.style.display = 'none';
+    } else {
+      row.style.display = 'flex';
+      row.innerHTML = subs.map(s =>
+        `<button class="ability-sub-btn ${s === activeSub ? 'active' : ''}" data-sub="${s}">${s}</button>`
+      ).join('');
     }
 
-    // Renderiza a lista de itens filtrada
-    function renderList() {
-        const container = overlay.querySelector('.item-list-large');
-        const search = overlay.querySelector('#catalogItemSearch').value.toLowerCase();
-        
-        let items = itemCatalog.filter(i => i.category === activeCat);
-        
-        // Se houver subcategorias, filtra por elas. Se não (ex: Provisão genérica), mostra tudo da categoria.
-        if (ITEM_SUBCATEGORIES[activeCat] && ITEM_SUBCATEGORIES[activeCat].length > 0) {
-             items = items.filter(i => i.subcategory === activeSub);
-        }
+    row.querySelectorAll('.ability-sub-btn').forEach(btn => {
+      btn.onclick = () => {
+        activeSub = btn.dataset.sub;
+        renderSubs();
+        renderList();
+      };
+    });
+  }
 
-        if (search) {
-            items = items.filter(i => i.name.toLowerCase().includes(search));
-        }
+  // Renderiza a lista de itens filtrada
+  function renderList() {
+    const container = overlay.querySelector('.item-list-large');
+    const search = overlay.querySelector('#catalogItemSearch').value.toLowerCase();
 
-        if (items.length === 0) {
-            container.innerHTML = `<div style="color:#ddd;padding:18px;">Nenhum item encontrado nesta categoria.</div>`;
-            return;
-        }
+    let items = itemCatalog.filter(i => i.category === activeCat);
 
-        container.innerHTML = items.map(item => {
-            // Formata os dados para exibição compacta no header
-            let metaInfo = '';
-            let highlightVal = ''; // Valor que aparece em roxo na direita
+    // Se houver subcategorias, filtra por elas. Se não (ex: Provisão genérica), mostra tudo da categoria.
+    if (ITEM_SUBCATEGORIES[activeCat] && ITEM_SUBCATEGORIES[activeCat].length > 0) {
+      items = items.filter(i => i.subcategory === activeSub);
+    }
 
-            if (item.category === 'Armas') {
-                metaInfo = `${item.tipoArma || ''} • ${item.proficiency || ''}`;
-                highlightVal = item.damage || '-';
-            } else if (item.category === 'Armaduras') {
-                metaInfo = `${item.tipoItem || ''} • ${item.proficiency || ''}`;
-                highlightVal = item.defense ? `CA ${item.defense}` : '-';
-            } else {
-                metaInfo = item.subcategory || item.type || 'Item';
-                highlightVal = '';
-            }
+    if (search) {
+      items = items.filter(i => i.name.toLowerCase().includes(search));
+    }
 
-            return `
+    if (items.length === 0) {
+      container.innerHTML = `<div style="color:#ddd;padding:18px;">Nenhum item encontrado nesta categoria.</div>`;
+      return;
+    }
+
+    container.innerHTML = items.map(item => {
+      // Formata os dados para exibição compacta no header
+      let metaInfo = '';
+      let highlightVal = ''; // Valor que aparece em roxo na direita
+
+      if (item.category === 'Armas') {
+        metaInfo = `${item.tipoArma || ''} • ${item.proficiency || ''}`;
+        highlightVal = item.damage || '-';
+      } else if (item.category === 'Armaduras') {
+        metaInfo = `${item.tipoItem || ''} • ${item.proficiency || ''}`;
+        highlightVal = item.defense ? `CA ${item.defense}` : '-';
+      } else {
+        metaInfo = item.subcategory || item.type || 'Item';
+        highlightVal = '';
+      }
+
+      return `
             <div class="catalog-card-item card" data-id="${item.id}" style="background:#1b1b1b; border:1px solid rgba(255,255,255,0.05); padding:0; margin-bottom:8px; overflow:hidden;">
                 
                 <div class="catalog-card-header" style="display:flex; justify-content:space-between; align-items:center; padding:12px; cursor:pointer;">
@@ -1934,165 +1958,165 @@ window.openItemCatalogOverlay = () => {
                     <p style="margin:0; padding-top:8px; border-top:1px solid rgba(255,255,255,0.05);">${item.description || 'Sem descrição.'}</p>
                 </div>
             </div>`;
-        }).join('');
+    }).join('');
 
-        // 1. Listener de Expandir (No Header inteiro, exceto botão +)
-        container.querySelectorAll('.catalog-card-header').forEach(header => {
-            header.addEventListener('click', (ev) => {
-                if (ev.target.closest('.catalog-add-btn')) return; // Ignora clique no botão +
+    // 1. Listener de Expandir (No Header inteiro, exceto botão +)
+    container.querySelectorAll('.catalog-card-header').forEach(header => {
+      header.addEventListener('click', (ev) => {
+        if (ev.target.closest('.catalog-add-btn')) return; // Ignora clique no botão +
 
-                const card = header.closest('.catalog-card-item');
-                const body = card.querySelector('.catalog-card-body');
-                const toggle = card.querySelector('.catalog-card-toggle');
-                
-                const isHidden = body.style.display === 'none';
-                body.style.display = isHidden ? 'block' : 'none';
-                toggle.textContent = isHidden ? '▾' : '▸';
-            });
-        });
+        const card = header.closest('.catalog-card-item');
+        const body = card.querySelector('.catalog-card-body');
+        const toggle = card.querySelector('.catalog-card-toggle');
 
-        // 2. Listener de Adicionar (+)
-        container.querySelectorAll('.catalog-add-btn').forEach(btn => {
-            btn.addEventListener('click', (ev) => {
-                ev.stopPropagation();
-                adicionarItemDoCatalogo(btn.dataset.id);
-                
-                // Feedback visual
-                const originalText = btn.textContent;
-                btn.textContent = '✓';
-                setTimeout(() => btn.textContent = originalText, 1000);
-            });
-        });
-    }
-
-    // Eventos das Categorias Principais
-    overlay.querySelectorAll('.ability-class-btn').forEach(btn => {
-        btn.onclick = () => {
-            overlay.querySelectorAll('.ability-class-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            activeCat = btn.dataset.cat;
-            // Tenta pegar a primeira subcategoria, ou string vazia se não houver
-            activeSub = ITEM_SUBCATEGORIES[activeCat] ? ITEM_SUBCATEGORIES[activeCat][0] : '';
-            renderSubs();
-            renderList();
-        };
+        const isHidden = body.style.display === 'none';
+        body.style.display = isHidden ? 'block' : 'none';
+        toggle.textContent = isHidden ? '▾' : '▸';
+      });
     });
 
-    overlay.querySelector('#catalogItemSearch').oninput = renderList;
-    renderSubs();
-    renderList();
+    // 2. Listener de Adicionar (+)
+    container.querySelectorAll('.catalog-add-btn').forEach(btn => {
+      btn.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        adicionarItemDoCatalogo(btn.dataset.id);
+
+        // Feedback visual
+        const originalText = btn.textContent;
+        btn.textContent = '✓';
+        setTimeout(() => btn.textContent = originalText, 1000);
+      });
+    });
+  }
+
+  // Eventos das Categorias Principais
+  overlay.querySelectorAll('.ability-class-btn').forEach(btn => {
+    btn.onclick = () => {
+      overlay.querySelectorAll('.ability-class-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCat = btn.dataset.cat;
+      // Tenta pegar a primeira subcategoria, ou string vazia se não houver
+      activeSub = ITEM_SUBCATEGORIES[activeCat] ? ITEM_SUBCATEGORIES[activeCat][0] : '';
+      renderSubs();
+      renderList();
+    };
+  });
+
+  overlay.querySelector('#catalogItemSearch').oninput = renderList;
+  renderSubs();
+  renderList();
 };
 
 // Função chamada pelo botão "+" do catálogo
 window.adicionarItemDoCatalogo = (id) => {
-    const i = itemCatalog.find(x => x.id === id);
-    if (!i) return;
-    
-    // Objeto base
-    let novoItem = {
-        id: uid(),
-        name: i.name,
-        description: i.description || '',
-        expanded: false,
-        equip: false,
-        type: 'Geral', // Default
-        // Valores padrão vazios para evitar undefined
-        damage: '', defense: '', proficiency: '', empunhadura: '', 
-        tipoArma: '', tipoItem: '', crit: '20', multiplicador: '2', alcance: '',
-        acertoBonus: '', damageBonus: '', damageType: '', defenseBonus: '', defenseType: '',
-        disadvantageSkill: [], advantageSkill: [], attunement: 'Não'
-    };
+  const i = itemCatalog.find(x => x.id === id);
+  if (!i) return;
 
-    // Mapeamento OBRIGATÓRIO por categoria
-    if (i.category === 'Armas') {
-        novoItem.type = 'Arma';
-        novoItem.proficiency = i.proficiency || 'Armas Simples';
-        novoItem.tipoArma = i.tipoArma || 'Corpo a Corpo';
-        novoItem.empunhadura = i.empunhadura || 'Uma mao';
-        
-        // Extras
-        novoItem.damage = i.damage || '1d4';
-        novoItem.damageTypes = i.damageType ? [i.damageType] : [];
-        novoItem.alcance = i.alcance || '';
-        novoItem.caracteristicas = i.caracteristicas || [];
-    } 
-    else if (i.category === 'Armaduras') {
-        novoItem.type = 'Proteção';
-        novoItem.proficiency = i.proficiency || 'Leve';
-        novoItem.tipoItem = i.tipoItem || (i.subcategory === 'Escudos' ? 'Escudo' : 'Armadura');
-        
-        // Extras
-        novoItem.defense = i.defense || '+1';
-        novoItem.minStrength = i.minStrength || 0;
-        novoItem.disadvantageSkill = i.disadvantageSkill ? [i.disadvantageSkill] : [];
-    }
+  // Objeto base
+  let novoItem = {
+    id: uid(),
+    name: i.name,
+    description: i.description || '',
+    expanded: false,
+    equip: false,
+    type: 'Geral', // Default
+    // Valores padrão vazios para evitar undefined
+    damage: '', defense: '', proficiency: '', empunhadura: '',
+    tipoArma: '', tipoItem: '', crit: '20', multiplicador: '2', alcance: '',
+    acertoBonus: '', damageBonus: '', damageType: '', defenseBonus: '', defenseType: '',
+    disadvantageSkill: [], advantageSkill: [], attunement: 'Não'
+  };
 
-    state.inventory.unshift(novoItem);
-    renderInventory();
-    saveStateToServer();
+  // Mapeamento OBRIGATÓRIO por categoria
+  if (i.category === 'Armas') {
+    novoItem.type = 'Arma';
+    novoItem.proficiency = i.proficiency || 'Armas Simples';
+    novoItem.tipoArma = i.tipoArma || 'Corpo a Corpo';
+    novoItem.empunhadura = i.empunhadura || 'Uma mao';
+
+    // Extras
+    novoItem.damage = i.damage || '1d4';
+    novoItem.damageTypes = i.damageType ? [i.damageType] : [];
+    novoItem.alcance = i.alcance || '';
+    novoItem.caracteristicas = i.caracteristicas || [];
+  }
+  else if (i.category === 'Armaduras') {
+    novoItem.type = 'Proteção';
+    novoItem.proficiency = i.proficiency || 'Leve';
+    novoItem.tipoItem = i.tipoItem || (i.subcategory === 'Escudos' ? 'Escudo' : 'Armadura');
+
+    // Extras
+    novoItem.defense = i.defense || '+1';
+    novoItem.minStrength = i.minStrength || 0;
+    novoItem.disadvantageSkill = i.disadvantageSkill ? [i.disadvantageSkill] : [];
+  }
+
+  state.inventory.unshift(novoItem);
+  renderInventory();
+  saveStateToServer();
 };
 
 // Conectar ao botão "Lista Padrão" dentro do Modal de Itens
 document.addEventListener('click', (e) => {
-    if(e.target && e.target.id === 'btnListaPadrao') {
-        e.preventDefault();
-        const modal = document.querySelector('.spell-modal-overlay');
-        if(modal) modal.remove(); // Fecha o modal de criação manual
-        checkScrollLock();
-        openItemCatalogOverlay(); // Abre o catálogo
-    }
+  if (e.target && e.target.id === 'btnListaPadrao') {
+    e.preventDefault();
+    const modal = document.querySelector('.spell-modal-overlay');
+    if (modal) modal.remove(); // Fecha o modal de criação manual
+    checkScrollLock();
+    openItemCatalogOverlay(); // Abre o catálogo
+  }
 });
 
 window.toggleCatalogItemDetails = (el) => {
-    const body = el.parentElement.parentElement.querySelector('.catalog-body-detail');
-    const btn = el.querySelector('.catalog-card-toggle');
-    const isHidden = body.style.display === 'none';
-    body.style.display = isHidden ? 'block' : 'none';
-    btn.textContent = isHidden ? '▾' : '▸';
+  const body = el.parentElement.parentElement.querySelector('.catalog-body-detail');
+  const btn = el.querySelector('.catalog-card-toggle');
+  const isHidden = body.style.display === 'none';
+  body.style.display = isHidden ? 'block' : 'none';
+  btn.textContent = isHidden ? '▾' : '▸';
 };
 
 // Função chamada pelo botão "+" do catálogo
 window.adicionarItemDoCatalogo = (id) => {
-    const i = itemCatalog.find(x => x.id === id);
-    if (!i) return;
+  const i = itemCatalog.find(x => x.id === id);
+  if (!i) return;
 
-    let novoItem = {
-        id: uid(),
-        name: i.name,
-        description: i.description || '',
-        expanded: false,
-        equip: false,
-        type: 'Geral'
-    };
+  let novoItem = {
+    id: uid(),
+    name: i.name,
+    description: i.description || '',
+    expanded: false,
+    equip: false,
+    type: 'Geral'
+  };
 
-    if (i.category === 'Armas') {
-        novoItem.type = 'Arma';
-        novoItem.damage = i.damage || '1d4';
-        novoItem.proficiency = i.proficiency || 'Armas Simples'; // Obrigatório
-        novoItem.tipoArma = i.tipoArma || 'Corpo a Corpo';      // Obrigatório
-        novoItem.empunhadura = i.empunhadura || 'Uma mao';      // Obrigatório
-    } else if (i.category === 'Armaduras') {
-        novoItem.type = 'Proteção';
-        novoItem.defense = i.defense || '10';
-        novoItem.tipoItem = i.tipoItem || 'Armadura';           // Obrigatório (Armadura ou Escudo)
-        novoItem.proficiency = i.proficiency || 'Leve';         // Obrigatório
-    }
+  if (i.category === 'Armas') {
+    novoItem.type = 'Arma';
+    novoItem.damage = i.damage || '1d4';
+    novoItem.proficiency = i.proficiency || 'Armas Simples'; // Obrigatório
+    novoItem.tipoArma = i.tipoArma || 'Corpo a Corpo';      // Obrigatório
+    novoItem.empunhadura = i.empunhadura || 'Uma mao';      // Obrigatório
+  } else if (i.category === 'Armaduras') {
+    novoItem.type = 'Proteção';
+    novoItem.defense = i.defense || '10';
+    novoItem.tipoItem = i.tipoItem || 'Armadura';           // Obrigatório (Armadura ou Escudo)
+    novoItem.proficiency = i.proficiency || 'Leve';         // Obrigatório
+  }
 
-    state.inventory.unshift(novoItem);
-    renderInventory();
-    saveStateToServer();
-    alert(i.name + " adicionado!");
+  state.inventory.unshift(novoItem);
+  renderInventory();
+  saveStateToServer();
+  alert(i.name + " adicionado!");
 };
 
 // Conectar ao botão "Lista Padrão" dentro do Modal de Itens
 // (Certifique-se de que isso é chamado dentro de openItemModal ou globalmente se o modal for estático)
 document.addEventListener('click', (e) => {
-    if (e.target && e.target.id === 'btnListaPadrao') {
-        e.preventDefault();
-        const modal = document.querySelector('.spell-modal-overlay');
-        if (modal) modal.remove();
-        openItemCatalogOverlay();
-    }
+  if (e.target && e.target.id === 'btnListaPadrao') {
+    e.preventDefault();
+    const modal = document.querySelector('.spell-modal-overlay');
+    if (modal) modal.remove();
+    openItemCatalogOverlay();
+  }
 });
 
 
@@ -2109,7 +2133,7 @@ function openAbilityCatalogOverlay() {
   overlay.className = 'catalog-overlay-large catalog-overlay-large-abilities';
 
   // Botões das classes (topo)
-  const classesHtml = CLASSES_AVAILABLE.map(c => 
+  const classesHtml = CLASSES_AVAILABLE.map(c =>
     `<button class="ability-class-btn ${c === activeClass ? 'active' : ''}" data-class="${c}">${c}</button>`
   ).join('');
 
@@ -2169,103 +2193,103 @@ function openAbilityCatalogOverlay() {
   function renderClassHabilitiesRow() {
     const row = overlay.querySelector('#catalog-class-habilities-row');
     if (!activeClass) { row.style.display = 'none'; return; }
-    
+
     row.style.display = 'flex';
-    row.innerHTML = `<button class="catalog-class-hability-pill ${activeClassHabilitySelected?'active':''}">Habilidades de ${activeClass}</button>`;
-    
-    row.querySelector('button').onclick = function() {
-        activeClassHabilitySelected = true;
-        activeSubclass = null;
-        this.classList.add('active');
-        overlay.querySelectorAll('.ability-sub-btn').forEach(b => b.classList.remove('active'));
-        renderCatalogList();
+    row.innerHTML = `<button class="catalog-class-hability-pill ${activeClassHabilitySelected ? 'active' : ''}">Habilidades de ${activeClass}</button>`;
+
+    row.querySelector('button').onclick = function () {
+      activeClassHabilitySelected = true;
+      activeSubclass = null;
+      this.classList.add('active');
+      overlay.querySelectorAll('.ability-sub-btn').forEach(b => b.classList.remove('active'));
+      renderCatalogList();
     };
   }
 
   function renderSubclassesRow() {
     const row = overlay.querySelector('#catalog-subclasses-row');
     const subs = CLASSES_WITH_SUBCLASSES[activeClass] || [];
-    
+
     if (!subs.length) { row.style.display = 'none'; return; }
-    
+
     row.style.display = 'flex';
     row.innerHTML = subs.map(s => `<button class="ability-sub-btn" data-sub="${s}">${s}</button>`).join('');
 
     row.querySelectorAll('.ability-sub-btn').forEach(b => {
-        b.onclick = () => {
-            overlay.querySelectorAll('.ability-sub-btn').forEach(x => x.classList.remove('active'));
-            overlay.querySelector('.catalog-class-hability-pill')?.classList.remove('active');
-            b.classList.add('active');
-            activeClassHabilitySelected = false;
-            activeSubclass = b.dataset.sub;
-            renderCatalogList();
-        };
+      b.onclick = () => {
+        overlay.querySelectorAll('.ability-sub-btn').forEach(x => x.classList.remove('active'));
+        overlay.querySelector('.catalog-class-hability-pill')?.classList.remove('active');
+        b.classList.add('active');
+        activeClassHabilitySelected = false;
+        activeSubclass = b.dataset.sub;
+        renderCatalogList();
+      };
     });
   }
 
   function renderCatalogList() {
     const container = overlay.querySelector('.abilities-list-large');
     const q = overlay.querySelector('#catalogAbilitySearch').value.toLowerCase();
-    
+
     // Filtros
     let items = abilityCatalog.filter(it => {
-        if (activeClass) {
-            if (activeClassHabilitySelected) {
-                if (it.class !== activeClass || (it.subclass && it.subclass !== '')) return false;
-            } else if (activeSubclass) {
-                if (it.class !== activeClass || it.subclass !== activeSubclass) return false;
-            }
+      if (activeClass) {
+        if (activeClassHabilitySelected) {
+          if (it.class !== activeClass || (it.subclass && it.subclass !== '')) return false;
+        } else if (activeSubclass) {
+          if (it.class !== activeClass || it.subclass !== activeSubclass) return false;
         }
-        if (q && !it.name.toLowerCase().includes(q) && !it.description.toLowerCase().includes(q)) return false;
-        return true;
+      }
+      if (q && !it.name.toLowerCase().includes(q) && !it.description.toLowerCase().includes(q)) return false;
+      return true;
     });
 
     if (!items.length) {
-        container.innerHTML = `<div style="color:#ddd;padding:18px;">Nenhuma habilidade encontrada.</div>`;
-        return;
+      container.innerHTML = `<div style="color:#ddd;padding:18px;">Nenhuma habilidade encontrada.</div>`;
+      return;
     }
 
     container.innerHTML = items.map(c => formatCatalogAbilityCard(c)).join('');
 
     // --- CORREÇÃO AQUI: LISTENER NA ÁREA ESQUERDA INTEIRA ---
     container.querySelectorAll('.catalog-card-header .left').forEach(divLeft => {
-        divLeft.addEventListener('click', (ev) => {
-            ev.stopPropagation();
-            const card = divLeft.closest('.catalog-card-ability');
-            const body = card.querySelector('.catalog-card-ability-body');
-            const toggle = card.querySelector('.catalog-ability-toggle');
-            
-            const isHidden = body.style.display === 'none';
-            body.style.display = isHidden ? 'block' : 'none';
-            toggle.textContent = isHidden ? '▾' : '▸';
-        });
+      divLeft.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        const card = divLeft.closest('.catalog-card-ability');
+        const body = card.querySelector('.catalog-card-ability-body');
+        const toggle = card.querySelector('.catalog-ability-toggle');
+
+        const isHidden = body.style.display === 'none';
+        body.style.display = isHidden ? 'block' : 'none';
+        toggle.textContent = isHidden ? '▾' : '▸';
+      });
     });
 
     // Listener Botão Adicionar (+)
     container.querySelectorAll('.catalog-add-ability-btn').forEach(btn => {
-        btn.onclick = (e) => {
-            e.stopPropagation();
-            const id = btn.dataset.id;
-            const c = abilityCatalog.find(x => x.id === id);
-            if (!c) return;
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.id;
+        const c = abilityCatalog.find(x => x.id === id);
+        if (!c) return;
 
-            const novo = { 
-                id: uid(), 
-                title: c.name, 
-                description: c.description || '', 
-                expanded: true, 
-                class: c.class || '', 
-                subclass: c.subclass || '',
-                active: false
-            };
-            
-            state.abilities.unshift(novo);
-            renderAbilities();
-            saveStateToServer();
-            
-            btn.textContent = '✓';
-            setTimeout(() => btn.textContent = '+', 1000);
+        const novo = {
+          id: uid(),
+          title: c.name,
+          description: c.description || '',
+          expanded: true,
+          class: c.class || '',
+          subclass: c.subclass || '',
+          active: false
         };
+
+        state.abilities.unshift(novo);
+        renderAbilities();
+        saveStateToServer();
+
+        btn.textContent = '✓';
+        setTimeout(() => btn.textContent = '+', 1000);
+      };
     });
   }
 
@@ -2464,48 +2488,48 @@ function escapeHtml(str) {
 
 /* ---------------- POPUP DE SELEÇÃO DE CLASSE ---------------- */
 function abrirPopupSelecaoClasse(classes, callback) {
-    const overlay = document.createElement('div');
-    overlay.style = `
+  const overlay = document.createElement('div');
+  overlay.style = `
         position: fixed; inset: 0; background: rgba(0,0,0,0.85); 
         display: flex; align-items: center; justify-content: center; 
         z-index: 20000; font-family: sans-serif;
     `;
 
-    const content = document.createElement('div');
-    content.style = `
+  const content = document.createElement('div');
+  content.style = `
         background: #1a1a1a; padding: 25px; border-radius: 8px; 
         border: 2px solid #9c27b0; text-align: center; width: 300px;
         box-shadow: 0 0 20px rgba(156,39,176,0.4);
     `;
 
-    content.innerHTML = `
+  content.innerHTML = `
         <h4 style="color: #fff; margin-bottom: 15px;">Escolha a Classe</h4>
         <p style="color: #bbb; font-size: 13px; margin-bottom: 20px;">Esta magia pertence a múltiplas classes. Qual você deseja usar?</p>
         <div id="class-buttons-container" style="display: flex; flex-direction: column; gap: 10px;"></div>
     `;
 
-    overlay.appendChild(content);
-    document.body.appendChild(overlay);
+  overlay.appendChild(content);
+  document.body.appendChild(overlay);
 
-    const container = content.querySelector('#class-buttons-container');
+  const container = content.querySelector('#class-buttons-container');
 
-    classes.forEach(cls => {
-        const btn = document.createElement('button');
-        btn.textContent = cls;
-        btn.style = `
+  classes.forEach(cls => {
+    const btn = document.createElement('button');
+    btn.textContent = cls;
+    btn.style = `
             background: #222; color: #fff; border: 1px solid #444; 
             padding: 10px; border-radius: 4px; cursor: pointer; 
             font-weight: bold; transition: 0.2s;
         `;
-        btn.onmouseover = () => btn.style.borderColor = '#9c27b0';
-        btn.onmouseout = () => btn.style.borderColor = '#444';
-        
-        btn.onclick = () => {
-            callback(cls);
-            overlay.remove();
-        };
-        container.appendChild(btn);
-    });
+    btn.onmouseover = () => btn.style.borderColor = '#9c27b0';
+    btn.onmouseout = () => btn.style.borderColor = '#444';
+
+    btn.onclick = () => {
+      callback(cls);
+      overlay.remove();
+    };
+    container.appendChild(btn);
+  });
 }
 /* =============================================================
    OBSERVADORES: Atualiza a DT assim que a Esquerda muda
@@ -2551,3 +2575,16 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("focus", atualizarDTVisual);
   window.addEventListener('sheet-updated', atualizarDTVisual);
 });
+
+// Função auxiliar para aplicar o comportamento do Enter
+function aplicarEnterNosInputs(container) {
+  const inputs = container.querySelectorAll('input, select');
+  inputs.forEach(el => {
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        el.blur(); // Tira o foco, disparando eventos de salvar/fechar teclado
+      }
+    });
+  });
+}

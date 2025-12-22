@@ -16,8 +16,6 @@
     <nav class="navbar">
       <div class="nav-links">
         <a href="#" class="active">Personagens</a>
-        <a href="#">Campanhas</a>
-        <a href="#">Ameaças</a>
       </div>
       <img src="img/perfil.png" alt="perfil" class="perfil-img" />
     </nav>
@@ -29,31 +27,31 @@
       <img src="img/personagem.png" alt="Foto do personagem" class="foto-personagem" />
     </div>
     <div class="info-direita">
-      <div class="linha-info">
-        <div class="campo">
-          <label>PERSONAGEM</label>
-          <input type="text" placeholder="" />
-        </div>
-        <div class="campo">
-          <label>JOGADOR</label>
-          <input type="text" placeholder="" />
-        </div>
-      </div>
-      <div class="linha-info">
-        <div class="campo">
-          <label>ANTECEDENTE</label>
-          <input type="text" placeholder="" />
-        </div>
-        <div class="campo">
-          <label>CLASSE'S</label>
-          <input type="text" placeholder="" />
-        </div>
-        <div class="campo">
-          <label>RAÇA</label>
-          <input type="text" placeholder="" />
-        </div>
-      </div>
+  <div class="linha-info">
+    <div class="campo">
+      <label>PERSONAGEM</label>
+      <input type="text" id="input-personagem" placeholder="" />
     </div>
+    <div class="campo">
+      <label>JOGADOR</label>
+      <input type="text" id="input-jogador" placeholder="" />
+    </div>
+  </div>
+  <div class="linha-info">
+    <div class="campo">
+      <label>ANTECEDENTE</label>
+      <input type="text" id="input-antecedente" placeholder="" />
+    </div>
+    <div class="campo">
+      <label>CLASSE'S</label>
+      <input type="text" id="input-classesHeader" placeholder="" />
+    </div>
+    <div class="campo">
+      <label>RAÇA</label>
+      <input type="text" id="input-raca" placeholder="" />
+    </div>
+  </div>
+</div>
   </section>
 
   <!-- CONTEÚDO PRINCIPAL -->
@@ -155,9 +153,9 @@
               <input type="number" id="metros" min="0" value="0" />
             </div>
             <div class="quadrados-box">
-              <label>Quadrados (q)</label>
-              <input type="number" id="quadrados" readonly />
-            </div>
+  <label>Quadrados (q)</label>
+  <input type="number" id="quadrados" min="0" step="1" />
+</div>
           </div>
 
           <div class="vida-container">
@@ -227,6 +225,11 @@
           <div class="iniciativa-label">INICIATIVA</div>
           <div class="iniciativa-valor" id="iniciativaValor">0</div>
         </div>
+
+        <div class="bonus-iniciativa-block">
+          <span class="bonus-label">BÔNUS</span>
+          <input type="number" id="iniciativaBonus" class="bonus-valor" value="0" />
+        </div>
       </div>
 
       <!-- FÓRMULA (coluna central) -->
@@ -251,7 +254,7 @@
 
           <!-- segundo zero + label -->
           <div class="zero-pair">
-            <span class="zero-num">0</span>
+            <span class="zero-num" id="ac-outros" contenteditable="true">0</span>
             <span class="zero-label">Outros.</span>
           </div>
         </div>
@@ -266,27 +269,23 @@
 
     <!-- detalhes abaixo -->
     <div class="armadura-details">
-      <div class="linha-detail">
-        <div class="label-detail">PROTEÇÃO</div>
-        <input type="text" class="input-detail" placeholder="" />
-      </div>
-      <div class="linha-detail">
-        <div class="label-detail">RESISTÊNCIAS</div>
-        <input type="text" class="input-detail" placeholder="" />
-      </div>
-      <div class="linha-detail">
-        <div class="label-detail">IMUNIDADE</div>
-        <input type="text" class="input-detail" placeholder="" />
-      </div>
-      <div class="linha-detail">
-        <div class="label-detail">FRAQUEZA</div>
-        <input type="text" class="input-detail" placeholder="" />
-      </div>
-      <div class="linha-detail profs">
-        <div class="label-detail">PROFICIÊNCIAS</div>
-        <input type="text" class="input-detail" placeholder="Armas simples e proteções leves" />
-      </div>
-    </div>
+  <div class="linha-detail">
+    <div class="label-detail">RESISTÊNCIAS</div>
+    <input type="text" id="input-resistencias" class="input-detail" />
+  </div>
+  <div class="linha-detail">
+    <div class="label-detail">IMUNIDADE</div>
+    <input type="text" id="input-imunidades" class="input-detail" />
+  </div>
+  <div class="linha-detail">
+    <div class="label-detail">FRAQUEZA</div>
+    <input type="text" id="input-fraquezas" class="input-detail" />
+  </div>
+  <div class="linha-detail profs">
+    <div class="label-detail">PROFICIÊNCIAS</div>
+    <input type="text" id="input-proficiencias" class="input-detail" />
+  </div>
+</div>
   </div>
 </div>
 <!-- FIM: BLOCO ARMADURA -->

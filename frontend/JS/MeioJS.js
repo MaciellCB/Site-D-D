@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Inicializa a Sanidade assim que o DOM carregar
     renderizarEstruturaSanidade();
 
-    // Escuta o evento de que a ficha foi carregada ou atualizada
     window.addEventListener('sheet-updated', () => {
         renderizarPericias();
         atualizarSanidadeInterface();
@@ -34,14 +33,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function obterProficiencia() {
         const profEl = document.getElementById('proficienciaValor');
-        return profEl ? parseInt(profEl.textContent || "0", 10) : 0;
+        return profEl ? parseInt(profEl.textContent.replace('+', '') || "0", 10) : 0;
     }
 
-   function renderizarPericias() {
+    function renderizarPericias() {
         if (!listaPericias || !state.pericias) return;
         listaPericias.innerHTML = "";
 
-        // Header da Tabela
         const headerLi = document.createElement("li");
         headerLi.className = "pericia-item header-row";
         headerLi.innerHTML = `
@@ -54,7 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
         listaPericias.appendChild(headerLi);
 
-        // Lista de atributos para o select
         const atributosOpcoes = ["FOR", "DEX", "CON", "INT", "SAB", "CAR"];
 
         Object.entries(state.pericias).forEach(([nome, dados]) => {
@@ -69,9 +66,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="col-nome" title="${nome}">${nome}</div>
                 <div class="col-dados">
                     <select class="atributo-select">
-                        ${atributosOpcoes.map(attr => 
-                            `<option value="${attr}" ${dados.atributo === attr ? 'selected' : ''}>${attr}</option>`
-                        ).join('')}
+                        ${atributosOpcoes.map(attr =>
+                `<option value="${attr}" ${dados.atributo === attr ? 'selected' : ''}>${attr}</option>`
+            ).join('')}
                     </select>
                 </div>
                 <div class="col-bonus"><span class="bonus-span">(${bônusTotal >= 0 ? '+' : ''}${bônusTotal})</span></div>
@@ -83,7 +80,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
             `;
 
-            // EVENTO: Alterar Atributo (Select)
             const selectAttr = li.querySelector('.atributo-select');
             selectAttr.addEventListener('change', (e) => {
                 state.pericias[nome].atributo = e.target.value;
@@ -91,7 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 saveStateToServer();
             });
 
-            // EVENTO: Treino (Checkbox)
             const check = li.querySelector('.treino');
             check.addEventListener('change', (e) => {
                 state.pericias[nome].treinado = e.target.checked;
@@ -99,12 +94,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 saveStateToServer();
             });
 
-            // EVENTO: Outros (Input)
             const inputOutros = li.querySelector('.outros');
             inputOutros.addEventListener('input', (e) => {
                 state.pericias[nome].outros = parseInt(e.target.value) || 0;
                 atualizarBonusVisual(li, nome);
                 saveStateToServer();
+            });
+
+            // ADICIONADO: ENTER PARA SAIR DA EDIÇÃO EM PERÍCIAS
+            inputOutros.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    inputOutros.blur();
+                }
             });
 
             listaPericias.appendChild(li);
@@ -149,10 +151,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const btnClose = wrap.querySelector('#btn-close-sanidade');
         const panel = wrap.querySelector('#sanidade-panel');
 
-        btnOpen.onclick = () => { btnOpen.style.display='none'; panel.style.display='flex'; };
-        btnClose.onclick = () => { panel.style.display='none'; btnOpen.style.display='block'; };
+        btnOpen.onclick = () => { btnOpen.style.display = 'none'; panel.style.display = 'flex'; };
+        btnClose.onclick = () => { panel.style.display = 'none'; btnOpen.style.display = 'block'; };
 
-        // Listeners para salvamento automático
         wrap.querySelectorAll('input').forEach(input => {
             input.addEventListener('change', () => {
                 state.sanidade = {
@@ -161,6 +162,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 };
                 saveStateToServer();
             });
+
+            // ADICIONADO: ENTER PARA SAIR DA EDIÇÃO EM SANIDADE
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    input.blur();
+                }
+            });
         });
     }
 
@@ -168,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const s = state.sanidade || { estresse: 0, vazio: 0 };
         const inEstresse = document.getElementById('input-estresse');
         const inVazio = document.getElementById('input-vazio');
-        if(inEstresse) inEstresse.value = s.estresse;
-        if(inVazio) inVazio.value = s.vazio;
+        if (inEstresse) inEstresse.value = s.estresse;
+        if (inVazio) inVazio.value = s.vazio;
     }
 });

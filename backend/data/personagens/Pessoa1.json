@@ -1,14 +1,72 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Magias",
+  "activeTab": "Inventário",
   "spellDCConfig": {
     "selectedAttr": "int",
     "extraMod": 0,
     "lastKnownLevel": 0
   },
-  "dtMagias": 8,
-  "inventory": [],
+  "dtMagias": 10,
+  "inventory": [
+    {
+      "id": 1766288967683,
+      "name": "Nova Armadura",
+      "description": "",
+      "expanded": true,
+      "equip": false,
+      "type": "Proteção",
+      "isEquipable": true,
+      "proficiency": "",
+      "tipoItem": "Escudo",
+      "minStrength": "0",
+      "attunement": "Não",
+      "minReqAttrs": [
+        "Força"
+      ],
+      "disadvantageSkill": [],
+      "advantageSkill": [],
+      "defense": "25"
+    },
+    {
+      "id": 1766288935210,
+      "name": "Nova Armadura",
+      "description": "",
+      "expanded": true,
+      "equip": true,
+      "type": "Proteção",
+      "isEquipable": true,
+      "proficiency": "Media",
+      "tipoItem": "Armadura",
+      "minStrength": "0",
+      "attunement": "Não",
+      "minReqAttrs": [
+        "Força"
+      ],
+      "disadvantageSkill": [],
+      "advantageSkill": [],
+      "defense": "10"
+    },
+    {
+      "id": 1766288866328,
+      "name": "Nova Armadura",
+      "description": "",
+      "expanded": false,
+      "equip": false,
+      "type": "Proteção",
+      "isEquipable": true,
+      "proficiency": "Pesada",
+      "tipoItem": "Armadura",
+      "minStrength": "0",
+      "attunement": "Não",
+      "minReqAttrs": [
+        "Força"
+      ],
+      "disadvantageSkill": [],
+      "advantageSkill": [],
+      "defense": "12"
+    }
+  ],
   "abilities": [],
   "description": {
     "anotacoes": "",
@@ -20,7 +78,29 @@
     "fraquezas": "",
     "historia": ""
   },
-  "spells": [],
+  "spells": [
+    {
+      "id": 1766274664678,
+      "name": "Cura Ferimentos",
+      "levelNumber": 1,
+      "school": "Abjuração",
+      "spellClass": "Clérigo",
+      "damage": "1d8 + Mod",
+      "components": {
+        "V": true,
+        "S": true,
+        "M": false
+      },
+      "attrs": {
+        "execucao": "1 ação",
+        "alcance": "Toque",
+        "duracao": "Instantânea"
+      },
+      "description": "Uma criatura que você toca recupera pontos de vida.",
+      "expanded": true,
+      "active": false
+    }
+  ],
   "abilityCatalog": [],
   "spellCatalog": [],
   "pericias": {
@@ -47,17 +127,17 @@
     "Arcanismo": {
       "atributo": "INT",
       "treinado": false,
-      "outros": 244444444
+      "outros": 0
     },
     "História": {
       "atributo": "INT",
       "treinado": false,
-      "outros": 0
+      "outros": 5
     },
     "Investigação": {
       "atributo": "INT",
       "treinado": false,
-      "outros": 0
+      "outros": 3
     },
     "Natureza": {
       "atributo": "INT",
@@ -76,8 +156,8 @@
     },
     "Lidar com animais": {
       "atributo": "SAB",
-      "treinado": false,
-      "outros": 0
+      "treinado": true,
+      "outros": 3
     },
     "Medicina": {
       "atributo": "SAB",
@@ -137,7 +217,7 @@
     "Salvaguarda (Sabedoria)": {
       "atributo": "SAB",
       "treinado": false,
-      "outros": 0
+      "outros": 343
     },
     "Salvaguarda (Carisma)": {
       "atributo": "CAR",
@@ -150,22 +230,31 @@
     "vazio": 0
   },
   "atributos": {
-    "n1": 10,
-    "n2": 10,
+    "n1": 1,
+    "n2": 20,
     "n3": 10,
     "n4": 10,
     "n5": 10,
     "n6": 10
   },
   "niveisClasses": {
+    "artifice": 0,
     "barbaro": 0,
-    "artifice": 0
+    "bardo": 0,
+    "blood hunter": 0
   },
   "xp": "0",
   "inspiracao": 0,
   "vidaDadosSalvos": {},
-  "marco": 0,
+  "marco": 1,
   "vidaAtual": 0,
-  "vidaTempAtual": 21,
-  "danoNecroAtual": 86
+  "vidaTempAtual": 51,
+  "danoNecroAtual": 30,
+  "metros": 123,
+  "iniciativaBonus": 34,
+  "acOutros": 0,
+  "resistencias": "123wvg",
+  "imunidades": "345rt",
+  "fraquezas": "8ju4",
+  "proficiencias": "wer46"
 }
