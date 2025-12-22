@@ -1,58 +1,28 @@
 [
-  {
-    "id": "a1",
-    "name": "Misturar Elixir",
-    "category": "Alquimista",
-    "class": "Artífice",
-    "subclass": "Alquimista",
-    "description": "Cria elixires de suporte e cura."
-  },
-  {
-    "id": "a2",
-    "name": "Armadura Compacta",
-    "category": "Armeiro",
-    "class": "Artífice",
-    "subclass": "Armeiro",
-    "description": "Fortalece armadura e concede habilidades defensivas."
-  },
-  {
-    "id": "a3",
-    "name": "Grito Frenético",
-    "category": "Bárbaro",
-    "class": "Bárbaro",
-    "subclass": "Caminho do Berserker",
-    "description": "Aumenta dano por alguns turnos."
-  },
-  {
-    "id": "a4",
-    "name": "Palavra Encantada",
-    "category": "Bardo",
-    "class": "Bardo",
-    "subclass": "Colégio do Conhecimento",
-    "description": "Concede bônus em testes de conhecimento."
-  },
-  {
-    "id": "a5",
-    "name": "Marca do Caçador",
-    "category": "Patrulheiro",
-    "class": "Patrulheiro",
-    "subclass": "Caçador",
-    "description": "Marca inimigo para dano adicional."
-  },
-  {
-    "id": "t1",
-    "name": "Mente Afiada",
-    "category": "Talentos",
-    "class": "Talentos",
-    "subclass": "",
-    "description": "Você recebe +1 em inteligência em testes específicos."
-  },
-  {
-    "id": "b1",
-    "name": "Antecedente: Nobre",
-    "category": "Antecedentes",
-    "class": "Antecedentes",
-    "subclass": "",
-    "description": "Vínculos e recursos sociais."
-  }
+  { "id": "art_base_1_funilaria", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(1º nível) Funilaria Mágica", "description": "Toque um objeto Pequeno não mágico e dê a ele uma propriedade: luz (1,5m), som gravado (6s), som/odor contínuo ou efeito visual estático. Máximo de objetos = Mod. INT." },
+  { "id": "art_base_1_conjura", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(1º nível) Conjuração", "description": "Usa ferramentas como foco de conjuração. Atributo: Inteligência. CD = 8+Prof+Int. Ataque = Prof+Int." },
+  { "id": "art_base_2_infundir", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(2º nível) Infundir Item", "description": "Transforma itens comuns em mágicos. No 2º nível você conhece 4 infusões e pode manter 2 itens infundidos." },
+  { "id": "art_base_3_ferramenta", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(3º nível) A Ferramenta Certa", "description": "Cria magicamente um conjunto de ferramentas de artesão em 1 hora. Desaparecem ao usar a habilidade de novo." },
+  { "id": "art_base_6_especialista", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(6º nível) Especialista em Ferramenta", "description": "O bônus de proficiência é dobrado para qualquer teste com ferramentas que você seja proficiente." },
+  { "id": "art_base_7_genialidade", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(7º nível) Lampejo de Genialidade", "description": "Reação: adiciona Mod. INT ao teste ou salvaguarda de uma criatura a até 9m. Usos = Mod. INT por Descanso Longo." },
+  { "id": "art_base_10_adepto", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(10º nível) Adepto de Item Mágico", "description": "Sintoniza até 4 itens. Cria itens comuns/incomuns em 1/4 do tempo e 1/2 do custo." },
+  { "id": "art_base_11_armazenar", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(11º nível) Item Armazenador de Magia", "description": "Armazena magia de 1º ou 2º nível em um item. Usos = 2x Mod. INT. Ativa com 1 Ação." },
+  { "id": "art_base_14_erudito", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(14º nível) Erudito do Item Mágico", "description": "Sintoniza até 5 itens. Ignora requisitos de classe, raça, magia e nível para usar itens mágicos." },
+  { "id": "art_base_20_alma", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(20º nível) Alma de Artífice", "description": "+1 em salvaguardas por item sintonizado. Se cair a 0 HP, pode usar Reação para encerrar infusão e cair a 1 HP." },
+
+  { "id": "art_alq_3_prof", "category": "Classe", "class": "Artífice", "subclass": "Alquimista", "name": "(alquimista, 3º nível) Proficiência com Ferramentas", "description": "Ganha proficiência com suprimentos de alquimista." },
+  { "id": "art_alq_3_elixir", "category": "Classe", "class": "Artífice", "subclass": "Alquimista", "name": "(alquimista, 3º nível) Elixir Experimental", "description": "Cria 1 elixir aleatório em descanso longo. Pode gastar espaço de magia para criar um com efeito escolhido (Cura, Agilidade, Resiliência, Audácia, Voo, Transformação)." },
+  { "id": "art_alq_5_sabio", "category": "Classe", "class": "Artífice", "subclass": "Alquimista", "name": "(alquimista, 5º nível) Sábio Alquímico", "description": "Adiciona Mod. INT a rolagens de dano (ácido, fogo, necrótico, veneno) ou cura ao usar suprimentos de alquimista." },
+
+  { "id": "art_arm_3_prof", "category": "Classe", "class": "Artífice", "subclass": "Armeiro", "name": "(armeiro, 3º nível) Ferramentas do Ofício", "description": "Ganha proficiência com armaduras pesadas e ferramentas de ferreiro." },
+  { "id": "art_arm_3_arcana", "category": "Classe", "class": "Artífice", "subclass": "Armeiro", "name": "(armeiro, 3º nível) Armadura Arcana", "description": "Armadura vira foco, ignora FOR, cobre membros ausentes e não pode ser removida contra vontade." },
+  { "id": "art_arm_3_modelo", "category": "Classe", "class": "Artífice", "subclass": "Armeiro", "name": "(armeiro, 3º nível) Modelo de Armadura", "description": "Escolha Guardião (Manoplas de Trovão + Campo Defensivo) ou Infiltrador (Lançador de Raios + Passos Potencializados)." },
+  { "id": "art_arm_9_mod", "category": "Classe", "class": "Artífice", "subclass": "Armeiro", "name": "(armeiro, 9º nível) Modificações de Armadura", "description": "Peito, botas, elmo e arma da armadura contam como itens separados para infusões. +2 itens infundidos permitidos." },
+
+  { "id": "art_art_3_canhao", "category": "Classe", "class": "Artífice", "subclass": "Artilheiro", "name": "(artilheiro, 3º nível) Canhão Arcano", "description": "Cria canhão Pequeno ou Minúsculo. Tipos: Balista Energética (2d8), Lança-Chamas (2d8 cone) ou Protetor (1d8+Int temp HP)." },
+  { "id": "art_art_5_fogo", "category": "Classe", "class": "Artífice", "subclass": "Artilheiro", "name": "(artilheiro, 5º nível) Arma Arcana", "description": "Cria símbolos em varinhas/cajados. Magias lançadas por ela ganham +1d8 de bônus no dano." },
+
+  { "id": "art_fer_3_batalha", "category": "Classe", "class": "Artífice", "subclass": "Ferreiro de Batalha", "name": "(ferreiro de batalha, 3º nível) Preparado para a Batalha", "description": "Proficiência com armas marciais. Usa Inteligência para ataques e dano com armas mágicas." },
+  { "id": "art_fer_3_defensor", "category": "Classe", "class": "Artífice", "subclass": "Ferreiro de Batalha", "name": "(ferreiro de batalha, 3º nível) Defensor de Aço", "description": "Cria um companheiro construto. Age após seu turno. Pode usar Desviar Ataque para proteger aliados." },
+  { "id": "art_fer_9_abalo", "category": "Classe", "class": "Artífice", "subclass": "Ferreiro de Batalha", "name": "(ferreiro de batalha, 9º nível) Abalo Arcano", "description": "Ao acertar ataque com arma mágica: +2d6 de dano energético ou cura 2d6 a um aliado a até 9m." }
 ]

@@ -2137,29 +2137,35 @@ function openAbilityCatalogOverlay() {
     `<button class="ability-class-btn ${c === activeClass ? 'active' : ''}" data-class="${c}">${c}</button>`
   ).join('');
 
+  // Dentro da função openAbilityCatalogOverlay, mude a parte do innerHTML para:
+
   overlay.innerHTML = `
-      <div class="catalog-large" role="dialog" aria-modal="true" style="width:980px; max-width:calc(100% - 40px);">
-        <div class="catalog-large-header" style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
-          <h3>Adicionar Habilidades</h3>
-          <div style="display:flex;gap:8px;align-items:center;">
-            <button id="catalog-new-hab" class="btn-add" style="background:#222;border:1px solid rgba(255,255,255,0.04);">Nova Habilidade</button>
-            <div class="catalog-large-close" title="Fechar">✖</div>
+      <div class="catalog-large" role="dialog" aria-modal="true">
+        
+        <div class="catalog-fixed-header" style="flex-shrink: 0;">
+          <div class="catalog-large-header">
+            <h3>Adicionar Habilidades</h3>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <button id="catalog-new-hab" class="btn-add" style="background:#222;border:1px solid rgba(255,255,255,0.04);">Nova Habilidade</button>
+              <div class="catalog-large-close" title="Fechar" style="cursor:pointer;">✖</div>
+            </div>
+          </div>
+
+          <div class="catalog-large-classes">
+            ${classesHtml}
+          </div>
+
+          <div id="catalog-class-habilities-row" style="display:flex; margin-top:6px;"></div>
+          <div id="catalog-subclasses-row" style="display:none; margin-top:8px; padding-bottom:6px;"></div>
+
+          <div class="catalog-large-search" style="margin-top:6px;">
+            <input id="catalogAbilitySearch" placeholder="Buscar habilidades..." />
           </div>
         </div>
 
-        <div class="catalog-large-classes">
-          ${classesHtml}
-        </div>
+        <div class="catalog-large-list abilities-list-large">
+           </div>
 
-        <div id="catalog-class-habilities-row" style="display:flex;margin-top:6px;"></div>
-        <div id="catalog-subclasses-row" style="display:none;margin-top:8px;padding-bottom:6px;"></div>
-
-        <div class="catalog-large-search" style="margin-top:6px;">
-          <input id="catalogAbilitySearch" placeholder="Buscar habilidades..." />
-        </div>
-
-        <div class="catalog-large-list abilities-list-large" style="margin-top:10px; overflow:auto; max-height:56vh;">
-          </div>
       </div>
     `;
 

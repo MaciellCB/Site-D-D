@@ -1,7 +1,7 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Inventário",
+  "activeTab": "Habilidades",
   "spellDCConfig": {
     "selectedAttr": "int",
     "extraMod": 0,
@@ -250,7 +250,7 @@
   "vidaAtual": 0,
   "vidaTempAtual": 51,
   "danoNecroAtual": 30,
-  "metros": 123,
+  "metros": 34.5,
   "iniciativaBonus": 34,
   "acOutros": 0,
   "resistencias": "123wvg",

@@ -1369,3 +1369,45 @@ body.no-scroll {
     background: #9c27b0;
     border-radius: 10px;
 }
+/* O Box principal do catálogo - Aumentado para 90% da tela */
+.catalog-large {
+    width: 920px;
+    max-width: calc(100% - 40px);
+    height: 90vh;            /* Deixado maior para baixo */
+    display: flex;
+    flex-direction: column;  
+    background: #121212;
+    border-radius: 10px;
+    padding: 18px;
+    overflow: hidden;        /* Trava o modal para não crescer além dos 90vh */
+}
+
+/* O container da lista - Ocupa todo o espaço que sobra */
+.catalog-large-list {
+    flex: 1;                 /* Puxa todo o espaço disponível */
+    overflow-y: auto !important; /* Ativa o scroll vertical */
+    margin-top: 15px;
+    padding-right: 8px;
+    min-height: 0;           /* Necessário para o flexbox entender o scroll */
+}
+
+/* OS CARDS - Proíbe que eles diminuam de tamanho */
+.catalog-card-ability, 
+.catalog-card-item {
+    flex-shrink: 0;          /* ISSO impede que os itens fiquem espremidos/finos */
+    margin-bottom: 12px;
+    display: block;          /* Garante que ocupem o espaço total */
+}
+
+/* Scrollbar Roxa */
+.catalog-large-list::-webkit-scrollbar {
+    width: 8px;
+}
+.catalog-large-list::-webkit-scrollbar-track {
+    background: #0a0a0a;
+    border-radius: 10px;
+}
+.catalog-large-list::-webkit-scrollbar-thumb {
+    background: #9c27b0;
+    border-radius: 10px;
+}
