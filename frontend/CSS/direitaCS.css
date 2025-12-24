@@ -1411,3 +1411,47 @@ body.no-scroll {
     background: #9c27b0;
     border-radius: 10px;
 }
+
+/* Estilização para o container de subclasses quando em modo scroll */
+#catalog-subclasses-row {
+    scrollbar-width: thin;
+    scrollbar-color: #9c27b0 transparent;
+    transition: all 0.3s ease;
+}
+
+#catalog-subclasses-row::-webkit-scrollbar {
+    height: 6px;
+}
+
+#catalog-subclasses-row::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+#catalog-subclasses-row::-webkit-scrollbar-thumb {
+    background: #9c27b0;
+    border-radius: 10px;
+}
+
+/* Botão de alternância */
+.toggle-expansion-btn {
+    background: #1a1a1a;
+    border: 1px solid #9c27b0;
+    color: #9c27b0;
+    border-radius: 6px;
+    padding: 0 10px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    transition: 0.2s;
+    font-size: 18px;
+}
+
+.toggle-expansion-btn:hover {
+    background: #9c27b0;
+    color: #fff;
+}

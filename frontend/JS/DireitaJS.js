@@ -168,12 +168,12 @@ let state = {
 };
 
 const CLASSES_WITH_SUBCLASSES = {
-  'Artífice': ['Alquimista', 'Armeiro', 'Artilheiro', 'Ferreiro de Batalha'],
-  'Bárbaro': ['Caminho do Berserker', 'Caminho do Guerreiro Totêmico', 'Caminho do Guardião Ancestral', 'Caminho do Arauto da Tempestade', 'Caminho do Fanático', 'Caminho da Besta', 'Caminho da Magia Selvagem'],
-  'Bardo': ['Colégio do Conhecimento', 'Colégio da Bravura', 'Colégio do Glamour', 'Colégio das Espadas', 'Colégio dos Sussurros', 'Colégio da Criação', 'Colégio da Eloquência', 'Colégio dos Espíritos'],
-  'Bruxo': ['Arquifada', 'O Corruptor', 'O Grande Antigo', 'O Celestial', 'Hexblade', 'O Insondável', 'O Gênio', 'O Morto-Vivo'],
-  'Blood Hunter': ['Ordem do Caça-Fantasmas', 'Ordem do Licantropo', 'Ordem do Mutante', 'Ordem da Alma Profana'],
-  'Clérigo': ['Domínio do Conhecimento', 'Domínio da Vida', 'Domínio da Luz', 'Domínio da Natureza', 'Domínio da Tempestade', 'Domínio da Enganação', 'Domínio da Guerra', 'Domínio da Forja', 'Domínio da Sepultura', 'Domínio da Ordem', 'Domínio da Paz', 'Domínio do Crepúsculo', 'Domínio Arcano', 'Domínio da Morte'],
+  'Artífice': ['Alquimista', 'Armeiro', 'Artilheiro', 'Ferreiro de Batalha','Arquivista', 'Infusão'],
+  'Bárbaro': ['Caminho do Berserker', 'Caminho do Guerreiro Totêmico', 'Caminho do Guardião Ancestral','Caminho da Alma Selvagem', 'Caminho do Arauto da Tempestade', 'Caminho do Fanático', 'Caminho da Besta', 'Caminho da Magia Selvagem'],
+  'Bardo': ['Colégio do Conhecimento','Colégio da Criação', 'Colégio da Bravura', 'Colégio do Glamour', 'Colégio das Espadas', 'Colégio dos Sussurros', 'Colégio da Criação', 'Colégio da Eloquência', 'Colégio dos Espíritos'],
+  'Bruxo': ['O Arquifada', 'O Corruptor', 'O Grande Antigo', 'O Celestial', 'Hexblade', 'O Insondável', 'O Gênio','A Luz Imortal', 'O Morto-Vivo', 'Shinigami', 'Fantasma do Maquinario','O Buscador' ],
+  'Blood Hunter': ['Ordem do Caça-Fantasmas', 'Ordem do Licantropo', 'Ordem do Mutante', 'Ordem da Alma Profana','Maldições de Sangue'],
+  'Clérigo': ['Domínio do Conhecimento', 'Domínio da Vida', 'Domínio da Luz','Domínio do Zelo', 'Domínio da Natureza','Domínio do Destino','Domínio da Solidariedade', 'Domínio da Tempestade','Domínio da Cidade ','Domínio da Força','Domínio da Unidade','Domínio da Ambição', 'Domínio da Enganação','Domínio de Proteção', 'Domínio da Guerra','Domínio do Crepúsculo', 'Domínio da Forja', 'Domínio da Sepultura', 'Domínio da Ordem', 'Domínio da Paz', 'Domínio do Crepúsculo', 'Domínio Arcano', 'Domínio da Morte'],
   'Druida': ['Círculo da Terra', 'Círculo da Lua', 'Círculo dos Sonhos', 'Círculo do Pastor', 'Círculo dos Esporos', 'Círculo das Estrelas', 'Círculo do Fogo Selvagem'],
   'Feiticeiro': ['Linhagem Dracônica', 'Magia Selvagem', 'Alma Divina', 'Magia das Sombras', 'Feitiçaria da Tempestade', 'Mente Aberrante', 'Alma do Relógio'],
   'Guerreiro': ['Campeão', 'Mestre de Batalha', 'Cavaleiro Arcano', 'Arqueiro Arcano', 'Cavaleiro', 'Samurai', 'Guerreiro Psiônico', 'Cavaleiro Rúnico', 'Cavaleiro do Eco'],
@@ -2121,6 +2121,7 @@ document.addEventListener('click', (e) => {
 
 
 /* ---------------- HABILIDADES CATALOG / NOVA HABILIDADE ---------------- */
+/* ---------------- HABILIDADES CATALOG / NOVA HABILIDADE ---------------- */
 function openAbilityCatalogOverlay() {
   const existing = document.querySelector('.catalog-overlay-large-abilities');
   if (existing) { existing.remove(); return; }
@@ -2128,6 +2129,9 @@ function openAbilityCatalogOverlay() {
   let activeClass = CLASSES_AVAILABLE.includes('Talentos') ? 'Talentos' : CLASSES_AVAILABLE[0];
   let activeClassHabilitySelected = true;
   let activeSubclass = null;
+  
+  // Controle de Expansão (false = Recluso/Scroll, true = Expandido)
+  let isSubclassesExpanded = false;
 
   const overlay = document.createElement('div');
   overlay.className = 'catalog-overlay-large catalog-overlay-large-abilities';
@@ -2136,8 +2140,6 @@ function openAbilityCatalogOverlay() {
   const classesHtml = CLASSES_AVAILABLE.map(c =>
     `<button class="ability-class-btn ${c === activeClass ? 'active' : ''}" data-class="${c}">${c}</button>`
   ).join('');
-
-  // Dentro da função openAbilityCatalogOverlay, mude a parte do innerHTML para:
 
   overlay.innerHTML = `
       <div class="catalog-large" role="dialog" aria-modal="true">
@@ -2155,8 +2157,8 @@ function openAbilityCatalogOverlay() {
             ${classesHtml}
           </div>
 
-          <div id="catalog-class-habilities-row" style="display:flex; margin-top:6px;"></div>
-          <div id="catalog-subclasses-row" style="display:none; margin-top:8px; padding-bottom:6px;"></div>
+          <div id="catalog-class-habilities-row" style="display:flex; align-items:center; margin-top:6px;"></div>
+          <div id="catalog-subclasses-row" style="display:flex; margin-top:8px; padding-bottom:6px;"></div>
 
           <div class="catalog-large-search" style="margin-top:6px;">
             <input id="catalogAbilitySearch" placeholder="Buscar habilidades..." />
@@ -2164,7 +2166,7 @@ function openAbilityCatalogOverlay() {
         </div>
 
         <div class="catalog-large-list abilities-list-large">
-           </div>
+        </div>
 
       </div>
     `;
@@ -2172,16 +2174,13 @@ function openAbilityCatalogOverlay() {
   document.body.appendChild(overlay);
   checkScrollLock();
 
-  // Fechar
   overlay.querySelector('.catalog-large-close').onclick = () => { overlay.remove(); checkScrollLock(); };
 
-  // Botão Criar Manual
   overlay.querySelector('#catalog-new-hab').onclick = () => {
     overlay.remove();
     openNewAbilityModal(null);
   };
 
-  // Troca de Classe
   overlay.querySelectorAll('.ability-class-btn').forEach(btn => {
     btn.onclick = () => {
       overlay.querySelectorAll('.ability-class-btn').forEach(b => b.classList.remove('active'));
@@ -2200,16 +2199,39 @@ function openAbilityCatalogOverlay() {
     const row = overlay.querySelector('#catalog-class-habilities-row');
     if (!activeClass) { row.style.display = 'none'; return; }
 
-    row.style.display = 'flex';
-    row.innerHTML = `<button class="catalog-class-hability-pill ${activeClassHabilitySelected ? 'active' : ''}">Habilidades de ${activeClass}</button>`;
+    const subs = CLASSES_WITH_SUBCLASSES[activeClass] || [];
+    const hasSubclasses = subs.length > 0;
 
-    row.querySelector('button').onclick = function () {
+    row.style.display = 'flex';
+    row.style.alignItems = 'center';
+    
+    // HTML com o botão de habilidades e o botão de toggle caso existam subclasses
+    let html = `<button class="catalog-class-hability-pill ${activeClassHabilitySelected ? 'active' : ''}">Habilidades de ${activeClass}</button>`;
+    
+    if (hasSubclasses) {
+      // Ícone ⊞ para expandir (grid) e ⇄ para recluso (scroll)
+      html += `<button id="toggle-sub-expansion" class="toggle-expansion-btn" title="Alternar visualização">
+                ${isSubclassesExpanded ? '⇄' : '⊞'}
+               </button>`;
+    }
+
+    row.innerHTML = html;
+
+    row.querySelector('.catalog-class-hability-pill').onclick = function () {
       activeClassHabilitySelected = true;
       activeSubclass = null;
-      this.classList.add('active');
+      renderClassHabilitiesRow();
       overlay.querySelectorAll('.ability-sub-btn').forEach(b => b.classList.remove('active'));
       renderCatalogList();
     };
+
+    if (hasSubclasses) {
+      row.querySelector('#toggle-sub-expansion').onclick = () => {
+        isSubclassesExpanded = !isSubclassesExpanded;
+        renderClassHabilitiesRow();
+        renderSubclassesRow();
+      };
+    }
   }
 
   function renderSubclassesRow() {
@@ -2219,7 +2241,17 @@ function openAbilityCatalogOverlay() {
     if (!subs.length) { row.style.display = 'none'; return; }
 
     row.style.display = 'flex';
-    row.innerHTML = subs.map(s => `<button class="ability-sub-btn" data-sub="${s}">${s}</button>`).join('');
+    
+    // Ajuste dinâmico do estilo baseado no botão de toggle
+    if (isSubclassesExpanded) {
+      row.style.flexWrap = 'wrap';
+      row.style.overflowX = 'visible';
+    } else {
+      row.style.flexWrap = 'nowrap';
+      row.style.overflowX = 'auto';
+    }
+
+    row.innerHTML = subs.map(s => `<button class="ability-sub-btn ${s === activeSubclass ? 'active' : ''}" data-sub="${s}">${s}</button>`).join('');
 
     row.querySelectorAll('.ability-sub-btn').forEach(b => {
       b.onclick = () => {
@@ -2237,7 +2269,6 @@ function openAbilityCatalogOverlay() {
     const container = overlay.querySelector('.abilities-list-large');
     const q = overlay.querySelector('#catalogAbilitySearch').value.toLowerCase();
 
-    // Filtros
     let items = abilityCatalog.filter(it => {
       if (activeClass) {
         if (activeClassHabilitySelected) {
@@ -2257,7 +2288,6 @@ function openAbilityCatalogOverlay() {
 
     container.innerHTML = items.map(c => formatCatalogAbilityCard(c)).join('');
 
-    // --- CORREÇÃO AQUI: LISTENER NA ÁREA ESQUERDA INTEIRA ---
     container.querySelectorAll('.catalog-card-header .left').forEach(divLeft => {
       divLeft.addEventListener('click', (ev) => {
         ev.stopPropagation();
@@ -2271,7 +2301,6 @@ function openAbilityCatalogOverlay() {
       });
     });
 
-    // Listener Botão Adicionar (+)
     container.querySelectorAll('.catalog-add-ability-btn').forEach(btn => {
       btn.onclick = (e) => {
         e.stopPropagation();

@@ -7,8 +7,28 @@
     "extraMod": 0,
     "lastKnownLevel": 0
   },
-  "dtMagias": 10,
+  "dtMagias": 14,
   "inventory": [
+    {
+      "id": 1766552249468,
+      "name": "Nova Arma",
+      "description": "",
+      "expanded": true,
+      "equip": true,
+      "type": "Arma",
+      "isEquipable": true,
+      "proficiency": "Arma de Fogo",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Duas Maos",
+      "crit": "20",
+      "multiplicador": "2",
+      "alcance": "1.5m",
+      "attunement": "Não",
+      "damage": "",
+      "caracteristicas": [],
+      "damageTypes": [],
+      "moreDmgList": []
+    },
     {
       "id": 1766288967683,
       "name": "Nova Armadura",
@@ -30,10 +50,10 @@
     },
     {
       "id": 1766288935210,
-      "name": "Nova Armadura",
+      "name": "media",
       "description": "",
       "expanded": true,
-      "equip": true,
+      "equip": false,
       "type": "Proteção",
       "isEquipable": true,
       "proficiency": "Media",
@@ -49,10 +69,10 @@
     },
     {
       "id": 1766288866328,
-      "name": "Nova Armadura",
+      "name": "pesado",
       "description": "",
-      "expanded": false,
-      "equip": false,
+      "expanded": true,
+      "equip": true,
       "type": "Proteção",
       "isEquipable": true,
       "proficiency": "Pesada",
@@ -112,7 +132,7 @@
     "Acrobacia": {
       "atributo": "DEX",
       "treinado": false,
-      "outros": 0
+      "outros": 46
     },
     "Furtividade": {
       "atributo": "DEX",
@@ -230,7 +250,7 @@
     "vazio": 0
   },
   "atributos": {
-    "n1": 1,
+    "n1": 32,
     "n2": 20,
     "n3": 10,
     "n4": 10,
@@ -238,23 +258,42 @@
     "n6": 10
   },
   "niveisClasses": {
-    "artifice": 0,
-    "barbaro": 0,
-    "bardo": 0,
-    "blood hunter": 0
+    "artifice": 3,
+    "barbaro": 4,
+    "bardo": 5,
+    "blood hunter": 6
   },
-  "xp": "0",
-  "inspiracao": 0,
-  "vidaDadosSalvos": {},
-  "marco": 1,
-  "vidaAtual": 0,
-  "vidaTempAtual": 51,
-  "danoNecroAtual": 30,
-  "metros": 34.5,
-  "iniciativaBonus": 34,
+  "xp": "2345667",
+  "inspiracao": 4,
+  "vidaDadosSalvos": {
+    "v1": 8,
+    "v2": 8,
+    "v3": 8,
+    "v4": 7,
+    "v5": 10,
+    "v6": 10,
+    "v7": 9,
+    "v8": 2,
+    "v10": 5,
+    "v9": 1,
+    "v11": 8,
+    "v12": 4,
+    "v13": 8,
+    "v14": 7,
+    "v15": 7,
+    "v16": 4,
+    "v17": 2,
+    "v18": 3
+  },
+  "marco": 2,
+  "vidaAtual": 105,
+  "vidaTempAtual": 71,
+  "danoNecroAtual": 60,
+  "metros": 364.5,
+  "iniciativaBonus": 0,
   "acOutros": 0,
-  "resistencias": "123wvg",
-  "imunidades": "345rt",
-  "fraquezas": "8ju4",
-  "proficiencias": "wer46"
+  "resistencias": "23",
+  "imunidades": "234",
+  "fraquezas": "234",
+  "proficiencias": "q3r"
 }

@@ -1,28 +1,3550 @@
 [
-  { "id": "art_base_1_funilaria", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(1º nível) Funilaria Mágica", "description": "Toque um objeto Pequeno não mágico e dê a ele uma propriedade: luz (1,5m), som gravado (6s), som/odor contínuo ou efeito visual estático. Máximo de objetos = Mod. INT." },
-  { "id": "art_base_1_conjura", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(1º nível) Conjuração", "description": "Usa ferramentas como foco de conjuração. Atributo: Inteligência. CD = 8+Prof+Int. Ataque = Prof+Int." },
-  { "id": "art_base_2_infundir", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(2º nível) Infundir Item", "description": "Transforma itens comuns em mágicos. No 2º nível você conhece 4 infusões e pode manter 2 itens infundidos." },
-  { "id": "art_base_3_ferramenta", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(3º nível) A Ferramenta Certa", "description": "Cria magicamente um conjunto de ferramentas de artesão em 1 hora. Desaparecem ao usar a habilidade de novo." },
-  { "id": "art_base_6_especialista", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(6º nível) Especialista em Ferramenta", "description": "O bônus de proficiência é dobrado para qualquer teste com ferramentas que você seja proficiente." },
-  { "id": "art_base_7_genialidade", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(7º nível) Lampejo de Genialidade", "description": "Reação: adiciona Mod. INT ao teste ou salvaguarda de uma criatura a até 9m. Usos = Mod. INT por Descanso Longo." },
-  { "id": "art_base_10_adepto", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(10º nível) Adepto de Item Mágico", "description": "Sintoniza até 4 itens. Cria itens comuns/incomuns em 1/4 do tempo e 1/2 do custo." },
-  { "id": "art_base_11_armazenar", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(11º nível) Item Armazenador de Magia", "description": "Armazena magia de 1º ou 2º nível em um item. Usos = 2x Mod. INT. Ativa com 1 Ação." },
-  { "id": "art_base_14_erudito", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(14º nível) Erudito do Item Mágico", "description": "Sintoniza até 5 itens. Ignora requisitos de classe, raça, magia e nível para usar itens mágicos." },
-  { "id": "art_base_20_alma", "category": "Classe", "class": "Artífice", "subclass": "", "name": "(20º nível) Alma de Artífice", "description": "+1 em salvaguardas por item sintonizado. Se cair a 0 HP, pode usar Reação para encerrar infusão e cair a 1 HP." },
+{
+"id": "art_base_1_mec_mag",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "",
+"name": "(1º nível) Funilaria Mágica",
+"description": "(Ação) Imbuir: você imbuí um objeto minúsculo não mágico com uma única propriedade à sua escolha por até 1 hora: emitir luz fraca (1,5 m), reproduzir um som gravado (até 6 s), manter um odor contínuo ou exibir um efeito visual estático (descrição de até 25 palavras). Você pode ter um número de objetos ativos igual ao seu modificador de INT. Objetos imbuídos não se tornam mágicos e a magia cessa se o objeto for destruído ou se o tempo expirar."
+},
+{
+"id": "art_base_1_conjura",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "",
+"name": "(1º nível) Conjuração",
+"description": "Foco e lançamento: você conjura magias usando ferramentas de artesão ou ladrão como foco. Atributo de conjuração: INT. Dificuldade (CD) das suas magias = 8 + Proficiência + Mod. INT. Bônus de ataque mágico = Proficiência + Mod. INT. Você pode preparar e lançar magias como rituais quando a magia permitir."
+},
+{
+"id": "art_base_2_infundir",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "",
+"name": "(2º nível) Infundir Item",
+"description": "Infusão: após um Descanso Longo você pode transformar itens mundanos em itens infundidos (mágicos) seguindo fórmulas conhecidas. Conhece 4 infusões iniciais (veja catálogo). Pode manter até 2 itens infundidos simultaneamente; itens infundidos podem servir como foco de conjuração. Trocar infusões requer um Descanso Longo."
+},
+{
+"id": "art_base_3_ferramenta",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "",
+"name": "(3º nível) A Ferramenta Certa para o Trabalho",
+"description": "(1 hora) Fabricação temporária: você conjura um conjunto completo de ferramentas de artesão apropriadas em um espaço desocupado até 1,5 m. As ferramentas são funcionais por 24 horas ou até você usar esta habilidade novamente, caso em que a criação anterior desaparece."
+},
+{
+"id": "art_base_asi",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "",
+"name": "Aumento no Valor de Atributo",
+"description": "Melhoria de atributo: escolha aumentar um valor de atributo em +2 ou dois valores em +1, sem ultrapassar 20 por este recurso. O ganho ocorre nos níveis 4, 8, 12, 16 e 19."
+},
+{
+"id": "art_base_6_especialista",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "",
+"name": "(6º nível) Especialista em Ferramenta",
+"description": "Maestria com ferramentas: quando você faz um teste de habilidade que usa ferramentas com as quais é proficiente, dobre seu bônus de proficiência (aplica-se apenas a testes que empregam efetivamente as ferramentas)."
+},
+{
+"id": "art_base_7_genialidade",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "",
+"name": "(7º nível) Lampejo de Genialidade",
+"description": "(Reação) Adicionar INT: quando você ou uma criatura a até 9 m falhar em um teste de habilidade ou salvaguarda, você pode adicionar seu modificador de INT ao resultado, possivelmente transformando a falha em sucesso. Usos: igual ao seu modificador de INT por Descanso Longo."
+},
+{
+"id": "art_base_10_adepto",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "",
+"name": "(10º nível) Adepto de Itens Mágicos",
+"description": "Sintonização e criação: sua capacidade de sintonizar aumenta para até 4 itens. Você fabrica itens mágicos Comuns e Incomuns mais rapidamente (tempo reduzido a 1/4) e pagando metade do custo em ouro em comparação ao normal."
+},
+{
+"id": "art_base_11_armazenar",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "",
+"name": "(11º nível) Item Armazenador de Magia",
+"description": "(Ação) Imprima uma magia em um objeto: você pode armazenar uma magia de 1º ou 2º nível preparada em um item. Qualquer criatura que use o item pode gastar uma ação para lançar a magia armazenada. Usos por Descanso Longo: duas vezes seu modificador de INT (mínimo 2)."
+},
+{
+"id": "art_base_14_erudito",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "",
+"name": "(14º nível) Erudito de Itens Mágicos",
+"description": "Sintonização ampliada e versatilidade: sua capacidade de sintonizar aumenta para 5 itens simultâneos. Você ignora requisitos de classe, raça, nível e componentes mágicos restritivos para usar ou sintonizar-se com itens mágicos."
+},
+{
+"id": "art_base_18_mestre",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "",
+"name": "(18º nível) Mestre de Itens Mágicos",
+"description": "Mestre em sintonização: a partir do 18º nível você pode se sintonizar com até seis itens mágicos ao mesmo tempo, permitindo grande flexibilidade tática e de suporte."
+},
+{
+"id": "art_base_20_alma",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "",
+"name": "(20º nível) Alma da Artimanha",
+"description": "Vínculo profundo: para cada item ao qual você estiver sintonizado, recebe +1 em todas as salvaguardas (máx. +6). Reação vital: se cair a 0 PV, você pode sacrificar imediatamente uma infusão ativa para permanecer em 1 PV (uso único por vez, exige que haja uma infusão ativa disponível)."
+},
+{
+"id": "art_inf_propulsao",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Infusão",
+"name": "(infusão, 14º nível) Armadura de Propulsão Arcana",
+"description": "Infusão (Armadura, sintonização): confere +1,5 m de deslocamento e gera manoplas mágicas corpo-a-corpo que causam 1d8 de dano de força (alcance de arremesso 6/18 m; retorna à mão). A armadura pode substituir membros perdidos e não pode ser removida contra a vontade do usuário."
+},
+{
+"id": "art_inf_forca",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Infusão",
+"name": "(infusão) Armadura de Força Mágica",
+"description": "Infusão (Armadura, sintonização): o item armazena 6 cargas (recupera 1d6 ao amanhecer). Gasta 1 carga para adicionar seu Mod. INT a testes ou salvaguardas de FOR ou, como Reação, gastar 1 carga para evitar ser derrubado. Quando as cargas chegam a zero, a infusão permanece mas sem efeitos de carga até recarregar."
+},
+{
+"id": "art_inf_ferramenta",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Infusão",
+"name": "(infusão) Armadura de Ferramentas",
+"description": "Infusão (Armadura): como Ação, integre uma ferramenta de artesão ou ladrão à armadura por até 8 horas. Enquanto integrada, você soma seu Mod. INT a testes de habilidade feitos com essa ferramenta. É necessária uma mão livre para operar a ferramenta integrada."
+},
+{
+"id": "art_inf_botas",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Infusão",
+"name": "(infusão, 6º nível) Botas do Caminho Sinistro",
+"description": "Infusão (Botas, sintonização): como Ação Bônus, você pode teleportar-se até 4,5 m para um espaço desocupado que você tenha ocupado durante o turno atual. Uso recrecional repetido dependendo do DM; a infusão dura enquanto estiver sintonizada."
+},
+{
+"id": "art_inf_foco",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Infusão",
+"name": "(infusão) Foco Arcano Aprimorado",
+"description": "Infusão (Vara/Cajado/Varinha, sintonização): concede +1 nas jogadas de ataque com magias e faz com que o portador ignore cobertura parcial ao atacar; o bônus aumenta para +2 quando você atingir o 10º nível de Artífice."
+},
+{
+"id": "art_inf_defesa",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Infusão",
+"name": "(infusão) Defesa Aprimorada",
+"description": "Infusão (Armadura ou Escudo, sintonização): enquanto o item estiver em uso, concede +1 na Classe de Armadura do usuário. Esse bônus aumenta para +2 quando você atingir o 10º nível de Artífice."
+},
+{
+"id": "art_inf_arma_aprim",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Infusão",
+"name": "(infusão) Arma Aprimorada",
+"description": "Infusão (arma simples ou marcial, sintonização): concede +1 nas jogadas de ataque e dano com a arma; o bônus aumenta para +2 no 10º nível do Artífice."
+},
+{
+"id": "art_inf_elmo",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Infusão",
+"name": "(infusão, 10º nível) Elmo da Consciência",
+"description": "Infusão (Elmo, sintonização): concede vantagem em testes de iniciativa para o usuário e impede que ele seja surpreendido no início do combate, salvo se estiver incapacitado."
+},
+{
+"id": "art_inf_homunculo",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Infusão",
+"name": "(infusão) Servo Homúnculo",
+"description": "Infusão (gema, custo 100 po): cria um homúnculo mecânico leal que age logo após seu turno. Pode usar Reação para 'Canalizar Magia' entregando magias de toque conjuradas por você a até 36 m. O homúnculo tem estatísticas e limitações próprias determinadas pelo DM."
+},
+{
+"id": "art_inf_mente",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Infusão",
+"name": "(infusão) Aguçador de Mente",
+"description": "Infusão (Armadura ou Vestes, sintonização): armazena 4 cargas (recupera 1d4 ao amanhecer). Como Reação, quando falhar em uma salvaguarda de CON para manter concentração, você pode gastar 1 carga para ser bem-sucedido automaticamente. Quando as cargas se esgotam, o efeito deixa de estar disponível até recarregar."
+},
+{
+"id": "art_inf_radiante",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Infusão",
+"name": "(infusão, 6º nível) Arma Radiante",
+"description": "Infusão (arma simples ou marcial, sintonização): conceda +1 em ataque e dano. Como Ação Bônus, a arma pode emitir luz brilhante por 9 m; como Reação, quando você for atingido, gaste 1 das 4 cargas para cegar o atacante até o fim do próximo turno (salvaguarda CON reduz/evita)."
+},
+{
+"id": "art_inf_repetido",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Infusão",
+"name": "(infusão) Tiro Repetido",
+"description": "Infusão (arma de munição, sintonização): concede +1 em ataque e dano. Remove a propriedade de recarga da arma e gera automaticamente munição mágica quando a arma estiver vazia; a munição desaparece após causar impacto."
+},
+{
+"id": "art_inf_replicar",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Infusão",
+"name": "(infusão) Replicar Item Mágico",
+"description": "Infusão (item variável): permite criar uma cópia funcional de um item mágico específico listado como replicável (ex.: Bolsa Cabe-Tudo, Óculos de Visão Noturna). A disponibilidade e o nível de itens replicáveis dependem do seu nível de Artífice; consulte a tabela de replicação do DM."
+},
+{
+"id": "art_inf_repulsao",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Infusão",
+"name": "(infusão, 6º nível) Escudo de Repulsão",
+"description": "Infusão (Escudo, sintonização): concede +1 na CA e armazena 4 cargas. Como Reação ao ser atingido por um ataque corpo-a-corpo, o portador pode gastar 1 carga para empurrar o atacante 4,5 m para longe. As cargas recarregam com o amanhecer."
+},
+{
+"id": "art_inf_resistente",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Infusão",
+"name": "(infusão, 6º nível) Armadura Resistente",
+"description": "Infusão (Armadura, sintonização): concede resistência a um tipo de dano escolhido no momento da infusão (ácido, frio, fogo, força, elétrico, necrótico, veneno, psíquico, radiante ou trovão) enquanto estiver sintonizada."
+},
+{
+"id": "art_inf_retorna",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Infusão",
+"name": "(infusão) Arma que Retorna",
+"description": "Infusão (arma de arremesso, sintonização): adiciona +1 em ataque e dano e faz com que a arma retorne magicamente à mão do portador imediatamente após realizar um ataque à distância."
+},
+{
+"id": "art_inf_anel",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Infusão",
+"name": "(infusão, 6º nível) Anel de Reabastecimento de Feitiços",
+"description": "Infusão (Anel, sintonização): como Ação, permite recuperar um espaço de magia gasto de 3º nível ou inferior. Esta habilidade pode ser usada uma vez por dia e recarrega ao amanhecer."
+},
+{
+"id": "art_alq_3_prof",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Alquimista",
+"name": "(alquimista, 3º nível) Proficiência com Ferramentas",
+"description": "Treinamento alquímico: você recebe proficiência com Suprimentos de Alquimista. Se já tiver essa proficiência, escolha outra ferramenta de artesão com a qual ganhar proficiência."
+},
+{
+"id": "art_alq_3_spells",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Alquimista",
+"name": "Feitiços de Alquimista",
+"description": "Lista de magias adicionais preparadas: no nível 3: Palavra de Cura, Raio da Doença; nível 5: Esfera Flamejante, Flecha Ácida de Melf; nível 9: Forma Gasosa, Palavra de Cura em Massa; nível 13: Praga, Guarda da Morte; nível 17: Nuvem Assassina, Ressuscitar Mortos. Essas magias complementam sua temática alquímica e contam como magias de Artífice para você."
+},
+{
+"id": "art_alq_3_elixir",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Alquimista",
+"name": "(alquimista, 3º nível) Elixir Experimental",
+"description": "(Ação) Cria um elixir experimental após um Descanso Longo (ou você pode gastar um espaço de magia para escolher o efeito). O elixir concederá um efeito aleatório como: cura (2d4 + Mod. INT), velocidade adicional (+3 m), +1 CA, bônus de Audácia (+1d4 em ataques/saves), voo limitado (3 m) ou alteração física. Duração e efeitos exatos são decididos pelo DM ou pela tabela de elixires."
+},
+{
+"id": "art_alq_5_sabio",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Alquimista",
+"name": "(alquimista, 5º nível) Sábio Alquímico",
+"description": "Potência alquímica: ao conjurar magias através de suprimentos de alquimista que causem cura ou dano (tipos: ácido, fogo, necrótico ou veneno), você adiciona seu modificador de INT ao total de cura ou dano."
+},
+{
+"id": "art_alq_9_reagente",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Alquimista",
+"name": "(alquimista, 9º nível) Reagentes Restauradores",
+"description": "Elixires fortalecidos: seus elixires agora conferem 2d6 + seu Mod. INT de PV temporários. Além disso, você pode conjurar Restauração Menor sem gastar espaços de magia um número de vezes igual ao seu Mod. INT por Descanso Longo."
+},
+{
+"id": "art_alq_15_mestre",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Alquimista",
+"name": "(alquimista, 15º nível) Mestre da Química",
+"description": "Mestre alquímico: você ganha resistência a dano de ácido e veneno e imunidade à condição Envenenado. Uma vez por Descanso Longo, pode conjurar Restauração Maior ou uma magia de Cura sem gastar espaço de magia ou componentes materiais."
+},
+{
+"id": "art_arm_3_prof",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Armeiro",
+"name": "(armeiro, 3º nível) Ferramentas do Ofício",
+"description": "Treinamento em combate: você ganha proficiência com Armaduras Pesadas e com Ferramentas de Ferreiro, ampliando sua capacidade de resistência e fabricação."
+},
+{
+"id": "art_arm_3_spells",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Armeiro",
+"name": "Feitiços de Armeiro",
+"description": "Feitiços adicionais preparados: nível 3: Míssil Mágico, Onda Trovejante; nível 5: Imagem Espelhada, Estilhaçar; nível 9: Padrão Hipnótico, Raio; nível 13: Escudo de Fogo, Invisibilidade Maior; nível 17: Passagem de Parede, Muralha de Força. Essas magias reforçam o estilo marcial e defensivo do armeiro."
+},
+{
+"id": "art_arm_3_arcana",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Armeiro",
+"name": "(armeiro, 3º nível) Armadura Arcana",
+"description": "(Ação) Armadura mágica: sua armadura ignora requisitos de Força, serve como foco de conjuração, pode substituir membros perdidos e não pode ser removida contra sua vontade. Vesti-la ou retirá-la leva 1 Ação."
+},
+{
+"id": "art_arm_3_modelo",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Armeiro",
+"name": "(armeiro, 3º nível) Modelo de Armadura",
+"description": "Modelos táticos: você escolhe um modelo para sua armadura. Guardião: manoplas que causam 1d8 de dano trovejante e impõem desvantagem ao alvo, além de um campo defensivo que concede PV temporários. Infiltrador: raio elétrico de 1d6 com dano extra e um campo de amortecimento que concede vantagem em testes de Furtividade."
+},
+{
+"id": "art_arm_5_ataque",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Armeiro",
+"name": "(armeiro, 5º nível) Ataque Extra",
+"description": "Combate aprimorado: quando você usa a ação de Atacar, pode realizar dois ataques em vez de um no seu turno."
+},
+{
+"id": "art_arm_9_mod",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Armeiro",
+"name": "(armeiro, 9º nível) Modificações de Armadura",
+"description": "Modularidade: sua armadura é tratada como quatro itens separados (peito, botas, elmo, arma) para fins de infusões. Seu limite de itens infundidos aumenta em +2 quando aplicar infusões especificamente à armadura."
+},
+{
+"id": "art_arm_15_aperf",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Armeiro",
+"name": "(armeiro, 15º nível) Armadura Aperfeiçoada",
+"description": "Aprimoramentos avançados: Guardião (Reação): puxe uma criatura a até 9 m e execute um ataque contra ela. Infiltrador: ataques com o raio fazem o alvo emitir luz por 1,5 m, concedem desvantagem ao alvo contra você e o próximo ataque contra ele recebe vantagem com +1d6 de dano elétrico."
+},
+{
+"id": "art_art_3_prof",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Artilheiro",
+"name": "(artilheiro, 3º nível) Proficiência com Ferramentas",
+"description": "Treinamento técnico: você ganha proficiência com ferramentas de entalhador, permitindo manipular construções e mecanismos com maior habilidade."
+},
+{
+"id": "art_art_3_spells",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Artilheiro",
+"name": "Feitiços de Artilheiro",
+"description": "Magias adicionais preparadas: nível 3: Escudo, Onda Trovejante; nível 5: Raio Incandescente, Estilhaçar; nível 9: Bola de Fogo, Parede de Vento; nível 13: Tempestade de Gelo, Muralha de Fogo; nível 17: Cone de Frio, Muralha de Força. Projetadas para uso com artilharia e controle de área."
+},
+{
+"id": "art_art_3_canhao",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Artilheiro",
+"name": "(artilheiro, 3º nível) Canhão Eldritch",
+"description": "(Ação) Construa temporariamente um canhão Pequeno ou Minúsculo que dura 1 hora. Tipos: Balista (2d8 Força + empurra 1,5 m), Lança-Chamas (2d8 fogo em cone de 4,5 m) ou Protetor (fornece 1d8 + Mod. INT de PV temporários em área). O canhão age conforme as regras do canhão eldritch."
+},
+{
+"id": "art_art_5_fogo",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Artilheiro",
+"name": "(artilheiro, 5º nível) Arma Arcana",
+"description": "Poder explosivo: quando você conjura magias através de sua arma arcana (foco esculpido), role 1d8 e adicione o resultado ao dano da magia, representando a potência arcana canalizada pelo canhão/arma."
+},
+{
+"id": "art_art_9_explosivo",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Artilheiro",
+"name": "(artilheiro, 9º nível) Canhão Explosivo",
+"description": "Aprimoramento do canhão: o dano base do canhão aumenta em +1d8. Como Ação, você pode detonar o canhão a até 18 m, causando 3d8 de dano de Força a criaturas num raio de 6 m (salvaguarda DEX reduz à metade)."
+},
+{
+"id": "art_art_15_fortificada",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Artilheiro",
+"name": "(artilheiro, 15º nível) Posição Fortificada",
+"description": "Defesa de artilharia: você e aliados a até 3 m do canhão recebem Meia Cobertura (+2 CA e vantagem em testes de Destreza relacionados à cobertura). Além disso, você pode criar e manter dois canhões ativos simultaneamente usando a mesma Ação Bônus."
+},
+{
+"id": "art_fer_3_prof",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Ferreiro de Batalha",
+"name": "(ferreiro de batalha, 3º nível) Proficiência com Ferramentas",
+"description": "Treinamento marcial: você ganha proficiência com ferramentas de ferreiro, refletindo sua habilidade em forjar e manter armas/armaduras de combate."
+},
+{
+"id": "art_fer_3_spells",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Ferreiro de Batalha",
+"name": "Feitiços de Ferreiro de Batalha",
+"description": "Magias adicionais preparadas: nível 3: Heroísmo, Escudo; nível 5: Golpe de Marca, Vínculo Protetor; nível 9: Aura de Vitalidade, Conjurar Barragem; nível 13: Aura de Pureza, Escudo de Fogo; nível 17: Golpe de Banimento, Cura em Massa. Projetadas para fortalecer aliados e proteger posições."
+},
+{
+"id": "art_fer_3_batalha",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Ferreiro de Batalha",
+"name": "(ferreiro de batalha, 3º nível) Pronto para a Batalha",
+"description": "Combate e substituição de atributo: você ganha proficiência com Armas Marciais e pode usar seu modificador de INT em lugar de Força ou Destreza para jogadas de ataque e dano feitas com armas mágicas que você empunha."
+},
+{
+"id": "art_fer_3_defensor",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Ferreiro de Batalha",
+"name": "(ferreiro de batalha, 3º nível) Defensor de Aço",
+"description": "Construto protetor: você cria um defensor (construto) leal que age imediatamente após seu turno. Como Reação, pode usar 'Desviar Ataque' para impor desvantagem a um ataque dirigido a criatura a até 1,5 m do defensor."
+},
+{
+"id": "art_fer_5_ataque",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Ferreiro de Batalha",
+"name": "(ferreiro de batalha, 5º nível) Ataque Extra",
+"description": "Ataques adicionais: quando você realiza a ação de Atacar, pode fazer dois ataques em vez de um durante seu turno."
+},
+{
+"id": "art_fer_9_choque",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Ferreiro de Batalha",
+"name": "(ferreiro de batalha, 9º nível) Choque Arcano",
+"description": "Choque ofensivo/curativo: quando você atinge um alvo com uma arma mágica ou um ataque do defensor, pode causar 2d6 de dano de Força adicional ou curar 2d6 PV de uma criatura a até 9 m. Usos por Descanso Longo: igual ao seu modificador de INT."
+},
+{
+"id": "art_fer_15_aprimorado",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Ferreiro de Batalha",
+"name": "(ferreiro de batalha, 15º nível) Defensor Aprimorado",
+"description": "Aprimoramentos do defensor: o Choque Arcano agora causa/curar 4d6. O Defensor de Aço recebe +2 na CA e sua Reação 'Desviar Ataque' passa a causar 1d4 + Mod. INT de dano de Força ao atacante."
+},
+{
+"id": "art_arq_3_spells",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Arquivista",
+"name": "Feitiços de Arquivista",
+"description": "Magias adicionais preparadas: nível 3: Compreender Línguas, Sussurros Dissonantes; nível 5: Detectar Pensamentos, Localizar Objetos; nível 9: Padrão Hipnótico, Línguas; nível 13: Localizar Criatura, Assassino Fantasmagórico; nível 17: Lenda e Conhecimento, Modificar Memória. Focadas em conhecimento, controle mental e manipulação de informação."
+},
+{
+"id": "art_arq_3_mente",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Arquivista",
+"name": "(arquivista, 3º nível) Mente Artificial",
+"description": "Consciência animada: você pode despertar uma mente artificial em um objeto, concedendo-lhe uma presença espectral que confere +2 em perícias escolhidas. Manifestar Mente (Ação Bônus) convoca uma presença espectral em até 18 m; Sobrecarga (Ação) causa 1d8 dano psíquico e concede vantagem no próximo ataque contra o alvo."
+},
+{
+"id": "art_arq_5_rede",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Arquivista",
+"name": "(arquivista, 5º nível) Rede Mental",
+"description": "Conexão entre itens: você estabelece comunicação telepática com portadores de itens infundidos que você criou. Além disso, adiciona seu Mod. INT ao dano psíquico de magias de artífice e ao dano causado pela Sobrecarga de Informação."
+},
+{
+"id": "art_arq_14_info",
+"category": "Classe",
+"class": "Artífice",
+"subclass": "Arquivista",
+"name": "(arquivista, 14º nível) Informação Pura",
+"description": "Sobrecarga mental avançada: alvos que sofrerem dano extra por um slot aplicado na Sobrecarga devem fazer uma salvaguarda de INT ou ficar Atordoados. Como Ação, você pode se teletransportar para o espaço de uma mente espectral ou para o local de um item infundido que contenha tal mente."
+},
 
-  { "id": "art_alq_3_prof", "category": "Classe", "class": "Artífice", "subclass": "Alquimista", "name": "(alquimista, 3º nível) Proficiência com Ferramentas", "description": "Ganha proficiência com suprimentos de alquimista." },
-  { "id": "art_alq_3_elixir", "category": "Classe", "class": "Artífice", "subclass": "Alquimista", "name": "(alquimista, 3º nível) Elixir Experimental", "description": "Cria 1 elixir aleatório em descanso longo. Pode gastar espaço de magia para criar um com efeito escolhido (Cura, Agilidade, Resiliência, Audácia, Voo, Transformação)." },
-  { "id": "art_alq_5_sabio", "category": "Classe", "class": "Artífice", "subclass": "Alquimista", "name": "(alquimista, 5º nível) Sábio Alquímico", "description": "Adiciona Mod. INT a rolagens de dano (ácido, fogo, necrótico, veneno) ou cura ao usar suprimentos de alquimista." },
 
-  { "id": "art_arm_3_prof", "category": "Classe", "class": "Artífice", "subclass": "Armeiro", "name": "(armeiro, 3º nível) Ferramentas do Ofício", "description": "Ganha proficiência com armaduras pesadas e ferramentas de ferreiro." },
-  { "id": "art_arm_3_arcana", "category": "Classe", "class": "Artífice", "subclass": "Armeiro", "name": "(armeiro, 3º nível) Armadura Arcana", "description": "Armadura vira foco, ignora FOR, cobre membros ausentes e não pode ser removida contra vontade." },
-  { "id": "art_arm_3_modelo", "category": "Classe", "class": "Artífice", "subclass": "Armeiro", "name": "(armeiro, 3º nível) Modelo de Armadura", "description": "Escolha Guardião (Manoplas de Trovão + Campo Defensivo) ou Infiltrador (Lançador de Raios + Passos Potencializados)." },
-  { "id": "art_arm_9_mod", "category": "Classe", "class": "Artífice", "subclass": "Armeiro", "name": "(armeiro, 9º nível) Modificações de Armadura", "description": "Peito, botas, elmo e arma da armadura contam como itens separados para infusões. +2 itens infundidos permitidos." },
 
-  { "id": "art_art_3_canhao", "category": "Classe", "class": "Artífice", "subclass": "Artilheiro", "name": "(artilheiro, 3º nível) Canhão Arcano", "description": "Cria canhão Pequeno ou Minúsculo. Tipos: Balista Energética (2d8), Lança-Chamas (2d8 cone) ou Protetor (1d8+Int temp HP)." },
-  { "id": "art_art_5_fogo", "category": "Classe", "class": "Artífice", "subclass": "Artilheiro", "name": "(artilheiro, 5º nível) Arma Arcana", "description": "Cria símbolos em varinhas/cajados. Magias lançadas por ela ganham +1d8 de bônus no dano." },
 
-  { "id": "art_fer_3_batalha", "category": "Classe", "class": "Artífice", "subclass": "Ferreiro de Batalha", "name": "(ferreiro de batalha, 3º nível) Preparado para a Batalha", "description": "Proficiência com armas marciais. Usa Inteligência para ataques e dano com armas mágicas." },
-  { "id": "art_fer_3_defensor", "category": "Classe", "class": "Artífice", "subclass": "Ferreiro de Batalha", "name": "(ferreiro de batalha, 3º nível) Defensor de Aço", "description": "Cria um companheiro construto. Age após seu turno. Pode usar Desviar Ataque para proteger aliados." },
-  { "id": "art_fer_9_abalo", "category": "Classe", "class": "Artífice", "subclass": "Ferreiro de Batalha", "name": "(ferreiro de batalha, 9º nível) Abalo Arcano", "description": "Ao acertar ataque com arma mágica: +2d6 de dano energético ou cura 2d6 a um aliado a até 9m." }
+
+
+{
+"id": "BARBAROz"
+},
+{
+"id": "bar_base_1_furia",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "",
+"name": "(1º nível) Fúria",
+"description": "(Ação Bônus) Estado de combate: você entra em fúria por até 1 minuto. Enquanto em fúria, você tem vantagem em testes e salvaguardas de Força, resistência a dano contundente, perfurante e cortante, e adiciona seu Bônus de Fúria ao dano de ataques corpo-a-corpo. A fúria termina se você não atacar ou receber dano desde o seu último turno."
+},
+{
+"id": "bar_base_1_defesa",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "",
+"name": "(1º nível) Defesa sem Blindagem",
+"description": "CA sem armadura: enquanto não usar armadura, sua CA é calculada como 10 + Mod. DEX + Mod. CON. Você ainda pode usar escudos normalmente."
+},
+{
+"id": "bar_base_2_perigo",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "",
+"name": "(2º nível) Sentido de Perigo",
+"description": "Percepção aguçada: você tem vantagem em salvaguardas de Destreza contra efeitos perceptíveis, como armadilhas ou magias visíveis, desde que não esteja cego, surdo ou incapacitado."
+},
+{
+"id": "bar_base_2_imprudente",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "",
+"name": "(2º nível) Ataque Imprudente",
+"description": "Estilo ofensivo: no primeiro ataque que fizer em seu turno, você pode provocá-lo com vantagem para ataques corpo-a-corpo baseados em Força; enquanto isso, ataques feitos contra você têm vantagem até o início do seu próximo turno."
+},
+{
+"id": "bar_base_3_conhecimento",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "",
+"name": "(3º nível) Conhecimento Primordial",
+"description": "Treinamento adicional: você ganha proficiência em uma perícia extra da lista de perícias do Bárbaro. Você ganha essa proficiência novamente no 10º nível, podendo escolher outra perícia."
+},
+{
+"id": "bar_base_asi",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "",
+"name": "Aumento no Valor de Atributo",
+"description": "Melhoria de atributo: escolha aumentar um atributo em +2 ou dois atributos em +1 (máximo 20) nos níveis padrões de progressão da classe."
+},
+{
+"id": "bar_base_5_ataque",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "",
+"name": "(5º nível) Ataque Extra",
+"description": "Combate aprimorado: quando você realiza a ação de Atacar, pode fazer dois ataques em vez de um durante seu turno."
+},
+{
+"id": "bar_base_5_movimento",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "",
+"name": "(5º nível) Movimento Rápido",
+"description": "Deslocamento aumentado: seu deslocamento aumenta em 3 metros enquanto você não estiver usando armadura pesada, permitindo maior mobilidade."
+},
+{
+"id": "bar_base_7_instinto",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "",
+"name": "(7º nível) Instinto Selvagem",
+"description": "Iniciativa superior: você tem vantagem em rolagens de Iniciativa. Se for surpreendido e não estiver incapacitado, pode agir no momento em que entrar em fúria, antes de outras ações."
+},
+{
+"id": "bar_base_7_instintivo",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "",
+"name": "(7º nível) Ataque Instintivo",
+"description": "(Ação Bônus) Mobilidade na fúria: ao entrar em fúria, você pode mover-se imediatamente até metade do seu deslocamento sem provocar Ataques de Oportunidade."
+},
+{
+"id": "bar_base_9_brutal",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "",
+"name": "(9º nível) Brutal Crítico",
+"description": "Crítico mais forte: quando você obtém um acerto crítico com ataque corpo-a-corpo, role um dado extra de dano. Esse número aumenta para dois dados no 13º nível e três dados no 17º nível."
+},
+{
+"id": "bar_base_11_implacavel",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "",
+"name": "(11º nível) Fúria Implacável",
+"description": "Sobrevivência em fúria: se você cair a 0 PV enquanto estiver em fúria, pode fazer uma salvaguarda de Constituição (CD 10). Se for bem-sucedida, você permanece com 1 PV. A dificuldade aumenta em +5 para usos subsequentes até você recuperar essa capacidade após um Descanso Curto ou Longo."
+},
+{
+"id": "bar_base_15_persistente",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "",
+"name": "(15º nível) Raiva Persistente",
+"description": "Fúria inabalável: sua fúria só termina prematuramente se você ficar inconsciente ou escolher encerrá-la voluntariamente; forças externas têm menos efeito em interromper seu estado."
+},
+{
+"id": "bar_base_18_indomavel",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "",
+"name": "(18º nível) Poder Indomável",
+"description": "Uso do atributo como resultado: se o total de um teste de Força for menor que seu valor de atributo de Força, você pode usar o valor do atributo como resultado daquela rolagem, garantindo sucesso em ações brutais."
+},
+{
+"id": "bar_base_20_campeao",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "",
+"name": "(20º nível) Campeão Primordial",
+"description": "Auge físico: seus valores de Força e Constituição aumentam em +4. O limite máximo desses atributos aumenta para 24, refletindo sua supremacia física."
+},
+{
+"id": "bar_ber_3_frenesi",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Berserker",
+"name": "(berserker, 3º nível) Frenesi",
+"description": "Fúria implacável: enquanto em fúria você pode fazer um ataque corpo-a-corpo adicional como Ação Bônus em cada turno. Ao fim da fúria, você sofre 1 nível de exaustão devido ao esforço extremo."
+},
+{
+"id": "bar_ber_6_sem_sentido",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Berserker",
+"name": "(berserker, 6º nível) Fúria sem Sentido",
+"description": "Imunidade mental temporária: enquanto estiver em fúria, você é imune às condições Enfeitiçado e Amedrontado; efeitos mentais ativos ficam suspensos durante a fúria."
+},
+{
+"id": "bar_ber_10_presenca",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Berserker",
+"name": "(berserker, 10º nível) Presença Intimidadora",
+"description": "(Ação) Intimidação em área: uma criatura a até 9 m deve fazer uma salvaguarda de Sabedoria (CD = 8 + Proficiência + Mod. CAR) ou ficar Amedrontada. Você pode gastar uma ação para prolongar o efeito."
+},
+{
+"id": "bar_ber_14_retalia",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Berserker",
+"name": "(berserker, 14º nível) Retaliação",
+"description": "(Reação) Contra-ataque: quando uma criatura a até 1,5 m de você causar dano a você, você pode usar sua reação para realizar imediatamente um ataque corpo-a-corpo contra essa criatura."
+},
+{
+"id": "bar_tot_3_busca",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Guerreiro Totêmico",
+"name": "(totêmico, 3º nível) Buscador de Espíritos",
+"description": "Conexão com a natureza: você pode conjurar Sentido Bestial e Falar com Animais como rituais, refletindo sua afinidade com espíritos naturais."
+},
+{
+"id": "bar_tot_3_espirito",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Guerreiro Totêmico",
+"name": "(totêmico, 3º nível) Espírito Totêmico",
+"description": "Escolha de totem: ao selecionar um totem, ganha-se um benefício permanente enquanto estiver em fúria: Urso — resistência a todos os danos exceto psíquico; Águia — capacidade de Disparada como Ação Bônus e oportunidades de ataque contra você com desvantagem; Lobo — aliados próximos têm vantagem em ataques corpo-a-corpo contra inimigos que estejam a 1,5 m de você."
+},
+{
+"id": "bar_tot_6_aspecto",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Guerreiro Totêmico",
+"name": "(totêmico, 6º nível) Aspecto da Besta",
+"description": "Benefícios totemicos ampliados: Urso — dobra sua carga e concede vantagem em testes de Força para empurrar/quebrar; Águia — visão excelente (alcance narrativo até 1,6 km) e penumbra não prejudica percepção; Lobo — melhor rastreamento e capacidade de mover-se furtivamente em velocidades normais."
+},
+{
+"id": "bar_tot_10_andarilho",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Guerreiro Totêmico",
+"name": "(totêmico, 10º nível) Andarilho Espiritual",
+"description": "Comunhão com a natureza: você pode conjurar Comunhão com a Natureza como Ritual, aprofundando sua ligação com espíritos e o mundo natural."
+},
+{
+"id": "bar_tot_14_sintonia",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Guerreiro Totêmico",
+"name": "(totêmico, 14º nível) Sintonização Totêmica",
+"description": "Poder totemico superior: Urso — inimigos a 1,5 m têm desvantagem em atacar qualquer alvo que não seja você; Águia — recebe velocidade de voo temporária igual à sua velocidade terrestre por um período curto; Lobo — como Ação Bônus, ao acertar um ataque corpo-a-corpo você pode tentar derrubar uma criatura Grande ou menor."
+},
+{
+"id": "bar_gua_3_protetores",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Guardião Ancestral",
+"name": "(guardião, 3º nível) Protetores Ancestrais",
+"description": "Proteção espiritual: a primeira criatura que atingir em cada turno sofre efeitos que a distraem — ela tem desvantagem em ataques que não sejam contra você; aliados atingidos pelo mesmo inimigo recebem resistência a dano por um breve período."
+},
+{
+"id": "bar_gua_6_escudo",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Guardião Ancestral",
+"name": "(guardião, 6º nível) Escudo Espiritual",
+"description": "(Reação) Redução de dano: quando um aliado a até 9 m sofre dano, você pode reduzir esse dano em 2d6. O valor aumenta para 3d6 no nível 10 e 4d6 no nível 14."
+},
+{
+"id": "bar_gua_10_espiritos",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Guardião Ancestral",
+"name": "(guardião, 10º nível) Consulte os Espíritos",
+"description": "Ajuda ancestral: você pode invocar espíritos para conjurar Augúrio ou Clarividência sem gastar espaços ou componentes materiais. Atributo usado: Sabedoria. Usa-se 1 vez por Descanso Curto ou Longo."
+},
+{
+"id": "bar_gua_14_retalia",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Guardião Ancestral",
+"name": "(guardião, 14º nível) Ancestrais Vingativos",
+"description": "Retaliação espiritual: quando você usa Escudo Espiritual para reduzir dano, o atacante sofre dano de Força igual ao valor prevenido, como punição dos espíritos ancestrais."
+},
+{
+"id": "bar_tem_3_aura",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Arauto da Tempestade",
+"name": "(arauto, 3º nível) Aura da Tempestade",
+"description": "(Ação Bônus) Aura elementar: você emana uma aura de 3 m cujos efeitos variam com o ambiente: Deserto — inflige 2 de dano de fogo por rodada; Mar — causa 1d6 elétrico em um alvo (save DEX metade); Tundra — fornece 2 PV temporários aos aliados. O efeito escala com seu nível."
+},
+{
+"id": "bar_tem_6_alma",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Arauto da Tempestade",
+"name": "(arauto, 6º nível) Alma da Tempestade",
+"description": "Resiliência ambiental: você ganha resistência aos tipos de dano relacionados ao ambiente (fogo/elétrico/frio). Em Mar, também recebe respiração aquática e nado +9 m; em Deserto, pode incendiar objetos combustíveis; em Tundra, é capaz de congelar água como efeito utilitário."
+},
+{
+"id": "bar_tem_10_prote",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Arauto da Tempestade",
+"name": "(arauto, 10º nível) Tempestade Protetora",
+"description": "Compartilhar resistência: aliados dentro de sua Aura da Tempestade ganham a mesma resistência a dano que você possui devido à Alma da Tempestade, oferecendo proteção elementar em área."
+},
+{
+"id": "bar_tem_14_furiosa",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Arauto da Tempestade",
+"name": "(arauto, 14º nível) Tempestade Furiosa",
+"description": "Reações elementais: efeitos variados por ambiente — Deserto (Reação): quando atingido, o atacante sofre dano de fogo igual a metade do seu nível de bárbaro; Mar (Reação): ao acertar um inimigo, você pode forçá-lo a fazer um Save FOR ou cair prostrado; Tundra: sua aura reduz a velocidade de inimigos para 0 enquanto estiverem nela."
+},
+{
+"id": "bar_zel_3_furia",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Fanático",
+"name": "(zelote, 3º nível) Fúria Divina",
+"description": "Dano sagrado: o primeiro ataque bem-sucedido que você fizer em cada turno causa dano radiante ou necrótico adicional igual a 1d6 + (nível de bárbaro / 2), refletindo a fúria divina do fanático."
+},
+{
+"id": "bar_zel_3_guerreiro",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Fanático",
+"name": "(zelote, 3º nível) Guerreiro dos Deuses",
+"description": "Proteção ritualística: magias de ressurreição lançadas em você (como Revivificar) não exigem componentes materiais preciosos, refletindo a benção divina que te sustenta."
+},
+{
+"id": "bar_zel_6_foco",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Fanático",
+"name": "(zelote, 6º nível) Foco Fanático",
+"description": "Determinação inabalável: se falhar em uma salvaguarda enquanto estiver em fúria, você pode rolar novamente e usar o novo resultado. Pode ser usado uma vez por fúria."
+},
+{
+"id": "bar_zel_10_presenca",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Fanático",
+"name": "(zelote, 10º nível) Presença Zelosa",
+"description": "(Ação Bônus) Inspiração divina: até 10 criaturas a até 18 m ganham vantagem em ataques e salvaguardas até o início do seu próximo turno. Uso: 1 vez por Descanso Longo."
+},
+{
+"id": "bar_zel_14_morte",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho do Fanático",
+"name": "(zelote, 14º nível) Fúria Além da Morte",
+"description": "Perseverança extrema: ao ficar com 0 PV enquanto em fúria, você não fica imediatamente inconsciente; continua lutando com saves contra morte normais. Você só morre se, ao fim da fúria, ainda estiver com 0 PV e tiver falhas de morte acumuladas suficientes."
+},
+{
+"id": "bar_bes_3_forma",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho da Besta",
+"name": "(besta, 3º nível) Forma da Besta",
+"description": "Armas naturais: enquanto em fúria, você ganha uma arma natural (à sua escolha) com propriedades especiais: Mordida — 1d8 perfurante e cura parcial baseada em nível; Garras — 1d6 cortante e concede um ataque extra; Cauda — 1d8 perfurante com alcance e Reação para aumentar sua CA. As estatísticas exatas são definidas pelo DM."
+},
+{
+"id": "bar_bes_6_alma",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho da Besta",
+"name": "(besta, 6º nível) Alma Bestial",
+"description": "Armas naturais mágicas e escolha de vantagem: suas armas naturais contam como mágicas para vencer resistência. Em um Descanso Curto, escolha um benefício: velocidade de nado e respiração aquática, velocidade de escalada, ou salto melhorado (aplica-se a testes de Atletismo)."
+},
+{
+"id": "bar_bes_10_infecciosa",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho da Besta",
+"name": "(besta, 10º nível) Fúria Infecciosa",
+"description": "Efeito contagioso: ao acertar com arma natural, o alvo deve fazer um Save de Sabedoria (CD = 8 + Prof. + Mod. CON) ou ser forçado a atacar um aliado (Reação) ou sofrer 2d12 de dano psíquico; número de usos por Descanso Longo = seu Proficiência."
+},
+{
+"id": "bar_bes_14_caçada",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho da Besta",
+"name": "(besta, 14º nível) Chame a Caçada",
+"description": "Fúria que inspira: ao entrar em fúria, aliados a até 9 m (até um máximo igual ao seu Mod. CON) recebem +1d6 de dano por turno. Você ganha 5 PV temporários por aliado afetado. Usos por Descanso Longo = Proficiência."
+},
+{
+"id": "bar_sel_3_conscien",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho da Magia Selvagem",
+"name": "(selvagem, 3º nível) Consciência Mágica",
+"description": "(Ação) Detecção mágica: você sente a presença de magia em itens e criaturas e identifica a escola mágica a até 18 m. Usos por Descanso Longo = Proficiência."
+},
+{
+"id": "bar_sel_3_onda",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho da Magia Selvagem",
+"name": "(selvagem, 3º nível) Onda Selvagem",
+"description": "Efeitos caóticos: ao entrar em fúria, role 1d8 numa tabela de efeitos randômicos (ex.: 1 — dano necrótico em área; 2 — teleporte; 3 — explosão de flumphs; 4 — criação de arma de força; 5 — retaliação de força; 6 — +1 CA em aura; 7 — terreno difícil; 8 — raio cegante). O efeito aplicado é imediato e pode impactar o campo de batalha."
+},
+{
+"id": "bar_sel_6_reforca",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho da Magia Selvagem",
+"name": "(selvagem, 6º nível) Magia Reforçada",
+"description": "(Ação) Bênção mágica: toque uma criatura; ela recebe +1d4 em ataques e testes por 10 minutos ou recupera um espaço de magia de nível 1–3. Usos por Descanso Longo = Proficiência."
+},
+{
+"id": "bar_sel_10_instavel",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho da Magia Selvagem",
+"name": "(selvagem, 10º nível) Reação Instável",
+"description": "(Reação) Caos controlado: quando você sofre dano ou falha em uma salvaguarda, role novamente na tabela da Onda Selvagem para substituir o efeito atual por um novo, potencialmente virando o jogo."
+},
+{
+"id": "bar_sel_14_sobrecarga",
+"category": "Classe",
+"class": "Bárbaro",
+"subclass": "Caminho da Magia Selvagem",
+"name": "(selvagem, 14º nível) Sobrecarga Controlada",
+"description": "Escolha múltipla: role dois dados na tabela da Onda Selvagem e escolha qual dos dois efeitos ativar. Se os dois resultados forem iguais, você pode escolher qualquer efeito extra ou modificá-lo com a permissão do DM."
+},
+  {
+    "id": "bar_als_3_persistente",
+    "category": "Classe",
+    "class": "Bárbaro",
+    "subclass": "Caminho da Alma Selvagem",
+    "name": "(alma selvagem, 3º nível) Magia Persistente",
+    "description": "(Ação) Seu corpo torna-se um para-raios para a Trama, permitindo que você conjure 'Detectar Magia' sem gastar espaços de magia ou componentes. Atributo de conjuração: CON. Ao detectar magia, você emite um brilho visual cuja cor corresponde à escola detectada. Usos: Mod. CON por Descanso Longo."
+  },
+  {
+    "id": "bar_als_3_onda",
+    "category": "Classe",
+    "class": "Bárbaro",
+    "subclass": "Caminho da Alma Selvagem",
+    "name": "(alma selvagem, 3º nível) Onda Selvagem",
+    "description": "Ao entrar em Fúria, a energia feérica irrompe de você de forma caótica. Role 1d8 p/ determinar o efeito (CD = 8 + Prof + CON):\n1. Necrótico: Drena 1d10 de inimigos a 9m; você ganha HP Temp igual à soma do dano.\n2. Teleporte: (Ação Bônus) Teleporta 6m p/ espaço visível cada turno.\n3. Flumphs: Conjura 1d4 espíritos que voam 9m e explodem causando 2d8 de Força (Save DEX).\n4. Manto Arcano: +2 na CA; inimigos que te acertarem a até 3m sofrem dano de Força = Mod. CON.\n5. Natureza: Solo a 3m de você torna-se terreno difícil p/ inimigos.\n6. Intuição: Inimigo a 9m faz Save SAB ou você lê sua mente, dando a ele Desvantagem em ataques contra você.\n7. Arma Sombria: Arma empunhada causa dano Psíquico, ganha propriedade Leve, Arremesso (6/18m) e retorna à mão.\n8. Raio Solar: Linha de 18m causa 2d8 radiante e Cegueira (Save CON)."
+  },
+  {
+    "id": "bar_als_6_reservas",
+    "category": "Classe",
+    "class": "Bárbaro",
+    "subclass": "Caminho da Alma Selvagem",
+    "name": "(alma selvagem, 6º nível) Reservas Mágicas",
+    "description": "(Ação) Você sacrifica sua força vital p/ imbuir outros com magia. Toque uma criatura e role 1d4: ela recupera um Spell Slot de nível igual ao resultado (ou recebe 5x o resultado em HP Temp). Em troca, você sofre dano de Força igual a 5x o valor rolado. No 14º nível, utilize um d6."
+  },
+  {
+    "id": "bar_als_10_repreensao",
+    "category": "Classe",
+    "class": "Bárbaro",
+    "subclass": "Caminho da Alma Selvagem",
+    "name": "(alma selvagem, 10º nível) Repreensão Arcana",
+    "description": "(Reação) A magia instável em sua alma reage contra agressões místicas. Sempre que uma criatura forçar você a realizar uma Salvaguarda enquanto estiver em Fúria, você pode usar sua reação para puni-la, causando 3d6 de dano de Força imediato ao agressor."
+  },
+  {
+    "id": "bar_als_14_caotica",
+    "category": "Classe",
+    "class": "Bárbaro",
+    "subclass": "Caminho da Alma Selvagem",
+    "name": "(alma selvagem, 14º nível) Fúria Caótica",
+    "description": "(Ação Bônus) Você atinge o controle parcial sobre o caos que o habita. Enquanto estiver em Fúria, você pode utilizar sua Ação Bônus para rolar novamente na tabela de Onda Selvagem, substituindo imediatamente o efeito atual pelo novo resultado obtido."
+  },
+
+
+
+
+
+
+{"id":"BARDOz"},
+{
+  "id": "bar_base_1_conjura",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "",
+  "name": "(1º nível) Lançamento de Feitiços",
+  "description": "Você aprende a manipular a Trama através da música e oratória. Atributo de conjuração: Carisma. CD = 8 + Bônus de Proficiência + Modificador de Carisma. Ataque Mágico = Bônus de Proficiência + Modificador de Carisma. Você usa um instrumento musical como foco de conjuração. Você pode conjurar qualquer magia de bardo que conheça como um ritual se ela tiver o rótulo de ritual. Ao subir de nível, você pode substituir uma magia conhecida por outra da lista de bardo."
+},
+{
+  "id": "bar_base_1_inspira",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "",
+  "name": "(1º nível) Inspiração Bárdica",
+  "description": "Como uma ação bônus, você concede um dado de Inspiração Bárdica (d6) a uma criatura (exceto você mesmo) a até 18 metros que possa ouvi-lo. Nos próximos 10 minutos, a criatura pode adicionar o dado a uma jogada de ataque, teste de habilidade ou teste de resistência. O dado escala com seu nível de bardo: d8 no 5º nível, d10 no 10º nível e d12 no 15º nível. Você pode usar essa característica um número de vezes igual ao seu Modificador de Carisma (mínimo 1). Recupera usos gastos após um Descanso Longo."
+},
+{
+  "id": "bar_base_2_pau_obra",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "",
+  "name": "(2º nível) Pau para Toda Obra",
+  "description": "Você pode adicionar metade do seu bônus de proficiência (arredondado para baixo) a qualquer teste de habilidade que você fizer e que ainda não inclua seu bônus de proficiência."
+},
+{
+  "id": "bar_base_2_cantico",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "",
+  "name": "(2º nível) Cântico de Descanso",
+  "description": "Você usa música suave para revitalizar aliados feridos durante um descanso curto. Se você ou quaisquer criaturas amigáveis que possam ouvir sua performance recuperarem pontos de vida no final do descanso curto gastando Dados de Vida, cada uma dessas criaturas recupera 1d6 pontos de vida extras. O dado extra aumenta conforme você sobe de nível: 1d8 no 9º nível, 1d10 no 13º nível e 1d12 no 17º nível."
+},
+{
+  "id": "bar_base_2_insp_magica",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "",
+  "name": "(2º nível) Inspiração Mágica (Opcional)",
+  "description": "Se uma criatura possuir um dado de Inspiração Bárdica seu e conjurar uma magia que restaura pontos de vida ou causa dano, ela pode rolar o dado e adicionar o número rolado a uma rolagem de dano ou cura da magia contra um alvo. O dado de Inspiração é então gasto."
+},
+{
+  "id": "bar_base_3_especializa",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "",
+  "name": "(3º nível) Especialização",
+  "description": "Escolha duas de suas proficiências em perícias. Seu bônus de proficiência é dobrado para qualquer teste de habilidade que você fizer usando qualquer uma das perícias escolhidas. No 10º nível, você pode escolher mais duas proficiências em perícias para obter esse benefício."
+},
+{
+  "id": "bar_base_asi",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "",
+  "name": "Aumento no Valor de Atributo",
+  "description": "Você pode aumentar um valor de atributo à sua escolha em 2, ou dois valores de atributo à sua escolha em 1. Como padrão, você não pode aumentar um atributo acima de 20 usando essa característica. Obtido nos níveis 4, 8, 12, 16 e 19."
+},
+{
+  "id": "bar_base_4_versatilidade",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "",
+  "name": "(4º nível) Versatilidade Bárdica (Opcional)",
+  "description": "Sempre que atingir um nível com Aumento no Valor de Atributo, você pode: 1) Substituir uma das perícias escolhidas para Especialização por outra proficiência em perícia que não tenha Especialização; ou 2) Substituir um truque de bardo conhecido por outro da lista de magias de bardo."
+},
+{
+  "id": "bar_base_5_fonte",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "",
+  "name": "(5º nível) Fonte de Inspiração",
+  "description": "Você recupera todos os seus usos gastos de Inspiração Bárdica quando termina um Descanso Curto ou Longo."
+},
+{
+  "id": "bar_base_6_contra",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "",
+  "name": "(6º nível) Contra-amor",
+  "description": "Como uma ação, você inicia uma performance que dura até o final do seu próximo turno. Durante esse tempo, você e quaisquer criaturas amigáveis a até 9 metros de você têm vantagem em testes de resistência contra serem amedrontados ou enfeitiçados. A criatura deve ser capaz de ouvi-lo para ganhar o benefício. A performance termina prematuramente se você for incapacitado, silenciado ou se a encerrar voluntariamente (sem ação)."
+},
+{
+  "id": "bar_base_10_segredos",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "",
+  "name": "(10º nível) Segredos Mágicos",
+  "description": "Você aprende duas magias de qualquer classe, incluindo esta. As magias escolhidas devem ser de um nível que você possa conjurar ou truques. Elas contam como magias de bardo para você e não contam no limite de magias conhecidas. Você aprende duas magias adicionais no 14º nível e novamente no 18º nível."
+},
+{
+  "id": "bar_base_20_superior",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "",
+  "name": "(20º nível) Inspiração Superior",
+  "description": "Quando você rola iniciativa e não tem usos de Inspiração Bárdica restantes, você recupera um uso."
+},
+{
+  "id": "bar_bra_3_profs",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Bravura",
+  "name": "(bravura, 3º nível) Proficiências Bônus",
+  "description": "Você ganha proficiência com armaduras médias, escudos e armas marciais."
+},
+{
+  "id": "bar_bra_3_inspira",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Bravura",
+  "name": "(bravura, 3º nível) Inspiração de Combate",
+  "description": "Uma criatura que tenha um dado de Inspiração Bárdica seu pode rolá-lo e adicionar o resultado a uma rolagem de dano com arma que acabou de fazer. Alternativamente, quando uma criatura for alvo de um ataque, ela pode usar sua reação para rolar o dado e adicionar o número à sua CA contra aquele ataque, potencialmente transformando um acerto em um erro."
+},
+{
+  "id": "bar_bra_6_ataque",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Bravura",
+  "name": "(bravura, 6º nível) Ataque Extra",
+  "description": "Você pode atacar duas vezes, em vez de uma, sempre que realizar a ação de Atacar no seu turno."
+},
+{
+  "id": "bar_bra_14_magia",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Bravura",
+  "name": "(bravura, 14º nível) Magia de Batalha",
+  "description": "Quando você usa sua ação para conjurar uma magia de bardo, você pode realizar um ataque com arma como uma ação bônus."
+},
+{
+  "id": "bar_con_3_pericias",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio do Conhecimento",
+  "name": "(conhecimento, 3º nível) Habilidades Adicionais",
+  "description": "Você ganha proficiência em três perícias à sua escolha."
+},
+{
+  "id": "bar_con_3_cortantes",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio do Conhecimento",
+  "name": "(conhecimento, 3º nível) Palavras Cortantes",
+  "description": "Como uma reação quando uma criatura a até 18 metros de você faz uma jogada de ataque, teste de habilidade ou rolagem de dano, você pode gastar um uso de Inspiração Bárdica para subtrair o valor rolado do total da criatura. Você pode decidir usar após a rolagem, mas antes do Mestre declarar o resultado. Imune se a criatura não puder ouvi-lo ou for imune a encantamento."
+},
+{
+  "id": "bar_con_6_segredos",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio do Conhecimento",
+  "name": "(conhecimento, 6º nível) Segredos Mágicos Adicionais",
+  "description": "Você aprende duas magias de qualquer classe. Elas devem ser de um nível que você possa conjurar ou truques. Elas contam como magias de bardo e não contam no limite de magias conhecidas."
+},
+{
+  "id": "bar_con_14_incomparavel",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio do Conhecimento",
+  "name": "(conhecimento, 14º nível) Habilidade Incomparável",
+  "description": "Quando você faz um teste de habilidade, pode gastar um uso de Inspiração Bárdica. Role o dado e adicione o número ao seu teste de habilidade. Você pode decidir usar após rolar o d20, mas antes do Mestre declarar sucesso ou falha."
+},
+{
+  "id": "bar_cri_3_particula",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Criação",
+  "name": "(criação, 3º nível) Partícula de Potencial",
+  "description": "Ao dar Inspiração Bárdica, cria uma Partícula de Potencial. Benefícios adicionais ao usar o dado: [Teste de Habilidade] Role o dado de Inspiração duas vezes e escolha o melhor resultado. [Ataque] O alvo e criaturas a 1,5m sofrem dano trovejante igual ao valor do dado (Save de CON contra sua CD anula para outros). [Resistência] O alvo ganha Pontos de Vida Temporários iguais ao valor do dado + seu Modificador de Carisma."
+},
+{
+  "id": "bar_cri_3_desempenho",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Criação",
+  "name": "(criação, 3º nível) Desempenho da Criação",
+  "description": "Como uma ação, crie um item não mágico Médio ou menor (valor máx 20po x nível de bardo) a até 3m. O item dura horas iguais ao seu bônus de proficiência. Pode usar 1 vez por descanso longo ou gastar um espaço de magia de 2º nível ou superior. O tamanho máximo aumenta para Grande (6º nível) e Enorme (14º nível)."
+},
+{
+  "id": "bar_cri_6_animacao",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Criação",
+  "name": "(criação, 6º nível) Animação de Performance",
+  "description": "Como uma ação, anime um objeto não mágico Grande ou menor a até 9m. Ele se torna um Item Dançante (ficha própria) por 1 hora. Em combate, age após você e obedece comandos via ação bônus (ou parte da ação bônus de Inspiração Bárdica). Pode usar 1 vez por descanso longo ou gastar espaço de magia de 3º nível ou superior."
+},
+{
+  "id": "bar_cri_14_crescendo",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Criação",
+  "name": "(criação, 14º nível) Crescendo Criativo",
+  "description": "Ao usar Desempenho da Criação, você pode criar múltiplos itens (número igual ao Modificador de Carisma). Apenas um pode ser do tamanho máximo permitido; os outros devem ser Pequenos ou Minúsculos. O limite de valor em ouro é removido."
+},
+{
+  "id": "bar_elo_3_prata",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Eloquência",
+  "name": "(eloquência, 3º nível) Língua de Prata",
+  "description": "Você é um mestre da oratória. Sempre que fizer um teste de Carisma (Persuasão) ou Carisma (Enganação), você pode tratar um resultado de 9 ou menos no d20 como um 10."
+},
+{
+  "id": "bar_elo_3_palavras",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Eloquência",
+  "name": "(eloquência, 3º nível) Palavras Perturbadoras",
+  "description": "Como uma ação bônus, gaste um uso de Inspiração Bárdica para escolher uma criatura a até 18m. Role o dado de inspiração; a criatura deve subtrair o resultado do próximo teste de resistência que fizer antes do início do seu próximo turno."
+},
+{
+  "id": "bar_elo_6_infalivel",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Eloquência",
+  "name": "(eloquência, 6º nível) Inspiração Infalível",
+  "description": "Suas palavras são duradouras. Quando uma criatura adiciona um dos seus dados de Inspiração Bárdica a uma jogada de ataque, teste de habilidade ou resistência e falha, ela pode manter o dado de Inspiração Bárdica, não o gastando."
+},
+{
+  "id": "bar_elo_6_discurso",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Eloquência",
+  "name": "(eloquência, 6º nível) Discurso Universal",
+  "description": "Como uma ação, escolha um número de criaturas a até 18m igual ao seu Modificador de Carisma. Por 1 hora, essas criaturas podem entendê-lo magicamente, independente do idioma. Pode usar 1 vez por descanso longo ou gastar qualquer espaço de magia."
+},
+{
+  "id": "bar_elo_14_contagiante",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Eloquência",
+  "name": "(eloquência, 14º nível) Inspiração Contagiante",
+  "description": "Quando uma criatura a até 18m usa seu dado de Inspiração Bárdica e obtém sucesso, você pode usar sua reação para conceder um dado de Inspiração Bárdica a outra criatura (exceto você) a até 18m, sem gastar seus usos de Inspiração. Pode usar reações iguais ao seu Modificador de Carisma. Recupera em descanso longo."
+},
+{
+  "id": "bar_gla_3_manto",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio do Glamour",
+  "name": "(glamour, 3º nível) Manto de Inspiração",
+  "description": "Como uma ação bônus, gaste um uso de Inspiração Bárdica para conceder 5 pontos de vida temporários a um número de criaturas igual ao seu Modificador de Carisma (a até 18m). Essas criaturas podem usar imediatamente suas reações para se mover até seu deslocamento sem provocar ataques de oportunidade. Os PV temporários aumentam para 8 (5º nível), 11 (10º nível) e 14 (15º nível)."
+},
+{
+  "id": "bar_gla_3_fascinante",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio do Glamour",
+  "name": "(glamour, 3º nível) Performance Fascinante",
+  "description": "Se você performar por 1 minuto, escolha um número de humanoides a até 18m igual ao seu Modificador de Carisma. Eles devem fazer um teste de resistência de Sabedoria contra sua CD ou ficarão enfeitiçados por 1 hora. Enquanto enfeitiçados, eles o idolatram e evitam violência, a menos que sejam atacados. Recupera em descanso curto ou longo."
+},
+{
+  "id": "bar_gla_6_majestade",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio do Glamour",
+  "name": "(glamour, 6º nível) Manto da Majestade",
+  "description": "Como uma ação bônus, assuma uma aparência sobrenatural por 1 minuto. Você conjura 'Comando' sem gastar espaço de magia e pode fazê-lo como ação bônus em cada turno subsequente. Criaturas enfeitiçadas por você falham automaticamente no teste de resistência. Recupera em descanso longo."
+},
+{
+  "id": "bar_gla_14_inquebravel",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio do Glamour",
+  "name": "(glamour, 14º nível) Majestade Inquebrável",
+  "description": "Sua aparência ganha um aspecto sobrenatural permanente. Além disso, como ação bônus, ative uma presença majestosa por 1 minuto. Qualquer criatura que tentar atacá-lo pela primeira vez em um turno deve fazer um teste de resistência de Carisma. Falha: não pode atacar você (deve escolher outro alvo ou perder o ataque). Sucesso: ataca com desvantagem em testes de resistência contra suas magias no próximo turno. Recupera em descanso curto ou longo."
+},
+{
+  "id": "bar_esp_3_profs",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio das Espadas",
+  "name": "(espadas, 3º nível) Habilidades Adicionais",
+  "description": "Você ganha proficiência com armaduras médias e cimitarras. Se você for proficiente com uma arma corpo a corpo simples ou marcial, pode usá-la como foco de conjuração para suas magias de bardo."
+},
+{
+  "id": "bar_esp_3_estilo",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio das Espadas",
+  "name": "(espadas, 3º nível) Estilo de Luta",
+  "description": "Escolha uma opção: Duelo (+2 de dano quando usar arma corpo a corpo em uma mão e nenhuma outra) OU Combate com Duas Armas (adiciona modificador de habilidade ao dano do segundo ataque)."
+},
+{
+  "id": "bar_esp_3_floreio",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio das Espadas",
+  "name": "(espadas, 3º nível) Floreio de Lâmina",
+  "description": "Ao usar a ação Atacar, sua velocidade aumenta em 3m. Se acertar, pode usar uma opção de Floreio (1x por turno): Golpe Defensivo (gasta inspiração, soma ao dano e à CA até próximo turno); Golpe Cortante (gasta inspiração, causa dano ao alvo e outro adjacente); Movimento Desdobrável (gasta inspiração, soma ao dano, empurra alvo 1,5m + valor do dado e usa reação para mover-se)."
+},
+{
+  "id": "bar_esp_6_ataque",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio das Espadas",
+  "name": "(espadas, 6º nível) Ataque Extra",
+  "description": "Você pode atacar duas vezes, em vez de uma, sempre que realizar a ação de Atacar no seu turno."
+},
+{
+  "id": "bar_esp_14_mestre",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio das Espadas",
+  "name": "(espadas, 14º nível) Floreio do Mestre",
+  "description": "Sempre que usar uma opção de Floreio de Lâmina, você pode rolar um d6 e usá-lo em vez de gastar um dado de Inspiração Bárdica."
+},
+{
+  "id": "bar_sus_3_laminas",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio dos Sussurros",
+  "name": "(sussurros, 3º nível) Lâminas Psíquicas",
+  "description": "Quando acertar uma criatura com um ataque de arma, pode gastar um uso de Inspiração Bárdica para causar 2d6 de dano psíquico extra. O dano aumenta para 3d6 no 5º nível, 5d6 no 10º nível e 8d6 no 15º nível. Pode usar apenas uma vez por rodada."
+},
+{
+  "id": "bar_sus_3_terror",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio dos Sussurros",
+  "name": "(sussurros, 3º nível) Palavras de Terror",
+  "description": "Se falar com um humanoide sozinho por 1 minuto, pode forçá-lo a fazer um teste de resistência de Sabedoria contra sua CD. Falha: fica amedrontado por você ou outra criatura escolhida por 1 hora (ou até ser atacado). Sucesso: não sabe que você tentou. Recupera em descanso curto ou longo."
+},
+{
+  "id": "bar_sus_6_manto",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio dos Sussurros",
+  "name": "(sussurros, 6º nível) Manto dos Sussurros",
+  "description": "Quando um humanoide morre a até 9m, use reação para capturar sua sombra. Como ação, use a sombra para se disfarçar como o morto por 1 hora. Ganha acesso a informações superficiais (não segredos) e +5 em testes de Enganação para se passar por ele. Recupera em descanso curto ou longo."
+},
+{
+  "id": "bar_sus_14_sombras",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio dos Sussurros",
+  "name": "(sussurros, 14º nível) Conhecimento das Sombras",
+  "description": "Como ação, sussurre uma frase para criatura a 9m. Ela faz teste de resistência de Sabedoria. Falha: fica enfeitiçada por 8 horas, acreditando que você sabe seu segredo mais terrível. Obedece comandos (não suicidas) e concede favores. Sucesso: sussurro ininteligível. Recupera em descanso longo."
+},
+{
+  "id": "bar_esi_3_sussurros",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio dos Espíritos",
+  "name": "(espíritos, 3º nível) Sussurros Guiadores",
+  "description": "Você aprende o truque 'Orientação' (não conta no limite). Para você, o alcance é de 18 metros."
+},
+{
+  "id": "bar_esi_3_foco",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio dos Espíritos",
+  "name": "(espíritos, 3º nível) Foco Espiritual",
+  "description": "Você pode usar vela, bola de cristal, crânio, tabuleiro ou tarô como foco. A partir do 6º nível, ao conjurar magia de bardo que cura ou causa dano com o foco, adicione 1d6 a uma das rolagens."
+},
+{
+  "id": "bar_esi_3_contos",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio dos Espíritos",
+  "name": "(espíritos, 3º nível) Contos do Além",
+  "description": "Com foco ativo, use ação bônus para gastar Inspiração Bárdica e rolar na tabela de Contos Espirituais. Mantém o efeito até usar (ação, alcance 9m) ou descansar. Efeitos variam de bônus em testes, dano, cura, teleporte ou condições, dependendo do número rolado no dado de inspiração."
+},
+{
+  "id": "bar_esi_6_sessao",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio dos Espíritos",
+  "name": "(espíritos, 6º nível) Sessão Espiritual",
+  "description": "Realize um ritual de 1 hora com número de participantes igual ao seu bônus de proficiência. Aprenda temporariamente 1 magia de Adivinhação ou Necromancia de qualquer classe (Nível máx = nº participantes, máx 5º nível). A magia conta como de bardo e dura até o próximo descanso longo."
+},
+{
+  "id": "bar_esi_14_conexao",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio dos Espíritos",
+  "name": "(espíritos, 14º nível) Conexão Mística",
+  "description": "Ao rolar na tabela de Contos do Além, você pode rolar o dado duas vezes e escolher qual efeito usar. Se rolar o mesmo número nos dois dados, pode escolher qualquer efeito da tabela."
+},
+{
+  "id": "bar_lor_1_spells",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio de Lorehold",
+  "name": "Feitiços de Lorehold",
+  "description": "Você aprende o truque Chama Sagrada e a magia Compreender Idiomas. Magias adicionais aprendidas: 3º - Bater, Localizar Objeto; 5º - Falar com os Mortos, Guardiões Espirituais; 7º - Olho Arcano, Moldar Rochas; 9º - Onda Destrutiva, Lendas e Histórias."
+},
+{
+  "id": "bar_lor_1_companheiro",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio de Lorehold",
+  "name": "(lorehold, 1º nível) Companheiro Ancestral",
+  "description": "Ao final de um descanso, invoque um espírito em uma estátua Média (Curandeiro, Sábio ou Guerreiro). Age após você. Pode gastar slot para curá-lo. Curandeiro: cura e dá HP temp. Sábio: bônus em INT/SAB e dano extra. Guerreiro: ataque extra e proteção com reação."
+},
+{
+  "id": "bar_lor_6_licoes",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio de Lorehold",
+  "name": "(lorehold, 6º nível) Lições do Passado",
+  "description": "Seu companheiro ganha melhorias. Curandeiro: aumenta seu HP máximo e cura extra em magias. Sábio: vantagem em perícias de conhecimento e causa dano de força extra com magias. Guerreiro: ataques com arma adicionais ao usar truques e dano radiante extra."
+},
+{
+  "id": "bar_lor_10_ecos",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio de Lorehold",
+  "name": "(lorehold, 10º nível) Ecos da Guerra",
+  "description": "Como reação quando uma criatura acerta um ataque, force o alvo a fazer um Save de Sabedoria. Falha: torna-se vulnerável a um dos tipos de dano do ataque até o final do próximo turno dele. Usos iguais ao bônus de proficiência."
+},
+{
+  "id": "bar_lor_14_caprichos",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio de Lorehold",
+  "name": "(lorehold, 14º nível) Caprichos da História",
+  "description": "Como ação bônus, entre em estado de caos cronal por 1 minuto. No início de cada turno, escolha: Sorte (+1d6 em saves), Resistência (a dano físico) ou Rapidez (+4,5m vel e sem ataques oportunidade). Não pode repetir o mesmo efeito seguidamente. Recupera em descanso longo ou gastando slot de 4º nível."
+},
+{
+  "id": "bar_sil_1_aprendiz",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Pena de Prata",
+  "name": "(pena de prata, 1º nível) Aprendiz Eloquente",
+  "description": "Você aprende o truque Chama Sagrada ou Zombaria Viciosa. Ganha proficiência em duas perícias: Enganação, Intimidação, Atuação, Persuasão ou Intuição."
+},
+{
+  "id": "bar_sil_1_espinhos",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Pena de Prata",
+  "name": "(pena de prata, 1º nível) Espinhos Prateados",
+  "description": "Como reação quando uma criatura a 18m acerta ataque/teste/save, force rerrolagem com o menor resultado. Se falhar, você pode dar vantagem a outra criatura (ou você) em uma rolagem no próximo minuto. Recupera em descanso longo ou gastando slot."
+},
+{
+  "id": "bar_sil_6_manto",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Pena de Prata",
+  "name": "(pena de prata, 6º nível) Manto de Tinta",
+  "description": "Aprende a magia Escuridão. Pode conjurar sem slot 1x por descanso longo (vê através dela e causa 2d10 psíquico a quem começa turno nela). Pode conjurar normalmente com slots."
+},
+{
+  "id": "bar_sil_10_infusao",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Pena de Prata",
+  "name": "(pena de prata, 10º nível) Infusão de Eloquência",
+  "description": "Ao causar dano com magia, mude o tipo para Psíquico ou Radiante. Adiciona dano extra igual ao bônus de proficiência e aplica efeito: Psíquico (Amedrontado) ou Radiante (Enfeitiçado) até próximo turno. Usos iguais ao bônus de proficiência."
+},
+{
+  "id": "bar_sil_14_palavra",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Pena de Prata",
+  "name": "(pena de prata, 14º nível) Palavra de Poder",
+  "description": "Opções poderosas: Desespero Mortal (alvo de Espinhos Prateados que falhar ganha vulnerabilidade a um dano) ou Invocação Altruísta (reação para dar resistência a dano a um aliado a 18m, você sofre o mesmo dano como psíquico)."
+},
+{
+  "id": "bar_sat_3_profs",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Sátira",
+  "name": "(sátira, 3º nível) Habilidades Adicionais",
+  "description": "Ganha proficiência com ferramentas de ladrão, Prestidigitação e uma perícia adicional à sua escolha."
+},
+{
+  "id": "bar_sat_3_tolo",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Sátira",
+  "name": "(sátira, 3º nível) Tolo Cambaleante",
+  "description": "Como ação bônus, realize uma cambalhota. Pelo resto do turno, ganha os benefícios de Disparada e Desengajar, ganha velocidade de escalada igual à de caminhada e sofre metade do dano de queda."
+},
+{
+  "id": "bar_sat_6_visao",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Sátira",
+  "name": "(sátira, 6º nível) Visão do Tolo",
+  "description": "Pode conjurar Detectar Pensamentos um número de vezes igual ao Modificador de Carisma. Se o alvo passar no teste de resistência, sofre uma gafe social embaraçosa imediata."
+},
+{
+  "id": "bar_sat_14_sorte",
+  "category": "Classe",
+  "class": "Bardo",
+  "subclass": "Colégio da Sátira",
+  "name": "(sátira, 14º nível) Sorte de Tolo",
+  "description": "Ao falhar em um teste de habilidade, resistência ou ataque, pode gastar Inspiração Bárdica para adicionar o dado ao total. Se transformar em sucesso, o Mestre guarda o número rolado para aplicar como penalidade em uma jogada futura sua (descrevendo uma falha embaraçosa)."
+},
+
+
+
+
+
+
+{"id":"BRUXOz"},
+
+
+  {
+    "id": "bru_base_1_pacto",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "",
+    "name": "(1º nível) Magia do Pacto",
+    "description": "Atributo: Carisma. CD = 8 + Proficiência + Mod. CAR. Bônus de ataque mágico = Proficiência + Mod. CAR. Seus espaços de magia de Bruxo são recuperados em Descanso Curto e Longo; você conhece um número fixo de magias e pode trocar uma magia conhecida ao subir de nível segundo as regras da classe."
+  },
+  {
+    "id": "bru_base_2_invoca",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "",
+    "name": "(2º nível) Invocações Eldritch",
+    "description": "Invocações: você aprende invocações místicas que concedem habilidades e melhorias permanentes. Começa com duas invocações e ganha mais conforme sobe de nível; pode trocar invocações ao subir de nível de Bruxo."
+  },
+  {
+    "id": "bru_base_3_lamina",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "",
+    "name": "(pacto, 3º nível) Pacto da Lâmina",
+    "description": "(Ação) Crie uma arma de pacto mágica em sua mão; você tem proficiência com essa arma. Pode vincular uma arma mágica existente através de um ritual de 1 hora. A arma pode ser enviada ao seu espaço extradimensional conforme regras da classe."
+  },
+  {
+    "id": "bru_base_3_corrente",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "",
+    "name": "(pacto, 3º nível) Pacto da Corrente",
+    "description": "Você aprende 'Encontrar Familiar' (ritual) e pode invocar formas especiais de familiar (Diabo Menor, Pseudodragão, Quasit, Sprite). Ao usar uma ação para comandar o familiar, você pode sacrificar um ataque para que o familiar ataque como reação."
+  },
+  {
+    "id": "bru_base_3_tomo",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "",
+    "name": "(pacto, 3º nível) Pacto do Tomo",
+    "description": "Recebe o 'Livro das Sombras' contendo 3 truques de qualquer lista; esses truques contam como magias de Bruxo para você. Se o livro for perdido, recuperá-lo requer uma cerimônia de 1 hora durante um Descanso Longo."
+  },
+  {
+    "id": "bru_base_3_talisma",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "",
+    "name": "(pacto, 3º nível) Pacto do Talismã",
+    "description": "Talismã protetor: o portador do talismã soma +1d4 a testes de habilidade falhos; usos por Descanso Longo igual ao seu bônus de proficiência. Se o talismã for perdido, recuperá-lo exige uma cerimônia de 1 hora."
+  },
+  {
+    "id": "bru_base_asi",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "",
+    "name": "Aumento no Valor de Atributo",
+    "description": "Aumente um atributo em +2 ou dois atributos em +1 (sem ultrapassar 20) nos níveis 4, 8, 12, 16 e 19, conforme as opções de progresso da classe."
+  },
+  {
+    "id": "bru_base_11_arcano",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "",
+    "name": "(11º nível) Arcano Místico",
+    "description": "O patrono concede acesso a magias de níveis superiores (6º a 9º) que você pode conjurar uma vez cada sem gastar espaços de magia; esses efeitos são recuperados após um Descanso Longo. Você obtém magias de 6º no 11º nível, 7º no 13º, 8º no 15º e 9º no 17º."
+  },
+  {
+    "id": "bru_base_20_mestre",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "",
+    "name": "(20º nível) Mestre Arcano",
+    "description": "Implore ao patrono: em um ritual de 1 minuto, você pode pedir para recuperar todos os espaços de magia de pacto gastos. Pode ser usado uma vez por Descanso Longo."
+  },
+  {
+    "id": "bru_arq_1_spells",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Arquifada",
+    "name": "Feitiços de Arquifada",
+    "description": "Magias expandidas do patrono: 1º nível — Fogo das Fadas, Sono; 2º — Emoções Calmas, Força Fantasmagórica; 3º — Piscar de Olhos, Crescimento de Plantas; 4º — Dominar Besta, Invisibilidade Maior; 5º — Dominar Pessoa, Aparência. Essas magias ficam disponíveis para você conforme as regras de magia expandida."
+  },
+  {
+    "id": "bru_arq_1_presenca",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Arquifada",
+    "name": "(arquifada, 1º nível) Presença Feérica",
+    "description": "(Ação) Crie uma área cúbica de 3 m; criaturas dentro fazem um Save de Sabedoria contra sua CD ou ficam Enfeitiçadas ou Amedrontadas (sua escolha) até o fim do seu próximo turno. Usa-se 1 vez por Descanso Curto ou Longo."
+  },
+  {
+    "id": "bru_arq_6_fuga",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Arquifada",
+    "name": "(arquifada, 6º nível) Fuga Nebulosa",
+    "description": "(Reação) Quando sofrer dano, você pode tornar-se invisível e se teletransportar até 18 m. A invisibilidade dura até o início do seu próximo turno ou até você atacar ou lançar uma magia. Usa-se 1 vez por Descanso Curto ou Longo."
+  },
+  {
+    "id": "bru_arq_10_defesa",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Arquifada",
+    "name": "(arquifada, 10º nível) Defesas Enganosas",
+    "description": "Você é imune a ser Enfeitiçado. Além disso, como Reação, quando alguém tentar enfeitiçá-lo, essa criatura deve fazer um Save de Sabedoria; se falhar, ela própria fica Enfeitiçada por você por 1 minuto (ou até sofrer dano)."
+  },
+  {
+    "id": "bru_arq_14_delirio",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Arquifada",
+    "name": "(arquifada, 14º nível) Delírio Sombrio",
+    "description": "(Ação) Uma criatura a até 18 m faz um Save de Sabedoria contra sua CD. Se falhar, fica Enfeitiçada ou Amedrontada por 1 minuto, sentindo-se perdida num reino nebuloso onde só reconhece você e ilusões que você cria."
+  },
+  {
+    "id": "bru_dem_1_spells",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Corruptor",
+    "name": "Feitiços de O Corruptor",
+    "description": "Magias expandidas do patrono: 1º — Mãos em Chamas, Comando; 2º — Cegueira/Surdez, Raio Incandescente; 3º — Bola de Fogo, Nuvem Fétida; 4º — Escudo de Fogo, Muralha de Fogo; 5º — Golpe Flamejante, Sagrado."
+  },
+  {
+    "id": "bru_dem_1_bencao",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Corruptor",
+    "name": "(corruptor, 1º nível) Bênção do Senhor das Trevas",
+    "description": "Quando você reduz uma criatura hostil a 0 PV, ganha PV Temporários iguais a seu Mod. CAR + seu nível de Bruxo (mín. 1)."
+  },
+  {
+    "id": "bru_dem_6_sorte",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Corruptor",
+    "name": "(corruptor, 6º nível) Sorte do Senhor das Trevas",
+    "description": "Ao realizar um teste de habilidade ou salvaguarda, você pode adicionar +1d10 ao resultado depois de ver a rolagem inicial. Pode ser usado 1 vez por Descanso Curto ou Longo."
+  },
+  {
+    "id": "bru_dem_10_resiliencia",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Corruptor",
+    "name": "(corruptor, 10º nível) Resiliência Diabólica",
+    "description": "Após um Descanso Curto ou Longo, escolha um tipo de dano para ganhar resistência até o próximo descanso. Armas mágicas ou prata ignoram essa resistência."
+  },
+  {
+    "id": "bru_dem_14_inferno",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Corruptor",
+    "name": "(corruptor, 14º nível) Arremessado através do Inferno",
+    "description": "Ao acertar um ataque, você pode banir o alvo para planos inferiores; ele retorna no fim do seu próximo turno sofrendo 10d10 de dano psíquico (não afeta demônios). Usos: 1 vez por Descanso Longo."
+  },
+  {
+    "id": "bru_anc_1_spells",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Grande Antigo",
+    "name": "Feitiços de O Grande Antigo",
+    "description": "Magias expandidas do patrono: 1º — Sussurros Dissonantes, Risada de Tasha; 2º — Detectar Pensamentos, Força Fantasmagórica; 3º — Clarividência, Envio; 4º — Dominar Besta, Tentáculos de Evard; 5º — Dominar Pessoa, Telecinese."
+  },
+  {
+    "id": "bru_anc_1_mente",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Grande Antigo",
+    "name": "(grande antigo, 1º nível) Mente Desperta",
+    "description": "Telepatia limitada: você pode comunicar telepaticamente com qualquer criatura que veja a até 9 m, desde que essa criatura compreenda pelo menos um idioma."
+  },
+  {
+    "id": "bru_anc_6_ala",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Grande Antigo",
+    "name": "(grande antigo, 6º nível) Ala Entrópica",
+    "description": "(Reação) Ao sofrer um ataque, você pode impor desvantagem nesse ataque. Se ele errar, seu próximo ataque contra essa criatura tem vantagem até o fim do seu próximo turno. Usa-se 1 vez por Descanso Curto ou Longo."
+  },
+  {
+    "id": "bru_anc_10_escudo",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Grande Antigo",
+    "name": "(grande antigo, 10º nível) Escudo Mental",
+    "description": "Proteção psíquica: seus pensamentos não podem ser lidos sem sua permissão. Você ganha resistência a dano psíquico e qualquer criatura que te causar dano psíquico sofre o mesmo valor de dano."
+  },
+  {
+    "id": "bru_anc_14_escravo",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Grande Antigo",
+    "name": "(grande antigo, 14º nível) Criar Escravo",
+    "description": "(Ação) Toque um humanoide incapacitado; ele fica Enfeitiçado por tempo indeterminado e uma ligação telepática é estabelecida (no mesmo plano). A condição só é removida por efeitos como 'Remover Maldição' ou similares."
+  },
+  {
+    "id": "bru_cel_1_spells",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Celestial",
+    "name": "Feitiços Celestiais",
+    "description": "Magias expandidas do patrono: 1º — Curar Ferimentos, Guia Reluzente; 2º — Esfera Flamejante, Restauração Menor; 3º — Luz do Dia, Revigorar; 4º — Guardião da Fé, Muralha de Fogo; 5º — Golpe Flamejante, Restauração Maior."
+  },
+  {
+    "id": "bru_cel_1_truques",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Celestial",
+    "name": "(celestial, 1º nível) Truques Bônus",
+    "description": "Você aprende os truques 'Luz' e 'Chama Sagrada'; esses truques não contam contra seu limite de truques conhecidos."
+  },
+  {
+    "id": "bru_cel_1_luz",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Celestial",
+    "name": "(celestial, 1º nível) Luz de Cura",
+    "description": "(Ação Bônus) Reserva de cura: você possui dados de cura d6 em número igual a 1 + seu nível de Bruxo; alcance 18 m. Gaste quantos dados quiser para curar uma criatura, somando os resultados (máx de dados usados = seu Mod. CAR). Recupera após Descanso Longo."
+  },
+  {
+    "id": "bru_cel_6_alma",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Celestial",
+    "name": "(celestial, 6º nível) Alma Radiante",
+    "description": "Resistência radiante: você ganha resistência a dano radiante. Além disso, quando causar dano radiante ou de fogo com magias, some seu Mod. CAR a uma rolagem de dano escolhida, aumentando sua efetividade."
+  },
+  {
+    "id": "bru_cel_10_resistencia",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Celestial",
+    "name": "(celestial, 10º nível) Resistência Celestial",
+    "description": "Após um Descanso Curto ou Longo, você ganha PV Temporários iguais ao seu nível + Mod. CAR. Até cinco aliados também ganham PV Temporários iguais a metade do seu nível + Mod. CAR."
+  },
+  {
+    "id": "bru_cel_14_vinganca",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Celestial",
+    "name": "(celestial, 14º nível) Vingança Ardente",
+    "description": "Quando você for bem-sucedido em um teste de resistência contra morte, recupera metade do seu HP máximo e se levanta. Além disso, inimigos a até 9 m sofrem 2d8 + Mod. CAR de dano radiante e ficam cegos até o fim do seu turno. Usa-se 1 vez por Descanso Longo."
+  },
+  {
+    "id": "bru_hex_1_spells",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Hexblade",
+    "name": "Feitiços de Hexblade",
+    "description": "Magias expandidas do patrono: 1º — Escudo, Golpe Furioso; 2º — Desfoque, Golpe de Marca; 3º — Piscar, Arma Elemental; 4º — Assassino Fantasmagórico, Golpe Estonteante; 5º — Golpe Banidor, Cone de Frio."
+  },
+  {
+    "id": "bru_hex_1_maldicao",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Hexblade",
+    "name": "(hexblade, 1º nível) Maldição da Lâmina Hex",
+    "description": "(Ação Bônus) Amaldiçoe um alvo a até 9 m por 1 minuto: você adiciona seu bônus de proficiência ao dano contra ele, acertos críticos com a maldição têm chance ampliada (19–20) e, se ele morrer sob a maldição, você recupera PV iguais ao seu nível + Mod. CAR. Usa-se 1 vez por Descanso Curto ou Longo."
+  },
+  {
+    "id": "bru_hex_1_guerreiro",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Hexblade",
+    "name": "(hexblade, 1º nível) Guerreiro Hex",
+    "description": "Proficiências: você ganha proficiência com armaduras médias, escudos e armas marciais. Pode usar seu Mod. CAR para jogadas de ataque e dano com uma arma vinculada que não seja de duas mãos, enquanto estiver vinculada via ritual durante um Descanso Longo."
+  },
+  {
+    "id": "bru_hex_6_espectro",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Hexblade",
+    "name": "(hexblade, 6º nível) Espectro Amaldiçoado",
+    "description": "Ao matar um humanoide, você pode invocar um espectro que concede suporte: ele ganha PV Temporários iguais à metade do seu nível e recebe bônus de ataque igual ao seu Mod. CAR. O espectro dura até o próximo Descanso Longo. Usa-se 1 vez por Descanso Longo."
+  },
+  {
+    "id": "bru_hex_10_armadura",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Hexblade",
+    "name": "(hexblade, 10º nível) Armadura de Maldições",
+    "description": "(Reação) Se a criatura sob sua Maldição o acertar, role 1d6; com resultado 4 ou mais, a investida falha contra você independentemente da jogada de ataque dela."
+  },
+  {
+    "id": "bru_hex_14_mestre",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Hexblade",
+    "name": "(hexblade, 14º nível) Mestre dos Feitiços",
+    "description": "Quando a criatura amaldiçoada por você morrer, você pode transferir a maldição para outra criatura a até 9 m sem recuperar HP pela morte anterior, mantendo pressão tática."
+  },
+  {
+    "id": "bru_ins_1_spells",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Insondável",
+    "name": "Feitiços de O Insondável",
+    "description": "Magias expandidas do patrono: 1º — Criar/Destruir Água, Onda Trovejante; 2º — Rajada de Vento, Silêncio; 3º — Raio, Tempestade de Granizo; 4º — Controlar Água, Invocar Elemental; 5º — Mão de Bigby, Cone de Frio."
+  },
+  {
+    "id": "bru_ins_1_tentaculo",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Insondável",
+    "name": "(insondável, 1º nível) Tentáculo das Profundezas",
+    "description": "(Ação Bônus) Conjure um tentáculo à distância (alcance 18 m). O tentáculo faz ataque mágico que causa 1d8 de dano frio e reduz velocidade do alvo em 3 m; escala para 2d8 no 10º nível. Movimentar ou ordenar o tentáculo custa Ação Bônus. Usos por Descanso Longo igual à sua proficiência."
+  },
+  {
+    "id": "bru_ins_6_alma",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Insondável",
+    "name": "(insondável, 6º nível) Alma Oceânica / Bobina",
+    "description": "Resistência ao frio: você ganha resistência a dano de frio e a capacidade de comunicar-se efetivamente debaixo d'água. Como Reação, um tentáculo pode reduzir o dano sofrido por uma criatura a até 3 m dele em 1d8 (2d8 no 10º nível)."
+  },
+  {
+    "id": "bru_ins_10_agarradores",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Insondável",
+    "name": "(insondável, 10º nível) Tentáculos Agarradores",
+    "description": "Você aprende 'Tentáculos de Evard' sem gastar slots uma vez por Descanso Longo. Ao conjurar essa magia assim, você recebe PV Temporários iguais ao seu nível e o dano da magia não quebra concentração."
+  },
+  {
+    "id": "bru_ins_14_mergulho",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Insondável",
+    "name": "(insondável, 14º nível) Mergulho Insondável",
+    "description": "(Ação) Teleporte você e até 5 aliados para um corpo d'água visível a até 1,6 km. Pode ser usado 1 vez por Descanso Curto ou Longo."
+  },
+  {
+    "id": "bru_gen_1_spells",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Gênio",
+    "name": "Feitiços de O Gênio",
+    "description": "Magias expandidas temáticas conforme o tipo do gênio (Dao, Djinni, Efreeti, Marid), incluindo magias elementais e, em patamares muito altos do pacto, efeitos comparáveis a 'Desejo' em formas limitadas (normalmente associado a níveis muito elevados)."
+  },
+  {
+    "id": "bru_gen_1_vaso",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Gênio",
+    "name": "(gênio, 1º nível) Vaso do Gênio",
+    "description": "Um receptáculo atua como foco e refúgio. Como Ação, você pode entrar no vaso (espaço extradimensional) por horas iguais a 2 × sua proficiência. A 'Ira do Gênio' concede, 1 vez por turno, bônus de proficiência ao dano de ataques elementais do tipo do gênio."
+  },
+  {
+    "id": "bru_gen_6_dom",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Gênio",
+    "name": "(gênio, 6º nível) Dom Elemental",
+    "description": "Resistência elemental ao tipo do seu patrono. Como Ação Bônus, ganhe velocidade de voo de 9 m e capacidade de pairar por até 10 minutos. Usos por Descanso Longo igual à sua proficiência."
+  },
+  {
+    "id": "bru_gen_10_santuario",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Gênio",
+    "name": "(gênio, 10º nível) Navio Santuário",
+    "description": "Você pode levar até cinco aliados para dentro do vaso (espaço extradimensional). Quem permanecer 10 minutos lá ganha os benefícios de um Descanso Curto e bônus em PV recuperados por Dados de Vida igual à sua proficiência."
+  },
+  {
+    "id": "bru_gen_14_desejo",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Gênio",
+    "name": "(gênio, 14º nível) Desejo Limitado",
+    "description": "(Ação) Solicite ao patrono um efeito equivalente a uma magia de 6º nível ou inferior (qualquer lista). O efeito é executado sem componentes e sem gastar slot. Usa-se 1 vez a cada 1d4 Descansos Longos."
+  },
+  {
+    "id": "bru_mor_1_spells",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Morto-Vivo",
+    "name": "Feitiços de O Morto-Vivo",
+    "description": "Magias expandidas do patrono: 1º — Bane, Vida Falsa; 2º — Cegueira/Surdez, Força Fantasmagórica; 3º — Cavalo Fantasma, Falar com Mortos; 4º — Guarda da Morte, Invisibilidade Maior; 5º — Casca Antivida, Nuvem Assassina."
+  },
+  {
+    "id": "bru_mor_1_forma",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Morto-Vivo",
+    "name": "(morto-vivo, 1º nível) Forma de Pavor",
+    "description": "(Ação Bônus) Transforme-se por 1 minuto: ganhe PV Temporários igual a 1d10 + seu nível, torne-se imune ao medo e, 1 vez por turno ao acertar, force o alvo a fazer um Save de Sabedoria ou ficar Amedrontado. Usos por Descanso Longo igual à sua proficiência."
+  },
+  {
+    "id": "bru_mor_6_tumulo",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Morto-Vivo",
+    "name": "(morto-vivo, 6º nível) Túmulo Tocado",
+    "description": "Você não precisa comer, beber ou respirar. Uma vez por turno, você pode substituir dano sofrido por cura necrótica ou converter dano em necrótico conforme a habilidade; em Forma de Pavor, soma um dado extra de dano necrótico."
+  },
+  {
+    "id": "bru_mor_10_casca",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Morto-Vivo",
+    "name": "(morto-vivo, 10º nível) Casca Necrótica",
+    "description": "Ganha resistência a dano necrótico (ou imunidade enquanto em Forma de Pavor). Se cair a 0 PV, como Reação você pode cair a 1 PV e explodir, causando 2d10 + seu nível de dano necrótico em um raio de 9 m; sofrerá 1 nível de exaustão. Usa-se 1 vez a cada 1d4 Descansos Longos."
+  },
+  {
+    "id": "bru_mor_14_projecao",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Morto-Vivo",
+    "name": "(morto-vivo, 14º nível) Projeção Espiritual",
+    "description": "(Ação) Sua alma pode sair do corpo por até 1 hora: você ganha resistência a dano físico, velocidade de voo e a habilidade de atravessar objetos; pode conjurar magias de Necromancia e Conjuração sem componentes. Cura metade do dano necrótico que causar. Usa-se 1 vez por Descanso Longo."
+  },
+  {
+    "id": "bru_imo_1_spells",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Imortal",
+    "name": "Feitiços de O Imortal",
+    "description": "Magias expandidas do patrono: 1º — Vida Falsa, Raio da Doença; 2º — Cegueira/Surdez, Silêncio; 3º — Fingir Morte, Falar com Mortos; 4º — Aura da Vida, Ala da Morte; 5º — Contágio, Lenda e Tradição."
+  },
+  {
+    "id": "bru_imo_1_mortos",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Imortal",
+    "name": "(imortal, 1º nível) Entre os Mortos",
+    "description": "Aprende 'Salvar os Moribundos'. Ganha vantagem em testes contra doenças. Mortos-vivos que o atacarem devem fazer Save de Sabedoria ou desviar/cessar o ataque; se passarem, ganham 24 horas de imunidade a esse efeito."
+  },
+  {
+    "id": "bru_imo_6_desafie",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Imortal",
+    "name": "(imortal, 6º nível) Desafie a Morte",
+    "description": "Ao estabilizar alguém ou passar num Save contra morte usando Truque apropriado, você cura essa criatura em 1d8 + Mod. CON (mín. 1). Usa-se 1 vez por Descanso Longo."
+  },
+  {
+    "id": "bru_imo_10_natureza",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Imortal",
+    "name": "(imortal, 10º nível) Natureza Imortal",
+    "description": "Você não precisa respirar, comer, beber ou dormir (ainda necessita de descansos para recuperar habilidades). Envelhece 1 ano a cada 10 anos reais e é imune ao envelhecimento mágico."
+  },
+  {
+    "id": "bru_imo_14_vida",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Imortal",
+    "name": "(imortal, 14º nível) Vida Indestrutível",
+    "description": "(Ação Bônus) Cure 1d8 + seu nível de Bruxo. Se você tiver um membro decepado e mantê-lo no lugar ao usar essa habilidade, ele se reconecta. Usa-se 1 vez por Descanso Curto ou Longo."
+  },
+  {
+    "id": "bru_lim_1_spells",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "A Luz Imortal",
+    "name": "Feitiços de A Luz Imortal",
+    "description": "Magias expandidas do patrono: 1º — Mãos em Chamas; 2º — Esfera Flamejante; 3º — Luz do Dia; 4º — Escudo de Fogo; 5º — Golpe de Chamas."
+  },
+  {
+    "id": "bru_lim_1_alma",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "A Luz Imortal",
+    "name": "(luz imortal, 1º nível) Alma Radiante",
+    "description": "Você ganha resistência a dano radiante e soma seu Mod. CAR a danos de fogo/radiante causados por suas magias. Aprende 'Luz' e 'Chama Sagrada' gratuitamente."
+  },
+  {
+    "id": "bru_lim_6_vinganca",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "A Luz Imortal",
+    "name": "(luz imortal, 6º nível) Vingança Ardente",
+    "description": "Ao sofrer uma ameaça de morte (ex.: falhar em saves mortais), você explode em luz e se levanta com metade do HP máximo. Inimigos a 9 m sofrem 10 + Mod. CAR de dano radiante e ficam cegos. Usa-se 1 vez por Descanso Longo."
+  },
+  {
+    "id": "bru_lim_14_luz",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "A Luz Imortal",
+    "name": "(luz imortal, 14º nível) Luz de Cura",
+    "description": "(Ação Bônus) Reserva de cura poderosa: você possui um reservatório total de 15d6 (pode usar até 5d6 por vez) para curar por toque. O reservatório recarrega no Descanso Longo."
+  },
+  {
+    "id": "bru_shi_1_spells",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Shinigami",
+    "name": "Feitiços do Shinigami",
+    "description": "Magias expandidas do patrono: 1º — Vida Falsa, Santuário; 2º — Silêncio, Arma Espiritual; 3º — Fingir Morte, Falar com Mortos; 4º — Tempestade de Gelo, Localizar Criatura; 5º — Comuna, Cone de Frio."
+  },
+  {
+    "id": "bru_shi_1_corvo",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Shinigami",
+    "name": "(shinigami, 1º nível) Corvo Sentinela",
+    "description": "Um espírito-corvo acompanha você: concede Visão no Escuro (9 m) e fornece bônus de percepção baseado em CAR; você pode ver e ouvir através dos sentidos do corvo a até 30 m. Se o corvo for destruído, você tem vantagem contra o responsável por 24 horas. Recupera com descanso."
+  },
+  {
+    "id": "bru_shi_6_alma",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Shinigami",
+    "name": "(shinigami, 6º nível) Alma do Corvo",
+    "description": "(Ação Bônus) Você pode fundir-se ao corvo (tornando-se Minúsculo); sua velocidade passa a ser a do corvo e pode usar apenas ações simples (Dash, Disengage, Hide, etc.). Reverter a fusão custa 1 Ação."
+  },
+  {
+    "id": "bru_shi_10_escudo",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Shinigami",
+    "name": "(shinigami, 10º nível) Escudo do Corvo",
+    "description": "Vantagem em salvaguardas contra morte, imunidade à condição Amedrontado e resistência a dano necrótico, refletindo vínculo espiritual protetor."
+  },
+  {
+    "id": "bru_shi_14_mao",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Shinigami",
+    "name": "(shinigami, 14º nível) Mão Direita do Shinigami",
+    "description": "Você pode conjurar 'Dedo da Morte' uma vez por Descanso Longo sem gastar espaços de magia, canalizando o poder do shinigami."
+  },
+  {
+    "id": "bru_maq_1_spells",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Fantasma do Maquinario",
+    "name": "Feitiços do Fantasma do Maquinario",
+    "description": "Magias expandidas de temática tecnológica: 1º — Relé, Acesso Remoto; 2º — Hacking, Fantasma Digital; 3º — Descontrolado, Invisibilidade para Câmeras; 4º — Knowbot, Backdoor; 5º — Desligamento, Sincronicidade. Essas magias traduzem efeitos arcanos para um cenário tecnologizado."
+  },
+  {
+    "id": "bru_maq_1_sobrecarga",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Fantasma do Maquinario",
+    "name": "(fantasma maquinario, 1º nível) Sobrecarga de Informação",
+    "description": "(Ação) Faça um dispositivo eletrônico a até 9 m parar de funcionar por 1 turno. Criaturas que o seguram fazem um Save de Inteligência contra sua CD; falha = dispositivo inoperante. Usa-se 1 vez por Descanso Curto ou Longo."
+  },
+  {
+    "id": "bru_maq_6_caminhada",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Fantasma do Maquinario",
+    "name": "(fantasma maquinario, 6º nível) Caminhada na Corda Bamba",
+    "description": "(Ação Bônus) Ao tocar um dispositivo conectado e visualizar outro ponto na mesma rede, você pode se teletransportar por meio da infraestrutura cabeada até esse ponto visível. Usa-se 1 vez por Descanso Curto ou Longo."
+  },
+  {
+    "id": "bru_maq_10_cripto",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Fantasma do Maquinario",
+    "name": "(fantasma maquinario, 10º nível) Criptografia Pessoal",
+    "description": "Você ganha vantagem em salvaguardas contra magias de adivinhação e detecção mental. Testes que tentem rastreá-lo eletronicamente ou mentalmente têm desvantagem."
+  },
+  {
+    "id": "bru_maq_14_tecnovirus",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Fantasma do Maquinario",
+    "name": "(fantasma maquinario, 14º nível) Tecnovírus",
+    "description": "(Ação) Ataque mágico corpo-a-corpo que causa 8d10 de dano psíquico (Save CON reduz à metade). Falha no save pode infectar o alvo, tornando-o vulnerável a um comando futuro (o alvo tem desvantagem na salvaguarda contra esse comando). Uso: 1 vez por Descanso Longo."
+  },
+  {
+    "id": "bru_bus_1_spells",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Buscador",
+    "name": "Feitiços de O Buscador",
+    "description": "Magias expandidas do patrono: 1º — Queda Suave, Salto; 2º — Levitar, Localizar Objeto; 3º — Clarividência, Envio; 4º — Olho Arcano, Localizar Criatura; 5º — Lenda e Tradição, Passagem. Focadas em mobilidade, busca e santuários astrais."
+  },
+  {
+    "id": "bru_bus_1_protecao",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Buscador",
+    "name": "(buscador, 1º nível) Proteção da Aurora",
+    "description": "(Ação Bônus) Ative uma aurora protetora por 1 rodada: você ganha resistência a todos os tipos de dano durante essa rodada; inimigos que terminarem seu turno a até 3 m sofrem dano radiante igual ao seu nível + Mod. CAR. Usa-se 1 vez por Descanso Curto ou Longo."
+  },
+  {
+    "id": "bru_bus_3_estelar",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Buscador",
+    "name": "(pacto, 3º nível) Pacto da Corrente Estelar",
+    "description": "Você conhece 'Augúrio' (ritual). Pode ganhar vantagem em um teste de Inteligência em circunstâncias apropriadas; essa vantagem se recupera após Descanso Curto ou Longo."
+  },
+  {
+    "id": "bru_bus_6_refugio",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Buscador",
+    "name": "(buscador, 6º nível) Refúgio Astral",
+    "description": "(Ação) Entre temporariamente no Plano Astral: enquanto lá, você pode gastar duas ações para conjurar magias que afetem apenas você; ao retornar, seu turno termina. Usa-se conforme decisão do DM e regras de planos."
+  },
+  {
+    "id": "bru_bus_14_sequestro",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "O Buscador",
+    "name": "(buscador, 14º nível) Sequestro Astral",
+    "description": "(Ritual de até 5 minutos) Transporte: você e até 10 aliados entram no Plano Astral para obter um Descanso Curto instantâneo (sem passar tempo no mundo material). Usa-se 1 vez por Descanso Longo."
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ {
+  "id": "csa_base_1_flagelo",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "",
+  "name": "(1º nível) Flagelo do Caçador",
+  "description": "Você sobreviveu ao ritual da Maldição. Você tem Vantagem em testes de Sabedoria (Sobrevivência) para rastrear Fadas, Demônios e Mortos-Vivos, e em testes de Inteligência para recordar informações sobre eles. Além disso, define sua CD de Hemomancia = 8 + Bônus de Proficiência + Modificador de Hemomancia (INT ou SAB)."
+},
+{
+  "id": "csa_base_1_maldicao",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "",
+  "name": "(1º nível) Maldição de Sangue",
+  "description": "Você conhece Maldições de Sangue (invocações de hemomancia). Ao usar, você pode escolher Amplificar a maldição: sofra dano necrótico igual a uma rolagem do seu dado de Hemomancia (esse dano não pode ser reduzido) para obter um efeito aprimorado. Criaturas sem sangue são imunes a maldições não amplificadas. Usos por descanso (Curto/Longo): 1 (1º), 2 (6º), 3 (13º) e 4 (17º nível)."
+},
+{
+  "id": "csa_base_2_estilo",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "",
+  "name": "(2º nível) Estilo de Luta",
+  "description": "Escolha uma especialidade: Arquearia (+2 ataque à distância), Duelo (+2 dano com uma arma em uma mão), Combate com Arma Grande (rerolar 1 e 2 no dano com armas de duas mãos/versáteis) ou Combate com Duas Armas (adiciona modificador de habilidade ao dano do segundo ataque)."
+},
+{
+  "id": "csa_base_2_rito",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "",
+  "name": "(2º nível) Rito Carmesim",
+  "description": "(Ação Bônus) Você ativa um rito elemental em uma arma empunhada. Sofra dano necrótico igual a uma rolagem do seu dado de Hemomancia (não redutível). Até o próximo descanso, a arma é mágica e causa dano extra igual ao seu dado de Hemomancia. Tipos iniciais: Chama (Fogo), Congelado (Frio), Tempestade (Elétrico). No 14º nível, aprende ritos esotéricos (Mortos, Oráculo ou Rugido)."
+},
+{
+  "id": "csa_base_asi",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "",
+  "name": "Aumento no Valor de Atributo",
+  "description": "Você pode aumentar um valor de atributo à sua escolha em 2, ou dois valores em 1. Como padrão, você não pode elevar um atributo acima de 20 com esta característica. Obtido nos níveis 4, 8, 12, 16 e 19."
+},
+{
+  "id": "csa_base_5_ataque",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "",
+  "name": "(5º nível) Ataque Extra",
+  "description": "Você pode realizar dois ataques, em vez de um, sempre que utilizar a ação de Atacar no seu turno."
+},
+{
+  "id": "csa_base_6_marca",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "",
+  "name": "(6º nível) Marca de Castigo",
+  "description": "Sempre que causar dano com um Rito Carmesim, você pode marcar a criatura (sem ação). Você sabe a direção dela no mesmo plano. Além disso, sempre que o alvo causar dano a você ou a uma criatura a 1,5m de você, ele sofre dano psíquico igual ao seu Modificador de Hemomancia. A marca dura até ser dissipada ou você marcar outro alvo. Recupera em Descanso Curto/Longo."
+},
+{
+  "id": "csa_base_9_psicometria",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "",
+  "name": "(9º nível) Psicometria Sombria",
+  "description": "Você tem vantagem em testes de Inteligência (História) para recordar informações sobre histórias sinistras, trágicas ou malignas de objetos que toca ou locais onde está. O Mestre pode conceder visões breves do passado relacionadas a esses objetos."
+},
+{
+  "id": "csa_base_10_escuridao",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "",
+  "name": "(10º nível) Aumento da Escuridão",
+  "description": "A magia de sangue permeia seu corpo. Sua velocidade aumenta em 1,5 metro e você adiciona seu Modificador de Hemomancia aos seus testes de resistência de Força, Destreza e Constituição."
+},
+{
+  "id": "csa_base_13_amarracao",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "",
+  "name": "(13º nível) Marca de Amarração",
+  "description": "Aprimora a Marca de Castigo: o dano psíquico dobra (2x Mod. Hemomancia). O alvo não pode usar a ação Disparada. Se tentar se teleportar ou mudar de plano, sofre 4d6 de dano psíquico e deve passar em um teste de resistência de Sabedoria ou a tentativa falha."
+},
+{
+  "id": "csa_base_14_alma",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "",
+  "name": "(14º nível) Alma Endurecida",
+  "description": "Sua determinação contra a escuridão é inabalável. Você tem vantagem em testes de resistência contra ser amedrontado e enfeitiçado."
+},
+{
+  "id": "csa_base_20_dominio",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "",
+  "name": "(20º nível) Domínio Sanguíneo",
+  "description": "Uma vez por turno, ao rolar um dado de Hemomancia (para dano de rito ou amplificação), você pode rolar novamente e escolher o resultado. Além disso, ao acertar um crítico com uma arma de Rito ativo, você recupera um uso gasto de Maldição de Sangue."
+},
+{
+  "id": "csa_mat_3_aurora",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem do Matador de Fantasmas",
+  "name": "(matador de fantasmas, 3º nível) Rito da Aurora",
+  "description": "Você aprende o rito esotérico 'Rito da Aurora' (dano Radiante). Enquanto ativo: sua arma emite luz (6m); você ganha resistência a dano necrótico; e você rola 1 dado de Hemomancia adicional de dano ao atacar mortos-vivos."
+},
+{
+  "id": "csa_mat_3_espec",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem do Matador de Fantasmas",
+  "name": "(matador de fantasmas, 3º nível) Especialista em Maldições",
+  "description": "Você ganha 1 uso adicional de Maldição de Sangue. Além disso, suas maldições de sangue podem afetar qualquer criatura, mesmo aquelas que não possuem sangue."
+},
+{
+  "id": "csa_mat_7_ete",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem do Matador de Fantasmas",
+  "name": "(matador de fantasmas, 7º nível) Caminhada Etérea",
+  "description": "(Sem ação) No início do turno, você pode entrar no plano etéreo. Você pode atravessar criaturas e objetos (como terreno difícil) e afetar criaturas no Plano Etéreo. Sofre 1d10 dano de força se terminar o turno dentro de um objeto. Dura rodadas iguais ao Mod. Hemomancia. Recupera em descanso curto/longo."
+},
+{
+  "id": "csa_mat_11_ruptura",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem do Matador de Fantasmas",
+  "name": "(matador de fantasmas, 11º nível) Marca de Ruptura",
+  "description": "Sua Marca de Castigo expõe o inimigo. Ao atacar um alvo marcado com seu Rito ativo, você causa 1 dado de Hemomancia adicional de dano. O alvo marcado não pode usar características de Movimento Incorpóreo para atravessar objetos."
+},
+{
+  "id": "csa_mat_18_renasc",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem do Matador de Fantasmas",
+  "name": "(matador de fantasmas, 18º nível) Rito de Renascimento",
+  "description": "Quando você for reduzido a 0 pontos de vida (mas não morto instantaneamente) e tiver um ou mais Ritos Carmesins ativos, você pode optar por encerrar todos os ritos para evitar a inconsciência e permanecer com 1 ponto de vida."
+},
+{
+  "id": "csa_lic_3_sentidos",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem do Licantropo",
+  "name": "(licantropo, 3º nível) Sentidos Aguçados",
+  "description": "Você ganha vantagem em testes de Sabedoria (Percepção) que dependam da audição ou do olfato."
+},
+{
+  "id": "csa_lic_3_transf",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem do Licantropo",
+  "name": "(licantropo, 3º nível) Transformação Híbrida",
+  "description": "(Ação Bônus) Transforma-se por 1h (Recupera em descanso curto/longo). Benefícios: Vantagem em testes/saves de Força; +1 dano corpo a corpo (+2 no 11º, +3 no 18º nível); Resistência a dano contundente/perfurante/cortante não-mágico/não-prata; +1 na CA; Ataques desarmados causam 1d6 (1d8 no 11º) e permitem um ataque extra como ação bônus. Desvantagem: Sede de Sangue (início do turno com <50% vida, faça Save de Sabedoria CD 8 ou ataque a criatura mais próxima)."
+},
+{
+  "id": "csa_lic_7_perseguidor",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem do Licantropo",
+  "name": "(licantropo, 7º nível) Habilidade do Perseguidor",
+  "description": "Sua velocidade aumenta em 3 metros. Seus saltos aumentam (3m distância, 1m altura). Em forma híbrida, seus ataques desarmados recebem +1 de bônus na jogada de ataque e são considerados mágicos se tiverem um Rito ativo."
+},
+{
+  "id": "csa_lic_11_regere",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem do Licantropo",
+  "name": "(licantropo, 11º nível) Regeneração Licantropa",
+  "description": "Você pode usar a Transformação Híbrida duas vezes por descanso. Em forma híbrida, se estiver com menos da metade da vida (mas acima de 0), você recupera 1 + Mod. Constituição PV no início do turno (antes do teste de Sede de Sangue)."
+},
+{
+  "id": "csa_lic_15_vorazes",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem do Licantropo",
+  "name": "(licantropo, 15º nível) Marca dos Vorazes",
+  "description": "Você tem vantagem no teste de resistência contra Sede de Sangue. Além disso, enquanto estiver em forma híbrida, você tem vantagem nas jogadas de ataque contra criaturas marcadas pela sua Marca de Castigo."
+},
+{
+  "id": "csa_lic_18_dominio",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem do Licantropo",
+  "name": "(licantropo, 18º nível) Domínio da Transformação",
+  "description": "Você pode usar a Transformação Híbrida um número ilimitado de vezes e permanecer nela indefinidamente. Você também aprende a 'Maldição de Sangue do Uivo' (não conta no limite de conhecidas)."
+},
+{
+  "id": "csa_mut_3_mutagens",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem do Mutante",
+  "name": "(mutante, 3º nível) Mutagencraft",
+  "description": "(Ação Bônus) Consome um mutagênico para ganhar benefícios e efeitos colaterais até o próximo descanso. Você conhece 4 fórmulas (aumenta com o nível) e pode preparar mutagênicos ao final de um descanso (1 no 3º, 2 no 7º, 3 no 15º nível). (Ação) Pode eliminar as toxinas para encerrar os efeitos prematuramente."
+},
+{
+  "id": "csa_mut_7_meta",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem do Mutante",
+  "name": "(mutante, 7º nível) Metabolismo Estranho",
+  "description": "Você ganha imunidade a dano de veneno e à condição envenenado. (Ação Bônus) Você pode ignorar o efeito colateral negativo de um mutagênico ativo por 1 minuto. Recupera em descanso longo."
+},
+{
+  "id": "csa_mut_11_axiom",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem do Mutante",
+  "name": "(mutante, 11º nível) Marca da Axiom",
+  "description": "Sua Marca de Castigo encerra ilusões e invisibilidade no alvo e impede que ele se beneficie delas. Se o alvo for um metamorfo ou estiver transformado (polimorfia, forma selvagem), deve passar em um Save de Sabedoria ou reverter à forma original e ficar atordoado por 1 turno."
+},
+{
+  "id": "csa_mut_18_exaltada",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem do Mutante",
+  "name": "(mutante, 18º nível) Mutação Exaltada",
+  "description": "(Ação Bônus) Você pode encerrar os efeitos de um mutagênico ativo e imediatamente ativar outro mutagênico cuja fórmula você conheça, sem precisar tê-lo preparado. Usos iguais ao Mod. Hemomancia. Recupera em descanso longo."
+},
+{
+  "id": "csa_pro_3_magia",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem da Alma Profana",
+  "name": "(alma profana, 3º nível) Magia do Pacto",
+  "description": "Você ganha a habilidade de conjurar magias usando a lista de Bruxo. Seus espaços de magia (spell slots) recuperam em descanso curto ou longo. Atributo de conjuração: Hemomancia (INT ou SAB). Sua arma com Rito ativo serve como foco de conjuração."
+},
+{
+  "id": "csa_pro_3_foco",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem da Alma Profana",
+  "name": "(alma profana, 3º nível) Rito Foco",
+  "description": "Sua arma ganha benefícios baseados no Patrono escolhido. Arquifada: alvo brilha (sem invisibilidade/cobertura). Celestial: (Ação Bônus) gasta Maldição p/ curar. Demônio: rerola 1 e 2 no dano de fogo. Gênio: (Ação Bônus) gasta Maldição p/ voar. Grande Antigo: Crítico causa medo em área. Hexblade: +Prof dano em alvo amaldiçoado. Morto-Vivo: (Reação) reduz dano necrótico à metade."
+},
+{
+  "id": "csa_pro_7_frenesi",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem da Alma Profana",
+  "name": "(alma profana, 7º nível) Frenesi Místico",
+  "description": "Quando você usa sua ação para conjurar um truque, você pode realizar um ataque com arma como uma ação bônus imediatamente."
+},
+{
+  "id": "csa_pro_7_revelados",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem da Alma Profana",
+  "name": "(alma profana, 7º nível) Arcanos Revelados",
+  "description": "Seu patrono concede uma magia específica que você pode conjurar usando um espaço de magia de pacto (1x por descanso longo). Ex: Arquifada (Desfocar), Celestial (Restauração Menor), Demônio (Raio Incandescente), Hexblade (Golpe de Marca), Morto-Vivo (Cegueira/Surdez)."
+},
+{
+  "id": "csa_pro_11_cicatriz",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem da Alma Profana",
+  "name": "(alma profana, 11º nível) Marca da Cicatriz Destruidora",
+  "description": "Uma criatura marcada pela sua Marca de Castigo sofre desvantagem em testes de resistência contra suas magias de bruxo."
+},
+{
+  "id": "csa_pro_15_deslacrados",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Ordem da Alma Profana",
+  "name": "(alma profana, 15º nível) Arcanos Deslacrados",
+  "description": "Seu patrono concede uma magia poderosa que pode ser conjurada sem gastar espaço de magia (1x por descanso longo). Ex: Arquifada (Lentidão), Celestial (Revivificar), Demônio (Bola de Fogo), Hexblade (Piscar), Morto-Vivo (Falar com Mortos)."
+},
+{
+  "id": "csa_mal_ansiosos",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Maldições de Sangue",
+  "name": "(maldição) Maldição de Sangue dos Ansiosos",
+  "description": "(Ação Bônus) Atormenta uma criatura a 9m. Até o fim do seu turno, testes de Intimidação contra ela têm vantagem. Amplificar: O próximo teste de resistência de Sabedoria do alvo tem desvantagem."
+},
+{
+  "id": "csa_mal_ligacao",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Maldições de Sangue",
+  "name": "(maldição) Maldição de Sangue da Ligação",
+  "description": "(Ação Bônus) Alvo (Grande ou menor) a 9m faz Save de Força. Falha: Velocidade 0 e sem reações até seu próximo turno. Amplificar: Dura 1 minuto, afeta qualquer tamanho e permite repetir o teste a cada turno."
+},
+{
+  "id": "csa_mal_agonia",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Maldições de Sangue",
+  "name": "(maldição) Maldição de Sangue da Agonia Inchada",
+  "description": "(Ação Bônus) Alvo a 9m incha até o fim do turno. Tem desvantagem em testes de FOR e DEX e sofre 1d8 necrótico se fizer mais de um ataque. Amplificar: Dura 1 minuto, com save de Constituição ao final de cada turno."
+},
+{
+  "id": "csa_mal_corrosao",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Maldições de Sangue",
+  "name": "(maldição, 15º nív, Mutante) Maldição de Sangue da Corrosão",
+  "description": "(Ação Bônus) Envenena uma criatura a 9m (Save CON encerra). Amplificar: Sofre 4d6 de dano necrótico imediato e repete o dano sempre que falhar no teste de resistência para encerrar."
+},
+{
+  "id": "csa_mal_exorcista",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Maldições de Sangue",
+  "name": "(maldição, 15º nív, Matador) Maldição de Sangue do Exorcista",
+  "description": "(Ação Bônus) Encerra imediatamente as condições Enfeitiçado, Amedrontado ou Possuído em um alvo a 9m. Amplificar: A criatura que causou o efeito sofre 3d6 psíquico e deve fazer Save de Sabedoria ou ficar Atordoada."
+},
+{
+  "id": "csa_mal_exposicao",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Maldições de Sangue",
+  "name": "(maldição) Maldição de Sangue da Exposição",
+  "description": "(Reação) Quando um alvo a 9m sofre dano, ele perde resistência a esse tipo de dano até o próximo turno. Amplificar: Ignora invulnerabilidade ao dano (tratando como resistência) até o final do turno."
+},
+{
+  "id": "csa_mal_sem_olhos",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Maldições de Sangue",
+  "name": "(maldição) Maldição de Sangue dos Sem Olhos",
+  "description": "(Reação) Quando uma criatura a 9m ataca, subtraia uma rolagem do seu dado de Hemomancia do ataque dela. Imune se não puder ser cegada. Amplificar: O efeito se aplica a todos os ataques da criatura até o fim do turno."
+},
+{
+  "id": "csa_mal_marionete",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Maldições de Sangue",
+  "name": "(maldição) Maldição de Sangue da Marionete Caída",
+  "description": "(Reação) Quando uma criatura a 9m cai a 0 PV, ela realiza um ataque imediato contra um alvo à sua escolha. Amplificar: A criatura move metade da velocidade antes de atacar e ganha bônus no acerto igual ao seu Mod. Hemomancia."
+},
+{
+  "id": "csa_mal_uivo",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Maldições de Sangue",
+  "name": "(maldição, 18º nív, Licantropo) Maldição de Sangue do Uivo",
+  "description": "(Ação) Solta um uivo a 9m. Inimigos fazem Save de Sabedoria ou ficam Amedrontados (Atordoados se falharem por 5+). Sucesso imuniza por 24h. Amplificar: Alcance aumenta para 18 metros."
+},
+{
+  "id": "csa_mal_marcados",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Maldições de Sangue",
+  "name": "(maldição) Maldição de Sangue dos Marcados",
+  "description": "(Ação Bônus) Marca criatura a 9m. Até o fim do turno, causa 1 dado de Hemomancia extra ao acertar com Rito ativo. Amplificar: Sua próxima jogada de ataque contra o alvo tem vantagem."
+},
+{
+  "id": "csa_mal_mente",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Maldições de Sangue",
+  "name": "(maldição) Maldição de Sangue da Mente Confusa",
+  "description": "(Ação Bônus) Amaldiçoa criatura a 9m que esteja concentrando. Ela tem desvantagem no próximo Save de Constituição para manter concentração. Amplificar: Desvantagem em todos os testes de concentração até o fim do próximo turno."
+},
+{
+  "id": "csa_mal_devorador",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "Maldições de Sangue",
+  "name": "(maldição, 18º nív, Alma Profana) Maldição do Devorador de Almas",
+  "description": "(Reação) Quando uma criatura (não constructo/morto-vivo) morre a 9m, você ganha vantagem em ataques e resistência a danos até seu próximo turno. Amplificar: Recupera um espaço de magia de Bruxo (1x por descanso longo)."
+},
+
+ 
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  {
+    "id": "cle_base_1_conjura",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "",
+    "name": "(1º nível) Lançamento de Feitiços",
+    "description": "Você prepara magias diariamente meditando. Atributo: Sabedoria. CD = 8 + Proficiência + Mod. Sabedoria. Ataque Mágico = Proficiência + Mod. Sabedoria. Você pode preparar um número de magias igual ao seu nível de Clérigo + Mod. Sabedoria. Pode conjurar magias preparadas com a etiqueta 'Ritual' sem gastar espaços de magia. Requer um Símbolo Sagrado como foco."
+  },
+  {
+    "id": "cle_base_2_canaliza",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "",
+    "name": "(2º nível) Canalizar Divindade",
+    "description": "Você ganha a habilidade de canalizar energia divina diretamente de sua divindade. Você começa com dois efeitos: 'Expulsar Mortos-Vivos' e um efeito determinado pelo seu Domínio. Você recupera os usos gastos após um descanso curto ou longo. Usos: 1 vez (2º nível), 2 vezes (6º nível), 3 vezes (18º nível)."
+  },
+  {
+    "id": "cle_base_2_expulsar",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "",
+    "name": "(2º nível) Canalizar Divindade: Expulsar Mortos-Vivos",
+    "description": "Como uma ação, você apresenta seu símbolo sagrado. Cada morto-vivo a até 9 metros que possa vê-lo ou ouvi-lo deve fazer um teste de resistência de Sabedoria. Se falhar, a criatura é expulsa por 1 minuto ou até sofrer dano. Uma criatura expulsa deve usar seus turnos para fugir de você, não pode se aproximar voluntariamente a menos de 9 metros e não pode usar reações. Ela só pode usar a ação de Disparada ou tentar escapar de efeitos que a impeçam de se mover."
+  },
+  {
+    "id": "cle_base_2_poder",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "",
+    "name": "(2º nível) Aproveite o Poder Divino (Opcional)",
+    "description": "Como uma ação bônus, você pode gastar um uso de sua Canalização Divina para recuperar um espaço de magia gasto. O nível do espaço recuperado não pode ser superior à metade do seu bônus de proficiência (arredondado para cima)."
+  },
+  {
+    "id": "cle_base_asi",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "",
+    "name": "Aumento no Valor de Atributo",
+    "description": "Você pode aumentar um valor de atributo à sua escolha em 2, ou dois valores em 1. Como padrão, você não pode elevar um atributo acima de 20 com esta característica. Obtido nos níveis 4, 8, 12, 16 e 19."
+  },
+  {
+    "id": "cle_base_5_destruir",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "",
+    "name": "(5º nível) Destruir Mortos-Vivos",
+    "description": "Quando um morto-vivo falha no teste de resistência contra sua habilidade 'Expulsar Mortos-Vivos', ele é instantaneamente destruído se seu Nível de Desafio (ND) for igual ou inferior ao limite: ND 1/2 (5º nível), ND 1 (8º nível), ND 2 (11º nível), ND 3 (14º nível), ND 4 (17º nível)."
+  },
+  {
+    "id": "cle_base_8_golpes_opc",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "",
+    "name": "(8º nível) Golpes Abençoados (Opcional)",
+    "description": "Esta característica substitui o Golpe Divino ou a Conjuração Potente. Quando uma criatura sofre dano de um de seus truques ou ataques com armas, você pode causar 1d8 de dano radiante adicional a essa criatura. Uma vez que você causa esse dano, não pode usá-lo novamente até o início do seu próximo turno."
+  },
+  {
+    "id": "cle_base_10_intervencao",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "",
+    "name": "(10º nível) Intervenção Divina",
+    "description": "Como uma ação, você implora a ajuda da sua divindade. Role d100: se o resultado for igual ou menor que seu nível de clérigo, a divindade intervém. Se tiver sucesso, você não pode usar novamente por 7 dias. Se falhar, pode tentar após um descanso longo. No 20º nível, o sucesso é automático."
+  },
+  {
+    "id": "cle_sol_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Solidariedade",
+    "name": "Feitiços de Solidariedade",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Abençoar, Raio Guia; 3º - Auxílio, Vínculo de Proteção; 5º - Farol da Esperança, Manto do Cruzado; 7º - Aura da Vida, Guardiã da Fé; 9º - Círculo de Poder, Cura em Massa."
+  },
+  {
+    "id": "cle_sol_1_acao",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Solidariedade",
+    "name": "(solidariedade, 1º nível) Ação de Solidariedade",
+    "description": "Você ganha proficiência com armaduras pesadas. Além disso, quando você usa a ação Ajudar para auxiliar o ataque de um aliado, você pode fazer um ataque com arma como uma ação bônus. Usos iguais ao seu modificador de Sabedoria (recupera em descanso longo)."
+  },
+  {
+    "id": "cle_sol_2_preservar",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Solidariedade",
+    "name": "(solidariedade, 2º nível) Canalizar Divindade: Preservar a Vida",
+    "description": "Como uma ação, você restaura um total de pontos de vida igual a 5 vezes seu nível de clérigo. Escolha quaisquer criaturas a até 9 metros e divida os pontos entre elas. Esta habilidade não pode curar uma criatura acima de metade do seu máximo de pontos de vida e não afeta mortos-vivos ou constructos."
+  },
+  {
+    "id": "cle_sol_6_bencao",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Solidariedade",
+    "name": "(solidariedade, 6º nível) Bênção de Oketra",
+    "description": "Como uma reação, quando uma criatura a até 9 metros de você faz uma jogada de ataque, você pode usar sua Canalização Divina para conceder um bônus de +10 na jogada. Você decide usar isso após ver a rolagem, mas antes do Mestre declarar o resultado."
+  },
+  {
+    "id": "cle_sol_8_golpe",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Solidariedade",
+    "name": "(solidariedade, 8º nível) Golpe Divino",
+    "description": "Uma vez em cada um dos seus turnos, quando você acerta uma criatura com um ataque de arma, você pode fazer com que o ataque cause 1d8 de dano extra do mesmo tipo da arma. O dano aumenta para 2d8 no 14º nível."
+  },
+  {
+    "id": "cle_sol_17_cura",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Solidariedade",
+    "name": "(solidariedade, 17º nível) Cura Suprema",
+    "description": "Quando você rolaria dados para restaurar pontos de vida com uma magia, use o resultado máximo possível em cada dado (por exemplo, curar 2d6 restaura automaticamente 12 pontos de vida)."
+  },
+  {
+    "id": "cle_for_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Força",
+    "name": "Feitiços de Força",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Favor Divino, Escudo da Fé; 3º - Aprimoramento de Habilidade, Proteção contra Veneno; 5º - Pressa, Proteção contra Energia; 7º - Dominar a Fera, Pele de Pedra; 9º - Onda Destrutiva, Praga de Insetos."
+  },
+  {
+    "id": "cle_for_1_acolito",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Força",
+    "name": "(força, 1º nível) Acólito da Força",
+    "description": "Você ganha proficiência com armaduras pesadas, aprende um truque de druida à sua escolha e ganha proficiência em uma das seguintes perícias: Adestramento de Animais, Atletismo, Natureza ou Sobrevivência."
+  },
+  {
+    "id": "cle_for_2_proeza",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Força",
+    "name": "(força, 2º nível) Canalizar Divindade: Proeza de Força",
+    "description": "Quando você fizer uma jogada de ataque, teste de habilidade ou teste de resistência usando Força, você pode usar sua Canalização Divina para ganhar um bônus de +10 na jogada. Você decide após ver a rolagem, mas antes do resultado."
+  },
+  {
+    "id": "cle_for_6_bencao",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Força",
+    "name": "(força, 6º nível) Bênção de Rhonas",
+    "description": "Como uma reação, quando uma criatura a até 9 metros de você faz uma jogada de ataque, teste de habilidade ou teste de resistência usando Força, você pode usar sua Canalização Divina para conceder um bônus de +10 na jogada."
+  },
+  {
+    "id": "cle_for_8_golpe",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Força",
+    "name": "(força, 8º nível) Golpe Divino",
+    "description": "Uma vez em cada um dos seus turnos, quando você acerta uma criatura com um ataque de arma, você pode fazer com que o ataque cause 1d8 de dano extra do mesmo tipo da arma. O dano aumenta para 2d8 no 14º nível."
+  },
+  {
+    "id": "cle_for_17_avatar",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Força",
+    "name": "(força, 17º nível) Avatar da Batalha",
+    "description": "Você ganha resistência a dano de concussão, perfuração e corte proveniente de ataques não mágicos."
+  },
+  {
+    "id": "cle_amb_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Ambição",
+    "name": "Feitiços de Ambição",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Bane, Disfarce-se; 3º - Imagem Espelhada, Raio de Enfraquecimento; 5º - Impor Maldição, Toque Vampírico; 7º - Ala da Morte, Porta Dimensional; 9º - Pessoa Dominante, Modificar Memória."
+  },
+  {
+    "id": "cle_amb_1_sinalizador",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Ambição",
+    "name": "(ambição, 1º nível) Sinalizador de Proteção",
+    "description": "Como uma reação quando atacado por uma criatura a até 9 metros que você possa ver, você pode impor desvantagem na jogada de ataque emitindo uma luz. Atacantes imunes a cegueira não são afetados. Usos iguais ao modificador de Sabedoria (mínimo 1). Recupera em descanso longo."
+  },
+  {
+    "id": "cle_amb_2_duplicidade",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Ambição",
+    "name": "(ambição, 2º nível) Canalizar Divindade: Invocar Duplicidade",
+    "description": "Como ação, cria uma ilusão perfeita de si mesmo a até 9 metros por 1 minuto (requer concentração). Você pode mover a ilusão até 9 metros como ação bônus (máx 36m de você). Você pode conjurar magias a partir do espaço da ilusão. Se você e a ilusão estiverem a 1,5m de um inimigo, você tem vantagem nos ataques contra ele."
+  },
+  {
+    "id": "cle_amb_6_manto",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Ambição",
+    "name": "(ambição, 6º nível) Canalizar Divindade: Manto das Sombras",
+    "description": "Como uma ação, você se torna invisível até o final do seu próximo turno. A invisibilidade termina prematuramente se você atacar ou conjurar uma magia."
+  },
+  {
+    "id": "cle_amb_8_magia",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Ambição",
+    "name": "(ambição, 8º nível) Magia Poderosa",
+    "description": "Você adiciona seu modificador de Sabedoria ao dano causado por qualquer truque de clérigo que você conjurar."
+  },
+  {
+    "id": "cle_amb_17_duplicidade_apr",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Ambição",
+    "name": "(ambição, 17º nível) Duplicidade Aprimorada",
+    "description": "Ao usar Invocar Duplicidade, você pode criar até quatro duplicatas de si mesmo em vez de uma. Como ação bônus no seu turno, você pode mover qualquer número delas até 9 metros, com um alcance máximo de 36 metros de você."
+  },
+  {
+    "id": "cle_zel_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Zelo",
+    "name": "Feitiços de Zelo",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Golpe Incandescente, Golpe Trovejante; 3º - Arma Mágica, Estilhaçar; 5º - Acelerar, Bola de Fogo; 7º - Escudo de Fogo (apenas escudo térmico), Liberdade de Movimento; 9º - Onda Destrutiva, Golpe de Chamas."
+  },
+  {
+    "id": "cle_zel_1_sacerdote",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Zelo",
+    "name": "(zelo, 1º nível) Sacerdote do Zelo",
+    "description": "Você ganha proficiência com armas marciais e armaduras pesadas. Além disso, quando você usa a ação Atacar, você pode realizar um ataque com arma como uma ação bônus. Usos iguais ao modificador de Sabedoria (mínimo 1). Recupera em descanso longo."
+  },
+  {
+    "id": "cle_zel_2_fervor",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Zelo",
+    "name": "(zelo, 2º nível) Canalizar Divindade: Fervor Consumidor",
+    "description": "Quando você rolar dano de fogo ou trovejante, você pode usar sua Canalização Divina para causar o dano máximo possível em vez de rolar."
+  },
+  {
+    "id": "cle_zel_6_retumbante",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Zelo",
+    "name": "(zelo, 6º nível) Golpe Retumbante",
+    "description": "Quando você causa dano trovejante a uma criatura Grande ou menor, você também pode empurrá-la até 3 metros para longe de você."
+  },
+  {
+    "id": "cle_zel_8_golpe",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Zelo",
+    "name": "(zelo, 8º nível) Golpe Divino",
+    "description": "Uma vez em cada um dos seus turnos, quando você acerta uma criatura com um ataque de arma, você pode fazer com que o ataque cause 1d8 de dano extra do mesmo tipo da arma. O dano aumenta para 2d8 no 14º nível."
+  },
+  {
+    "id": "cle_zel_17_chama",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Zelo",
+    "name": "(zelo, 17º nível) Chama da Glória",
+    "description": "Como reação quando reduzido a 0 pontos de vida por um atacante visível, você pode se mover e realizar um ataque corpo a corpo com vantagem contra ele (causando +5d10 fogo e +5d10 tipo da arma se acertar). Depois, você cai inconsciente (ou morre se o dano exceder o limite). 1x por descanso longo."
+  },
+  {
+    "id": "cle_des_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Destino",
+    "name": "Feitiços de Destino",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Sussurros Dissonantes, Heroísmo; 3º - Ver Invisibilidade, Vínculo de Proteção; 5º - Farol de Esperança, Clarividência; 7º - Guarda da Morte, Adivinhação; 9º - Comuna, Geas."
+  },
+  {
+    "id": "cle_des_1_pressagios",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Destino",
+    "name": "(destino, 1º nível) Presságios e Sinais",
+    "description": "Você pode conjurar a magia Augúrio sem gastar espaço de magia ou componentes (1x por descanso longo). Além disso, a chance de falha ou leitura aleatória em magias de adivinhação (como Augúrio, Comunhão, Adivinhação) é reduzida em 25%."
+  },
+  {
+    "id": "cle_des_1_lacos",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Destino",
+    "name": "(destino, 1º nível) Laços que Unem",
+    "description": "Como uma ação, você toca um objeto ou criatura para criar um vínculo por 1 hora. Você sente a direção do alvo. Uma vez por turno, ao conjurar uma magia com slot que cause dano ou restaure vida ao alvo vinculado, você adiciona 1d6 ao valor rolado. Usos iguais ao bônus de proficiência (recupera em descanso longo)."
+  },
+  {
+    "id": "cle_des_2_fios",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Destino",
+    "name": "(destino, 2º nível) Canalizar Divindade: Fios do Destino",
+    "description": "Como uma ação bônus, você entra em um estado de visão por 1 minuto (requer concentração). Durante esse tempo, sempre que outra criatura que você possa ver fizer uma jogada de ataque ou um teste de habilidade, você pode usar uma reação para conceder vantagem ou desvantagem (à sua escolha)."
+  },
+  {
+    "id": "cle_des_6_perspicaz",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Destino",
+    "name": "(destino, 6º nível) Perspicaz e Impactante",
+    "description": "Como uma ação bônus, escolha uma criatura a 9m. Até o final do próximo turno, escolha um: 1) Adicione 1d6 ao seu próximo ataque contra ela; ou 2) O alvo deve subtrair 1d6 do próximo teste de resistência que fizer contra uma magia sua. Usos iguais ao bônus de proficiência."
+  },
+  {
+    "id": "cle_des_8_magia",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Destino",
+    "name": "(destino, 8º nível) Magia Poderosa",
+    "description": "Você adiciona seu modificador de Sabedoria ao dano causado por qualquer truque de clérigo que você conjurar."
+  },
+  {
+    "id": "cle_des_17_visoes",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Destino",
+    "name": "(destino, 17º nível) Visões do Futuro",
+    "description": "Você pode conjurar a magia Previsão uma vez sem gastar um espaço de magia. Quando conjurada desta forma, a duração da magia é de 1 minuto. Você recupera o uso desta habilidade após terminar um descanso longo."
+  },
+  {
+    "id": "cle_cid_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Cidade",
+    "name": "Feitiços da Cidade",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Compreender idiomas, Acesso Remoto; 3º - Localizar Veículo, Aquecer Metal; 5º - Raio, Proteção contra Balística; 7º - Localizar Criatura, Sincronicidade; 9º - Comungar com a Cidade, Desligar."
+  },
+  {
+    "id": "cle_cid_1_bonus",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Cidade",
+    "name": "(cidade, 1º nível) Habilidades Adicionais",
+    "description": "Você ganha o truque Ligar/Desligar, além de proficiência com armas de porte (sidearms) e veículos (terrestres)."
+  },
+  {
+    "id": "cle_cid_1_coracao",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Cidade",
+    "name": "(cidade, 1º nível) Coração da Cidade",
+    "description": "Enquanto estiver em uma cidade, você pode obter vantagem em um único teste de Carisma (Enganação, Intimidação ou Persuasão) e é considerado proficiente na perícia. Usos iguais ao modificador de Sabedoria (mínimo 1). Recupera em descanso longo."
+  },
+  {
+    "id": "cle_cid_2_espiritos",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Cidade",
+    "name": "(cidade, 2º nível) Canalizar Divindade: Espíritos da Cidade",
+    "description": "Como ação, você controla serviços públicos a até 9m (faz funcionar ou parar). Além disso, criaturas hostis na área devem fazer um teste de resistência de Carisma ou serem derrubadas/imobilizadas por perigos urbanos. Escapar exige teste de Atletismo ou Acrobacia contra sua CD de magia."
+  },
+  {
+    "id": "cle_cid_6_vigia",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Cidade",
+    "name": "(cidade, 6º nível) Vigia de Blocos",
+    "description": "Enquanto estiver em um ambiente urbano, você é considerado proficiente nas perícias Intuição e Percepção, e adiciona o dobro do seu bônus de proficiência aos testes de Sabedoria (Intuição) e Sabedoria (Percepção)."
+  },
+  {
+    "id": "cle_cid_8_golpe",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Cidade",
+    "name": "(cidade, 8º nível) Golpe Divino",
+    "description": "Uma vez em cada um dos seus turnos, quando você acerta uma criatura com um ataque de arma, você pode fazer com que o ataque cause 1d8 de dano psíquico extra ao alvo. O dano aumenta para 2d8 no 14º nível."
+  },
+  {
+    "id": "cle_cid_17_transito",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Cidade",
+    "name": "(cidade, 17º nível) Trânsito Expresso",
+    "description": "Você pode se teletransportar de um ponto de transporte público (ponto de ônibus, estação de trem/metrô) para outro ponto similar dentro da mesma cidade, como se tivesse conjurado a magia Teletransporte para um círculo permanente conhecido. 1x por descanso curto/longo."
+  },
+  {
+    "id": "cle_pro_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio de Proteção",
+    "name": "Feitiços de Proteção",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Duelo Compulsório, Proteção contra o Mal e o Bem; 3º - Auxílio, Proteção contra Veneno; 5º - Proteção contra Energia, Lentidão; 7º - Guardião da Fé, Esfera Resiliente de Otiluke; 9º - Concha Antivida, Muralha de Força."
+  },
+  {
+    "id": "cle_pro_1_escudo",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio de Proteção",
+    "name": "(proteção, 1º nível) Escudo dos Fiéis",
+    "description": "Você ganha proficiência com armaduras pesadas. Além disso, quando uma criatura ataca um alvo que não seja você e que esteja a até 1,5 metro de você, você pode usar sua reação para impor desvantagem na jogada de ataque."
+  },
+  {
+    "id": "cle_pro_2_defesa",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio de Proteção",
+    "name": "(proteção, 2º nível) Canalizar Divindade: Defesa Radiante",
+    "description": "Como uma ação, você canaliza energia abençoada em um aliado que você possa ver a até 9 metros. Na primeira vez que esse aliado for atingido por um ataque no próximo minuto, o atacante sofre dano radiante igual a 2d10 + seu nível de clérigo."
+  },
+  {
+    "id": "cle_pro_6_curandeiro",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio de Proteção",
+    "name": "(proteção, 6º nível) Curandeiro Abençoado",
+    "description": "Quando você conjura uma magia com um espaço de magia e ela restaura pontos de vida de qualquer criatura que não seja você neste turno, você recupera pontos de vida iguais a 2 + o nível da magia."
+  },
+  {
+    "id": "cle_pro_8_golpe",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio de Proteção",
+    "name": "(proteção, 8º nível) Golpe Divino",
+    "description": "Uma vez em cada um dos seus turnos, quando você acerta uma criatura com um ataque de arma, você pode fazer com que o ataque cause 1d8 de dano radiante extra ao alvo. O dano aumenta para 2d8 no 14º nível."
+  },
+  {
+    "id": "cle_pro_17_indomavel",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio de Proteção",
+    "name": "(proteção, 17º nível) Defesa Indomável",
+    "description": "Você ganha resistência a dois tipos de dano (contundente, necrótico, perfurante, radiante ou cortante), que podem ser trocados em descansos. Como ação, você pode transferir essa resistência para uma criatura tocada até o próximo descanso ou até você recuperá-la com uma ação bônus."
+  },
+  {
+    "id": "cle_crep_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Crepúsculo",
+    "name": "Feitiços de Crepúsculo",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Fogo das Fadas, Sono; 3º - Escuridão, Ver Invisibilidade; 5º - Aura de Vitalidade, Cabana Minúscula de Leomund; 7º - Aura da Vida, Invisibilidade Maior; 9º - Círculo de Poder, Enganar."
+  },
+  {
+    "id": "cle_crep_1_olhos",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Crepúsculo",
+    "name": "(crepúsculo, 1º nível) Olhos da Noite",
+    "description": "Você ganha proficiência com armas marciais e armaduras pesadas. Você tem visão no escuro com alcance de 90m (enxerga na escuridão como luz plena). Como ação, pode compartilhar essa visão com criaturas a 3m (até Mod. Sabedoria) por 1 hora. 1x grátis ou gasta slot."
+  },
+  {
+    "id": "cle_crep_1_vigilante",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Crepúsculo",
+    "name": "(crepúsculo, 1º nível) Bênção Vigilante",
+    "description": "Como uma ação, você concede a uma criatura que você tocar (incluindo você mesmo) vantagem na próxima jogada de iniciativa que ela fizer."
+  },
+  {
+    "id": "cle_crep_2_santuario",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Crepúsculo",
+    "name": "(crepúsculo, 2º nível) Canalizar Divindade: Santuário do Crepúsculo",
+    "description": "Como ação, cria uma esfera de 9m de luz tênue centrada em você por 1 min. Quando uma criatura (incluindo você) termina o turno nela, você pode conceder 1d6 + Nível de Clérigo em PV temporários OU encerrar um efeito de encantado/amedrontado."
+  },
+  {
+    "id": "cle_crep_6_passos",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Crepúsculo",
+    "name": "(crepúsculo, 6º nível) Passos dos Bravos",
+    "description": "Você tem vantagem em testes de resistência contra medo. Se estiver em penumbra ou escuridão, pode usar uma ação bônus para ganhar velocidade de voo igual à sua velocidade de caminhada até o final do seu próximo turno."
+  },
+  {
+    "id": "cle_crep_8_golpe",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Crepúsculo",
+    "name": "(crepúsculo, 8º nível) Golpe Divino",
+    "description": "Uma vez em cada um dos seus turnos, quando você acerta uma criatura com um ataque de arma, você pode fazer com que o ataque cause 1d8 de dano radiante extra. O dano aumenta para 2d8 no 14º nível."
+  },
+  {
+    "id": "cle_crep_17_manto",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Crepúsculo",
+    "name": "(crepúsculo, 17º nível) Manto do Crepúsculo",
+    "description": "Você e seus aliados têm cobertura parcial enquanto estiverem na esfera criada pelo seu Santuário do Crepúsculo."
+  },
+  {
+    "id": "cle_uni_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Unidade",
+    "name": "Feitiços de Unidade",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Heroísmo, Escudo da Fé; 3º - Auxílio, Vínculo de Proteção; 5º - Farol da Esperança, Envio; 7º - Aura de Pureza, Guardiã da Fé; 9º - Restauração Maior, Ligação Telepática de Rary."
+  },
+  {
+    "id": "cle_uni_1_laco",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Unidade",
+    "name": "(unidade, 1º nível) Laço de Fortalecimento",
+    "description": "Como ação, vincula duas criaturas voluntárias a 9m por 1 hora. Enquanto estiverem a 9m uma da outra, podem adicionar +1d4 a uma jogada de ataque, teste de habilidade ou teste de resistência (1x por turno). 1x grátis/descanso longo ou gasta slot."
+  },
+  {
+    "id": "cle_uni_2_fardo",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Unidade",
+    "name": "(unidade, 2º nível) Canalizar Divindade: Fardo Compartilhado",
+    "description": "Como reação, quando um aliado a 9m sofre dano, você pode dividir esse dano entre ele e outros aliados voluntários (até seu Mod. Sabedoria). Cada criatura deve sofrer pelo menos 1 ponto de dano."
+  },
+  {
+    "id": "cle_uni_6_protetor",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Unidade",
+    "name": "(unidade, 6º nível) Laço Protetor",
+    "description": "Criaturas no Vínculo Fortalecedor (a até 9m) podem usar sua reação para conceder resistência a todos os danos a um parceiro vinculado que sofra dano, até o final do turno atual."
+  },
+  {
+    "id": "cle_uni_8_magia",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Unidade",
+    "name": "(unidade, 8º nível) Magia Poderosa",
+    "description": "Você adiciona seu modificador de Sabedoria ao dano causado por qualquer truque de clérigo que você conjurar."
+  },
+  {
+    "id": "cle_uni_17_duradoura",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Unidade",
+    "name": "(unidade, 17º nível) Unidade Duradoura",
+    "description": "Os benefícios do Vínculo Fortalecedor funcionam em qualquer distância no mesmo plano. Se um vinculado cai a 0 PV, o parceiro ganha vantagem em ataques/testes/saves e resistência a todos os danos por 1 min. O parceiro pode tocar o caído (Ação) para gastar Dados de Vida e curá-lo."
+  },
+  {
+    "id": "cle_arc_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio Arcano",
+    "name": "Feitiços Arcanos",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Detectar Magia, Míssil Mágico; 3º - Arma Mágica, Aura Mágica de Nystul; 5º - Dissipar Magia, Círculo Mágico; 7º - Olho Arcano, Baú Secreto de Leomund; 9º - Ligação Planar, Círculo de Teletransporte."
+  },
+  {
+    "id": "cle_arc_1_iniciado",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio Arcano",
+    "name": "(arcano, 1º nível) Iniciado Arcano",
+    "description": "Você ganha proficiência na perícia Arcanismo e recebe dois truques à sua escolha da lista de magias de mago, que contam como truques de clérigo para você."
+  },
+  {
+    "id": "cle_arc_2_abjuracao",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio Arcano",
+    "name": "(arcano, 2º nível) Canalizar Divindade: Abjuração Arcana",
+    "description": "Como ação, uma criatura celestial, elemental, feérica ou demoníaca a 9m deve fazer um Save de Sabedoria. Se falhar, é expulsa (foge) por 1 min. No 5º nível, bane a criatura se falhar e tiver ND baixo (1/2 no 5º, 1 no 8º, 2 no 11º, 3 no 14º, 4 no 17º)."
+  },
+  {
+    "id": "cle_arc_6_quebra",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio Arcano",
+    "name": "(arcano, 6º nível) Quebra-feitiços",
+    "description": "Quando você restaura pontos de vida a um aliado com uma magia de 1º nível ou superior, você também pode encerrar uma magia ativa nele. O nível da magia encerrada deve ser igual ou inferior ao nível do espaço usado na cura."
+  },
+  {
+    "id": "cle_arc_8_magia",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio Arcano",
+    "name": "(arcano, 8º nível) Magia Poderosa",
+    "description": "Você adiciona seu modificador de Sabedoria ao dano causado por qualquer truque de clérigo que você conjurar."
+  },
+  {
+    "id": "cle_arc_17_maestria",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio Arcano",
+    "name": "(arcano, 17º nível) Maestria Arcana",
+    "description": "Você escolhe quatro magias da lista de mago (uma de 6º, 7º, 8º e 9º nível) e as adiciona às suas magias de domínio. Elas estão sempre preparadas e contam como magias de clérigo."
+  },
+  {
+    "id": "cle_mor_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Morte",
+    "name": "Feitiços da Morte",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Vida Falsa, Raio da Doença; 3º - Cegueira/Surdez, Raio de Enfraquecimento; 5º - Animar os Mortos, Toque Vampírico; 7º - Praga, Guarda da Morte; 9º - Concha Antivida, Nuvem Assassina."
+  },
+  {
+    "id": "cle_mor_1_ceifador",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Morte",
+    "name": "(morte, 1º nível) Ceifador",
+    "description": "Você ganha proficiência com armas marciais. Você aprende um truque de necromancia de qualquer lista. Truques de necromancia que alvejariam apenas uma criatura podem alvejar duas criaturas a até 1,5m uma da outra."
+  },
+  {
+    "id": "cle_mor_2_toque",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Morte",
+    "name": "(morte, 2º nível) Canalizar Divindade: Toque da Morte",
+    "description": "Quando você acerta uma criatura com um ataque corpo a corpo, você pode usar Canalizar Divindade para causar dano necrótico extra igual a 5 + duas vezes o seu nível de clérigo."
+  },
+  {
+    "id": "cle_mor_6_destruicao",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Morte",
+    "name": "(morte, 6º nível) Destruição Inescapável",
+    "description": "O dano necrótico causado por suas magias de clérigo e opções de Canalizar Divindade ignora a resistência a dano necrótico."
+  },
+  {
+    "id": "cle_mor_8_golpe",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Morte",
+    "name": "(morte, 8º nível) Golpe Divino",
+    "description": "Uma vez em cada um dos seus turnos, quando você acerta uma criatura com um ataque de arma, você pode fazer com que o ataque cause 1d8 de dano necrótico extra. O dano aumenta para 2d8 no 14º nível."
+  },
+  {
+    "id": "cle_mor_17_ceifador_apr",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Morte",
+    "name": "(morte, 17º nível) Ceifador Aprimorado",
+    "description": "Quando você conjura uma magia de necromancia de 1º a 5º nível que tem como alvo apenas uma criatura, a magia pode ter como alvo duas criaturas a até 1,5m uma da outra. Componentes materiais são consumidos para cada alvo."
+  },
+  {
+    "id": "cle_forj_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Forja",
+    "name": "Feitiços da Forja",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Identificar, Golpe Incandescente; 3º - Metal Quente, Arma Mágica; 5º - Arma Elemental, Proteção contra Energia; 7º - Fabricar, Muralha de Fogo; 9º - Animar Objetos, Criação."
+  },
+  {
+    "id": "cle_forj_1_bencao",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Forja",
+    "name": "(forja, 1º nível) Bênção da Forja",
+    "description": "Você ganha proficiência com armaduras pesadas e ferramentas de ferreiro. Ao final de um descanso longo, toque uma arma ou armadura não mágica: ela se torna mágica com +1 (CA para armadura, Ataque/Dano para arma) até o próximo descanso longo."
+  },
+  {
+    "id": "cle_forj_2_artesao",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Forja",
+    "name": "(forja, 2º nível) Canalizar Divindade: Bênção do Artesão",
+    "description": "Você realiza um ritual de 1 hora para criar um item não mágico de metal (arma, armadura, munição, ferramenta) de valor até 100 po. Requer metal bruto de valor equivalente, que é consumido no processo."
+  },
+  {
+    "id": "cle_forj_6_alma",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Forja",
+    "name": "(forja, 6º nível) Alma da Forja",
+    "description": "Você ganha resistência a dano de fogo. Além disso, ao usar armadura pesada, você recebe um bônus de +1 na Classe de Armadura (CA)."
+  },
+  {
+    "id": "cle_forj_8_golpe",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Forja",
+    "name": "(forja, 8º nível) Golpe Divino",
+    "description": "Uma vez em cada um dos seus turnos, quando você acerta uma criatura com um ataque de arma, você pode fazer com que o ataque cause 1d8 de dano de fogo extra. O dano aumenta para 2d8 no 14º nível."
+  },
+  {
+    "id": "cle_forj_17_santo",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Forja",
+    "name": "(forja, 17º nível) Santo da Forja e do Fogo",
+    "description": "Você ganha imunidade a dano de fogo. Ao usar armadura pesada, você possui resistência a danos de concussão, perfuração e corte provenientes de ataques não mágicos."
+  },
+  {
+    "id": "cle_sep_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Sepultura",
+    "name": "Feitiços da Sepultura",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Bane, Vida Falsa; 3º - Repouso Suave, Raio de Enfraquecimento; 5º - Revivificar, Toque Vampírico; 7º - Praga, Guarda da Morte; 9º - Concha Antivida, Ressuscitar Mortos."
+  },
+  {
+    "id": "cle_sep_1_circulo",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Sepultura",
+    "name": "(sepultura, 1º nível) Círculo da Mortalidade",
+    "description": "Ao curar uma criatura com 0 PV usando uma magia, use o valor máximo possível dos dados. Você aprende o truque Salvar os Moribundos (alcance 9m, Ação Bônus). Pode detectar mortos-vivos a 18m (usos = Mod. Sabedoria)."
+  },
+  {
+    "id": "cle_sep_2_caminho",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Sepultura",
+    "name": "(sepultura, 2º nível) Canalizar Divindade: Caminho para a Sepultura",
+    "description": "Como uma ação, amaldiçoe uma criatura a 9m até o final do seu próximo turno. O próximo ataque que você ou um aliado acertar na criatura causará vulnerabilidade a todo o dano daquele ataque, encerrando a maldição."
+  },
+  {
+    "id": "cle_sep_6_sentinela",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Sepultura",
+    "name": "(sepultura, 6º nível) Sentinela à Beira da Morte",
+    "description": "Como reação, quando você ou um aliado a 9m sofrer um acerto crítico, você pode transformar esse ataque em um acerto normal, cancelando efeitos do crítico. Usos iguais ao Mod. Sabedoria (recupera em descanso longo)."
+  },
+  {
+    "id": "cle_sep_8_magia",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Sepultura",
+    "name": "(sepultura, 8º nível) Magia Poderosa",
+    "description": "Você adiciona seu modificador de Sabedoria ao dano causado por qualquer truque de clérigo que você conjurar."
+  },
+  {
+    "id": "cle_sep_17_guardiao",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Sepultura",
+    "name": "(sepultura, 17º nível) Guardião das Almas",
+    "description": "Quando um inimigo morre a até 9 metros de você, você ou um aliado a até 9 metros recupera pontos de vida iguais ao número de Dados de Vida do inimigo. Limitado a uma vez por turno."
+  },
+  {
+    "id": "cle_con_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Conhecimento",
+    "name": "Feitiços do Conhecimento",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Comando, Identificar; 3º - Augúrio, Sugestão; 5º - Indetectável, Falar com os Mortos; 7º - Olho Arcano, Confusão; 9º - Lendas e Histórias, Adivinhação."
+  },
+  {
+    "id": "cle_con_1_bencaos",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Conhecimento",
+    "name": "(conhecimento, 1º nível) Bênçãos do Conhecimento",
+    "description": "Você aprende dois idiomas à sua escolha. Você também ganha proficiência em duas perícias (Arcanismo, História, Natureza ou Religião) e seu bônus de proficiência é dobrado para testes com essas perícias escolhidas."
+  },
+  {
+    "id": "cle_con_2_eras",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Conhecimento",
+    "name": "(conhecimento, 2º nível) Canalizar Divindade: Conhecimento das Eras",
+    "description": "Como uma ação, você escolhe uma perícia ou ferramenta. Durante 10 minutos, você possui proficiência com a perícia ou ferramenta escolhida."
+  },
+  {
+    "id": "cle_con_6_ler",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Conhecimento",
+    "name": "(conhecimento, 6º nível) Canalizar Divindade: Ler Pensamentos",
+    "description": "Como uma ação, uma criatura a 18m faz um Save de Sabedoria. Se falhar, você lê pensamentos superficiais por 1 min. Durante esse tempo, pode usar uma ação para conjurar Sugestão sem gastar slot (o alvo falha automaticamente no teste)."
+  },
+  {
+    "id": "cle_con_8_magia",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Conhecimento",
+    "name": "(conhecimento, 8º nível) Magia Poderosa",
+    "description": "Você adiciona seu modificador de Sabedoria ao dano causado por qualquer truque de clérigo que você conjurar."
+  },
+  {
+    "id": "cle_con_17_visoes",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio do Conhecimento",
+    "name": "(conhecimento, 17º nível) Visões do Passado",
+    "description": "Ao meditar por 1 minuto, você recebe visões do passado de um objeto (donos anteriores, como foi perdido) ou de uma área (eventos recentes em cubo de 15m), retrocedendo um número de dias igual à sua Sabedoria. Requer concentração."
+  },
+  {
+    "id": "cle_vid_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Vida",
+    "name": "Feitiços da Vida",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Abençoar, Curar Ferimentos; 3º - Restauração Menor, Arma Espiritual; 5º - Farol da Esperança, Revivificar; 7º - Guarda da Morte, Guardião da Fé; 9º - Cura em Massa, Ressuscitar Mortos."
+  },
+  {
+    "id": "cle_vid_1_discipulo",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Vida",
+    "name": "(vida, 1º nível) Discípulo da Vida",
+    "description": "Você ganha proficiência com armaduras pesadas. Sempre que usar uma magia de 1º nível ou superior para curar, o alvo recupera pontos de vida adicionais iguais a 2 + o nível da magia."
+  },
+  {
+    "id": "cle_vid_2_preservar",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Vida",
+    "name": "(vida, 2º nível) Canalizar Divindade: Preservar a Vida",
+    "description": "Como uma ação, você restaura um total de PV igual a 5 vezes seu nível de clérigo. Escolha quaisquer criaturas a até 9m e divida os pontos. Esta habilidade não cura acima de metade do HP máximo e não afeta mortos-vivos ou constructos."
+  },
+  {
+    "id": "cle_vid_6_curandeiro",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Vida",
+    "name": "(vida, 6º nível) Curandeiro Abençoado",
+    "description": "Quando você conjura uma magia de 1º nível ou superior que restaura pontos de vida a uma criatura que não seja você, você recupera pontos de vida iguais a 2 + o nível da magia."
+  },
+  {
+    "id": "cle_vid_8_golpe",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Vida",
+    "name": "(vida, 8º nível) Golpe Divino",
+    "description": "Uma vez em cada um dos seus turnos, quando você acerta uma criatura com um ataque de arma, você pode fazer com que o ataque cause 1d8 de dano radiante extra. O dano aumenta para 2d8 no 14º nível."
+  },
+  {
+    "id": "cle_vid_17_cura",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Vida",
+    "name": "(vida, 17º nível) Cura Suprema",
+    "description": "Quando você rolaria um ou mais dados para restaurar pontos de vida com uma magia, você usa o maior número possível para cada dado (cura máxima automática)."
+  },
+  {
+    "id": "cle_luz_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Luz",
+    "name": "Feitiços da Luz",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Mãos em Chamas, Fogo das Fadas; 3º - Esfera Flamejante, Raio Incandescente; 5º - Luz do Dia, Bola de Fogo; 7º - Guardião da Fé, Muralha de Fogo; 9º - Golpe Flamejante, Adivinhação."
+  },
+  {
+    "id": "cle_luz_1_sinalizador",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Luz",
+    "name": "(luz, 1º nível) Sinalizador de Proteção",
+    "description": "Você ganha o truque Luz. Como uma reação quando atacado por criatura a 9m, você impõe desvantagem no ataque com um clarão de luz. Imune se o atacante não puder ser cegado. Usos iguais ao Mod. Sabedoria (recupera em descanso longo)."
+  },
+  {
+    "id": "cle_luz_2_radiancia",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Luz",
+    "name": "(luz, 2º nível) Canalizar Divindade: Radiância da Aurora",
+    "description": "Como uma ação, dissipe escuridão mágica a 9m. Inimigos a 9m devem fazer um Save de Constituição. Falha: sofrem 2d10 + Nível de Clérigo de dano radiante. Sucesso: metade do dano. Criaturas com cobertura total não são afetadas."
+  },
+  {
+    "id": "cle_luz_6_flare",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Luz",
+    "name": "(luz, 6º nível) Flare Aprimorado",
+    "description": "Você também pode usar sua habilidade Sinalizador Protetor quando uma criatura que você possa ver a até 9 metros de você atacar outra criatura que não seja você."
+  },
+  {
+    "id": "cle_luz_8_magia",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Luz",
+    "name": "(luz, 8º nível) Magia Poderosa",
+    "description": "Você adiciona seu modificador de Sabedoria ao dano causado por qualquer truque de clérigo que você conjurar."
+  },
+  {
+    "id": "cle_luz_17_coroa",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Luz",
+    "name": "(luz, 17º nível) Coroa de Luz",
+    "description": "Como ação, ative uma aura de luz solar (18m brilhante + 9m penumbra) por 1 min. Inimigos na luz brilhante têm desvantagem em testes de resistência contra qualquer magia que cause dano de fogo ou radiante."
+  },
+  {
+    "id": "cle_nat_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Natureza",
+    "name": "Feitiços da Natureza",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Amizade com os Animais, Falar com Animais; 3º - Pele de Árvore, Crescer Espinhos; 5º - Crescer Plantas, Muralha de Vento; 7º - Dominar Fera, Videira Agarradora; 9º - Praga de Insetos, Passos em Árvores."
+  },
+  {
+    "id": "cle_nat_1_acolito",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Natureza",
+    "name": "(natureza, 1º nível) Acólito da Natureza",
+    "description": "Você ganha proficiência com armaduras pesadas. Aprende um truque de druida à sua escolha. Ganha proficiência em uma perícia: Adestramento de Animais, Natureza ou Sobrevivência."
+  },
+  {
+    "id": "cle_nat_2_encantar",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Natureza",
+    "name": "(natureza, 2º nível) Canalizar Divindade: Encantar Animais e Plantas",
+    "description": "Como uma ação, cada besta ou planta a até 9 metros de você deve fazer um teste de resistência de Sabedoria. Se falhar, fica enfeitiçada por você por 1 minuto ou até sofrer dano."
+  },
+  {
+    "id": "cle_nat_6_elementos",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Natureza",
+    "name": "(natureza, 6º nível) Elementos de Amortecimento",
+    "description": "Como uma reação, quando você ou uma criatura a até 9 metros sofrer dano de ácido, frio, fogo, relâmpago ou trovão, você pode conceder resistência à criatura contra aquela instância de dano."
+  },
+  {
+    "id": "cle_nat_8_golpe",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Natureza",
+    "name": "(natureza, 8º nível) Golpe Divino",
+    "description": "Uma vez em cada um dos seus turnos, quando você acerta uma criatura com um ataque de arma, você pode fazer com que o ataque cause 1d8 de dano extra de frio, fogo ou relâmpago. O dano aumenta para 2d8 no 14º nível."
+  },
+  {
+    "id": "cle_nat_17_mestre",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Natureza",
+    "name": "(natureza, 17º nível) Mestre da Natureza",
+    "description": "Você pode usar uma ação bônus para comandar verbalmente criaturas que estejam enfeitiçadas pela sua habilidade 'Encantar Animais e Plantas', ditando o que farão no próximo turno."
+  },
+  {
+    "id": "cle_ord_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Ordem",
+    "name": "Feitiços da Ordem",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Comando, Heroísmo; 3º - Segurar Pessoa, Zona da Verdade; 5º - Palavra de Cura em Massa, Lentidão; 7º - Compulsão, Localizar Criatura; 9º - Comuna, Pessoa Dominante."
+  },
+  {
+    "id": "cle_ord_1_voz",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Ordem",
+    "name": "(ordem, 1º nível) Voz da Autoridade",
+    "description": "Proficiência com armaduras pesadas e em Intimidação ou Persuasão. Se conjurar uma magia de 1º nível ou superior em um aliado, ele pode usar a reação para fazer um ataque com arma contra uma criatura à sua escolha."
+  },
+  {
+    "id": "cle_ord_2_demanda",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Ordem",
+    "name": "(ordem, 2º nível) Canalizar Divindade: A Demanda da Ordem",
+    "description": "Como uma ação, cada criatura à sua escolha a até 9m deve fazer um Save de Sabedoria ou ficar enfeitiçada até o final do seu próximo turno. Você pode fazer com que larguem o que estão segurando se falharem."
+  },
+  {
+    "id": "cle_ord_6_incorporacao",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Ordem",
+    "name": "(ordem, 6º nível) Incorporação da Lei",
+    "description": "Quando você conjura uma magia de encantamento usando um espaço de magia de 1º nível ou superior que tenha tempo de conjuração de 1 ação, pode mudar o tempo para 1 ação bônus. Usos iguais ao Mod. Sabedoria (recupera em descanso longo)."
+  },
+  {
+    "id": "cle_ord_8_golpe",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Ordem",
+    "name": "(ordem, 8º nível) Golpe Divino",
+    "description": "Uma vez em cada um dos seus turnos, quando você acerta uma criatura com um ataque de arma, você pode fazer com que o ataque cause 1d8 de dano psíquico extra. O dano aumenta para 2d8 no 14º nível."
+  },
+  {
+    "id": "cle_ord_17_ira",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Ordem",
+    "name": "(ordem, 17º nível) Ira da Ordem",
+    "description": "Se você causar dano de Golpe Divino a uma criatura, você a amaldiçoa até o início do seu próximo turno. A próxima vez que um aliado acertar essa criatura, ela sofre 2d8 de dano psíquico adicional e a maldição termina."
+  },
+  {
+    "id": "cle_paz_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Paz",
+    "name": "Feitiços da Paz",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Heroísmo, Santuário; 3º - Auxílio, Vínculo de Proteção; 5º - Farol da Esperança, Envio; 7º - Aura de Pureza, Esfera Resiliente de Otiluke; 9º - Restauração Maior, Ligação Telepática de Rary."
+  },
+  {
+    "id": "cle_paz_1_laco",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Paz",
+    "name": "(paz, 1º nível) Laço de Fortalecimento",
+    "description": "Proficiência em Percepção, Desempenho ou Persuasão. Como ação, vincula criaturas (nº = proficiência) a 9m por 10 min. Enquanto a 9m uma da outra, podem adicionar 1d4 a um ataque, teste ou resistência (1x/turno). Usos iguais ao bônus de proficiência."
+  },
+  {
+    "id": "cle_paz_2_balsamo",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Paz",
+    "name": "(paz, 2º nível) Canalizar Divindade: Bálsamo da Paz",
+    "description": "Como uma ação, mova-se até seu deslocamento sem provocar ataques de oportunidade. Ao passar a 1,5m de qualquer criatura, você pode curá-la em 2d6 + Mod. Sabedoria (uma vez por criatura durante a ação)."
+  },
+  {
+    "id": "cle_paz_6_protetor",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Paz",
+    "name": "(paz, 6º nível) Laço Protetor",
+    "description": "Quando uma criatura no seu Vínculo Fortalecedor (a até 9m) sofre dano, outra criatura vinculada pode usar a reação para teleportar para 1,5m da primeira e receber todo o dano em seu lugar."
+  },
+  {
+    "id": "cle_paz_8_magia",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Paz",
+    "name": "(paz, 8º nível) Magia Poderosa",
+    "description": "Você adiciona seu modificador de Sabedoria ao dano causado por qualquer truque de clérigo que você conjurar."
+  },
+  {
+    "id": "cle_paz_17_expansivo",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Paz",
+    "name": "(paz, 17º nível) Vínculo Expansivo",
+    "description": "Os benefícios do Vínculo Fortalecedor e Protetor agora funcionam a até 18 metros. Quando uma criatura usa o Laço Protetor para absorver dano, ela ganha resistência àquele dano."
+  },
+  {
+    "id": "cle_tem_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Tempestade",
+    "name": "Feitiços da Tempestade",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Nuvem de Nevoeiro, Onda de Trovão; 3º - Rajada de Vento, Estilhaçar; 5º - Chamar Relâmpago, Tempestade de Granizo; 7º - Controle da Água, Tempestade de Gelo; 9º - Onda Destrutiva, Praga de Insetos."
+  },
+  {
+    "id": "cle_tem_1_ira",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Tempestade",
+    "name": "(tempestade, 1º nível) Ira da Tempestade",
+    "description": "Proficiência com armas marciais e armaduras pesadas. Como reação ao ser atingido a 1,5m, force um Save de Destreza: alvo sofre 2d8 de dano elétrico ou trovejante (metade no sucesso). Usos iguais ao Mod. Sabedoria (recupera em descanso longo)."
+  },
+  {
+    "id": "cle_tem_2_destrutiva",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Tempestade",
+    "name": "(tempestade, 2º nível) Canalizar Divindade: Ira Destrutiva",
+    "description": "Quando você rolar dano elétrico ou trovejante, pode usar sua Canalização Divina para causar o dano máximo possível em vez de rolar os dados."
+  },
+  {
+    "id": "cle_tem_6_estrondoso",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Tempestade",
+    "name": "(tempestade, 6º nível) Golpe Estrondoso",
+    "description": "Quando você causa dano elétrico a uma criatura Grande ou menor, você também pode empurrá-la até 3 metros para longe de você."
+  },
+  {
+    "id": "cle_tem_8_golpe",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Tempestade",
+    "name": "(tempestade, 8º nível) Golpe Divino",
+    "description": "Uma vez em cada um dos seus turnos, quando você acerta uma criatura com um ataque de arma, você pode fazer com que o ataque cause 1d8 de dano trovejante extra. O dano aumenta para 2d8 no 14º nível."
+  },
+  {
+    "id": "cle_tem_17_nascido",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Tempestade",
+    "name": "(tempestade, 17º nível) Nascido da Tempestade",
+    "description": "Você possui uma velocidade de voo igual à sua velocidade de caminhada atual sempre que não estiver no subsolo ou em ambientes internos."
+  },
+  {
+    "id": "cle_tra_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Trapaça",
+    "name": "Feitiços da Trapaça",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Enfeitiçar Pessoa, Disfarçar-se; 3º - Imagem Espelhada, Passos sem Pegadas; 5º - Piscar, Dissipar Magia; 7º - Porta Dimensional, Polimorfo; 9º - Pessoa Dominante, Modificar Memória."
+  },
+  {
+    "id": "cle_tra_1_bencao",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Trapaça",
+    "name": "(trapaça, 1º nível) Bênção do Trapaceiro",
+    "description": "Como uma ação, toque uma criatura voluntária (exceto você). Ela ganha vantagem em testes de Destreza (Furtividade) por 1 hora ou até você usar a habilidade novamente."
+  },
+  {
+    "id": "cle_tra_2_duplicidade",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Trapaça",
+    "name": "(trapaça, 2º nível) Canalizar Divindade: Invocar Duplicidade",
+    "description": "Cria uma ilusão perfeita de si mesmo a 9m por 1 minuto (Concentração). Pode conjurar magias da posição dela. Se ambos estiverem a 1,5m de um alvo, você tem vantagem nos ataques contra ele."
+  },
+  {
+    "id": "cle_tra_6_manto",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Trapaça",
+    "name": "(trapaça, 6º nível) Canalizar Divindade: Manto das Sombras",
+    "description": "Como uma ação, você se torna invisível até o final do seu próximo turno. A invisibilidade termina se você atacar ou conjurar uma magia."
+  },
+  {
+    "id": "cle_tra_8_golpe",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Trapaça",
+    "name": "(trapaça, 8º nível) Golpe Divino",
+    "description": "Uma vez em cada um dos seus turnos, quando você acerta uma criatura com um ataque de arma, você pode fazer com que o ataque cause 1d8 de dano de veneno extra. O dano aumenta para 2d8 no 14º nível."
+  },
+  {
+    "id": "cle_tra_17_duplicidade_apr",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Trapaça",
+    "name": "(trapaça, 17º nível) Duplicidade Aprimorada",
+    "description": "Você pode criar até quatro duplicatas de si mesmo ao usar Invocar Duplicidade. Como ação bônus, pode mover qualquer número delas."
+  },
+  {
+    "id": "cle_gue_spells",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Guerra",
+    "name": "Feitiços da Guerra",
+    "description": "Você ganha as seguintes magias preparadas: 1º - Favor Divino, Escudo da Fé; 3º - Arma Mágica, Arma Espiritual; 5º - Manto do Cruzado, Guardiões Espirituais; 7º - Liberdade de Movimento, Pele de Pedra; 9º - Golpe Flamejante, Imobilizar Monstro."
+  },
+  {
+    "id": "cle_gue_1_sacerdote",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Guerra",
+    "name": "(guerra, 1º nível) Sacerdote da Guerra",
+    "description": "Você ganha proficiência com armas marciais e armaduras pesadas. Quando usa a ação Atacar, pode realizar um ataque com arma como uma ação bônus. Usos iguais ao modificador de Sabedoria (recupera em descanso longo)."
+  },
+  {
+    "id": "cle_gue_2_golpe",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Guerra",
+    "name": "(guerra, 2º nível) Canalizar Divindade: Golpe Guiado",
+    "description": "Ao fazer uma jogada de ataque, você pode usar sua Canalização Divina para ganhar um bônus de +10 na jogada. Você decide após ver o resultado do dado, mas antes de saber se acertou."
+  },
+  {
+    "id": "cle_gue_6_bencao",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Guerra",
+    "name": "(guerra, 6º nível) Canalizar Divindade: Bênção do Deus da Guerra",
+    "description": "Como uma reação, quando uma criatura a até 9 metros de você faz uma jogada de ataque, você pode usar sua Canalização Divina para conceder a ela um bônus de +10 na jogada."
+  },
+  {
+    "id": "cle_gue_8_golpe",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Guerra",
+    "name": "(guerra, 8º nível) Golpe Divino",
+    "description": "Uma vez em cada um dos seus turnos, quando você acerta uma criatura com um ataque de arma, você pode fazer com que o ataque cause 1d8 de dano extra do mesmo tipo da arma. O dano aumenta para 2d8 no 14º nível."
+  },
+  {
+    "id": "cle_gue_17_avatar",
+    "category": "Classe",
+    "class": "Clérigo",
+    "subclass": "Domínio da Guerra",
+    "name": "(guerra, 17º nível) Avatar da Batalha",
+    "description": "Você ganha resistência a dano de concussão, perfuração e corte proveniente de ataques não mágicos."
+  }
+
+
 ]
