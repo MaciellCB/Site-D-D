@@ -1,475 +1,475 @@
 [
 {
-"id": "art_base_1_mec_mag",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "",
-"name": "(1º nível) Funilaria Mágica",
-"description": "(Ação) Imbuir: você imbuí um objeto minúsculo não mágico com uma única propriedade à sua escolha por até 1 hora: emitir luz fraca (1,5 m), reproduzir um som gravado (até 6 s), manter um odor contínuo ou exibir um efeito visual estático (descrição de até 25 palavras). Você pode ter um número de objetos ativos igual ao seu modificador de INT. Objetos imbuídos não se tornam mágicos e a magia cessa se o objeto for destruído ou se o tempo expirar."
+  "id": "art_base_1_mec_mag",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "",
+  "name": "(1º nível) Funilaria Mágica",
+  "description": "(Ação) Você imbuí um objeto minúsculo não mágico com uma propriedade mágica: luz (1,5m), som gravado (6s), odor/som contínuo ou efeito visual estático (até 25 palavras). O efeito dura indefinidamente até você encerrá-lo ou exceder seu limite de objetos ativos (igual ao seu Modificador de Inteligência)."
 },
 {
-"id": "art_base_1_conjura",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "",
-"name": "(1º nível) Conjuração",
-"description": "Foco e lançamento: você conjura magias usando ferramentas de artesão ou ladrão como foco. Atributo de conjuração: INT. Dificuldade (CD) das suas magias = 8 + Proficiência + Mod. INT. Bônus de ataque mágico = Proficiência + Mod. INT. Você pode preparar e lançar magias como rituais quando a magia permitir."
+  "id": "art_base_1_conjura",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "",
+  "name": "(1º nível) Conjuração",
+  "description": "Você canaliza magias através de ferramentas ou infusões. Atributo: Inteligência. CD = 8 + Proficiência + Mod. INT. Ataque Mágico = Proficiência + Mod. INT. Você deve ter ferramentas de ladrão ou de artesão em mãos como foco. Pode preparar magias diariamente e conjurar rituais de magias preparadas."
 },
 {
-"id": "art_base_2_infundir",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "",
-"name": "(2º nível) Infundir Item",
-"description": "Infusão: após um Descanso Longo você pode transformar itens mundanos em itens infundidos (mágicos) seguindo fórmulas conhecidas. Conhece 4 infusões iniciais (veja catálogo). Pode manter até 2 itens infundidos simultaneamente; itens infundidos podem servir como foco de conjuração. Trocar infusões requer um Descanso Longo."
+  "id": "art_base_2_infundir",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "",
+  "name": "(2º nível) Infundir Item",
+  "description": "Ao terminar um descanso longo, você toca um objeto não mágico e o imbuí com uma de suas infusões conhecidas, transformando-o em um item mágico. Você conhece 4 infusões e pode manter 2 itens infundidos simultaneamente (aumenta com o nível). Infusões duram até sua morte ou substituição."
 },
 {
-"id": "art_base_3_ferramenta",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "",
-"name": "(3º nível) A Ferramenta Certa para o Trabalho",
-"description": "(1 hora) Fabricação temporária: você conjura um conjunto completo de ferramentas de artesão apropriadas em um espaço desocupado até 1,5 m. As ferramentas são funcionais por 24 horas ou até você usar esta habilidade novamente, caso em que a criação anterior desaparece."
+  "id": "art_base_3_ferramenta",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "",
+  "name": "(3º nível) A Ferramenta Certa para o Trabalho",
+  "description": "Com ferramentas de ladrão ou artesão em mãos, você pode usar 1 hora de trabalho para criar magicamente um conjunto de ferramentas de artesão em um espaço desocupado a até 1,5m. As ferramentas criadas desaparecem se você usar essa habilidade novamente."
 },
 {
-"id": "art_base_asi",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "",
-"name": "Aumento no Valor de Atributo",
-"description": "Melhoria de atributo: escolha aumentar um valor de atributo em +2 ou dois valores em +1, sem ultrapassar 20 por este recurso. O ganho ocorre nos níveis 4, 8, 12, 16 e 19."
+  "id": "art_base_asi",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "",
+  "name": "Aumento no Valor de Atributo",
+  "description": "Você pode aumentar um valor de atributo à sua escolha em 2, ou dois valores em 1. Como padrão, você não pode elevar um atributo acima de 20. Obtido nos níveis 4, 8, 12, 16 e 19."
 },
 {
-"id": "art_base_6_especialista",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "",
-"name": "(6º nível) Especialista em Ferramenta",
-"description": "Maestria com ferramentas: quando você faz um teste de habilidade que usa ferramentas com as quais é proficiente, dobre seu bônus de proficiência (aplica-se apenas a testes que empregam efetivamente as ferramentas)."
+  "id": "art_base_6_especialista",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "",
+  "name": "(6º nível) Especialista em Ferramenta",
+  "description": "Seu bônus de proficiência é dobrado para qualquer teste de habilidade que você fizer usando sua proficiência com uma ferramenta."
 },
 {
-"id": "art_base_7_genialidade",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "",
-"name": "(7º nível) Lampejo de Genialidade",
-"description": "(Reação) Adicionar INT: quando você ou uma criatura a até 9 m falhar em um teste de habilidade ou salvaguarda, você pode adicionar seu modificador de INT ao resultado, possivelmente transformando a falha em sucesso. Usos: igual ao seu modificador de INT por Descanso Longo."
+  "id": "art_base_7_genialidade",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "",
+  "name": "(7º nível) Lampejo de Genialidade",
+  "description": "(Reação) Quando você ou uma criatura que você possa ver a até 9 metros fizer um teste de habilidade ou salvaguarda, você pode adicionar seu Modificador de Inteligência ao resultado. Usos iguais ao seu Modificador de Inteligência (mínimo 1). Recupera em descanso longo."
 },
 {
-"id": "art_base_10_adepto",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "",
-"name": "(10º nível) Adepto de Itens Mágicos",
-"description": "Sintonização e criação: sua capacidade de sintonizar aumenta para até 4 itens. Você fabrica itens mágicos Comuns e Incomuns mais rapidamente (tempo reduzido a 1/4) e pagando metade do custo em ouro em comparação ao normal."
+  "id": "art_base_10_adepto",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "",
+  "name": "(10º nível) Adepto de Itens Mágicos",
+  "description": "Você pode sintonizar até 4 itens mágicos ao mesmo tempo. Se você criar um item mágico de raridade comum ou incomum, leva um quarto do tempo normal e custa metade do ouro usual."
 },
 {
-"id": "art_base_11_armazenar",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "",
-"name": "(11º nível) Item Armazenador de Magia",
-"description": "(Ação) Imprima uma magia em um objeto: você pode armazenar uma magia de 1º ou 2º nível preparada em um item. Qualquer criatura que use o item pode gastar uma ação para lançar a magia armazenada. Usos por Descanso Longo: duas vezes seu modificador de INT (mínimo 2)."
+  "id": "art_base_11_armazenar",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "",
+  "name": "(11º nível) Item Armazenador de Magia",
+  "description": "Ao terminar um descanso longo, toque uma arma ou foco arcano para armazenar nele uma magia de artífice de 1º ou 2º nível (tempo de 1 ação). Uma criatura segurando o objeto pode usar uma ação para produzir o efeito da magia, usando seu modificador de conjuração. O item armazena usos iguais a 2x seu Modificador de Inteligência."
 },
 {
-"id": "art_base_14_erudito",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "",
-"name": "(14º nível) Erudito de Itens Mágicos",
-"description": "Sintonização ampliada e versatilidade: sua capacidade de sintonizar aumenta para 5 itens simultâneos. Você ignora requisitos de classe, raça, nível e componentes mágicos restritivos para usar ou sintonizar-se com itens mágicos."
+  "id": "art_base_14_erudito",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "",
+  "name": "(14º nível) Erudito de Itens Mágicos",
+  "description": "Você pode sintonizar até 5 itens mágicos ao mesmo tempo. Você ignora todos os requisitos de classe, raça, magia e nível para sintonizar ou usar um item mágico."
 },
 {
-"id": "art_base_18_mestre",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "",
-"name": "(18º nível) Mestre de Itens Mágicos",
-"description": "Mestre em sintonização: a partir do 18º nível você pode se sintonizar com até seis itens mágicos ao mesmo tempo, permitindo grande flexibilidade tática e de suporte."
+  "id": "art_base_18_mestre",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "",
+  "name": "(18º nível) Mestre de Itens Mágicos",
+  "description": "Você pode sintonizar até 6 itens mágicos ao mesmo tempo."
 },
 {
-"id": "art_base_20_alma",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "",
-"name": "(20º nível) Alma da Artimanha",
-"description": "Vínculo profundo: para cada item ao qual você estiver sintonizado, recebe +1 em todas as salvaguardas (máx. +6). Reação vital: se cair a 0 PV, você pode sacrificar imediatamente uma infusão ativa para permanecer em 1 PV (uso único por vez, exige que haja uma infusão ativa disponível)."
+  "id": "art_base_20_alma",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "",
+  "name": "(20º nível) Alma da Artimanha",
+  "description": "Você ganha +1 em todos os testes de resistência para cada item mágico ao qual está sintonizado (máximo +6). Se for reduzido a 0 PV mas não morto instantaneamente, pode usar sua reação para encerrar uma de suas infusões ativas e cair para 1 PV em vez disso."
 },
 {
-"id": "art_inf_propulsao",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Infusão",
-"name": "(infusão, 14º nível) Armadura de Propulsão Arcana",
-"description": "Infusão (Armadura, sintonização): confere +1,5 m de deslocamento e gera manoplas mágicas corpo-a-corpo que causam 1d8 de dano de força (alcance de arremesso 6/18 m; retorna à mão). A armadura pode substituir membros perdidos e não pode ser removida contra a vontade do usuário."
+  "id": "art_inf_propulsao",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Infusão",
+  "name": "(infusão, 14º nível) Armadura de Propulsão Arcana",
+  "description": "Item: Armadura (Sintonização). Aumenta o deslocamento em 1,5m. As manoplas da armadura tornam-se armas mágicas que causam 1d8 de dano de força e podem ser arremessadas (alcance 6/18m), retornando à mão imediatamente. A armadura não pode ser removida contra sua vontade e substitui membros perdidos."
 },
 {
-"id": "art_inf_forca",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Infusão",
-"name": "(infusão) Armadura de Força Mágica",
-"description": "Infusão (Armadura, sintonização): o item armazena 6 cargas (recupera 1d6 ao amanhecer). Gasta 1 carga para adicionar seu Mod. INT a testes ou salvaguardas de FOR ou, como Reação, gastar 1 carga para evitar ser derrubado. Quando as cargas chegam a zero, a infusão permanece mas sem efeitos de carga até recarregar."
+  "id": "art_inf_forca",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Infusão",
+  "name": "(infusão) Armadura de Força Mágica",
+  "description": "Item: Armadura (Sintonização). Possui 6 cargas, recuperando 1d6 ao amanhecer. Gaste 1 carga para adicionar seu Modificador de Inteligência a um teste ou salvaguarda de Força. (Reação) Gaste 1 carga para evitar ser derrubado."
 },
 {
-"id": "art_inf_ferramenta",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Infusão",
-"name": "(infusão) Armadura de Ferramentas",
-"description": "Infusão (Armadura): como Ação, integre uma ferramenta de artesão ou ladrão à armadura por até 8 horas. Enquanto integrada, você soma seu Mod. INT a testes de habilidade feitos com essa ferramenta. É necessária uma mão livre para operar a ferramenta integrada."
+  "id": "art_inf_ferramenta",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Infusão",
+  "name": "(infusão) Armadura de Ferramentas",
+  "description": "Item: Armadura. Como uma ação, você integra um conjunto de ferramentas de artesão ou de ladrão à armadura por 8 horas. Você adiciona seu Modificador de Inteligência a testes feitos com a ferramenta integrada. Requer uma mão livre para uso."
 },
 {
-"id": "art_inf_botas",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Infusão",
-"name": "(infusão, 6º nível) Botas do Caminho Sinistro",
-"description": "Infusão (Botas, sintonização): como Ação Bônus, você pode teleportar-se até 4,5 m para um espaço desocupado que você tenha ocupado durante o turno atual. Uso recrecional repetido dependendo do DM; a infusão dura enquanto estiver sintonizada."
+  "id": "art_inf_botas",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Infusão",
+  "name": "(infusão, 6º nível) Botas do Caminho Sinistro",
+  "description": "Item: Botas (Sintonização). Como uma ação bônus, teleporte-se até 4,5 metros para um espaço desocupado que você ocupou em algum momento durante o turno atual."
 },
 {
-"id": "art_inf_foco",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Infusão",
-"name": "(infusão) Foco Arcano Aprimorado",
-"description": "Infusão (Vara/Cajado/Varinha, sintonização): concede +1 nas jogadas de ataque com magias e faz com que o portador ignore cobertura parcial ao atacar; o bônus aumenta para +2 quando você atingir o 10º nível de Artífice."
+  "id": "art_inf_foco",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Infusão",
+  "name": "(infusão) Foco Arcano Aprimorado",
+  "description": "Item: Varinha, Cajado ou Bastão (Sintonização). Concede +1 nas jogadas de ataque com magia e ignora meia cobertura ao realizar ataques mágicos. O bônus aumenta para +2 no 10º nível."
 },
 {
-"id": "art_inf_defesa",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Infusão",
-"name": "(infusão) Defesa Aprimorada",
-"description": "Infusão (Armadura ou Escudo, sintonização): enquanto o item estiver em uso, concede +1 na Classe de Armadura do usuário. Esse bônus aumenta para +2 quando você atingir o 10º nível de Artífice."
+  "id": "art_inf_defesa",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Infusão",
+  "name": "(infusão) Defesa Aprimorada",
+  "description": "Item: Armadura ou Escudo. Concede um bônus de +1 na Classe de Armadura enquanto o item for usado. O bônus aumenta para +2 no 10º nível."
 },
 {
-"id": "art_inf_arma_aprim",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Infusão",
-"name": "(infusão) Arma Aprimorada",
-"description": "Infusão (arma simples ou marcial, sintonização): concede +1 nas jogadas de ataque e dano com a arma; o bônus aumenta para +2 no 10º nível do Artífice."
+  "id": "art_inf_arma_aprim",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Infusão",
+  "name": "(infusão) Arma Aprimorada",
+  "description": "Item: Arma simples ou marcial. Concede um bônus de +1 nas jogadas de ataque e dano com a arma. O bônus aumenta para +2 no 10º nível."
 },
 {
-"id": "art_inf_elmo",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Infusão",
-"name": "(infusão, 10º nível) Elmo da Consciência",
-"description": "Infusão (Elmo, sintonização): concede vantagem em testes de iniciativa para o usuário e impede que ele seja surpreendido no início do combate, salvo se estiver incapacitado."
+  "id": "art_inf_elmo",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Infusão",
+  "name": "(infusão, 10º nível) Elmo da Consciência",
+  "description": "Item: Elmo (Sintonização). Você tem vantagem em testes de iniciativa. Além disso, você não pode ser surpreendido, desde que não esteja incapacitado."
 },
 {
-"id": "art_inf_homunculo",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Infusão",
-"name": "(infusão) Servo Homúnculo",
-"description": "Infusão (gema, custo 100 po): cria um homúnculo mecânico leal que age logo após seu turno. Pode usar Reação para 'Canalizar Magia' entregando magias de toque conjuradas por você a até 36 m. O homúnculo tem estatísticas e limitações próprias determinadas pelo DM."
+  "id": "art_inf_homunculo",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Infusão",
+  "name": "(infusão) Servo Homúnculo",
+  "description": "Item: Gema ou cristal (100 po). Cria um homúnculo mecânico que obedece a seus comandos. Em combate, age imediatamente após você. Pode usar sua reação para canalizar uma magia de toque que você conjurar a até 36 metros dele."
 },
 {
-"id": "art_inf_mente",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Infusão",
-"name": "(infusão) Aguçador de Mente",
-"description": "Infusão (Armadura ou Vestes, sintonização): armazena 4 cargas (recupera 1d4 ao amanhecer). Como Reação, quando falhar em uma salvaguarda de CON para manter concentração, você pode gastar 1 carga para ser bem-sucedido automaticamente. Quando as cargas se esgotam, o efeito deixa de estar disponível até recarregar."
+  "id": "art_inf_mente",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Infusão",
+  "name": "(infusão) Aguçador de Mente",
+  "description": "Item: Armadura ou Túnica. O item tem 4 cargas e recupera 1d4 ao amanhecer. (Reação) Quando falhar em um teste de resistência de Constituição para manter concentração, gaste 1 carga para ter sucesso automático."
 },
 {
-"id": "art_inf_radiante",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Infusão",
-"name": "(infusão, 6º nível) Arma Radiante",
-"description": "Infusão (arma simples ou marcial, sintonização): conceda +1 em ataque e dano. Como Ação Bônus, a arma pode emitir luz brilhante por 9 m; como Reação, quando você for atingido, gaste 1 das 4 cargas para cegar o atacante até o fim do próximo turno (salvaguarda CON reduz/evita)."
+  "id": "art_inf_radiante",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Infusão",
+  "name": "(infusão, 6º nível) Arma Radiante",
+  "description": "Item: Arma simples ou marcial (Sintonização). +1 ataque/dano. (Ação Bônus) Emite luz brilhante (9m). Possui 4 cargas (recupera 1d4 ao amanhecer). (Reação) Ao ser atingido por um ataque, gaste 1 carga para cegar o atacante até o final do próximo turno dele (Save de CON anula)."
 },
 {
-"id": "art_inf_repetido",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Infusão",
-"name": "(infusão) Tiro Repetido",
-"description": "Infusão (arma de munição, sintonização): concede +1 em ataque e dano. Remove a propriedade de recarga da arma e gera automaticamente munição mágica quando a arma estiver vazia; a munição desaparece após causar impacto."
+  "id": "art_inf_repetido",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Infusão",
+  "name": "(infusão) Tiro Repetido",
+  "description": "Item: Arma com propriedade munição (Sintonização). +1 ataque/dano. A arma ignora a propriedade de recarga e cria sua própria munição mágica automaticamente (que desaparece após atingir ou errar)."
 },
 {
-"id": "art_inf_replicar",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Infusão",
-"name": "(infusão) Replicar Item Mágico",
-"description": "Infusão (item variável): permite criar uma cópia funcional de um item mágico específico listado como replicável (ex.: Bolsa Cabe-Tudo, Óculos de Visão Noturna). A disponibilidade e o nível de itens replicáveis dependem do seu nível de Artífice; consulte a tabela de replicação do DM."
+  "id": "art_inf_replicar",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Infusão",
+  "name": "(infusão) Replicar Item Mágico",
+  "description": "Você aprende a criar um item mágico específico (ex: Bolsa de Carga, Óculos de Visão Noturna, etc). Escolha um item da tabela de 'Itens Replicáveis' disponível para o seu nível."
 },
 {
-"id": "art_inf_repulsao",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Infusão",
-"name": "(infusão, 6º nível) Escudo de Repulsão",
-"description": "Infusão (Escudo, sintonização): concede +1 na CA e armazena 4 cargas. Como Reação ao ser atingido por um ataque corpo-a-corpo, o portador pode gastar 1 carga para empurrar o atacante 4,5 m para longe. As cargas recarregam com o amanhecer."
+  "id": "art_inf_repulsao",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Infusão",
+  "name": "(infusão, 6º nível) Escudo de Repulsão",
+  "description": "Item: Escudo (Sintonização). +1 na CA. Possui 4 cargas (recupera 1d4 ao amanhecer). (Reação) Ao ser atingido por um ataque corpo a corpo, gaste 1 carga para empurrar o atacante 4,5 metros para longe."
 },
 {
-"id": "art_inf_resistente",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Infusão",
-"name": "(infusão, 6º nível) Armadura Resistente",
-"description": "Infusão (Armadura, sintonização): concede resistência a um tipo de dano escolhido no momento da infusão (ácido, frio, fogo, força, elétrico, necrótico, veneno, psíquico, radiante ou trovão) enquanto estiver sintonizada."
+  "id": "art_inf_resistente",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Infusão",
+  "name": "(infusão, 6º nível) Armadura Resistente",
+  "description": "Item: Armadura (Sintonização). Concede resistência a um dos seguintes tipos de dano (escolhido ao infundir): ácido, frio, fogo, força, elétrico, necrótico, veneno, psíquico, radiante ou trovão."
 },
 {
-"id": "art_inf_retorna",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Infusão",
-"name": "(infusão) Arma que Retorna",
-"description": "Infusão (arma de arremesso, sintonização): adiciona +1 em ataque e dano e faz com que a arma retorne magicamente à mão do portador imediatamente após realizar um ataque à distância."
+  "id": "art_inf_retorna",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Infusão",
+  "name": "(infusão) Arma que Retorna",
+  "description": "Item: Arma com propriedade arremesso. +1 ataque/dano. A arma retorna magicamente para a mão do portador imediatamente após ser usada para um ataque à distância."
 },
 {
-"id": "art_inf_anel",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Infusão",
-"name": "(infusão, 6º nível) Anel de Reabastecimento de Feitiços",
-"description": "Infusão (Anel, sintonização): como Ação, permite recuperar um espaço de magia gasto de 3º nível ou inferior. Esta habilidade pode ser usada uma vez por dia e recarrega ao amanhecer."
+  "id": "art_inf_anel",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Infusão",
+  "name": "(infusão, 6º nível) Anel de Reabastecimento de Feitiços",
+  "description": "Item: Anel (Sintonização). Como uma ação, você pode recuperar um espaço de magia gasto de 3º nível ou inferior. Uma vez usado, não pode ser usado novamente até o próximo amanhecer."
 },
 {
-"id": "art_alq_3_prof",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Alquimista",
-"name": "(alquimista, 3º nível) Proficiência com Ferramentas",
-"description": "Treinamento alquímico: você recebe proficiência com Suprimentos de Alquimista. Se já tiver essa proficiência, escolha outra ferramenta de artesão com a qual ganhar proficiência."
+  "id": "art_alq_3_prof",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Alquimista",
+  "name": "(alquimista, 3º nível) Proficiência com Ferramentas",
+  "description": "Você ganha proficiência com suprimentos de alquimista. Se já tiver, ganha proficiência com outra ferramenta de artesão à sua escolha."
 },
 {
-"id": "art_alq_3_spells",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Alquimista",
-"name": "Feitiços de Alquimista",
-"description": "Lista de magias adicionais preparadas: no nível 3: Palavra de Cura, Raio da Doença; nível 5: Esfera Flamejante, Flecha Ácida de Melf; nível 9: Forma Gasosa, Palavra de Cura em Massa; nível 13: Praga, Guarda da Morte; nível 17: Nuvem Assassina, Ressuscitar Mortos. Essas magias complementam sua temática alquímica e contam como magias de Artífice para você."
+  "id": "art_alq_3_spells",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Alquimista",
+  "name": "Feitiços de Alquimista",
+  "description": "Você sempre tem preparadas as seguintes magias: 3º - Palavra de Cura, Raio da Doença; 5º - Esfera Flamejante, Flecha Ácida de Melf; 9º - Forma Gasosa, Palavra de Cura em Massa; 13º - Praga, Guarda da Morte; 17º - Nuvem Assassina, Ressuscitar Mortos."
 },
 {
-"id": "art_alq_3_elixir",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Alquimista",
-"name": "(alquimista, 3º nível) Elixir Experimental",
-"description": "(Ação) Cria um elixir experimental após um Descanso Longo (ou você pode gastar um espaço de magia para escolher o efeito). O elixir concederá um efeito aleatório como: cura (2d4 + Mod. INT), velocidade adicional (+3 m), +1 CA, bônus de Audácia (+1d4 em ataques/saves), voo limitado (3 m) ou alteração física. Duração e efeitos exatos são decididos pelo DM ou pela tabela de elixires."
+  "id": "art_alq_3_elixir",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Alquimista",
+  "name": "(alquimista, 3º nível) Elixir Experimental",
+  "description": "Ao final de um descanso longo, ou gastando um espaço de magia (ação), crie um elixir em um frasco vazio. Efeitos possíveis (rolagem ou escolha se gastar slot): Cura, Velocidade (+3m), CA (+1), Audácia (+1d4 em ataques/saves), Voo (3m) ou Alterar Forma. O efeito dura até o próximo descanso longo ou até ser bebido."
 },
 {
-"id": "art_alq_5_sabio",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Alquimista",
-"name": "(alquimista, 5º nível) Sábio Alquímico",
-"description": "Potência alquímica: ao conjurar magias através de suprimentos de alquimista que causem cura ou dano (tipos: ácido, fogo, necrótico ou veneno), você adiciona seu modificador de INT ao total de cura ou dano."
+  "id": "art_alq_5_sabio",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Alquimista",
+  "name": "(alquimista, 5º nível) Sábio Alquímico",
+  "description": "Ao conjurar uma magia usando suprimentos de alquimista que cure ou cause dano de ácido, fogo, necrótico ou veneno, adicione seu Modificador de Inteligência a uma das rolagens."
 },
 {
-"id": "art_alq_9_reagente",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Alquimista",
-"name": "(alquimista, 9º nível) Reagentes Restauradores",
-"description": "Elixires fortalecidos: seus elixires agora conferem 2d6 + seu Mod. INT de PV temporários. Além disso, você pode conjurar Restauração Menor sem gastar espaços de magia um número de vezes igual ao seu Mod. INT por Descanso Longo."
+  "id": "art_alq_9_reagente",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Alquimista",
+  "name": "(alquimista, 9º nível) Reagentes Restauradores",
+  "description": "Seus Elixires Experimentais concedem 2d6 + Mod. INT de pontos de vida temporários ao serem bebidos. Você também pode conjurar Restauração Menor sem gastar slots um número de vezes igual ao seu Modificador de Inteligência (recupera em descanso longo)."
 },
 {
-"id": "art_alq_15_mestre",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Alquimista",
-"name": "(alquimista, 15º nível) Mestre da Química",
-"description": "Mestre alquímico: você ganha resistência a dano de ácido e veneno e imunidade à condição Envenenado. Uma vez por Descanso Longo, pode conjurar Restauração Maior ou uma magia de Cura sem gastar espaço de magia ou componentes materiais."
+  "id": "art_alq_15_mestre",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Alquimista",
+  "name": "(alquimista, 15º nível) Mestre da Química",
+  "description": "Você ganha resistência a dano de ácido e veneno e imunidade à condição envenenado. Uma vez por descanso longo, pode conjurar Restauração Maior ou Cura sem gastar espaço de magia ou componentes materiais."
 },
 {
-"id": "art_arm_3_prof",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Armeiro",
-"name": "(armeiro, 3º nível) Ferramentas do Ofício",
-"description": "Treinamento em combate: você ganha proficiência com Armaduras Pesadas e com Ferramentas de Ferreiro, ampliando sua capacidade de resistência e fabricação."
+  "id": "art_arm_3_prof",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Armeiro",
+  "name": "(armeiro, 3º nível) Ferramentas do Ofício",
+  "description": "Você ganha proficiência com armaduras pesadas e ferramentas de ferreiro."
 },
 {
-"id": "art_arm_3_spells",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Armeiro",
-"name": "Feitiços de Armeiro",
-"description": "Feitiços adicionais preparados: nível 3: Míssil Mágico, Onda Trovejante; nível 5: Imagem Espelhada, Estilhaçar; nível 9: Padrão Hipnótico, Raio; nível 13: Escudo de Fogo, Invisibilidade Maior; nível 17: Passagem de Parede, Muralha de Força. Essas magias reforçam o estilo marcial e defensivo do armeiro."
+  "id": "art_arm_3_spells",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Armeiro",
+  "name": "Feitiços de Armeiro",
+  "description": "Você sempre tem preparadas as seguintes magias: 3º - Míssil Mágico, Onda Trovejante; 5º - Imagem Espelhada, Estilhaçar; 9º - Padrão Hipnótico, Raio; 13º - Escudo de Fogo, Invisibilidade Maior; 17º - Passagem de Parede, Muralha de Força."
 },
 {
-"id": "art_arm_3_arcana",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Armeiro",
-"name": "(armeiro, 3º nível) Armadura Arcana",
-"description": "(Ação) Armadura mágica: sua armadura ignora requisitos de Força, serve como foco de conjuração, pode substituir membros perdidos e não pode ser removida contra sua vontade. Vesti-la ou retirá-la leva 1 Ação."
+  "id": "art_arm_3_arcana",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Armeiro",
+  "name": "(armeiro, 3º nível) Armadura Arcana",
+  "description": "Como uma ação, transforme a armadura que está vestindo em Armadura Arcana. Ela não exige Força para ser usada, serve como foco arcano, não pode ser removida contra vontade, substitui membros perdidos e pode ser vestida/retirada com uma ação."
 },
 {
-"id": "art_arm_3_modelo",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Armeiro",
-"name": "(armeiro, 3º nível) Modelo de Armadura",
-"description": "Modelos táticos: você escolhe um modelo para sua armadura. Guardião: manoplas que causam 1d8 de dano trovejante e impõem desvantagem ao alvo, além de um campo defensivo que concede PV temporários. Infiltrador: raio elétrico de 1d6 com dano extra e um campo de amortecimento que concede vantagem em testes de Furtividade."
+  "id": "art_arm_3_modelo",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Armeiro",
+  "name": "(armeiro, 3º nível) Modelo de Armadura",
+  "description": "Escolha Guardião ou Infiltrador. Você usa INT para ataques com as armas da armadura. Guardião: Manoplas Trovejantes (1d8 trovão, desvantagem em ataques contra outros) e Campo Defensivo (HP temp como ação bônus). Infiltrador: Lançador de Raios (1d6 elétrico +1d6 1x/turno), +1,5m deslocamento e vantagem em Furtividade."
 },
 {
-"id": "art_arm_5_ataque",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Armeiro",
-"name": "(armeiro, 5º nível) Ataque Extra",
-"description": "Combate aprimorado: quando você usa a ação de Atacar, pode realizar dois ataques em vez de um no seu turno."
+  "id": "art_arm_5_ataque",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Armeiro",
+  "name": "(armeiro, 5º nível) Ataque Extra",
+  "description": "Você pode atacar duas vezes, em vez de uma, sempre que usar a ação Atacar no seu turno."
 },
 {
-"id": "art_arm_9_mod",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Armeiro",
-"name": "(armeiro, 9º nível) Modificações de Armadura",
-"description": "Modularidade: sua armadura é tratada como quatro itens separados (peito, botas, elmo, arma) para fins de infusões. Seu limite de itens infundidos aumenta em +2 quando aplicar infusões especificamente à armadura."
+  "id": "art_arm_9_mod",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Armeiro",
+  "name": "(armeiro, 9º nível) Modificações de Armadura",
+  "description": "As partes da sua Armadura Arcana (peito, botas, elmo, arma) contam como itens separados para infusão. Você pode manter 2 infusões adicionais ativas, desde que sejam usadas nessas partes da armadura."
 },
 {
-"id": "art_arm_15_aperf",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Armeiro",
-"name": "(armeiro, 15º nível) Armadura Aperfeiçoada",
-"description": "Aprimoramentos avançados: Guardião (Reação): puxe uma criatura a até 9 m e execute um ataque contra ela. Infiltrador: ataques com o raio fazem o alvo emitir luz por 1,5 m, concedem desvantagem ao alvo contra você e o próximo ataque contra ele recebe vantagem com +1d6 de dano elétrico."
+  "id": "art_arm_15_aperf",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Armeiro",
+  "name": "(armeiro, 15º nível) Armadura Aperfeiçoada",
+  "description": "Guardião: (Reação) Quando criatura termina turno a 9m, force save de FOR; falha puxa ela 9m e permite ataque corpo a corpo. Infiltrador: Alvo atingido por raio emite luz e tem desvantagem contra você; próximo ataque contra ele tem vantagem e causa +1d6 elétrico."
 },
 {
-"id": "art_art_3_prof",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Artilheiro",
-"name": "(artilheiro, 3º nível) Proficiência com Ferramentas",
-"description": "Treinamento técnico: você ganha proficiência com ferramentas de entalhador, permitindo manipular construções e mecanismos com maior habilidade."
+  "id": "art_art_3_prof",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Artilheiro",
+  "name": "(artilheiro, 3º nível) Proficiência com Ferramentas",
+  "description": "Você ganha proficiência com ferramentas de entalhador."
 },
 {
-"id": "art_art_3_spells",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Artilheiro",
-"name": "Feitiços de Artilheiro",
-"description": "Magias adicionais preparadas: nível 3: Escudo, Onda Trovejante; nível 5: Raio Incandescente, Estilhaçar; nível 9: Bola de Fogo, Parede de Vento; nível 13: Tempestade de Gelo, Muralha de Fogo; nível 17: Cone de Frio, Muralha de Força. Projetadas para uso com artilharia e controle de área."
+  "id": "art_art_3_spells",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Artilheiro",
+  "name": "Feitiços de Artilheiro",
+  "description": "Você sempre tem preparadas as seguintes magias: 3º - Escudo, Onda Trovejante; 5º - Raio Incandescente, Estilhaçar; 9º - Bola de Fogo, Parede de Vento; 13º - Tempestade de Gelo, Muralha de Fogo; 17º - Cone de Frio, Muralha de Força."
 },
 {
-"id": "art_art_3_canhao",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Artilheiro",
-"name": "(artilheiro, 3º nível) Canhão Eldritch",
-"description": "(Ação) Construa temporariamente um canhão Pequeno ou Minúsculo que dura 1 hora. Tipos: Balista (2d8 Força + empurra 1,5 m), Lança-Chamas (2d8 fogo em cone de 4,5 m) ou Protetor (fornece 1d8 + Mod. INT de PV temporários em área). O canhão age conforme as regras do canhão eldritch."
+  "id": "art_art_3_canhao",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Artilheiro",
+  "name": "(artilheiro, 3º nível) Canhão Eldritch",
+  "description": "(Ação) Crie um canhão mágico Pequeno ou Minúsculo (dura 1h). Ative com ação bônus (18m). Lança-chamas: cone 4,5m, 2d8 fogo (DEX metade). Balista: ataque mágico 36m, 2d8 força + empurrão 1,5m. Protetor: emanação 3m, 1d8+INT PV temporários."
 },
 {
-"id": "art_art_5_fogo",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Artilheiro",
-"name": "(artilheiro, 5º nível) Arma Arcana",
-"description": "Poder explosivo: quando você conjura magias através de sua arma arcana (foco esculpido), role 1d8 e adicione o resultado ao dano da magia, representando a potência arcana canalizada pelo canhão/arma."
+  "id": "art_art_5_fogo",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Artilheiro",
+  "name": "(artilheiro, 5º nível) Arma Arcana",
+  "description": "Transforme uma varinha, cajado ou bastão em Arma Arcana. Ao conjurar magias de artífice através dela, adicione 1d8 a uma das rolagens de dano da magia."
 },
 {
-"id": "art_art_9_explosivo",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Artilheiro",
-"name": "(artilheiro, 9º nível) Canhão Explosivo",
-"description": "Aprimoramento do canhão: o dano base do canhão aumenta em +1d8. Como Ação, você pode detonar o canhão a até 18 m, causando 3d8 de dano de Força a criaturas num raio de 6 m (salvaguarda DEX reduz à metade)."
+  "id": "art_art_9_explosivo",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Artilheiro",
+  "name": "(artilheiro, 9º nível) Canhão Explosivo",
+  "description": "O dano de todos os seus canhões aumenta em 1d8. Como uma ação, você pode detonar seu canhão a até 18m, causando 3d8 de dano de força a criaturas num raio de 6m (Save de DEX para metade)."
 },
 {
-"id": "art_art_15_fortificada",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Artilheiro",
-"name": "(artilheiro, 15º nível) Posição Fortificada",
-"description": "Defesa de artilharia: você e aliados a até 3 m do canhão recebem Meia Cobertura (+2 CA e vantagem em testes de Destreza relacionados à cobertura). Além disso, você pode criar e manter dois canhões ativos simultaneamente usando a mesma Ação Bônus."
+  "id": "art_art_15_fortificada",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Artilheiro",
+  "name": "(artilheiro, 15º nível) Posição Fortificada",
+  "description": "Você e seus aliados têm meia cobertura enquanto estiverem a até 3m de um canhão criado por você. Você pode ter dois canhões ativos ao mesmo tempo e ativá-los com a mesma ação bônus."
 },
 {
-"id": "art_fer_3_prof",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Ferreiro de Batalha",
-"name": "(ferreiro de batalha, 3º nível) Proficiência com Ferramentas",
-"description": "Treinamento marcial: você ganha proficiência com ferramentas de ferreiro, refletindo sua habilidade em forjar e manter armas/armaduras de combate."
+  "id": "art_fer_3_prof",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Ferreiro de Batalha",
+  "name": "(ferreiro de batalha, 3º nível) Proficiência com Ferramentas",
+  "description": "Você ganha proficiência com ferramentas de ferreiro."
 },
 {
-"id": "art_fer_3_spells",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Ferreiro de Batalha",
-"name": "Feitiços de Ferreiro de Batalha",
-"description": "Magias adicionais preparadas: nível 3: Heroísmo, Escudo; nível 5: Golpe de Marca, Vínculo Protetor; nível 9: Aura de Vitalidade, Conjurar Barragem; nível 13: Aura de Pureza, Escudo de Fogo; nível 17: Golpe de Banimento, Cura em Massa. Projetadas para fortalecer aliados e proteger posições."
+  "id": "art_fer_3_spells",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Ferreiro de Batalha",
+  "name": "Feitiços de Ferreiro de Batalha",
+  "description": "Você sempre tem preparadas as seguintes magias: 3º - Heroísmo, Escudo; 5º - Golpe de Marca, Vínculo Protetor; 9º - Aura de Vitalidade, Conjurar Barragem; 13º - Aura de Pureza, Escudo de Fogo; 17º - Golpe de Banimento, Cura em Massa."
 },
 {
-"id": "art_fer_3_batalha",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Ferreiro de Batalha",
-"name": "(ferreiro de batalha, 3º nível) Pronto para a Batalha",
-"description": "Combate e substituição de atributo: você ganha proficiência com Armas Marciais e pode usar seu modificador de INT em lugar de Força ou Destreza para jogadas de ataque e dano feitas com armas mágicas que você empunha."
+  "id": "art_fer_3_batalha",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Ferreiro de Batalha",
+  "name": "(ferreiro de batalha, 3º nível) Pronto para a Batalha",
+  "description": "Você ganha proficiência com armas marciais. Ao atacar com uma arma mágica, você pode usar seu Modificador de Inteligência em vez de Força ou Destreza para as jogadas de ataque e dano."
 },
 {
-"id": "art_fer_3_defensor",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Ferreiro de Batalha",
-"name": "(ferreiro de batalha, 3º nível) Defensor de Aço",
-"description": "Construto protetor: você cria um defensor (construto) leal que age imediatamente após seu turno. Como Reação, pode usar 'Desviar Ataque' para impor desvantagem a um ataque dirigido a criatura a até 1,5 m do defensor."
+  "id": "art_fer_3_defensor",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Ferreiro de Batalha",
+  "name": "(ferreiro de batalha, 3º nível) Defensor de Aço",
+  "description": "Você cria um constructo leal que age logo após seu turno. (Ação Bônus) Comande-o a atacar ou usar outra ação (senão ele usa Esquivar). (Reação) Defensor impõe desvantagem em um ataque contra uma criatura a 1,5m dele."
 },
 {
-"id": "art_fer_5_ataque",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Ferreiro de Batalha",
-"name": "(ferreiro de batalha, 5º nível) Ataque Extra",
-"description": "Ataques adicionais: quando você realiza a ação de Atacar, pode fazer dois ataques em vez de um durante seu turno."
+  "id": "art_fer_5_ataque",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Ferreiro de Batalha",
+  "name": "(ferreiro de batalha, 5º nível) Ataque Extra",
+  "description": "Você pode atacar duas vezes, em vez de uma, sempre que usar a ação Atacar no seu turno."
 },
 {
-"id": "art_fer_9_choque",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Ferreiro de Batalha",
-"name": "(ferreiro de batalha, 9º nível) Choque Arcano",
-"description": "Choque ofensivo/curativo: quando você atinge um alvo com uma arma mágica ou um ataque do defensor, pode causar 2d6 de dano de Força adicional ou curar 2d6 PV de uma criatura a até 9 m. Usos por Descanso Longo: igual ao seu modificador de INT."
+  "id": "art_fer_9_choque",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Ferreiro de Batalha",
+  "name": "(ferreiro de batalha, 9º nível) Choque Arcano",
+  "description": "Ao acertar com arma mágica ou ataque do defensor, canalize energia para causar 2d6 de dano de força extra OU curar 2d6 PV de um alvo a 9m. Usos iguais ao Mod. INT (recupera em descanso longo)."
 },
 {
-"id": "art_fer_15_aprimorado",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Ferreiro de Batalha",
-"name": "(ferreiro de batalha, 15º nível) Defensor Aprimorado",
-"description": "Aprimoramentos do defensor: o Choque Arcano agora causa/curar 4d6. O Defensor de Aço recebe +2 na CA e sua Reação 'Desviar Ataque' passa a causar 1d4 + Mod. INT de dano de Força ao atacante."
+  "id": "art_fer_15_aprimorado",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Ferreiro de Batalha",
+  "name": "(ferreiro de batalha, 15º nível) Defensor Aprimorado",
+  "description": "O dano e a cura do Choque Arcano aumentam para 4d6. Seu Defensor de Aço ganha +2 na CA. Quando o Defensor usa a reação de desviar ataque, o atacante sofre 1d4 + INT de dano de força."
 },
 {
-"id": "art_arq_3_spells",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Arquivista",
-"name": "Feitiços de Arquivista",
-"description": "Magias adicionais preparadas: nível 3: Compreender Línguas, Sussurros Dissonantes; nível 5: Detectar Pensamentos, Localizar Objetos; nível 9: Padrão Hipnótico, Línguas; nível 13: Localizar Criatura, Assassino Fantasmagórico; nível 17: Lenda e Conhecimento, Modificar Memória. Focadas em conhecimento, controle mental e manipulação de informação."
+  "id": "art_arq_3_spells",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Arquivista",
+  "name": "Feitiços de Arquivista",
+  "description": "Você sempre tem preparadas as seguintes magias: 3º - Compreender Línguas, Sussurros Dissonantes; 5º - Detectar Pensamentos, Localizar Objetos; 9º - Padrão Hipnótico, Línguas; 13º - Localizar Criatura, Assassino Fantasmagórico; 17º - Lenda e Conhecimento, Modificar Memória."
 },
 {
-"id": "art_arq_3_mente",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Arquivista",
-"name": "(arquivista, 3º nível) Mente Artificial",
-"description": "Consciência animada: você pode despertar uma mente artificial em um objeto, concedendo-lhe uma presença espectral que confere +2 em perícias escolhidas. Manifestar Mente (Ação Bônus) convoca uma presença espectral em até 18 m; Sobrecarga (Ação) causa 1d8 dano psíquico e concede vantagem no próximo ataque contra o alvo."
+  "id": "art_arq_3_mente",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Arquivista",
+  "name": "(arquivista, 3º nível) Mente Artificial",
+  "description": "Desperte uma mente em um objeto minúsculo. Enquanto com você, concede proficiência em 2 perícias baseadas no material. (Ação Bônus) Manifeste uma mente espectral a 18m; pode conjurar magias a partir dela. (Ação) Sobrecarga de Informação: Alvo a 1,5m da mente faz Save INT ou sofre 1d8 psíquico e o próximo ataque contra ele tem vantagem."
 },
 {
-"id": "art_arq_5_rede",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Arquivista",
-"name": "(arquivista, 5º nível) Rede Mental",
-"description": "Conexão entre itens: você estabelece comunicação telepática com portadores de itens infundidos que você criou. Além disso, adiciona seu Mod. INT ao dano psíquico de magias de artífice e ao dano causado pela Sobrecarga de Informação."
+  "id": "art_arq_5_rede",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Arquivista",
+  "name": "(arquivista, 5º nível) Rede Mental",
+  "description": "Você pode se comunicar telepaticamente com qualquer pessoa portando um de seus itens infundidos. Ao causar dano psíquico com magia de artífice ou Sobrecarga, adicione seu Modificador de Inteligência ao dano."
 },
 {
-"id": "art_arq_14_info",
-"category": "Classe",
-"class": "Artífice",
-"subclass": "Arquivista",
-"name": "(arquivista, 14º nível) Informação Pura",
-"description": "Sobrecarga mental avançada: alvos que sofrerem dano extra por um slot aplicado na Sobrecarga devem fazer uma salvaguarda de INT ou ficar Atordoados. Como Ação, você pode se teletransportar para o espaço de uma mente espectral ou para o local de um item infundido que contenha tal mente."
+  "id": "art_arq_14_info",
+  "category": "Classe",
+  "class": "Artífice",
+  "subclass": "Arquivista",
+  "name": "(arquivista, 14º nível) Informação Pura",
+  "description": "Sobrecarga aprimorada: se gastar slot de magia para aumentar dano da Sobrecarga, alvo atordoado em falha. (Ação) Teleporte-se para o espaço da mente espectral ou de um item infundido. 1x grátis ou gasta slot 2º nível."
 },
 
 
@@ -481,413 +481,413 @@
 "id": "BARBAROz"
 },
 {
-"id": "bar_base_1_furia",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "",
-"name": "(1º nível) Fúria",
-"description": "(Ação Bônus) Estado de combate: você entra em fúria por até 1 minuto. Enquanto em fúria, você tem vantagem em testes e salvaguardas de Força, resistência a dano contundente, perfurante e cortante, e adiciona seu Bônus de Fúria ao dano de ataques corpo-a-corpo. A fúria termina se você não atacar ou receber dano desde o seu último turno."
+  "id": "bar_base_1_furia",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "",
+  "name": "(1º nível) Fúria",
+  "description": "(Ação Bônus) Você entra em um estado de ferocidade primal por 1 minuto. Benefícios: Vantagem em testes e salvaguardas de Força; Resistência a dano contundente, perfurante e cortante; +Bônus de Fúria no dano de ataques corpo a corpo com Força. Não pode conjurar ou concentrar em magias. Termina se você cair inconsciente ou se passar um turno sem atacar um inimigo ou sofrer dano."
 },
 {
-"id": "bar_base_1_defesa",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "",
-"name": "(1º nível) Defesa sem Blindagem",
-"description": "CA sem armadura: enquanto não usar armadura, sua CA é calculada como 10 + Mod. DEX + Mod. CON. Você ainda pode usar escudos normalmente."
+  "id": "bar_base_1_defesa",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "",
+  "name": "(1º nível) Defesa sem Blindagem",
+  "description": "Enquanto você não estiver usando nenhuma armadura, sua Classe de Armadura (CA) é igual a 10 + seu modificador de Destreza + seu modificador de Constituição. Você pode usar um escudo e ainda obter esse benefício."
 },
 {
-"id": "bar_base_2_perigo",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "",
-"name": "(2º nível) Sentido de Perigo",
-"description": "Percepção aguçada: você tem vantagem em salvaguardas de Destreza contra efeitos perceptíveis, como armadilhas ou magias visíveis, desde que não esteja cego, surdo ou incapacitado."
+  "id": "bar_base_2_perigo",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "",
+  "name": "(2º nível) Sentido de Perigo",
+  "description": "Você possui uma percepção sobrenatural para evitar riscos. Você tem Vantagem em salvaguardas de Destreza contra efeitos que possa ver (como armadilhas e magias). Você perde este benefício se estiver cego, surdo ou incapacitado."
 },
 {
-"id": "bar_base_2_imprudente",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "",
-"name": "(2º nível) Ataque Imprudente",
-"description": "Estilo ofensivo: no primeiro ataque que fizer em seu turno, você pode provocá-lo com vantagem para ataques corpo-a-corpo baseados em Força; enquanto isso, ataques feitos contra você têm vantagem até o início do seu próximo turno."
+  "id": "bar_base_2_imprudente",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "",
+  "name": "(2º nível) Ataque Imprudente",
+  "description": "Ao fazer seu primeiro ataque no turno, você pode decidir atacar imprudentemente. Você ganha Vantagem em jogadas de ataque corpo a corpo usando Força durante este turno, mas as jogadas de ataque contra você também têm Vantagem até o início do seu próximo turno."
 },
 {
-"id": "bar_base_3_conhecimento",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "",
-"name": "(3º nível) Conhecimento Primordial",
-"description": "Treinamento adicional: você ganha proficiência em uma perícia extra da lista de perícias do Bárbaro. Você ganha essa proficiência novamente no 10º nível, podendo escolher outra perícia."
+  "id": "bar_base_3_conhecimento",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "",
+  "name": "(3º nível) Conhecimento Primordial",
+  "description": "Você ganha proficiência em uma perícia adicional da lista de classe de Bárbaro. No 10º nível, você ganha outra proficiência da mesma lista."
 },
 {
-"id": "bar_base_asi",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "",
-"name": "Aumento no Valor de Atributo",
-"description": "Melhoria de atributo: escolha aumentar um atributo em +2 ou dois atributos em +1 (máximo 20) nos níveis padrões de progressão da classe."
+  "id": "bar_base_asi",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "",
+  "name": "Aumento no Valor de Atributo",
+  "description": "Você pode aumentar um valor de atributo à sua escolha em 2, ou dois valores em 1. Como padrão, você não pode elevar um atributo acima de 20 com esta característica. Obtido nos níveis 4, 8, 12, 16 e 19."
 },
 {
-"id": "bar_base_5_ataque",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "",
-"name": "(5º nível) Ataque Extra",
-"description": "Combate aprimorado: quando você realiza a ação de Atacar, pode fazer dois ataques em vez de um durante seu turno."
+  "id": "bar_base_5_ataque",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "",
+  "name": "(5º nível) Ataque Extra",
+  "description": "Você pode realizar dois ataques, em vez de um, sempre que utilizar a ação de Atacar no seu turno."
 },
 {
-"id": "bar_base_5_movimento",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "",
-"name": "(5º nível) Movimento Rápido",
-"description": "Deslocamento aumentado: seu deslocamento aumenta em 3 metros enquanto você não estiver usando armadura pesada, permitindo maior mobilidade."
+  "id": "bar_base_5_movimento",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "",
+  "name": "(5º nível) Movimento Rápido",
+  "description": "Sua velocidade de deslocamento aumenta em 3 metros enquanto você não estiver usando armadura pesada."
 },
 {
-"id": "bar_base_7_instinto",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "",
-"name": "(7º nível) Instinto Selvagem",
-"description": "Iniciativa superior: você tem vantagem em rolagens de Iniciativa. Se for surpreendido e não estiver incapacitado, pode agir no momento em que entrar em fúria, antes de outras ações."
+  "id": "bar_base_7_instinto",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "",
+  "name": "(7º nível) Instinto Selvagem",
+  "description": "Você tem Vantagem nas rolagens de Iniciativa. Além disso, se for surpreendido no início do combate e não estiver incapacitado, você pode agir normalmente em seu primeiro turno, mas apenas se entrar em Fúria antes de fazer qualquer outra coisa."
 },
 {
-"id": "bar_base_7_instintivo",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "",
-"name": "(7º nível) Ataque Instintivo",
-"description": "(Ação Bônus) Mobilidade na fúria: ao entrar em fúria, você pode mover-se imediatamente até metade do seu deslocamento sem provocar Ataques de Oportunidade."
+  "id": "bar_base_7_instintivo",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "",
+  "name": "(7º nível) Ataque Instintivo",
+  "description": "Como parte da Ação Bônus que você usa para entrar em Fúria, você pode se mover até metade do seu deslocamento."
 },
 {
-"id": "bar_base_9_brutal",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "",
-"name": "(9º nível) Brutal Crítico",
-"description": "Crítico mais forte: quando você obtém um acerto crítico com ataque corpo-a-corpo, role um dado extra de dano. Esse número aumenta para dois dados no 13º nível e três dados no 17º nível."
+  "id": "bar_base_9_brutal",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "",
+  "name": "(9º nível) Brutal Crítico",
+  "description": "Você pode rolar um dado de dano de arma adicional ao determinar o dano extra de um acerto crítico com um ataque corpo a corpo. Aumenta para 2 dados no 13º nível e 3 dados no 17º nível."
 },
 {
-"id": "bar_base_11_implacavel",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "",
-"name": "(11º nível) Fúria Implacável",
-"description": "Sobrevivência em fúria: se você cair a 0 PV enquanto estiver em fúria, pode fazer uma salvaguarda de Constituição (CD 10). Se for bem-sucedida, você permanece com 1 PV. A dificuldade aumenta em +5 para usos subsequentes até você recuperar essa capacidade após um Descanso Curto ou Longo."
+  "id": "bar_base_11_implacavel",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "",
+  "name": "(11º nível) Fúria Implacável",
+  "description": "Se você cair a 0 pontos de vida enquanto estiver em Fúria e não morrer instantaneamente, pode fazer um teste de resistência de Constituição CD 10. Se tiver sucesso, você cai para 1 ponto de vida em vez de 0. A CD aumenta em 5 a cada uso sucessivo. A CD reinicia para 10 após um descanso curto ou longo."
 },
 {
-"id": "bar_base_15_persistente",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "",
-"name": "(15º nível) Raiva Persistente",
-"description": "Fúria inabalável: sua fúria só termina prematuramente se você ficar inconsciente ou escolher encerrá-la voluntariamente; forças externas têm menos efeito em interromper seu estado."
+  "id": "bar_base_15_persistente",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "",
+  "name": "(15º nível) Raiva Persistente",
+  "description": "Sua Fúria é tão intensa que só termina prematuramente se você cair inconsciente ou se decidir encerrá-la."
 },
 {
-"id": "bar_base_18_indomavel",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "",
-"name": "(18º nível) Poder Indomável",
-"description": "Uso do atributo como resultado: se o total de um teste de Força for menor que seu valor de atributo de Força, você pode usar o valor do atributo como resultado daquela rolagem, garantindo sucesso em ações brutais."
+  "id": "bar_base_18_indomavel",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "",
+  "name": "(18º nível) Poder Indomável",
+  "description": "Se o total de um teste de Força for menor que o seu valor de atributo de Força, você pode usar o valor do atributo no lugar do total."
 },
 {
-"id": "bar_base_20_campeao",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "",
-"name": "(20º nível) Campeão Primordial",
-"description": "Auge físico: seus valores de Força e Constituição aumentam em +4. O limite máximo desses atributos aumenta para 24, refletindo sua supremacia física."
+  "id": "bar_base_20_campeao",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "",
+  "name": "(20º nível) Campeão Primordial",
+  "description": "Você incorpora o poder da natureza selvagem. Seus valores de Força e Constituição aumentam em 4. O máximo para esses atributos agora é 24."
 },
 {
-"id": "bar_ber_3_frenesi",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Berserker",
-"name": "(berserker, 3º nível) Frenesi",
-"description": "Fúria implacável: enquanto em fúria você pode fazer um ataque corpo-a-corpo adicional como Ação Bônus em cada turno. Ao fim da fúria, você sofre 1 nível de exaustão devido ao esforço extremo."
+  "id": "bar_ber_3_frenesi",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Berserker",
+  "name": "(berserker, 3º nível) Frenesi",
+  "description": "Você pode entrar em um frenesi ao enfurecer-se. Durante essa Fúria, você pode fazer um ataque corpo a corpo como uma Ação Bônus em cada um dos seus turnos. Quando a Fúria termina, você sofre um nível de exaustão."
 },
 {
-"id": "bar_ber_6_sem_sentido",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Berserker",
-"name": "(berserker, 6º nível) Fúria sem Sentido",
-"description": "Imunidade mental temporária: enquanto estiver em fúria, você é imune às condições Enfeitiçado e Amedrontado; efeitos mentais ativos ficam suspensos durante a fúria."
+  "id": "bar_ber_6_sem_sentido",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Berserker",
+  "name": "(berserker, 6º nível) Fúria sem Sentido",
+  "description": "Você não pode ser enfeitiçado ou amedrontado enquanto estiver em Fúria. Se você já estiver sob um desses efeitos ao entrar em Fúria, o efeito é suspenso pela duração da Fúria."
 },
 {
-"id": "bar_ber_10_presenca",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Berserker",
-"name": "(berserker, 10º nível) Presença Intimidadora",
-"description": "(Ação) Intimidação em área: uma criatura a até 9 m deve fazer uma salvaguarda de Sabedoria (CD = 8 + Proficiência + Mod. CAR) ou ficar Amedrontada. Você pode gastar uma ação para prolongar o efeito."
+  "id": "bar_ber_10_presenca",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Berserker",
+  "name": "(berserker, 10º nível) Presença Intimidadora",
+  "description": "(Ação) Escolha uma criatura a até 9m que possa vê-lo ou ouvi-lo. Ela deve passar em um Save de Sabedoria (CD 8 + Prof + CAR) ou ficará amedrontada até o final do seu próximo turno. Você pode usar sua ação em turnos subsequentes para estender a duração."
 },
 {
-"id": "bar_ber_14_retalia",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Berserker",
-"name": "(berserker, 14º nível) Retaliação",
-"description": "(Reação) Contra-ataque: quando uma criatura a até 1,5 m de você causar dano a você, você pode usar sua reação para realizar imediatamente um ataque corpo-a-corpo contra essa criatura."
+  "id": "bar_ber_14_retalia",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Berserker",
+  "name": "(berserker, 14º nível) Retaliação",
+  "description": "(Reação) Quando você sofrer dano de uma criatura que esteja a até 1,5m de você, você pode realizar um ataque corpo a corpo contra essa criatura imediatamente."
 },
 {
-"id": "bar_tot_3_busca",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Guerreiro Totêmico",
-"name": "(totêmico, 3º nível) Buscador de Espíritos",
-"description": "Conexão com a natureza: você pode conjurar Sentido Bestial e Falar com Animais como rituais, refletindo sua afinidade com espíritos naturais."
+  "id": "bar_tot_3_busca",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Guerreiro Totêmico",
+  "name": "(totêmico, 3º nível) Buscador de Espíritos",
+  "description": "Você ganha a capacidade de conjurar as magias 'Sentido Bestial' e 'Falar com Animais', mas apenas como rituais."
 },
 {
-"id": "bar_tot_3_espirito",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Guerreiro Totêmico",
-"name": "(totêmico, 3º nível) Espírito Totêmico",
-"description": "Escolha de totem: ao selecionar um totem, ganha-se um benefício permanente enquanto estiver em fúria: Urso — resistência a todos os danos exceto psíquico; Águia — capacidade de Disparada como Ação Bônus e oportunidades de ataque contra você com desvantagem; Lobo — aliados próximos têm vantagem em ataques corpo-a-corpo contra inimigos que estejam a 1,5 m de você."
+  "id": "bar_tot_3_espirito",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Guerreiro Totêmico",
+  "name": "(totêmico, 3º nível) Espírito Totêmico",
+  "description": "Em Fúria: [Urso] Resistência a todos os danos (exceto psíquico). [Águia] Disparada como Ação Bônus e Oportunidade com desvantagem contra você. [Lobo] Aliados têm vantagem em ataques corpo a corpo contra inimigos a 1,5m de você. [Alce] +4,5m de deslocamento. [Tigre] +3m salto distância/+1m altura."
 },
 {
-"id": "bar_tot_6_aspecto",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Guerreiro Totêmico",
-"name": "(totêmico, 6º nível) Aspecto da Besta",
-"description": "Benefícios totemicos ampliados: Urso — dobra sua carga e concede vantagem em testes de Força para empurrar/quebrar; Águia — visão excelente (alcance narrativo até 1,6 km) e penumbra não prejudica percepção; Lobo — melhor rastreamento e capacidade de mover-se furtivamente em velocidades normais."
+  "id": "bar_tot_6_aspecto",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Guerreiro Totêmico",
+  "name": "(totêmico, 6º nível) Aspecto da Besta",
+  "description": "Benefício passivo: [Urso] Dobra capacidade de carga e vantagem em testes de Força para empurrar/quebrar. [Águia] Visão de 1,6km e sem desvantagem por penumbra. [Lobo] Rastreia em ritmo rápido e furtividade em ritmo normal. [Alce/Tigre] Ganha proficiência em duas perícias (Atletismo, Acrobacia, Furtividade, Sobrevivência)."
 },
 {
-"id": "bar_tot_10_andarilho",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Guerreiro Totêmico",
-"name": "(totêmico, 10º nível) Andarilho Espiritual",
-"description": "Comunhão com a natureza: você pode conjurar Comunhão com a Natureza como Ritual, aprofundando sua ligação com espíritos e o mundo natural."
+  "id": "bar_tot_10_andarilho",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Guerreiro Totêmico",
+  "name": "(totêmico, 10º nível) Andarilho Espiritual",
+  "description": "Você pode conjurar a magia 'Comunhão com a Natureza' como um ritual, invocando uma versão espiritual do seu animal totêmico para obter informações."
 },
 {
-"id": "bar_tot_14_sintonia",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Guerreiro Totêmico",
-"name": "(totêmico, 14º nível) Sintonização Totêmica",
-"description": "Poder totemico superior: Urso — inimigos a 1,5 m têm desvantagem em atacar qualquer alvo que não seja você; Águia — recebe velocidade de voo temporária igual à sua velocidade terrestre por um período curto; Lobo — como Ação Bônus, ao acertar um ataque corpo-a-corpo você pode tentar derrubar uma criatura Grande ou menor."
+  "id": "bar_tot_14_sintonia",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Guerreiro Totêmico",
+  "name": "(totêmico, 14º nível) Sintonização Totêmica",
+  "description": "Em Fúria: [Urso] Inimigos a 1,5m têm desvantagem para atacar outros que não você. [Águia] Ganha velocidade de voo igual à de caminhada (cai se terminar turno no ar). [Lobo] Ação Bônus para derrubar criatura Grande ou menor ao acertar ataque. [Alce] Ação Bônus ao mover p/ atropelar inimigo (dano + derrubar). [Tigre] Ação Bônus para ataque extra se mover 6m em linha reta."
 },
 {
-"id": "bar_gua_3_protetores",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Guardião Ancestral",
-"name": "(guardião, 3º nível) Protetores Ancestrais",
-"description": "Proteção espiritual: a primeira criatura que atingir em cada turno sofre efeitos que a distraem — ela tem desvantagem em ataques que não sejam contra você; aliados atingidos pelo mesmo inimigo recebem resistência a dano por um breve período."
+  "id": "bar_gua_3_protetores",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Guardião Ancestral",
+  "name": "(guardião, 3º nível) Protetores Ancestrais",
+  "description": "Enquanto em Fúria, a primeira criatura que você acertar no turno é assombrada. Até seu próximo turno, ela tem desvantagem em ataques que não sejam contra você e, se atacar outro alvo, esse alvo tem resistência ao dano."
 },
 {
-"id": "bar_gua_6_escudo",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Guardião Ancestral",
-"name": "(guardião, 6º nível) Escudo Espiritual",
-"description": "(Reação) Redução de dano: quando um aliado a até 9 m sofre dano, você pode reduzir esse dano em 2d6. O valor aumenta para 3d6 no nível 10 e 4d6 no nível 14."
+  "id": "bar_gua_6_escudo",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Guardião Ancestral",
+  "name": "(guardião, 6º nível) Escudo Espiritual",
+  "description": "(Reação) Se você estiver em Fúria e uma criatura a até 9m sofrer dano, você pode reduzir esse dano em 2d6. A redução aumenta para 3d6 no 10º nível e 4d6 no 14º nível."
 },
 {
-"id": "bar_gua_10_espiritos",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Guardião Ancestral",
-"name": "(guardião, 10º nível) Consulte os Espíritos",
-"description": "Ajuda ancestral: você pode invocar espíritos para conjurar Augúrio ou Clarividência sem gastar espaços ou componentes materiais. Atributo usado: Sabedoria. Usa-se 1 vez por Descanso Curto ou Longo."
+  "id": "bar_gua_10_espiritos",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Guardião Ancestral",
+  "name": "(guardião, 10º nível) Consulte os Espíritos",
+  "description": "Você pode conjurar 'Augúrio' ou 'Clarividência' sem gastar espaço de magia ou componentes materiais, invocando seus ancestrais (Sabedoria é o atributo). Recupera após um descanso curto ou longo."
 },
 {
-"id": "bar_gua_14_retalia",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Guardião Ancestral",
-"name": "(guardião, 14º nível) Ancestrais Vingativos",
-"description": "Retaliação espiritual: quando você usa Escudo Espiritual para reduzir dano, o atacante sofre dano de Força igual ao valor prevenido, como punição dos espíritos ancestrais."
+  "id": "bar_gua_14_retalia",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Guardião Ancestral",
+  "name": "(guardião, 14º nível) Ancestrais Vingativos",
+  "description": "Quando você usa seu Escudo Espiritual para reduzir o dano de um ataque, o atacante sofre uma quantidade de dano de força igual ao valor que foi prevenido pelo escudo."
 },
 {
-"id": "bar_tem_3_aura",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Arauto da Tempestade",
-"name": "(arauto, 3º nível) Aura da Tempestade",
-"description": "(Ação Bônus) Aura elementar: você emana uma aura de 3 m cujos efeitos variam com o ambiente: Deserto — inflige 2 de dano de fogo por rodada; Mar — causa 1d6 elétrico em um alvo (save DEX metade); Tundra — fornece 2 PV temporários aos aliados. O efeito escala com seu nível."
+  "id": "bar_tem_3_aura",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Arauto da Tempestade",
+  "name": "(arauto, 3º nível) Aura da Tempestade",
+  "description": "(Ação Bônus) Em Fúria, emana aura de 3m. [Deserto] Todas as criaturas na aura sofrem 2 dano de fogo. [Mar] Uma criatura sofre 1d6 elétrico (Save DEX metade). [Tundra] Aliados ganham 2 PV temporários. Efeitos escalam com nível."
 },
 {
-"id": "bar_tem_6_alma",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Arauto da Tempestade",
-"name": "(arauto, 6º nível) Alma da Tempestade",
-"description": "Resiliência ambiental: você ganha resistência aos tipos de dano relacionados ao ambiente (fogo/elétrico/frio). Em Mar, também recebe respiração aquática e nado +9 m; em Deserto, pode incendiar objetos combustíveis; em Tundra, é capaz de congelar água como efeito utilitário."
+  "id": "bar_tem_6_alma",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Arauto da Tempestade",
+  "name": "(arauto, 6º nível) Alma da Tempestade",
+  "description": "Benefícios passivos: [Deserto] Resistência a fogo, ignora calor extremo, incendeia objetos ao toque. [Mar] Resistência a elétrico, respira na água, natação 9m. [Tundra] Resistência a frio, ignora frio extremo, congela água ao toque."
 },
 {
-"id": "bar_tem_10_prote",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Arauto da Tempestade",
-"name": "(arauto, 10º nível) Tempestade Protetora",
-"description": "Compartilhar resistência: aliados dentro de sua Aura da Tempestade ganham a mesma resistência a dano que você possui devido à Alma da Tempestade, oferecendo proteção elementar em área."
+  "id": "bar_tem_10_prote",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Arauto da Tempestade",
+  "name": "(arauto, 10º nível) Tempestade Protetora",
+  "description": "Você compartilha sua resistência a dano elemental (da Alma da Tempestade) com criaturas de sua escolha que estejam dentro da sua Aura da Tempestade."
 },
 {
-"id": "bar_tem_14_furiosa",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Arauto da Tempestade",
-"name": "(arauto, 14º nível) Tempestade Furiosa",
-"description": "Reações elementais: efeitos variados por ambiente — Deserto (Reação): quando atingido, o atacante sofre dano de fogo igual a metade do seu nível de bárbaro; Mar (Reação): ao acertar um inimigo, você pode forçá-lo a fazer um Save FOR ou cair prostrado; Tundra: sua aura reduz a velocidade de inimigos para 0 enquanto estiverem nela."
+  "id": "bar_tem_14_furiosa",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Arauto da Tempestade",
+  "name": "(arauto, 14º nível) Tempestade Furiosa",
+  "description": "Efeitos de reação: [Deserto] Se atingido, atacante sofre dano de fogo igual à metade do nível de Bárbaro. [Mar] Ao acertar ataque, derruba alvo (Save FOR nega). [Tundra] Zera o deslocamento de uma criatura na aura (Save FOR nega)."
 },
 {
-"id": "bar_zel_3_furia",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Fanático",
-"name": "(zelote, 3º nível) Fúria Divina",
-"description": "Dano sagrado: o primeiro ataque bem-sucedido que você fizer em cada turno causa dano radiante ou necrótico adicional igual a 1d6 + (nível de bárbaro / 2), refletindo a fúria divina do fanático."
+  "id": "bar_zel_3_furia",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Fanático",
+  "name": "(fanático, 3º nível) Fúria Divina",
+  "description": "Enquanto em Fúria, a primeira criatura que você atingir no seu turno sofre 1d6 + metade do seu nível de Bárbaro de dano extra (necrótico ou radiante, escolhido ao ganhar a habilidade)."
 },
 {
-"id": "bar_zel_3_guerreiro",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Fanático",
-"name": "(zelote, 3º nível) Guerreiro dos Deuses",
-"description": "Proteção ritualística: magias de ressurreição lançadas em você (como Revivificar) não exigem componentes materiais preciosos, refletindo a benção divina que te sustenta."
+  "id": "bar_zel_3_guerreiro",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Fanático",
+  "name": "(fanático, 3º nível) Guerreiro dos Deuses",
+  "description": "Se uma magia (como Ressuscitar Mortos) tiver o único efeito de restaurá-lo à vida, o conjurador não precisa fornecer componentes materiais para a magia."
 },
 {
-"id": "bar_zel_6_foco",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Fanático",
-"name": "(zelote, 6º nível) Foco Fanático",
-"description": "Determinação inabalável: se falhar em uma salvaguarda enquanto estiver em fúria, você pode rolar novamente e usar o novo resultado. Pode ser usado uma vez por fúria."
+  "id": "bar_zel_6_foco",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Fanático",
+  "name": "(fanático, 6º nível) Foco Fanático",
+  "description": "Se você falhar em um teste de resistência enquanto estiver em Fúria, pode rolar o dado novamente e deve usar o novo resultado. Você pode usar essa habilidade uma vez por Fúria."
 },
 {
-"id": "bar_zel_10_presenca",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Fanático",
-"name": "(zelote, 10º nível) Presença Zelosa",
-"description": "(Ação Bônus) Inspiração divina: até 10 criaturas a até 18 m ganham vantagem em ataques e salvaguardas até o início do seu próximo turno. Uso: 1 vez por Descanso Longo."
+  "id": "bar_zel_10_presenca",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Fanático",
+  "name": "(fanático, 10º nível) Presença Zelosa",
+  "description": "(Ação Bônus) Você solta um grito de guerra. Até 10 criaturas a até 18m (que possam ouvi-lo) ganham Vantagem em jogadas de ataque e testes de resistência até o início do seu próximo turno. 1x por descanso longo."
 },
 {
-"id": "bar_zel_14_morte",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho do Fanático",
-"name": "(zelote, 14º nível) Fúria Além da Morte",
-"description": "Perseverança extrema: ao ficar com 0 PV enquanto em fúria, você não fica imediatamente inconsciente; continua lutando com saves contra morte normais. Você só morre se, ao fim da fúria, ainda estiver com 0 PV e tiver falhas de morte acumuladas suficientes."
+  "id": "bar_zel_14_morte",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho do Fanático",
+  "name": "(fanático, 14º nível) Fúria Além da Morte",
+  "description": "Em Fúria, ter 0 PV não o deixa inconsciente. Você ainda faz saves contra morte e sofre dano, mas não morre por falhas nos saves até que sua Fúria termine e você ainda tenha 0 PV."
 },
 {
-"id": "bar_bes_3_forma",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho da Besta",
-"name": "(besta, 3º nível) Forma da Besta",
-"description": "Armas naturais: enquanto em fúria, você ganha uma arma natural (à sua escolha) com propriedades especiais: Mordida — 1d8 perfurante e cura parcial baseada em nível; Garras — 1d6 cortante e concede um ataque extra; Cauda — 1d8 perfurante com alcance e Reação para aumentar sua CA. As estatísticas exatas são definidas pelo DM."
+  "id": "bar_bes_3_forma",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho da Besta",
+  "name": "(besta, 3º nível) Forma da Besta",
+  "description": "Ao entrar em Fúria, manifeste uma arma natural. [Mordida] 1d8 perfurante + cura (se <50% HP). [Garras] 1d6 cortante + 1 ataque extra se usar ação Atacar. [Cauda] 1d8 perfurante com alcance; Reação p/ aumentar CA em 1d8 contra um ataque."
 },
 {
-"id": "bar_bes_6_alma",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho da Besta",
-"name": "(besta, 6º nível) Alma Bestial",
-"description": "Armas naturais mágicas e escolha de vantagem: suas armas naturais contam como mágicas para vencer resistência. Em um Descanso Curto, escolha um benefício: velocidade de nado e respiração aquática, velocidade de escalada, ou salto melhorado (aplica-se a testes de Atletismo)."
+  "id": "bar_bes_6_alma",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho da Besta",
+  "name": "(besta, 6º nível) Alma Bestial",
+  "description": "Suas armas naturais contam como mágicas. Após descanso, escolha um: Natação igual à caminhada + respirar na água; Escalada igual à caminhada (teto inclusive); ou Saltos aumentados (add resultado de Atletismo ao salto)."
 },
 {
-"id": "bar_bes_10_infecciosa",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho da Besta",
-"name": "(besta, 10º nível) Fúria Infecciosa",
-"description": "Efeito contagioso: ao acertar com arma natural, o alvo deve fazer um Save de Sabedoria (CD = 8 + Prof. + Mod. CON) ou ser forçado a atacar um aliado (Reação) ou sofrer 2d12 de dano psíquico; número de usos por Descanso Longo = seu Proficiência."
+  "id": "bar_bes_10_infecciosa",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho da Besta",
+  "name": "(besta, 10º nível) Fúria Infecciosa",
+  "description": "Ao acertar com arma natural em Fúria, alvo faz Save de Sabedoria. Falha: Alvo usa reação para atacar outra criatura à sua escolha OU sofre 2d12 psíquico. Usos iguais ao Bônus de Proficiência."
 },
 {
-"id": "bar_bes_14_caçada",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho da Besta",
-"name": "(besta, 14º nível) Chame a Caçada",
-"description": "Fúria que inspira: ao entrar em fúria, aliados a até 9 m (até um máximo igual ao seu Mod. CON) recebem +1d6 de dano por turno. Você ganha 5 PV temporários por aliado afetado. Usos por Descanso Longo = Proficiência."
+  "id": "bar_bes_14_caçada",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho da Besta",
+  "name": "(besta, 14º nível) Chame a Caçada",
+  "description": "Ao entrar em Fúria, escolha aliados a 9m (nº = Mod. CON). Você ganha 5 PV temporários por aliado. Eles ganham +1d6 de dano em ataques enquanto sua Fúria durar. Usos iguais ao Bônus de Proficiência."
 },
 {
-"id": "bar_sel_3_conscien",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho da Magia Selvagem",
-"name": "(selvagem, 3º nível) Consciência Mágica",
-"description": "(Ação) Detecção mágica: você sente a presença de magia em itens e criaturas e identifica a escola mágica a até 18 m. Usos por Descanso Longo = Proficiência."
+  "id": "bar_sel_3_conscien",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho da Magia Selvagem",
+  "name": "(magia selvagem, 3º nível) Consciência Mágica",
+  "description": "(Ação) Você abre sua percepção para detectar a presença de magia ou itens mágicos a até 18 metros, descobrindo a escola de magia. Usos iguais ao seu Bônus de Proficiência."
 },
 {
-"id": "bar_sel_3_onda",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho da Magia Selvagem",
-"name": "(selvagem, 3º nível) Onda Selvagem",
-"description": "Efeitos caóticos: ao entrar em fúria, role 1d8 numa tabela de efeitos randômicos (ex.: 1 — dano necrótico em área; 2 — teleporte; 3 — explosão de flumphs; 4 — criação de arma de força; 5 — retaliação de força; 6 — +1 CA em aura; 7 — terreno difícil; 8 — raio cegante). O efeito aplicado é imediato e pode impactar o campo de batalha."
+  "id": "bar_sel_3_onda",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho da Magia Selvagem",
+  "name": "(magia selvagem, 3º nível) Onda Selvagem",
+  "description": "Ao entrar em Fúria, role 1d8 na tabela de Magia Selvagem. Efeitos incluem: Dano necrótico em área + HP temp; Teleporte (Ação Bônus); Explosão de flumphs; Arma de Força com retorno; Retaliação de Força; Aura de CA (+1); Terreno difícil; Raio cegante."
 },
 {
-"id": "bar_sel_6_reforca",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho da Magia Selvagem",
-"name": "(selvagem, 6º nível) Magia Reforçada",
-"description": "(Ação) Bênção mágica: toque uma criatura; ela recebe +1d4 em ataques e testes por 10 minutos ou recupera um espaço de magia de nível 1–3. Usos por Descanso Longo = Proficiência."
+  "id": "bar_sel_6_reforca",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho da Magia Selvagem",
+  "name": "(magia selvagem, 6º nível) Magia Reforçada",
+  "description": "(Ação) Toque uma criatura ou a si mesmo. Conceda um benefício: +1d3 em ataques e testes de habilidade por 10 min OU recuperar um espaço de magia (nível 1 a 3, decidido por 1d3). Usos iguais ao Bônus de Proficiência."
 },
 {
-"id": "bar_sel_10_instavel",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho da Magia Selvagem",
-"name": "(selvagem, 10º nível) Reação Instável",
-"description": "(Reação) Caos controlado: quando você sofre dano ou falha em uma salvaguarda, role novamente na tabela da Onda Selvagem para substituir o efeito atual por um novo, potencialmente virando o jogo."
+  "id": "bar_sel_10_instavel",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho da Magia Selvagem",
+  "name": "(magia selvagem, 10º nível) Reação Instável",
+  "description": "(Reação) Quando você sofrer dano ou falhar em um teste de resistência durante a Fúria, você pode rolar imediatamente na tabela de Magia Selvagem e substituir o efeito atual pelo novo resultado."
 },
 {
-"id": "bar_sel_14_sobrecarga",
-"category": "Classe",
-"class": "Bárbaro",
-"subclass": "Caminho da Magia Selvagem",
-"name": "(selvagem, 14º nível) Sobrecarga Controlada",
-"description": "Escolha múltipla: role dois dados na tabela da Onda Selvagem e escolha qual dos dois efeitos ativar. Se os dois resultados forem iguais, você pode escolher qualquer efeito extra ou modificá-lo com a permissão do DM."
+  "id": "bar_sel_14_sobrecarga",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho da Magia Selvagem",
+  "name": "(magia selvagem, 14º nível) Sobrecarga Controlada",
+  "description": "Sempre que rolar na tabela de Magia Selvagem, você pode rolar dois dados e escolher qual efeito ativar. Se rolar números iguais, você pode escolher qualquer efeito da tabela."
 },
-  {
-    "id": "bar_als_3_persistente",
-    "category": "Classe",
-    "class": "Bárbaro",
-    "subclass": "Caminho da Alma Selvagem",
-    "name": "(alma selvagem, 3º nível) Magia Persistente",
-    "description": "(Ação) Seu corpo torna-se um para-raios para a Trama, permitindo que você conjure 'Detectar Magia' sem gastar espaços de magia ou componentes. Atributo de conjuração: CON. Ao detectar magia, você emite um brilho visual cuja cor corresponde à escola detectada. Usos: Mod. CON por Descanso Longo."
-  },
-  {
-    "id": "bar_als_3_onda",
-    "category": "Classe",
-    "class": "Bárbaro",
-    "subclass": "Caminho da Alma Selvagem",
-    "name": "(alma selvagem, 3º nível) Onda Selvagem",
-    "description": "Ao entrar em Fúria, a energia feérica irrompe de você de forma caótica. Role 1d8 p/ determinar o efeito (CD = 8 + Prof + CON):\n1. Necrótico: Drena 1d10 de inimigos a 9m; você ganha HP Temp igual à soma do dano.\n2. Teleporte: (Ação Bônus) Teleporta 6m p/ espaço visível cada turno.\n3. Flumphs: Conjura 1d4 espíritos que voam 9m e explodem causando 2d8 de Força (Save DEX).\n4. Manto Arcano: +2 na CA; inimigos que te acertarem a até 3m sofrem dano de Força = Mod. CON.\n5. Natureza: Solo a 3m de você torna-se terreno difícil p/ inimigos.\n6. Intuição: Inimigo a 9m faz Save SAB ou você lê sua mente, dando a ele Desvantagem em ataques contra você.\n7. Arma Sombria: Arma empunhada causa dano Psíquico, ganha propriedade Leve, Arremesso (6/18m) e retorna à mão.\n8. Raio Solar: Linha de 18m causa 2d8 radiante e Cegueira (Save CON)."
-  },
-  {
-    "id": "bar_als_6_reservas",
-    "category": "Classe",
-    "class": "Bárbaro",
-    "subclass": "Caminho da Alma Selvagem",
-    "name": "(alma selvagem, 6º nível) Reservas Mágicas",
-    "description": "(Ação) Você sacrifica sua força vital p/ imbuir outros com magia. Toque uma criatura e role 1d4: ela recupera um Spell Slot de nível igual ao resultado (ou recebe 5x o resultado em HP Temp). Em troca, você sofre dano de Força igual a 5x o valor rolado. No 14º nível, utilize um d6."
-  },
-  {
-    "id": "bar_als_10_repreensao",
-    "category": "Classe",
-    "class": "Bárbaro",
-    "subclass": "Caminho da Alma Selvagem",
-    "name": "(alma selvagem, 10º nível) Repreensão Arcana",
-    "description": "(Reação) A magia instável em sua alma reage contra agressões místicas. Sempre que uma criatura forçar você a realizar uma Salvaguarda enquanto estiver em Fúria, você pode usar sua reação para puni-la, causando 3d6 de dano de Força imediato ao agressor."
-  },
-  {
-    "id": "bar_als_14_caotica",
-    "category": "Classe",
-    "class": "Bárbaro",
-    "subclass": "Caminho da Alma Selvagem",
-    "name": "(alma selvagem, 14º nível) Fúria Caótica",
-    "description": "(Ação Bônus) Você atinge o controle parcial sobre o caos que o habita. Enquanto estiver em Fúria, você pode utilizar sua Ação Bônus para rolar novamente na tabela de Onda Selvagem, substituindo imediatamente o efeito atual pelo novo resultado obtido."
-  },
+{
+  "id": "bar_als_3_persistente",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho da Alma Selvagem",
+  "name": "(alma selvagem, 3º nível) Magia Persistente",
+  "description": "(Ação) Você pode conjurar 'Detectar Magia' sem gastar espaços ou componentes, usando Constituição como atributo. Você emite um brilho colorido correspondente à escola. Usos iguais ao Modificador de Constituição."
+},
+{
+  "id": "bar_als_3_onda",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho da Alma Selvagem",
+  "name": "(alma selvagem, 3º nível) Onda Selvagem (UA)",
+  "description": "Ao entrar em Fúria, role 1d8 na tabela UA: 1-Necrótico em área (drena vida); 2-Teleporte (Ação Bônus); 3-Espíritos explosivos (dano força); 4-Aura Arcana (+2 CA e retaliação); 5-Terreno Difícil; 6-Leitura Mental (Desvantagem no inimigo); 7-Arma Sombria (Psíquico/Arremesso); 8-Feixe Radiante (Cegueira)."
+},
+{
+  "id": "bar_als_6_reservas",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho da Alma Selvagem",
+  "name": "(alma selvagem, 6º nível) Reservas Mágicas",
+  "description": "(Ação) Toque uma criatura e role 1d4 (1d6 no 14º nível). Ela recupera um espaço de magia desse nível (ou ganha 5x o valor em PV temporários). Você sofre dano de força igual a 5x o número rolado."
+},
+{
+  "id": "bar_als_10_repreensao",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho da Alma Selvagem",
+  "name": "(alma selvagem, 10º nível) Repreensão Arcana",
+  "description": "(Reação) Quando uma criatura força você a fazer um teste de resistência enquanto está em Fúria, você pode causar 3d6 de dano de força a essa criatura."
+},
+{
+  "id": "bar_als_14_caotica",
+  "category": "Classe",
+  "class": "Bárbaro",
+  "subclass": "Caminho da Alma Selvagem",
+  "name": "(alma selvagem, 14º nível) Fúria Caótica",
+  "description": "(Ação Bônus) Enquanto estiver em Fúria, você pode rolar novamente na tabela de Onda Selvagem e substituir o efeito atual pelo novo resultado."
+},
 
 
 
@@ -3544,7 +3544,1638 @@
     "subclass": "Domínio da Guerra",
     "name": "(guerra, 17º nível) Avatar da Batalha",
     "description": "Você ganha resistência a dano de concussão, perfuração e corte proveniente de ataques não mágicos."
-  }
+  },
+
+
+
+
+
+
+
+
+
+  {
+"id": "dru_base_1_druidico",
+"category": "Classe",
+"class": "Druida",
+"subclass": "",
+"name": "(1º nível) Druídico",
+"description": "Você conhece o idioma secreto dos druidas. Pode usá-lo para deixar mensagens ocultas. Outros druidas percebem automaticamente; não-druidas precisam de um teste de Sabedoria (Percepção) CD 15 para notar a mensagem, mas não conseguem decifrá-la sem magia."
+},
+{
+"id": "dru_base_1_conjura",
+"category": "Classe",
+"class": "Druida",
+"subclass": "",
+"name": "(1º nível) Lançamento de Feitiços",
+"description": "Você conjura magias divinas da natureza. Atributo: Sabedoria. CD = 8 + Proficiência + Mod. SAB. Ataque Mágico = Proficiência + Mod. SAB. Foco: Foco Druídico (visco, totem, cajado, varinha de teixo). Você prepara magias diariamente (Nível + Mod. SAB). Pode conjurar rituais preparados."
+},
+{
+"id": "dru_base_2_forma",
+"category": "Classe",
+"class": "Druida",
+"subclass": "",
+"name": "(2º nível) Forma Selvagem",
+"description": "(Ação) Assume a forma de uma besta que já viu. 2 usos por Descanso Curto/Longo. Duração: horas iguais a metade do nível de druida. Limites: Nível 2 (ND 1/4, sem voo/nado); Nível 4 (ND 1/2, sem voo); Nível 8 (ND 1). Mantém alinhamento e atributos mentais; assume atributos físicos e HP da besta. Se cair a 0 PV, retorna à forma normal com o dano excedente."
+},
+{
+"id": "dru_base_2_companheiro",
+"category": "Classe",
+"class": "Druida",
+"subclass": "",
+"name": "(2º nível) Companheiro Selvagem (Opcional)",
+"description": "(Ação) Você pode gastar um uso de Forma Selvagem para conjurar a magia 'Encontrar Familiar' sem componentes materiais. O familiar é uma fada em vez de besta e dura um número de horas igual à metade do seu nível de druida."
+},
+
+{
+"id": "dru_base_asi",
+"category": "Classe",
+"class": "Druida",
+"subclass": "",
+"name": "Aumento no Valor de Atributo",
+"description": "Você pode aumentar um valor de atributo à sua escolha em 2, ou dois valores em 1. Como padrão, você não pode elevar um atributo acima de 20 com esta característica. Obtido nos níveis 4, 8, 12, 16 e 19. (Opcional: Versatilidade de Truques permite trocar um truque nestes níveis)."
+},
+{
+"id": "dru_base_18_atemporal",
+"category": "Classe",
+"class": "Druida",
+"subclass": "",
+"name": "(18º nível) Corpo Atemporal",
+"description": "A magia primordial sustenta você. Para cada 10 anos que passarem, seu corpo envelhece apenas 1 ano."
+},
+{
+"id": "dru_base_18_feitiços_besta",
+"category": "Classe",
+"class": "Druida",
+"subclass": "",
+"name": "(18º nível) Feitiços de Besta",
+"description": "Você pode conjurar magias de druida enquanto estiver em Forma Selvagem. Você pode executar os componentes verbais e somáticos da magia, mas não pode fornecer componentes materiais."
+},
+{
+"id": "dru_base_20_arquidruida",
+"category": "Classe",
+"class": "Druida",
+"subclass": "",
+"name": "(20º nível) Arquidruida",
+"description": "Você pode usar sua Forma Selvagem um número ilimitado de vezes. Além disso, suas magias de druida ignoram componentes verbais, somáticos e materiais (que não tenham custo e não sejam consumidos), tanto na forma normal quanto na Forma Selvagem."
+},
+{
+"id": "dru_son_2_balsamo",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo dos Sonhos",
+"name": "(sonhos, 2º nível) Bálsamo da Corte de Verão",
+"description": "(Ação Bônus) Você possui uma reserva de d6s igual ao seu nível de druida. Escolha um aliado a até 36m e gaste dados (máx = metade do nível) para curá-lo. O alvo também ganha 1 PV temporário por dado gasto. Recupera em Descanso Longo."
+},
+{
+"id": "dru_son_6_lareira",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo dos Sonhos",
+"name": "(sonhos, 6º nível) Lareira de Luar e Sombra",
+"description": "No início de um descanso curto ou longo, cria uma esfera de 9m de proteção. Concede +5 em testes de Furtividade e Percepção para todos dentro dela e bloqueia a luz de chamas internas para o lado de fora."
+},
+{
+"id": "dru_son_10_caminhos",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo dos Sonhos",
+"name": "(sonhos, 10º nível) Caminhos Ocultos",
+"description": "Teletransporte feérico. (Ação Bônus) Teleporte-se até 18m para um espaço visível. (Ação) Toque uma criatura voluntária para teleportá-la até 9m. Usos iguais ao Mod. Sabedoria. Recupera em Descanso Longo."
+},
+{
+"id": "dru_son_14_andarilho",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo dos Sonhos",
+"name": "(sonhos, 14º nível) Andarilho em Sonhos",
+"description": "Ao terminar um descanso curto, pode conjurar 'Sonho', 'Vidência' ou 'Círculo de Teletransporte' sem gastar slot ou materiais. O teleporte leva ao último local de descanso longo no mesmo plano. 1x por Descanso Longo."
+},
+{
+"id": "dru_ter_2_truque",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo da Terra",
+"name": "(terra, 2º nível) Truque Bônus",
+"description": "Você aprende um truque de druida adicional à sua escolha."
+},
+{
+"id": "dru_ter_2_recuperacao",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo da Terra",
+"name": "(terra, 2º nível) Recuperação Natural",
+"description": "Durante um descanso curto, você pode recuperar espaços de magia gastos. O nível combinado dos slots é igual ou inferior à metade do seu nível de druida (máx 5º nível). 1x por Descanso Longo."
+},
+{
+"id": "dru_ter_3_feitiços",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo da Terra",
+"name": "Feitiços de Círculo",
+"description": "Você ganha magias preparadas baseadas no terreno escolhido (Ártico, Costa, Deserto, Floresta, Pradaria, Montanha, Pântano ou Subterrâneo) nos níveis 3, 5, 7 e 9."
+},
+{
+"id": "dru_ter_6_passo",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo da Terra",
+"name": "(terra, 6º nível) Passo da Terra",
+"description": "Mover-se por terreno difícil não mágico não custa movimento extra. Você atravessa plantas não mágicas sem dano ou lentidão. Tem vantagem em saves contra plantas mágicas que impedem movimento."
+},
+{
+"id": "dru_ter_10_guarda",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo da Terra",
+"name": "(terra, 10º nível) Guarda da Natureza",
+"description": "Você não pode ser enfeitiçado ou amedrontado por elementais ou fadas. Você é imune a veneno e doenças."
+},
+{
+"id": "dru_ter_14_santuario",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo da Terra",
+"name": "(terra, 14º nível) Santuário da Natureza",
+"description": "Quando uma besta ou planta tenta atacá-lo, deve fazer um Save de Sabedoria. Se falhar, deve escolher outro alvo ou perder o ataque. Se passar, fica imune por 24h."
+},
+{
+"id": "dru_lua_2_combate",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo da Lua",
+"name": "(lua, 2º nível) Forma Selvagem de Combate",
+"description": "Você pode usar Forma Selvagem como uma Ação Bônus. Enquanto transformado, pode usar uma Ação Bônus para gastar um espaço de magia e recuperar 1d8 PV por nível do slot gasto."
+},
+{
+"id": "dru_lua_2_formas",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo da Lua",
+"name": "(lua, 2º nível) Formas Circulares",
+"description": "Você pode se transformar em feras mais perigosas. Nível 2: Max ND 1. Nível 6: Max ND igual ao nível de druida dividido por 3 (ex: ND 2 no nível 6)."
+},
+{
+"id": "dru_lua_6_golpe",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo da Lua",
+"name": "(lua, 6º nível) Golpe Primordial",
+"description": "Seus ataques na forma de besta contam como mágicos para fins de superar resistência e imunidade a ataques e danos não mágicos."
+},
+{
+"id": "dru_lua_10_elemental",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo da Lua",
+"name": "(lua, 10º nível) Forma Selvagem Elemental",
+"description": "Você pode gastar dois usos de Forma Selvagem simultaneamente para se transformar em um Elemental do Ar, Terra, Fogo ou Água."
+},
+{
+"id": "dru_lua_14_mil",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo da Lua",
+"name": "(lua, 14º nível) Mil Formas",
+"description": "Você aprende a alterar sua forma física sutilmente. Você pode conjurar a magia 'Alterar Forma' à vontade, sem gastar espaços de magia."
+},
+{
+"id": "dru_pas_2_discurso",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo do Pastor",
+"name": "(pastor, 2º nível) Discurso da Floresta",
+"description": "Você aprende a falar Silvestre. Bestas compreendem sua fala e você pode decifrar seus ruídos e movimentos. Vantagem em interações com bestas."
+},
+{
+"id": "dru_pas_2_totem",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo do Pastor",
+"name": "(pastor, 2º nível) Totem Espiritual",
+"description": "(Ação Bônus) Invoca espírito (Urso, Falcão ou Unicórnio) em ponto a 18m. Aura de 9m por 1 min. Urso: PV temp (5+Nível) e Vantagem em Força. Falcão: Reação p/ dar Vantagem em ataque e Vantagem em Percepção. Unicórnio: Detectar inimigos e cura em área quando você usa magias de cura. 1x por Descanso Curto/Longo."
+},
+{
+"id": "dru_pas_6_invocador",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo do Pastor",
+"name": "(pastor, 6º nível) Invocador Poderoso",
+"description": "Bestas e fadas que você conjura ganham +2 PV por Dado de Vida e seus ataques naturais são considerados mágicos para superar resistências."
+},
+{
+"id": "dru_pas_10_guardiao",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo do Pastor",
+"name": "(pastor, 10º nível) Espírito Guardião",
+"description": "Quando uma besta ou fada invocada por você termina o turno na aura do seu Totem Espiritual, ela recupera PV iguais à metade do seu nível de druida."
+},
+{
+"id": "dru_pas_14_chamada",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo do Pastor",
+"name": "(pastor, 14º nível) Chamada Fiel",
+"description": "Se você cair a 0 PV ou for incapacitado, conjura imediatamente 'Conjurar Animais' (como slot de 9º nível: 4 bestas ND 2). Elas protegem você. 1x por Descanso Longo."
+},
+{
+"id": "dru_esp_2_feitiços",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo dos Esporos",
+"name": "Feitiços de Esporos",
+"description": "Aprende o truque Toque Gélido. Magias preparadas: 3º - Cegueira/Surdez, Repouso Suave; 5º - Animar Mortos, Forma Gasosa; 7º - Praga, Confusão; 9º - Nuvem Assassina, Contágio."
+},
+{
+"id": "dru_esp_2_halo",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo dos Esporos",
+"name": "(esporos, 2º nível) Halo de Esporos",
+"description": "(Reação) Quando uma criatura se move para 3m de você ou inicia turno lá, ela faz Save de CON ou sofre 1d4 necrótico. Aumenta: 1d6 (6º), 1d8 (10º), 1d10 (14º nível)."
+},
+{
+"id": "dru_esp_2_entidade",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo dos Esporos",
+"name": "(esporos, 2º nível) Entidade Simbiótica",
+"description": "(Ação) Gasta uso de Forma Selvagem para despertar esporos. Ganha 4 PV temporários por nível de druida. Dano do Halo de Esporos dobra. Ataques corpo a corpo com arma causam +1d6 necrótico. Dura 10 min ou até perder os PV temporários."
+},
+{
+"id": "dru_esp_6_infestacao",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo dos Esporos",
+"name": "(esporos, 6º nível) Infestação Fúngica",
+"description": "(Reação) Quando uma besta ou humanoide (Pequeno/Médio) morre a 3m, você o reanima como Zumbi com 1 PV. Ele age após você e dura 1 hora. Usos iguais ao Mod. Sabedoria. Recupera em Descanso Longo."
+},
+{
+"id": "dru_esp_10_disseminacao",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo dos Esporos",
+"name": "(esporos, 10º nível) Disseminação de Esporos",
+"description": "(Ação Bônus) Enquanto em Entidade Simbiótica, arremesse esporos a 9m (cubo de 3m). Criaturas na área sofrem dano do seu Halo de Esporos. Substitui a reação do Halo enquanto ativo."
+},
+{
+"id": "dru_esp_14_corpo",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo dos Esporos",
+"name": "(esporos, 14º nível) Corpo Fúngico",
+"description": "Imunidade às condições: Cego, Surdo, Amedrontado e Envenenado. Qualquer acerto crítico contra você torna-se um acerto normal (salvo se incapacitado)."
+},
+{
+"id": "dru_est_2_mapa",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo das Estrelas",
+"name": "(estrelas, 2º nível) Mapa Estelar",
+"description": "Foco druídico que concede o truque 'Orientação' e a magia 'Raio Guia' preparada (não conta no limite). Pode conjurar Raio Guia sem gastar slot um número de vezes igual ao bônus de proficiência."
+},
+{
+"id": "dru_est_2_forma",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo das Estrelas",
+"name": "(estrelas, 2º nível) Forma Estrelada",
+"description": "(Ação Bônus) Gasta uso de Forma Selvagem para assumir forma luminosa (10 min). Escolha constelação: Arqueiro (Ação Bônus ataque 1d8+SAB), Cálice (Cura extra 1d8+SAB ao conjurar cura), Dragão (Mínimo 10 em testes de INT/SAB e concentração)."
+},
+{
+"id": "dru_est_6_pressagio",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo das Estrelas",
+"name": "(estrelas, 6º nível) Presságio Cósmico",
+"description": "Ao fim de descanso longo, role um dado. Par (Bem): Reação para adicionar 1d6 a ataque/save/teste de criatura a 9m. Ímpar (Ai): Reação para subtrair 1d6. Usos iguais ao bônus de proficiência."
+},
+{
+"id": "dru_est_10_cintilantes",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo das Estrelas",
+"name": "(estrelas, 10º nível) Constelações Cintilantes",
+"description": "Melhora a Forma Estrelada: Arqueiro e Cálice causam/curam 2d8. Dragão concede voo de 6m e pairar. Pode trocar a constelação no início de cada turno."
+},
+{
+"id": "dru_est_14_cheio",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo das Estrelas",
+"name": "(estrelas, 14º nível) Cheio de Estrelas",
+"description": "Enquanto na Forma Estrelada, você se torna parcialmente incorpóreo e ganha resistência a danos de concussão, perfuração e corte."
+},
+{
+"id": "dru_fog_2_feitiços",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo do Fogo Selvagem",
+"name": "Feitiços de Fogo Selvagem",
+"description": "Magias preparadas: 2º - Mãos Ardentes, Curar Ferimentos; 3º - Esfera Flamejante, Raio Incandescente; 5º - Crescer Plantas, Revivificar; 7º - Aura da Vida, Escudo de Fogo; 9º - Golpe de Chamas, Cura em Massa."
+},
+{
+"id": "dru_fog_2_espirito",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo do Fogo Selvagem",
+"name": "(fogo, 2º nível) Invocar Espírito de Fogo Selvagem",
+"description": "(Ação) Gasta uso de Forma Selvagem para invocar espírito elemental (1h). Ao surgir, causa 2d6 fogo em área (3m). Age após você. Ações do espírito (via Ação Bônus): Semente de Chamas (ataque distância, 1d6+PB) ou Teleporte Flamejante (teleporta aliados, causa dano na origem)."
+},
+{
+"id": "dru_fog_6_vinculo",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo do Fogo Selvagem",
+"name": "(fogo, 6º nível) Vínculo Reforçado",
+"description": "Enquanto o espírito estiver ativo, adicione +1d8 a magias de cura ou dano de fogo. Você pode conjurar magias a partir da posição do espírito."
+},
+{
+"id": "dru_fog_10_cauterizar",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo do Fogo Selvagem",
+"name": "(fogo, 10º nível) Chamas Cauterizantes",
+"description": "(Reação) Quando uma criatura morre a 9m de você ou do espírito, cria uma chama espectral. Ao ser tocada/atravessada, você pode extinguí-la para curar ou causar dano de fogo (2d10 + Mod. SAB). Usos iguais ao bônus de proficiência."
+},
+{
+"id": "dru_fog_14_renascimento",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo do Fogo Selvagem",
+"name": "(fogo, 14º nível) Renascimento Ardente",
+"description": "Se você cair a 0 PV e o espírito estiver a 36m, pode sacrificar o espírito (ele cai a 0 PV). Você recupera metade dos seus PV e se levanta imediatamente. 1x por Descanso Longo."
+},
+{
+"id": "dru_pri_2_guardiao",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo do Primordial",
+"name": "(primordial, 2º nível) Guardião dos Antigos",
+"description": "Você ganha proficiência em História. Ao fazer testes de Inteligência (História), pode adicionar 1d4 ao resultado."
+},
+{
+"id": "dru_pri_2_companheiro",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo do Primordial",
+"name": "(primordial, 2º nível) Companheiro Primordial",
+"description": "(Ação) Gasta uso de Forma Selvagem para invocar um companheiro dinossauro/ancestral (Médio). Age após você. Ações: Golpe (1d8+PB). Reação: Interceptação (absorve metade do dano de aliado a 1,5m). Dura até 0 PV."
+},
+{
+"id": "dru_pri_6_conduto",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo do Primordial",
+"name": "(primordial, 6º nível) Conduto Pré-Histórico",
+"description": "Pode conjurar magias a partir do espaço do companheiro. O companheiro tem vantagem em saves contra suas magias e possui evasão contra elas (nenhum dano no sucesso, metade na falha)."
+},
+{
+"id": "dru_pri_10_ligacao",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo do Primordial",
+"name": "(primordial, 10º nível) Ligação do Titanic",
+"description": "Companheiro torna-se Grande e ganha escalada ou natação. 1x/turno, quando você causa dano (ataque ou magia), pode forçar o alvo a fazer Save de Sabedoria ou ficar Amedrontado até o fim do próximo turno."
+},
+{
+"id": "dru_pri_14_flagelo",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo do Primordial",
+"name": "(primordial, 14º nível) Flagelo dos Antigos",
+"description": "Ao comandar o companheiro (Ação Bônus), pode gastar um espaço de magia para fortalecê-lo por 1 hora: torna-se Enorme, ganha PV temporários (10 x nível do slot), dano extra no golpe (1d8 + nível do slot) e velocidade aumentada (5 pés x nível do slot)."
+},
+{
+"id": "dru_cre_2_foice",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo do Crepúsculo",
+"name": "(crepúsculo, 2º nível) Foice da Colheita",
+"description": "Você tem uma reserva de d10s (igual ao nível de druida). Ao causar dano com magia, pode gastar dados (máx metade do nível) para adicionar dano necrótico. Se matar o alvo, cura você ou aliado em 2 PV por dado gasto (5 PV se o alvo for morto-vivo)."
+},
+{
+"id": "dru_cre_6_discurso",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo do Crepúsculo",
+"name": "(crepúsculo, 6º nível) Discurso Além-Túmulo",
+"description": "Você pode conjurar 'Falar com os Mortos' à vontade, sem componentes materiais. O alvo entende suas perguntas independente do idioma ou inteligência. 1x por Descanso Curto/Longo."
+},
+{
+"id": "dru_cre_10_observador",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo do Crepúsculo",
+"name": "(crepúsculo, 10º nível) Observador no Limiar",
+"description": "Você ganha resistência a dano necrótico e radiante. Aliados a até 9m de você têm vantagem em testes de resistência contra a morte enquanto você não estiver incapacitado."
+},
+{
+"id": "dru_cre_14_caminhos",
+"category": "Classe",
+"class": "Druida",
+"subclass": "Círculo do Crepúsculo",
+"name": "(crepúsculo, 14º nível) Caminhos dos Mortos",
+"description": "Você pode conjurar a magia 'Eterealidade' sem gastar espaço de magia. 1x por Descanso Curto/Longo."
+},
+
+
+
+
+
+
+
+
+
+{
+"id": "sor_base_1_conjura",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "",
+"name": "(1º nível) Lançamento de Feitiços",
+"description": "Você possui uma fonte de magia inata. Atributo de conjuração: Carisma. CD de salvaguarda = 8 + Bônus de Proficiência + Modificador de Carisma. Ataque Mágico = Bônus de Proficiência + Modificador de Carisma. Você conhece um número limitado de magias (conforme tabela) e pode trocar uma magia conhecida ao subir de nível. Usa um Foco Arcano. Recupera todos os espaços de magia após um Descanso Longo."
+},
+{
+"id": "sor_base_2_fonte",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "",
+"name": "(2º nível) Fonte de Magia",
+"description": "Você acessa uma reserva de energia mágica representada por Pontos de Feitiçaria (inicia com 2 e aumenta com o nível). Você pode converter Pontos em Espaços de Magia como Ação Bônus (Custo: 1º=2, 2º=3, 3º=5, 4º=6, 5º=7 pts) ou converter um Espaço de Magia em Pontos (ganha pontos iguais ao nível do espaço). Recupera todos os pontos após um Descanso Longo."
+},
+{
+"id": "sor_base_3_metamagia",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "",
+"name": "(3º nível) Metamagia",
+"description": "Você ganha a habilidade de alterar suas magias. Você aprende 2 opções de Metamagia (ganha mais uma no 10º e 17º nível). Exemplos: Acelerada (2 pts, muda tempo de 1 ação para bônus), Gêmea (pts=nível da magia, 1 pt se truque; duplica alvo único), Sutil (1 pt, conjura sem componentes verbais/somáticos), Potencializada (1 pt, rerola dados de dano), Distante (1 pt, dobra alcance ou toque vira 9m), Estendida (1 pt, dobra duração até máx 24h), Cuidadosa (1 pt, protege aliados de efeitos da magia)."
+},
+{
+"id": "sor_base_asi",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "",
+"name": "Aumento no Valor de Atributo",
+"description": "Você pode aumentar um valor de atributo à sua escolha em 2, ou dois valores de atributo à sua escolha em 1. Como padrão, você não pode aumentar um atributo acima de 20 usando essa característica. Obtido nos níveis 4, 8, 12, 16 e 19. (Opcional: Versatilidade Mágica permite trocar uma Metamagia ou um Truque nestes níveis)."
+},
+{
+"id": "sor_base_5_orientacao",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "",
+"name": "(5º nível) Orientação Mágica (Opcional)",
+"description": "Quando você falhar em um teste de habilidade, você pode gastar 1 Ponto de Feitiçaria para rolar o d20 novamente e usar o novo resultado, potencialmente transformando a falha em sucesso."
+},
+{
+"id": "sor_base_20_restauracao",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "",
+"name": "(20º nível) Restauração Mágica",
+"description": "Sua maestria arcana permite recuperar energia rapidamente. Você recupera 4 Pontos de Feitiçaria gastos sempre que termina um Descanso Curto."
+},
+{
+"id": "sor_abe_1_spells",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Mente Aberrante",
+"name": "Feitiços Psiônicos",
+"description": "Você aprende magias adicionais nos níveis 1, 3, 5, 7 e 9 (ex: Braços de Hadar, Detectar Pensamentos, Fome de Hadar, Tentáculos Negros de Evard, Telecinese). Elas não contam no limite de magias conhecidas. Ao subir de nível, pode trocá-las por magias de Adivinhação ou Encantamento da lista de Mago, Bruxo ou Feiticeiro."
+},
+{
+"id": "sor_abe_1_telepatia",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Mente Aberrante",
+"name": "(aberrante, 1º nível) Fala Telepática",
+"description": "(Ação Bônus) Você cria um elo telepático com uma criatura a até 9 metros. Vocês podem se comunicar telepaticamente enquanto estiverem a uma distância de até (Modificador de Carisma) milhas um do outro. A conexão dura um número de minutos igual ao seu nível de feiticeiro."
+},
+{
+"id": "sor_abe_6_psionica",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Mente Aberrante",
+"name": "(aberrante, 6º nível) Feitiçaria Psiônica",
+"description": "Ao conjurar qualquer uma das suas Magias Psiônicas de 1º nível ou superior, você pode gastar Pontos de Feitiçaria igual ao nível da magia em vez de gastar um espaço de magia. Se fizer isso, a magia não requer componentes verbais, somáticos ou materiais (desde que não tenham custo em ouro)."
+},
+{
+"id": "sor_abe_6_defesa",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Mente Aberrante",
+"name": "(aberrante, 6º nível) Defesas Psíquicas",
+"description": "Você ganha resistência a dano psíquico. Além disso, você tem vantagem em testes de resistência contra ser Enfeitiçado ou Amedrontado."
+},
+{
+"id": "sor_abe_14_revelacao",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Mente Aberrante",
+"name": "(aberrante, 14º nível) Revelação em Carne",
+"description": "(Ação Bônus) Você pode gastar 1 ou mais Pontos de Feitiçaria para transformar seu corpo por 10 minutos. Para cada ponto gasto, escolha um benefício diferente: Ver invisibilidade (18m); Velocidade de voo (igual à caminhada) e pairar; Velocidade de natação (2x caminhada) e respirar na água; Corpo viscoso (passar em espaços de 2,5cm, vantagem para escapar de agarrão)."
+},
+{
+"id": "sor_abe_18_implosao",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Mente Aberrante",
+"name": "(aberrante, 18º nível) Implosão de Deformação",
+"description": "(Ação) Você se teletransporta para um espaço a até 36 metros. Imediatamente após desaparecer, criaturas a até 9 metros do espaço que você deixou devem fazer um teste de resistência de Força. Falha: 3d10 de dano de força e são puxadas para o espaço que você ocupava. Sucesso: metade do dano e não são puxadas. Pode usar 1 vez por descanso longo ou gastar 5 pontos de feitiçaria."
+},
+{
+"id": "sor_mec_1_spells",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Mecânica",
+"name": "Magia Mecânica",
+"description": "Você aprende magias adicionais nos níveis 1, 3, 5, 7 e 9 (ex: Alarme, Auxílio, Dissipar Magia, Liberdade de Movimento, Muralha de Força). Elas não contam no limite de magias conhecidas. Ao subir de nível, pode trocá-las por magias de Abjuração ou Transmutação da lista de Mago, Bruxo ou Feiticeiro."
+},
+{
+"id": "sor_mec_1_equilibrio",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Mecânica",
+"name": "(mecânica, 1º nível) Restaurar o Equilíbrio",
+"description": "(Reação) Quando uma criatura a até 18 metros de você rola um d20 com Vantagem ou Desvantagem, você pode usar sua reação para impedir que a rolagem seja afetada, anulando a vantagem ou desvantagem. Usos iguais ao seu Bônus de Proficiência. Recupera em descanso longo."
+},
+{
+"id": "sor_mec_6_bastiao",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Mecânica",
+"name": "(mecânica, 6º nível) Bastião da Lei",
+"description": "(Ação) Você pode gastar de 1 a 5 Pontos de Feitiçaria para criar um escudo mágico em você ou em uma criatura a até 9 metros. O escudo tem um número de d8s igual aos pontos gastos. Quando a criatura sofre dano, ela pode gastar esses dados para reduzir o dano pelo valor rolado. Dura até um descanso longo."
+},
+{
+"id": "sor_mec_14_transe",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Mecânica",
+"name": "(mecânica, 14º nível) Transe da Ordem",
+"description": "(Ação Bônus) Você entra em um estado de transe por 1 minuto. Enquanto estiver nesse estado, jogadas de ataque contra você não podem ter vantagem. Além disso, sempre que você fizer uma jogada de ataque, teste de habilidade ou teste de resistência, você pode tratar um resultado de 9 ou menos no d20 como um 10. Pode usar 1 vez por descanso longo ou gastar 5 pontos de feitiçaria."
+},
+{
+"id": "sor_mec_18_cavalcade",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Mecânica",
+"name": "(mecânica, 18º nível) Cavalcade Mecânica",
+"description": "(Ação) Você invoca espíritos da ordem em um cubo de 9 metros centrado em você. Os espíritos restauram até 100 pontos de vida (divididos como você escolher entre criaturas na área), reparam todos os objetos danificados na área e encerram qualquer magia de 6º nível ou inferior em criaturas ou objetos escolhidos. Pode usar 1 vez por descanso longo ou gastar 7 pontos de feitiçaria."
+},
+{
+"id": "sor_dra_1_ancestral",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Linhagem Dracônica",
+"name": "(dracônica, 1º nível) Ancestral Dragão",
+"description": "Você escolhe um tipo de dragão como ancestral (Preto, Azul, Latão, Bronze, Cobre, Ouro, Verde, Vermelho, Prata, Branco). O tipo determina seu elemento de afinidade (Ácido, Raio, Fogo, Veneno ou Frio). Você pode falar, ler e escrever Dracônico e dobra seu bônus de proficiência em testes de Carisma ao interagir com dragões."
+},
+{
+"id": "sor_dra_1_resiliencia",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Linhagem Dracônica",
+"name": "(dracônica, 1º nível) Resiliência Dracônica",
+"description": "Sua magia endurece seu corpo. Seu máximo de pontos de vida aumenta em 1 no 1º nível e em mais 1 a cada nível de feiticeiro subsequente. Além disso, quando você não estiver usando armadura, sua Classe de Armadura é 13 + seu modificador de Destreza."
+},
+{
+"id": "sor_dra_6_afinidade",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Linhagem Dracônica",
+"name": "(dracônica, 6º nível) Afinidade Elemental",
+"description": "Quando você conjura uma magia que causa dano do tipo associado ao seu ancestral dracônico, você pode adicionar seu Modificador de Carisma a uma das rolagens de dano. Além disso, você pode gastar 1 Ponto de Feitiçaria para ganhar resistência a esse tipo de dano por 1 hora."
+},
+{
+"id": "sor_dra_14_asas",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Linhagem Dracônica",
+"name": "(dracônica, 14º nível) Asas de Dragão",
+"description": "(Ação Bônus) Você pode manifestar um par de asas de dragão em suas costas, ganhando uma velocidade de voo igual à sua velocidade atual. As asas duram até que você as dissipe com uma ação bônus. Armaduras não adaptadas impedem o uso das asas."
+},
+{
+"id": "sor_dra_18_presenca",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Linhagem Dracônica",
+"name": "(dracônica, 18º nível) Presença Dracônica",
+"description": "(Ação) Você pode gastar 5 Pontos de Feitiçaria para exalar uma aura de 18 metros de Temor (Enfeitiçado) ou Medo (Amedrontado). Por 1 minuto (requer concentração), criaturas hostis que iniciarem o turno na aura devem fazer um teste de resistência de Sabedoria ou sofrer o efeito escolhido. Sucesso torna a criatura imune por 24 horas."
+},
+{
+"id": "sor_div_1_magia",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Divina",
+"name": "(divina, 1º nível) Magia Divina",
+"description": "Sua conexão divina permite que você aprenda magias da lista de Clérigo. Ao aprender novas magias de feiticeiro, você pode escolher da lista de Clérigo ou Feiticeiro. Além disso, você aprende uma magia adicional baseada na afinidade da sua fonte divina (Bem, Mal, Lei, Caos, Neutralidade), que pode ser trocada posteriormente."
+},
+{
+"id": "sor_div_1_favorecido",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Divina",
+"name": "(divina, 1º nível) Favorecido pelos Deuses",
+"description": "Se você falhar em um teste de resistência ou errar uma jogada de ataque, você pode rolar 2d4 e adicionar o resultado ao total, possivelmente mudando o desfecho. Você recupera o uso desta habilidade após um descanso curto ou longo."
+},
+{
+"id": "sor_div_6_cura",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Divina",
+"name": "(divina, 6º nível) Cura Empoderada",
+"description": "Sempre que você ou um aliado a até 1,5 metro rolar dados para determinar a cura de uma magia sua, você pode gastar 1 Ponto de Feitiçaria para rolar novamente qualquer número desses dados. Você deve usar os novos resultados. Pode ser usado uma vez por turno."
+},
+{
+"id": "sor_div_14_asas",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Divina",
+"name": "(divina, 14º nível) Forma Angélica",
+"description": "(Ação Bônus) Você pode manifestar um par de asas espectrais em suas costas, ganhando uma velocidade de voo de 9 metros. As asas permanecem até que você fique incapacitado, morra ou as dissipe com uma ação bônus. A aparência das asas depende da sua afinidade divina."
+},
+{
+"id": "sor_div_18_recuperacao",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Divina",
+"name": "(divina, 18º nível) Recuperação Sobrenatural",
+"description": "(Ação Bônus) Quando você tiver menos da metade dos seus pontos de vida restantes, você pode recuperar um número de pontos de vida igual à metade do seu máximo de pontos de vida. Você recupera o uso desta habilidade após um descanso longo."
+},
+{
+"id": "sor_lun_spells",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Lunar",
+"name": "Feitiços Lunares",
+"description": "Você aprende magias adicionais associadas às três fases da lua: Lua Cheia (Abjuração/Adivinhação), Lua Nova (Encantamento/Necromancia) e Lua Crescente (Ilusão/Transmutação). Ao final de um descanso longo, você escolhe uma fase lunar para manifestar. Enquanto na fase escolhida, você pode conjurar a magia de 1º nível associada a ela uma vez sem gastar espaço de magia."
+},
+{
+"id": "sor_lun_1_fogo",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Lunar",
+"name": "(lunar, 1º nível) Fogo da Lua",
+"description": "Você aprende o truque 'Chama Sagrada'. Ao conjurar este truque, você pode alvejar uma criatura normalmente ou duas criaturas que estejam a até 1,5 metro uma da outra."
+},
+{
+"id": "sor_lun_6_dadivas",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Lunar",
+"name": "(lunar, 6º nível) Dádivas Lunares / Crescendo",
+"description": "Redução de custo de Metamagia: você pode reduzir em 1 ponto de feitiçaria (mínimo 0) o custo de Metamagia em magias das escolas associadas à sua fase lunar atual (usos = Bônus de Proficiência). (Ação Bônus) Você pode gastar 1 ponto de feitiçaria para mudar sua fase lunar atual."
+},
+{
+"id": "sor_lun_14_empoderamento",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Lunar",
+"name": "(lunar, 14º nível) Empoderamento Lunar",
+"description": "Você ganha um benefício passivo baseado na sua fase lunar atual: Lua Cheia (pode emitir luz intensa como ação bônus e tem vantagem em Investigação/Percepção na luz); Lua Nova (vantagem em Furtividade e desvantagem em ataques na escuridão total); Lua Crescente (resistência a dano necrótico e radiante)."
+},
+{
+"id": "sor_lun_18_fenomeno",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Lunar",
+"name": "(lunar, 18º nível) Fenômeno Lunar",
+"description": "(Ação Bônus) Você pode ativar um poder especial da sua fase lunar: Lua Cheia (cega inimigos e cura aliado); Lua Nova (dano necrótico e redução de velocidade em área + invisibilidade); Lua Crescente (teleporte com aliado + resistência a danos). Pode usar 1 vez por descanso longo ou gastar 5 pontos de feitiçaria."
+},
+{
+"id": "sor_som_1_olhos",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Magia das Sombras",
+"name": "(sombras, 1º nível) Olhos da Escuridão",
+"description": "Você ganha visão no escuro com alcance de 36 metros. No 3º nível, você aprende a magia 'Escuridão' e pode conjurá-la gastando 2 Pontos de Feitiçaria. Se conjurada dessa forma, você pode enxergar através dessa escuridão mágica."
+},
+{
+"id": "sor_som_1_forca",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Magia das Sombras",
+"name": "(sombras, 1º nível) Força da Sepultura",
+"description": "Quando o dano reduz seus pontos de vida a 0, você pode fazer um teste de resistência de Carisma (CD 5 + dano sofrido). Se tiver sucesso, você cai para 1 ponto de vida em vez de 0. Não funciona se o dano for radiante ou de um acerto crítico. Pode usar 1 vez por descanso longo."
+},
+{
+"id": "sor_som_6_cao",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Magia das Sombras",
+"name": "(sombras, 6º nível) Cão de Mau Presságio",
+"description": "(Ação Bônus) Você pode gastar 3 Pontos de Feitiçaria para invocar um cão sombrio para atacar um alvo a até 36 metros. O cão tem estatísticas de lobo atroz (com modificações), pode atravessar objetos e ataca apenas o alvo escolhido. Enquanto o cão estiver a até 1,5 metro do alvo, o alvo tem desvantagem em testes de resistência contra suas magias."
+},
+{
+"id": "sor_som_14_caminhada",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Magia das Sombras",
+"name": "(sombras, 14º nível) Caminhada na Sombra",
+"description": "(Ação Bônus) Quando você estiver em uma área de penumbra ou escuridão, você pode se teletransportar magicamente até 36 metros para outro espaço desocupado que também esteja em penumbra ou escuridão."
+},
+{
+"id": "sor_som_18_forma",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Magia das Sombras",
+"name": "(sombras, 18º nível) Forma Umbral",
+"description": "(Ação Bônus) Você pode gastar 6 Pontos de Feitiçaria para assumir uma forma sombria por 1 minuto. Nessa forma, você tem resistência a todos os danos (exceto força e radiante) e pode se mover através de criaturas e objetos como se fossem terreno difícil (sofre 5 de dano de força se terminar o turno dentro de um objeto)."
+},
+{
+"id": "sor_tem_1_magia",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Feitiçaria da Tempestade",
+"name": "(tempestade, 1º nível) Magia Tempestuosa / Idioma",
+"description": "Você pode falar, ler e escrever Primordial. (Ação Bônus) Imediatamente antes ou depois de conjurar uma magia de 1º nível ou superior, você pode voar até 3 metros sem provocar ataques de oportunidade."
+},
+{
+"id": "sor_tem_6_coracao",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Feitiçaria da Tempestade",
+"name": "(tempestade, 6º nível) Coração da Tempestade",
+"description": "Você ganha resistência a dano elétrico e trovejante. Sempre que conjurar uma magia de 1º nível ou superior que cause dano elétrico ou trovejante, criaturas à sua escolha a até 3 metros de você sofrem dano elétrico ou trovejante igual à metade do seu nível de feiticeiro."
+},
+{
+"id": "sor_tem_6_guia",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Feitiçaria da Tempestade",
+"name": "(tempestade, 6º nível) Guia de Tempestades",
+"description": "Você pode controlar o clima ao seu redor. (Ação) Pare a chuva em uma esfera de 6 metros. (Ação Bônus) Altere a direção do vento em uma esfera de 30 metros até o final do seu próximo turno."
+},
+{
+"id": "sor_tem_14_furia",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Feitiçaria da Tempestade",
+"name": "(tempestade, 14º nível) Fúria da Tempestade",
+"description": "(Reação) Quando você for atingido por um ataque corpo a corpo, você pode causar dano elétrico ao atacante igual ao seu nível de feiticeiro. O atacante também deve fazer um teste de resistência de Força ou será empurrado 6 metros para longe de você."
+},
+{
+"id": "sor_tem_18_alma",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Feitiçaria da Tempestade",
+"name": "(tempestade, 18º nível) Alma do Vento",
+"description": "Você ganha imunidade a dano elétrico e trovejante e uma velocidade de voo mágica de 18 metros. (Ação) Você pode reduzir seu voo para 9 metros e conceder voo de 9 metros para um número de criaturas igual a 3 + Mod. Carisma por 1 hora. Recupera em descanso curto ou longo."
+},
+{
+"id": "sor_sel_1_onda",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Magia Selvagem",
+"name": "(selvagem, 1º nível) Onda de Magia Selvagem",
+"description": "Imediatamente após conjurar uma magia de feiticeiro de 1º nível ou superior, o Mestre pode pedir para você rolar um d20. Se rolar 1, role na tabela de Surto de Magia Selvagem para criar um efeito mágico aleatório."
+},
+{
+"id": "sor_sel_1_mares",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Magia Selvagem",
+"name": "(selvagem, 1º nível) Marés do Caos",
+"description": "Você pode manipular o caos para ganhar vantagem em uma jogada de ataque, teste de habilidade ou teste de resistência. Você recupera o uso desta habilidade após um descanso longo. O Mestre pode causar um Surto de Magia Selvagem para recarregar esta habilidade imediatamente."
+},
+{
+"id": "sor_sel_6_sorte",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Magia Selvagem",
+"name": "(selvagem, 6º nível) Bend Sorte",
+"description": "(Reação) Quando outra criatura que você possa ver fizer uma jogada de ataque, teste de habilidade ou teste de resistência, você pode gastar 2 Pontos de Feitiçaria para rolar 1d4 e aplicar o número como bônus ou penalidade à rolagem da criatura."
+},
+{
+"id": "sor_sel_14_caos",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Magia Selvagem",
+"name": "(selvagem, 14º nível) Caos Controlado",
+"description": "Sempre que você rolar na tabela de Surto de Magia Selvagem, você pode rolar duas vezes e escolher qual dos dois efeitos deseja que aconteça."
+},
+{
+"id": "sor_sel_18_bombardeio",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Magia Selvagem",
+"name": "(selvagem, 18º nível) Bombardeio de Feitiços",
+"description": "Ao rolar o dano de uma magia e obter o valor máximo em qualquer dado, você pode escolher um desses dados, rolá-lo novamente e adicionar o novo resultado ao dano total. Pode ser usado uma vez por turno."
+},
+{
+"id": "sor_pir_1_coracao",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Piromantica",
+"name": "(piromancia, 1º nível) Coração de Fogo",
+"description": "Sempre que você conjurar uma magia de 1º nível ou superior que cause dano de fogo, criaturas à sua escolha a até 3 metros de você sofrem dano de fogo igual à metade do seu nível de feiticeiro."
+},
+{
+"id": "sor_pir_6_veias",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Piromantica",
+"name": "(piromancia, 6º nível) Fogo nas Veias",
+"description": "Você ganha resistência a dano de fogo. Além disso, as magias de fogo que você conjura ignoram a resistência a dano de fogo dos alvos."
+},
+{
+"id": "sor_pir_14_furia",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Piromantica",
+"name": "(piromancia, 14º nível) Fúria do Piromante",
+"description": "(Reação) Quando você for atingido por um ataque corpo a corpo, você pode causar dano de fogo ao atacante igual ao seu nível de feiticeiro. Este dano ignora resistência a fogo."
+},
+{
+"id": "sor_pir_18_alma",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Piromantica",
+"name": "(piromancia, 18º nível) Alma Ardente",
+"description": "Você ganha imunidade a dano de fogo. Além disso, qualquer magia de fogo que você conjurar trata imunidade a dano de fogo como se fosse apenas resistência."
+},
+{
+"id": "sor_fav_1_divina",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Favorecida",
+"name": "(favorecida, 1º nível) Magia Divina / Resiliência",
+"description": "Você pode escolher magias da lista de Clérigo. Seu máximo de pontos de vida aumenta em 1 por nível de feiticeiro. 'Favorecido pelos Deuses': Se falhar em um teste de resistência ou errar um ataque, adicione 2d4 ao resultado. Recupera em descanso curto/longo."
+},
+{
+"id": "sor_fav_6_rosto",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Favorecida",
+"name": "(favorecida, 6º nível) Rosto Bendito",
+"description": "Sua aparência assume um aspecto sobrenatural (Belo, Jovial, etc). Sempre que fizer um teste de Carisma onde aplique sua proficiência, seu bônus de proficiência é dobrado para esse teste."
+},
+{
+"id": "sor_fav_14_pureza",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Favorecida",
+"name": "(favorecida, 14º nível) Pureza Divina",
+"description": "Você se torna imune a doenças, dano de veneno e à condição de envenenado."
+},
+{
+"id": "sor_fav_18_recuperacao",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Favorecida",
+"name": "(favorecida, 18º nível) Recuperação Sobrenatural",
+"description": "(Ação Bônus) Quando você tiver menos da metade dos seus pontos de vida restantes, você pode recuperar um número de pontos de vida igual à metade do seu máximo de pontos de vida. Recupera em descanso longo."
+},
+{
+"id": "sor_gig_1_marca",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Gigante",
+"name": "(gigante, 1º nível) Marca da Ordenação",
+"description": "Seu máximo de PV aumenta em 1 por nível. Você aprende magias adicionais baseadas no tipo de gigante escolhido (Nuvem, Fogo, Gelo, Colina, Pedra, Tempestade) no 1º e 3º nível."
+},
+{
+"id": "sor_gig_6_alma",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Gigante",
+"name": "(gigante, 6º nível) Alma de Ostoria Perdida",
+"description": "Você recebe um benefício adicional ao conjurar suas magias de Marca da Ordenação: Nuvem (Teleporte); Fogo (Dano extra = Mod. CON); Gelo (PV Temp = Mod. CON); Colina (Empurra alvo); Pedra (+CA = Mod. CON); Tempestade (Dano elétrico extra em alvos)."
+},
+{
+"id": "sor_gig_14_furia",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Gigante",
+"name": "(gigante, 14º nível) Fúria da Ostoria Caída",
+"description": "Ao gastar um espaço de magia para conjurar uma magia de feiticeiro, você pode aumentar seu tamanho em uma categoria por 1 minuto. Ganha: +1 PV atual/máx por nível, +1,5m alcance, +1,5m velocidade, Vantagem em testes/saves de Força e bônus de dano corpo a corpo igual ao Mod. CON. Recupera em descanso curto/longo."
+},
+{
+"id": "sor_gig_18_bencao",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Gigante",
+"name": "(gigante, 18º nível) Bênção do Pai de Todos",
+"description": "Seu valor de Constituição aumenta em 2 (máximo 22). Você pode usar a Fúria de Ostoria Caída duas vezes entre descansos, e os efeitos se acumulam se usada enquanto já ativa."
+},
+{
+"id": "sor_fen_1_manto",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Feitiçaria da Fênix",
+"name": "(fênix, 1º nível) Manto de Chamas",
+"description": "Você pode acender fogueiras com um toque. (Ação Bônus) Ativa um manto de fogo por 1 minuto: emite luz, causa dano de fogo (Mod. CAR) em quem te toca e adiciona seu Mod. CAR às suas rolagens de dano de fogo. Recupera em descanso longo."
+},
+{
+"id": "sor_fen_6_faisca",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Feitiçaria da Fênix",
+"name": "(fênix, 6º nível) Faísca de Fênix",
+"description": "(Reação) Quando reduzido a 0 PV, você pode cair a 1 PV e explodir em chamas. Criaturas a até 3 metros sofrem dano de fogo igual a metade do seu nível + Mod. CAR. Se o Manto de Chamas estiver ativo, o dano aumenta e o manto termina. Recupera em descanso longo."
+},
+{
+"id": "sor_fen_14_nutritivo",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Feitiçaria da Fênix",
+"name": "(fênix, 14º nível) Fogo Nutritivo",
+"description": "Quando você gasta um espaço de magia para conjurar uma magia que inclui uma rolagem de dano de fogo, você recupera pontos de vida iguais ao nível do espaço de magia + seu modificador de Carisma."
+},
+{
+"id": "sor_fen_18_forma",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Feitiçaria da Fênix",
+"name": "(fênix, 18º nível) Forma da Fênix",
+"description": "Enquanto o Manto de Chamas estiver ativo, você ganha velocidade de voo de 12 metros (pairar) e resistência a todos os tipos de dano. Além disso, sua Faísca de Fênix causa 20 pontos de dano de fogo adicionais."
+},
+{
+"id": "sor_psi_1_talento",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Psiônica",
+"name": "(psiônica, 1º nível) Talento Psiônico",
+"description": "Você ganha um Dado Psiônico (d6, aumenta com o nível). Pode usá-lo para: aprender temporariamente magias de adivinhação/encantamento; conjurar magias sutilmente; ou estabelecer telepatia. Rolar o valor máximo diminui o dado; rolar 1 aumenta o dado. Recupera tamanho inicial em descanso longo ou 1x com ação bônus."
+},
+{
+"id": "sor_psi_6_golpe",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Psiônica",
+"name": "(psiônica, 6º nível) Golpe Psíquico",
+"description": "Imediatamente após causar dano com uma magia de feiticeiro usando um espaço de magia, você pode rolar seu Dado Psiônico e causar dano psíquico adicional igual ao resultado. Uma vez por turno."
+},
+{
+"id": "sor_psi_14_controle",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Psiônica",
+"name": "(psiônica, 14º nível) A Mente Controla o Corpo",
+"description": "(Ação Bônus) Role seu Dado Psiônico e gaste Pontos de Feitiçaria para se transformar por horas iguais ao resultado do dado. Benefícios (1 por ponto): Ver invisível, Voo e pairar, Natação e respirar água, Corpo maleável."
+},
+{
+"id": "sor_psi_18_aura",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Alma Psiônica",
+"name": "(psiônica, 18º nível) Aura Psíquica",
+"description": "(Ação Bônus) Você emite uma aura de 9 metros por 1 minuto. Quando uma criatura entra ou começa o turno nela, role seu Dado Psiônico: ela sofre dano psíquico (Dado + Mod. CAR) e tem velocidade reduzida à metade."
+},
+{
+"id": "sor_mar_1_alma",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Mente Marinha",
+"name": "(marinha, 1º nível) Alma do Mar / Maldição",
+"description": "Você respira na água e tem velocidade de natação. Seus truques aplicam uma Maldição do Mar. Se acertar um alvo amaldiçoado com magia de Frio (reduz velô), Raio (dano extra) ou Movimento Forçado (empurra mais longe), a maldição é ativada para efeito extra."
+},
+{
+"id": "sor_mar_6_defesa",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Mente Marinha",
+"name": "(marinha, 6º nível) Defesa Aquosa",
+"description": "Você ganha resistência a dano de fogo. (Reação) Ao ser atingido por um ataque e sofrer dano físico, você pode reduzir o dano (Nível + Carisma) e se mover até 9 metros sem provocar ataques de oportunidade. Recupera em descanso curto/longo."
+},
+{
+"id": "sor_mar_14_mutavel",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Mente Marinha",
+"name": "(marinha, 14º nível) Forma Mutável",
+"description": "Você pode se tornar líquido ao se mover. Você sofre apenas metade do dano de ataques de oportunidade, pode atravessar o espaço de inimigos e passar por aberturas de até 7,6 cm sem se espremer."
+},
+{
+"id": "sor_mar_18_alma_agua",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Mente Marinha",
+"name": "(marinha, 18º nível) Alma da Água",
+"description": "Você não precisa mais comer, beber ou dormir. Acertos críticos contra você tornam-se normais. Você ganha resistência a danos contundentes, perfurantes e cortantes."
+},
+{
+"id": "sor_sombra_ua_1_olhos",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Mente Sombria",
+"name": "(Mente Sombria, 1º nível) Olhos da Escuridão",
+"description": "Você tem visão no escuro de 18 metros. Pode conjurar 'Escuridão' gastando 1 Ponto de Feitiçaria e consegue enxergar através dessa escuridão mágica se conjurada dessa forma."
+},
+{
+"id": "sor_sombra_ua_1_forca",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Mente Sombria",
+"name": "(Mente Sombria, 1º nível) Força da Sepultura",
+"description": "Se o dano reduzir você a 0 PV, faça um Save de Constituição (CD 5 + dano). Sucesso: cai a 1 PV. Falha se for dano radiante ou crítico. Pode usar 1 vez por descanso longo."
+},
+{
+"id": "sor_sombra_ua_6_cao",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Mente Sombria",
+"name": "(Mente Sombria, 6º nível) Cão de Mau Presságio",
+"description": "(Ação Bônus) Gaste 3 Pontos de Feitiçaria para invocar um cão sombrio para atacar um alvo visível. O cão atravessa objetos e tem PV temporários. Enquanto o cão estiver adjacente ao alvo, o alvo tem desvantagem em testes de resistência contra suas magias."
+},
+{
+"id": "sor_sombra_ua_14_caminhada",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Mente Sombria",
+"name": "(Mente Sombria, 14º nível) Caminhada na Sombra",
+"description": "(Ação Bônus) Se estiver em penumbra ou escuridão, teleporte-se até 36 metros para outro ponto que também esteja em penumbra ou escuridão."
+},
+{
+"id": "sor_sombra_ua_18_forma",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Mente Sombria",
+"name": "(Mente Sombria, 18º nível) Forma Sombria",
+"description": "(Ação Bônus) Gaste 3 Pontos de Feitiçaria para virar uma forma sombria por 1 minuto. Ganha resistência a todos os danos (exceto força) e pode atravessar objetos e criaturas."
+},
+{
+"id": "sor_pedra_1_durabilidade",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Feitiçaria de Pedra",
+"name": "(pedra, 1º nível) Durabilidade da Pedra",
+"description": "Você ganha proficiência com escudos, armas simples e marciais. Seu máximo de PV aumenta em 1 por nível. (Ação) Pode endurecer a pele para ter CA 13 + Mod. Constituição."
+},
+{
+"id": "sor_pedra_6_egide",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Feitiçaria de Pedra",
+"name": "(pedra, 6º nível) Égide de Pedra",
+"description": "(Ação Bônus) Protege um aliado a até 18m, reduzindo dano físico sofrido. (Reação) Se o aliado for atingido, você pode se teleportar para perto do atacante e realizar um ataque corpo a corpo que causa dano de força extra."
+},
+{
+"id": "sor_pedra_14_borda",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Feitiçaria de Pedra",
+"name": "(pedra, 14º nível) Borda de Pedra",
+"description": "Ao conjurar uma magia que cause dano, você pode adicionar dano de força igual à metade do seu nível de feiticeiro a um dos alvos da magia."
+},
+{
+"id": "sor_pedra_18_mestre",
+"category": "Classe",
+"class": "Feiticeiro",
+"subclass": "Feitiçaria de Pedra",
+"name": "(pedra, 18º nível) Égide do Mestre",
+"description": "Quando você usa sua Égide de Pedra, pode escolher até três criaturas para receberem a proteção simultaneamente."
+},
+
+
+
+
+
+
+
+
+
+
+
+
+{
+"id": "gue_base_1_estilo",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "",
+"name": "(1º nível) Estilo de Luta",
+"description": "Você adota um estilo de combate especializado. Escolha um: Arquearia (+2 ataque à distância); Defesa (+1 CA com armadura); Duelo (+2 dano com 1 arma); Arma Grande (rerolar 1 e 2 no dano); Proteção (reação p/ impor desvantagem em ataque a aliado com escudo); Combate Duas Armas (soma atributo no dano da 2ª arma); Interceptação (reduz dano em 1d10+Prof); Técnica Superior (1 manobra, 1d6 sup); Cego (visão cega 3m); Arremesso (+2 dano e saque livre); Desarmado (1d6/1d8 dano + 1d4 em agarrados)."
+},
+{
+"id": "gue_base_1_folego",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "",
+"name": "(1º nível) Segundo Fôlego",
+"description": "(Ação Bônus) Você possui uma reserva de vitalidade para se recuperar em combate. Recupere pontos de vida iguais a 1d10 + seu nível de guerreiro. Você deve terminar um descanso curto ou longo antes de usar essa característica novamente."
+},
+{
+"id": "gue_base_2_surto",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "",
+"name": "(2º nível) Surto de Ação",
+"description": "Você pode forçar seu limite para agir novamente. No seu turno, você pode realizar uma ação adicional além da sua ação regular e possível ação bônus. Usos: 1 vez (2º nível), 2 vezes (17º nível). Recupera em descanso curto ou longo."
+},
+{
+"id": "gue_base_asi",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "",
+"name": "Aumento no Valor de Atributo",
+"description": "Você pode aumentar um valor de atributo à sua escolha em 2, ou dois valores em 1 (máximo 20). Guerreiros recebem mais aumentos que outras classes: níveis 4, 6, 8, 12, 14, 16 e 19. (Opcional: Pode trocar um Estilo de Luta ou Manobra nestes níveis)."
+},
+{
+"id": "gue_base_5_ataque",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "",
+"name": "(5º nível) Ataque Extra",
+"description": "Você pode atacar duas vezes, em vez de uma, sempre que realizar a ação de Atacar no seu turno. O número de ataques aumenta para 3 no 11º nível e para 4 no 20º nível."
+},
+{
+"id": "gue_base_9_indomavel",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "",
+"name": "(9º nível) Indomável",
+"description": "Você pode rolar novamente um teste de resistência em que falhou. Você deve usar o novo resultado. Usos: 1 vez (9º nível), 2 vezes (13º nível), 3 vezes (17º nível). Recupera todos os usos após um descanso longo."
+},
+{
+"id": "gue_arq_3_conhecimento",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Arqueiro Arcano",
+"name": "(arqueiro, 3º nível) Conhecimento do Arqueiro Arcano",
+"description": "Você ganha proficiência na perícia Arcanismo ou Natureza. Além disso, você aprende o truque Prestidigitação ou Druidismo."
+},
+{
+"id": "gue_arq_3_tiro",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Arqueiro Arcano",
+"name": "(arqueiro, 3º nível) Tiro Arcano",
+"description": "Você aprende 2 opções de Tiro Arcano (ex: Banimento, Explosivo, Perfurante, etc). Uma vez por turno, ao disparar uma flecha com arco curto/longo, você pode aplicar uma opção se acertar (ou ao disparar, dependendo da opção). Você tem 2 usos por descanso curto/longo. Ganha mais opções nos níveis 7, 10, 15 e 18. CD = 8 + Prof + INT."
+},
+{
+"id": "gue_arq_7_flecha",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Arqueiro Arcano",
+"name": "(arqueiro, 7º nível) Flecha Mágica",
+"description": "Sempre que você disparar uma flecha não mágica com um arco curto ou longo, você pode torná-la mágica para fins de superar resistência e imunidade a ataques e danos não mágicos."
+},
+{
+"id": "gue_arq_7_curvo",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Arqueiro Arcano",
+"name": "(arqueiro, 7º nível) Tiro Curvo",
+"description": "(Ação Bônus) Quando você errar uma jogada de ataque com uma flecha mágica, pode redirecionar o ataque para outro alvo a até 18 metros do alvo original. Faça uma nova jogada de ataque contra o novo alvo."
+},
+{
+"id": "gue_arq_15_pronto",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Arqueiro Arcano",
+"name": "(arqueiro, 15º nível) Tiro Sempre Pronto",
+"description": "Se você rolar a iniciativa e não tiver usos restantes de Tiro Arcano, você recupera um uso imediatamente."
+},
+{
+"id": "gue_arq_18_melhoria",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Arqueiro Arcano",
+"name": "(arqueiro, 18º nível) Tiros Aprimorados",
+"description": "O poder de seus Tiros Arcanos aumenta: Banimento (+2d6 força), Sedutora (4d6 psíquico), Explosiva (4d6 força), Debilitante (4d6 necrótico), Agarradora (4d6 veneno/cortante), Perfurante (2d6 perfurante), Perseguidora (2d6 força), Sombria (4d6 psíquico)."
+},
+{
+"id": "gue_por_3_grito",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Porta-Estandarte",
+"name": "(porta-estandarte, 3º nível) Grito de Guerra",
+"description": "Quando você usa sua característica Segundo Fôlego, pode escolher até 3 aliados a até 18 metros que possam vê-lo ou ouvi-lo. Cada um recupera pontos de vida iguais ao seu nível de guerreiro."
+},
+{
+"id": "gue_por_7_enviado",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Porta-Estandarte",
+"name": "(porta-estandarte, 7º nível) Enviado Real",
+"description": "Você ganha proficiência em Persuasão. Se já tiver, ganha em Adestrar Animais, Intuição, Intimidação ou Atuação. Seu bônus de proficiência é dobrado para qualquer teste de Persuasão que fizer."
+},
+{
+"id": "gue_por_10_onda",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Porta-Estandarte",
+"name": "(porta-estandarte, 10º nível) Onda Inspiradora",
+"description": "Quando você usa seu Surto de Ação, pode escolher um aliado a até 18 metros. Esse aliado pode usar sua reação para fazer um ataque corpo a corpo ou à distância. No 18º nível, pode escolher dois aliados."
+},
+{
+"id": "gue_por_15_baluarte",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Porta-Estandarte",
+"name": "(porta-estandarte, 15º nível) Baluarte",
+"description": "Quando você usa sua característica Indomável para refazer um teste de resistência de INT, SAB ou CAR, pode escolher um aliado a até 18 metros que também tenha falhado no mesmo teste. Esse aliado também pode rolar novamente."
+},
+{
+"id": "gue_mes_3_superioridade",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Mestre de Batalha",
+"name": "(mestre, 3º nível) Superioridade em Combate",
+"description": "Você aprende 3 Manobras (ex: Ataque de Precisão, Derrubar, Desarmar). Ganha 4 Dados de Superioridade (d8). Gasta um dado para usar uma manobra. Recupera em descanso curto/longo. CD das manobras = 8 + Prof + Força ou Destreza."
+},
+{
+"id": "gue_mes_3_estudante",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Mestre de Batalha",
+"name": "(mestre, 3º nível) Estudante da Guerra",
+"description": "Você ganha proficiência com um tipo de ferramenta de artesão à sua escolha."
+},
+{
+"id": "gue_mes_7_inimigo",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Mestre de Batalha",
+"name": "(mestre, 7º nível) Conheça seu Inimigo",
+"description": "Se passar 1 minuto observando uma criatura fora de combate, o Mestre revela se ela é igual, superior ou inferior a você em duas características: Força, Destreza, Constituição, CA, PV atuais, Nível total ou Nível de guerreiro."
+},
+{
+"id": "gue_mes_10_aprimorada",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Mestre de Batalha",
+"name": "(mestre, 10º nível) Superioridade Aprimorada (d10)",
+"description": "Seus dados de superioridade aumentam para d10. Você aprende mais duas manobras."
+},
+{
+"id": "gue_mes_15_implacavel",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Mestre de Batalha",
+"name": "(mestre, 15º nível) Implacável",
+"description": "Quando você rolar iniciativa e não tiver dados de superioridade restantes, você recupera 1 dado."
+},
+{
+"id": "gue_mes_18_suprema",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Mestre de Batalha",
+"name": "(mestre, 18º nível) Superioridade Suprema (d12)",
+"description": "Seus dados de superioridade aumentam para d12."
+},
+{
+"id": "gue_cav_3_sela",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro",
+"name": "(cavaleiro, 3º nível) Nascido para a Sela / Proficiência",
+"description": "Ganha uma proficiência (Adestramento, História, Intuição, Atuação, Persuasão) ou idioma. Vantagem para não cair da montaria; cair de até 3m não derruba você se consciente. Montar/desmontar custa apenas 1,5m de movimento."
+},
+{
+"id": "gue_cav_3_marca",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro",
+"name": "(cavaleiro, 3º nível) Marca Inabalável",
+"description": "Ao acertar ataque corpo a corpo, marca o alvo até o fim do seu próximo turno. Alvo marcado tem desvantagem em ataques contra outros. Se o alvo causar dano a outro, você pode fazer um ataque especial com vantagem como ação bônus no seu turno (dano extra = metade do nível de guerreiro). Usos do ataque especial = Mod. Força."
+},
+{
+"id": "gue_cav_7_protecao",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro",
+"name": "(cavaleiro, 7º nível) Manobra de Proteção",
+"description": "(Reação) Se você ou criatura a 1,5m for atingida, role 1d8 e adicione à CA do alvo contra o ataque. Se ainda acertar, o alvo tem resistência ao dano. Requer escudo ou arma. Usos = Mod. Constituição. Recupera em descanso longo."
+},
+{
+"id": "gue_cav_10_posicao",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro",
+"name": "(cavaleiro, 10º nível) Mantenha a Posição",
+"description": "Criaturas provocam ataque de oportunidade ao se moverem 1,5m ou mais dentro do seu alcance. Se acertar o ataque de oportunidade, o deslocamento do alvo torna-se 0 no turno."
+},
+{
+"id": "gue_cav_15_carregador",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro",
+"name": "(cavaleiro, 15º nível) Carregador Feroz",
+"description": "Se você se mover 3m em linha reta e acertar um ataque corpo a corpo, o alvo deve passar num Save de Força (CD 8+Prof+FOR) ou ser derrubado. Pode usar 1 vez por turno."
+},
+{
+"id": "gue_cav_18_vigilante",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro",
+"name": "(cavaleiro, 18º nível) Defensor Vigilante",
+"description": "Você ganha uma reação especial em cada turno de cada outra criatura, que pode ser usada apenas para realizar ataques de oportunidade. Você não pode usar sua reação normal e esta reação especial no mesmo turno."
+},
+{
+"id": "gue_eco_3_manifesto",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro do Eco",
+"name": "(eco, 3º nível) Eco Manifesto",
+"description": "(Ação Bônus) Invoca um Eco (15 CA, 1 PV, imune condições) a 4,5m. Dura até ser destruído ou dispensado. Pode atacar do espaço do Eco. (Ação Bônus) Trocar de lugar com o Eco (gasta 4,5m mov). (Reação) Ataque de oportunidade pode vir do Eco. Se ficar >9m do Eco, ele some."
+},
+{
+"id": "gue_eco_3_encarnacao",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro do Eco",
+"name": "(eco, 3º nível) Liberte a Encarnação",
+"description": "Quando realizar a ação Atacar, você pode fazer um ataque corpo a corpo adicional a partir da posição do Eco. Usos iguais ao Modificador de Constituição (mínimo 1). Recupera em descanso longo."
+},
+{
+"id": "gue_eco_7_avatar",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro do Eco",
+"name": "(eco, 7º nível) Avatar Eco",
+"description": "(Ação) Você transfere sua consciência para o Eco por até 10 minutos. Vê e ouve através dele (fica cego/surdo no corpo). Eco pode se afastar até 300m de você nessa forma."
+},
+{
+"id": "gue_eco_10_martir",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro do Eco",
+"name": "(eco, 10º nível) Mártir das Sombras",
+"description": "(Reação) Quando um aliado a vista for alvo de ataque, você pode teleportar o Eco para 1,5m do aliado e o ataque atinge o Eco em vez do aliado. Usos: 1 vez por descanso curto/longo."
+},
+{
+"id": "gue_eco_15_potencial",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro do Eco",
+"name": "(eco, 15º nível) Recuperar o Potencial",
+"description": "Quando seu Eco é destruído (sofre dano), você pode ganhar 2d6 + Mod. Constituição em Pontos de Vida Temporários, se não tiver nenhum. Usos iguais ao Mod. Constituição (recupera descanso longo)."
+},
+{
+"id": "gue_eco_18_legiao",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro do Eco",
+"name": "(eco, 18º nível) Legião de Um",
+"description": "Você pode manifestar até 2 Ecos simultaneamente. Ao rolar iniciativa sem usos de 'Liberte a Encarnação', recupera 1 uso."
+},
+{
+"id": "gue_arc_3_spells",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro Arcano",
+"name": "Lançamento de Feitiços",
+"description": "Conjura magias de Mago (Inteligência). Foco: Componentes ou foco arcano (se permitido). Conhece 2 truques e 3 magias de 1º nível (maioria Abjuração/Evocação). Espaços de magia recuperam em descanso longo. Ganha slots até 4º nível."
+},
+{
+"id": "gue_arc_3_ligacao",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro Arcano",
+"name": "(arcano, 3º nível) Ligação de Arma",
+"description": "Ritual de 1h para vincular até 2 armas. Você não pode ser desarmado delas (salvo incapacitado). (Ação Bônus) Pode invocar a arma vinculada para sua mão instantaneamente se estiver no mesmo plano."
+},
+{
+"id": "gue_arc_7_magia_guerra",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro Arcano",
+"name": "(arcano, 7º nível) Magia de Guerra",
+"description": "Quando você usa sua ação para conjurar um Truque, você pode realizar um ataque com arma como uma Ação Bônus."
+},
+{
+"id": "gue_arc_10_golpe",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro Arcano",
+"name": "(arcano, 10º nível) Golpe Eldritch",
+"description": "Quando você acerta uma criatura com um ataque de arma, ela tem desvantagem no próximo teste de resistência contra uma magia que você conjurar antes do final do seu próximo turno."
+},
+{
+"id": "gue_arc_15_carga",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro Arcano",
+"name": "(arcano, 15º nível) Carga Arcana",
+"description": "Quando você usa seu Surto de Ação, você pode se teletransportar até 9 metros para um espaço desocupado que possa ver, antes ou depois da ação adicional."
+},
+{
+"id": "gue_arc_18_magia_aprim",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro Arcano",
+"name": "(arcano, 18º nível) Magia de Guerra Aprimorada",
+"description": "Quando você usa sua ação para conjurar uma Magia (de qualquer nível), você pode realizar um ataque com arma como uma Ação Bônus."
+},
+{
+"id": "gue_psi_3_poder",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Guerreiro Psiônico",
+"name": "(psiônico, 3º nível) Poder Psiônico",
+"description": "Você tem Dados de Energia Psiônica (d6, qtde = 2x Prof). Recupera em descanso longo. Usos: Campo Protetor (Reação: reduz dano em 1d6+INT em alvo a 9m); Golpe Psiônico (1x/turno: 1d6+INT dano força extra ao acertar); Movimento Telecinético (Ação: move objeto/criatura Grande a 9m por 9m). Dado aumenta (d8 no 5º, d10 no 11º, d12 no 17º)."
+},
+{
+"id": "gue_psi_7_adepto",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Guerreiro Psiônico",
+"name": "(psiônico, 7º nível) Adepto Telecinético",
+"description": "Salto Psiônico (Ação Bônus): voo dobro da caminhada até fim do turno (gasta 1 dado). Impulso Telecinético: ao causar dano com Golpe Psiônico, força Save de FOR; falha derruba ou empurra alvo 3m."
+},
+{
+"id": "gue_psi_10_mente",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Guerreiro Psiônico",
+"name": "(psiônico, 10º nível) Mente Cautelosa",
+"description": "Você ganha resistência a dano psíquico. Se começar o turno enfeitiçado ou amedrontado, pode gastar 1 dado psiônico para encerrar todos esses efeitos imediatamente."
+},
+{
+"id": "gue_psi_15_baluarte",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Guerreiro Psiônico",
+"name": "(psiônico, 15º nível) Baluarte da Força",
+"description": "(Ação Bônus) Gaste 1 dado para proteger criaturas a 9m (nº = Mod. INT). Elas ganham Meia Cobertura (+2 CA/Dex) por 1 minuto."
+},
+{
+"id": "gue_psi_18_mestre",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Guerreiro Psiônico",
+"name": "(psiônico, 18º nível) Mestre Telecinético",
+"description": "Você pode conjurar Telecinese sem componentes (Inteligência). Enquanto concentra nela, pode fazer 1 ataque com arma como ação bônus. 1x por descanso longo ou gasta 1 dado psiônico."
+},
+{
+"id": "gue_run_3_escultor",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro Rúnico",
+"name": "(rúnico, 3º nível) Escultor de Runas",
+"description": "Conhece 2 runas (Nuvem, Fogo, Gelo, Pedra, etc). Inscreve em equipamentos em descanso longo. Efeitos passivos e ativos (1x/descanso curto). Nuvem: transfere ataque (Reação). Fogo: grilhões de dano (Ação ao acertar). Gelo: +2 Força/Con por 10 min. Pedra: Visão escuro 36m + encantar criatura (Reação). Colina (7º): Resistência a dano físico. Tempestade (7º): Prever futuro (Vant/Desv em jogadas)."
+},
+{
+"id": "gue_run_3_poder",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro Rúnico",
+"name": "(rúnico, 3º nível) Poder do Gigante",
+"description": "(Ação Bônus) Torna-se Grande por 1 min. Vantagem em testes/saves de Força. Causa 1d6 de dano extra em um ataque por turno. Usos = Bônus de Proficiência."
+},
+{
+"id": "gue_run_7_escudo",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro Rúnico",
+"name": "(rúnico, 7º nível) Escudo Rúnico",
+"description": "(Reação) Quando criatura a 18m é atingida, force o atacante a rerolar o d20 e usar o novo resultado. Usos = Bônus de Proficiência. Recupera em descanso longo."
+},
+{
+"id": "gue_run_10_estatura",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro Rúnico",
+"name": "(rúnico, 10º nível) Grande Estatura",
+"description": "Você cresce 3d4 polegadas permanentemente. O dano extra do Poder do Gigante aumenta para 1d8."
+},
+{
+"id": "gue_run_15_mestre",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro Rúnico",
+"name": "(rúnico, 15º nível) Mestre das Runas",
+"description": "Você pode invocar cada uma de suas runas duas vezes por descanso, em vez de uma."
+},
+{
+"id": "gue_run_18_juggernaut",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Cavaleiro Rúnico",
+"name": "(rúnico, 18º nível) Juggernaut Rúnico",
+"description": "O dano extra do Poder do Gigante aumenta para 1d10. Ao usar Poder do Gigante, você pode se tornar Enorme e seu alcance aumenta em 1,5m."
+},
+{
+"id": "gue_sam_3_espirito",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Samurai",
+"name": "(samurai, 3º nível) Espírito de Luta",
+"description": "(Ação Bônus) Ganha Vantagem em todos os ataques com arma até o fim do turno e 5 PV temporários (aumenta para 10 no 10º e 15 no 15º). 3 usos por descanso longo."
+},
+{
+"id": "gue_sam_7_cortesao",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Samurai",
+"name": "(samurai, 7º nível) Cortesão Elegante",
+"description": "Você soma seu modificador de Sabedoria aos testes de Carisma (Persuasão). Ganha proficiência em testes de resistência de Sabedoria."
+},
+{
+"id": "gue_sam_10_incansavel",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Samurai",
+"name": "(samurai, 10º nível) Espírito Incansável",
+"description": "Ao rolar iniciativa, se não tiver usos de Espírito de Luta, recupera 1 uso."
+},
+{
+"id": "gue_sam_15_rapido",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Samurai",
+"name": "(samurai, 15º nível) Ataque Rápido",
+"description": "Se tiver vantagem em um ataque, pode abrir mão da vantagem para fazer um ataque adicional contra o mesmo alvo (sem vantagem). 1x por turno."
+},
+{
+"id": "gue_sam_18_morte",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Samurai",
+"name": "(samurai, 18º nível) Força Antes da Morte",
+"description": "(Reação) Se cair a 0 PV, pode realizar um turno extra imediatamente antes de cair inconsciente. Se sofrer dano nesse turno, falha em saves de morte. Se terminar o turno com 0 PV, cai inconsciente. 1x por descanso longo."
+},
+{
+"id": "gue_bru_3_forca",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Bruto UA",
+"name": "(bruto, 3º nível) Força Bruta",
+"description": "Ao acertar ataque com arma em que é proficiente, causa dano extra baseado no nível: 1d4 (3º), 1d6 (10º), 1d8 (16º), 1d10 (20º)."
+},
+{
+"id": "gue_bru_7_durabilidade",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Bruto UA",
+"name": "(bruto, 7º nível) Durabilidade Brutal",
+"description": "Sempre que fizer um teste de resistência, role 1d6 e adicione ao total. Se isso levar um save de morte a 20+, conta como um '20 natural' (recupera 1 PV)."
+},
+{
+"id": "gue_bru_15_devastador",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Bruto UA",
+"name": "(bruto, 15º nível) Devastador Crítico",
+"description": "Ao acertar um crítico, adicione seu nível de guerreiro ao dano do ataque."
+},
+{
+"id": "gue_bru_18_sobrevivente",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Bruto UA",
+"name": "(bruto, 18º nível) Sobrevivente",
+"description": "No início do turno, se tiver menos de metade dos PV (e >0), recupera 5 + Mod. Constituição PV."
+},
+{
+"id": "gue_cac_3_superioridade",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Caçador de Monstros UA",
+"name": "(caçador, 3º nível) Superioridade e Misticismo",
+"description": "Ganha 4 dados de superioridade (d8). Manobras: Ataque Preciso, Ataque Afiado (dano extra + quebra concentração), Sentidos Aguçados (Percepção/Intuição), Vontade Superior (Saves mentais). Pode conjurar Detectar Magia (Ritual) e Proteção Bem/Mal (1x/descanso)."
+},
+{
+"id": "gue_cac_7_matador",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Caçador de Monstros UA",
+"name": "(caçador, 7º nível) Matador de Monstros",
+"description": "Ao usar dado de superioridade para dano, pode gastar 2 dados. Se o alvo for aberração, fada, demônio ou morto-vivo, causa dano máximo dos dados."
+},
+{
+"id": "gue_esc_3_superioridade",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Escoteiro UA",
+"name": "(escoteiro, 3º nível) Superioridade e Explorador",
+"description": "Ganha 4 dados de superioridade (d8). Manobras: Sobrevivência (bônus em perícias), Ataque Preciso, Esquiva (Reação, soma dado na CA e metade dano). Vantagem em Terreno Predileto e bônus de exploração."
+},
+{
+"id": "gue_ati_3_mira",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Atirador de Elite UA",
+"name": "(atirador, 3º nível) Mira Firme",
+"description": "(Ação Bônus) Mira em alvo visível. Até fim do turno: ignora meia e 3/4 cobertura e causa 2 + 1/2 nível de dano extra em ataques à distância contra ele. 3 usos por descanso."
+},
+{
+"id": "gue_ati_7_olhos",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Atirador de Elite UA",
+"name": "(atirador, 7º nível) Olhos Atentos",
+"description": "Pode usar a ação Procurar como Ação Bônus. Proficiência em uma perícia de percepção/investigação."
+},
+{
+"id": "gue_ati_10_tiroteio",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Atirador de Elite UA",
+"name": "(atirador, 10º nível) Tiroteio Confinado",
+"description": "Não tem desvantagem em ataques à distância por inimigo a 1,5m. Se acertar inimigo a 1,5m com ataque à distância, ele não pode usar reações."
+},
+{
+"id": "gue_ati_18_instantaneo",
+"category": "Classe",
+"class": "Guerreiro",
+"subclass": "Atirador de Elite UA",
+"name": "(atirador, 18º nível) Instantâneo",
+"description": "Se usar ação Atacar no primeiro turno do combate, pode fazer 1 ataque à distância adicional."
+}
 
 
 ]
