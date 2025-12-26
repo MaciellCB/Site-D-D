@@ -176,13 +176,13 @@ const CLASSES_WITH_SUBCLASSES = {
   'Clérigo': ['Domínio do Conhecimento', 'Domínio da Vida', 'Domínio da Luz','Domínio do Zelo', 'Domínio da Natureza','Domínio do Destino','Domínio da Solidariedade', 'Domínio da Tempestade','Domínio da Cidade ','Domínio da Força','Domínio da Unidade','Domínio da Ambição', 'Domínio da Enganação','Domínio de Proteção', 'Domínio da Guerra','Domínio do Crepúsculo', 'Domínio da Forja', 'Domínio da Sepultura', 'Domínio da Ordem', 'Domínio da Paz', 'Domínio do Crepúsculo', 'Domínio Arcano', 'Domínio da Morte'],
   'Druida': ['Círculo da Terra', 'Círculo da Lua', 'Círculo dos Sonhos', 'Círculo do Pastor', 'Círculo dos Esporos', 'Círculo das Estrelas', 'Círculo do Fogo Selvagem','Círculo do Primordial', 'Círculo do Crepúsculo'],
   'Feiticeiro': ['Linhagem Dracônica', 'Magia Selvagem', 'Alma Divina', 'Magia das Sombras', 'Mente Sombria', 'Feitiçaria da Tempestade','Mente Marinha','Feitiçaria de Pedra', 'Feitiçaria da Fênix', 'Alma Gigante', 'Alma Piromantica', 'Mente Aberrante','Alma Psiônica', 'Alma Lunar','Alma Favorecida', 'Alma do Relógio', 'Alma Mecânica', ],
-  'Guerreiro': ['Campeão', 'Mestre de Batalha', 'Cavaleiro Arcano', 'Arqueiro Arcano', 'Cavaleiro', 'Samurai', 'Guerreiro Psiônico', 'Cavaleiro Rúnico', 'Cavaleiro do Eco'],
-  'Ladino': ['Ladrão', 'Assassino', 'Trapaceiro Arcano', 'Inquisitivo', 'Mentor', 'Espadachim', 'Batedor', 'Fantasma', 'Lâmina da Alma'],
-  'Mago': ['Abjuração', 'Conjuração', 'Adivinhação', 'Encantamento', 'Evocação', 'Ilusão', 'Necromancia', 'Transmutação', 'Magia de Guerra', 'Cantor da Lâmina', 'Escribas'],
-  'Monge': ['Caminho da Mão Aberta', 'Caminho das Sombras', 'Caminho dos Quatro Elementos', 'Caminho da Longa Morte', 'Kensei', 'Mestre Bêbado', 'Alma Solar', 'Misericórdia', 'Forma Astral', 'Dragão Ascendente'],
-  'Paladino': ['Devotion', 'Ancients', 'Vengeance', 'Crown', 'Conquest', 'Redemption', 'Glory', 'Watchers', 'Oathbreaker'],
-  'Patrulheiro': ['Caçador', 'Mestre das Feras', 'Caçador das Sombras', 'Andarilho do Horizonte', 'Matador de Monstros', 'Peregrino Feérico', 'Guardião do Enxame', 'Guardião Dracônico'],
-  'Antecedentes': [],
+  'Guerreiro': ['Campeão', 'Mestre de Batalha', 'Cavaleiro Arcano','Porta-Estandarte', 'Arqueiro Arcano','Brutamontes', 'Cavaleiro', 'Samurai', 'Guerreiro Psiônico', 'Cavaleiro Rúnico', 'Cavaleiro do Eco', 'Atirador de Elite'],
+  'Ladino': ['Ladrão', 'Assassino', 'Trapaceiro Arcano', 'Inquisitivo', 'Mestre do Crime','Espadachim', 'Batedor','Revivido', 'Fantasma', 'Lâmina da Alma'],
+  'Mago': ['Abjuração', 'Conjuração', 'Adivinhação', 'Encantamento', 'Evocação', 'Ilusão','Cronurgia', 'Necromancia', 'Criador de Runas','Tecnomancia', 'Teurgia', 'Transmutação','Graviturgia', 'Mago de Guerra', 'Cantor da Lâmina', 'Ordem dos Escribas'],
+  'Monge': ['Caminho da Mão Aberta', 'Caminho das Sombras', ,'Tranquilidade','Caminho dos Quatro Elementos', 'Longa Morte', 'Kensei', 'Mestre Bêbado', 'Alma Solar', 'Misericórdia', 'Forma Astral', 'Dragão Ascendente'],
+  'Paladino': ['Juramento dos Anciões','Juramento da Conquista','Juramento da Coroa','Juramento de Devoção','Juramento de Glória', 'Juramento de Redenção','Juramento de Vingança', 'Juramento dos Observadores','Quebrador de Juramento','Juramento da Traição','Juramento de Heroísmo', ''],
+  'Patrulheiro': ['Caçador', 'Mestre das Feras','Guardião Primordial','Guardião Dracônico', 'Perseguidor Sombrio', 'Andarilho do Horizonte', 'Matador de Monstros', 'Peregrino Feérico', 'Guardião do Enxame', 'Guardião Dracônico'],
+  'Antecedentes': ['Acólito', "Artesão de Guilda",'Artista',"Charlatão","Criminoso","Eremita","Forasteiro","Herói Popular","Marinheiro","Morador de Rua","Nobre", "Sábio", "Soldado",   ],
   'Talentos': []
 };
 

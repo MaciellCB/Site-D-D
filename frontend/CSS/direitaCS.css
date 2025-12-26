@@ -1455,3 +1455,59 @@ body.no-scroll {
     background: #9c27b0;
     color: #fff;
 }
+
+/* ==================== TABELAS ESTILO D&D 5E ==================== */
+
+.dnd-table-container {
+  background-color: #fff; /* Fundo branco para a tabela se destacar no tema escuro */
+  padding: 5px;
+  border-radius: 6px;
+  margin-top: 10px;
+  color: #000; /* Texto preto para leitura no fundo claro */
+  font-family: 'Georgia', serif; /* Fonte mais próxima do livro */
+}
+
+.dnd-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* Cabeçalho Dourado */
+.dnd-table th {
+  background-color: #c9ad6a; /* Cor mostarda/dourada típica */
+  color: #fff;
+  font-weight: 800;
+  text-align: left;
+  padding: 6px 10px;
+  border: 1px solid #bfa35f;
+}
+
+/* Coluna do Dado (d8) */
+.dnd-col-dice {
+  width: 40px;
+  text-align: center;
+}
+
+.dnd-table td {
+  padding: 6px 10px;
+  border: 1px solid #e0e0e0;
+  vertical-align: top;
+}
+
+/* Linhas alternadas (Zebra) */
+.dnd-table tr:nth-child(odd) td {
+  background-color: #ffffff;
+}
+
+.dnd-table tr:nth-child(even) td {
+  background-color: #fdfae0; /* Amarelo bem clarinho */
+}
+
+/* Ajuste da primeira coluna (número) */
+.dnd-table td:first-child {
+  font-weight: bold;
+  color: #c9ad6a;
+  text-align: center;
+}
