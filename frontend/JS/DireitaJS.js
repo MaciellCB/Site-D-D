@@ -136,15 +136,7 @@ function calculateSpellDC() {
   return base + prof + mod + extra;
 }
 
-// Escuta atualizações do lado Esquerdo para recalcular
-window.addEventListener('sheet-updated', () => {
-  state.dtMagias = calculateSpellDC();
 
-  const inputDisplay = document.getElementById('dtMagiasInput');
-  if (inputDisplay) {
-    inputDisplay.value = state.dtMagias;
-  }
-});
 
 // ALTERADO: 'const' para 'let' para permitir sobrescrita no login
 let state = {
@@ -179,7 +171,7 @@ const CLASSES_WITH_SUBCLASSES = {
   'Guerreiro': ['Campeão', 'Mestre de Batalha', 'Cavaleiro Arcano','Porta-Estandarte', 'Arqueiro Arcano','Brutamontes', 'Cavaleiro', 'Samurai', 'Guerreiro Psiônico', 'Cavaleiro Rúnico', 'Cavaleiro do Eco', 'Atirador de Elite'],
   'Ladino': ['Ladrão', 'Assassino', 'Trapaceiro Arcano', 'Inquisitivo', 'Mestre do Crime','Espadachim', 'Batedor','Revivido', 'Fantasma', 'Lâmina da Alma'],
   'Mago': ['Abjuração', 'Conjuração', 'Adivinhação', 'Encantamento', 'Evocação', 'Ilusão','Cronurgia', 'Necromancia', 'Criador de Runas','Tecnomancia', 'Teurgia', 'Transmutação','Graviturgia', 'Mago de Guerra', 'Cantor da Lâmina', 'Ordem dos Escribas'],
-  'Monge': ['Caminho da Mão Aberta', 'Caminho das Sombras', ,'Tranquilidade','Caminho dos Quatro Elementos', 'Longa Morte', 'Kensei', 'Mestre Bêbado', 'Alma Solar', 'Misericórdia', 'Forma Astral', 'Dragão Ascendente'],
+  'Monge': ['Caminho da Mão Aberta', 'Caminho das Sombras', ,'Caminho da Tranquilidade','Caminho dos Quatro Elementos', 'Longa Morte', 'Kensei', 'Mestre Bêbado', 'Alma Solar', 'Misericórdia', 'Forma Astral', 'Dragão Ascendente'],
   'Paladino': ['Juramento dos Anciões','Juramento da Conquista','Juramento da Coroa','Juramento de Devoção','Juramento de Glória', 'Juramento de Redenção','Juramento de Vingança', 'Juramento dos Observadores','Quebrador de Juramento','Juramento da Traição','Juramento de Heroísmo', ''],
   'Patrulheiro': ['Caçador', 'Mestre das Feras','Guardião Primordial','Guardião Dracônico', 'Perseguidor Sombrio', 'Andarilho do Horizonte', 'Matador de Monstros', 'Peregrino Feérico', 'Guardião do Enxame', 'Guardião Dracônico'],
   'Antecedentes': ['Acólito', "Artesão de Guilda",'Artista',"Charlatão","Criminoso","Eremita","Forasteiro","Herói Popular","Marinheiro","Morador de Rua","Nobre", "Sábio", "Soldado",   ],
@@ -200,13 +192,28 @@ function checkScrollLock() {
   }
 }
 
-// Escuta atualizações do lado Esquerdo
+// Escuta atualizações do lado Esquerdo e Inventário
+// Escuta atualizações do lado Esquerdo e Inventário
+// Escuta atualizações do lado Esquerdo e Inventário
 window.addEventListener('sheet-updated', () => {
+  // 1. Atualiza DT Magias
   state.dtMagias = calculateSpellDC();
-  // Se a aba Magias estiver aberta, atualiza o input visualmente
-  const inputDisplay = document.getElementById('dtMagiasInput');
-  if (inputDisplay) {
-    inputDisplay.value = state.dtMagias;
+  const inputDT = document.getElementById('dtMagiasInput');
+  if (inputDT) inputDT.value = state.dtMagias;
+
+  // 2. Atualiza Classe de Armadura (CA)
+  const armorClass = calculateArmorClass();
+  
+  // Tenta encontrar o elemento onde a CA é exibida
+  // Prioridade: ID direto > Classe do Hexagrama > Input genérico
+  const inputCA = document.getElementById('caTotal') || document.querySelector('.hexagrama-ca .valor');
+  
+  if (inputCA) {
+      if (inputCA.tagName === 'INPUT') {
+          inputCA.value = armorClass;
+      } else {
+          inputCA.textContent = armorClass;
+      }
   }
 });
 
@@ -225,21 +232,22 @@ function formatInventoryItem(item) {
   let rightSideHtml = '';
   const caretSymbol = item.expanded ? '▾' : '▸';
 
-  // 1. Configuração do Cabeçalho por Tipo
   if (item.type === 'Arma') {
     subTitle = [item.proficiency, item.tipoArma].filter(Boolean).join(' • ');
 
-    // Cálculo do Dano Total (Base + Extras)
-    let dmgParts = [];
-    if (item.damage && item.damage !== '0' && item.damage.trim() !== '') {
-      dmgParts.push(item.damage);
+    // LÓGICA VERSÁTIL: Se estiver marcado 2 mãos, usa o dano alternativo
+    let baseDamage = item.damage;
+    if (item.empunhadura === 'Versátil' && item.useTwoHands && item.damage2Hands) {
+        baseDamage = item.damage2Hands;
     }
-    if (item.moreDmgList && Array.isArray(item.moreDmgList)) {
-      item.moreDmgList.forEach(m => {
-        if (m.dano) dmgParts.push(m.dano);
-      });
+
+    let dmgParts = [baseDamage];
+    if (item.moreDmgList) {
+      item.moreDmgList.forEach(m => { if (m.dano) dmgParts.push(m.dano); });
     }
     const finalDamage = dmgParts.join(' + ') || '-';
+
+    // ... lógica do dmgFontSize que você já tem ...
 
     // LÓGICA DE FONTE DINÂMICA: Quanto mais caracteres, menor a fonte (mínimo 11px, máximo 18px)
     let dmgFontSize = 18;
@@ -290,13 +298,25 @@ function formatInventoryItem(item) {
     statsHTML += createStat('Critico', item.crit);
     statsHTML += createStat('Mult', item.multiplicador);
     statsHTML += createStat('Alcance', item.alcance);
-    statsHTML += createStat('Empunhadura', item.empunhadura);
-    if (item.attunement === 'Sim') statsHTML += `<div><span class="purple-label">Sint:</span> <span class="white-val">Sim</span></div>`;
+    
+    // Empunhadura Customizada com Checkbox Inline
+    const empHTML = `
+        <div style="display:flex; align-items:center; gap:5px;">
+            <span class="purple-label">Empunhadura:</span> 
+            <span class="white-val">${item.empunhadura}</span>
+            ${item.empunhadura === 'Versátil' ? `
+                <label class="versatile-check-inline" title="Alternar para 2 mãos">
+                    <input type="checkbox" class="toggle-versatile" data-id="${item.id}" ${item.useTwoHands ? 'checked' : ''} />
+                    <span class="v-box">2 Mãos</span>
+                </label>
+            ` : ''}
+        </div>`;
 
     bodyContent = `
-      <div class="item-stats-row">${statsHTML}</div>
+      <div class="item-stats-row">${statsHTML}${empHTML}</div>
       <div class="item-data-row">
-          <span class="purple-label">Dano Base:</span> <span class="white-val bold">${item.damage || '-'}</span>
+          <span class="purple-label">Dano Base:</span> 
+          <span class="white-val bold">${(item.empunhadura === 'Versátil' && item.useTwoHands) ? (item.damage2Hands || item.damage) : item.damage || '-'}</span>
           ${item.damageTypes ? `<span class="separator"></span><span class="purple-label">Tipo:</span> <span class="white-val">${item.damageTypes.join(', ')}</span>` : ''}
       </div>
       ${(item.moreDmgList || []).map(extra => `
@@ -371,7 +391,9 @@ function renderInventory() {
   aplicarEnterNosInputs(conteudoEl);
 }
 
+/* ---------------- EVENTOS DO INVENTÁRIO (ATUALIZADO) ---------------- */
 function bindInventoryCardEvents() {
+  // Expandir Card
   document.querySelectorAll('.item-card').forEach(card => {
     const id = Number(card.getAttribute('data-id'));
     const header = card.querySelector('.card-header');
@@ -385,6 +407,21 @@ function bindInventoryCardEvents() {
     });
   });
 
+  // Checkbox "Versátil" (2 Mãos)
+  document.querySelectorAll('.toggle-versatile').forEach(chk => {
+    chk.addEventListener('change', (ev) => {
+      const id = Number(ev.target.getAttribute('data-id'));
+      const item = state.inventory.find(x => x.id === id);
+      if (item) {
+        item.useTwoHands = ev.target.checked;
+        saveStateToServer();
+        renderActiveTab(); 
+      }
+    });
+    chk.addEventListener('click', ev => ev.stopPropagation());
+  });
+
+  // Checkbox "Equipar" (CRÍTICO PARA A CA)
   document.querySelectorAll('.item-equip-checkbox').forEach(ch => {
     ch.addEventListener('change', (ev) => {
       ev.stopPropagation();
@@ -392,16 +429,15 @@ function bindInventoryCardEvents() {
       const item = state.inventory.find(x => x.id === id);
 
       if (item && ev.target.checked) {
-        // LÓGICA DE EXCLUSIVIDADE
+        // Lógica de exclusividade (se equipar uma armadura, tira a outra)
         if (item.type === 'Proteção' || item.type === 'protecao') {
           const isEscudo = item.tipoItem?.toLowerCase() === 'escudo' || item.proficiency?.toLowerCase() === 'escudo';
 
           state.inventory.forEach(i => {
             if (i.id !== id && (i.type === 'Proteção' || i.type === 'protecao')) {
               const otherIsEscudo = i.tipoItem?.toLowerCase() === 'escudo' || i.proficiency?.toLowerCase() === 'escudo';
-
-              // Se eu equipei uma armadura, desequipa a outra armadura.
-              // Se eu equipei um escudo, desequipa o outro escudo.
+              
+              // Se é o mesmo tipo (armadura com armadura, escudo com escudo), desequipa o antigo
               if (isEscudo === otherIsEscudo) {
                 i.equip = false;
               }
@@ -413,14 +449,19 @@ function bindInventoryCardEvents() {
       if (item) {
         item.equip = ev.target.checked;
         saveStateToServer();
+        
+        // --- O SEGREDO ESTÁ AQUI ---
+        // Renderiza a aba atual (para atualizar visual dos checks)
         renderActiveTab();
-        // Notifica a Esquerda para recalcular a CA
+        // E FORÇA a esquerda a recalcular a CA imediatamente
         window.dispatchEvent(new CustomEvent('sheet-updated'));
+        // ---------------------------
       }
     });
     ch.addEventListener('click', ev => ev.stopPropagation());
   });
 
+  // Remover Item
   document.querySelectorAll('.remover-item').forEach(el => {
     el.addEventListener('click', (ev) => {
       ev.preventDefault();
@@ -428,10 +469,11 @@ function bindInventoryCardEvents() {
       state.inventory = state.inventory.filter(i => i.id !== id);
       renderActiveTab();
       saveStateToServer();
-      window.dispatchEvent(new CustomEvent('sheet-updated'));
+      window.dispatchEvent(new CustomEvent('sheet-updated')); // Atualiza CA se remover armadura equipada
     });
   });
 
+  // Editar Item
   document.querySelectorAll('.editar-item').forEach(el => {
     el.addEventListener('click', (ev) => {
       ev.preventDefault();
@@ -441,6 +483,7 @@ function bindInventoryCardEvents() {
     });
   });
 
+  // Botões gerais
   const botAdd = document.getElementById('botAddItem');
   if (botAdd) botAdd.onclick = () => openItemModal(null);
 
@@ -666,25 +709,29 @@ function openItemModal(existingItem = null) {
             <label>Nome*</label>
             <input id="item-name" type="text" value="${escapeHtml(pre.name || 'Nova Arma')}" />
           </div>
+
           <div>
             <label>Proficiência</label>
             <div class="pills-container" id="prof-pills">
               ${PROFICIENCIAS_ARMA.map(p => `<button type="button" class="pill single-select ${p === profSelected ? 'active' : ''}" data-val="${escapeHtml(p)}">${escapeHtml(p)}</button>`).join('')}
             </div>
           </div>
+
           <div>
             <label>Tipo</label>
             <div class="pills-container" id="tipo-pills">
               ${TIPOS_ARMA.map(p => `<button type="button" class="pill single-select ${p === tipoSelected ? 'active' : ''}" data-val="${escapeHtml(p)}">${escapeHtml(p)}</button>`).join('')}
             </div>
           </div>
+
           <div>
             <label>Empunhadura</label>
             <div class="pills-container" id="emp-pills">
               ${EMPUNHADURAS.map(p => `<button type="button" class="pill single-select ${p === empSelected ? 'active' : ''}" data-val="${escapeHtml(p)}">${escapeHtml(p)}</button>`).join('')}
             </div>
           </div>
-          <div style="grid-column: 4 / span 1;">
+
+          <div>
              <label>Caracteristica</label>
              <div id="car-field" class="multi-select-field" style="margin-top:6px; position:relative;">
                <div class="display"><span>${carSelected.length ? carSelected.join(', ') : 'Selecione...'}</span> <span style="color:#9c27b0;">▾</span></div>
@@ -693,18 +740,43 @@ function openItemModal(existingItem = null) {
                </div>
              </div>
           </div>
-          <div style="grid-column: 1 / span 1;">
-            <label>Critico</label>
-            <input id="item-crit" type="text" value="${escapeHtml(pre.crit || '20')}" />
+
+          <div style="grid-column: 1 / span 4; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; align-items: end;">
+            
+            <div id="layout-standard" style="display: ${empSelected === 'Versátil' ? 'none' : 'contents'};">
+                <div style="grid-column: span 2;">
+                    <label>Dano</label>
+                    <input id="item-damage" type="text" value="${escapeHtml(pre.damage || '')}" placeholder="Ex: 1d8" />
+                </div>
+                <div id="dmg-type-container-std" style="grid-column: span 2;"></div>
+            </div>
+
+            <div id="layout-versatile" style="display: ${empSelected === 'Versátil' ? 'contents' : 'none'};">
+                <div style="grid-column: span 2;">
+                    <label>Dano (1 mão / Base)</label>
+                    <input id="item-damage-1hand" type="text" value="${escapeHtml(pre.damage || '')}" placeholder="Ex: 1d8" />
+                </div>
+                <div style="grid-column: span 2;">
+                    <label>Dano (2 mãos)</label>
+                    <input id="item-damage-2hands" type="text" value="${escapeHtml(pre.damage2Hands || '')}" placeholder="Ex: 1d10" />
+                </div>
+                <div id="dmg-type-container-ver" style="grid-column: 1 / span 4;"></div>
+            </div>
           </div>
-          <div style="grid-column: 2 / span 1;">
-            <label>Multiplicador</label>
-            <input id="item-mult" type="text" value="${escapeHtml(pre.multiplicador || '2')}" />
+
+          <div id="dmg-field-wrapper" style="display:none;">
+              <label>Tipo de Dano Principal</label>
+              <div id="dmg-field" class="multi-select-field" style="margin-top:6px; position:relative;">
+                 <div class="display"><span>${dmgTypesSelected.length ? dmgTypesSelected.join(', ') : 'Selecione...'}</span> <span style="color:#9c27b0;">▾</span></div>
+                 <div id="dmg-panel" class="panel" style="display:none; position:absolute; z-index:12000; width:100%;">
+                   ${TIPOS_DANO.map(c => `<label style="display:block;padding:6px;"><input type="checkbox" value="${c}" ${dmgTypesSelected.includes(c) ? 'checked' : ''} /> ${c}</label>`).join('')}
+                 </div>
+              </div>
           </div>
-          <div style="grid-column: 3 / span 1;">
-            <label>Alcance</label>
-            <input id="item-range" type="text" value="${escapeHtml(pre.alcance || '1.5m')}" />
-          </div>
+
+          <div style="grid-column: 1 / span 1;"><label>Critico</label><input id="item-crit" type="text" value="${escapeHtml(pre.crit || '20')}" /></div>
+          <div style="grid-column: 2 / span 1;"><label>Multiplicador</label><input id="item-mult" type="text" value="${escapeHtml(pre.multiplicador || '2')}" /></div>
+          <div style="grid-column: 3 / span 1;"><label>Alcance</label><input id="item-range" type="text" value="${escapeHtml(pre.alcance || '1.5m')}" /></div>
           <div style="grid-column: 4 / span 1;">
              <label>Sintonização</label>
              <select id="item-attune-weapon" class="dark-select">
@@ -712,30 +784,16 @@ function openItemModal(existingItem = null) {
                 <option value="Sim" ${pre.attunement === 'Sim' ? 'selected' : ''}>Sim</option>
              </select>
           </div>
-          <div style="grid-column: 1 / span 2;">
-            <label>Dano</label>
-            <input id="item-damage" type="text" value="${escapeHtml(pre.damage || '')}" placeholder="Ex: 1d8" />
-          </div>
-          <div style="grid-column: 3 / span 2;">
-            <label>Tipo de dano</label>
-             <div id="dmg-field" class="multi-select-field" style="margin-top:6px; position:relative;">
-               <div class="display"><span>${dmgTypesSelected.length ? dmgTypesSelected.join(', ') : 'Selecione...'}</span> <span style="color:#9c27b0;">▾</span></div>
-               <div id="dmg-panel" class="panel" style="display:none; position:absolute; z-index:12000; width:100%;">
-                 ${TIPOS_DANO.map(c => `<label style="display:block;padding:6px;"><input type="checkbox" value="${c}" ${dmgTypesSelected.includes(c) ? 'checked' : ''} /> ${c}</label>`).join('')}
-               </div>
-             </div>
-          </div>
+
           <div style="grid-column: 1 / span 4;">
              <div id="extra-dmg-list" style="display:flex; flex-direction:column; gap:8px;"></div>
-             <button type="button" id="btn-add-dmg" style="margin-top:8px; background:#9c27b0; color:white; border:none; padding:6px 12px; border-radius:4px; font-weight:bold; cursor:pointer;">+ Adicionar Dano</button>
+             <button type="button" id="btn-add-dmg" style="margin-top:8px; background:#9c27b0; color:white; border:none; padding:6px 12px; border-radius:4px; font-weight:bold; cursor:pointer;">+ Adicionar Dano Extra</button>
           </div>
-          <div style="grid-column:1 / span 4;">
-             <label>Descrição</label>
-             <textarea id="item-desc" style="height:100px;">${escapeHtml(pre.description || '')}</textarea>
-          </div>
+
+          <div style="grid-column:1 / span 4;"><label>Descrição</label><textarea id="item-desc" style="height:100px;">${escapeHtml(pre.description || '')}</textarea></div>
         </div>
-       `;
-    } else if (tab === 'Armadura') {
+      `;
+     } else if (tab === 'Armadura') {
       const profSelected = pre.proficiency || '';
       const tipoSelected = pre.tipoItem || 'Armadura';
       const minReqAttrs = pre.minReqAttrs || ['Força'];
@@ -856,56 +914,114 @@ function openItemModal(existingItem = null) {
     return row;
   }
 
-  function bindTabEvents(tab) {
+/* ---------------- BIND DOS EVENTOS DO MODAL (COMPLETO E CORRIGIDO) ---------------- */
+function bindTabEvents(tab) {
+    // 1. Lógica das Pills (Seleção Única)
     modal.querySelectorAll('.pill.single-select').forEach(p => {
-      p.addEventListener('click', () => {
-        p.parentElement.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
-        p.classList.add('active');
-      });
+        p.addEventListener('click', () => {
+            p.parentElement.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+            p.classList.add('active');
+        });
     });
 
+    // 2. Lógica de Multi-Select Geral (Perícias, etc)
     modal.querySelectorAll('.multi-select-field').forEach(field => {
-      if (field.closest('.extra-dmg-row')) return;
+        if (field.id === 'dmg-field' || field.closest('.extra-dmg-row')) return;
 
-      const isMinReq = field.id === 'min-req-container';
-      let trigger = field.querySelector('.label-dropdown-trigger') || field.querySelector('.display');
-      const panel = field.querySelector('.panel');
+        const isMinReq = field.id === 'min-req-container';
+        let trigger = field.querySelector('.label-dropdown-trigger') || field.querySelector('.display');
+        const panel = field.querySelector('.panel');
 
-      trigger.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const isOpen = panel.style.display === 'block';
-        document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
-        panel.style.display = isOpen ? 'none' : 'block';
-      });
+        trigger.onclick = (e) => {
+            e.stopPropagation();
+            const isOpen = panel.style.display === 'block';
+            document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+            panel.style.display = isOpen ? 'none' : 'block';
+        };
 
-      panel.querySelectorAll('input[type="checkbox"]').forEach(chk => {
-        chk.addEventListener('change', () => {
-          const vals = Array.from(panel.querySelectorAll('input:checked')).map(x => x.value);
-
-          if (isMinReq) {
-            const labelText = modal.querySelector('#min-req-label-text');
-            labelText.textContent = vals.length ? vals.join(', ') : '';
-          } else {
-            const span = trigger.querySelector('span:first-child');
-            if (span) span.textContent = vals.length ? vals.join(', ') : 'Selecione...';
-          }
+        panel.querySelectorAll('input[type="checkbox"]').forEach(chk => {
+            chk.onchange = () => {
+                const vals = Array.from(panel.querySelectorAll('input:checked')).map(x => x.value);
+                if (isMinReq) {
+                    modal.querySelector('#min-req-label-text').textContent = vals.length ? vals.join(', ') : '';
+                } else {
+                    const span = trigger.querySelector('span:first-child');
+                    if (span) span.textContent = vals.length ? vals.join(', ') : 'Selecione...';
+                }
+            };
         });
-      });
     });
 
+    // 3. Lógica específica para ARMA (Versátil + Tipo de Dano Principal)
     if (tab === 'Arma') {
-      const container = modal.querySelector('#extra-dmg-list');
-      const btnAdd = modal.querySelector('#btn-add-dmg');
-      if (pre.moreDmgList && pre.moreDmgList.length) {
-        pre.moreDmgList.forEach(item => {
-          container.appendChild(createDamageRow(item.dano, item.types));
+        const empPills = modal.querySelectorAll('#emp-pills .pill');
+        const layoutStd = modal.querySelector('#layout-standard');
+        const layoutVer = modal.querySelector('#layout-versatile');
+        const dmgWrapper = modal.querySelector('#dmg-field-wrapper');
+        const containerStd = modal.querySelector('#dmg-type-container-std');
+        const containerVer = modal.querySelector('#dmg-type-container-ver');
+
+        const inputDanoPrincipal = modal.querySelector('#item-damage');
+        const inputDano1Mao = modal.querySelector('#item-damage-1hand');
+
+        const organizarLayoutDano = (isVersatil) => {
+            dmgWrapper.style.display = 'block';
+            if (isVersatil) {
+                layoutStd.style.display = 'none';
+                layoutVer.style.display = 'contents';
+                if (containerVer) containerVer.appendChild(dmgWrapper);
+                if (inputDanoPrincipal.value) inputDano1Mao.value = inputDanoPrincipal.value;
+            } else {
+                layoutStd.style.display = 'contents';
+                layoutVer.style.display = 'none';
+                if (containerStd) containerStd.appendChild(dmgWrapper);
+                if (inputDano1Mao.value) inputDanoPrincipal.value = inputDano1Mao.value;
+            }
+        };
+
+        inputDano1Mao.oninput = () => { inputDanoPrincipal.value = inputDano1Mao.value; };
+
+        empPills.forEach(p => {
+            p.addEventListener('click', () => {
+                organizarLayoutDano(p.getAttribute('data-val') === 'Versátil');
+            });
         });
-      }
-      btnAdd.addEventListener('click', () => {
-        container.appendChild(createDamageRow());
-      });
+
+        // Inicializa layout
+        const empInicial = modal.querySelector('#emp-pills .pill.active')?.getAttribute('data-val');
+        organizarLayoutDano(empInicial === 'Versátil');
+
+        // LÓGICA DO MULTI-SELECT DE TIPO DE DANO (CORRIGIDA)
+        const dmgField = dmgWrapper.querySelector('.multi-select-field');
+        const dmgDisplay = dmgField.querySelector('.display');
+        const dmgPanel = dmgField.querySelector('.panel');
+
+        dmgDisplay.onclick = (e) => {
+            e.stopPropagation();
+            const isNowOpen = dmgPanel.style.display === 'block';
+            document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+            dmgPanel.style.display = isNowOpen ? 'none' : 'block';
+        };
+
+        dmgPanel.querySelectorAll('input').forEach(chk => {
+            chk.onchange = () => {
+                const vals = Array.from(dmgPanel.querySelectorAll('input:checked')).map(x => x.value);
+                dmgDisplay.querySelector('span').textContent = vals.length ? vals.join(', ') : 'Selecione...';
+            };
+        });
+
+        // Botão Adicionar Dano Extra
+        const extraDmgContainer = modal.querySelector('#extra-dmg-list');
+        const btnAddExtra = modal.querySelector('#btn-add-dmg');
+        if (pre.moreDmgList?.length && extraDmgContainer.children.length === 0) {
+            pre.moreDmgList.forEach(item => extraDmgContainer.appendChild(createDamageRow(item.dano, item.types)));
+        }
+        btnAddExtra.onclick = (ev) => {
+            ev.preventDefault();
+            extraDmgContainer.appendChild(createDamageRow());
+        };
     }
-  }
+}
 
   renderBody(currentTab);
 
@@ -977,7 +1093,10 @@ function openItemModal(existingItem = null) {
       const attuneEl = modal.querySelector('#item-attune-weapon');
       newItem.attunement = attuneEl ? attuneEl.value : 'Não';
 
-      newItem.damage = modal.querySelector('#item-damage').value;
+      // ... dentro do salvamento da Arma ...
+newItem.damage = modal.querySelector('#item-damage').value;
+newItem.damage2Hands = modal.querySelector('#item-damage-2hands') ? modal.querySelector('#item-damage-2hands').value : '';
+newItem.useTwoHands = existingItem ? !!existingItem.useTwoHands : false; // Mantém o estado atual
 
       const carPanel = modal.querySelector('#car-panel');
       if (carPanel) newItem.caracteristicas = Array.from(carPanel.querySelectorAll('input:checked')).map(x => x.value);
@@ -1031,7 +1150,7 @@ function openItemModal(existingItem = null) {
   });
 }
 
-/* ---------------- HABILIDADES ---------------- */
+/* ---------------- HABILIDADES (DIREITA) - ATUALIZADO COM EXCLUSIVIDADE ---------------- */
 function renderAbilities() {
   const html = `
     <div class="abilities-controls controls-row">
@@ -1049,7 +1168,7 @@ function renderAbilities() {
               <div class="card-title">${a.title}</div>
             </div>
             <div class="right">
-               <label class="check-ativar" title="Preparar Habilidade">
+               <label class="check-ativar" title="Preparar/Ativar Habilidade">
                   <input class="hab-activate" type="checkbox" data-id="${a.id}" ${a.active ? 'checked' : ''}/>
                   <span class="square-check"></span>
                </label>
@@ -1068,12 +1187,13 @@ function renderAbilities() {
   `;
   conteudoEl.innerHTML = html;
 
+  // Listeners dos Cards
   document.querySelectorAll('.hab-card').forEach(card => {
     const id = Number(card.getAttribute('data-id'));
     const header = card.querySelector('.card-header');
 
+    // Expandir
     header.addEventListener('click', (ev) => {
-
       if (ev.target.closest('.check-ativar') || ev.target.closest('.hab-activate')) return;
       const hab = state.abilities.find(h => h.id === id);
       hab.expanded = !hab.expanded;
@@ -1081,26 +1201,63 @@ function renderAbilities() {
       saveStateToServer();
     });
 
+    // Checkbox Ativar
     const ch = card.querySelector('.hab-activate');
     if (ch) {
       ch.addEventListener('change', (ev) => {
         const hab = state.abilities.find(h => h.id === id);
         if (hab) {
           hab.active = ev.target.checked;
-          saveStateToServer();
 
-          if (state.activeTab === 'Mag. Preparadas') renderPreparedSpells();
+          // --- LÓGICA DE EXCLUSIVIDADE (Monge vs Bárbaro) ---
+          if (hab.active) {
+            // Se ativou Bárbaro, desliga Monge
+            if (hab.title.includes("Defesa sem Armadura(Bárbaro)")) {
+                const monk = state.abilities.find(a => a.title.includes("Defesa sem Armadura(Monge)"));
+                if (monk) monk.active = false;
+            }
+            // Se ativou Monge, desliga Bárbaro
+            if (hab.title.includes("Defesa sem Armadura(Monge)")) {
+                const barb = state.abilities.find(a => a.title.includes("Defesa sem Armadura(Bárbaro)"));
+                if (barb) barb.active = false;
+            }
+          }
+          // --------------------------------------------------
+
+          saveStateToServer();
+          
+          // Renderiza novamente para atualizar visualmente os checkboxes (caso um tenha sido desmarcado)
+          renderAbilities(); 
+
+          // Avisa a esquerda
+          window.dispatchEvent(new CustomEvent('sheet-updated')); 
         }
       });
-
       ch.addEventListener('click', (ev) => ev.stopPropagation());
     }
   });
 
-  document.querySelectorAll('.remover-hab').forEach(el => el.addEventListener('click', (ev) => { ev.preventDefault(); const id = Number(el.getAttribute('data-id')); state.abilities = state.abilities.filter(h => h.id !== id); renderAbilities(); saveStateToServer(); })); // <--- SALVAR REMOVER
-  document.querySelectorAll('.editar-hab').forEach(el => el.addEventListener('click', (ev) => { ev.preventDefault(); const id = Number(el.getAttribute('data-id')); const hab = state.abilities.find(h => h.id === id); if (!hab) return; openNewAbilityModal(hab); }));
+  // Botões de Ação
+  document.querySelectorAll('.remover-hab').forEach(el => el.addEventListener('click', (ev) => { 
+      ev.preventDefault(); 
+      const id = Number(el.getAttribute('data-id')); 
+      state.abilities = state.abilities.filter(h => h.id !== id); 
+      renderAbilities(); 
+      saveStateToServer(); 
+      window.dispatchEvent(new CustomEvent('sheet-updated'));
+  })); 
+  
+  document.querySelectorAll('.editar-hab').forEach(el => el.addEventListener('click', (ev) => { 
+      ev.preventDefault(); 
+      const id = Number(el.getAttribute('data-id')); 
+      const hab = state.abilities.find(h => h.id === id); 
+      if (!hab) return; 
+      openNewAbilityModal(hab); 
+  }));
+  
   const botAddCatalog = document.getElementById('botOpenCatalogHab');
   if (botAddCatalog) botAddCatalog.addEventListener('click', () => openAbilityCatalogOverlay());
+  
   const filtro = document.getElementById('filterHabs');
   if (filtro) filtro.addEventListener('input', (e) => {
     const q = e.target.value.toLowerCase();
@@ -1110,10 +1267,24 @@ function renderAbilities() {
     });
   });
 }
+  
+  const botAddCatalog = document.getElementById('botOpenCatalogHab');
+  if (botAddCatalog) botAddCatalog.addEventListener('click', () => openAbilityCatalogOverlay());
+  
+  const filtro = document.getElementById('filterHabs');
+  if (filtro) filtro.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase();
+    document.querySelectorAll('.hab-card').forEach(card => {
+      const title = card.querySelector('.card-title').textContent.toLowerCase();
+      card.style.display = title.includes(q) ? '' : 'none';
+    });
+  });
+
 
 /* ---------------- MAGIAS ---------------- */
 function formatMySpellCard(s) {
   const schoolPill = `<div class="pill">${s.school || '—'}${s.levelNumber !== undefined ? ` <span class="pill-level">${s.levelNumber}</span>` : ''}</div>`;
+  
   const compRow = `
       <div class="comp-block">
         <div class="comp-title">Componente</div>
@@ -1125,6 +1296,7 @@ function formatMySpellCard(s) {
         <div class="comp-material">Material: ${s.material || '-'}</div>
       </div>
     `;
+  
   const caretSymbol = s.expanded ? '▾' : '▸';
   const classDisplay = `<div class="class-box-display">${s.spellClass || '—'}</div>`;
 
@@ -1143,11 +1315,23 @@ function formatMySpellCard(s) {
           </div>
         </div>
         <div class="card-body" style="${s.expanded ? '' : 'display:none;'}">
-          <div style="display:flex; gap:12px; align-items:flex-start; width:100%;">
-            <div style="flex:0 0 auto;">${schoolPill}</div>
-            <div style="flex:1 1 auto;">${compRow}</div>
-            <div style="flex:0 0 auto; align-self:flex-start;">${classDisplay}</div>
+          
+          <div style="display:flex; gap:10px; align-items:flex-start; width:100%;">
+            
+            <div style="flex: 0 0 auto;">
+                ${schoolPill}
+            </div>
+
+            <div style="flex: 1 1 auto; min-width: 0;"> 
+                ${compRow}
+            </div>
+
+            <div style="flex: 0 0 auto; display:flex; justify-content:flex-end;">
+                ${classDisplay}
+            </div>
+
           </div>
+
           <div class="spell-attrs" style="margin-top:12px;">
             <div><span class="purple">Execução:</span> ${s.attrs.execucao}</div>
             <div><span class="purple">Alcance:</span> ${s.attrs.alcance}</div>
@@ -1514,7 +1698,6 @@ function openSpellModal(existingSpell = null) {
 }
 
 
-/* ---------------- CATALOGO MAGIAS (CORRIGIDO PARA CLICAR EM TODO O HEADER) ---------------- */
 function openSpellCatalogOverlay(parentModal = null) {
   const existing = document.querySelector('.catalog-overlay-large');
   if (existing) { existing.remove(); return; }
@@ -1547,7 +1730,7 @@ function openSpellCatalogOverlay(parentModal = null) {
           ${circlesHtml}
         </div>
         <div class="catalog-large-search">
-          <input id="catalogLargeSearch" placeholder="Buscar no catálogo..." />
+          <input id="catalogLargeSearch" placeholder="Ex: pode pesquisar coisas separadas, separa por vírgula ma pesquisa(coisa1,coisa2,palavra-chave3)..." />
         </div>
         <div class="catalog-large-list">
           ${spellCatalog.map(c => formatCatalogSpellCard(c)).join('')}
@@ -1566,30 +1749,74 @@ function openSpellCatalogOverlay(parentModal = null) {
     openSpellModal(null);
   };
 
-  // FILTROS DE CÍRCULO
+  // FILTROS DE CÍRCULO (Visual)
   overlay.querySelectorAll('.circle-filter').forEach(btn => {
     btn.onclick = () => {
       overlay.querySelectorAll('.circle-filter').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      const filter = btn.dataset.filter;
-      overlay.querySelectorAll('.catalog-card-item').forEach(card => {
-        card.style.display = (filter === 'all' || card.dataset.level === filter) ? '' : 'none';
-      });
+      
+      // Re-aplica o filtro de texto + círculo
+      triggerSearch();
     };
   });
 
-  // BUSCA
-  overlay.querySelector('#catalogLargeSearch').oninput = (e) => {
-    const q = e.target.value.toLowerCase();
-    overlay.querySelectorAll('.catalog-card-item').forEach(it => {
-      it.style.display = it.querySelector('.catalog-card-title').textContent.toLowerCase().includes(q) ? '' : 'none';
+  // BUSCA (Lógica Principal)
+  const inputSearch = overlay.querySelector('#catalogLargeSearch');
+  inputSearch.oninput = triggerSearch;
+
+  function triggerSearch() {
+    const q = inputSearch.value.toLowerCase();
+    const searchTerms = q.split(',').map(t => t.trim()).filter(t => t);
+    
+    const activeCircleBtn = overlay.querySelector('.circle-filter.active');
+    const circleFilter = activeCircleBtn ? activeCircleBtn.dataset.filter : 'all';
+
+    overlay.querySelectorAll('.catalog-card-item').forEach(card => {
+      // 1. Filtro de Círculo
+      const itemLevel = card.dataset.level;
+      const passCircle = (circleFilter === 'all' || itemLevel === circleFilter);
+
+      // 2. Filtro de Texto (Comma Separated)
+      let passText = true;
+      if (searchTerms.length > 0) {
+        // Pega os dados brutos do card (reconstruindo a string de busca)
+        // O ideal seria ter o objeto original, mas vamos pegar do DOM para simplificar a referência
+        // ou buscar no spellCatalog pelo ID se precisar de mais precisão.
+        // Vamos usar o spellCatalog global para busca precisa.
+        
+        const id = card.dataset.id;
+        const spell = spellCatalog.find(s => s.id === id);
+        
+        if (spell) {
+            const fullText = [
+                spell.name,
+                spell.school,
+                spell.spellClass,
+                spell.levelNumber.toString(),
+                spell.damage,
+                spell.description,
+                spell.material,
+                // Componentes
+                (spell.components?.V ? 'verbal' : ''),
+                (spell.components?.S ? 'somatico' : ''),
+                (spell.components?.M ? 'material' : '')
+            ].filter(Boolean).join(' ').toLowerCase();
+
+            passText = searchTerms.every(term => fullText.includes(term));
+        } else {
+            // Fallback se não achar no catalogo (raro)
+            passText = card.textContent.toLowerCase().includes(searchTerms[0]);
+        }
+      }
+
+      card.style.display = (passCircle && passText) ? '' : 'none';
     });
-  };
+  }
 
   // BOTÃO ADICIONAR (+)
   overlay.querySelectorAll('.catalog-add-btn').forEach(btn => {
     btn.onclick = (ev) => {
-      ev.stopPropagation(); // Impede que o clique no botão expanda o card
+      ev.stopPropagation(); 
       const id = btn.dataset.id;
       const c = spellCatalog.find(x => x.id === id);
       if (!c) return;
@@ -1616,19 +1843,14 @@ function openSpellCatalogOverlay(parentModal = null) {
     saveStateToServer();
   }
 
-  // --- LÓGICA DE EXPANDIR (CORRIGIDA PARA O HEADER INTEIRO) ---
+  // LÓGICA DE EXPANDIR
   overlay.querySelectorAll('.catalog-card-header').forEach(header => {
-    // Muda o cursor para indicar que é clicável
     header.style.cursor = 'pointer';
-
     header.addEventListener('click', (ev) => {
-      // Se clicou no botão de adicionar ou dentro dele, não faz nada (o evento do botão já trata)
       if (ev.target.closest('.catalog-add-btn')) return;
-
       const card = header.closest('.catalog-card-item');
       const body = card.querySelector('.catalog-card-body');
       const toggle = card.querySelector('.catalog-card-toggle');
-
       const isHidden = body.style.display === 'none';
       body.style.display = isHidden ? 'block' : 'none';
       toggle.textContent = isHidden ? '▾' : '▸';
@@ -1691,18 +1913,16 @@ function formatCatalogSpellCard(c) {
       </div>
     `;
 }
-/* ---------------- MAGIAS E HABILIDADES PREPARADAS (COM PESQUISA) ---------------- */
+/* ---------------- PREPARADAS (DIREITA) - ATUALIZADO COM EXCLUSIVIDADE ---------------- */
 function renderPreparedSpells() {
   const habilidadesPreparadas = state.abilities.filter(h => h.active);
   const magiasPreparadas = state.spells.filter(s => s.active);
 
-  // Se não houver nada preparado, mostra o aviso e para por aqui
   if (!habilidadesPreparadas.length && !magiasPreparadas.length) {
     conteudoEl.innerHTML = `<div class="empty-tip">Nenhuma habilidade ou magia preparada/ativa no momento.</div>`;
     return;
   }
 
-  // Gera HTML das Habilidades
   const habilidadesHTML = habilidadesPreparadas.map(a => `
     <div class="card hab-card ${a.expanded ? 'expanded' : ''}" data-id="${a.id}" data-type="hab">
       <div class="card-header">
@@ -1723,10 +1943,8 @@ function renderPreparedSpells() {
     </div>
   `).join('');
 
-  // Gera HTML das Magias
   const magiasHTML = magiasPreparadas.map(formatMySpellCard).join('');
 
-  // Monta o HTML final com a Barra de Pesquisa no topo
   const html = `
     <div class="controls-row">
       <input id="filterPrepared" placeholder="Filtrar preparados..." />
@@ -1737,15 +1955,13 @@ function renderPreparedSpells() {
       ${magiasHTML}
     </div>
   `;
-
   conteudoEl.innerHTML = html;
 
-  // --- Lógica de Filtro em Tempo Real ---
+  // Filtro
   const filtro = document.getElementById('filterPrepared');
   if (filtro) {
     filtro.addEventListener('input', (e) => {
       const q = e.target.value.toLowerCase();
-      // Filtra tanto cards de habilidades quanto de magias
       conteudoEl.querySelectorAll('.hab-card, .spell-card').forEach(card => {
         const title = card.querySelector('.card-title').textContent.toLowerCase();
         card.style.display = title.includes(q) ? '' : 'none';
@@ -1753,7 +1969,7 @@ function renderPreparedSpells() {
     });
   }
 
-  // --- Re-conectar Listeners de Eventos (Habilidades) ---
+  // Eventos Habilidades (Com exclusividade)
   conteudoEl.querySelectorAll('.hab-card').forEach(card => {
     const id = Number(card.getAttribute('data-id'));
     const header = card.querySelector('.card-header');
@@ -1773,14 +1989,29 @@ function renderPreparedSpells() {
         const hab = state.abilities.find(h => h.id === id);
         if (hab) {
           hab.active = ev.target.checked;
-          renderPreparedSpells();
+
+          // --- LÓGICA DE EXCLUSIVIDADE ---
+          if (hab.active) {
+            if (hab.title.includes("Defesa sem Armadura(Bárbaro)")) {
+                const monk = state.abilities.find(a => a.title.includes("Defesa sem Armadura(Monge)"));
+                if (monk) monk.active = false;
+            }
+            if (hab.title.includes("Defesa sem Armadura(Monge)")) {
+                const barb = state.abilities.find(a => a.title.includes("Defesa sem Armadura(Bárbaro)"));
+                if (barb) barb.active = false;
+            }
+          }
+          // -------------------------------
+
           saveStateToServer();
+          window.dispatchEvent(new CustomEvent('sheet-updated'));
+          renderPreparedSpells();
         }
       });
     }
   });
 
-  // --- Re-conectar Listeners de Eventos (Magias) ---
+  // Eventos Magias
   conteudoEl.querySelectorAll('.spell-card').forEach(card => {
     const id = Number(card.getAttribute('data-id'));
     const header = card.querySelector('.card-header');
@@ -1799,8 +2030,9 @@ function renderPreparedSpells() {
         const s = state.spells.find(x => x.id === id);
         if (s) {
           s.active = ev.target.checked;
-          renderPreparedSpells();
           saveStateToServer();
+          renderPreparedSpells();
+          window.dispatchEvent(new CustomEvent('sheet-updated'));
         }
       });
     }
@@ -1817,7 +2049,7 @@ const ITEM_SUBCATEGORIES = {
   'Armaduras': ['Armaduras', 'Escudos'],
   'Utensílios': ['Utensílios gerais'],
   'Conjuntos': ['Kits', 'Pacotes', 'Ferramentas'],
-  'Provisão': ['Comida', 'Transporte', 'Hospedagem']
+  'Provisão': ['Comida', 'Transporte/Animais', 'Hospedagem']
 };
 
 window.openItemCatalogOverlay = () => {
@@ -1830,106 +2062,101 @@ window.openItemCatalogOverlay = () => {
   const overlay = document.createElement('div');
   overlay.className = 'catalog-overlay-large catalog-overlay-large-items';
 
-  // Gera botões de categorias principais
   const catsHtml = ITEM_CATEGORIES.map((c, i) =>
     `<button class="ability-class-btn ${i === 0 ? 'active' : ''}" data-cat="${c}">${c}</button>`
   ).join('');
 
   overlay.innerHTML = `
       <div class="catalog-large" role="dialog" aria-modal="true" style="width:980px; max-width:calc(100% - 40px);">
-        <div class="catalog-large-header" style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+        <div class="catalog-large-header">
           <h3>Lista Padrão de Itens</h3>
           <div class="catalog-large-close" title="Fechar" style="cursor:pointer;">✖</div>
         </div>
-
-        <div class="catalog-large-classes" id="item-cats-row">
-          ${catsHtml}
-        </div>
-
-        <div id="item-subs-row" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; padding-bottom:6px;">
-           </div>
-
+        <div class="catalog-large-classes" id="item-cats-row">${catsHtml}</div>
+        <div id="item-subs-row" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; padding-bottom:6px;"></div>
         <div class="catalog-large-search" style="margin-top:6px;">
-          <input id="catalogItemSearch" placeholder="Buscar no catálogo..." />
+          <input id="catalogItemSearch" placeholder="Ex: pode pesquisar coisas separadas, separa por vírgula ma pesquisa(coisa1,coisa2,palavra-chave3)..." />
         </div>
-
-        <div class="catalog-large-list item-list-large" style="margin-top:10px; overflow:auto; max-height:56vh;">
-           </div>
+        <div class="catalog-large-list item-list-large" style="margin-top:10px; overflow:auto; flex:1;"></div>
       </div>
     `;
 
   document.body.appendChild(overlay);
   checkScrollLock();
 
-  // Evento Fechar
-  overlay.querySelector('.catalog-large-close').addEventListener('click', () => {
-    overlay.remove();
-    checkScrollLock();
-  });
+  overlay.querySelector('.catalog-large-close').onclick = () => { overlay.remove(); checkScrollLock(); };
 
-  // Renderiza as subcategorias (pills)
   function renderSubs() {
     const row = overlay.querySelector('#item-subs-row');
     const subs = ITEM_SUBCATEGORIES[activeCat] || [];
-
-    if (subs.length === 0) {
-      row.style.display = 'none';
-    } else {
+    if (subs.length === 0) { row.style.display = 'none'; } 
+    else {
       row.style.display = 'flex';
-      row.innerHTML = subs.map(s =>
-        `<button class="ability-sub-btn ${s === activeSub ? 'active' : ''}" data-sub="${s}">${s}</button>`
-      ).join('');
+      row.innerHTML = subs.map(s => `<button class="ability-sub-btn ${s === activeSub ? 'active' : ''}" data-sub="${s}">${s}</button>`).join('');
     }
-
     row.querySelectorAll('.ability-sub-btn').forEach(btn => {
-      btn.onclick = () => {
-        activeSub = btn.dataset.sub;
-        renderSubs();
-        renderList();
-      };
+      btn.onclick = () => { activeSub = btn.dataset.sub; renderSubs(); renderList(); };
     });
   }
 
-  // Renderiza a lista de itens filtrada
   function renderList() {
     const container = overlay.querySelector('.item-list-large');
-    const search = overlay.querySelector('#catalogItemSearch').value.toLowerCase();
+    const searchInput = overlay.querySelector('#catalogItemSearch').value.toLowerCase();
+    
+    // Divide os termos por vírgula e remove espaços extras
+    const searchTerms = searchInput.split(',').map(t => t.trim()).filter(t => t);
 
     let items = itemCatalog.filter(i => i.category === activeCat);
 
-    // Se houver subcategorias, filtra por elas. Se não (ex: Provisão genérica), mostra tudo da categoria.
-    if (ITEM_SUBCATEGORIES[activeCat] && ITEM_SUBCATEGORIES[activeCat].length > 0) {
+    if (ITEM_SUBCATEGORIES[activeCat]?.length > 0) {
       items = items.filter(i => i.subcategory === activeSub);
     }
 
-    if (search) {
-      items = items.filter(i => i.name.toLowerCase().includes(search));
+    // LÓGICA DE FILTRO AVANÇADA
+    if (searchTerms.length > 0) {
+      items = items.filter(item => {
+        // Monta uma string gigante com todas as infos do item para buscar
+        const searchableText = [
+          item.name,
+          item.description,
+          item.type,
+          item.tipoArma,
+          item.proficiency,
+          item.damageType,
+          Array.isArray(item.damageTypes) ? item.damageTypes.join(' ') : '',
+          item.caracteristicas ? item.caracteristicas.join(' ') : '',
+          item.empunhadura,
+          item.defense ? `CA ${item.defense}` : ''
+        ].filter(Boolean).join(' ').toLowerCase();
+
+        // Verifica se TODOS os termos digitados existem no item (Lógica AND)
+        return searchTerms.every(term => searchableText.includes(term));
+      });
     }
 
     if (items.length === 0) {
-      container.innerHTML = `<div style="color:#ddd;padding:18px;">Nenhum item encontrado nesta categoria.</div>`;
+      container.innerHTML = `<div style="color:#ddd;padding:18px;">Nenhum item encontrado.</div>`;
       return;
     }
 
     container.innerHTML = items.map(item => {
-      // Formata os dados para exibição compacta no header
       let metaInfo = '';
-      let highlightVal = ''; // Valor que aparece em roxo na direita
+      let highlightVal = '';
 
       if (item.category === 'Armas') {
-        metaInfo = `${item.tipoArma || ''} • ${item.proficiency || ''}`;
-        highlightVal = item.damage || '-';
+        const dano2M = item.damage2Hands ? ` / ${item.damage2Hands}` : '';
+        const tDano = Array.isArray(item.damageTypes) ? item.damageTypes[0] : (item.damageType || '');
+        metaInfo = `${item.tipoArma || ''} • ${item.proficiency || ''} ${tDano ? `• ${tDano}` : ''}`;
+        highlightVal = `${item.damage}${dano2M}`;
       } else if (item.category === 'Armaduras') {
         metaInfo = `${item.tipoItem || ''} • ${item.proficiency || ''}`;
         highlightVal = item.defense ? `CA ${item.defense}` : '-';
       } else {
         metaInfo = item.subcategory || item.type || 'Item';
-        highlightVal = '';
       }
 
       return `
             <div class="catalog-card-item card" data-id="${item.id}" style="background:#1b1b1b; border:1px solid rgba(255,255,255,0.05); padding:0; margin-bottom:8px; overflow:hidden;">
-                
                 <div class="catalog-card-header" style="display:flex; justify-content:space-between; align-items:center; padding:12px; cursor:pointer;">
                     <div class="left" style="display:flex; gap:12px; align-items:center; min-width:0; flex:1;">
                         <button class="catalog-card-toggle" style="background:transparent; border:none; color:#9c27b0; font-weight:800; font-size:18px; cursor:pointer;">▸</button>
@@ -1938,67 +2165,57 @@ window.openItemCatalogOverlay = () => {
                             <div style="font-size:13px; color:#bbb; margin-top:4px;">${metaInfo}</div>
                         </div>
                     </div>
-                    
                     <div style="display:flex; align-items:center; gap:12px;">
-                        ${highlightVal ? `<div class="catalog-card-dmg" style="font-weight:800; color:#9c27b0; font-size:16px;">${highlightVal}</div>` : ''}
-                        <button class="catalog-add-btn plus-btn" data-id="${item.id}" title="Adicionar" style="background:#9c27b0; border:none; color:#fff; width:38px; height:38px; border-radius:6px; font-size:20px; font-weight:bold; cursor:pointer; display:flex; align-items:center; justify-content:center;">+</button>
+                        ${highlightVal ? `<div class="catalog-card-dmg" style="font-weight:800; color:#9c27b0; font-size:15px; white-space:nowrap;">${highlightVal}</div>` : ''}
+                        <button class="catalog-add-btn plus-btn" data-id="${item.id}" title="Adicionar">+</button>
                     </div>
                 </div>
 
-                <div style="height:3px; background:#9c27b0; width: calc(100% - 24px); margin: 0 auto 8px auto; border-radius:2px;"></div>
+                <div style="height:2px; background:#9c27b0; width: calc(100% - 24px); margin: 0 auto; border-radius:2px;"></div>
                 
-                <div class="catalog-card-body" style="display:none; padding:0 12px 12px 12px; color:#ddd; font-size:14px; line-height:1.5;">
+                <div class="catalog-card-body" style="display:none; padding:12px; color:#ddd; font-size:14px; line-height:1.5;">
                     <div style="margin-bottom:8px; font-size:13px; color:#ccc; display:grid; grid-template-columns: 1fr 1fr; gap:4px;">
-                        ${item.damage ? `<div><strong class="purple">Dano:</strong> ${item.damage} ${item.damageType ? `(${item.damageType})` : ''}</div>` : ''}
-                        ${item.defense ? `<div><strong class="purple">Defesa:</strong> ${item.defense}</div>` : ''}
-                        ${item.empunhadura ? `<div><strong class="purple">Empunhadura:</strong> ${item.empunhadura}</div>` : ''}
+                        ${item.damage ? `<div><strong class="purple">Dano:</strong> ${item.damage} ${item.damage2Hands ? `(2M: ${item.damage2Hands})` : ''}</div>` : ''}
+                        ${item.category === 'Armas' ? `<div><strong class="purple">Tipo:</strong> ${Array.isArray(item.damageTypes) ? item.damageTypes.join(', ') : (item.damageType || '-')}</div>` : ''}
+                        ${item.empunhadura ? `<div><strong class="purple">Mãos:</strong> ${item.empunhadura}</div>` : ''}
                         ${item.alcance ? `<div><strong class="purple">Alcance:</strong> ${item.alcance}</div>` : ''}
-                        ${item.caracteristicas ? `<div style="grid-column: 1 / -1;"><strong class="purple">Propriedades:</strong> ${Array.isArray(item.caracteristicas) ? item.caracteristicas.join(', ') : item.caracteristicas}</div>` : ''}
                     </div>
-                    <p style="margin:0; padding-top:8px; border-top:1px solid rgba(255,255,255,0.05);">${item.description || 'Sem descrição.'}</p>
+                    <div style="padding-top:8px; border-top:1px solid rgba(255,255,255,0.05);">${item.description || 'Sem descrição.'}</div>
                 </div>
             </div>`;
     }).join('');
 
-    // 1. Listener de Expandir (No Header inteiro, exceto botão +)
+    // Listener de Expandir
     container.querySelectorAll('.catalog-card-header').forEach(header => {
       header.addEventListener('click', (ev) => {
-        if (ev.target.closest('.catalog-add-btn')) return; // Ignora clique no botão +
-
+        if (ev.target.closest('.catalog-add-btn')) return;
         const card = header.closest('.catalog-card-item');
         const body = card.querySelector('.catalog-card-body');
         const toggle = card.querySelector('.catalog-card-toggle');
-
         const isHidden = body.style.display === 'none';
         body.style.display = isHidden ? 'block' : 'none';
         toggle.textContent = isHidden ? '▾' : '▸';
       });
     });
 
-    // 2. Listener de Adicionar (+)
+    // Listener de Adicionar
     container.querySelectorAll('.catalog-add-btn').forEach(btn => {
-      btn.addEventListener('click', (ev) => {
+      btn.onclick = (ev) => {
         ev.stopPropagation();
         adicionarItemDoCatalogo(btn.dataset.id);
-
-        // Feedback visual
-        const originalText = btn.textContent;
         btn.textContent = '✓';
-        setTimeout(() => btn.textContent = originalText, 1000);
-      });
+        setTimeout(() => btn.textContent = '+', 1000);
+      };
     });
   }
 
-  // Eventos das Categorias Principais
   overlay.querySelectorAll('.ability-class-btn').forEach(btn => {
     btn.onclick = () => {
       overlay.querySelectorAll('.ability-class-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       activeCat = btn.dataset.cat;
-      // Tenta pegar a primeira subcategoria, ou string vazia se não houver
       activeSub = ITEM_SUBCATEGORIES[activeCat] ? ITEM_SUBCATEGORIES[activeCat][0] : '';
-      renderSubs();
-      renderList();
+      renderSubs(); renderList();
     };
   });
 
@@ -2007,54 +2224,7 @@ window.openItemCatalogOverlay = () => {
   renderList();
 };
 
-// Função chamada pelo botão "+" do catálogo
-window.adicionarItemDoCatalogo = (id) => {
-  const i = itemCatalog.find(x => x.id === id);
-  if (!i) return;
 
-  // Objeto base
-  let novoItem = {
-    id: uid(),
-    name: i.name,
-    description: i.description || '',
-    expanded: false,
-    equip: false,
-    type: 'Geral', // Default
-    // Valores padrão vazios para evitar undefined
-    damage: '', defense: '', proficiency: '', empunhadura: '',
-    tipoArma: '', tipoItem: '', crit: '20', multiplicador: '2', alcance: '',
-    acertoBonus: '', damageBonus: '', damageType: '', defenseBonus: '', defenseType: '',
-    disadvantageSkill: [], advantageSkill: [], attunement: 'Não'
-  };
-
-  // Mapeamento OBRIGATÓRIO por categoria
-  if (i.category === 'Armas') {
-    novoItem.type = 'Arma';
-    novoItem.proficiency = i.proficiency || 'Armas Simples';
-    novoItem.tipoArma = i.tipoArma || 'Corpo a Corpo';
-    novoItem.empunhadura = i.empunhadura || 'Uma mao';
-
-    // Extras
-    novoItem.damage = i.damage || '1d4';
-    novoItem.damageTypes = i.damageType ? [i.damageType] : [];
-    novoItem.alcance = i.alcance || '';
-    novoItem.caracteristicas = i.caracteristicas || [];
-  }
-  else if (i.category === 'Armaduras') {
-    novoItem.type = 'Proteção';
-    novoItem.proficiency = i.proficiency || 'Leve';
-    novoItem.tipoItem = i.tipoItem || (i.subcategory === 'Escudos' ? 'Escudo' : 'Armadura');
-
-    // Extras
-    novoItem.defense = i.defense || '+1';
-    novoItem.minStrength = i.minStrength || 0;
-    novoItem.disadvantageSkill = i.disadvantageSkill ? [i.disadvantageSkill] : [];
-  }
-
-  state.inventory.unshift(novoItem);
-  renderInventory();
-  saveStateToServer();
-};
 
 // Conectar ao botão "Lista Padrão" dentro do Modal de Itens
 document.addEventListener('click', (e) => {
@@ -2086,26 +2256,26 @@ window.adicionarItemDoCatalogo = (id) => {
     description: i.description || '',
     expanded: false,
     equip: false,
-    type: 'Geral'
+    type: i.type || 'Arma',
+    isEquipable: true,
+    proficiency: i.proficiency || 'Armas Simples',
+    tipoArma: i.tipoArma || 'Corpo a Corpo',
+    empunhadura: i.empunhadura || 'Uma mao',
+    crit: i.crit || '20',
+    multiplicador: i.multiplicador || '2',
+    alcance: i.alcance || '1.5m',
+    attunement: i.attunement || 'Não',
+    damage: i.damage || '1d4',
+    damage2Hands: i.damage2Hands || '', // IMPORTANTE: Puxa o dano de 2 mãos do back
+    useTwoHands: false,
+    damageTypes: Array.isArray(i.damageTypes) ? [...i.damageTypes] : (i.damageType ? [i.damageType] : []),
+    moreDmgList: i.moreDmgList || [],
+    caracteristicas: i.caracteristicas || []
   };
-
-  if (i.category === 'Armas') {
-    novoItem.type = 'Arma';
-    novoItem.damage = i.damage || '1d4';
-    novoItem.proficiency = i.proficiency || 'Armas Simples'; // Obrigatório
-    novoItem.tipoArma = i.tipoArma || 'Corpo a Corpo';      // Obrigatório
-    novoItem.empunhadura = i.empunhadura || 'Uma mao';      // Obrigatório
-  } else if (i.category === 'Armaduras') {
-    novoItem.type = 'Proteção';
-    novoItem.defense = i.defense || '10';
-    novoItem.tipoItem = i.tipoItem || 'Armadura';           // Obrigatório (Armadura ou Escudo)
-    novoItem.proficiency = i.proficiency || 'Leve';         // Obrigatório
-  }
 
   state.inventory.unshift(novoItem);
   renderInventory();
   saveStateToServer();
-  alert(i.name + " adicionado!");
 };
 
 // Conectar ao botão "Lista Padrão" dentro do Modal de Itens
@@ -2120,7 +2290,6 @@ document.addEventListener('click', (e) => {
 });
 
 
-/* ---------------- HABILIDADES CATALOG / NOVA HABILIDADE ---------------- */
 /* ---------------- HABILIDADES CATALOG / NOVA HABILIDADE ---------------- */
 function openAbilityCatalogOverlay() {
   const existing = document.querySelector('.catalog-overlay-large-abilities');
@@ -2161,7 +2330,7 @@ function openAbilityCatalogOverlay() {
           <div id="catalog-subclasses-row" style="display:flex; margin-top:8px; padding-bottom:6px;"></div>
 
           <div class="catalog-large-search" style="margin-top:6px;">
-            <input id="catalogAbilitySearch" placeholder="Buscar habilidades..." />
+            <input id="catalogAbilitySearch" placeholder="Ex: ataque, guerreiro (separa por vírgula)..." />
           </div>
         </div>
 
@@ -2186,8 +2355,12 @@ function openAbilityCatalogOverlay() {
       overlay.querySelectorAll('.ability-class-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       activeClass = btn.dataset.class;
+      
+      // Se for Antecedentes, não selecionamos a "Habilidade Geral" por padrão visualmente,
+      // mas mantemos a lógica interna funcionando.
       activeClassHabilitySelected = true;
       activeSubclass = null;
+      
       renderClassHabilitiesRow();
       renderSubclassesRow();
       renderCatalogList();
@@ -2205,8 +2378,12 @@ function openAbilityCatalogOverlay() {
     row.style.display = 'flex';
     row.style.alignItems = 'center';
     
-    // HTML com o botão de habilidades e o botão de toggle caso existam subclasses
-    let html = `<button class="catalog-class-hability-pill ${activeClassHabilitySelected ? 'active' : ''}">Habilidades de ${activeClass}</button>`;
+    let html = '';
+    
+    // --- ALTERAÇÃO AQUI: Remove o botão se for Antecedentes ---
+    if (activeClass !== 'Antecedentes') {
+        html += `<button class="catalog-class-hability-pill ${activeClassHabilitySelected ? 'active' : ''}">Habilidades de ${activeClass}</button>`;
+    }
     
     if (hasSubclasses) {
       // Ícone ⊞ para expandir (grid) e ⇄ para recluso (scroll)
@@ -2217,13 +2394,17 @@ function openAbilityCatalogOverlay() {
 
     row.innerHTML = html;
 
-    row.querySelector('.catalog-class-hability-pill').onclick = function () {
-      activeClassHabilitySelected = true;
-      activeSubclass = null;
-      renderClassHabilitiesRow();
-      overlay.querySelectorAll('.ability-sub-btn').forEach(b => b.classList.remove('active'));
-      renderCatalogList();
-    };
+    // Só adiciona o evento de clique se o botão existir (não for Antecedentes)
+    const pillBtn = row.querySelector('.catalog-class-hability-pill');
+    if (pillBtn) {
+        pillBtn.onclick = function () {
+            activeClassHabilitySelected = true;
+            activeSubclass = null;
+            renderClassHabilitiesRow();
+            overlay.querySelectorAll('.ability-sub-btn').forEach(b => b.classList.remove('active'));
+            renderCatalogList();
+        };
+    }
 
     if (hasSubclasses) {
       row.querySelector('#toggle-sub-expansion').onclick = () => {
@@ -2267,17 +2448,33 @@ function openAbilityCatalogOverlay() {
 
   function renderCatalogList() {
     const container = overlay.querySelector('.abilities-list-large');
-    const q = overlay.querySelector('#catalogAbilitySearch').value.toLowerCase();
+    const searchInput = overlay.querySelector('#catalogAbilitySearch').value.toLowerCase();
+    const searchTerms = searchInput.split(',').map(t => t.trim()).filter(t => t);
 
     let items = abilityCatalog.filter(it => {
+      // 1. Lógica das Abas (Classe/Subclasse)
       if (activeClass) {
         if (activeClassHabilitySelected) {
+          // Se estiver na aba principal da classe
           if (it.class !== activeClass || (it.subclass && it.subclass !== '')) return false;
         } else if (activeSubclass) {
+          // Se estiver numa subclasse específica
           if (it.class !== activeClass || it.subclass !== activeSubclass) return false;
         }
       }
-      if (q && !it.name.toLowerCase().includes(q) && !it.description.toLowerCase().includes(q)) return false;
+      
+      // 2. Filtro de Texto (separado por vírgula)
+      if (searchTerms.length > 0) {
+        const fullText = [
+            it.name,
+            it.description,
+            it.class,
+            it.subclass,
+            it.category // Geral, Ação, etc.
+        ].filter(Boolean).join(' ').toLowerCase();
+
+        return searchTerms.every(term => fullText.includes(term));
+      }
       return true;
     });
 
@@ -2334,6 +2531,112 @@ function openAbilityCatalogOverlay() {
   renderSubclassesRow();
   renderCatalogList();
 }
+
+
+
+/* =============================================================
+   CÁLCULO DA CLASSE DE ARMADURA (CA) - LÓGICA CORRIGIDA
+============================================================= */
+
+// Função auxiliar para pegar modificadores do DOM (segurança contra valores nulos)
+function getAttributeMod(attrKey) {
+  const selector = DOM_SELECTORS[attrKey]; 
+  const hexEl = document.querySelector(selector);
+  if (hexEl) {
+    let rawVal = hexEl.dataset.attrValue || hexEl.textContent;
+    const score = parseInt(rawVal, 10);
+    if (!isNaN(score)) {
+      return Math.floor((score - 10) / 2);
+    }
+  }
+  return 0; 
+}
+
+function calculateArmorClass() {
+  // 1. Pega os Modificadores necessários
+  const modDex = getAttributeMod('dex');
+  const modCon = getAttributeMod('con');
+  const modSab = getAttributeMod('sab');
+
+  // 2. Verifica Inventário (Itens equipados)
+  const equippedArmor = state.inventory.find(i => 
+    i.equip && (i.type === 'Proteção' || i.type === 'protecao') && 
+    (i.tipoItem || '').toLowerCase() === 'armadura'
+  );
+
+  const equippedShield = state.inventory.find(i => 
+    i.equip && (i.type === 'Proteção' || i.type === 'protecao') && 
+    (i.tipoItem || '').toLowerCase() === 'escudo'
+  );
+
+  // 3. Verifica Habilidades Ativas (Busca por texto exato ou parcial)
+  const barbDefense = state.abilities.find(a => a.active && a.title.includes("Defesa sem Armadura(Bárbaro)"));
+  const monkDefense = state.abilities.find(a => a.active && a.title.includes("Defesa sem Armadura(Monge)"));
+
+  let ac = 10; // Base padrão (sem nada)
+
+  // --- LÓGICA DE PRIORIDADE ---
+
+  if (equippedArmor) {
+    // CASO 1: TEM ARMADURA EQUIPADA
+    // Regra: Armadura anula Defesa sem Armadura de Monge e Bárbaro
+    
+    let baseArmor = parseInt(equippedArmor.defense) || 10;
+    let prof = (equippedArmor.proficiency || '').toLowerCase();
+
+    // Cálculo base da armadura + destreza limitada
+    if (prof.includes('pesada')) {
+      ac = baseArmor; // Armadura pesada não usa Des
+    } else if (prof.includes('media') || prof.includes('média')) {
+      ac = baseArmor + Math.min(modDex, 2); // Média limita Des em +2
+    } else {
+      ac = baseArmor + modDex; // Leve usa Des total
+    }
+
+  } else {
+    // CASO 2: SEM ARMADURA (Verifica habilidades)
+    
+    if (barbDefense) {
+      // Bárbaro: 10 + Des + Con (Permite escudo)
+      ac = 10 + modDex + modCon;
+      // Nota: Bárbaro soma escudo normalmente no final
+    } 
+    else if (monkDefense) {
+      // Monge: 10 + Des + Sab
+      // Regra: Monge perde o benefício se usar escudo
+      if (equippedShield) {
+         // Se tiver escudo, a habilidade "quebra" e vira CA base normal (10 + Des)
+         ac = 10 + modDex; 
+      } else {
+         ac = 10 + modDex + modSab;
+      }
+    } 
+    else {
+      // Nenhuma habilidade especial: 10 + Des
+      ac = 10 + modDex;
+    }
+  }
+
+  // 4. Adiciona Bônus do Escudo (Se houver)
+  if (equippedShield) {
+    let shieldBonus = parseInt(equippedShield.defense) || 2;
+    ac += shieldBonus;
+  }
+
+  // 5. Verifica itens mágicos ou outros bônus de "Defesa" que não sejam armadura/escudo
+  // Ex: Anel de Proteção (+1 na CA) - Itens do tipo "Geral" com defenseBonus
+  state.inventory.filter(i => i.equip && i.type === 'Geral' && i.defenseBonus).forEach(item => {
+      ac += (parseInt(item.defenseBonus) || 0);
+  });
+
+  return ac;
+}
+
+
+
+
+
+
 
 /* ---------------- FORMATAR CARD DE HABILIDADE (DESIGN IGUAL MAGIA) ---------------- */
 function formatCatalogAbilityCard(c) {

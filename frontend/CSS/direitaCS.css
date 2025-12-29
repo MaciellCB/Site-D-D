@@ -1,9 +1,49 @@
-/* direitaCS.css (mesmo arquivo) */
-/* Nenhuma alteração de estilo necessária para este passo, apenas mantendo a referência */
+/* ==========================================================================
+   LAYOUT PRINCIPAL & ESTRUTURA
+   ========================================================================== */
 
+/* Container Principal da Direita */
+.lado-direito {
+  flex: 0 0 400px !important;
+  width: 400px !important;
+  max-width: 400px !important;
+  background-color: #171717;
+  border-radius: 5px;
+  padding: 12px;
+  padding-bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  color: #e6e6e6;
+  height: fit-content !important;
+  min-height: 100vh;
+  max-height: none !important;
+  overflow: visible !important;
+  flex-shrink: 0;
+}
 
+/* Conteúdo Interno */
+.conteudo {
+  background-color: transparent;
+  padding: 0;
+  color: #e6e6e6;
+  /* Força o conteúdo a ocupar espaço físico e empurrar o pai */
+  display: block !important;
+  height: auto !important;
+  overflow: visible !important;
+  flex: none !important; /* Impede o flexbox de tentar encolher isso */
+}
 
-/* Abas */
+/* Travamento de Scroll do Body (quando modal aberto) */
+body.no-scroll {
+  overflow: hidden !important;
+  height: 100vh;
+}
+
+/* ==========================================================================
+   ABAS DE NAVEGAÇÃO
+   ========================================================================== */
+
 .abas {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 3 colunas iguais */
@@ -12,14 +52,13 @@
   align-items: center;
 }
 
-/* Organização visual dos botões no Grid */
+/* Posicionamento dos botões no Grid */
 .abas button:nth-child(1) { grid-column: 1; grid-row: 1; } /* Combate */
 .abas button:nth-child(2) { grid-column: 2; grid-row: 1; } /* Mag. Preparadas */
-.abas button:nth-child(6) { grid-column: 3; grid-row: 2; } /* Descrição */
+.abas button:nth-child(3) { grid-column: 3; grid-row: 1; } /* Habilidades */
 .abas button:nth-child(4) { grid-column: 1; grid-row: 2; } /* Magias */
 .abas button:nth-child(5) { grid-column: 2; grid-row: 2; } /* Inventário */
-
-.abas button:nth-child(3) { grid-column: 3; grid-row: 1; } /* Habilidades */
+.abas button:nth-child(6) { grid-column: 3; grid-row: 2; } /* Descrição */
 
 .abas button {
   background-color: transparent;
@@ -34,7 +73,11 @@
   position: relative;
   white-space: nowrap;
 }
-.abas button.ativa { color: #fff; }
+
+.abas button.ativa { 
+  color: #fff; 
+}
+
 .abas button.ativa::after {
   content: "";
   position: absolute;
@@ -48,803 +91,89 @@
   width: 60%;
 }
 
-.conteudo { 
-background-color: transparent;
-padding: 0;
-color: #e6e6e6;
-flex: 1 0 auto;              /* Permite expandir o pai */
-overflow: visible !important; /* Remove scroll interno */
-height: auto !important;      /* Remove limite de altura */
-  flex: 1; 
-  display: flex;
-  flex-direction: column;  
-}
-
-/* cards base */
-.card { background: #1f1f1f; border-radius: 8px; padding: 10px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.03); }
-.card-header { display:flex; justify-content:space-between; align-items:center; }
-.caret { display:inline-block; width:22px; text-align:center; margin-right:8px; color:#9c27b0; font-size:18px; vertical-align:middle; }
-
-/* Ajuste do caret para usar ᐱ / ᐯ e tamanho */
-.caret { font-size:20px; line-height:1; color:#9c27b0; }
-
-/* título do card */
-.card-title { font-weight:800; font-size:16px; color:#fff; white-space:normal; word-break:break-word; overflow:hidden; display:block; max-width: 100%; }
-.card-sub { font-size:12px; color:#bdbdbd; }
-
-/* compact header */
-.card-header.compact { padding:6px 4px; }
-.card-header.compact .left { display:flex; align-items:center; gap:8px; cursor:pointer; min-width:0; }
-.title-block { display:flex; flex-direction:column; min-width:0; overflow:hidden; }
-.mini-sub { font-size:13px; color:#b39cff; }
-
-/* hab card */
-.hab-card .card-header { padding:10px; border-bottom: 1px solid rgba(255,255,255,0.03); display:flex; justify-content:space-between; align-items:center; }
-.hab-card .card-header .left { display:flex; align-items:center; gap:8px; cursor:pointer; min-width:0; }
-
-.header-equip { display:flex; align-items:center; }
-.header-equip input[type="checkbox"] { display:none; }
-.square-check { width:34px; height:34px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); display:inline-block; }
-.header-equip input[type="checkbox"]:checked + .square-check { background:#9c27b0; border-color:#9c27b0; }
-.square-check::after { content:'✓'; color:transparent; font-weight:800; display:block; text-align:center; line-height:34px; }
-.header-equip input[type="checkbox"]:checked + .square-check::after { color:#fff; }
-
-.card-body { margin-top:10px; color:#ddd; font-size:14px; }
-
-/* spell header */
-.spell-header { padding:12px; align-items:flex-start; border-bottom: 2px solid rgba(156,39,176,0.08); }
-.spell-left { display:flex; align-items:center; gap:8px; cursor:pointer; min-width:0; }
-
-/* Deixa o nome por extenso (não truncar) */
-.spell-title { font-size:18px; font-weight:800; color:#fff; white-space:normal; word-break:break-word; }
-
-/* right side do header da magia */
-.spell-right { display:flex; align-items:center; gap:12px; }
-
-/* level number (caixa pequena) - mantido definindo estilo caso precise, mas não usado no header principal */
-.spell-level-num {
-  min-width:36px;
-  height:36px;
-  border-radius:6px;
-  background:#111;
-  border:1px solid rgba(255,255,255,0.03);
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:800;
-  color:#ddd;
-  margin-right:8px;
-}
-
-/* damage highlight + dado.png */
-.spell-damage { font-size:18px; font-weight:800; color:#9c27b0; display:flex; align-items:center; gap:8px; }
-.dice-img { width:18px; height:18px; }
-
-/* pill (usado para Escola) */
-.pill { display:inline-flex; align-items:center; gap:8px; margin-bottom:10px; padding:6px 10px; background:#fff; color:#111; font-weight:700; border-radius:6px; }
-
-/* pequeno badge dentro do pill para o nível */
-.pill .pill-level {
-  background:#111;
-  color:#ddd;
-  padding:4px 8px;
-  border-radius:6px;
-  font-weight:800;
-  font-size:13px;
-}
-
-/* spell attributes */
-.spell-attrs { margin-top:8px; color:#ddd; display:grid; grid-template-columns: 1fr 1fr; gap:6px; }
-.purple { color:#9c27b0; font-weight:700; }
-
-/* componente / material block */
-.comp-block { display:flex; flex-direction:column; gap:6px; min-width:120px; }
-.comp-title { font-size:13px; color:#cfcfcf; font-weight:700; }
-.comp-letters { display:flex; gap:6px; align-items:center; }
-.comp-letter { display:inline-flex; width:26px; height:26px; border-radius:6px; align-items:center; justify-content:center; background:#1a1a1a; border:1px solid rgba(255,255,255,0.03); color:#bbb; font-weight:800; }
-.comp-letter.on { background:#9c27b0; color:#fff; border-color:#9c27b0; }
-.comp-material { font-size:13px; color:#ddd; }
-
-/* controls / buttons */
-.controls-row { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
-.controls-row input { flex:1; padding:10px; background:#111; border:1px solid #272727; color:#ddd; border-radius:4px; min-width:0; }
-.right-controls { display:flex; gap:10px; align-items:center; }
-.dt-magias { display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
-.dt-magias label { font-size:12px; color:#cfcfcf; font-weight:700; }
-.dt-magias input { width:64px; padding:6px; background:#0f0f0f; border:1px solid #262626; color:#eee; border-radius:6px; text-align:center; }
-.btn-add { background:#9c27b0; color:#fff; border:none; padding:8px 14px; border-radius:6px; cursor:pointer; font-weight:700; }
-
-/* catalog */
-.catalog-list { padding:0; }
-.plus-btn { background:#9c27b0; border:none; color:#fff; width:38px; height:38px; border-radius:6px; font-size:18px; cursor:pointer; }
-.plus-btn.small-add { width:34px; height:34px; }
-
-/* big Magias button (canto superior direito na aba Magias) */
-.magias-big-btn {
-  position:absolute;
-  right:12px;
-  top:8px;
-  padding:10px 16px;
-  border-radius:8px;  
-  border:2px solid #9c27b0;
-  background:transparent;
-  color:#fff;
-  font-weight:800;
-  cursor:pointer;
-  z-index:2;
-}
-
-/* modal (nova magia) */
-.spell-modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); display:flex; align-items:flex-start; justify-content:center; padding:40px; z-index:10000; }
-.spell-modal { background:#0f0f0f; border-radius:8px; width:760px; max-height:90vh; overflow:auto; padding:18px; border:1px solid rgba(255,255,255,0.04); }
-.spell-modal .modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
-.spell-modal .modal-body { display:flex; flex-direction:column; gap:10px; }
-.spell-modal label { font-weight:700; color:#ddd; font-size:13px; margin-top:6px; }
-.spell-modal input[type="text"], .spell-modal input[type="number"], .spell-modal textarea, .spell-modal select { width:100%; padding:8px; background:#111; border:1px solid #272727; color:#eee; border-radius:6px; box-sizing:border-box; }
-.spell-modal .modal-row { display:flex; gap:12px; }
-.spell-modal .modal-row > div { flex:1; }
-.modal-actions { display:flex; gap:12px; justify-content:flex-end; margin-top:12px; }
-
-/* links */
-a.remover-item, a.remover-hab, a.remover-spell { color:#c43f3f; text-decoration:none; font-weight:700; margin-right:8px; }
-a.editar-item, a.editar-hab, a.editar-spell { color:#2e7d32; text-decoration:none; font-weight:700; }
-
-/* small utilities */
-.card-meta { font-size:13px; color:#d6d6d6; }
-.empty-tip { color:#bdbdbd; padding:12px; }
-
-/* ==================== CATALOGO GRANDE ==================== */
-
-.catalog-overlay-large {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index: 10050; /* bem acima do modal */
-  padding: 20px;
-}
-
-.catalog-large {
-  width: 920px;
-  max-width: calc(100% - 40px);
-  max-height: 90vh;
-  background: #121212;
-  border-radius: 10px;
-  padding: 18px;
-  box-sizing: border-box;
-  border: 1px solid rgba(255,255,255,0.04);
-  overflow: hidden;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-
-.catalog-large-header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-}
-
-.catalog-large-header h3 {
-  margin:0;
-  color:#fff;
-  font-size:20px;
-  font-weight:800;
-}
-
-.catalog-large-close {
-  cursor:pointer;
-  color:#ddd;
-  font-size:20px;
-  padding:6px 10px;
-  border-radius:6px;
-  background:transparent;
-  border: 1px solid rgba(255,255,255,0.02);
-}
-
-.catalog-large-filters {
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  padding:6px 0;
-  max-width:100%;
-}
-
-.circle-filter {
-  background:#161616;
-  color:#dcdcdc;
-  border:1px solid rgba(255,255,255,0.03);
-  padding:6px 10px;
-  border-radius:20px;
-  font-weight:700;
-  cursor:pointer;
-}
-.circle-filter.active {
-  background:#2b2b2b;
-  border-color:#9c27b0;
-  color:#fff;
-  box-shadow: 0 2px 6px rgba(156,39,176,0.12);
-}
-
-/* search */
-.catalog-large-search {
-  margin-top:6px;
-}
-.catalog-large-search input {
-  width:100%;
-  padding:12px;
-  background:#0f0f0f;
-  border:1px solid #262626;
-  border-radius:6px;
-  color:#eee;
-  box-sizing:border-box;
-}
-
-/* list */
-.catalog-large-list {
-  margin-top:10px;
-  overflow:auto;
-  padding-right:6px;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-
-/* catalog card (igual ao estilo do screenshot) */
-.catalog-card-item {
-  background:#1b1b1b;
-  border:1px solid rgba(255,255,255,0.03);
-  border-radius:8px;
-  padding:10px;
-}
-.catalog-card-header { display:flex; justify-content:space-between; align-items:center; }
-.catalog-card-toggle {
-  background:transparent;
-  border:none;
-  color:#9c27b0;
-  font-weight:800;
-  cursor:pointer;
-  font-size:18px;
-}
-.catalog-card-title { font-weight:800; color:#fff; font-size:16px; }
-.catalog-card-dmg { color:#9c27b0; font-weight:800; }
-
-/* corpo do card */
-.catalog-card-body { margin-top:10px; color:#ddd; display:block; }
-
-
-
-/* Esconde o catálogo embutido dentro da aba Magias */
-.lado-direito .spells-wrapper > .catalog-list.card {
-  display: none;
-}
-
-/* ==================== Ajustes específicos para Minhas Magias ==================== */
-
-/* checkbox menor para 'ativar magias' */
-.check-ativar input[type="checkbox"] { display:none; }
-.check-ativar .square-check {
-  width:20px;
-  height:20px;
-  border-radius:4px;
-  border:1px solid rgba(255,255,255,0.06);
-  display:inline-block;
-  line-height:20px;
-  text-align:center;
-  font-weight:800;
-}
-.check-ativar input[type="checkbox"]:checked + .square-check {
-  background:#9c27b0;
-  border-color:#9c27b0;
-}
-.check-ativar .square-check::after {
-  content:'✓';
-  color:transparent;
-  display:block;
-  line-height:20px;
-  font-size:14px;
-}
-.check-ativar input[type="checkbox"]:checked + .square-check::after { color:#fff; }
-
-/* garante que o header da magia clique só na parte apropriada */
-.spell-left { min-width:0; flex:1; }
-
-/* evita truncar nomes de magias */
-.spell-card .spell-title { white-space:normal; }
-
-/* top padding do bloco de magias */
-.spells-wrapper { position:relative; }
-
-/* ====== Estilos para a tag de classe (pequena, à direita do bloco superior) ====== */
-
-/* apresentação simples da classe já salva no card */
-.class-box-display {
-  min-width:84px;
-  height:32px;
-  background:#111;
-  border:1px solid rgba(255,255,255,0.04);
-  border-radius:6px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:800;
-  color:#ddd;
-  padding:4px 8px;
-  box-sizing:border-box;
-}
-
-/* estilos para o seletor de classe dentro do modal (expandível) */
-.class-select-root { position:relative; }
-.class-select-toggle {
-  min-width:130px;
-  height:36px;
-  background:#111;
-  border:1px solid rgba(255,255,255,0.04);
-  border-radius:6px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  padding:6px 10px;
-  cursor:pointer;
-  color:#ddd;
-  font-weight:700;
-}
-.class-select-toggle .caret-small { color:#9c27b0; margin-left:6px; font-size:14px; }
-
-/* opções (dropdown) */
-.class-select-options {
-  position:absolute;
-  right:0;
-  top:44px;
-  background:#121212;
-  border:1px solid rgba(255,255,255,0.04);
-  border-radius:8px;
-  padding:8px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-  z-index: 12000;
-  min-width:160px;
-}
-.class-select-options button {
-  display:block;
-  width:100%;
-  background:transparent;
-  border:none;
-  color:#ddd;
-  text-align:left;
-  padding:8px 10px;
-  border-radius:6px;
-  cursor:pointer;
-  font-weight:700;
-}
-.class-select-options button:hover { background:rgba(156,39,176,0.06); color:#fff; }
-
-.class-select-label { font-size:12px; color:#cfcfcf; margin-top:6px; font-weight:700; text-align:right; }
-
-/* ==================== ESTILOS PARA CLASSES NO CATALOGO ==================== */
-
-.catalog-large-classes {
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap; 
-  padding-bottom:6px;
-  align-items:center;
-  -webkit-overflow-scrolling: touch;
-}
-.catalog-large-classes::-webkit-scrollbar { height:8px; }
-.catalog-large-classes::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.04); border-radius:6px; }
-
-.ability-class-btn {
-  background: transparent;
-  border: none;
-  color: #e6e6e6;
-  padding: 6px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 800;
-  font-size: 15px;
-  position: relative;
-  white-space: nowrap;
-  transition: color .12s ease, transform .08s ease;
-}
-.ability-class-btn:hover { color:#fff; transform: translateY(-1px); }
-
-.ability-class-btn.active {
-  color: #fff;
-}
-.ability-class-btn.active::after {
-  content: "";
-  position: absolute;
-  left: 8px;
-  right: 8px;
-  bottom: -10px;
-  height: 3px;
-  background: linear-gradient(90deg,#9c27b0,#7b1fa2);
-  border-radius: 4px;
-}
-
-#catalog-subclasses-row {
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:8px;
-  padding-bottom:6px;
-}
-
-.ability-sub-btn {
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  background:#0f0f0f;
-  color:#ddd;
-  border-radius:22px;
-  padding:8px 14px;
-  border:1px solid rgba(255,255,255,0.04);
-  font-weight:800;
-  cursor:pointer;
-  box-shadow: inset 0 -2px 0 rgba(0,0,0,0.5);
-  transition: background .12s ease, color .12s ease, box-shadow .12s ease, transform .08s ease;
-}
-.ability-sub-btn:hover {
-  background:#151515;
-  color:#fff;
-  transform: translateY(-1px);
-}
-
-.ability-sub-btn.active {
-  background:#0f0f0f;
-  color:#9c27b0;
-  border-color:#9c27b0;
-  box-shadow: 0 6px 18px rgba(156,39,176,0.08);
-}
-
-.catalog-class-hability-pill,
-#catalog-subclasses-row .ability-sub-btn[data-sub="__class__"] {
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  background:#0f0f0f;
-  color:#ddd;
-  border-radius:22px;
-  padding:8px 14px;
-  border:1px solid rgba(255,255,255,0.04);
-  font-weight:800;
-  cursor:pointer;
-  box-shadow: inset 0 -2px 0 rgba(0,0,0,0.5);
-  transition: background .12s ease, color .12s ease, box-shadow .12s ease, transform .08s ease;
-}
-.catalog-class-hability-pill:hover,
-#catalog-subclasses-row .ability-sub-btn[data-sub="__class__"]:hover {
-  background:#151515;
-  color:#fff;
-  transform: translateY(-1px);
-}
-.catalog-class-hability-pill.active,
-#catalog-subclasses-row .ability-sub-btn[data-sub="__class__"].active {
-  background:#0f0f0f;
-  color:#9c27b0;
-  border-color:#9c27b0;
-  box-shadow: 0 6px 18px rgba(156,39,176,0.08);
-}
-
-@media (max-width: 780px) {
-  .catalog-large { width: calc(100% - 24px); padding:12px; }
-  .catalog-large-classes { gap:8px; }
-  .ability-class-btn { font-size:14px; padding:6px 8px; }
-  .ability-sub-btn { padding:6px 10px; font-size:13px; border-radius:18px; }
-}
-
-
-/* ==================== AJUSTES VISUAIS PARA MODAL NOVA ARMA ==================== */
-
-/* overlay e modal (ajustes finos) */
-.spell-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
-  padding:32px;
-  z-index:11000;
-}
-
-.spell-modal {
-  width: 920px;
-  max-width: calc(100% - 48px);
-  background: #1f1f1f;         /* slightly lighter than background */
-  border-radius: 6px;
-  padding: 18px;
-  box-sizing: border-box;
-  border: 1px solid rgba(0,0,0,0.45);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-  color: #e6e6e6;
-}
-
-/* header */
-.spell-modal .modal-header {
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  align-items:flex-start;
-  margin-bottom:12px;
-}
-.spell-modal .modal-header h3 {
-  margin:0;
-  font-size:22px;
-  font-weight:800;
-  color:#fff;
-}
-
-/* botão 'Lista Padrao' no header */
-.spell-modal #btnListaPadrao {
-  background: #9c27b0;
-  border: none;
-  color: #fff;
-  padding: 8px 14px;
-  border-radius: 6px;
-  font-weight:800;
-  text-align:center;
-  line-height:1.05;
-}
-
-/* corpo */
-.spell-modal .modal-body { padding-top:4px; }
-
-/* labels e inputs */
-.spell-modal label { display:block; font-weight:700; color:#ddd; font-size:13px; margin-bottom:6px; }
-.spell-modal input[type="text"], .spell-modal input[type="number"], .spell-modal textarea {
-  background: #0f0f0f;
-  border: 1px solid rgba(255,255,255,0.04);
-  color: #eee;
-  padding: 8px 10px;
-  border-radius:6px;
-  box-sizing:border-box;
-  width:100%;
-}
-
-/* grid do form (ajuste fino) */
-.spell-modal .modal-body > div[style*="display:grid"] {
-  gap:12px;
-}
-
-/* pills (seleção única) */
-.spell-modal .pill {
-  background:#0f0f0f;
-  color:#ddd;
-  padding:8px 10px;
-  border-radius:6px;
-  border:1px solid rgba(255,255,255,0.03);
-  cursor:pointer;
-  font-weight:800;
-  box-shadow: inset 0 -2px 0 rgba(0,0,0,0.4);
-}
-.spell-modal .pill.active {
-  background: #111;
-  border-color:#9c27b0;
-  color:#fff;
-  box-shadow: 0 6px 18px rgba(156,39,176,0.08);
-}
-
-/* multi-select field display */
-.spell-modal .multi-select-field > div {
-  min-height:36px;
-  padding:8px;
-  border-radius:6px;
-  background:#0f0f0f;
-  border:1px solid rgba(255,255,255,0.03);
-  color:#ddd;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  cursor:pointer;
-}
-
-/* painel interno do multi-select */
-.spell-modal .multi-select-field .panel {
-  background:#121212;
-  border:1px solid rgba(255,255,255,0.03);
-  padding:8px;
-  border-radius:6px;
-  margin-top:6px;
-  max-height:220px;
-  overflow:auto;
-}
-
-/* linhas de dano extra */
-.spell-modal .damage-row {
-  display:flex;
-  gap:8px;
-  align-items:center;
-  margin-top:8px;
-}
-.spell-modal .damage-row input[type="text"] {
-  flex:1 1 240px;
-}
-.spell-modal .damage-row .dmg-type {
-  width:220px;
-  flex:0 0 220px;
-}
-.spell-modal .damage-row .remove-dmg {
-  background:transparent;
-  border:none;
-  color:#f55;
-  font-weight:800;
-  cursor:pointer;
-  padding:6px 8px;
-  border-radius:6px;
-}
-
-/* botão + de adicionar dano */
-.spell-modal .add-dmg-btn {
-  background:#9c27b0;
-  color:#fff;
-  border:none;
-  padding:8px 10px;
-  border-radius:6px;
-  cursor:pointer;
-  font-weight:800;
-}
-
-/* ações do modal */
-.spell-modal .modal-actions {
-  border-top:1px solid rgba(255,255,255,0.03);
-  margin-top:12px;
-  padding-top:12px;
-  background:transparent;
-  display:flex;
-  justify-content:flex-end;
-  gap:12px;
-}
-
-/* botão Adicionar/Cancelar */
-.spell-modal .btn-add { padding:10px 14px; border-radius:6px; font-weight:800; }
-.spell-modal .btn-add.btn-save-item { background:#9c27b0; color:#fff; border:none; }
-.spell-modal .btn-add.btn-cancel { background:transparent; color:#ddd; border:1px solid rgba(255,255,255,0.03); }
-
-/* responsivo */
-@media (max-width: 980px) {
-  .spell-modal { width: calc(100% - 32px); padding:12px; }
-  .spell-modal .damage-row { flex-direction:column; align-items:stretch; }
-  .spell-modal .damage-row .dmg-type { width:100%; }
-}
-
-
-/* direitaCS.css - Adições */
-
-/* Header com Abas Grandes (Item Arma Armadura) */
-.modal-tabs-header {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
-
-.modal-tab-btn {
-  background: transparent;
-  border: none;
-  color: #777;
-  font-size: 28px;
-  font-weight: 800;
-  cursor: pointer;
-  padding: 4px 0;
-  transition: color 0.2s;
-  position: relative;
-}
-
-.modal-tab-btn:hover {
-  color: #aaa;
-}
-
-/* Estado Ativo: Branco com sublinhado ou destaque roxo */
-.modal-tab-btn.active {
-  color: #fff;
-  /* Borda roxa "Item" style conforme imagem 38c236.png */
-  /* A imagem mostra um box roxo ao redor ou texto roxo. Vamos usar o estilo da imagem 2: Box roxo outline */
-}
-
-/* Ajuste específico para parecer com a seleção da imagem */
-.modal-tab-btn.active {
-  color: #9c27b0; 
-  border: 2px solid #9c27b0;
-  padding: 4px 12px;
-  border-radius: 4px;
-}
-/* Os inativos não têm borda */
-.modal-tab-btn:not(.active) {
-  padding: 4px 12px; /* Mantém espaçamento para não pular */
-  border: 2px solid transparent;
-}
-
-/* Container de Pills (botões de seleção) */
-.pills-container {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 6px;
-}
-
-
-.label-dropdown-trigger {
-  font-weight: 700;
-  color: #ddd;
-  font-size: 13px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 4px;
-  background: #0f0f0f;
-  border: 1px solid rgba(255,255,255,0.04);
-  border-radius: 6px;
-  padding: 4px 8px;
-  box-sizing: border-box;
-}
-.label-dropdown-trigger:hover {
-  border-color: #9c27b0;
-}
-.purple-caret {
-  color: #9c27b0;
-  font-size: 14px;
-}
-
-/* Selects escuros (para Vantagem, Desvantagem, Sintonização) */
-.dark-select {
-  width: 100%;
-  padding: 8px;
-  background: #0f0f0f;
-  border: 1px solid rgba(255,255,255,0.04);
-  color: #eee;
-  border-radius: 6px;
-  box-sizing: border-box;
-  font-size: 14px;
-}
-.dark-select:focus {
-  border-color: #9c27b0;
-  outline: none;
-}
-
-
-.extra-dmg-row .multi-select-field > .display {
-  min-height: 36px;
-  padding: 8px;
-  border-radius: 6px;
-  background: #0f0f0f;
+/* ==========================================================================
+   CARDS (BASE)
+   ========================================================================== */
+
+.card {
+  background: #1f1f1f;
+  border-radius: 8px;
+  padding: 8px; 
+  margin-bottom: 10px;
   border: 1px solid rgba(255,255,255,0.03);
-  color: #ddd;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-header.compact {
+  padding: 4px 2px;
+}
+
+.card-header.compact .left {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 8px;
   cursor: pointer;
+  min-width: 0;
 }
 
-.extra-dmg-input {
-  width: 100%;
-  padding: 8px;
-  background: #0f0f0f;
-  border: 1px solid rgba(255,255,255,0.04);
-  color: #eee;
-  border-radius: 6px;
-  box-sizing: border-box;
+.card-title {
+  font-weight: 800;
+  font-size: 16px;
+  color: #fff;
+  white-space: normal;
+  word-break: break-word;
+  overflow: hidden;
+  display: block;
+  max-width: 100%;
 }
 
-.extra-dmg-input {
-  width: 100%;
-  padding: 8px;
-  background: #0f0f0f;
-  border: 1px solid rgba(255,255,255,0.04);
-  color: #eee;
-  border-radius: 6px;
-  box-sizing: border-box;
+.card-sub {
+  font-size: 12px;
+  color: #bdbdbd;
 }
 
-/* --- Estilos do Novo Card de Inventário (Estilo Maça Flamejante) --- */
+.card-body {
+  margin-top: 10px;
+  color: #ddd;
+  font-size: 14px;
+}
 
-/* Ajuste do triângulo do header */
+/* Regra para quebra de texto dentro do card */
+.card-body p, 
+.card-body > div {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  white-space: pre-wrap;
+}
+
+.card-meta {
+  font-size: 13px;
+  color: #d6d6d6;
+}
+
+.empty-tip {
+  color: #bdbdbd;
+  padding: 12px;
+}
+
+/* Carets e Ícones */
+.caret {
+  display: inline-block;
+  width: 22px;
+  text-align: center;
+  margin-right: 8px;
+  vertical-align: middle;
+  font-size: 20px;
+  line-height: 1;
+  color: #9c27b0;
+}
+
 .caret-triangle {
   color: #9c27b0;
   font-size: 14px;
@@ -852,64 +181,216 @@ a.editar-item, a.editar-hab, a.editar-spell { color:#2e7d32; text-decoration:non
   transition: transform 0.2s;
   display: inline-block;
 }
+
 .caret-triangle.down {
-  transform: rotate(0deg); /* O caractere já aponta pra baixo, ou ajuste conforme o char */
+  transform: rotate(0deg);
   color: #9c27b0;
 }
 
-/* Ícone de dado no header à direita do título */
+/* ==========================================================================
+   MAGIAS (CARDS & LISTAS) - CORREÇÃO DE BUGS APLICADA
+   ========================================================================== */
+
+.spells-wrapper {
+  position: relative;
+}
+
+.spell-header {
+  padding: 12px;
+  align-items: flex-start;
+  border-bottom: 2px solid rgba(156,39,176,0.08);
+}
+
+/* CORREÇÃO: Limita o tamanho de qualquer imagem/dado no header */
+.spell-header img,
+.spell-damage img,
+.card-header img,
+.dice-img {
+  max-width: 20px !important;
+  max-height: 20px !important;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block; /* Remove espaços fantasmas */
+}
+
+.spell-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  
+  /* Garante espaço para o texto não ficar vertical */
+  min-width: 0;
+  flex: 1;
+  margin-right: 10px; 
+}
+
+.spell-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  
+  /* Impede que o bloco de dano esmague o título */
+  flex-shrink: 0; 
+  max-width: 120px;
+}
+
+.spell-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  white-space: normal;
+  word-break: break-word;
+  width: 100%;
+  display: block;
+}
+
+.spell-damage {
+  font-size: 18px;
+  font-weight: 800;
+  color: #9c27b0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spell-attrs {
+  margin-top: 8px;
+  color: #ddd;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+/* Componentes de Magia (V, S, M) */
+.comp-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 120px;
+}
+.comp-title { font-size: 13px; color: #cfcfcf; font-weight: 700; }
+.comp-letters { display: flex; gap: 6px; align-items: center; }
+.comp-letter {
+  display: inline-flex; width: 26px; height: 26px;
+  border-radius: 6px; align-items: center; justify-content: center;
+  background: #1a1a1a; border: 1px solid rgba(255,255,255,0.03);
+  color: #bbb; font-weight: 800;
+}
+.comp-letter.on { background: #9c27b0; color: #fff; border-color: #9c27b0; }
+.comp-material { font-size: 13px; color: #ddd; }
+
+/* Botão Grande de Adicionar Magia */
+.magias-big-btn {
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 2px solid #9c27b0;
+  background: transparent;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* Catálogo embutido (escondido) */
+.lado-direito .spells-wrapper > .catalog-list.card {
+  display: none;
+}
+
+/* ==========================================================================
+   HABILIDADES & INVENTÁRIO
+   ========================================================================== */
+
+/* Habilidades */
+.hab-card .card-header {
+  padding: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.hab-card .card-header .left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  min-width: 0;
+}
+
+/* Inventário / Header Equipamento */
+.header-equip {
+  display: flex;
+  align-items: center;
+}
+.header-equip input[type="checkbox"] { display: none; }
+.square-check {
+  width: 34px; height: 34px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.06);
+  display: inline-block;
+}
+.header-equip input[type="checkbox"]:checked + .square-check {
+  background: #9c27b0; border-color: #9c27b0;
+}
+.square-check::after {
+  content: '✓'; color: transparent;
+  font-weight: 800; display: block;
+  text-align: center; line-height: 34px;
+}
+.header-equip input[type="checkbox"]:checked + .square-check::after { color: #fff; }
+
+/* Novo estilo Card Inventário (Maça Flamejante) */
 .header-icon {
-  margin-left: auto; 
+  margin-left: auto;
   padding-left: 10px;
   font-size: 18px;
   color: #eee;
 }
 
-/* Linha de Tags (Roxo, topo do body) */
 .item-tags-line {
-  color: #9c27b0; /* Roxo vibrante */
+  color: #9c27b0;
   font-weight: 700;
-  font-size: 13px;
-  margin-bottom: 8px;
+  font-size: 12px; 
+  margin-bottom: 6px;
   padding-bottom: 4px;
   border-bottom: 1px solid rgba(156, 39, 176, 0.2);
 }
 
-/* Grid de Estatísticas (Critico, Mult, Alcance) */
-
-
-
-/* Utilitários de Texto */
-.purple-label {
-  color: #9c27b0;
-  font-weight: 700; /* Sempre negrito para destacar o rótulo */
-  font-size: 13px;  /* Tamanho fixo padronizado */
-  line-height: 1.4;
+.item-stats-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
-.white-val {
-  color: #e0e0e0;
-  font-weight: 400; /* Sempre normal (remove o negrito excessivo) */
-  font-size: 13px;  /* Tamanho igual ao rótulo */
-  line-height: 1.4;
+.item-data-row {
+  margin-bottom: 4px;
+  font-size: 13px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
 }
 
-.white-val.bold {
-  font-weight: 400; 
-  font-size: 13px; 
+.item-description-text {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  color: #ccc;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: left;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
-.separator {
-  display: inline-block;
-  margin: 0 6px;
-  width: 1px;
-  height: 12px;
-  background-color: rgba(255, 255, 255, 0.2);
-  vertical-align: middle;
-}
-
-
-/* Rodapé de Ações */
 .item-actions-footer {
   margin-top: 12px;
   display: flex;
@@ -917,597 +398,542 @@ a.editar-item, a.editar-hab, a.editar-spell { color:#2e7d32; text-decoration:non
   align-items: center;
 }
 
-.remover-item {
-  color: #d32f2f !important; /* Vermelho */
+/* ==========================================================================
+   ABA DESCRIÇÃO (TEXTAREAS)
+   ========================================================================== */
+
+.desc-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 5px;
+}
+
+.desc-grid label {
+  color: #ffffff;
   font-weight: 700;
-  font-size: 13px;
-  text-transform: uppercase;
+  font-size: 15px;
+  margin-bottom: 5px;
+  letter-spacing: 0.5px;
+  display: block;
 }
 
-.editar-item {
-  color: #388e3c !important; /* Verde */
-  font-weight: 700;
-  font-size: 13px;
-  text-transform: uppercase;
+.desc-grid textarea {
+  background-color: #1f1f1f; 
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: #ccc;
+  padding: 12px 14px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  overflow-y: auto; /* Permite scroll se reduzir altura */
+  min-height: 80px;
+  transition: border-color 0.2s, background-color 0.2s;
 }
 
-/* --- ESCONDER SCROLLBAR (Manter funcionalidade) --- */
-
-/* Alvo principal: O container de conteúdo da direita */
-.lado-direito .conteudo {
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
-  scrollbar-width: none;  /* Firefox */
-  overflow: visible !important; 
-  /* Remove a rolagem interna */
-  height: auto !important;
-  /* Impede o flexbox de tentar espremer o conteúdo na tela */
-  flex: none !important;
+.desc-grid textarea:focus {
+  border-color: #9c27b0;
+  background-color: #252525;
+  outline: none;
 }
 
-.lado-direito .conteudo::-webkit-scrollbar { 
-  display: none;  /* Safari e Chrome */
+.desc-grid textarea::placeholder {
+  color: #555;
 }
 
-/* Alvo secundário: Listas específicas caso tenham scroll interno */
-.inventory-list,
-.abilities-list,
-.spells-list,
-.catalog-large-list, 
+/* Scrollbar da Descrição */
+.desc-grid textarea::-webkit-scrollbar { width: 8px; }
+.desc-grid textarea::-webkit-scrollbar-track { background: transparent; }
+.desc-grid textarea::-webkit-scrollbar-thumb {
+  background-color: #333;
+  border-radius: 4px;
+  border: 1px solid #1f1f1f;
+}
+.desc-grid textarea::-webkit-scrollbar-thumb:hover { background-color: #555; }
+
+/* ==========================================================================
+   MODAL GERAL E "NOVA MAGIA/ITEM"
+   ========================================================================== */
+
+.spell-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px;
+  z-index: 11000;
+  overflow-y: auto;
+}
+
 .spell-modal {
--ms-overflow-style: none;
-scrollbar-width: none;
-height: auto !important;
-overflow: visible !important;
-display: flex;
-flex-direction: column;
+  width: 920px;
+  max-width: calc(100% - 48px);
+  background: #1f1f1f;
+  border-radius: 6px;
+  padding: 18px;
+  box-sizing: border-box;
+  border: 1px solid rgba(0,0,0,0.45);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  color: #e6e6e6;
+  max-height: none;
+  height: auto;
+  margin: 40px auto;
+  display: flex;
+  flex-direction: column;
 }
 
+.spell-modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.spell-modal .modal-header h3 {
+  margin: 0; font-size: 22px; font-weight: 800; color: #fff;
+}
+
+.spell-modal .modal-body {
+  padding-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Inputs do Modal */
+.spell-modal label {
+  display: block; font-weight: 700; color: #ddd; font-size: 13px; margin-bottom: 6px; margin-top: 6px;
+}
+.spell-modal input[type="text"], 
+.spell-modal input[type="number"], 
+.spell-modal textarea, 
+.spell-modal select {
+  width: 100%;
+  padding: 8px 10px;
+  background: #0f0f0f;
+  border: 1px solid rgba(255,255,255,0.04);
+  color: #eee;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+/* Área de Descrição no Modal (Expandida) */
+.spell-modal textarea {
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.5;
+}
+#modal-desc {
+  min-height: 300px;
+  height: auto;
+}
+
+/* Estrutura Interna do Modal */
+.spell-modal .modal-row {
+  display: flex; gap: 12px;
+}
+.spell-modal .modal-row > div { flex: 1; }
+.spell-modal .modal-body > div[style*="display:grid"] { gap: 12px; }
+
+/* Botões de Ação do Modal */
+.spell-modal .modal-actions {
+  border-top: 1px solid rgba(255,255,255,0.03);
+  margin-top: 12px;
+  padding-top: 12px;
+  background: transparent;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+.spell-modal .btn-add { padding: 10px 14px; border-radius: 6px; font-weight: 800; }
+.spell-modal .btn-add.btn-save-item { background: #9c27b0; color: #fff; border: none; }
+.spell-modal .btn-add.btn-cancel { background: transparent; color: #ddd; border: 1px solid rgba(255,255,255,0.03); }
+
+/* Header Tabs (Item/Arma/Armadura) */
+.modal-tabs-header {
+  display: flex; gap: 20px; align-items: center;
+}
+.modal-tab-btn {
+  background: transparent; border: 2px solid transparent;
+  color: #777; font-size: 28px; font-weight: 800;
+  cursor: pointer; padding: 4px 12px; transition: color 0.2s; position: relative; border-radius: 4px;
+}
+.modal-tab-btn:hover { color: #aaa; }
+.modal-tab-btn.active {
+  color: #9c27b0; border: 2px solid #9c27b0; padding: 4px 12px;
+}
+
+/* Multi-select e Danos Extras */
+.spell-modal .multi-select-field > div {
+  min-height: 36px; padding: 8px; border-radius: 6px;
+  background: #0f0f0f; border: 1px solid rgba(255,255,255,0.03);
+  color: #ddd; display: flex; align-items: center; justify-content: space-between; cursor: pointer;
+}
+.spell-modal .multi-select-field .panel {
+  background: #121212; border: 1px solid rgba(255,255,255,0.03);
+  padding: 8px; border-radius: 6px; margin-top: 6px; max-height: 220px; overflow: auto;
+}
+.spell-modal .damage-row {
+  display: flex; gap: 8px; align-items: center; margin-top: 8px;
+}
+.spell-modal .damage-row input[type="text"] { flex: 1 1 240px; }
+.spell-modal .damage-row .dmg-type { width: 220px; flex: 0 0 220px; }
+.spell-modal .damage-row .remove-dmg {
+  background: transparent; border: none; color: #f55;
+  font-weight: 800; cursor: pointer; padding: 6px 8px; border-radius: 6px;
+}
+.spell-modal .add-dmg-btn {
+  background: #9c27b0; color: #fff; border: none;
+  padding: 8px 10px; border-radius: 6px; cursor: pointer; font-weight: 800;
+}
+
+/* ==========================================================================
+   CATÁLOGO GRANDE
+   ========================================================================== */
+
+.catalog-overlay-large {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10050;
+  padding: 20px;
+}
+
+.catalog-large {
+  width: 920px;
+  max-width: calc(100% - 40px);
+  height: 90vh; /* Altura fixa */
+  background: #121212;
+  border-radius: 10px;
+  padding: 18px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255,255,255,0.04);
+  overflow: hidden; /* Trava modal */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.catalog-large-header {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+}
+.catalog-large-header h3 { margin: 0; color: #fff; font-size: 20px; font-weight: 800; }
+.catalog-large-close {
+  cursor: pointer; color: #ddd; font-size: 20px;
+  padding: 6px 10px; border-radius: 6px; background: transparent; border: 1px solid rgba(255,255,255,0.02);
+}
+
+.catalog-large-filters {
+  display: flex; gap: 8px; flex-wrap: wrap; padding: 6px 0; max-width: 100%;
+}
+
+.catalog-large-search { margin-top: 6px; }
+.catalog-large-search input {
+  width: 100%; padding: 12px; background: #0f0f0f;
+  border: 1px solid #262626; border-radius: 6px; color: #eee; box-sizing: border-box;
+}
+
+/* Lista do Catálogo */
+.catalog-large-list {
+  flex: 1; /* Ocupa espaço restante */
+  margin-top: 15px;
+  padding-right: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto !important;
+  min-height: 0;
+}
+
+/* Cards do Catálogo */
+.catalog-card-item, .catalog-card-ability {
+  background: #1b1b1b;
+  border: 1px solid rgba(255,255,255,0.03);
+  border-radius: 8px;
+  padding: 10px;
+  flex-shrink: 0; /* Impede encolhimento */
+  display: block;
+  margin-bottom: 12px;
+}
+.catalog-card-header { display: flex; justify-content: space-between; align-items: center; }
+.catalog-card-toggle {
+  background: transparent; border: none; color: #9c27b0;
+  font-weight: 800; cursor: pointer; font-size: 18px;
+}
+.catalog-card-title { font-weight: 800; color: #fff; font-size: 16px; }
+.catalog-card-dmg { color: #9c27b0; font-weight: 800; }
+.catalog-card-body { margin-top: 10px; color: #ddd; display: block; }
+
+/* Scrollbar do Catálogo */
+.catalog-large-list::-webkit-scrollbar { width: 8px; }
+.catalog-large-list::-webkit-scrollbar-track { background: #0a0a0a; border-radius: 10px; }
+.catalog-large-list::-webkit-scrollbar-thumb { background: #9c27b0; border-radius: 10px; }
+
+/* Filtros de Classe e Subclasse */
+.catalog-large-classes {
+  display: flex; gap: 12px; flex-wrap: wrap; padding-bottom: 6px; align-items: center;
+  -webkit-overflow-scrolling: touch;
+}
+.catalog-large-classes::-webkit-scrollbar { height: 8px; }
+.catalog-large-classes::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.04); border-radius: 6px; }
+
+.ability-class-btn {
+  background: transparent; border: none; color: #e6e6e6;
+  padding: 6px 10px; border-radius: 4px; cursor: pointer;
+  font-weight: 800; font-size: 15px; position: relative;
+  white-space: nowrap; transition: color .12s ease, transform .08s ease;
+}
+.ability-class-btn:hover { color: #fff; transform: translateY(-1px); }
+.ability-class-btn.active { color: #fff; }
+.ability-class-btn.active::after {
+  content: ""; position: absolute; left: 8px; right: 8px; bottom: -10px;
+  height: 3px; background: linear-gradient(90deg,#9c27b0,#7b1fa2); border-radius: 4px;
+}
+
+#catalog-subclasses-row {
+  display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; padding-bottom: 6px;
+  scrollbar-width: thin; scrollbar-color: #9c27b0 transparent; transition: all 0.3s ease;
+}
+#catalog-subclasses-row::-webkit-scrollbar { height: 6px; }
+#catalog-subclasses-row::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 10px; }
+#catalog-subclasses-row::-webkit-scrollbar-thumb { background: #9c27b0; border-radius: 10px; }
+
+.ability-sub-btn, 
+.catalog-class-hability-pill,
+#catalog-subclasses-row .ability-sub-btn[data-sub="__class__"] {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: #0f0f0f; color: #ddd; border-radius: 22px; padding: 8px 14px;
+  border: 1px solid rgba(255,255,255,0.04); font-weight: 800; cursor: pointer;
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,0.5);
+  transition: background .12s ease, color .12s ease, box-shadow .12s ease, transform .08s ease;
+}
+.ability-sub-btn:hover,
+.catalog-class-hability-pill:hover,
+#catalog-subclasses-row .ability-sub-btn[data-sub="__class__"]:hover {
+  background: #151515; color: #fff; transform: translateY(-1px);
+}
+.ability-sub-btn.active,
+.catalog-class-hability-pill.active,
+#catalog-subclasses-row .ability-sub-btn[data-sub="__class__"].active {
+  background: #0f0f0f; color: #9c27b0; border-color: #9c27b0;
+  box-shadow: 0 6px 18px rgba(156,39,176,0.08);
+}
+
+/* ==========================================================================
+   UTILITÁRIOS E COMPONENTES MENORES
+   ========================================================================== */
+
+/* Scrollbars Gerais (Escondidas no conteúdo, mas funcionais) */
+.lado-direito .conteudo::-webkit-scrollbar,
 .inventory-list::-webkit-scrollbar,
 .abilities-list::-webkit-scrollbar,
 .spells-list::-webkit-scrollbar,
-.catalog-large-list::-webkit-scrollbar,
 .spell-modal::-webkit-scrollbar { 
   display: none; 
 }
 
-/* direitaCS.css - Correção Definitiva do Fundo */
-
-
-
-/* Conteúdo interno */
-.conteudo {
-  background-color: transparent;
-  padding: 0;
-  color: #e6e6e6;
-  
-  /* Força o conteúdo a ocupar espaço físico e empurrar o pai */
-  display: block !important; 
-  height: auto !important;
-  overflow: visible !important;
-  flex: none !important; /* Impede o flexbox de tentar encolher isso */
-}
-
-/* Garante que as listas não tenham scroll interno e empurrem a página */
+.lado-direito .conteudo,
 .inventory-list,
 .abilities-list,
-.spells-list {
-  display: block;
-  height: auto !important;
-  overflow: visible !important;
-}
-
-/* --- TRAVAMENTO DE SCROLL DO FUNDO --- */
-body.no-scroll {
-  overflow: hidden !important; /* Impede a rolagem da página principal */
-  height: 100vh; /* Garante que a altura não estoure */
-}
-
-/* Garante que o modal tenha scroll independente se for muito grande */
-.spell-modal-overlay {
-  overflow-y: auto; /* Permite scroll no overlay se necessário */
-}
-
-/* O modal em si não precisa de scroll, o overlay cuida disso,
-   mas mantemos caso o conteúdo interno precise */
+.spells-list,
 .spell-modal {
-  max-height: none; /* Remove limite para deixar o overlay controlar o scroll */
-  height: auto;
-  margin: 40px auto; /* Margem para cima/baixo para dar espaço ao rolar */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* Atualização para a descrição dos Itens (Inventário) */
-.item-description-text {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  color: #ccc;
-  font-size: 13px;
-  font-weight: 400; /* Garante que a descrição também seja normal */
-  line-height: 1.5;
-  text-align: left;
-  white-space: pre-wrap;
-  word-break: break-word;
+/* Links de Ação (Editar/Remover) */
+a.remover-item, a.remover-hab, a.remover-spell {
+  color: #c43f3f; text-decoration: none; font-weight: 700; margin-right: 8px;
+}
+a.editar-item, a.editar-hab, a.editar-spell {
+  color: #2e7d32; text-decoration: none; font-weight: 700;
+}
+.remover-item { color: #d32f2f !important; font-weight: 700; font-size: 13px; text-transform: uppercase; }
+.editar-item { color: #388e3c !important; font-weight: 700; font-size: 13px; text-transform: uppercase; }
+
+/* Pills e Filtros */
+.pill {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 10px;
+  padding: 6px 10px; background: #fff; color: #111; font-weight: 700; border-radius: 6px;
+}
+.pill .pill-level {
+  background: #111; color: #ddd; padding: 4px 8px; border-radius: 6px; font-weight: 800; font-size: 13px;
+}
+.spell-modal .pill {
+  background: #0f0f0f; color: #ddd; padding: 8px 10px; border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.03); cursor: pointer; font-weight: 800;
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,0.4);
+}
+.spell-modal .pill.active {
+  background: #111; border-color: #9c27b0; color: #fff; box-shadow: 0 6px 18px rgba(156,39,176,0.08);
+}
+.circle-filter {
+  background: #161616; color: #dcdcdc; border: 1px solid rgba(255,255,255,0.03);
+  padding: 6px 10px; border-radius: 20px; font-weight: 700; cursor: pointer;
+}
+.circle-filter.active {
+  background: #2b2b2b; border-color: #9c27b0; color: #fff; box-shadow: 0 2px 6px rgba(156,39,176,0.12);
 }
 
-/* Regra Genérica para Magias (tag p) e Habilidades (divs soltas no body) */
-.card-body p, 
-.card-body > div {
-  word-break: break-word;     /* Faz o texto ir para baixo se for muito longo */
-  overflow-wrap: break-word;
-  max-width: 100%;            /* Impede que o texto estoure a largura do card */
-  white-space: pre-wrap;      /* Respeita quebras de linha */
+/* Checkboxes Personalizados */
+.check-ativar input[type="checkbox"] { display: none; }
+.check-ativar .square-check {
+  width: 20px; height: 20px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.06);
+  display: inline-block; line-height: 20px; text-align: center; font-weight: 800;
+}
+.check-ativar input[type="checkbox"]:checked + .square-check { background: #9c27b0; border-color: #9c27b0; }
+.check-ativar .square-check::after {
+  content: '✓'; color: transparent; display: block; line-height: 20px; font-size: 14px;
+}
+.check-ativar input[type="checkbox"]:checked + .square-check::after { color: #fff; }
+
+.versatile-check-inline {
+  display: inline-flex; align-items: center; cursor: pointer; margin-left: 12px;
+}
+.versatile-check-inline input { display: none; }
+.versatile-check-inline .v-box {
+  font-size: 11px; font-weight: 900; color: #9c27b0; border: 2px solid #9c27b0;
+  padding: 4px 10px; border-radius: 5px; transition: 0.2s; line-height: 1;
+  text-transform: uppercase; background: transparent;
+}
+.versatile-check-inline input:checked + .v-box {
+  background: #9c27b0; color: #fff; box-shadow: none;
 }
 
-
-/* --- AUMENTAR ÁREA DE DESCRIÇÃO DA MAGIA --- */
-
-/* Aplica especificamente ao ID da descrição da Magia */
-#modal-desc {
-  min-height: 300px; /* Define uma altura inicial bem grande */
-  height: auto;
+/* Labels e Textos Roxos */
+.purple { color: #9c27b0; font-weight: 700; }
+.purple-label { color: #9c27b0; font-weight: 700; font-size: 13px; line-height: 1.4; }
+.white-val { color: #e0e0e0; font-weight: 400; font-size: 13px; line-height: 1.4; }
+.white-val.bold { font-weight: 400; font-size: 13px; }
+.separator {
+  display: inline-block; margin: 0 6px; width: 1px; height: 12px;
+  background-color: rgba(255, 255, 255, 0.2); vertical-align: middle;
 }
 
-/* Regra geral para todas as textareas dentro de modais */
-.spell-modal textarea {
-  resize: vertical; /* Habilita o "puxador" no canto inferior direito para crescer a área */
-  font-family: inherit; /* Mantém a fonte consistente */
-  line-height: 1.5;
+/* Botões Diversos */
+.btn-add {
+  background: #9c27b0; color: #fff; border: none; padding: 8px 14px;
+  border-radius: 6px; cursor: pointer; font-weight: 700;
 }
-
-.lado-direito {
-
-  flex: 1 !important;
-  width: auto !important; 
-  background-color: #171717;
-  border-radius: 5px;
-  padding: 12px;
-  padding-bottom: 60px; 
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  color: #e6e6e6;
-  height: fit-content !important; 
-  min-height: 100vh; 
-  max-height: none !important;
-  overflow: visible !important;
-  flex-shrink: 0; 
+.plus-btn {
+  background: #9c27b0; border: none; color: #fff; width: 38px; height: 38px;
+  border-radius: 6px; font-size: 18px; cursor: pointer;
 }
-
-
-.lado-direito {
-  /* Aumentei de 330px para 400px (meio termo) */
-  flex: 0 0 400px !important; 
-  width: 400px !important;
-  max-width: 400px !important;
-
-  /* Restante das configurações iguais */
-  background-color: #171717;
-  border-radius: 5px;
-  padding: 12px;
-  padding-bottom: 60px; 
-  
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  color: #e6e6e6;
-  
-  height: fit-content !important; 
-  min-height: 100vh; 
-  max-height: none !important;
-  overflow: visible !important;
-  flex-shrink: 0;
-}
-
-
-
-/* Reduzir o espaço entre Critico / Mult / Alcance */
-.item-stats-row {
-  display: flex;
-  gap: 16px; /* Espaçamento uniforme */
-  margin-bottom: 6px;
-  font-size: 13px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-/* Reduzir espaço entre Dano e Tipo */
-.item-data-row {
-  margin-bottom: 4px;
-  font-size: 13px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px; /* Espaço pequeno e consistente entre label e valor */
-}
-
-/* Ajustar o Header do card para ficar mais compacto */
-.card-header.compact {
-  padding: 4px 2px;
-}
-
-.card {
-  padding: 8px; /* Menos borda interna no card */
-  margin-bottom: 10px;
-}
-
-/* Diminuir a fonte das Tags .desc-grid label {(Armas Simples, etc) */
-.item-tags-line {
-  font-size: 12px;
-  margin-bottom: 6px;
-}
-
-
-/* ==================== ESTILOS DA ABA DESCRIÇÃO ==================== */
-
-.desc-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  padding: 5px;
-}
-
-.desc-item {
-  display: flex;
-  flex-direction: column;
-  gap: 8px; /* Espaço entre o label e o textarea */
-}
-
-/* Estilo do Título (Label) - Texto Branco e Negrito */
-.desc-item label {
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 15px;
-  margin: 0;
-  letter-spacing: 0.5px;
-}
-
-/* Estilo do Campo de Texto (Textarea) */
-.desc-item textarea {
-  background-color: #161616; /* Fundo bem escuro quase preto */
-  border: 1px solid #333;    /* Borda sutil cinza escuro */
-  border-radius: 6px;
-  color: #ccc;               /* Cor do texto digitado */
-  padding: 12px 14px;
-  font-family: inherit;      /* Mantém a fonte do sistema */
-  font-size: 14px;
-  line-height: 1.5;
-  resize: vertical;          /* Permite redimensionar altura */
-  min-height: 100px;         /* Altura inicial gordinha */
-  outline: none;
-  transition: border-color 0.2s, background-color 0.2s;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* Efeito ao clicar no campo */
-.desc-item textarea:focus {
-  border-color: #9c27b0;     /* Borda roxa ao focar */
-  background-color: #1a1a1a; /* Fundo levemente mais claro */
-}
-
-/* Cor do texto de ajuda (Placeholder) */
-.desc-item textarea::placeholder {
-  color: #555; /* Cinza escuro para o texto de exemplo */
-}
-
-/* Botão de Salvar */
-.desc-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 10px;
-  margin-bottom: 20px;
-}
-
-.desc-actions .btn-save {
-  background: #9c27b0;
-  color: #fff;
-  border: none;
-  padding: 10px 24px;
-  border-radius: 6px;
-  font-weight: 800;
-  cursor: pointer;
-  text-transform: uppercase;
-  font-size: 13px;
-  letter-spacing: 0.5px;
-  transition: background 0.2s;
-}
-
-.desc-actions .btn-save:hover {
-  background: #7b1fa2;
-}
-
-
-/* ==================== ESTILOS DA ABA DESCRIÇÃO ==================== */
-
-.desc-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  padding: 5px;
-}
-
-/* Labels dentro do grid */
-.desc-grid label {
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 15px;
-  margin-bottom: 5px;
-  letter-spacing: 0.5px;
-  display: block;
-}
-
-/* Estilo dos Textareas */
-.desc-grid textarea {
-  background-color: #1f1f1f; /* Cor escura baseada na imagem/tema */
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  color: #ccc;
-  padding: 12px 14px;
-  font-family: inherit;
-  font-size: 14px;
-  line-height: 1.5;
-  
-  /* Comportamento de redimensionamento */
-  width: 100%;
-  box-sizing: border-box;
-  resize: vertical; /* Permite usuário puxar na vertical se quiser */
-  overflow: hidden; /* Esconde barra de rolagem para o efeito auto-grow funcionar bem */
-  min-height: 80px; /* Altura inicial mínima */
-  
-  transition: border-color 0.2s, background-color 0.2s;
-}
-
-/* Efeito ao clicar/focar */
-.desc-grid textarea:focus {
-  border-color: #9c27b0;
-  background-color: #252525;
-  outline: none;
-}
-
-.desc-grid textarea::placeholder {
-  color: #555;
-}
-
-/* Removemos a classe .desc-actions e o botão pois é salvo automático agora */
-
-
-/* ==================== ESTILOS DA ABA DESCRIÇÃO ==================== */
-
-.desc-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  padding: 5px;
-}
-
-/* Labels dentro do grid */
-.desc-grid label {
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 15px;
-  margin-bottom: 5px;
-  letter-spacing: 0.5px;
-  display: block;
-}
-
-/* Estilo dos Textareas */
-.desc-grid textarea {
-  background-color: #1f1f1f; /* Cor escura do tema */
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  color: #ccc;
-  padding: 12px 14px;
-  font-family: inherit;
-  font-size: 14px;
-  line-height: 1.5;
-  
-  /* Comportamento de redimensionamento e Scroll */
-  width: 100%;
-  box-sizing: border-box;
-  
-  resize: vertical;  /* Só permite mover na vertical */
-  overflow-y: auto;  /* PERMITE SCROLL se você diminuir a caixa */
-  
-  min-height: 80px;  /* Altura inicial mínima */
-  transition: border-color 0.2s, background-color 0.2s;
-}
-
-/* Efeito ao clicar/focar */
-.desc-grid textarea:focus {
-  border-color: #9c27b0;
-  background-color: #252525;
-  outline: none;
-}
-
-.desc-grid textarea::placeholder {
-  color: #555;
-}
-
-/* ==================== SCROLLBAR PERSONALIZADA (DESCRIÇÃO) ==================== */
-
-/* Largura da barra de rolagem */
-.desc-grid textarea::-webkit-scrollbar {
-  width: 8px;
-}
-
-/* O "trilho" (fundo) da barra - Transparente para sumir com o branco */
-.desc-grid textarea::-webkit-scrollbar-track {
-  background: transparent; 
-}
-
-/* A "pegada" (parte que mexe) - Cinza escuro discreto */
-.desc-grid textarea::-webkit-scrollbar-thumb {
-  background-color: #333; 
-  border-radius: 4px;
-  border: 1px solid #1f1f1f; /* Cria um pequeno espaço visual */
-}
-
-/* Ao passar o mouse na barra */
-.desc-grid textarea::-webkit-scrollbar-thumb:hover {
-  background-color: #555;
-}
-
-
-/* Forçar scroll nas listas de catálogo quando houver muitos itens */
-.catalog-large-list {
-    max-height: 55vh; /* Altura máxima de 55% da tela */
-    overflow-y: auto !important; /* Ativa scroll vertical */
-    padding-right: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-/* Personalização da scrollbar para ficar discreta e roxa */
-.catalog-large-list::-webkit-scrollbar {
-    width: 6px;
-}
-.catalog-large-list::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.2);
-}
-.catalog-large-list::-webkit-scrollbar-thumb {
-    background: #9c27b0;
-    border-radius: 10px;
-}
-/* O Box principal do catálogo - Aumentado para 90% da tela */
-.catalog-large {
-    width: 920px;
-    max-width: calc(100% - 40px);
-    height: 90vh;            /* Deixado maior para baixo */
-    display: flex;
-    flex-direction: column;  
-    background: #121212;
-    border-radius: 10px;
-    padding: 18px;
-    overflow: hidden;        /* Trava o modal para não crescer além dos 90vh */
-}
-
-/* O container da lista - Ocupa todo o espaço que sobra */
-.catalog-large-list {
-    flex: 1;                 /* Puxa todo o espaço disponível */
-    overflow-y: auto !important; /* Ativa o scroll vertical */
-    margin-top: 15px;
-    padding-right: 8px;
-    min-height: 0;           /* Necessário para o flexbox entender o scroll */
-}
-
-/* OS CARDS - Proíbe que eles diminuam de tamanho */
-.catalog-card-ability, 
-.catalog-card-item {
-    flex-shrink: 0;          /* ISSO impede que os itens fiquem espremidos/finos */
-    margin-bottom: 12px;
-    display: block;          /* Garante que ocupem o espaço total */
-}
-
-/* Scrollbar Roxa */
-.catalog-large-list::-webkit-scrollbar {
-    width: 8px;
-}
-.catalog-large-list::-webkit-scrollbar-track {
-    background: #0a0a0a;
-    border-radius: 10px;
-}
-.catalog-large-list::-webkit-scrollbar-thumb {
-    background: #9c27b0;
-    border-radius: 10px;
-}
-
-/* Estilização para o container de subclasses quando em modo scroll */
-#catalog-subclasses-row {
-    scrollbar-width: thin;
-    scrollbar-color: #9c27b0 transparent;
-    transition: all 0.3s ease;
-}
-
-#catalog-subclasses-row::-webkit-scrollbar {
-    height: 6px;
-}
-
-#catalog-subclasses-row::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-}
-
-#catalog-subclasses-row::-webkit-scrollbar-thumb {
-    background: #9c27b0;
-    border-radius: 10px;
-}
-
-/* Botão de alternância */
+.plus-btn.small-add { width: 34px; height: 34px; }
 .toggle-expansion-btn {
-    background: #1a1a1a;
-    border: 1px solid #9c27b0;
-    color: #9c27b0;
-    border-radius: 6px;
-    padding: 0 10px;
-    margin-left: 10px;
-    cursor: pointer;
-    font-weight: bold;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 32px;
-    transition: 0.2s;
-    font-size: 18px;
+  background: #1a1a1a; border: 1px solid #9c27b0; color: #9c27b0; border-radius: 6px;
+  padding: 0 10px; margin-left: 10px; cursor: pointer; font-weight: bold;
+  display: inline-flex; align-items: center; justify-content: center; height: 32px;
+  transition: 0.2s; font-size: 18px;
+}
+.toggle-expansion-btn:hover { background: #9c27b0; color: #fff; }
+
+/* Display de Classe (Tags) */
+.class-box-display {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #111; border: 1px solid rgba(255,255,255,0.04); border-radius: 6px;
+  color: #bbb; font-weight: 700; font-size: 11px; line-height: 1.3; text-align: center;
+  padding: 6px 8px; box-sizing: border-box;
+  min-width: 80px; max-width: 120px; height: auto; min-height: 32px;
+  white-space: normal; word-wrap: break-word;
 }
 
-.toggle-expansion-btn:hover {
-    background: #9c27b0;
-    color: #fff;
+/* Dropdown de Seleção de Classe */
+.class-select-root { position: relative; }
+.class-select-toggle {
+  min-width: 130px; height: 36px; background: #111;
+  border: 1px solid rgba(255,255,255,0.04); border-radius: 6px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; padding: 6px 10px; cursor: pointer; color: #ddd; font-weight: 700;
+}
+.class-select-toggle .caret-small { color: #9c27b0; margin-left: 6px; font-size: 14px; }
+.class-select-options {
+  position: absolute; right: 0; top: 44px; background: #121212;
+  border: 1px solid rgba(255,255,255,0.04); border-radius: 8px;
+  padding: 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.6); z-index: 12000; min-width: 160px;
+}
+.class-select-options button {
+  display: block; width: 100%; background: transparent; border: none;
+  color: #ddd; text-align: left; padding: 8px 10px; border-radius: 6px;
+  cursor: pointer; font-weight: 700;
+}
+.class-select-options button:hover { background: rgba(156,39,176,0.06); color: #fff; }
+.class-select-label {
+  font-size: 12px; color: #cfcfcf; margin-top: 6px; font-weight: 700; text-align: right;
 }
 
-/* ==================== TABELAS ESTILO D&D 5E ==================== */
+/* Selects Escuros */
+.dark-select {
+  width: 100%; padding: 8px; background: #0f0f0f;
+  border: 1px solid rgba(255,255,255,0.04); color: #eee;
+  border-radius: 6px; box-sizing: border-box; font-size: 14px;
+}
+.dark-select:focus { border-color: #9c27b0; outline: none; }
+
+/* Controles de Linha */
+.controls-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.controls-row input {
+  flex: 1; padding: 10px; background: #111; border: 1px solid #272727;
+  color: #ddd; border-radius: 4px; min-width: 0;
+}
+.right-controls { display: flex; gap: 10px; align-items: center; }
+
+/* DT Magias */
+.dt-magias { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.dt-magias label { font-size: 12px; color: #cfcfcf; font-weight: 700; }
+.dt-magias input {
+  width: 64px; padding: 6px; background: #0f0f0f; border: 1px solid #262626;
+  color: #eee; border-radius: 6px; text-align: center;
+}
+
+/* ==========================================================================
+   TABELAS D&D 5E
+   ========================================================================== */
 
 .dnd-table-container {
-  background-color: #fff; /* Fundo branco para a tabela se destacar no tema escuro */
-  padding: 5px;
-  border-radius: 6px;
-  margin-top: 10px;
-  color: #000; /* Texto preto para leitura no fundo claro */
-  font-family: 'Georgia', serif; /* Fonte mais próxima do livro */
+  background-color: #fff; padding: 5px; border-radius: 6px;
+  margin-top: 10px; color: #000; font-family: 'Georgia', serif;
 }
 
 .dnd-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-  line-height: 1.4;
+  width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.4;
 }
-
-/* Cabeçalho Dourado */
 .dnd-table th {
-  background-color: #c9ad6a; /* Cor mostarda/dourada típica */
-  color: #fff;
-  font-weight: 800;
-  text-align: left;
-  padding: 6px 10px;
-  border: 1px solid #bfa35f;
+  background-color: #c9ad6a; color: #fff; font-weight: 800;
+  text-align: left; padding: 6px 10px; border: 1px solid #bfa35f;
 }
-
-/* Coluna do Dado (d8) */
-.dnd-col-dice {
-  width: 40px;
-  text-align: center;
-}
-
+.dnd-col-dice { width: 40px; text-align: center; }
 .dnd-table td {
-  padding: 6px 10px;
-  border: 1px solid #e0e0e0;
-  vertical-align: top;
+  padding: 6px 10px; border: 1px solid #e0e0e0; vertical-align: top;
 }
-
-/* Linhas alternadas (Zebra) */
-.dnd-table tr:nth-child(odd) td {
-  background-color: #ffffff;
-}
-
-.dnd-table tr:nth-child(even) td {
-  background-color: #fdfae0; /* Amarelo bem clarinho */
-}
-
-/* Ajuste da primeira coluna (número) */
+.dnd-table tr:nth-child(odd) td { background-color: #ffffff; }
+.dnd-table tr:nth-child(even) td { background-color: #fdfae0; }
 .dnd-table td:first-child {
-  font-weight: bold;
-  color: #c9ad6a;
-  text-align: center;
+  font-weight: bold; color: #c9ad6a; text-align: center;
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE
+   ========================================================================== */
+
+@media (max-width: 980px) {
+  .spell-modal { width: calc(100% - 32px); padding: 12px; }
+  .spell-modal .damage-row { flex-direction: column; align-items: stretch; }
+  .spell-modal .damage-row .dmg-type { width: 100%; }
+}
+
+@media (max-width: 780px) {
+  .catalog-large { width: calc(100% - 24px); padding: 12px; }
+  .catalog-large-classes { gap: 8px; }
+  .ability-class-btn { font-size: 14px; padding: 6px 8px; }
+  .ability-sub-btn { padding: 6px 10px; font-size: 13px; border-radius: 18px; }
 }

@@ -1,40 +1,44 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Habilidades",
+  "activeTab": "Inventário",
   "spellDCConfig": {
-    "selectedAttr": "int",
+    "selectedAttr": "for",
     "extraMod": 0,
     "lastKnownLevel": 0
   },
-  "dtMagias": 14,
+  "dtMagias": 19,
   "inventory": [
     {
-      "id": 1766552249468,
-      "name": "Nova Arma",
-      "description": "",
+      "id": 1766973070409,
+      "name": "Machado de Batalha",
+      "description": "<p>Um machado de lâmina única ou dupla, equilibrado para golpes poderosos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>",
       "expanded": true,
-      "equip": true,
+      "equip": false,
       "type": "Arma",
       "isEquipable": true,
-      "proficiency": "Arma de Fogo",
+      "proficiency": "Armas Marciais",
       "tipoArma": "Corpo a Corpo",
-      "empunhadura": "Duas Maos",
+      "empunhadura": "Versátil",
       "crit": "20",
       "multiplicador": "2",
       "alcance": "1.5m",
       "attunement": "Não",
-      "damage": "",
-      "caracteristicas": [],
-      "damageTypes": [],
-      "moreDmgList": []
+      "damage": "1d8",
+      "damage2Hands": "1d10",
+      "useTwoHands": false,
+      "damageTypes": [
+        "Cortante"
+      ],
+      "moreDmgList": [],
+      "caracteristicas": []
     },
     {
-      "id": 1766288967683,
-      "name": "Nova Armadura",
-      "description": "",
+      "id": 1766973012649,
+      "name": "Escudo",
+      "description": "<p>Pode ser de madeira ou metal.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>",
       "expanded": true,
-      "equip": false,
+      "equip": true,
       "type": "Proteção",
       "isEquipable": true,
       "proficiency": "",
@@ -46,13 +50,13 @@
       ],
       "disadvantageSkill": [],
       "advantageSkill": [],
-      "defense": "25"
+      "defense": "2"
     },
     {
-      "id": 1766288935210,
-      "name": "media",
-      "description": "",
-      "expanded": true,
+      "id": 1766806036855,
+      "name": "Meia-Armadura",
+      "description": "<p>Placas de metal moldadas cobrindo a maior parte do corpo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 750 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 20 kg</li></ul>",
+      "expanded": false,
       "equip": false,
       "type": "Proteção",
       "isEquipable": true,
@@ -65,14 +69,14 @@
       ],
       "disadvantageSkill": [],
       "advantageSkill": [],
-      "defense": "10"
+      "defense": "123"
     },
     {
-      "id": 1766288866328,
-      "name": "pesado",
-      "description": "",
+      "id": 1766806010141,
+      "name": "Armadura de Batalha",
+      "description": "<p>Armadura pesada robusta.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 16 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 28 kg</li></ul>",
       "expanded": true,
-      "equip": true,
+      "equip": false,
       "type": "Proteção",
       "isEquipable": true,
       "proficiency": "Pesada",
@@ -84,10 +88,29 @@
       ],
       "disadvantageSkill": [],
       "advantageSkill": [],
-      "defense": "12"
+      "defense": "2"
     }
   ],
-  "abilities": [],
+  "abilities": [
+    {
+      "id": 1766804864918,
+      "title": "(1º nível) Defesa sem Armadura(Monge)",
+      "description": "<p>Enquanto não usar armadura nem escudo, sua Classe de Armadura (CA) é:</p><p style='text-align:center; font-weight:bold; color:#fff; background:#222; padding:8px; border-radius:4px;'>10 + Mod. Destreza + Mod. Sabedoria</p>",
+      "expanded": true,
+      "class": "Monge",
+      "subclass": "",
+      "active": false
+    },
+    {
+      "id": 1766804861398,
+      "title": "(1º nível) Defesa sem Armadura(Bárbaro)",
+      "description": "<p>Enquanto você não estiver usando nenhuma armadura, sua Classe de Armadura (CA) é:</p><p style='text-align:center; font-weight:bold; color:#fff; background:#222; padding:8px; border-radius:4px;'>10 + Mod. Destreza + Mod. Constituição</p><p>Você pode usar um escudo e ainda obter esse benefício.</p>",
+      "expanded": false,
+      "class": "Bárbaro",
+      "subclass": "",
+      "active": true
+    }
+  ],
   "description": {
     "anotacoes": "",
     "aparencia": "",
@@ -100,23 +123,52 @@
   },
   "spells": [
     {
-      "id": 1766274664678,
-      "name": "Cura Ferimentos",
+      "id": 1766798046234,
+      "name": "Sono",
       "levelNumber": 1,
-      "school": "Abjuração",
-      "spellClass": "Clérigo",
-      "damage": "1d8 + Mod",
+      "damage": "-",
+      "expanded": false,
+      "active": true,
       "components": {
         "V": true,
         "S": true,
-        "M": false
+        "M": true
       },
+      "material": "Areia, pétalas ou grilo",
       "attrs": {
         "execucao": "1 ação",
-        "alcance": "Toque",
-        "duracao": "Instantânea"
+        "alcance": "36m",
+        "area": "Esfera 6m",
+        "alvo": "Vários",
+        "duracao": "1 min",
+        "resistencia": "-"
       },
-      "description": "Uma criatura que você toca recupera pontos de vida.",
+      "school": "Encantamento",
+      "spellClass": "Blood Hunter",
+      "description": "<p>Role <strong>5d8</strong>. Adormece criaturas na área em ordem ascendente de seus PV atuais.</p><p><strong>Níveis Superiores:</strong> +2d8 por nível de slot.</p>"
+    },
+    {
+      "id": 1766798008908,
+      "name": "Sono",
+      "levelNumber": 1,
+      "school": "Encantamento",
+      "spellClass": "Mago",
+      "damage": "-",
+      "components": {
+        "V": true,
+        "S": true,
+        "M": true
+      },
+      "material": "Areia, pétalas ou grilo",
+      "attrs": {
+        "execucao": "1 ação",
+        "alcance": "36m",
+        "area": "Esfera 6m",
+        "alvo": "Vários",
+        "duracao": "1 min",
+        "resistencia": "-"
+      },
+      "description": "<p>Role <strong>5d8</strong>. Adormece criaturas na área em ordem ascendente de seus PV atuais.</p><p><strong>Níveis Superiores:</strong> +2d8 por nível de slot.</p>",
       "expanded": true,
       "active": false
     }
@@ -255,7 +307,7 @@
     "n3": 10,
     "n4": 10,
     "n5": 10,
-    "n6": 10
+    "n6": 20
   },
   "niveisClasses": {
     "artifice": 3,

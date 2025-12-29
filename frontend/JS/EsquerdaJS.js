@@ -1,5 +1,9 @@
+/* =============================================================
+   LÓGICA DA ESQUERDA (ATRIBUTOS, VIDA, XP, CLASSES E CA)
+============================================================= */
+
 // ======================================
-// Configurações e Tabelas
+// 1. Configurações e Tabelas
 // ======================================
 const xpPorNivel = {
     1: { max: 300, marco: 0 }, 2: { max: 900, marco: 0 }, 3: { max: 2700, marco: 1 },
@@ -35,7 +39,7 @@ const DADOS_VALORES = {
     'd6': [1, 2, 3, 4, 5, 6]
 };
 
-// Variáveis Globais de Controle
+// Variáveis Globais de Controle da Esquerda
 let mostrandoAtributos = true;
 let editMode = false;
 let rotateInterval = null;
@@ -43,27 +47,22 @@ const numerosHex = Array.from(document.querySelectorAll('.hexagrama .num'));
 const hexOverlay = document.querySelector('.hex-overlay');
 
 // ======================================
-// Sincronização Inicial
+// 2. Inicialização e Listeners
 // ======================================
 
 window.addEventListener('sheet-updated', () => {
     inicializarDadosEsquerda();
     atualizarTudoVisual();
     vincularEventosInputs();
-
-    if (state.iniciativaBonus === undefined) state.iniciativaBonus = 0;
-    document.getElementById('iniciativaBonus').value = state.iniciativaBonus;
-
-    atualizarIniciativaTotal();
 });
 
 function inicializarDadosEsquerda() {
     if (!state.atributos) state.atributos = { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 };
     if (!state.niveisClasses) state.niveisClasses = {};
     if (!state.vidaDadosSalvos) state.vidaDadosSalvos = {};
-    if (state.acOutros === undefined) state.acOutros = 0;
-
-    // Fallbacks para valores numéricos
+    
+    state.acOutros = parseInt(state.acOutros) || 0;
+    state.iniciativaBonus = parseInt(state.iniciativaBonus) || 0;
     state.vidaAtual = parseInt(state.vidaAtual) || 0;
     state.vidaTempAtual = parseInt(state.vidaTempAtual) || 0;
     state.danoNecroAtual = parseInt(state.danoNecroAtual) || 0;
@@ -72,49 +71,34 @@ function inicializarDadosEsquerda() {
     state.inspiracao = parseInt(state.inspiracao) || 0;
     state.metros = parseFloat(state.metros) || 0;
 
-    // Sincroniza Atributos no Hexágono
+    const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
+    const setText = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+
+    setVal('xpAtual', state.xp);
+    setVal('marcoAtual', state.marco);
+    setText('inspiraValor', state.inspiracao);
+    setVal('metros', state.metros);
+    setVal('quadrados', (state.metros / 1.5).toFixed(1));
+    setVal('iniciativaBonus', state.iniciativaBonus);
+    
     numerosHex.forEach(n => {
-        const id = n.classList[1];
+        const id = n.classList[1]; 
         const val = state.atributos[id] || 10;
         n.dataset.attrValue = val;
         n.textContent = mostrandoAtributos ? val : formatMod(calcularModificador(val));
+        
         n.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault(); // Impede o pulo de linha
-            if (editMode) toggleEditMode(); // Se estiver editando, fecha e salva
-        }
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (editMode) toggleEditMode();
+            }
+        });
     });
-    });
-
-    document.getElementById('xpAtual').value = state.xp;
-    document.getElementById('marcoAtual').value = state.marco;
-    document.getElementById('inspiraValor').textContent = state.inspiracao;
-    document.getElementById('metros').value = state.metros;
-    document.getElementById('quadrados').value = (state.metros / 1.5).toFixed(1);
-
-
-
 }
 
 // ======================================
-// Atributos e Modificadores
+// 3. Funções de Cálculo
 // ======================================
-// --- Função para calcular proficiência conforme tabela D&D 5e ---
-function calcularProficiencia(nivel) {
-    if (nivel <= 0) return 2;
-    return Math.floor((nivel - 1) / 4) + 2;
-}
-
-// --- Atualiza visualmente o campo de proficiência ---
-function atualizarProficiencia() {
-    const nivelTotal = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0) || 1;
-    const prof = calcularProficiencia(nivelTotal);
-
-    const profEl = document.getElementById('proficienciaValor');
-    if (profEl) {
-        profEl.textContent = `+${prof}`;
-    }
-}
 
 function calcularModificador(n) {
     return Math.floor((parseInt(n, 10) - 10) / 2);
@@ -123,6 +107,22 @@ function calcularModificador(n) {
 function formatMod(m) {
     return m >= 0 ? `+${m}` : m;
 }
+
+function calcularProficiencia(nivel) {
+    if (nivel <= 0) return 2;
+    return Math.floor((nivel - 1) / 4) + 2;
+}
+
+function atualizarProficiencia() {
+    const nivelTotal = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0) || 1;
+    const prof = calcularProficiencia(nivelTotal);
+    const profEl = document.getElementById('proficienciaValor');
+    if (profEl) profEl.textContent = `+${prof}`;
+}
+
+// ======================================
+// 4. Lógica do Hexagrama
+// ======================================
 
 if (hexOverlay) {
     hexOverlay.onclick = () => {
@@ -136,14 +136,17 @@ if (hexOverlay) {
     };
 }
 
-document.querySelector('.editar-hex').onclick = () => {
-    if (!mostrandoAtributos) {
-        mostrandoAtributos = true;
-        hexOverlay.src = 'img/atributos.png';
-        numerosHex.forEach(n => n.textContent = n.dataset.attrValue);
-    }
-    toggleEditMode();
-};
+const btnEditarHex = document.querySelector('.editar-hex');
+if(btnEditarHex) {
+    btnEditarHex.onclick = () => {
+        if (!mostrandoAtributos) {
+            mostrandoAtributos = true;
+            hexOverlay.src = 'img/atributos.png';
+            numerosHex.forEach(n => n.textContent = n.dataset.attrValue);
+        }
+        toggleEditMode();
+    };
+}
 
 function toggleEditMode() {
     editMode = !editMode;
@@ -151,7 +154,7 @@ function toggleEditMode() {
         n.setAttribute('contenteditable', editMode);
         if (!editMode) {
             const id = n.classList[1];
-            const val = parseInt(n.textContent) || 0;
+            const val = parseInt(n.textContent) || 10;
             state.atributos[id] = val;
             n.dataset.attrValue = val;
         }
@@ -163,35 +166,36 @@ function toggleEditMode() {
 }
 
 // ======================================
-// Gestão de Classes e Vida (Seletores)
+// 5. Classes e Dados de Vida
 // ======================================
 
-document.getElementById('classeFocus').onclick = (e) => {
-    const painel = document.getElementById('painelClasses');
-    const lista = document.getElementById('listaClasses');
-    lista.innerHTML = '';
+const elClasseFocus = document.getElementById('classeFocus');
+if(elClasseFocus) {
+    elClasseFocus.onclick = (e) => {
+        const painel = document.getElementById('painelClasses');
+        const lista = document.getElementById('listaClasses');
+        lista.innerHTML = '';
 
-    classesPadrao.forEach(c => {
-        const nivel = state.niveisClasses[c.key] || 0;
-        const div = document.createElement('div');
-        div.className = 'item-classe';
-        div.innerHTML = `
-            <span>${c.nome}</span>
-            <input type="number" min="0" value="${nivel}" oninput="salvarNivelClasse('${c.key}', this.value)">
-        `;
-        lista.appendChild(div);
-    });
+        classesPadrao.forEach(c => {
+            const nivel = state.niveisClasses[c.key] || 0;
+            const div = document.createElement('div');
+            div.className = 'item-classe';
+            div.innerHTML = `
+                <span>${c.nome}</span>
+                <input type="number" min="0" value="${nivel}" oninput="salvarNivelClasse('${c.key}', this.value)">
+            `;
+            lista.appendChild(div);
+        });
 
-    painel.style.display = 'block';
-    const rect = e.currentTarget.getBoundingClientRect();
-    painel.style.left = `${rect.left}px`;
-    painel.style.top = `${rect.bottom + 5}px`;
-};
+        painel.style.display = 'block';
+        const rect = e.currentTarget.getBoundingClientRect();
+        painel.style.left = `${rect.left}px`;
+        painel.style.top = `${rect.bottom + 5}px`;
+    };
+}
 
 window.salvarNivelClasse = (key, val) => {
     state.niveisClasses[key] = parseInt(val) || 0;
-
-    // Limpeza de bônus órfãos (se você reduziu o nível)
     const totalNiv = Object.values(state.niveisClasses).reduce((a, b) => a + b, 0);
     Object.keys(state.vidaDadosSalvos).forEach(k => {
         const numNivel = parseInt(k.replace('v', ''));
@@ -199,22 +203,23 @@ window.salvarNivelClasse = (key, val) => {
     });
 
     saveStateToServer();
-    atualizarTudoVisual(); // Isso chamará atualizarVidaCalculada
-
-    // Se o painel de dados estiver aberto, re-renderiza a lista
-    const container = document.querySelector('.classes-lista-container');
-    if (container && container.style.display === 'block') {
+    atualizarTudoVisual();
+    if(document.querySelector('.classes-lista-container').style.display === 'block') {
         renderizarDadosVida();
     }
 };
 
-document.getElementById('fecharPainel').onclick = () => document.getElementById('painelClasses').style.display = 'none';
+const btnFecharPainel = document.getElementById('fecharPainel');
+if(btnFecharPainel) btnFecharPainel.onclick = () => document.getElementById('painelClasses').style.display = 'none';
 
-document.getElementById('btnVida').onclick = () => {
-    const container = document.querySelector('.classes-lista-container');
-    container.style.display = container.style.display === 'none' ? 'block' : 'none';
-    renderizarDadosVida();
-};
+const btnVida = document.getElementById('btnVida');
+if(btnVida) {
+    btnVida.onclick = () => {
+        const container = document.querySelector('.classes-lista-container');
+        container.style.display = container.style.display === 'none' ? 'block' : 'none';
+        renderizarDadosVida();
+    };
+}
 
 function renderizarDadosVida() {
     const lista = document.getElementById('classesLista');
@@ -230,10 +235,8 @@ function renderizarDadosVida() {
             const vidId = `v${counter}`;
             const faces = parseInt(classeRef.dado.replace('d', ''));
 
-            // SE FOR O PRIMEIRO DADO GERAL, DEFINE COMO MÁXIMO
-            if (counter === 1 && (!state.vidaDadosSalvos[vidId] || state.vidaDadosSalvos[vidId] === 0)) {
+            if (counter === 1 && (!state.vidaDadosSalvos[vidId])) {
                 state.vidaDadosSalvos[vidId] = faces;
-                saveStateToServer();
             }
 
             const valorSalvo = state.vidaDadosSalvos[vidId] || 0;
@@ -271,21 +274,15 @@ window.salvarDadoVida = (id, val) => {
     saveStateToServer();
 };
 
-// ======================================++-
-// Sistema de Barras e Conversões
+// ======================================
+// 6. Atualizações Visuais (Vida, Iniciativa)
 // ======================================
 
 function atualizarVidaCalculada() {
-    // Soma APENAS os valores numéricos salvos no objeto vidaDadosSalvos
-    // Se um dado estiver como "-" (0), ele não adiciona nada à soma.
     const vidaMax = Object.values(state.vidaDadosSalvos || {}).reduce((acc, val) => acc + (parseInt(val) || 0), 0);
+    const elVidaTotal = document.getElementById('vida-total');
+    if(elVidaTotal) elVidaTotal.textContent = vidaMax;
 
-    const vidaTotalEl = document.getElementById('vida-total');
-    if (vidaTotalEl) {
-        vidaTotalEl.textContent = vidaMax;
-    }
-
-    // Atualiza as barras visuais com base no novo total
     atualizarBarraUI('vida', state.vidaAtual, vidaMax);
     atualizarBarraUI('vida-temp', state.vidaTempAtual, 100);
     atualizarBarraUI('dano-necro', state.danoNecroAtual, 100);
@@ -302,114 +299,268 @@ function atualizarBarraUI(prefixo, atual, total) {
     }
 }
 
+function atualizarMarcosEXP() {
+    const nivelTotal = Object.values(state.niveisClasses).reduce((a, b) => a + b, 0) || 1;
+    const tabela = xpPorNivel[Math.min(20, Math.max(1, nivelTotal))];
+    
+    const elXPText = document.getElementById('xpTotalText');
+    if(elXPText) elXPText.textContent = `/ ${tabela.max}`;
+    
+    const elXPBar = document.getElementById('xpBar');
+    if(elXPBar) elXPBar.style.width = Math.min(100, (parseInt(state.xp || 0) / tabela.max) * 100) + "%";
+
+    const marcoMax = tabela.marco;
+    const elMarcoMax = document.getElementById('marcoMax');
+    if(elMarcoMax) elMarcoMax.value = marcoMax;
+    
+    const elMarcoBar = document.getElementById('marcoBar');
+    if(elMarcoBar) elMarcoBar.style.width = marcoMax > 0 ? Math.min(100, (parseInt(state.marco || 0) / marcoMax) * 100) + "%" : "0%";
+}
+
+function atualizarFocoClasseRotativo() {
+    const ativas = classesPadrao.filter(c => state.niveisClasses[c.key] > 0);
+    const elNome = document.getElementById('classeFocusNome');
+    const elNivel = document.getElementById('classeFocusNivel');
+
+    if (!ativas.length) {
+        if(elNome) elNome.textContent = "Sem Classe";
+        if(elNivel) elNivel.textContent = "0";
+        return;
+    }
+    let i = 0;
+    if (rotateInterval) clearInterval(rotateInterval);
+    const mudar = () => {
+        const c = ativas[i % ativas.length];
+        if(elNome) elNome.textContent = c.nome;
+        if(elNivel) elNivel.textContent = state.niveisClasses[c.key];
+        i++;
+    };
+    mudar();
+    if (ativas.length > 1) rotateInterval = setInterval(mudar, 5000);
+}
+
+function atualizarIniciativaTotal() {
+    const dexScore = state.atributos?.n2 || 10;
+    const dexMod = Math.floor((dexScore - 10) / 2);
+    const bonus = parseInt(state.iniciativaBonus) || 0;
+    const total = dexMod + bonus;
+    const sinal = total >= 0 ? "+" : "";
+    const elIni = document.getElementById('iniciativaValor');
+    if(elIni) elIni.textContent = `${sinal}${total}`;
+}
+
+
+// =============================================================
+// CÁLCULO DE CA (ARMOR CLASS) COM PRIORIDADE DE HABILIDADE
+// =============================================================
+
+function atualizarAC() {
+    // 1. Modificadores
+    const getMod = (n) => Math.floor((parseInt(state.atributos?.[n] || 10) - 10) / 2);
+    const modDex = getMod('n2');
+    const modCon = getMod('n1');
+    const modSab = getMod('n3');
+
+    // 2. Busca Equipamentos
+    const armadura = state.inventory.find(i => 
+        i.equip && 
+        (i.type === 'Proteção' || i.type === 'protecao') && 
+        (i.tipoItem || '').toLowerCase() === 'armadura'
+    );
+    const escudo = state.inventory.find(i => 
+        i.equip && 
+        (i.type === 'Proteção' || i.type === 'protecao') && 
+        (i.tipoItem || '').toLowerCase() === 'escudo'
+    );
+
+    // 3. Busca Habilidades Ativas
+    const barbDef = state.abilities.some(a => a.active && a.title.includes("Defesa sem Armadura(Bárbaro)"));
+    const monkDef = state.abilities.some(a => a.active && a.title.includes("Defesa sem Armadura(Monge)"));
+
+    // Variáveis
+    let acFinal = 10;
+    let visualEquip = 0;
+    let visualDexText = "DEX";
+    let tipoTag = "SEM ARMADURA";
+    let escudoBonus = escudo ? (parseInt(escudo.defense) || 2) : 0;
+    let bonusOutros = parseInt(state.acOutros) || 0;
+
+    // --- PRIORIDADE TOTAL PARA HABILIDADES ---
+
+    if (barbDef) {
+        // === BÁRBARO (Prioridade) ===
+        // 10 + Dex + Con + Escudo (se houver)
+        // Ignora armadura equipada
+        acFinal = 10 + modDex + modCon + escudoBonus;
+        tipoTag = "DEF. BÁRBARO";
+        visualDexText = "DEX + CON";
+        visualEquip = escudoBonus; // Só escudo conta no equipamento
+
+    } else if (monkDef) {
+        // === MONGE (Prioridade) ===
+        // 10 + Dex + Sab
+        // Se tiver escudo, a regra diz que perde. Mas se a habilidade tá ativa,
+        // vamos assumir a lógica: Se tem escudo, volta pra AC base + escudo.
+        
+        if (escudo) {
+            acFinal = 10 + modDex + escudoBonus;
+            tipoTag = "SEM ARMADURA";
+            visualDexText = "DEX";
+            visualEquip = escudoBonus;
+        } else {
+            acFinal = 10 + modDex + modSab;
+            tipoTag = "DEF. MONGE";
+            visualDexText = "DEX + SAB";
+            visualEquip = 0;
+        }
+
+    } else if (armadura) {
+        // === ARMADURA (Sem habilidade especial ativa) ===
+        const defArmadura = parseInt(armadura.defense) || 10;
+        const prof = (armadura.proficiency || '').toLowerCase();
+        let dexConsiderado = modDex;
+
+        visualEquip = (defArmadura - 10) + escudoBonus;
+        tipoTag = armadura.proficiency?.toUpperCase() || "LEVE";
+
+        if (prof.includes('pesada')) {
+            dexConsiderado = 0;
+            visualDexText = "-"; 
+            tipoTag = "PESADA";
+        } else if (prof.includes('media') || prof.includes('média')) {
+            dexConsiderado = Math.min(modDex, 2);
+            visualDexText = "DEX (Máx 2)";
+            tipoTag = "MÉDIA";
+        } else {
+            visualDexText = "DEX";
+            tipoTag = "LEVE";
+        }
+        
+        acFinal = 10 + (defArmadura - 10) + dexConsiderado + escudoBonus;
+
+    } else {
+        // === SEM NADA (Base) ===
+        acFinal = 10 + modDex + escudoBonus;
+        tipoTag = "SEM ARMADURA";
+        visualDexText = "DEX";
+        visualEquip = escudoBonus;
+    }
+
+    // Soma bônus diversos (Anéis, etc)
+    acFinal += bonusOutros;
+
+    // --- RENDERIZAÇÃO ---
+    const elValor = document.getElementById('armaduraValor');
+    if (elValor) elValor.textContent = acFinal;
+
+    const elTag = document.querySelector('.armadura-tag');
+    if (elTag) {
+        elTag.textContent = tipoTag;
+        elTag.style.cssText = `display: flex; align-items: center; justify-content: center; border: 2px solid #fff; padding: 8px 15px; border-radius: 8px; background: transparent; color: #fff; font-weight: 900; font-size: 15px; margin-top: 12px; min-width: 130px; text-transform: uppercase; white-space: nowrap;`;
+    }
+
+    const elFormulaDex = document.querySelector('.formula-attr');
+    const elFormulaPlus = document.querySelector('.inline-formula .formula-plus'); 
+    if (elFormulaDex) {
+        elFormulaDex.textContent = visualDexText;
+        elFormulaDex.style.visibility = (visualDexText === "-") ? "hidden" : "visible";
+        if(elFormulaPlus) elFormulaPlus.style.visibility = (visualDexText === "-") ? "hidden" : "visible";
+        
+        // Ajuste se o texto for longo
+        if (visualDexText.length > 5) {
+             elFormulaDex.style.transform = "translateY(-26px)";
+             elFormulaDex.style.fontSize = "10px";
+        } else {
+             elFormulaDex.style.transform = "translateY(-30px)";
+             elFormulaDex.style.fontSize = "12px";
+        }
+    }
+
+    const zeros = document.querySelectorAll('.hexagrama-ca .zero-num');
+    if (zeros.length >= 1) zeros[0].textContent = visualEquip;
+    if (zeros.length >= 2 && document.activeElement !== zeros[1]) zeros[1].textContent = bonusOutros;
+}
+
+
+// ======================================
+// 7. Função Mestre e Listeners
+// ======================================
+
+function atualizarTudoVisual() {
+    atualizarFocoClasseRotativo();
+    atualizarMarcosEXP();
+    atualizarVidaCalculada();
+    atualizarProficiencia();
+    atualizarIniciativaTotal();
+    atualizarAC(); 
+    
+    const nivelTotal = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0);
+    const elNivel = document.getElementById('nivelFoco');
+    if(elNivel) elNivel.textContent = nivelTotal;
+}
+
 function vincularEventosInputs() {
-    // Helper para adicionar comportamento de Salvar + Blur ao pressionar Enter
     const addEnterBlur = (el, stateKey) => {
         if (!el) return;
-
-        // Carrega o valor inicial do state para o campo
         el.value = state[stateKey] || "";
-
         el.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault(); // Evita comportamento padrão
-                state[stateKey] = el.value; // Atualiza o estado
-                saveStateToServer(); // Salva no servidor
-                el.blur(); // Tira o foco do campo
-            }
+            if (e.key === 'Enter') { e.preventDefault(); state[stateKey] = el.value; saveStateToServer(); el.blur(); }
         });
-
-        // Garante o salvamento também se o usuário apenas clicar fora (evento change)
-        el.onchange = () => {
-            state[stateKey] = el.value;
-            saveStateToServer();
-        };
+        el.onchange = () => { state[stateKey] = el.value; saveStateToServer(); };
     };
 
-    // --- VINCULANDO STATUS (CABEÇALHO) ---
     addEnterBlur(document.getElementById('input-personagem'), 'personagem');
     addEnterBlur(document.getElementById('input-jogador'), 'jogador');
     addEnterBlur(document.getElementById('input-antecedente'), 'antecedente');
     addEnterBlur(document.getElementById('input-classesHeader'), 'classesHeader');
     addEnterBlur(document.getElementById('input-raca'), 'raca');
 
-    // --- VINCULANDO DETALHES DE ARMADURA ---
     addEnterBlur(document.getElementById('input-resistencias'), 'resistencias');
     addEnterBlur(document.getElementById('input-imunidades'), 'imunidades');
     addEnterBlur(document.getElementById('input-fraquezas'), 'fraquezas');
     addEnterBlur(document.getElementById('input-proficiencias'), 'proficiencias');
 
-    // --- COMPORTAMENTOS ESPECÍFICOS DE OUTROS CAMPOS ---
-
-    // XP e MARCO
     const xpInput = document.getElementById('xpAtual');
     if (xpInput) {
         xpInput.oninput = (e) => { state.xp = e.target.value; atualizarMarcosEXP(); saveStateToServer(); };
         xpInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') xpInput.blur(); });
     }
-
     const marcoInput = document.getElementById('marcoAtual');
     if (marcoInput) {
         marcoInput.oninput = (e) => { state.marco = parseInt(e.target.value) || 0; atualizarMarcosEXP(); saveStateToServer(); };
         marcoInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') marcoInput.blur(); });
     }
-
-    // INICIATIVA BÔNUS
-    const iniBonus = document.getElementById('iniciativaBonus');
-    if (iniBonus) {
-        iniBonus.oninput = (e) => { state.iniciativaBonus = parseInt(e.target.value) || 0; atualizarIniciativaTotal(); saveStateToServer(); };
-        iniBonus.addEventListener('keydown', (e) => { if (e.key === 'Enter') iniBonus.blur(); });
-    }
-
-    // CA OUTROS (contenteditable)
-    const outrosInput = document.getElementById('ac-outros');
-    if (outrosInput) {
-        outrosInput.oninput = () => { state.acOutros = parseInt(outrosInput.textContent) || 0; atualizarAC(); };
-        outrosInput.onblur = () => {
-            const val = parseInt(outrosInput.textContent) || 0;
-            outrosInput.textContent = val;
-            state.acOutros = val;
-            saveStateToServer();
-        };
-        outrosInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); outrosInput.blur(); } });
-    }
-
-    // METROS E QUADRADOS
     const metrosInput = document.getElementById('metros');
     const quadradosInput = document.getElementById('quadrados');
     if (metrosInput && quadradosInput) {
-        metrosInput.oninput = (e) => {
-            const m = parseFloat(e.target.value) || 0;
-            state.metros = m;
-            quadradosInput.value = (m / 1.5).toFixed(1);
-            saveStateToServer();
-        };
+        metrosInput.oninput = (e) => { state.metros = parseFloat(e.target.value) || 0; quadradosInput.value = (state.metros / 1.5).toFixed(1); saveStateToServer(); };
         metrosInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') metrosInput.blur(); });
-
-        quadradosInput.oninput = (e) => {
-            const q = parseFloat(e.target.value) || 0;
-            state.metros = q * 1.5;
-            metrosInput.value = state.metros;
-            saveStateToServer();
-        };
+        quadradosInput.oninput = (e) => { const q = parseFloat(e.target.value) || 0; state.metros = q * 1.5; metrosInput.value = state.metros; saveStateToServer(); };
         quadradosInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') quadradosInput.blur(); });
     }
 
-    // VIDA E BARRAS (contenteditable)
+    const outrosInput = document.getElementById('ac-outros');
+    if (outrosInput) {
+        outrosInput.oninput = () => { state.acOutros = parseInt(outrosInput.textContent) || 0; atualizarAC(); };
+        outrosInput.onblur = () => { state.acOutros = parseInt(outrosInput.textContent) || 0; saveStateToServer(); };
+        outrosInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); outrosInput.blur(); } });
+    }
+
     ['vida-atual', 'vida-temp-atual', 'dano-necro-atual'].forEach(id => {
         const el = document.getElementById(id);
-        if (!el) return;
-        el.oninput = () => {
-            const val = parseInt(el.textContent) || 0;
-            const key = id.includes('temp') ? 'vidaTempAtual' : (id.includes('necro') ? 'danoNecroAtual' : 'vidaAtual');
-            state[key] = val;
-            atualizarVidaCalculada();
-        };
-        el.onblur = () => { saveStateToServer(); };
-        el.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } });
+        if (el) {
+            el.oninput = () => {
+                const val = parseInt(el.textContent) || 0;
+                const key = id.includes('temp') ? 'vidaTempAtual' : (id.includes('necro') ? 'danoNecroAtual' : 'vidaAtual');
+                state[key] = val;
+                atualizarVidaCalculada();
+            };
+            el.onblur = () => saveStateToServer();
+            el.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } });
+        }
     });
 }
-// Botões das setas das barras
+
 document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
     if (!btn.closest('.vida-bar') && !btn.closest('.barra-secundaria')) return;
     btn.onclick = () => {
@@ -421,159 +572,6 @@ document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
         saveStateToServer();
     };
 });
-
-// ======================================
-// Funções Gerais de Atualização
-// ======================================
-
-function atualizarMarcosEXP() {
-    const nivelTotal = Object.values(state.niveisClasses).reduce((a, b) => a + b, 0) || 1;
-    const tabela = xpPorNivel[Math.min(20, Math.max(1, nivelTotal))];
-
-    document.getElementById('xpTotalText').textContent = `/ ${tabela.max}`;
-    document.getElementById('xpBar').style.width = Math.min(100, (parseInt(state.xp || 0) / tabela.max) * 100) + "%";
-
-    const marcoMax = tabela.marco;
-    document.getElementById('marcoMax').value = marcoMax;
-    document.getElementById('marcoBar').style.width = marcoMax > 0 ? Math.min(100, (parseInt(state.marco || 0) / marcoMax) * 100) + "%" : "0%";
-}
-
-function atualizarFocoClasseRotativo() {
-    const ativas = classesPadrao.filter(c => state.niveisClasses[c.key] > 0);
-    if (!ativas.length) {
-        document.getElementById('classeFocusNome').textContent = "Sem Classe";
-        document.getElementById('classeFocusNivel').textContent = "0";
-        return;
-    }
-    let i = 0;
-    if (rotateInterval) clearInterval(rotateInterval);
-    const mudar = () => {
-        const c = ativas[i % ativas.length];
-        document.getElementById('classeFocusNome').textContent = c.nome;
-        document.getElementById('classeFocusNivel').textContent = state.niveisClasses[c.key];
-        i++;
-    };
-    mudar();
-    if (ativas.length > 1) rotateInterval = setInterval(mudar, 5000);
-}
-
-function atualizarIniciativaTotal() {
-    const dexScore = state.atributos?.n2 || 10;
-    const dexMod = Math.floor((dexScore - 10) / 2);
-    const bonus = parseInt(state.iniciativaBonus) || 0;
-
-    const total = dexMod + bonus;
-    const sinal = total >= 0 ? "+" : "";
-
-    // Atualiza o número grande da Iniciativa
-    document.getElementById('iniciativaValor').textContent = `${sinal}${total}`;
-}
-
-// Vincular o evento de input para salvar e recalcular
-const inputBonus = document.getElementById('iniciativaBonus');
-if (inputBonus) {
-    inputBonus.oninput = (e) => {
-        state.iniciativaBonus = parseInt(e.target.value) || 0;
-        atualizarIniciativaTotal();
-        saveStateToServer();
-    };
-}
-
-
-function atualizarAC() {
-    const dexScore = state.atributos?.n2 || 10;
-    const dexMod = Math.floor((dexScore - 10) / 2);
-
-    const armadura = state.inventory.find(i => i.equip && (i.type === 'Proteção' || i.type === 'protecao') && i.tipoItem?.toLowerCase() !== 'escudo');
-    const escudo = state.inventory.find(i => i.equip && (i.type === 'Proteção' || i.type === 'protecao') && i.tipoItem?.toLowerCase() === 'escudo');
-
-    let equipBonus = 0;
-    let tipoTag = "SEM ARMADURA";
-    let dexFinal = dexMod;
-    let dexFormulaText = "DEX";
-
-    const formulaDexEl = document.querySelector('.formula-attr');
-    const formulaPluses = document.querySelectorAll('.inline-formula .formula-plus');
-    const plusAntesDex = formulaPluses[0];
-
-    // Reset padrão
-    if (formulaDexEl) {
-        formulaDexEl.style.display = "inline-block";
-        formulaDexEl.style.visibility = "visible";
-        formulaDexEl.style.width = "auto";
-        formulaDexEl.style.transform = "translateY(-30px)";
-    }
-    if (plusAntesDex) {
-        plusAntesDex.style.visibility = "visible";
-        plusAntesDex.style.width = "auto";
-    }
-
-    if (armadura) {
-        equipBonus += parseInt(armadura.defense?.replace('+', '')) || 0;
-        tipoTag = armadura.proficiency?.toUpperCase() || "LEVE";
-        const tNorm = tipoTag.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
-        if (tNorm === "media") {
-            dexFinal = Math.min(dexMod, 2);
-            dexFormulaText = "DEX (<=2)";
-            if (formulaDexEl) formulaDexEl.style.transform = "translateY(-26px)";
-        } else if (tNorm === "pesada") {
-            dexFinal = 0;
-            // Esconde DEX e "+" mantendo o espaço ou colapsando conforme desejado
-            if (formulaDexEl) {
-                formulaDexEl.style.visibility = "hidden";
-                formulaDexEl.style.width = "0px";
-                formulaDexEl.style.margin = "0";
-            }
-            if (plusAntesDex) {
-                plusAntesDex.style.visibility = "hidden";
-                plusAntesDex.style.width = "0px";
-                plusAntesDex.style.margin = "0";
-            }
-        }
-    }
-
-    if (formulaDexEl) formulaDexEl.textContent = dexFormulaText;
-    if (escudo) equipBonus += parseInt(escudo.defense?.replace('+', '')) || 0;
-
-    // --- MUDANÇA AQUI: Ler o valor de "Outros" do state ---
-    const outrosBonus = parseInt(state.acOutros) || 0;
-
-    // Atualiza apenas o texto do Equipamento (o primeiro .zero-num)
-    const zeros = document.querySelectorAll('.zero-num');
-    if (zeros[0]) zeros[0].textContent = equipBonus;
-
-    // O segundo .zero-num é o "Outros", que já é atualizado pelo input do usuário, 
-    // mas garantimos que ele mostre o valor correto ao carregar a página:
-    if (zeros[1] && document.activeElement !== zeros[1]) {
-        zeros[1].textContent = outrosBonus;
-    }
-
-    // SOMA TOTAL: 10 + DEX + Equip + Outros
-    document.getElementById('armaduraValor').textContent = 10 + dexFinal + equipBonus + outrosBonus;
-
-    const tagEl = document.querySelector('.armadura-tag');
-    if (tagEl) {
-        tagEl.textContent = tipoTag;
-        tagEl.style.cssText = `
-            display: flex; align-items: center; justify-content: center; 
-            border: 2px solid #fff; padding: 8px 15px; border-radius: 8px; 
-            background: transparent; color: #fff; font-weight: 900; 
-            font-size: 15px; margin-top: 12px; min-width: 130px; 
-            text-transform: uppercase; white-space: nowrap;
-        `;
-    }
-}
-
-// ATUALIZE esta função para incluir a chamada da armadura
-function atualizarTudoVisual() {
-    atualizarFocoClasseRotativo();
-    atualizarMarcosEXP();
-    atualizarVidaCalculada();
-    atualizarAC();
-    atualizarProficiencia(); // <--- ADICIONE ESTA LINHA
-    document.getElementById('nivelFoco').textContent = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0);
-}
 
 document.getElementById('inspiraLeft').onclick = () => { state.inspiracao = Math.max(0, (parseInt(state.inspiracao) || 0) - 1); document.getElementById('inspiraValor').textContent = state.inspiracao; saveStateToServer(); };
 document.getElementById('inspiraRight').onclick = () => { state.inspiracao = (parseInt(state.inspiracao) || 0) + 1; document.getElementById('inspiraValor').textContent = state.inspiracao; saveStateToServer(); };

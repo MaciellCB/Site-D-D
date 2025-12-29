@@ -1,6 +1,198 @@
 [
   {
-    "id": "i1",
+    "id": "i_machado",
+    "name": "Machado de Batalha",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d8",
+    "damage2Hands": "1d10",
+    "useTwoHands": false,
+    "damageType": "Cortante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Versátil",
+    "caracteristicas": [],
+    "description": "<p>Um machado de lâmina única ou dupla, equilibrado para golpes poderosos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_mangual",
+    "name": "Mangual",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d8",
+    "damageType": "Contundente",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Uma mao",
+    "caracteristicas": [],
+    "description": "<p>Uma bola de metal presa a um cabo por uma corrente.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_glaive",
+    "name": "Glaive",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d10",
+    "damageType": "Cortante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Duas Maos",
+    "caracteristicas": ["Pesada", "Alcance", "Duas Mãos"],
+    "alcance": "3m",
+    "description": "<p>Uma lâmina longa na ponta de uma haste.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 9 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
+  },
+  {
+    "id": "i_machado_grande",
+    "name": "Machado Grande",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d12",
+    "damageType": "Cortante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Duas Maos",
+    "caracteristicas": ["Pesada", "Duas Mãos"],
+    "description": "<p>Um machado massivo capaz de decepar cabeças com um golpe.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 7 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3,5 kg</li></ul>"
+  },
+  {
+    "id": "i_espada_duas_maos",
+    "name": "Espada de Duas Mãos",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "2d6",
+    "damageType": "Cortante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Duas Maos",
+    "caracteristicas": ["Pesada", "Duas Mãos"],
+    "description": "<p>A famosa Montante ou Greatsword. Requer treinamento e força.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 7 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
+  },
+  {
+    "id": "i_alabarda",
+    "name": "Alabarda",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d10",
+    "damageType": "Cortante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Duas Maos",
+    "caracteristicas": ["Pesada", "Alcance", "Duas Mãos"],
+    "alcance": "3m",
+    "description": "<p>Haste com lâmina de machado e ponta de lança.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 7 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
+  },
+  {
+    "id": "i_lanca_montaria",
+    "name": "Lança de Montaria",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d12",
+    "damageType": "Perfurante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Duas Maos",
+    "caracteristicas": ["Alcance", "Especial"],
+    "alcance": "3m",
+    "description": "<p>Desvantagem para atacar alvo adjacente (1,5m). Requer duas mãos se não estiver montado.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
+  },
+  {
+    "id": "i_espada_longa",
+    "name": "Espada Longa",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d8",
+    "damage2Hands": "1d10",
+    "useTwoHands": false,
+    "damageType": "Cortante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Versátil",
+    "caracteristicas": [],
+    "description": "<p>A lâmina padrão do cavaleiro, usada com uma ou duas mãos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_marreta",
+    "name": "Marreta (Malho)",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "2d6",
+    "damageType": "Contundente",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Duas Maos",
+    "caracteristicas": ["Pesada", "Duas Mãos"],
+    "description": "<p>Um martelo de guerra massivo para esmagar armaduras.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>"
+  },
+  {
+    "id": "i_maca_estrela",
+    "name": "Maça Estrela (Morningstar)",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d8",
+    "damage2Hands": "1d10",
+    "useTwoHands": false,
+    "damageType": "Perfurante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Versátil",
+    "caracteristicas": [],
+    "description": "<p>Uma bola de metal com espinhos na ponta de um cabo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_pique",
+    "name": "Pique",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d10",
+    "damageType": "Perfurante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Duas Maos",
+    "caracteristicas": ["Pesada", "Alcance", "Duas Mãos"],
+    "alcance": "3m",
+    "description": "<p>Uma lança extremamente longa.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 9 kg</li></ul>"
+  },
+  {
+    "id": "i_florete",
+    "name": "Florete",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d8",
+    "damageType": "Perfurante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Ágil", "Leve"],
+    "description": "<p>Lâmina fina focada em precisão e estocadas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 4 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_cimitarra",
+    "name": "Cimitarra",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d6",
+    "damageType": "Cortante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Ágil", "Leve"],
+    "description": "<p>Espada de lâmina curva leve.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 4 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
+  },
+  {
+    "id": "i_espada_curta",
     "name": "Espada Curta",
     "category": "Armas",
     "subcategory": "Corpo-a-corpo",
@@ -10,11 +202,120 @@
     "proficiency": "Armas Marciais",
     "tipoArma": "Corpo a Corpo",
     "empunhadura": "Uma mao",
-    "caracteristicas": ["Leve", "Sutil"],
-    "description": "Uma espada leve e rápida."
+    "caracteristicas": ["Ágil", "Leve"],
+    "description": "<p>Uma espada leve e rápida.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 4 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
   },
   {
-    "id": "i2",
+    "id": "i_tridente",
+    "name": "Tridente",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d6",
+    "damage2Hands": "1d8",
+    "useTwoHands": false,
+    "damageType": "Perfurante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Versátil",
+    "caracteristicas": ["Arremesso (6/18)"],
+    "alcance": "1,5m",
+    "description": "<p>Lança com três pontas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 4 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_foice_longa",
+    "name": "Foice Longa",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d8",
+    "damage2Hands": "1d10",
+    "useTwoHands": false,
+    "damageType": "Cortante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Versátil",
+    "caracteristicas": ["Ágil"],
+    "description": "<p>Lâmina curva em cabo longo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_martelo_guerra",
+    "name": "Martelo de Guerra",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d8",
+    "damage2Hands": "1d10",
+    "useTwoHands": false,
+    "damageType": "Contundente",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Versátil",
+    "caracteristicas": [],
+    "description": "<p>Martelo versátil de combate.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_chicote",
+    "name": "Chicote",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d4",
+    "damageType": "Cortante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Ágil", "Alcance", "Leve"],
+    "alcance": "3m",
+    "description": "<p>Arma flexível de longo alcance.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
+  },
+  {
+    "id": "i_zarabatana",
+    "name": "Zarabatana",
+    "category": "Armas",
+    "subcategory": "A distancia",
+    "type": "Arma",
+    "damage": "1",
+    "damageType": "Perfurante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Munição", "Leve"],
+    "alcance": "7,5m/30m",
+    "description": "<p>Tubo para soprar dardos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_besta_mao",
+    "name": "Besta de Mão",
+    "category": "Armas",
+    "subcategory": "A distancia",
+    "type": "Arma",
+    "damage": "1d6",
+    "damageType": "Perfurante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Munição", "Leve", "Recarga"],
+    "alcance": "9m/36m",
+    "description": "<p>Besta pequena e compacta.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
+  },
+  {
+    "id": "i_besta_pesada",
+    "name": "Besta Pesada",
+    "category": "Armas",
+    "subcategory": "A distancia",
+    "type": "Arma",
+    "damage": "1d10",
+    "damageType": "Perfurante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Duas Maos",
+    "caracteristicas": ["Munição", "Pesada", "Duas Mãos", "Recarga"],
+    "alcance": "30m/120m",
+    "description": "<p>Besta potente com longo alcance.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 15 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 9 kg</li></ul>"
+  },
+  {
+    "id": "i_arco_longo",
     "name": "Arco Longo",
     "category": "Armas",
     "subcategory": "A distancia",
@@ -24,12 +325,475 @@
     "proficiency": "Armas Marciais",
     "tipoArma": "A Distancia",
     "empunhadura": "Duas Maos",
+    "caracteristicas": ["Munição", "Pesada", "Duas Mãos"],
     "alcance": "45m/180m",
-    "caracteristicas": ["Pesada", "Duas Mãos"],
-    "description": "Um arco grande usado para tiros longos."
+    "description": "<p>Arco grande para longas distâncias.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 8 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
   },
   {
-    "id": "i3",
+    "id": "i_rede",
+    "name": "Rede",
+    "category": "Armas",
+    "subcategory": "A distancia",
+    "type": "Arma",
+    "damage": "0",
+    "damageType": "-",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Arremesso", "Especial"],
+    "alcance": "1,5m/4,5m",
+    "description": "<p>Usada para enredar inimigos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
+  },
+  {
+    "id": "i_adaga",
+    "name": "Adaga",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d4",
+    "damageType": "Perfurante",
+    "proficiency": "Armas Simples",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Ágil", "Leve", "Arremesso (6/18)"],
+    "description": "<p>Lâmina curta multiuso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_azagaia",
+    "name": "Azagaia",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d6",
+    "damageType": "Perfurante",
+    "proficiency": "Armas Simples",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Arremesso (9/36)", "Ágil"],
+    "description": "<p>Lança leve para arremesso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 4 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_cajado",
+    "name": "Cajado",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d6",
+    "damage2Hands": "1d8",
+    "useTwoHands": false,
+    "damageType": "Contundente",
+    "proficiency": "Armas Simples",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Versátil",
+    "caracteristicas": [],
+    "description": "<p>Bastão de madeira simples, mas eficaz.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_clava_grande",
+    "name": "Clava Grande",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d8",
+    "damageType": "Contundente",
+    "proficiency": "Armas Simples",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Duas Maos",
+    "caracteristicas": ["Pesada", "Duas Mãos"],
+    "description": "<p>Um bastão grosso e pesado.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 3 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>"
+  },
+  {
+    "id": "i_desarmado",
+    "name": "Ataque Desarmado",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1",
+    "damageType": "Contundente",
+    "proficiency": "Armas Simples",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Leve"],
+    "description": "<p>Socos, chutes e cabeçadas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> -</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> -</li></ul>"
+  },
+  {
+    "id": "i_lanca",
+    "name": "Lança",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d6",
+    "damage2Hands": "1d8",
+    "useTwoHands": false,
+    "damageType": "Perfurante",
+    "proficiency": "Armas Simples",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Versátil",
+    "caracteristicas": ["Arremesso (6/18)"],
+    "description": "<p>Arma versátil para estocada ou arremesso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
+  },
+  {
+    "id": "i_maca",
+    "name": "Maça",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d6",
+    "damageType": "Contundente",
+    "proficiency": "Armas Simples",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Pesada", "Leve"],
+    "description": "<p>Arma contundente simples.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_machadinha",
+    "name": "Machadinha",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d6",
+    "damageType": "Cortante",
+    "proficiency": "Armas Simples",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Leve", "Arremesso (6/18)"],
+    "description": "<p>Pequeno machado equilibrado.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 3 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_arco_curto",
+    "name": "Arco Curto",
+    "category": "Armas",
+    "subcategory": "A distancia",
+    "type": "Arma",
+    "damage": "1d6",
+    "damageType": "Perfurante",
+    "proficiency": "Armas Simples",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Duas Maos",
+    "caracteristicas": ["Munição", "Duas Mãos"],
+    "alcance": "24m/96m",
+    "description": "<p>Arco leve e comum.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_besta_leve",
+    "name": "Besta Leve",
+    "category": "Armas",
+    "subcategory": "A distancia",
+    "type": "Arma",
+    "damage": "1d8",
+    "damageType": "Perfurante",
+    "proficiency": "Armas Simples",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Duas Maos",
+    "caracteristicas": ["Munição", "Recarga", "Duas Mãos"],
+    "alcance": "24m/96m",
+    "description": "<p>Besta simples, fácil de usar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 7 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg</li></ul>"
+  },
+  {
+    "id": "i_dardo",
+    "name": "Dardo",
+    "category": "Armas",
+    "subcategory": "A distancia",
+    "type": "Arma",
+    "damage": "1d4",
+    "damageType": "Perfurante",
+    "proficiency": "Armas Simples",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Ágil", "Arremesso"],
+    "alcance": "6m/18m",
+    "description": "<p>Pequeno projétil de arremesso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pc</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,1 kg</li></ul>"
+  },
+  {
+    "id": "i_pistola",
+    "name": "Pistola (Renascentista)",
+    "category": "Armas",
+    "subcategory": "Fora de epoca",
+    "type": "Arma",
+    "damage": "1d10",
+    "damageType": "Perfurante",
+    "proficiency": "Armas de Fogo",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Munição", "Recarga", "Leve"],
+    "alcance": "9m/27m",
+    "description": "<p>Arma de pólvora de uma mão.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 250 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
+  },
+  {
+    "id": "i_mosquete",
+    "name": "Mosquete (Renascentista)",
+    "category": "Armas",
+    "subcategory": "Fora de epoca",
+    "type": "Arma",
+    "damage": "1d12",
+    "damageType": "Perfurante",
+    "proficiency": "Armas de Fogo",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Duas Maos",
+    "caracteristicas": ["Munição", "Recarga", "Duas Mãos"],
+    "alcance": "12m/36m",
+    "description": "<p>Arma de pólvora longa.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 500 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 4,5 kg</li></ul>"
+  },
+  {
+    "id": "i_pistola_automatica",
+    "name": "Pistola Automática (Moderna)",
+    "category": "Armas",
+    "subcategory": "Fora de epoca",
+    "type": "Arma",
+    "damage": "2d6",
+    "damageType": "Perfurante",
+    "proficiency": "Armas de Fogo",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Munição", "Recarga (15 tiros)", "Leve"],
+    "alcance": "15m/45m",
+    "description": "<p>Pistola moderna.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> -</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
+  },
+  {
+    "id": "i_revolver",
+    "name": "Revólver (Moderno)",
+    "category": "Armas",
+    "subcategory": "Fora de epoca",
+    "type": "Arma",
+    "damage": "2d8",
+    "damageType": "Perfurante",
+    "proficiency": "Armas de Fogo",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Munição", "Recarga (6 tiros)", "Leve"],
+    "alcance": "12m/36m",
+    "description": "<p>Revólver de seis tiros.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> -</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
+  },
+  {
+    "id": "i_rifle_fuca",
+    "name": "Rifle de Caça (Moderno)",
+    "category": "Armas",
+    "subcategory": "Fora de epoca",
+    "type": "Arma",
+    "damage": "2d10",
+    "damageType": "Perfurante",
+    "proficiency": "Armas de Fogo",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Duas Maos",
+    "caracteristicas": ["Munição", "Recarga (5 tiros)", "Duas Mãos"],
+    "alcance": "24m/72m",
+    "description": "<p>Rifle de precisão.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> -</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 4 kg</li></ul>"
+  },
+  {
+    "id": "i_escopeta",
+    "name": "Escopeta (Moderna)",
+    "category": "Armas",
+    "subcategory": "Fora de epoca",
+    "type": "Arma",
+    "damage": "2d8",
+    "damageType": "Perfurante",
+    "proficiency": "Armas de Fogo",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Duas Maos",
+    "caracteristicas": ["Munição", "Recarga (2 tiros)", "Duas Mãos"],
+    "alcance": "9m/27m",
+    "description": "<p>Arma de dispersão.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> -</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
+  },
+  {
+    "id": "i_pistola_laser",
+    "name": "Pistola Laser (Futurista)",
+    "category": "Armas",
+    "subcategory": "Fora de epoca",
+    "type": "Arma",
+    "damage": "3d6",
+    "damageType": "Radiante",
+    "proficiency": "Armas de Fogo",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Munição", "Recarga (50 tiros)", "Leve"],
+    "alcance": "12m/36m",
+    "description": "<p>Pistola de energia.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> -</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_rifle_antimateria",
+    "name": "Rifle Antimatéria (Futurista)",
+    "category": "Armas",
+    "subcategory": "Fora de epoca",
+    "type": "Arma",
+    "damage": "6d8",
+    "damageType": "Necrótico",
+    "proficiency": "Armas de Fogo",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Duas Maos",
+    "caracteristicas": ["Munição", "Recarga (2 tiros)", "Duas Mãos"],
+    "alcance": "36m/110m",
+    "description": "<p>Arma devastadora de antimatéria.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> -</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>"
+  },
+  {
+    "id": "i_rifle_laser",
+    "name": "Rifle Laser (Futurista)",
+    "category": "Armas",
+    "subcategory": "Fora de epoca",
+    "type": "Arma",
+    "damage": "3d8",
+    "damageType": "Radiante",
+    "proficiency": "Armas de Fogo",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Duas Maos",
+    "caracteristicas": ["Munição", "Recarga (30 tiros)", "Duas Mãos"],
+    "alcance": "30m/90m",
+    "description": "<p>Rifle de energia.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> -</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3,5 kg</li></ul>"
+  },
+  {
+    "id": "i_bomba",
+    "name": "Bomba",
+    "category": "Armas",
+    "subcategory": "Munição",
+    "type": "Item",
+    "damage": "3d6",
+    "damageType": "Fogo",
+    "description": "<p>Arremesso (18m). Todos a 1,5m do impacto devem fazer resistência de Destreza (CD 12) ou sofrem o dano.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 150 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+
+
+  {
+    "id": "i_simbolo_amuleto",
+    "name": "Símbolo Sagrado - Amuleto",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Amuleto sagrado usado como foco divino.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_simbolo_emblema",
+    "name": "Símbolo Sagrado - Emblema",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Emblema sagrado, geralmente gravado em escudo ou armadura.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,25 kg</li></ul>"
+  },
+  {
+    "id": "i_chifre_polvora",
+    "name": "Chifre de Pólvora",
+    "category": "Armas",
+    "subcategory": "Munição",
+    "type": "Item",
+    "damage": "2d4",
+    "damageType": "Fogo",
+    "description": "<p>Recipiente para pólvora. Se incendiado, explode em raio de 1,5m. CD 12 Destreza para metade.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 35 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+
+  {
+    "id": "i_dinamite",
+    "name": "Dinamite",
+    "category": "Armas",
+    "subcategory": "Munição",
+    "type": "Item",
+    "damage": "3d6",
+    "damageType": "Contundente",
+    "description": "<p>Explode em raio de 1,5m. CD 12. Pode amarrar bananas juntas (+1d6 e +1,5m raio por banana extra, máx 10d6).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> -</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_acolchoada",
+    "name": "Acolchoada",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "11",
+    "proficiency": "Leve",
+    "tipoItem": "Armadura",
+    "disadvantageSkill": "Furtividade",
+    "description": "<p>Camadas de tecido acolchoado.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 4 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_couro",
+    "name": "Couro",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "11",
+    "proficiency": "Leve",
+    "tipoItem": "Armadura",
+    "description": "<p>Peitoral e ombro de couro rígido.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_couro_batido",
+    "name": "Couro Batido",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "12",
+    "proficiency": "Leve",
+    "tipoItem": "Armadura",
+    "description": "<p>Couro reforçado com rebites de metal.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 45 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 6,5 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_gibao",
+    "name": "Gibão de Peles",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "12",
+    "proficiency": "Media",
+    "tipoItem": "Armadura",
+    "description": "<p>Peles grossas e pelos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 6 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_camisao",
+    "name": "Camisão de Malha",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "13",
+    "proficiency": "Media",
+    "tipoItem": "Armadura",
+    "description": "<p>Malha de metal entre camadas de tecido.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 10 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_escamas",
+    "name": "Brunea (Escamas)",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "14",
+    "proficiency": "Media",
+    "tipoItem": "Armadura",
+    "disadvantageSkill": "Furtividade",
+    "description": "<p>Escamas de metal sobre couro.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 20 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_peitoral",
+    "name": "Peitoral de Aço",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "14",
+    "proficiency": "Media",
+    "tipoItem": "Armadura",
+    "description": "<p>Peitoral de metal com couro flexível.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 400 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 10 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_meia_armadura",
+    "name": "Meia-Armadura",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "15",
+    "proficiency": "Media",
+    "tipoItem": "Armadura",
+    "disadvantageSkill": "Furtividade",
+    "description": "<p>Placas de metal moldadas cobrindo a maior parte do corpo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 750 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 20 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_cota_aneis",
+    "name": "Cota de Anéis",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "14",
+    "proficiency": "Pesada",
+    "tipoItem": "Armadura",
+    "disadvantageSkill": "Furtividade",
+    "description": "<p>Anéis de metal costurados em couro.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 30 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 20 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_cota_malha",
     "name": "Cota de Malha",
     "category": "Armaduras",
     "subcategory": "Armaduras",
@@ -39,25 +803,1977 @@
     "tipoItem": "Armadura",
     "minStrength": "13",
     "disadvantageSkill": "Furtividade",
-    "description": "Feita de anéis de metal entrelaçados."
+    "description": "<p>Anéis de metal entrelaçados.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 75 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 25 kg</li></ul>"
   },
   {
-    "id": "i4",
-    "name": "Escudo de Aço",
+    "id": "i_arm_cota_talas",
+    "name": "Cota de Talas",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "17",
+    "proficiency": "Pesada",
+    "tipoItem": "Armadura",
+    "minStrength": "15",
+    "disadvantageSkill": "Furtividade",
+    "description": "<p>Tiras verticais de metal sobre couro.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 200 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 30 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_placas",
+    "name": "Armadura de Placas",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "18",
+    "proficiency": "Pesada",
+    "tipoItem": "Armadura",
+    "minStrength": "15",
+    "disadvantageSkill": "Furtividade",
+    "description": "<p>Placas de metal moldadas cobrindo todo o corpo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1.500 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 30 kg</li></ul>"
+  },
+  {
+    "id": "i_escudo",
+    "name": "Escudo",
     "category": "Armaduras",
     "subcategory": "Escudos",
     "type": "Proteção",
     "defense": "+2",
     "proficiency": "Escudo",
     "tipoItem": "Escudo",
-    "description": "Um escudo padrão."
+    "description": "<p>Pode ser de madeira ou metal.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
   },
   {
-    "id": "i5",
+    "id": "i_abaco",
+    "name": "Ábaco",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Ferramenta de cálculo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_acido",
+    "name": "Ácido (vidro)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Pode ser arremessado (6m) ou despejado. Causa 2d6 ácido.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_agua_benta",
+    "name": "Água Benta (frasco)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Causa 2d6 radiante em corruptores/mortos-vivos se arremessado.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_algemas",
+    "name": "Algemas",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Metal. CD 20 para escapar/quebrar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_aljava",
+    "name": "Aljava",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Comporta 20 flechas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_ampulheta",
+    "name": "Ampulheta",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Mede tempo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_antidoto",
+    "name": "Antídoto (vidro)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Advantage em testes contra veneno por 1 hora.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> -</li></ul>"
+  },
+  {
+    "id": "i_ariete",
+    "name": "Aríete Portátil",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>+4 em testes de Força para arrombar portas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 4 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 16 kg</li></ul>"
+  },
+  {
+    "id": "i_armadilha_caca",
+    "name": "Armadilha de Caça",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Dano 1d4 e imobiliza (CD 13).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 11 kg</li></ul>"
+  },
+  {
+    "id": "i_arpeu",
+    "name": "Arpéu",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Gancho de metal.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_balanca",
+    "name": "Balança de Mercador",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Pequena balança.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
+  },
+  {
+    "id": "i_barril",
+    "name": "Barril",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Comporta 150 litros ou 1 metro cúbico.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 32 kg</li></ul>"
+  },
+  {
+    "id": "i_bau",
+    "name": "Baú",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Comporta 350 litros ou 3,5 metros cúbicos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 11 kg</li></ul>"
+  },
+  {
+    "id": "i_bolsa_componentes",
+    "name": "Bolsa de Componentes",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Contém componentes materiais para magias (sem custo).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_caixa_fogo",
+    "name": "Caixa de Fogo",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Pederneira e isqueiro para acender fogo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_cantil",
+    "name": "Cantil",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Comporta 2 litros.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg (cheio)</li></ul>"
+  },
+  {
+    "id": "i_corda_canhamo",
+    "name": "Corda de Cânhamo (15m)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Resiste 2 PV (CD 17 arrebentar).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>"
+  },
+  {
+    "id": "i_corda_seda",
     "name": "Corda de Seda (15m)",
     "category": "Utensílios",
     "subcategory": "Utensílios gerais",
     "type": "Geral",
-    "description": "Corda resistente e leve."
+    "description": "<p>Resiste 2 PV (CD 17 arrebentar), mais leve.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg</li></ul>"
+  },
+  {
+    "id": "i_corrente",
+    "name": "Corrente (3m)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Resiste 10 PV (CD 20 arrebentar).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>"
+  },
+  {
+    "id": "i_esferas",
+    "name": "Esferas (1000)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Cobre quadrado de 3m. CD 10 Destreza ou cai.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_fechadura",
+    "name": "Fechadura",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Com chave. CD 15 para abrir.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_fogo_alquimico",
+    "name": "Fogo Alquímico (vidro)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Arremesso (6m). Causa 1d4 fogo no início de cada turno. Ação CD 10 para apagar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_foco_arcano_cristal",
+    "name": "Foco Arcano (Cristal)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Para magos, feiticeiros e bruxos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_foco_druidico",
+    "name": "Foco Druídico (Ramo de Visco)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Para druidas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> -</li></ul>"
+  },
+  {
+    "id": "i_grimorio",
+    "name": "Grimório",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Livro de magias.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
+  },
+  {
+    "id": "i_kit_escalada",
+    "name": "Kit de Escalada",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Pítons, botas, luvas. Protege contra quedas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 6 kg</li></ul>"
+  },
+  {
+    "id": "i_kit_primeiros_socorros",
+    "name": "Kit de Primeiros Socorros",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>10 usos. Estabiliza criatura (0 PV) sem teste.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
+  },
+  {
+    "id": "i_lanterna_coberta",
+    "name": "Lanterna Coberta",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Luz plena 9m + penumbra 9m. 6 horas por frasco de óleo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_lanterna_furta_fogo",
+    "name": "Lanterna Furta-Fogo",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Luz em cone de 18m. 6 horas por frasco de óleo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_luneta",
+    "name": "Luneta",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Amplia objetos 2x.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1.000 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_mochila",
+    "name": "Mochila",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Carrega 15 kg.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg</li></ul>"
+  },
+  {
+    "id": "i_oleo",
+    "name": "Óleo (frasco)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Combustível ou ataque (1d4 + 5 fogo se aceso).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_pe_cabra",
+    "name": "Pé de Cabra",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Vantagem em testes de Força para abrir coisas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg</li></ul>"
+  },
+  {
+    "id": "i_pocao_cura",
+    "name": "Poção de Cura",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Cura 2d4 + 2 PV.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,25 kg</li></ul>"
+  },
+  {
+    "id": "i_saco_dormir",
+    "name": "Saco de Dormir",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Para dormir.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3,5 kg</li></ul>"
+  },
+  {
+    "id": "i_simbolo_sagrado",
+    "name": "Símbolo Sagrado",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Foco para Clérigos e Paladinos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_tocha",
+    "name": "Tocha",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Luz plena 6m + penumbra 6m. Dura 1 hora.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pc</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_veneno_basico",
+    "name": "Veneno Básico (vidro)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Aplica em arma. CD 10 Constituição ou 1d4 veneno.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 100 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> -</li></ul>"
+  },
+  {
+    "id": "i_pacote_assaltante",
+    "name": "Pacote de Assaltante",
+    "category": "Conjuntos",
+    "subcategory": "Pacotes",
+    "type": "Geral",
+    "description": "<p>Mochila, esferas (1000), corda (3m), sino, velas (5), pé de cabra, martelo, pítons (10), lanterna coberta, óleo (2), rações (5), caixa de fogo, cantil, corda de cânhamo (15m).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 16 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 22 kg</li></ul>"
+  },
+  {
+    "id": "i_pacote_aventureiro",
+    "name": "Pacote de Aventureiro",
+    "category": "Conjuntos",
+    "subcategory": "Pacotes",
+    "type": "Geral",
+    "description": "<p>Mochila, pé de cabra, martelo, pítons (10), tochas (10), caixa de fogo, rações (10), cantil, corda de cânhamo (15m).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 26 kg</li></ul>"
+  },
+  {
+    "id": "i_pacote_explorador",
+    "name": "Pacote de Explorador",
+    "category": "Conjuntos",
+    "subcategory": "Pacotes",
+    "type": "Geral",
+    "description": "<p>Mochila, saco de dormir, kit de refeição, caixa de fogo, tochas (10), rações (10), cantil, corda de cânhamo (15m).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 26 kg</li></ul>"
+  },
+  {
+    "id": "i_pacote_sacerdote",
+    "name": "Pacote de Sacerdote",
+    "category": "Conjuntos",
+    "subcategory": "Pacotes",
+    "type": "Geral",
+    "description": "<p>Mochila, cobertor, velas (10), caixa de fogo, caixa de esmolas, incenso (2), incensário, vestes, rações (2), cantil.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 19 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 13 kg</li></ul>"
+  },
+  {
+    "id": "i_kit_ladrao",
+    "name": "Ferramentas de Ladrão",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Para abrir fechaduras e desarmar armadilhas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_kit_disfarce",
+    "name": "Kit de Disfarce",
+    "category": "Conjuntos",
+    "subcategory": "Kits",
+    "type": "Geral",
+    "description": "<p>Maquiagem e adereços.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
+  },
+  {
+    "id": "i_kit_herbalismo",
+    "name": "Kit de Herbalismo",
+    "category": "Conjuntos",
+    "subcategory": "Kits",
+    "type": "Geral",
+    "description": "<p>Para criar poções de cura e antídotos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
+  },
+  {
+    "id": "i_racao",
+    "name": "Rações de Viagem (1 dia)",
+    "category": "Provisão",
+    "subcategory": "Comida",
+    "type": "Geral",
+    "description": "<p>Comida seca.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+
+
+  
+  {
+    "id": "i_foice_curta",
+    "name": "Foice Curta",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d4",
+    "damageType": "Cortante",
+    "proficiency": "Armas Simples",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Leve"],
+    "description": "<p>Ferramenta agrícola usada como arma.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_martelo_leve",
+    "name": "Martelo Leve",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d4",
+    "damageType": "Contundente",
+    "proficiency": "Armas Simples",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Leve", "Arremesso (6/18)"],
+    "description": "<p>Martelo pequeno de arremesso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 3 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_porrete",
+    "name": "Porrete",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d4",
+    "damageType": "Contundente",
+    "proficiency": "Armas Simples",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Leve"],
+    "description": "<p>Pedaço de madeira simples.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_porrete_reforcado",
+    "name": "Porrete Reforçado",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d12",
+    "damageType": "Contundente",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Duas Maos",
+    "caracteristicas": ["Pesada", "Duas Mãos"],
+    "description": "<p>Bastão pesado com reforços de metal ou pregos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 9 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 14 kg</li></ul>"
+  },
+  {
+    "id": "i_funda",
+    "name": "Funda",
+    "category": "Armas",
+    "subcategory": "A distancia",
+    "type": "Arma",
+    "damage": "1d4",
+    "damageType": "Contundente",
+    "proficiency": "Armas Simples",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Uma mao",
+    "caracteristicas": ["Munição"],
+    "alcance": "9m/36m",
+    "description": "<p>Tira de couro para arremessar pedras.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> -</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> -</li></ul>"
+  },
+  {
+    "id": "i_rifle_automatico",
+    "name": "Rifle Automático (Moderno)",
+    "category": "Armas",
+    "subcategory": "Fora de epoca",
+    "type": "Arma",
+    "damage": "2d8",
+    "damageType": "Perfurante",
+    "proficiency": "Armas de Fogo",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Duas Maos",
+    "caracteristicas": ["Munição", "Recarga (30 tiros)", "Automática", "Duas Mãos"],
+    "alcance": "15m/45m",
+    "description": "<p>Rifle de assalto moderno.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 8 pl</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>"
+  },
+  {
+    "id": "i_granada_fumaca",
+    "name": "Granada de Fumaça",
+    "category": "Armas",
+    "subcategory": "Munição",
+    "type": "Item",
+    "description": "<p>Cria fumaça em raio de 6m. Arremesso 18m.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_lancador_granada",
+    "name": "Lançador de Granada",
+    "category": "Armas",
+    "subcategory": "Fora de epoca",
+    "type": "Arma",
+    "damage": "1d10",
+    "damageType": "Contundente",
+    "proficiency": "Armas de Fogo",
+    "tipoArma": "A Distancia",
+    "empunhadura": "Duas Maos",
+    "caracteristicas": ["Munição", "Recarga"],
+    "alcance": "24m/40m",
+    "description": "<p>Dispara granadas a longa distância.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 4 pl</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_bomba_plasma",
+    "name": "Bomba de Plasma",
+    "category": "Armas",
+    "subcategory": "Fora de epoca",
+    "type": "Item",
+    "damage": "5d6",
+    "damageType": "Energético",
+    "description": "<p>Explosivo futurista. Raio de 4,5m.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 pl</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_granada_pulso",
+    "name": "Granada de Pulso",
+    "category": "Armas",
+    "subcategory": "Fora de epoca",
+    "type": "Item",
+    "damage": "6d6",
+    "damageType": "Energético",
+    "description": "<p>Pulso eletromagnético. Raio de 4,5m.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pl</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_camisa_couro",
+    "name": "Camisa de Couro",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "12",
+    "proficiency": "Leve",
+    "tipoItem": "Armadura",
+    "description": "<p>Fácil de esconder.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 3 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 4 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_manto_encouracado",
+    "name": "Manto Encouraçado",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "13",
+    "proficiency": "Leve",
+    "tipoItem": "Armadura",
+    "disadvantageSkill": "Furtividade",
+    "description": "<p>Manto reforçado com placas de couro.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_tunica_reforcada",
+    "name": "Túnica Reforçada",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "12",
+    "proficiency": "Leve",
+    "tipoItem": "Armadura",
+    "description": "<p>Tecido grosso e reforçado.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 4 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 4 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_camisa_cota_leve",
+    "name": "Camisa de Cota Leve",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "13",
+    "proficiency": "Leve",
+    "tipoItem": "Armadura",
+    "description": "<p>Malha fina usada sob a roupa.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 7 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 6 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_couro_ref",
+    "name": "Armadura de Couro Reforçado",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "13",
+    "proficiency": "Media",
+    "tipoItem": "Armadura",
+    "description": "<p>Couro tratado e endurecido.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 8 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_couro_metalizado",
+    "name": "Cota de Couro Metalizado",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "14",
+    "proficiency": "Media",
+    "tipoItem": "Armadura",
+    "description": "<p>Couro com rebites e placas de metal.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 18 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 12 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_ossos",
+    "name": "Armadura de Ossos",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "13",
+    "proficiency": "Media",
+    "tipoItem": "Armadura",
+    "description": "<p>Feita de ossos resistentes.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 12 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 10 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_linho_aco",
+    "name": "Armadura de Linho e Aço",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "14",
+    "proficiency": "Media",
+    "tipoItem": "Armadura",
+    "description": "<p>Linho reforçado com placas de aço internas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 15 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 9 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_laminar",
+    "name": "Armadura Laminar",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "17",
+    "proficiency": "Pesada",
+    "tipoItem": "Armadura",
+    "minStrength": "12",
+    "disadvantageSkill": "Furtividade",
+    "description": "<p>Lâminas entrelaçadas. Devolve 1d4 de dano ao contato.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 18 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 25 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_batalha",
+    "name": "Armadura de Batalha",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "16",
+    "proficiency": "Pesada",
+    "tipoItem": "Armadura",
+    "disadvantageSkill": "Furtividade",
+    "description": "<p>Armadura pesada robusta.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 16 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 28 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_cravos",
+    "name": "Cota de Cravos",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "16",
+    "proficiency": "Pesada",
+    "tipoItem": "Armadura",
+    "disadvantageSkill": "Furtividade",
+    "description": "<p>Coberta de espinhos. Devolve 1d6 perfurante ao ser agarrado.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 20 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 22 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_reforcada",
+    "name": "Armadura Reforçada",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "17",
+    "proficiency": "Pesada",
+    "tipoItem": "Armadura",
+    "disadvantageSkill": "Furtividade",
+    "description": "<p>Camadas extras. Reduz dano de fogo pela metade (1ª vez).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 22 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 25 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_guerra",
+    "name": "Armadura de Guerra",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "18",
+    "proficiency": "Pesada",
+    "tipoItem": "Armadura",
+    "minStrength": "16",
+    "disadvantageSkill": "Furtividade",
+    "description": "<p>Extremamente pesada. Resistência contra empurrões e quedas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 35 kg</li></ul>"
+  },
+  {
+    "id": "i_apito",
+    "name": "Apito de Advertência",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Usado para alertas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li></ul>"
+  },
+  {
+    "id": "i_balde",
+    "name": "Balde",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Recipiente simples.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_caneca",
+    "name": "Caneca",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Para beber.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_cesto",
+    "name": "Cesto",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>De vime, para carga leve.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_cobertor",
+    "name": "Cobertor de Inverno",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Grosso e quente.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_equip_pesca",
+    "name": "Equipamento de Pescaria",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Vara, linha, anzol.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_escada",
+    "name": "Escada (3 metros)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Madeira, portátil.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 10 kg</li></ul>"
+  },
+  {
+    "id": "i_esmeril",
+    "name": "Esmeril",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Para afiar armas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_espelho",
+    "name": "Espelho de Aço",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Pequeno, polido.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_estrepes",
+    "name": "Estrepes (bolsa 20)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Pinos para o chão. Cobre quadrado 1,5m. Dano 1 e pare.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_giz",
+    "name": "Giz (1 peça)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Para escrever/desenhar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li></ul>"
+  },
+  {
+    "id": "i_implemento_batao",
+    "name": "Implemento Arcano - Bastão",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Foco mágico.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_implemento_cajado",
+    "name": "Implemento Arcano - Cajado",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Foco mágico.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_implemento_orbe",
+    "name": "Implemento Arcano - Orbe",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Foco mágico.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 15 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_implemento_varinha",
+    "name": "Implemento Arcano - Varinha",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Foco mágico.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_jarro",
+    "name": "Jarro",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Recipiente para líquidos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_kit_refeicao",
+    "name": "Kit de Refeição",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Prato, talheres, copo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_lampada",
+    "name": "Lâmpada",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Ilumina 4,5m raio. Queima óleo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_lente",
+    "name": "Lente de Aumento",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Para detalhes finos ou acender fogo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_livro",
+    "name": "Livro",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Em branco ou com conteúdo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_manto",
+    "name": "Manto",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Capa simples.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_marreta_ferramenta",
+    "name": "Marreta (Ferramenta)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Para construção.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 4 kg</li></ul>"
+  },
+  {
+    "id": "i_martelo_ferramenta",
+    "name": "Martelo (Ferramenta)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Para pregar pítons ou construção.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_panela",
+    "name": "Panela de Ferro",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Para cozinhar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_papel",
+    "name": "Papel (folha)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Folha simples.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 pp</li></ul>"
+  },
+  {
+    "id": "i_parafina",
+    "name": "Parafina",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Cera para selar ou iluminar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li></ul>"
+  },
+  {
+    "id": "i_perfume",
+    "name": "Perfume (vidro)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Fragrância fina.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_pergaminho",
+    "name": "Pergaminho (folha)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Pele curtida para escrita.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li></ul>"
+  },
+  {
+    "id": "i_picareta",
+    "name": "Picareta de Mina",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Para quebrar pedra.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 3 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>"
+  },
+  {
+    "id": "i_piton",
+    "name": "Píton",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Pino para fixar corda em pedra.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,25 kg</li></ul>"
+  },
+  {
+    "id": "i_porta_mapas",
+    "name": "Porta Mapas",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Tubo de couro ou madeira.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_porta_virotes",
+    "name": "Porta Virotes",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Comporta 20 virotes.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_pregos",
+    "name": "Pregos de Ferro (10)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Para construção ou travar portas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,25 kg</li></ul>"
+  },
+  {
+    "id": "i_sabao",
+    "name": "Sabão",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Bloco de sabão.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,25 kg</li></ul>"
+  },
+  {
+    "id": "i_saco",
+    "name": "Saco",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Carrega 15 kg.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,25 kg</li></ul>"
+  },
+  {
+    "id": "i_sinete",
+    "name": "Sinete",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Para selar cartas com cera.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,25 kg</li></ul>"
+  },
+  {
+    "id": "i_sind",
+    "name": "Sind (Bloqueador)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Material para bloquear água.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_talha",
+    "name": "Talha e Polia",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Permite erguer 4x o peso normal.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg</li></ul>"
+  },
+  {
+    "id": "i_tenda",
+    "name": "Tenda (2 pessoas)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Abrigo portátil.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 10 kg</li></ul>"
+  },
+  {
+    "id": "i_tinta",
+    "name": "Tinta (vidro)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>30ml de tinta preta.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li></ul>"
+  },
+  {
+    "id": "i_traje_comum",
+    "name": "Traje, Comum",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Roupa de plebeu.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
+  },
+  {
+    "id": "i_traje_elegante",
+    "name": "Traje, Elegante",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Roupa cara e bem feita.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 15 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
+  },
+  {
+    "id": "i_traje_fantasia",
+    "name": "Traje, Fantasia",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Roupa extravagante.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_traje_viajante",
+    "name": "Traje, Viajante",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Botas, calças resistentes, capa.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_vara",
+    "name": "Vara (3 metros)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Bastão longo de madeira.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pc</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
+  },
+  {
+    "id": "i_vela",
+    "name": "Vela",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Ilumina 1,5m raio. Dura 1 hora.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pc</li></ul>"
+  },
+  {
+    "id": "i_vidro",
+    "name": "Vidro ou Frasco",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Para líquidos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_pacote_artista",
+    "name": "Pacote de Artista",
+    "category": "Conjuntos",
+    "subcategory": "Pacotes",
+    "type": "Geral",
+    "description": "<p>Mochila, saco de dormir, 2 fantasias, 5 velas, 5 dias rações, cantil, kit disfarce.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 40 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 15 kg</li></ul>"
+  },
+  {
+    "id": "i_pacote_diplomata",
+    "name": "Pacote de Diplomata",
+    "category": "Conjuntos",
+    "subcategory": "Pacotes",
+    "type": "Geral",
+    "description": "<p>Baú, caixas mapas, roupas finas, tinta, caneta, lâmpada, óleo, papel, perfume, sabão.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 39 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 18 kg</li></ul>"
+  },
+  {
+    "id": "i_pacote_estudioso",
+    "name": "Pacote de Estudioso",
+    "category": "Conjuntos",
+    "subcategory": "Pacotes",
+    "type": "Geral",
+    "description": "<p>Mochila, livro estudo, tinta, caneta, pergaminho, areia, faca.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 40 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>"
+  },
+  {
+    "id": "i_kit_falsificacao",
+    "name": "Kit de Falsificação",
+    "category": "Conjuntos",
+    "subcategory": "Kits",
+    "type": "Geral",
+    "description": "<p>Papeis, tintas, selos, lacres.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 15 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg</li></ul>"
+  },
+  {
+    "id": "i_kit_veneno",
+    "name": "Kit de Veneno",
+    "category": "Conjuntos",
+    "subcategory": "Kits",
+    "type": "Geral",
+    "description": "<p>Frascos, químicos, misturadores.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_conjunto_jogo",
+    "name": "Conjunto de Jogo",
+    "category": "Conjuntos",
+    "subcategory": "Kits",
+    "type": "Geral",
+    "description": "<p>Dados, cartas ou tabuleiro.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_ferramentas_artesao",
+    "name": "Ferramentas de Artesão",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Escolha: Carpinteiro, Ferreiro, Alquimista, etc.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> Varia (5-50 po)</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2-5 kg</li></ul>"
+  },
+  {
+    "id": "i_ferramentas_navegador",
+    "name": "Ferramentas de Navegador",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Bússola, sextante, mapas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_instrumento_musical",
+    "name": "Instrumento Musical",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Alaúde, Flauta, Tambor, Lira, etc.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> Varia (2-35 po)</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5-3 kg</li></ul>"
+  },
+  {
+    "id": "i_banquete",
+    "name": "Banquete (leve)",
+    "category": "Provisão",
+    "subcategory": "Comida",
+    "type": "Geral",
+    "description": "<p>Refeição opulenta.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li></ul>"
+  },
+  {
+    "id": "i_carne",
+    "name": "Carne (porção)",
+    "category": "Provisão",
+    "subcategory": "Comida",
+    "type": "Geral",
+    "description": "<p>Carne fresca assada.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 3 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_pao",
+    "name": "Pão",
+    "category": "Provisão",
+    "subcategory": "Comida",
+    "type": "Geral",
+    "description": "<p>Fresco e macio.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 pc</li></ul>"
+  },
+  {
+    "id": "i_queijo",
+    "name": "Queijo",
+    "category": "Provisão",
+    "subcategory": "Comida",
+    "type": "Geral",
+    "description": "<p>Fatia de queijo curado.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li></ul>"
+  },
+  {
+    "id": "i_vinho_jarro",
+    "name": "Vinho (jarro)",
+    "category": "Provisão",
+    "subcategory": "Comida",
+    "type": "Geral",
+    "description": "<p>Vinho comum.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_vinho_fino",
+    "name": "Vinho Fino (garrafa)",
+    "category": "Provisão",
+    "subcategory": "Comida",
+    "type": "Geral",
+    "description": "<p>Vinho de qualidade.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,75 kg</li></ul>"
+  },
+  {
+    "id": "i_cerveja_caneca",
+    "name": "Cerveja (caneca)",
+    "category": "Provisão",
+    "subcategory": "Comida",
+    "type": "Geral",
+    "description": "<p>Cerveja comum.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 4 pc</li></ul>"
+  },
+  {
+    "id": "i_cerveja_galao",
+    "name": "Cerveja (galão)",
+    "category": "Provisão",
+    "subcategory": "Comida",
+    "type": "Geral",
+    "description": "<p>Grande quantidade.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 4 kg</li></ul>"
+  },
+  {
+    "id": "i_hospedagem",
+    "name": "Hospedagem (dia)",
+    "category": "Provisão",
+    "subcategory": "Hospedagem",
+    "type": "Geral",
+    "description": "<p>Qualidade:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Esquálido:</strong> 7 pc</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Pobre:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Modesto:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Confortável:</strong> 8 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Rico:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Aristocrático:</strong> 4 po+</li></ul>"
+  },
+  {
+    "id": "i_refeicao",
+    "name": "Refeição (dia)",
+    "category": "Provisão",
+    "subcategory": "Comida",
+    "type": "Geral",
+    "description": "<p>Qualidade:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Esquálido:</strong> 3 pc</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Pobre:</strong> 6 pc</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Modesto:</strong> 3 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Confortável:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Rico:</strong> 8 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Aristocrático:</strong> 2 po+</li></ul>"
+  },
+  {
+    "id": "i_mensageiro",
+    "name": "Mensageiro",
+    "category": "Provisão",
+    "subcategory": "Transporte/Animais",
+    "type": "Geral",
+    "description": "<p>Entrega rápida.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 pc/milha</li></ul>"
+  },
+  {
+    "id": "i_passagem_navio",
+    "name": "Passagem de Navio",
+    "category": "Provisão",
+    "subcategory": "Transporte/Animais",
+    "type": "Geral",
+    "description": "<p>Viagem simples.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp/milha</li></ul>"
+  },
+  {
+    "id": "i_pedagio",
+    "name": "Pedágio",
+    "category": "Provisão",
+    "subcategory": "Transporte/Animais",
+    "type": "Geral",
+    "description": "<p>Estrada ou portão.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li></ul>"
+  },
+  {
+    "id": "i_cochein",
+    "name": "Carruagem (viagem)",
+    "category": "Provisão",
+    "subcategory": "Transporte/Animais",
+    "type": "Geral",
+    "description": "<p>Transporte/Animais entre cidades.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 pc/milha</li></ul>"
+  },
+  {
+    "id": "i_servos",
+    "name": "Servos (dia)",
+    "category": "Provisão",
+    "subcategory": "Hospedagem",
+    "type": "Geral",
+    "description": "<p>Assistentes.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Não qualificado:</strong> 2 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Qualificado:</strong> 2 po</li></ul>"
+  },
+  {
+    "id": "i_burro",
+    "name": "Burro ou Mula",
+    "category": "Provisão",
+    "subcategory": "Transporte/Animais",
+    "type": "Geral",
+    "description": "<p>Animal de carga.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 8 po</li></ul>"
+  },
+  {
+    "id": "i_cachorro",
+    "name": "Cachorro",
+    "category": "Provisão",
+    "subcategory": "Transporte/Animais",
+    "type": "Geral",
+    "description": "<p>Animal de estimação ou guarda.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po (mastim)</li></ul>"
+  },
+  {
+    "id": "i_camelo",
+    "name": "Camelo",
+    "category": "Provisão",
+    "subcategory": "Transporte/Animais",
+    "type": "Geral",
+    "description": "<p>Carga em deserto.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 20 po</li></ul>"
+  },
+  {
+    "id": "i_cavalo_carga",
+    "name": "Cavalo de Carga",
+    "category": "Provisão",
+    "subcategory": "Transporte/Animais",
+    "type": "Geral",
+    "description": "<p>Lento e forte.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 20 po</li></ul>"
+  },
+  {
+    "id": "i_cavalo_montaria",
+    "name": "Cavalo de Montaria",
+    "category": "Provisão",
+    "subcategory": "Transporte/Animais",
+    "type": "Geral",
+    "description": "<p>Rápido.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 30 po</li></ul>"
+  },
+  {
+    "id": "i_cavalo_guerra",
+    "name": "Cavalo de Guerra",
+    "category": "Provisão",
+    "subcategory": "Transporte/Animais",
+    "type": "Geral",
+    "description": "<p>Treinado para combate.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 40 po</li></ul>"
+  },
+  {
+    "id": "i_elefante",
+    "name": "Elefante",
+    "category": "Provisão",
+    "subcategory": "Transporte/Animais",
+    "type": "Geral",
+    "description": "<p>Enorme carga.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pl</li></ul>"
+  },
+  {
+    "id": "i_ponei",
+    "name": "Pônei",
+    "category": "Provisão",
+    "subcategory": "Transporte/Animais",
+    "type": "Geral",
+    "description": "<p>Pequeno.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li></ul>"
+  },
+  {
+    "id": "i_barco_remo",
+    "name": "Barco a Remo",
+    "category": "Provisão",
+    "subcategory": "Transporte/Animais",
+    "type": "Geral",
+    "description": "<p>Pequeno.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li></ul>"
+  },
+  {
+    "id": "i_galera",
+    "name": "Galera",
+    "category": "Provisão",
+    "subcategory": "Transporte/Animais",
+    "type": "Geral",
+    "description": "<p>Grande navio a remo/vela.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 300 po</li></ul>"
+  },
+  {
+    "id": "i_navio_guerra",
+    "name": "Navio de Guerra",
+    "category": "Provisão",
+    "subcategory": "Transporte/Animais",
+    "type": "Geral",
+    "description": "<p>Armado.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 500 po</li></ul>"
+  },
+  {
+    "id": "i_navio_longo",
+    "name": "Navio Longo (Drakkar)",
+    "category": "Provisão",
+    "subcategory": "Transporte/Animais",
+    "type": "Geral",
+    "description": "<p>Rápido e ágil.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 120 po</li></ul>"
+  },
+  {
+    "id": "i_veleiro",
+    "name": "Veleiro",
+    "category": "Provisão",
+    "subcategory": "Transporte/Animais",
+    "type": "Geral",
+    "description": "<p>Pequeno barco a vela.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 po</li></ul>"
+  },
+
+
+{
+    "id": "i_municao_flechas",
+    "name": "Flechas",
+    "category": "Armas",
+    "subcategory": "Munição",
+    "type": "Item",
+    "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_flecha_osso",
+    "name": "Flecha de Osso",
+    "category": "Armas",
+    "subcategory": "Munição",
+    "type": "Item",
+    "damage": "+1",
+    "description": "<p>Flecha com ponta de osso afiada.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 3 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,45 kg</li></ul>"
+  },
+  {
+    "id": "i_flecha_aco",
+    "name": "Flecha de Aço",
+    "category": "Armas",
+    "subcategory": "Munição",
+    "type": "Item",
+    "damage": "+2",
+    "description": "<p>Flecha de qualidade superior.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,80 kg</li></ul>"
+  },
+  {
+    "id": "i_flecha_obsidiana",
+    "name": "Flecha de Obsidiana",
+    "category": "Armas",
+    "subcategory": "Munição",
+    "type": "Item",
+    "damage": "+3",
+    "description": "<p>Extremamente afiada, mas frágil.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,80 kg</li></ul>"
+  },
+  {
+    "id": "i_flecha_encantada",
+    "name": "Flecha Encantada",
+    "category": "Armas",
+    "subcategory": "Munição",
+    "type": "Item",
+    "damage": "+5",
+    "description": "<p>Munição mágica.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,45 kg</li></ul>"
+  },
+  {
+    "id": "i_granada_desintegracao",
+    "name": "Granada de Desintegração",
+    "category": "Armas",
+    "subcategory": "Fora de epoca",
+    "type": "Item",
+    "description": "<p>Explosivo futurista devastador. Raio 4,5m.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pl</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_escamas_metalica",
+    "name": "Armadura de Escamas Metálica",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "15",
+    "proficiency": "Media",
+    "tipoItem": "Armadura",
+    "disadvantageSkill": "Furtividade",
+    "description": "<p>Escamas pesadas de metal polido.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 16 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_cerimonial",
+    "name": "Armadura Cerimonial",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "14",
+    "proficiency": "Pesada",
+    "tipoItem": "Armadura",
+    "minStrength": "14",
+    "disadvantageSkill": "Furtividade",
+    "description": "<p>Ornamentada, feita para desfiles e rituais.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 20 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 30 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_encantada",
+    "name": "Armadura Encantada",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "16",
+    "proficiency": "Pesada",
+    "tipoItem": "Armadura",
+    "minStrength": "16",
+    "disadvantageSkill": "Furtividade",
+    "description": "<p>Bônus mágico variável e proteção arcana.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 30 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 40 kg</li></ul>"
+  },
+  {
+    "id": "i_arm_runica",
+    "name": "Armadura Rúnica",
+    "category": "Armaduras",
+    "subcategory": "Armaduras",
+    "type": "Proteção",
+    "defense": "16",
+    "proficiency": "Pesada",
+    "tipoItem": "Armadura",
+    "minStrength": "16",
+    "disadvantageSkill": "Furtividade",
+    "description": "<p>Inscrita com runas anãs de proteção.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 30 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 33 kg</li></ul>"
+  },
+  {
+    "id": "i_algibeira",
+    "name": "Algibeira",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Pequena bolsa para cinto.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_caneta",
+    "name": "Caneta Tinteiro",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Para escrita fina.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li></ul>"
+  },
+  {
+    "id": "i_garrafa",
+    "name": "Garrafa de Vidro",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Recipiente para 1 litro.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_relicario",
+    "name": "Símbolo Sagrado (Relicário)",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Pequena caixa com relíquia sagrada.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_ferramentas_artesao_lista",
+    "name": "Ferramentas de Artesão",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Escolha: Carpinteiro, Ferreiro, Alquimista, Cartógrafo, Coureiro, Joalheiro, Pedreiro, Sapateiro, Tecelão, Vidreiro, etc.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 20 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_ferramentas_navegador",
+    "name": "Ferramentas de Navegador",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Bússola, sextante, mapas estelares.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_instrumento_alaude",
+    "name": "Alaúde",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Instrumento de cordas popular.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 35 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_instrumento_flauta",
+    "name": "Flauta",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Instrumento de sopro simples.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_instrumento_tambor",
+    "name": "Tambor",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Instrumento de percussão.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
+  },
+  {
+    "id": "i_kit_alaude",
+    "name": "Kit de Alaúde",
+    "category": "Conjuntos",
+    "subcategory": "Kits",
+    "type": "Geral",
+    "description": "<p>Alaúde, cordas extras e suporte.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_kit_musical_completo",
+    "name": "Kit Musical Completo",
+    "category": "Conjuntos",
+    "subcategory": "Kits",
+    "type": "Geral",
+    "description": "<p>Escolha 3 instrumentos (Alaúde, Flauta, Tambor, Lira, Trombeta, etc).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  
+  
+
+
+
+
+  
+  {
+    "id": "i_foice_longa_custom",
+    "name": "Foice Longa",
+    "category": "Armas",
+    "subcategory": "Corpo-a-corpo",
+    "type": "Arma",
+    "damage": "1d8",
+    "damage2Hands": "1d10",
+    "useTwoHands": false,
+    "damageType": "Cortante",
+    "proficiency": "Armas Marciais",
+    "tipoArma": "Corpo a Corpo",
+    "empunhadura": "Versátil",
+    "caracteristicas": ["Ágil"],
+    "description": "<p>Uma lâmina curva em um cabo longo, ágil e versátil.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_balas_funda",
+    "name": "Munição - Balas de Funda (20)",
+    "category": "Armas",
+    "subcategory": "Munição",
+    "type": "Item",
+    "description": "<p>Pequenas esferas de chumbo para uso em fundas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,75 kg</li></ul>"
+  },
+  {
+    "id": "i_kit_charamela",
+    "name": "Kit de Charamela",
+    "category": "Conjuntos",
+    "subcategory": "Kits",
+    "type": "Geral",
+    "description": "<p>Inclui uma charamela, um livro de músicas e palhetas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_kit_flauta_d",
+    "name": "Kit de Flauta D",
+    "category": "Conjuntos",
+    "subcategory": "Kits",
+    "type": "Geral",
+    "description": "<p>Inclui uma flauta D, um estojo e um guia de notas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_kit_gaita_fole",
+    "name": "Kit de Gaita de Fole",
+    "category": "Conjuntos",
+    "subcategory": "Kits",
+    "type": "Geral",
+    "description": "<p>Inclui uma gaita de fole, um estojo e um guia de músicas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_kit_lira",
+    "name": "Kit de Lira",
+    "category": "Conjuntos",
+    "subcategory": "Kits",
+    "type": "Geral",
+    "description": "<p>Inclui uma lira, cordas extras e um suporte.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
+  },
+  {
+    "id": "i_kit_tambor",
+    "name": "Kit de Tambor",
+    "category": "Conjuntos",
+    "subcategory": "Kits",
+    "type": "Geral",
+    "description": "<p>Inclui um tambor, baquetas e um suporte.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
+  },
+  {
+    "id": "i_kit_trombeta",
+    "name": "Kit de Trombeta",
+    "category": "Conjuntos",
+    "subcategory": "Kits",
+    "type": "Geral",
+    "description": "<p>Inclui uma trombeta, um estojo e um guia de músicas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
+  },
+  {
+    "id": "i_kit_viola",
+    "name": "Kit de Viola",
+    "category": "Conjuntos",
+    "subcategory": "Kits",
+    "type": "Geral",
+    "description": "<p>Inclui uma viola, arco e um guia de notas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
+  },
+  {
+    "id": "i_kit_xilofone",
+    "name": "Kit de Xilofone",
+    "category": "Conjuntos",
+    "subcategory": "Kits",
+    "type": "Geral",
+    "description": "<p>Inclui um xilofone, baquetas e um suporte.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_inst_charamela",
+    "name": "Instrumento - Charamela",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Instrumento de sopro de palheta dupla.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_inst_gaita",
+    "name": "Instrumento - Gaita de Fole",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Instrumento de sopro com reservatório de ar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 30 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
+  },
+  {
+    "id": "i_inst_lira",
+    "name": "Instrumento - Lira",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Pequena harpa de mão.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 30 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_inst_trombeta",
+    "name": "Instrumento - Trombeta",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Instrumento de metal de sopro.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 35 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_inst_viola",
+    "name": "Instrumento - Viola",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Instrumento de cordas com arco.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 30 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+
+
+
+
+
+
+
+
+
+
+  
+  {
+    "id": "i_foco_druidico_cajado",
+    "name": "Foco Druídico - Cajado de Madeira",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Foco natural para conjuração druídica.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_foco_druidico_totem",
+    "name": "Foco Druídico - Totem",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Símbolo druídico usado em rituais.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_foco_druidico_varinha",
+    "name": "Foco Druídico - Varinha",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>Varinha de teixo ou madeira sagrada.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_inst_flauta_d",
+    "name": "Instrumento - Flauta D",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Flauta doce de metal ou madeira fina.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 12 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_inst_xilofone",
+    "name": "Instrumento - Xilofone",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Instrumento de percussão com barras de madeira.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 20 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_veiculo_barco",
+    "name": "Barco",
+    "category": "Provisão",
+    "subcategory": "Transporte/Animais",
+    "type": "Geral",
+    "description": "<p>Barco pequeno para Transporte/Animais (maior que barco a remo).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 20 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Carga:</strong> 200 kg</li></ul>"
+  },
+  {
+    "id": "i_cartucho_futurista",
+    "name": "Cartucho Futurista (Antimatéria)",
+    "category": "Armas",
+    "subcategory": "Fora de epoca",
+    "type": "Item",
+    "description": "<p>Munição especial para Rifles de Antimatéria.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,1 kg</li></ul>"
+  },
+  {
+    "id": "i_barril_polvora_separado",
+    "name": "Barril de Pólvora (Item)",
+    "category": "Armas",
+    "subcategory": "Munição",
+    "type": "Item",
+    "damage": "10d6",
+    "damageType": "Fogo",
+    "description": "<p>Barril explosivo. Se incendiado, explode em raio de 6m. CD 12 Destreza para metade.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 pl 50 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 100 kg</li></ul>"
+  },
+
+
+  
+  
+  {
+    "id": "i_municao_virotes",
+    "name": "Virotes (20)",
+    "category": "Armas",
+    "subcategory": "Munição",
+    "type": "Item",
+    "description": "<p>Munição padrão para bestas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,75 kg</li></ul>"
+  },
+  {
+    "id": "i_municao_zarabatana",
+    "name": "Agulhas de Zarabatana (50)",
+    "category": "Armas",
+    "subcategory": "Munição",
+    "type": "Item",
+    "description": "<p>Pequenas agulhas para zarabatana.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_municao_balas_polvora",
+    "name": "Balas de Pólvora (10)",
+    "category": "Armas",
+    "subcategory": "Munição",
+    "type": "Item",
+    "description": "<p>Esferas de chumbo para armas renascentistas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 3 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_municao_cartuchos",
+    "name": "Cartuchos Modernos (50)",
+    "category": "Armas",
+    "subcategory": "Fora de epoca",
+    "type": "Item",
+    "description": "<p>Para pistolas e rifles modernos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+  {
+    "id": "i_municao_celula",
+    "name": "Célula de Energia (50)",
+    "category": "Armas",
+    "subcategory": "Fora de epoca",
+    "type": "Item",
+    "description": "<p>Bateria para armas futuristas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,25 kg</li></ul>"
+  },
+  {
+    "id": "i_ferr_alquimista",
+    "name": "Suprimentos de Alquimista",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Vidrarias e ingredientes básicos para poções.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 4 kg</li></ul>"
+  },
+  {
+    "id": "i_ferr_caligrafo",
+    "name": "Suprimentos de Calígrafo",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Tintas finas e penas para escrita.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg</li></ul>"
+  },
+  {
+    "id": "i_ferr_carpinteiro",
+    "name": "Ferramentas de Carpinteiro",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Serras, martelos e plainas para madeira.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 8 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
+  },
+  {
+    "id": "i_ferr_cartografo",
+    "name": "Ferramentas de Cartógrafo",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Para desenhar mapas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 15 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
+  },
+  {
+    "id": "i_ferr_cervejeiro",
+    "name": "Suprimentos de Cervejeiro",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Para fermentar bebidas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 20 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 4 kg</li></ul>"
+  },
+  {
+    "id": "i_ferr_coureiro",
+    "name": "Ferramentas de Coureiro",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Para trabalhar couro.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg</li></ul>"
+  },
+  {
+    "id": "i_ferr_cozinheiro",
+    "name": "Utensílios de Cozinheiro",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Panelas, facas e temperos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 4 kg</li></ul>"
+  },
+  {
+    "id": "i_ferr_entalhador",
+    "name": "Ferramentas de Entalhador",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Para esculpir madeira.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg</li></ul>"
+  },
+  {
+    "id": "i_ferr_ferreiro",
+    "name": "Ferramentas de Ferreiro",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Martelos, tenazes e bigorna portátil.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 20 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 4 kg</li></ul>"
+  },
+  {
+    "id": "i_ferr_joalheiro",
+    "name": "Ferramentas de Joalheiro",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Para trabalhar com gemas e metais preciosos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_ferr_oleiro",
+    "name": "Ferramentas de Oleiro",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Para cerâmica.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
+  },
+  {
+    "id": "i_ferr_pedreiro",
+    "name": "Ferramentas de Pedreiro",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Para trabalhar pedra.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 4 kg</li></ul>"
+  },
+  {
+    "id": "i_ferr_pintor",
+    "name": "Suprimentos de Pintor",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Tintas, pincéis e telas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg</li></ul>"
+  },
+  {
+    "id": "i_ferr_sapateiro",
+    "name": "Ferramentas de Sapateiro",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Para reparar e criar calçados.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg</li></ul>"
+  },
+  {
+    "id": "i_ferr_serralheiro",
+    "name": "Ferramentas de Serralheiro",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Para trabalhar com vidro e metal fino.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 30 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_ferr_tecelao",
+    "name": "Ferramentas de Tecelão",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Para tecer fios e tecidos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_ferr_vidreiro",
+    "name": "Ferramentas de Vidreiro",
+    "category": "Conjuntos",
+    "subcategory": "Ferramentas",
+    "type": "Geral",
+    "description": "<p>Para soprar e moldar vidro.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 30 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg</li></ul>"
+  },
+  {
+    "id": "i_jogo_baralho",
+    "name": "Conjunto de Jogo (Baralho)",
+    "category": "Conjuntos",
+    "subcategory": "Kits",
+    "type": "Geral",
+    "description": "<p>Baralho de cartas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li></ul>"
+  },
+  {
+    "id": "i_jogo_dados",
+    "name": "Conjunto de Jogo (Dados)",
+    "category": "Conjuntos",
+    "subcategory": "Kits",
+    "type": "Geral",
+    "description": "<p>Conjunto de dados de osso ou madeira.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li></ul>"
+  },
+  {
+    "id": "i_jogo_xadrez",
+    "name": "Conjunto de Jogo (Xadrez do Dragão)",
+    "category": "Conjuntos",
+    "subcategory": "Kits",
+    "type": "Geral",
+    "description": "<p>Tabuleiro e peças complexas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
   }
+
+
 ]
