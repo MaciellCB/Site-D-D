@@ -1,5 +1,5 @@
 /* =============================================================
-   LÓGICA DA ESQUERDA (ATRIBUTOS, VIDA, XP, CLASSES E CA)
+   LÓGICA DA ESQUERDA (ATRIBUTOS, VIDA, XP, CLASSES, CA E STATUS)
 ============================================================= */
 
 // ======================================
@@ -39,7 +39,31 @@ const DADOS_VALORES = {
     'd6': [1, 2, 3, 4, 5, 6]
 };
 
-// Variáveis Globais de Controle da Esquerda
+// --- LISTAS DE SELEÇÃO (Solicitadas) ---
+const TIPOS_DANO_LISTA = [
+    'Ácido', 'Contundente', 'Cortante', 'Perfurante', 'Fogo', 'Frio', 
+    'Elétrico', 'Trovão', 'Veneno', 'Radiante', 'Necrótico', 'Psíquico', 'Energético'
+];
+
+const PROFICIENCIAS_LISTA_ESQUERDA = [
+    'Armaduras leves', 'Armaduras médias', 'Armaduras pesadas', 'Escudos',
+    'Armas simples', 'Armas marciais',
+    'Ferramentas de Alquimista', 'Ferramentas de Calígrafo', 'Ferramentas de Carpinteiro',
+    'Ferramentas de Cartógrafo', 'Ferramentas de Coureiro', 'Ferramentas de Ferreiro',
+    'Ferramentas de Joalheiro', 'Ferramentas de Oleiro', 'Ferramentas de Pedreiro',
+    'Ferramentas de Sapateiro', 'Ferramentas de Tecelão', 'Ferramentas de Vidreiro',
+    'Ferramentas de Pintor', 'Ferramentas de Ladrão',
+    'Kit de Disfarce', 'Kit de Falsificação', 'Kit de Herborismo', 'Kit de Venenos',
+    'Instrumento Musical', 'Veículos (terrestres)', 'Veículos (aquáticos)'
+];
+
+const IDIOMAS_LISTA = [
+    'Comum', 'Anão', 'Élfico', 'Gigante', 'Gnômico', 'Goblin', 'Halfling', 'Orc',
+    'Abissal', 'Celestial', 'Dialeto Subterrâneo', 'Dracônico', 'Infernal', 'Primordial',
+    'Silvestre', 'Druídico', 'Gíria de Ladrões'
+];
+
+// Variáveis Globais de Controle
 let mostrandoAtributos = true;
 let editMode = false;
 let rotateInterval = null;
@@ -57,10 +81,19 @@ window.addEventListener('sheet-updated', () => {
 });
 
 function inicializarDadosEsquerda() {
+    // Inicializa objetos do state se não existirem
     if (!state.atributos) state.atributos = { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 };
     if (!state.niveisClasses) state.niveisClasses = {};
     if (!state.vidaDadosSalvos) state.vidaDadosSalvos = {};
     
+    // Inicializa arrays para os status (listas)
+    if (!state.fraquezasList) state.fraquezasList = [];
+    if (!state.resistenciasList) state.resistenciasList = [];
+    if (!state.imunidadesList) state.imunidadesList = [];
+    if (!state.proficienciasList) state.proficienciasList = [];
+    if (!state.idiomasList) state.idiomasList = [];
+
+    // Garantir valores seguros para números
     state.acOutros = parseInt(state.acOutros) || 0;
     state.iniciativaBonus = parseInt(state.iniciativaBonus) || 0;
     state.vidaAtual = parseInt(state.vidaAtual) || 0;
@@ -71,6 +104,7 @@ function inicializarDadosEsquerda() {
     state.inspiracao = parseInt(state.inspiracao) || 0;
     state.metros = parseFloat(state.metros) || 0;
 
+    // Preenche inputs básicos
     const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
     const setText = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
 
@@ -79,8 +113,18 @@ function inicializarDadosEsquerda() {
     setText('inspiraValor', state.inspiracao);
     setVal('metros', state.metros);
     setVal('quadrados', (state.metros / 1.5).toFixed(1));
-    setVal('iniciativaBonus', state.iniciativaBonus);
     
+    // IMPORTANTE: Preenche o bônus de iniciativa
+    setVal('iniciativaBonus', state.iniciativaBonus); 
+
+    // Renderiza os Multi-Selects nas divs criadas no HTML
+    renderMultiSelect('sel-fraquezas', TIPOS_DANO_LISTA, state.fraquezasList, 'fraquezasList');
+    renderMultiSelect('sel-resistencias', TIPOS_DANO_LISTA, state.resistenciasList, 'resistenciasList');
+    renderMultiSelect('sel-imunidades', TIPOS_DANO_LISTA, state.imunidadesList, 'imunidadesList');
+    renderMultiSelect('sel-proficiencias', PROFICIENCIAS_LISTA_ESQUERDA, state.proficienciasList, 'proficienciasList');
+    renderMultiSelect('sel-idiomas', IDIOMAS_LISTA, state.idiomasList, 'idiomasList');
+
+    // Atualiza Hexagrama
     numerosHex.forEach(n => {
         const id = n.classList[1]; 
         const val = state.atributos[id] || 10;
@@ -97,7 +141,84 @@ function inicializarDadosEsquerda() {
 }
 
 // ======================================
-// 3. Funções de Cálculo
+// 3. Sistema de Multi-Select (Dropdowns)
+// ======================================
+
+function renderMultiSelect(elementId, optionsList, currentSelection, stateKey) {
+    const container = document.getElementById(elementId);
+    if (!container) return; // Se a div não existir no HTML, para aqui.
+
+    // Verifica se já foi renderizado para não duplicar eventos ou HTML
+    let display = container.querySelector('.multi-select-display');
+    
+    // Se não existe, cria a estrutura
+    if (!display) {
+        container.innerHTML = `
+            <div class="multi-select-box" tabindex="0">
+                <div class="multi-select-display">Selecionar...</div>
+                <div class="multi-select-options" style="display:none;">
+                    ${optionsList.map(opt => `
+                        <label>
+                            <input type="checkbox" value="${opt}">
+                            ${opt}
+                        </label>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+        display = container.querySelector('.multi-select-display');
+        
+        // Adiciona eventos APENAS na criação
+        const box = container.querySelector('.multi-select-box');
+        const optsContainer = container.querySelector('.multi-select-options');
+        const inputs = optsContainer.querySelectorAll('input');
+
+        // Toggle Abrir/Fechar
+        box.addEventListener('click', (e) => {
+            if(e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
+            const isVisible = optsContainer.style.display === 'block';
+            document.querySelectorAll('.multi-select-options').forEach(el => el.style.display = 'none'); // Fecha outros
+            optsContainer.style.display = isVisible ? 'none' : 'block';
+        });
+
+        // Evento de Change nos checkboxes
+        inputs.forEach(input => {
+            input.addEventListener('change', () => {
+                const newVal = input.value;
+                if (input.checked) {
+                    if (!state[stateKey].includes(newVal)) state[stateKey].push(newVal);
+                } else {
+                    state[stateKey] = state[stateKey].filter(item => item !== newVal);
+                }
+                
+                // Atualiza visual
+                updateDisplayText(display, state[stateKey]);
+                saveStateToServer();
+            });
+        });
+
+        // Fechar ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!container.contains(e.target)) {
+                optsContainer.style.display = 'none';
+            }
+        });
+    }
+
+    // Atualiza estado visual (checks e texto) sempre que chamado
+    const inputs = container.querySelectorAll('input');
+    inputs.forEach(chk => {
+        chk.checked = currentSelection.includes(chk.value);
+    });
+    updateDisplayText(display, currentSelection);
+}
+
+function updateDisplayText(element, list) {
+    element.textContent = list.length > 0 ? list.join(', ') : 'Selecionar...';
+}
+
+// ======================================
+// 4. Funções de Cálculo
 // ======================================
 
 function calcularModificador(n) {
@@ -121,7 +242,7 @@ function atualizarProficiencia() {
 }
 
 // ======================================
-// 4. Lógica do Hexagrama
+// 5. Lógica do Hexagrama
 // ======================================
 
 if (hexOverlay) {
@@ -166,7 +287,7 @@ function toggleEditMode() {
 }
 
 // ======================================
-// 5. Classes e Dados de Vida
+// 6. Classes e Dados de Vida
 // ======================================
 
 const elClasseFocus = document.getElementById('classeFocus');
@@ -275,7 +396,7 @@ window.salvarDadoVida = (id, val) => {
 };
 
 // ======================================
-// 6. Atualizações Visuais (Vida, Iniciativa)
+// 7. Atualizações Visuais (Vida, Iniciativa)
 // ======================================
 
 function atualizarVidaCalculada() {
@@ -339,45 +460,37 @@ function atualizarFocoClasseRotativo() {
     if (ativas.length > 1) rotateInterval = setInterval(mudar, 5000);
 }
 
+// ATUALIZAÇÃO DA INICIATIVA (AGORA CORRIGIDA)
 function atualizarIniciativaTotal() {
     const dexScore = state.atributos?.n2 || 10;
     const dexMod = Math.floor((dexScore - 10) / 2);
+    // Lê diretamente do estado, garantindo que seja número
     const bonus = parseInt(state.iniciativaBonus) || 0;
+    
     const total = dexMod + bonus;
     const sinal = total >= 0 ? "+" : "";
+    
     const elIni = document.getElementById('iniciativaValor');
     if(elIni) elIni.textContent = `${sinal}${total}`;
 }
 
-
-// =============================================================
-// CÁLCULO DE CA (ARMOR CLASS) COM PRIORIDADE DE HABILIDADE
-// =============================================================
-
+/* ---------------- CÁLCULO DE CA (ARMADURA SOBREPÕE HABILIDADE) ---------------- */
 function atualizarAC() {
-    // 1. Modificadores
     const getMod = (n) => Math.floor((parseInt(state.atributos?.[n] || 10) - 10) / 2);
     const modDex = getMod('n2');
     const modCon = getMod('n1');
     const modSab = getMod('n3');
 
-    // 2. Busca Equipamentos
     const armadura = state.inventory.find(i => 
-        i.equip && 
-        (i.type === 'Proteção' || i.type === 'protecao') && 
-        (i.tipoItem || '').toLowerCase() === 'armadura'
+        i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'armadura'
     );
     const escudo = state.inventory.find(i => 
-        i.equip && 
-        (i.type === 'Proteção' || i.type === 'protecao') && 
-        (i.tipoItem || '').toLowerCase() === 'escudo'
+        i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'escudo'
     );
 
-    // 3. Busca Habilidades Ativas
-    const barbDef = state.abilities.some(a => a.active && a.title.includes("Defesa sem Armadura(Bárbaro)"));
-    const monkDef = state.abilities.some(a => a.active && a.title.includes("Defesa sem Armadura(Monge)"));
+    const barbDef = state.abilities.some(a => a.active && a.title.includes("Defesa sem Armadura") && a.title.includes("Bárbaro"));
+    const monkDef = state.abilities.some(a => a.active && a.title.includes("Defesa sem Armadura") && a.title.includes("Monge"));
 
-    // Variáveis
     let acFinal = 10;
     let visualEquip = 0;
     let visualDexText = "DEX";
@@ -385,37 +498,7 @@ function atualizarAC() {
     let escudoBonus = escudo ? (parseInt(escudo.defense) || 2) : 0;
     let bonusOutros = parseInt(state.acOutros) || 0;
 
-    // --- PRIORIDADE TOTAL PARA HABILIDADES ---
-
-    if (barbDef) {
-        // === BÁRBARO (Prioridade) ===
-        // 10 + Dex + Con + Escudo (se houver)
-        // Ignora armadura equipada
-        acFinal = 10 + modDex + modCon + escudoBonus;
-        tipoTag = "DEF. BÁRBARO";
-        visualDexText = "DEX + CON";
-        visualEquip = escudoBonus; // Só escudo conta no equipamento
-
-    } else if (monkDef) {
-        // === MONGE (Prioridade) ===
-        // 10 + Dex + Sab
-        // Se tiver escudo, a regra diz que perde. Mas se a habilidade tá ativa,
-        // vamos assumir a lógica: Se tem escudo, volta pra AC base + escudo.
-        
-        if (escudo) {
-            acFinal = 10 + modDex + escudoBonus;
-            tipoTag = "SEM ARMADURA";
-            visualDexText = "DEX";
-            visualEquip = escudoBonus;
-        } else {
-            acFinal = 10 + modDex + modSab;
-            tipoTag = "DEF. MONGE";
-            visualDexText = "DEX + SAB";
-            visualEquip = 0;
-        }
-
-    } else if (armadura) {
-        // === ARMADURA (Sem habilidade especial ativa) ===
+    if (armadura) {
         const defArmadura = parseInt(armadura.defense) || 10;
         const prof = (armadura.proficiency || '').toLowerCase();
         let dexConsiderado = modDex;
@@ -439,17 +522,40 @@ function atualizarAC() {
         acFinal = 10 + (defArmadura - 10) + dexConsiderado + escudoBonus;
 
     } else {
-        // === SEM NADA (Base) ===
-        acFinal = 10 + modDex + escudoBonus;
-        tipoTag = "SEM ARMADURA";
-        visualDexText = "DEX";
-        visualEquip = escudoBonus;
+        if (barbDef) {
+            acFinal = 10 + modDex + modCon + escudoBonus;
+            tipoTag = "DEF. BÁRBARO";
+            visualDexText = "DEX + CON";
+            visualEquip = escudoBonus; 
+        } else if (monkDef) {
+            if (escudo) {
+                acFinal = 10 + modDex + escudoBonus;
+                tipoTag = "SEM ARMADURA";
+                visualDexText = "DEX";
+                visualEquip = escudoBonus;
+            } else {
+                acFinal = 10 + modDex + modSab;
+                tipoTag = "DEF. MONGE";
+                visualDexText = "DEX + SAB";
+                visualEquip = 0;
+            }
+        } else {
+            acFinal = 10 + modDex + escudoBonus;
+            tipoTag = "SEM ARMADURA";
+            visualDexText = "DEX";
+            visualEquip = escudoBonus;
+        }
     }
 
-    // Soma bônus diversos (Anéis, etc)
     acFinal += bonusOutros;
 
-    // --- RENDERIZAÇÃO ---
+    if (state.inventory) {
+        state.inventory.filter(i => i.equip && i.type === 'Geral' && i.defenseBonus).forEach(item => {
+            const b = parseInt(item.defenseBonus) || 0;
+            acFinal += b;
+        });
+    }
+
     const elValor = document.getElementById('armaduraValor');
     if (elValor) elValor.textContent = acFinal;
 
@@ -461,12 +567,12 @@ function atualizarAC() {
 
     const elFormulaDex = document.querySelector('.formula-attr');
     const elFormulaPlus = document.querySelector('.inline-formula .formula-plus'); 
+    
     if (elFormulaDex) {
         elFormulaDex.textContent = visualDexText;
         elFormulaDex.style.visibility = (visualDexText === "-") ? "hidden" : "visible";
-        if(elFormulaPlus) elFormulaPlus.style.visibility = (visualDexText === "-") ? "hidden" : "visible";
-        
-        // Ajuste se o texto for longo
+        if (elFormulaPlus) elFormulaPlus.style.visibility = (visualDexText === "-") ? "hidden" : "visible";
+
         if (visualDexText.length > 5) {
              elFormulaDex.style.transform = "translateY(-26px)";
              elFormulaDex.style.fontSize = "10px";
@@ -481,9 +587,8 @@ function atualizarAC() {
     if (zeros.length >= 2 && document.activeElement !== zeros[1]) zeros[1].textContent = bonusOutros;
 }
 
-
 // ======================================
-// 7. Função Mestre e Listeners
+// 8. Função Mestre e Listeners
 // ======================================
 
 function atualizarTudoVisual() {
@@ -515,10 +620,8 @@ function vincularEventosInputs() {
     addEnterBlur(document.getElementById('input-classesHeader'), 'classesHeader');
     addEnterBlur(document.getElementById('input-raca'), 'raca');
 
-    addEnterBlur(document.getElementById('input-resistencias'), 'resistencias');
-    addEnterBlur(document.getElementById('input-imunidades'), 'imunidades');
-    addEnterBlur(document.getElementById('input-fraquezas'), 'fraquezas');
-    addEnterBlur(document.getElementById('input-proficiencias'), 'proficiencias');
+    // Removemos os antigos text inputs para Fraquezas/Resistências, pois agora são selects.
+    // Mas mantemos os inputs de números que ainda são usados.
 
     const xpInput = document.getElementById('xpAtual');
     if (xpInput) {
@@ -537,6 +640,17 @@ function vincularEventosInputs() {
         metrosInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') metrosInput.blur(); });
         quadradosInput.oninput = (e) => { const q = parseFloat(e.target.value) || 0; state.metros = q * 1.5; metrosInput.value = state.metros; saveStateToServer(); };
         quadradosInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') quadradosInput.blur(); });
+    }
+
+    // Iniciativa Bônus - Listener corrigido
+    const iniBonus = document.getElementById('iniciativaBonus');
+    if (iniBonus) {
+        iniBonus.oninput = (e) => { 
+            state.iniciativaBonus = parseInt(e.target.value) || 0; 
+            atualizarIniciativaTotal(); 
+            saveStateToServer(); 
+        };
+        iniBonus.addEventListener('keydown', (e) => { if (e.key === 'Enter') iniBonus.blur(); });
     }
 
     const outrosInput = document.getElementById('ac-outros');

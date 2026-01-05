@@ -987,3 +987,86 @@ input[type=number]::-webkit-outer-spin-button {
 input[type=number] {
   -moz-appearance: textfield; /* Para Firefox */
 }
+
+/* =============================================================
+   ESTILO DOS MULTI-SELECTS (ESQUERDA) - CORRIGIDO PARA QUEBRAR LINHA
+============================================================= */
+
+/* Ajuste para o container ficar alinhado na linha-detail */
+.input-detail .multi-select-box {
+    width: 100%;
+    position: relative;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.multi-select-display {
+    border-bottom: 1px solid #2a2a2a;
+    padding: 6px 20px 6px 4px; /* Espaço na direita para a setinha */
+    min-height: 24px; /* Altura mínima levemente maior */
+    color: #ddd;
+    
+    /* --- CORREÇÃO DE QUEBRA DE LINHA --- */
+    white-space: normal;       /* Permite que o texto vá para baixo */
+    word-break: break-word;    /* Quebra palavras se necessário */
+    overflow: visible;         /* Remove qualquer corte */
+    height: auto;              /* Deixa a altura crescer conforme o texto */
+    line-height: 1.4;          /* Espaçamento entre as linhas */
+    
+    position: relative;
+    display: block;            /* Garante comportamento de bloco */
+}
+
+/* Seta indicativa */
+.multi-select-display::after {
+    content: '▾';
+    position: absolute;
+    right: 0;
+    top: 6px; /* Fixa no topo para não descer com o texto */
+    color: #9c27b0;
+    font-weight: bold;
+}
+
+/* O resto permanece igual... */
+.multi-select-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    min-width: 200px;
+    max-height: 250px;
+    overflow-y: auto;
+    background: #151515;
+    border: 1px solid #9c27b0;
+    border-radius: 4px;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+    padding: 5px;
+}
+
+.multi-select-options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    cursor: pointer;
+    color: #ccc;
+    font-size: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.multi-select-options label:hover {
+    background: #9c27b0;
+    color: #fff;
+}
+
+.multi-select-options input[type="checkbox"] {
+    accent-color: #fff;
+    transform: scale(1.2);
+}
+
+.multi-select-options::-webkit-scrollbar { width: 6px; }
+.multi-select-options::-webkit-scrollbar-track { background: #0f0f0f; }
+.multi-select-options::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
