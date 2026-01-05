@@ -1049,3 +1049,128 @@ a.editar-item, a.editar-hab, a.editar-spell {
 .section-content.hidden {
   display: none;
 }
+
+/* =============================================================
+   ESTILOS DOS SLOTS DE MAGIA (CÍRCULOS)
+============================================================= */
+
+.slots-container {
+    background: #121212;
+    border: 1px solid rgba(156, 39, 176, 0.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+}
+
+.slots-container.empty {
+    border-style: dashed;
+    border-color: #333;
+    text-align: center;
+    padding: 20px;
+}
+
+.slots-header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.slots-title {
+    font-weight: 800;
+    color: #9c27b0;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-config-slots {
+    background: transparent;
+    border: 1px solid #333;
+    color: #bbb;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: 0.2s;
+}
+.btn-config-slots:hover { background: #222; color: #fff; border-color: #9c27b0; }
+
+#btnRestSlots, #btnConfigSlots {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    color: #ddd;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+}
+#btnRestSlots:hover { color: #fff; border-color: #9c27b0; }
+
+/* GRID DE SLOTS */
+.slots-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.slot-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #1b1b1b;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.03);
+    min-width: 50px;
+}
+
+.slot-label {
+    font-size: 11px;
+    color: #888;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.slot-pips {
+    display: flex;
+    gap: 5px;
+}
+
+/* BOLINHAS (PIPS) */
+.slot-pip {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid #555;
+    cursor: pointer;
+    transition: all 0.2s;
+    background-color: transparent;
+}
+
+/* Disponível (Cheio/Roxo) */
+.slot-pip.available {
+    background-color: #9c27b0;
+    border-color: #9c27b0;
+    box-shadow: 0 0 4px rgba(156, 39, 176, 0.4);
+}
+
+/* Gasto (Vazio/Cinza Escuro) */
+.slot-pip.used {
+    background-color: #111;
+    border-color: #333;
+}
+
+.slot-pip:hover {
+    transform: scale(1.2);
+}
+
+.slot-group.pact-group {
+    border-color: rgba(224, 170, 255, 0.2);
+}
+.slot-pip.pact.available {
+    background-color: #e0aaff;
+    border-color: #e0aaff;
+}

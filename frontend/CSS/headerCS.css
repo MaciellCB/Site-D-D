@@ -1,0 +1,148 @@
+/* Botão que simula input (para Antecedente e outros se precisar) */
+.input-simulado {
+  background-color: transparent;
+  border-bottom: 1px solid #555;
+  color: #ddd;
+  padding: 4px 0;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 20px;
+}
+
+.input-simulado:hover {
+  border-bottom-color: #9c27b0;
+  color: #fff;
+}
+
+.input-simulado:focus {
+  outline: none;
+  border-bottom-color: #9c27b0;
+}
+
+/* Botão que simula input para Antecedentes */
+.input-simulado {
+  background-color: transparent;
+  border-bottom: 1px solid #555;
+  color: #ddd;
+  padding: 4px 0;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 20px;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.input-simulado:hover {
+  border-bottom-color: #9c27b0;
+  color: #fff;
+}
+
+.input-simulado:focus {
+  outline: none;
+  border-bottom-color: #9c27b0;
+}
+
+/* =============================================================
+   AJUSTE DE TAMANHOS DO HEADER (LINHA 2)
+============================================================= */
+
+/* A lógica aqui usa 'flex-grow'. 
+   O padrão geralmente é 1. 
+   Valores menores encolhem a coluna, valores maiores expandem.
+*/
+
+/* 1. Antecedente (1ª coluna da 2ª linha) - Menor */
+.info-direita .linha-info:nth-child(2) .campo:nth-child(1) {
+    flex: 0.6 !important; /* Reduzido significativamente */
+    min-width: 100px;     /* Garante um mínimo para não quebrar */
+}
+
+/* 2. Classes (2ª coluna da 2ª linha) - Muito Maior */
+.info-direita .linha-info:nth-child(2) .campo:nth-child(2) {
+    flex: 2.5 !important; /* Ocupa o dobro/triplo do espaço das outras */
+}
+
+/* 3. Raça (3ª coluna da 2ª linha) - Um pouco menor */
+.info-direita .linha-info:nth-child(2) .campo:nth-child(3) {
+    flex: 0.7 !important; /* Levemente reduzido */
+}
+
+/* Estilo visual para o input Readonly (Classes) parecer normal, mas não editável */
+#input-classesHeader[readonly] {
+    cursor: default;
+    color: #fff; /* Mantém cor branca */
+    opacity: 1;  /* Evita que pareça desabilitado/cinza */
+    background-color: transparent; /* Mantém fundo transparente */
+}
+
+/* Garante que o input do antecedente (que agora é uma div) tenha o tamanho certo */
+.input-simulado {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* =============================================================
+   AJUSTE DE TAMANHOS E QUEBRA DE LINHA NO HEADER
+============================================================= */
+
+/* 1. LARGURA DAS COLUNAS (Flex-grow) */
+
+/* Antecedente: Bem menor */
+.info-direita .linha-info:nth-child(2) .campo:nth-child(1) {
+    flex: 0.5 !important; 
+    min-width: 90px;
+}
+
+/* Classes: Ocupa o maior espaço */
+.info-direita .linha-info:nth-child(2) .campo:nth-child(2) {
+    flex: 2.5 !important; 
+}
+
+/* Raça: Tamanho médio/reduzido */
+.info-direita .linha-info:nth-child(2) .campo:nth-child(3) {
+    flex: 0.8 !important;
+}
+
+
+/* 2. ESTILO DOS TEXTAREAS (CLASSE E RAÇA) */
+.header-textarea {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #555;
+    color: #fff;
+    font-family: Arial, sans-serif; /* Mesma fonte do resto */
+    font-size: 14px;
+    padding: 4px 0;
+    width: 100%;
+    
+    /* Comportamento de quebra de linha */
+    resize: none;       /* Remove puxador de tamanho manual */
+    overflow: hidden;   /* Esconde scrollbar (JS ajusta altura) */
+    min-height: 25px;   /* Altura mínima de 1 linha */
+    height: 25px;       /* Altura inicial */
+    line-height: 1.4;   /* Espaçamento entre linhas */
+    box-sizing: border-box;
+    display: block;
+}
+
+/* Foco */
+.header-textarea:focus {
+    outline: none;
+    border-bottom-color: #9c27b0;
+}
+
+/* Classes (Readonly) não deve parecer desabilitado */
+#input-classesHeader[readonly] {
+    cursor: default;
+    color: #eee;
+}
+
+/* Ajuste vertical para alinhar com o Antecedente */
+.input-simulado {
+    padding-top: 6px; /* Pequeno ajuste para alinhar com o texto do textarea */
+}

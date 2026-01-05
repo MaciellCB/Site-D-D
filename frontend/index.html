@@ -4,11 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ficha de Personagem</title>
+  
   <link rel="stylesheet" href="CSS/style.css" />
   <link rel="stylesheet" href="CSS/esquerdaCS.css">
   <link rel="stylesheet" href="CSS/direitaCS.css">
   <link rel="stylesheet" href="CSS/meioCS.css">
   <link rel="stylesheet" href="CSS/headerCS.css">
+  
 </head>
 <body>
   <!-- HEADER e INFORMAÇÕES DO PERSONAGEM -->
@@ -37,20 +39,22 @@
       <input type="text" id="input-jogador" placeholder="" />
     </div>
   </div>
-  <div class="linha-info">
-    <div class="campo">
-      <label>ANTECEDENTE</label>
-      <input type="text" id="input-antecedente" placeholder="" />
-    </div>
-    <div class="campo">
-      <label>CLASSE'S</label>
-      <input type="text" id="input-classesHeader" placeholder="" />
-    </div>
-    <div class="campo">
-      <label>RAÇA</label>
-      <input type="text" id="input-raca" placeholder="" />
-    </div>
+ <div class="linha-info">
+  <div class="campo">
+    <label>ANTECEDENTE</label>
+    <div id="btn-antecedente" class="input-simulado" tabindex="0">Escolher...</div>
   </div>
+  
+  <div class="campo">
+    <label>CLASSE'S</label>
+    <textarea id="input-classesHeader" class="header-textarea" rows="1" readonly></textarea>
+  </div>
+  
+  <div class="campo">
+    <label>RAÇA</label>
+    <textarea id="input-raca" class="header-textarea" rows="1"></textarea>
+  </div>
+</div>
 </div>
   </section>
 
