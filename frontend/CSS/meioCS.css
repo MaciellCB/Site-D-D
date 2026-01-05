@@ -541,3 +541,190 @@ input[type=number]::-webkit-outer-spin-button {
 input[type=number] {
   -moz-appearance: textfield; /* Para Firefox */
 }
+
+
+/* ==================== ESTRESSE E VAZIO (MEIO) ==================== */
+
+/* Container geral - Adicionado z-index para garantir hierarquia */
+.sanidade-wrapper {
+    width: 100%;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative; 
+    z-index: 2000; /* Garante que fique acima das perícias */
+}
+
+/* Imagens de botão */
+.btn-sanidade-img, .btn-sanidade1-img {
+    cursor: pointer;
+    transition: transform 0.1s;
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+}
+.btn-sanidade-img:hover, .btn-sanidade1-img:hover { transform: scale(1.02); }
+
+/* Painel principal */
+.sanidade-panel {
+    width: 100%;
+    background-color: #121212;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative; /* Necessário para z-index funcionar */
+}
+
+/* Linhas */
+.sanidade-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative; 
+    border-radius: 6px;
+    padding: 4px;
+}
+
+/* Label do Estresse (Hover/Click) */
+.sanidade-label-interactive {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ccc;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    cursor: help;
+    border-bottom: 1px dotted #666; 
+    position: relative; 
+    display: inline-block;
+}
+
+/* --- TOOLTIP PERSONALIZADO (CORRIGIDO) --- */
+.estresse-tooltip {
+    visibility: hidden;
+    opacity: 0;
+    width: 260px;
+    background-color: #0f0f0f;
+    color: #ddd;
+    text-align: left;
+    border-radius: 6px;
+    padding: 10px;
+    
+    /* POSICIONAMENTO */
+    position: absolute;
+    bottom: 130%; /* Mais alto para não encostar */
+    left: 50%;
+    transform: translateX(-50%);
+    
+    /* HIERARQUIA (Z-INDEX MUITO ALTO) */
+    z-index: 999999; 
+    
+    border: 1px solid #9c27b0;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.95);
+    font-size: 12px;
+    line-height: 1.6;
+    transition: opacity 0.2s, bottom 0.2s;
+    pointer-events: none;
+}
+
+/* Mostra o tooltip */
+.sanidade-label-interactive:hover .estresse-tooltip,
+.sanidade-label-interactive:focus .estresse-tooltip {
+    visibility: visible;
+    opacity: 1;
+    bottom: 140%; /* Pequena animação de subida */
+}
+
+/* Seta do tooltip */
+.estresse-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #9c27b0 transparent transparent transparent;
+}
+
+/* Cores de texto */
+.txt-verde { color: #4caf50; font-weight: bold; }
+.txt-amarelo { color: #ffeb3b; font-weight: bold; }
+.txt-vermelho { color: #f44336; font-weight: bold; }
+.txt-roxo { color: #e040fb; font-weight: bold; }
+
+/* Input numérico */
+.sanidade-input {
+    background: #0f0f0f;
+    border: 1px solid #444;
+    color: #fff;
+    border-radius: 6px;
+    padding: 6px;
+    width: 60px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    z-index: 2;
+}
+
+/* Barra de Progresso */
+.sanidade-progress-container {
+    width: 100%;
+    height: 12px; 
+    background-color: #000;
+    border: 1px solid #333;
+    border-radius: 6px;
+    margin-top: 4px;
+    overflow: hidden;
+}
+
+.sanidade-progress-bar {
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease, background-color 0.3s ease;
+    border-radius: 4px;
+}
+
+/* CORES DA BARRA */
+.estresse-verde    { background-color: #4caf50; }
+.estresse-amarelo  { background-color: #ffeb3b; }
+.estresse-laranja  { background-color: #ff9800; }
+.estresse-vermelho { background-color: #f44336; }
+
+/* Animação Crise */
+@keyframes pulse-surto {
+    0% { background-color: #f44336; box-shadow: 0 0 5px #f44336; }
+    25% { background-color: #9c27b0; }
+    50% { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
+    75% { background-color: #fff; }
+    100% { background-color: #f44336; box-shadow: 0 0 5px #f44336; }
+}
+.estresse-surto {
+    animation: pulse-surto 0.8s infinite;
+}
+
+.estresse-footer {
+    font-size: 11px;
+    color: #777;
+    text-align: center;
+    margin-top: 4px;
+}
+
+/* Vazio Sincronizado */
+.input-sincronizado {
+    width: 120px !important;
+    border-color: #9c27b0 !important;
+    color: #e040fb !important;
+    text-shadow: 0 0 5px #9c27b0;
+}
+
+/* Utils Input */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; margin: 0; 
+}
+input[type=number] { -moz-appearance: textfield; }
