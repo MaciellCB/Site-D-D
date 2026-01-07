@@ -1500,112 +1500,18 @@ function formatMySpellCard(s) {
 
 /* ---------------- PARTE 1: RENDERIZAR LISTA DE MAGIAS ---------------- */
 
-/* =============================================================
-   MAGIAS: RENDERIZAÇÃO E SLOTS
-============================================================= */
 
-// Inicializa estrutura de slots se não existir
-function initSpellSlotsState() {
-    if (!state.spellSlots) {
-        state.spellSlots = {};
-        // Cria slots do 1 ao 9
-        for (let i = 1; i <= 9; i++) {
-            state.spellSlots[i] = { max: 0, used: 0 };
-        }
-        // Slot de Pacto (Bruxo)
-        state.spellSlots['pact'] = { max: 0, used: 0, level: 1 }; 
-    }
-}
-
-// Renderiza o HTML dos Slots
-function renderSpellSlotsHTML() {
-    initSpellSlotsState();
-    
-    // Filtra apenas níveis que têm slots máximos > 0
-    const activeLevels = [];
-    for (let i = 1; i <= 9; i++) {
-        if (state.spellSlots[i].max > 0) activeLevels.push(i);
-    }
-
-    const hasPact = state.spellSlots['pact'].max > 0;
-    
-    if (activeLevels.length === 0 && !hasPact) {
-        return `
-            <div class="slots-container empty">
-                <p>Nenhum espaço de magia configurado.</p>
-                <button id="btnConfigSlotsIni" class="btn-config-slots">⚙️ Configurar Espaços</button>
-            </div>
-        `;
-    }
-
-    let html = `<div class="slots-container">`;
-
-    // Cabeçalho com Botão de Descanso e Config
-    html += `
-        <div class="slots-header-actions">
-            <span class="slots-title">Espaços de Magia</span>
-            <div style="display:flex; gap:8px;">
-                <button id="btnRestSlots" title="Recuperar todos os espaços (Descanso Longo)">🌙 Descansar</button>
-                <button id="btnConfigSlots" title="Configurar Quantidade">⚙️</button>
-            </div>
-        </div>
-        <div class="slots-grid">
-    `;
-
-    // Renderiza Slots Normais (1-9)
-    activeLevels.forEach(level => {
-        const slot = state.spellSlots[level];
-        const available = slot.max - slot.used;
-        
-        let pips = '';
-        for (let i = 0; i < slot.max; i++) {
-            // Se i < used, então está gasto (vazio/checkado). Se não, está disponível (cheio).
-            // Vamos inverter visualmente: Cheio = Disponível.
-            const isUsed = i < slot.used;
-            pips += `<span class="slot-pip ${isUsed ? 'used' : 'available'}" data-level="${level}" data-idx="${i}"></span>`;
-        }
-
-        html += `
-            <div class="slot-group">
-                <div class="slot-label">${level}º Círculo</div>
-                <div class="slot-pips">${pips}</div>
-            </div>
-        `;
-    });
-
-    // Renderiza Magia de Pacto (Se houver)
-    if (hasPact) {
-        const pact = state.spellSlots['pact'];
-        let pips = '';
-        for (let i = 0; i < pact.max; i++) {
-            const isUsed = i < pact.used;
-            pips += `<span class="slot-pip pact ${isUsed ? 'used' : 'available'}" data-level="pact" data-idx="${i}"></span>`;
-        }
-        html += `
-            <div class="slot-group pact-group">
-                <div class="slot-label" style="color:#e0aaff;">Pacto (${pact.level}º)</div>
-                <div class="slot-pips">${pips}</div>
-            </div>
-        `;
-    }
-
-    html += `</div></div>`; // Fecha grid e container
-    return html;
-}
-
-// --- FUNÇÃO PRINCIPAL DE MAGIAS (ATUALIZADA) ---
 function renderSpells() {
-    // Garante DT calculada
     state.dtMagias = calculateSpellDC();
 
-    // 1. Gera HTML dos Slots
+    // Gera HTML dos Slots (agora automático)
     const slotsHTML = renderSpellSlotsHTML();
 
     const html = `
     <div class="spells-wrapper" style="position:relative;">
       
       ${slotsHTML}
-      <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 15px 0;">
+      ${slotsHTML ? '<hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 15px 0;">' : ''}
 
       <div class="spells-controls controls-row">
         <input id="filterMagias" placeholder="Filtrar minhas magias" />
@@ -1628,27 +1534,162 @@ function renderSpells() {
   `;
   
   conteudoEl.innerHTML = html;
+  bindSpellEvents();
+  bindSlotEvents();
+}
+// Inicializa estrutura de slots usada para controle de "gastos" (used)
+/* =============================================================
+   RENDERIZAÇÃO DE SLOTS (CORRIGIDA: WRAP & SEM MODO NUMÉRICO)
+============================================================= */
 
-  bindSpellEvents(); // Função auxiliar para religar tudo
-  bindSlotEvents();  // NOVA: Liga os eventos dos slots
+/* =============================================================
+   RENDERIZAÇÃO DE SLOTS (ATUALIZADA: ARTÍFICE, BH E INFOS)
+============================================================= */
+
+function initSpellSlotsState() {
+    if (!state.spellSlots) state.spellSlots = {};
+    // Adicionei 'infusions' na lista de chaves
+    const keys = ['1','2','3','4','5','6','7','8','9','pact','ki','furia','sorcery','mutagen','blood_curse', 'infusions'];
+    keys.forEach(k => {
+        if (!state.spellSlots[k]) state.spellSlots[k] = { status: [] }; 
+        if (!Array.isArray(state.spellSlots[k].status)) state.spellSlots[k].status = [];
+    });
 }
 
-// --- LÓGICA DE EVENTOS DOS SLOTS ---
-function bindSlotEvents() {
-    // Botão Configurar (Engrenagem ou Inicial)
-    const btnCfg = document.getElementById('btnConfigSlots');
-    const btnCfgIni = document.getElementById('btnConfigSlotsIni');
+function renderSpellSlotsHTML() {
+    initSpellSlotsState();
     
-    if(btnCfg) btnCfg.onclick = openSlotConfigModal;
-    if(btnCfgIni) btnCfgIni.onclick = openSlotConfigModal;
+    // Calcula Recursos
+    const recursosTotais = calcularRecursosTotais(state.niveisClasses, state.abilities, state.atributos);
 
-    // Botão Descansar (Resetar)
+    if (typeof state.isSlotsCollapsed === 'undefined') state.isSlotsCollapsed = false;
+    const isCollapsed = state.isSlotsCollapsed;
+    const arrowIcon = isCollapsed ? '▸' : '▾';
+    const displayStyle = isCollapsed ? 'display:none;' : '';
+
+    let html = `<div class="slots-container" style="border: 1px solid rgba(156, 39, 176, 0.3); background: #121212;">`;
+
+    // Cabeçalho
+    html += `
+        <div class="slots-header-actions" id="headerSlotsToggle" style="cursor:pointer; user-select:none;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span style="color:#9c27b0; font-size:18px; width:15px;">${arrowIcon}</span>
+                <span class="slots-title">Recursos de Classe</span>
+            </div>
+            <button id="btnRestSlots" class="mini-btn-res" title="Recuperar Tudo" style="padding:4px 8px; width:auto; font-size:11px;">🌙</button>
+        </div>
+        
+        <div class="slots-body-content" style="${displayStyle}">
+            <div class="slots-grid">
+    `;
+
+    let hasAnySlot = false;
+
+    // Render Pips
+    const renderPips = (key, maxVal, label, colorClass) => {
+        if (maxVal > 0) {
+            hasAnySlot = true;
+            const slotState = state.spellSlots[key];
+            while(slotState.status.length < maxVal) slotState.status.push(false);
+
+            let contentHtml = '';
+            if (maxVal === 99) {
+                contentHtml = `<div class="slot-pips"><span style="color:#fff; font-weight:bold; font-size:12px;">ILIMITADO</span></div>`;
+            } else {
+                let pips = '';
+                for (let i = 0; i < maxVal; i++) {
+                    const isSpent = slotState.status[i]; 
+                    pips += `<span class="slot-pip ${colorClass} ${isSpent ? 'used' : 'available'}" data-key="${key}" data-idx="${i}"></span>`;
+                }
+                contentHtml = `<div class="slot-pips" style="flex-wrap: wrap;">${pips}</div>`;
+            }
+
+            html += `
+                <div class="slot-group ${key === 'pact' ? 'pact-group' : ''}">
+                    <div class="slot-label" style="${key === 'pact' ? 'color:#e0aaff;' : ''}">${label}</div>
+                    ${contentHtml}
+                </div>
+            `;
+        }
+    };
+
+    // Slots Padrão
+    for (let i = 1; i <= 9; i++) renderPips(String(i), recursosTotais.slots[i-1], `${i}º Círculo`, '');
+    if (recursosTotais.pact.qtd > 0) renderPips('pact', recursosTotais.pact.qtd, `Pacto (${recursosTotais.pact.nivel}º)`, 'pact');
+    
+    // Especiais
+    renderPips('ki', recursosTotais.ki, 'Ki', 'ki-pip');
+    renderPips('furia', recursosTotais.furia, 'Fúria', 'rage-pip');
+    renderPips('sorcery', recursosTotais.sorcery, 'Feitiçaria', 'sorc-pip');
+    
+    // Novos Especiais
+    renderPips('mutagen', recursosTotais.mutagen, 'Mutagênicos', 'mut-pip');
+    renderPips('infusions', recursosTotais.infusions, 'Itens Infundidos', 'infusion-pip'); // <--- NOVO (Artífice)
+    renderPips('blood_curse', recursosTotais.blood_curse, 'Maldições', 'curse-pip');
+
+    html += `</div>`; // Fecha grid
+
+    // --- ÁREA DE INFORMAÇÕES ---
+    if (recursosTotais.infoConjuracao.length > 0) {
+        html += `<div class="spell-info-footer" style="margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">`;
+        
+        // Remove duplicatas de infos (caso tenha adicionado duas vezes por erro)
+        const infosUnicas = recursosTotais.infoConjuracao.filter((v,i,a)=>a.findIndex(t=>(t.classe === v.classe))===i);
+
+        infosUnicas.forEach(info => {
+            let texto = `<strong style="color:#9c27b0;">${info.classe}</strong>: `;
+            let partes = [];
+            
+            if (info.truques !== undefined) partes.push(`${info.truques} Truques`);
+            if (info.tipo === 'preparadas') partes.push(`${info.preparadas} Preparadas`);
+            else if (info.tipo === 'conhecidas' && info.conhecidas > 0) partes.push(`${info.conhecidas} Conhecidas`);
+            
+            // Maldições Conhecidas
+            if (info.maldicoes !== undefined) partes.push(`${info.maldicoes} Maldições Conhecidas`);
+            
+            // Texto Extra (ex: Infusões Conhecidas, Fórmulas)
+            if (info.extra) partes.push(info.extra);
+
+            texto += partes.join(' • ');
+            html += `<div style="font-size:12px; color:#ccc; margin-bottom:4px;">${texto}</div>`;
+        });
+        html += `</div>`;
+    }
+
+    html += `</div></div>`;
+    
+    if (!hasAnySlot && recursosTotais.infoConjuracao.length === 0) return '';
+    return html;
+}
+
+// --- EVENTOS DOS SLOTS ---
+function bindSlotEvents() {
+    // 1. Toggle Minimizar
+    const headerToggle = document.getElementById('headerSlotsToggle');
+    if (headerToggle) {
+        headerToggle.addEventListener('click', (e) => {
+            if(e.target.closest('#btnRestSlots')) return;
+
+            state.isSlotsCollapsed = !state.isSlotsCollapsed;
+            saveStateToServer();
+            
+            const content = document.querySelector('.slots-body-content');
+            const arrow = headerToggle.querySelector('span');
+            if (content) {
+                content.style.display = state.isSlotsCollapsed ? 'none' : 'block';
+                arrow.textContent = state.isSlotsCollapsed ? '▸' : '▾';
+            }
+        });
+    }
+
+    // 2. Descanso Longo
     const btnRest = document.getElementById('btnRestSlots');
     if (btnRest) {
-        btnRest.onclick = () => {
-            if(confirm("Realizar Descanso Longo? Todos os espaços de magia serão recuperados.")) {
+        btnRest.onclick = (e) => {
+            e.stopPropagation();
+            if(confirm("Recuperar todos os recursos?")) {
                 for (let key in state.spellSlots) {
-                    state.spellSlots[key].used = 0;
+                    state.spellSlots[key].status = []; // Reseta
                 }
                 saveStateToServer();
                 renderSpells();
@@ -1656,43 +1697,56 @@ function bindSlotEvents() {
         };
     }
 
-    // Clique nas Bolinhas (Pips)
+    // 3. Clique nas Bolinhas (Individual)
     document.querySelectorAll('.slot-pip').forEach(pip => {
         pip.addEventListener('click', (e) => {
-            const level = pip.dataset.level;
+            e.stopPropagation();
+            const key = pip.dataset.key;
             const idx = parseInt(pip.dataset.idx);
-            const slotData = state.spellSlots[level];
-
-            // Lógica inteligente: 
-            // Se clicar numa bolinha "disponível" (roxa), gasta um slot.
-            // Se clicar numa "usada" (cinza), recupera um slot.
-            // Geralmente, D&D é da esquerda pra direita.
             
-            // Simplificação: Se clicar, alterna o estado geral baseada na posição?
-            // Melhor: Clique na bolinha X define que temos X gastos ou X+1 gastos?
+            if (!state.spellSlots[key]) state.spellSlots[key] = { status: [] };
+            if (!state.spellSlots[key].status) state.spellSlots[key].status = [];
             
-            // Lógica Simples Toggle:
-            // Se clicar, aumenta o número de usados para cobrir até ali, ou diminui.
+            // Toggle
+            state.spellSlots[key].status[idx] = !state.spellSlots[key].status[idx];
             
-            if (pip.classList.contains('available')) {
-                // Está gastando
-                slotData.used = idx + 1;
-            } else {
-                // Está recuperando (clicou num usado)
-                // Se clicou no último usado, remove 1 usado.
-                // Se clicou no meio, define usados para esse index
-                slotData.used = idx; 
-            }
-
-            // Garante limites
-            if (slotData.used > slotData.max) slotData.used = slotData.max;
-            if (slotData.used < 0) slotData.used = 0;
-
             saveStateToServer();
-            renderSpells();
+            
+            // Atualização visual rápida
+            const isNowSpent = state.spellSlots[key].status[idx];
+            if (isNowSpent) {
+                pip.classList.remove('available');
+                pip.classList.add('used');
+            } else {
+                pip.classList.remove('used');
+                pip.classList.add('available');
+            }
         });
     });
 }
+
+// Função global para botões numéricos (+/-) de recursos altos
+window.changeResource = (key, delta, max) => {
+    if (!state.spellSlots[key]) state.spellSlots[key] = { used: 0 };
+    
+    // Se delta for positivo (botão -), estamos AUMENTANDO o uso (gastando)
+    // Se delta for negativo (botão +), estamos DIMINUINDO o uso (recuperando)
+    // Mas visualmente o botão é "+" para ter mais recursos disponíveis.
+    // Então: Botão "+" -> Diminui Used. Botão "-" -> Aumenta Used.
+    
+    // Correção: O parametro delta vem do onclick.
+    // changeResource('ki', 1, 20) -> Clicou no "-" (Gastou 1) -> used + 1
+    // changeResource('ki', -1, 20) -> Clicou no "+" (Recuperou 1) -> used - 1
+    
+    let newUsed = (state.spellSlots[key].used || 0) + delta;
+    
+    if (max !== 99 && newUsed > max) newUsed = max;
+    if (newUsed < 0) newUsed = 0;
+
+    state.spellSlots[key].used = newUsed;
+    saveStateToServer();
+    renderSpells();
+};
 
 // --- MODAL DE CONFIGURAÇÃO DE SLOTS ---
 function openSlotConfigModal() {

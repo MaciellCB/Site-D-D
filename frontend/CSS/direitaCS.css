@@ -1174,3 +1174,73 @@ a.editar-item, a.editar-hab, a.editar-spell {
     background-color: #e0aaff;
     border-color: #e0aaff;
 }
+
+/* --- Estilos Extras para Recursos Especiais --- */
+
+/* Ki - Verde Água */
+.slot-pip.ki-pip.available {
+    background-color: #4db6ac;
+    border-color: #4db6ac;
+    box-shadow: 0 0 4px rgba(77, 182, 172, 0.4);
+}
+
+/* Fúria - Vermelho/Laranja */
+.slot-pip.rage-pip.available {
+    background-color: #ff7043;
+    border-color: #ff7043;
+    box-shadow: 0 0 4px rgba(255, 112, 67, 0.4);
+}
+
+/* Feitiçaria - Azul */
+.slot-pip.sorc-pip.available {
+    background-color: #64b5f6;
+    border-color: #64b5f6;
+    box-shadow: 0 0 4px rgba(100, 181, 246, 0.4);
+}
+
+/* Mutagênico - Verde Tóxico */
+.slot-pip.mut-pip.available {
+    background-color: #aeea00;
+    border-color: #aeea00;
+    box-shadow: 0 0 4px rgba(174, 234, 0, 0.4);
+}
+
+/* Botões pequenos para contador numérico */
+.mini-btn-res {
+    background: #333;
+    color: #fff;
+    border: 1px solid #555;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mini-btn-res:hover {
+    background: #555;
+}
+
+.slot-pips {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap; /* ISSO FAZ AS BOLINHAS QUEBRAREM LINHA */
+    justify-content: center;
+    max-width: 100%; /* Garante que não estoure o container pai */
+}
+
+/* Maldição de Sangue - Vermelho Escuro */
+.slot-pip.curse-pip.available {
+    background-color: #b71c1c;
+    border-color: #b71c1c;
+    box-shadow: 0 0 4px rgba(183, 28, 28, 0.4);
+}
+
+/* Infusões (Artífice) - Ciano Neon */
+.slot-pip.infusion-pip.available {
+    background-color: #00e5ff;
+    border-color: #00e5ff;
+    box-shadow: 0 0 4px rgba(0, 229, 255, 0.4);
+}

@@ -1,7 +1,7 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Inventário",
+  "activeTab": "Magias",
   "spellDCConfig": {
     "selectedAttr": "for",
     "extraMod": 0,
@@ -9,30 +9,6 @@
   },
   "dtMagias": 19,
   "inventory": [
-    {
-      "id": 1766973070409,
-      "name": "Machado de Batalha",
-      "description": "<p>Um machado de lâmina única ou dupla, equilibrado para golpes poderosos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>",
-      "expanded": true,
-      "equip": false,
-      "type": "Arma",
-      "isEquipable": true,
-      "proficiency": "Armas Marciais",
-      "tipoArma": "Corpo a Corpo",
-      "empunhadura": "Versátil",
-      "crit": "20",
-      "multiplicador": "2",
-      "alcance": "1.5m",
-      "attunement": "Não",
-      "damage": "1d8",
-      "damage2Hands": "1d10",
-      "useTwoHands": false,
-      "damageTypes": [
-        "Cortante"
-      ],
-      "moreDmgList": [],
-      "caracteristicas": []
-    },
     {
       "id": 1766973012649,
       "name": "Escudo",
@@ -75,7 +51,7 @@
       "id": 1766806010141,
       "name": "Armadura de Batalha",
       "description": "<p>Armadura pesada robusta.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 16 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 28 kg</li></ul>",
-      "expanded": true,
+      "expanded": false,
       "equip": false,
       "type": "Proteção",
       "isEquipable": true,
@@ -93,22 +69,13 @@
   ],
   "abilities": [
     {
-      "id": 1766804864918,
-      "title": "(1º nível) Defesa sem Armadura(Monge)",
-      "description": "<p>Enquanto não usar armadura nem escudo, sua Classe de Armadura (CA) é:</p><p style='text-align:center; font-weight:bold; color:#fff; background:#222; padding:8px; border-radius:4px;'>10 + Mod. Destreza + Mod. Sabedoria</p>",
-      "expanded": true,
-      "class": "Monge",
-      "subclass": "",
-      "active": false
-    },
-    {
-      "id": 1766804861398,
-      "title": "(1º nível) Defesa sem Armadura(Bárbaro)",
-      "description": "<p>Enquanto você não estiver usando nenhuma armadura, sua Classe de Armadura (CA) é:</p><p style='text-align:center; font-weight:bold; color:#fff; background:#222; padding:8px; border-radius:4px;'>10 + Mod. Destreza + Mod. Constituição</p><p>Você pode usar um escudo e ainda obter esse benefício.</p>",
+      "id": 1767820786188,
+      "title": "(Alma Profana, 3º nível) Magia do Pacto",
+      "description": "<p>Você ganha conjuração de Bruxo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Recuperação:</strong> Espaços de magia recuperam em descanso curto ou longo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Atributo:</strong> Hemomancia (INT ou SAB).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Foco:</strong> Arma com Rito ativo.</li></ul>",
       "expanded": false,
-      "class": "Bárbaro",
-      "subclass": "",
-      "active": true
+      "class": "Blood Hunter",
+      "subclass": "Ordem da Alma Profana",
+      "active": false
     }
   ],
   "description": {
@@ -120,6 +87,10 @@
     "vinculos": "",
     "fraquezas": "",
     "historia": ""
+  },
+  "sanidade": {
+    "estresse": 4,
+    "vazio": 144
   },
   "spells": [
     {
@@ -169,7 +140,7 @@
         "resistencia": "-"
       },
       "description": "<p>Role <strong>5d8</strong>. Adormece criaturas na área em ordem ascendente de seus PV atuais.</p><p><strong>Níveis Superiores:</strong> +2d8 por nível de slot.</p>",
-      "expanded": true,
+      "expanded": false,
       "active": false
     }
   ],
@@ -297,10 +268,6 @@
       "outros": 0
     }
   },
-  "sanidade": {
-    "estresse": 0,
-    "vazio": 0
-  },
   "atributos": {
     "n1": 32,
     "n2": 20,
@@ -310,42 +277,329 @@
     "n6": 20
   },
   "niveisClasses": {
-    "artifice": 3,
-    "barbaro": 4,
-    "bardo": 5,
-    "blood hunter": 6
+    "artifice": 0,
+    "barbaro": 0,
+    "bardo": 0,
+    "blood hunter": 20,
+    "bruxo": 0,
+    "clerigo": 0,
+    "monge": 0,
+    "druida": 0,
+    "feiticeiro": 0,
+    "guerreiro": 0,
+    "ladino": 0,
+    "mago": 0,
+    "paladino": 0,
+    "patrulheiro": 0
   },
   "xp": "2345667",
   "inspiracao": 4,
-  "vidaDadosSalvos": {
-    "v1": 8,
-    "v2": 8,
-    "v3": 8,
-    "v4": 7,
-    "v5": 10,
-    "v6": 10,
-    "v7": 9,
-    "v8": 2,
-    "v10": 5,
-    "v9": 1,
-    "v11": 8,
-    "v12": 4,
-    "v13": 8,
-    "v14": 7,
-    "v15": 7,
-    "v16": 4,
-    "v17": 2,
-    "v18": 3
-  },
+  "vidaDadosSalvos": {},
   "marco": 2,
   "vidaAtual": 105,
   "vidaTempAtual": 71,
   "danoNecroAtual": 60,
   "metros": 364.5,
-  "iniciativaBonus": 0,
+  "iniciativaBonus": 87,
   "acOutros": 0,
   "resistencias": "23",
   "imunidades": "234",
   "fraquezas": "234",
-  "proficiencias": "q3r"
+  "proficiencias": "q3r",
+  "minimizedPreparedSpells": false,
+  "minimizedPreparedAbilities": false,
+  "fraquezasList": [
+    "Ácido",
+    "Contundente",
+    "Cortante",
+    "Perfurante",
+    "Fogo",
+    "Elétrico",
+    "Veneno",
+    "Trovão",
+    "Radiante",
+    "Necrótico"
+  ],
+  "resistenciasList": [
+    "Contundente",
+    "Perfurante",
+    "Frio"
+  ],
+  "imunidadesList": [],
+  "proficienciasList": [
+    "Armaduras médias",
+    "Armaduras leves",
+    "Armaduras pesadas"
+  ],
+  "idiomasList": [
+    "Gíria de Ladrões",
+    "Druídico",
+    "Silvestre",
+    "Primordial",
+    "Infernal",
+    "Dialeto Subterrâneo",
+    "Dracônico"
+  ],
+  "spellSlots": {
+    "1": {
+      "used": 0,
+      "status": [
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "2": {
+      "used": 0,
+      "status": [
+        false,
+        false,
+        false
+      ]
+    },
+    "3": {
+      "used": 0,
+      "status": [
+        false,
+        false,
+        false
+      ]
+    },
+    "4": {
+      "used": 0,
+      "status": [
+        false,
+        false,
+        false
+      ]
+    },
+    "5": {
+      "used": 0,
+      "status": [
+        false,
+        false,
+        false
+      ]
+    },
+    "6": {
+      "used": 0,
+      "status": [
+        false,
+        false
+      ]
+    },
+    "7": {
+      "used": 0,
+      "status": [
+        false,
+        false
+      ]
+    },
+    "8": {
+      "used": 0,
+      "status": [
+        false
+      ]
+    },
+    "9": {
+      "used": 0,
+      "status": [
+        false
+      ]
+    },
+    "pact": {
+      "used": 0,
+      "status": [
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "ki": {
+      "used": 0,
+      "status": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "furia": {
+      "used": 0,
+      "status": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "sorcery": {
+      "used": 0,
+      "status": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false
+      ]
+    },
+    "mutagen": {
+      "used": 0,
+      "status": [
+        false,
+        false,
+        false
+      ]
+    },
+    "blood_curse": {
+      "status": [
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "infusions": {
+      "status": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "isSlotsCollapsed": false,
+  "collapsedSections": {
+    "class-Blood Hunter": false
+  }
 }
