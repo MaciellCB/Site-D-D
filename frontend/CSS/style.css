@@ -1,148 +1,159 @@
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #0a0a0a;
-    color: white;
-  }
+/* =============================================================
+   RESET E CONFIGURAÇÕES GLOBAIS
+============================================================= */
+* {
+  box-sizing: border-box;
+  /* Garante que padding não aumente a largura total */
+}
 
-  /* HEADER */
-  header {
-    background-color: black;
-    padding: 10px 20px;
-  }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #0a0a0a;
+  color: white;
+  width: 100%;
+  overflow-x: hidden;
+  /* Evita rolagem lateral indesejada */
+}
 
-  .navbar {
-    display: flex;
-    justify-content: space-between;
+/* =============================================================
+   HEADER E NAVEGAÇÃO
+============================================================= */
+header {
+  background-color: black;
+  padding: 10px 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  margin-right: 20px;
+  font-weight: bold;
+}
+
+.nav-links a.active {
+  border-bottom: 2px solid #9c27b0;
+}
+
+.perfil-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+/* =============================================================
+   CONTAINER PRINCIPAL
+   (Consolidado da versão "LAYOUT ÚNICO" e "CONTAINER AMPLIADO")
+============================================================= */
+.container {
+  display: flex;
+  justify-content: center;
+  /* Centraliza os blocos na tela */
+  align-items: stretch;
+  /* Faz todas as colunas terem a mesma altura visual */
+  min-height: calc(100vh - 60px);
+
+  /* Largura e Espaçamento */
+  width: 98% !important;
+  /* Ocupa quase toda a tela */
+  max-width: 1800px;
+  /* Limite para monitores ultra-wide */
+  margin: 0 auto !important;
+  padding: 15px 5px !important;
+  gap: 10px !important;
+  /* Gap fixo e pequeno para economizar espaço */
+
+  /* Comportamento de quebra */
+  flex-wrap: wrap;
+  /* Permite pular linha se a tela for muito pequena */
+}
+
+/* =============================================================
+   COLUNAS (ESQUERDA, CENTRO, DIREITA)
+============================================================= */
+
+/* LADO ESQUERDO 
+   Prioridade: Tamanho fixo aumentado para caber a Armadura */
+.lado-esquerdo {
+  flex: 0 0 385px !important;
+  /* Tamanho fixo (não estica nem encolhe) */
+  min-width: 360px;
+  background-color: #121212;
+  border-radius: 10px;
+  padding: 15px;
+  margin: 0 !important;
+}
+
+/* LADO CENTRO 
+   Prioridade: Flexível mas com limite para não "esmagar" nem "invadir" */
+.lado-centro {
+  flex: 1 1 250px !important;
+  /* Tenta ficar em 250px, mas cresce para ocupar o vazio */
+  min-width: 240px;
+  /* Limite absoluto de encolhimento */
+  background-color: #121212;
+  border-radius: 10px;
+  padding: 8px;
+  /* Padding reduzido para ganhar espaço interno */
+  overflow: hidden;
+  /* Corta conteúdo que tentar vazar */
+  margin: 0 !important;
+}
+
+/* LADO DIREITO
+   Prioridade: Ganha mais peso que o centro para caber cards de magia/inventário */
+.lado-direito {
+  flex: 1.5 1 auto !important;
+  /* Cresce mais (1.5) que o centro (1) */
+  min-width: 350px;
+  /* Adicionei o visual padrão dos outros blocos para consistência, 
+     já que não estava explícito no último bloco mas é o esperado */
+  background-color: #121212;
+  border-radius: 10px;
+  padding: 15px;
+  margin: 0 !important;
+}
+
+/* =============================================================
+   RESPONSIVIDADE
+============================================================= */
+
+/* Ajuste para Tablets/Notebooks menores (ex: 1100px para baixo) */
+@media (max-width: 1100px) {
+
+  .lado-esquerdo,
+  .lado-centro,
+  .lado-direito {
+    /* Faz os blocos ocuparem quase metade da tela, forçando quebra de linha 
+       organizada (2 em cima, 1 embaixo ou todos empilhados) */
+    flex: 1 1 45% !important;
+    max-width: 100%;
+    /* Remove travas de largura em telas pequenas */
+  }
+}
+
+/* Ajuste para Celulares (ex: 768px para baixo) */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    /* Empilha tudo verticalmente */
     align-items: center;
   }
 
-  .nav-links a {
-    color: white;
-    text-decoration: none;
-    margin-right: 20px;
-    font-weight: bold;
-  }
-
-  .nav-links a.active {
-    border-bottom: 2px solid #9c27b0;
-  }
-
-  .perfil-img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-  }
-
-  /* CONTEÚDO */
-  .container {
-    display: flex;
-    height: calc(100vh - 60px);
-    padding: 20px;
-    gap: 20px;
-    align-items: stretch; /* garante que colunas fiquem com mesma altura */
-  }
-
-  /* CONTEÚDO */
-  .container {
-    display: flex;
-    min-height: calc(100vh - 60px); /* Garante altura mínima */
-    
-    /* MUDANÇA 1: Padding lateral zero faz encostar nas bordas */
-    padding: 20px 0; 
-    
-    /* MUDANÇA 2: Gap reduzido (era 20px, agora 8px) para aproximar as colunas */
-    gap: 8px; 
-    
-    align-items: stretch;
-    width: 100%;
-    box-sizing: border-box; /* Garante que o padding não estoure a largura */
-  }
-
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #0a0a0a;
-    color: white;
-    width: 100vw;      /* Garante largura total */
-    overflow-x: hidden; /* Evita rolagem lateral indesejada */
-  }
-
-  /* HEADER */
-  header {
-    background-color: black;
-    padding: 10px 20px;
-    width: 100%;
-    box-sizing: border-box; /* Garante que o padding não estoure a largura */
-  }
-
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .nav-links a {
-    color: white;
-    text-decoration: none;
-    margin-right: 20px;
-    font-weight: bold;
-  }
-
-  .nav-links a.active {
-    border-bottom: 2px solid #9c27b0;
-  }
-
-  .perfil-img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-  }
-
-  /* CONTEÚDO PRINCIPAL */
-  .container {
-    display: flex;
-    
-    /* Altura mínima para preencher a tela menos o header */
-    min-height: calc(100vh - 60px); 
-    
-    /* --- MUDANÇAS CRÍTICAS AQUI --- */
+  .lado-esquerdo,
+  .lado-centro,
+  .lado-direito {
     width: 100% !important;
-    max-width: 100% !important;
-    
-    /* 20px em cima/baixo e 0px nas laterais */
-    padding: 20px 0 !important; 
-    
-    /* Diminui a distância entre as colunas (coloquei 4px para ficarem bem próximas) */
-    gap: 4px !important; 
-    
-    align-items: stretch; 
-    box-sizing: border-box;
+    flex: 1 1 auto !important;
+    margin-bottom: 10px !important;
   }
-
-  /* Garante que as colunas não tenham margens externas empurrando as bordas */
-  .lado-esquerdo, 
-  .lado-centro, 
-  .lado-direito {
-    margin-left: 5px !important;
-    margin-right: 5px !important;
-  }
-
-  /* Defina um tamanho fixo para a esquerda e impeça que ela cresça */
-  .lado-esquerdo {
-    /* O primeiro 0 impede de crescer, o segundo 0 impede de encolher demais */
-    /* 280px é a largura base. Aumente ou diminua esse número conforme necessário */
-    flex: 0 0 280px !important; 
-    width: 390px !important;
-    max-width: 390px !important;
-    margin-left: 12px !important;
-  }
-
-  /* Garante que o centro e a direita ocupem o resto do espaço disponível */
-  .lado-centro, 
-  .lado-direito {
-    flex: 1; 
-  }
-
-
+}

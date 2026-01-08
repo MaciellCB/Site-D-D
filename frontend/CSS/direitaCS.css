@@ -1,64 +1,115 @@
 /* ==========================================================================
-   LAYOUT PRINCIPAL & ESTRUTURA
+   ESTRUTURA PRINCIPAL (LADO DIREITO)
    ========================================================================== */
-
-/* Container Principal da Direita */
 .lado-direito {
+  /* Layout e Tamanho - Prioridade Maxima */
   flex: 0 0 400px !important;
   width: 400px !important;
   max-width: 400px !important;
+  height: fit-content !important;
+  min-height: 100vh;
+  max-height: none !important;
+
+  /* Visual */
   background-color: #171717;
   border-radius: 5px;
   padding: 12px;
   padding-bottom: 60px;
+  color: #e6e6e6;
+
+  /* Comportamento */
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  color: #e6e6e6;
-  height: fit-content !important;
-  min-height: 100vh;
-  max-height: none !important;
   overflow: visible !important;
   flex-shrink: 0;
+  overflow-anchor: none;
 }
 
-/* Conteúdo Interno */
+/* Conteúdo Interno (Wrapper) */
 .conteudo {
   background-color: transparent;
   padding: 0;
   color: #e6e6e6;
-  /* Força o conteúdo a ocupar espaço físico e empurrar o pai */
   display: block !important;
   height: auto !important;
   overflow: visible !important;
-  flex: none !important; /* Impede o flexbox de tentar encolher isso */
+  flex: none !important;
+  /* Impede o flexbox de encolher */
 }
 
-/* Travamento de Scroll do Body (quando modal aberto) */
+/* Travamento do Body ao abrir Modais */
 body.no-scroll {
   overflow: hidden !important;
   height: 100vh;
 }
 
+/* Scrollbars Gerais (Escondidas no conteúdo principal) */
+.lado-direito .conteudo::-webkit-scrollbar,
+.inventory-list::-webkit-scrollbar,
+.abilities-list::-webkit-scrollbar,
+.spells-list::-webkit-scrollbar,
+.spell-modal::-webkit-scrollbar {
+  display: none;
+}
+
+.lado-direito .conteudo,
+.inventory-list,
+.abilities-list,
+.spells-list,
+.spell-modal {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* ==========================================================================
    ABAS DE NAVEGAÇÃO
    ========================================================================== */
-
 .abas {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 colunas iguais */
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   margin-bottom: 14px;
   align-items: center;
 }
 
-/* Posicionamento dos botões no Grid */
-.abas button:nth-child(1) { grid-column: 1; grid-row: 1; } /* Combate */
-.abas button:nth-child(2) { grid-column: 2; grid-row: 1; } /* Mag. Preparadas */
-.abas button:nth-child(3) { grid-column: 3; grid-row: 1; } /* Habilidades */
-.abas button:nth-child(4) { grid-column: 1; grid-row: 2; } /* Magias */
-.abas button:nth-child(5) { grid-column: 2; grid-row: 2; } /* Inventário */
-.abas button:nth-child(6) { grid-column: 3; grid-row: 2; } /* Descrição */
+/* Posicionamento Fixo no Grid */
+.abas button:nth-child(1) {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+/* Combate */
+.abas button:nth-child(2) {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+/* Mag. Preparadas */
+.abas button:nth-child(3) {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+/* Habilidades */
+.abas button:nth-child(4) {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+/* Magias */
+.abas button:nth-child(5) {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+/* Inventário */
+.abas button:nth-child(6) {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+/* Descrição */
 
 .abas button {
   background-color: transparent;
@@ -74,8 +125,8 @@ body.no-scroll {
   white-space: nowrap;
 }
 
-.abas button.ativa { 
-  color: #fff; 
+.abas button.ativa {
+  color: #fff;
 }
 
 .abas button.ativa::after {
@@ -85,24 +136,40 @@ body.no-scroll {
   right: 0;
   bottom: -10px;
   height: 3px;
-  background: linear-gradient(90deg,#9c27b0,#7b1fa2);
+  background: linear-gradient(90deg, #9c27b0, #7b1fa2);
   border-radius: 4px;
   margin: 0 auto;
   width: 60%;
 }
 
 /* ==========================================================================
-   CARDS (BASE)
+   CARDS (BASE E COMPORTAMENTO)
    ========================================================================== */
-
 .card {
   background: #1f1f1f;
   border-radius: 8px;
-  padding: 8px; 
+  padding: 8px;
   margin-bottom: 10px;
-  border: 1px solid rgba(255,255,255,0.03);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  transition: all 0.2s ease;
 }
 
+/* Estados do Card (Expandido/Colapsado) */
+.card:not(.expanded) {
+  padding-bottom: 4px;
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+.card:not(.expanded) .card-header {
+  border-bottom: none;
+  padding-bottom: 4px;
+}
+
+.card:not(.expanded) .card-body {
+  display: none !important;
+}
+
+/* Header do Card */
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -121,6 +188,18 @@ body.no-scroll {
   min-width: 0;
 }
 
+/* Correção de Imagens no Header */
+.card-header img,
+.spell-header img,
+.dice-img {
+  max-width: 20px !important;
+  max-height: 20px !important;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
 .card-title {
   font-weight: 800;
   font-size: 16px;
@@ -137,19 +216,30 @@ body.no-scroll {
   color: #bdbdbd;
 }
 
+/* Corpo do Card */
 .card-body {
   margin-top: 10px;
   color: #ddd;
   font-size: 14px;
 }
 
-/* Regra para quebra de texto dentro do card */
-.card-body p, 
-.card-body > div {
+.card-body p,
+.card-body>div {
   word-break: break-word;
   overflow-wrap: break-word;
   max-width: 100%;
   white-space: pre-wrap;
+}
+
+.card-body b,
+.card-body strong {
+  color: #9c27b0;
+  font-weight: 800;
+}
+
+.card-body ul {
+  padding-left: 20px;
+  margin: 5px 0;
 }
 
 .card-meta {
@@ -162,7 +252,7 @@ body.no-scroll {
   padding: 12px;
 }
 
-/* Carets e Ícones */
+/* Carets (Setinhas) */
 .caret {
   display: inline-block;
   width: 22px;
@@ -172,7 +262,14 @@ body.no-scroll {
   font-size: 20px;
   line-height: 1;
   color: #9c27b0;
+  transition: transform 0.2s ease;
 }
+
+.card.expanded .caret {
+  transform: rotate(0deg);
+}
+
+/* Ajuste se necessário */
 
 .caret-triangle {
   color: #9c27b0;
@@ -188,30 +285,35 @@ body.no-scroll {
 }
 
 /* ==========================================================================
-   MAGIAS (CARDS & LISTAS) - CORREÇÃO DE BUGS APLICADA
+   MAGIAS (LISTAGEM)
    ========================================================================== */
-
 .spells-wrapper {
   position: relative;
+}
+
+.magias-big-btn {
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 2px solid #9c27b0;
+  background: transparent;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* Esconde catálogo embutido na lista */
+.lado-direito .spells-wrapper>.catalog-list.card {
+  display: none;
 }
 
 .spell-header {
   padding: 12px;
   align-items: flex-start;
-  border-bottom: 2px solid rgba(156,39,176,0.08);
-}
-
-/* CORREÇÃO: Limita o tamanho de qualquer imagem/dado no header */
-.spell-header img,
-.spell-damage img,
-.card-header img,
-.dice-img {
-  max-width: 20px !important;
-  max-height: 20px !important;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  display: block; /* Remove espaços fantasmas */
+  border-bottom: 2px solid rgba(156, 39, 176, 0.08);
 }
 
 .spell-left {
@@ -219,20 +321,16 @@ body.no-scroll {
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  
-  /* Garante espaço para o texto não ficar vertical */
   min-width: 0;
   flex: 1;
-  margin-right: 10px; 
+  margin-right: 10px;
 }
 
 .spell-right {
   display: flex;
   align-items: center;
   gap: 12px;
-  
-  /* Impede que o bloco de dano esmague o título */
-  flex-shrink: 0; 
+  flex-shrink: 0;
   max-width: 120px;
 }
 
@@ -255,6 +353,10 @@ body.no-scroll {
   gap: 8px;
 }
 
+.spell-damage img {
+  max-width: 20px !important;
+}
+
 .spell-attrs {
   margin-top: 8px;
   color: #ddd;
@@ -263,56 +365,85 @@ body.no-scroll {
   gap: 6px;
 }
 
-/* Componentes de Magia (V, S, M) */
+/* Componentes (V, S, M) */
 .comp-block {
   display: flex;
   flex-direction: column;
   gap: 6px;
   min-width: 120px;
 }
-.comp-title { font-size: 13px; color: #cfcfcf; font-weight: 700; }
-.comp-letters { display: flex; gap: 6px; align-items: center; }
+
+.comp-title {
+  font-size: 13px;
+  color: #cfcfcf;
+  font-weight: 700;
+}
+
+.comp-letters {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
 .comp-letter {
-  display: inline-flex; width: 26px; height: 26px;
-  border-radius: 6px; align-items: center; justify-content: center;
-  background: #1a1a1a; border: 1px solid rgba(255,255,255,0.03);
-  color: #bbb; font-weight: 800;
-}
-.comp-letter.on { background: #9c27b0; color: #fff; border-color: #9c27b0; }
-.comp-material { font-size: 13px; color: #ddd; }
-
-/* Botão Grande de Adicionar Magia */
-.magias-big-btn {
-  position: absolute;
-  right: 12px;
-  top: 8px;
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: 2px solid #9c27b0;
-  background: transparent;
-  color: #fff;
+  display: inline-flex;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  color: #bbb;
   font-weight: 800;
-  cursor: pointer;
-  z-index: 2;
 }
 
-/* Catálogo embutido (escondido) */
-.lado-direito .spells-wrapper > .catalog-list.card {
-  display: none;
+.comp-letter.on {
+  background: #9c27b0;
+  color: #fff;
+  border-color: #9c27b0;
+}
+
+.comp-material {
+  font-size: 13px;
+  color: #ddd;
+}
+
+/* DT Magias e Controles */
+.dt-magias {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.dt-magias label {
+  font-size: 12px;
+  color: #cfcfcf;
+  font-weight: 700;
+}
+
+.dt-magias input {
+  width: 64px;
+  padding: 6px;
+  background: #0f0f0f;
+  border: 1px solid #262626;
+  color: #eee;
+  border-radius: 6px;
+  text-align: center;
 }
 
 /* ==========================================================================
-   HABILIDADES & INVENTÁRIO
+   INVENTÁRIO E HABILIDADES
    ========================================================================== */
-
-/* Habilidades */
 .hab-card .card-header {
   padding: 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .hab-card .card-header .left {
   display: flex;
   align-items: center;
@@ -321,29 +452,107 @@ body.no-scroll {
   min-width: 0;
 }
 
-/* Inventário / Header Equipamento */
-.header-equip {
+/* Seções de Habilidade Minimizáveis */
+.hab-section-group .section-content {
+  transition: all 0.2s ease;
+}
+
+.section-content.hidden {
+  display: none;
+}
+
+.toggle-section-header {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+
+.toggle-section-header:hover {
+  color: #fff !important;
+}
+
+/* Checkboxes (Equipamento / Ativar) */
+.header-equip,
+.check-ativar {
   display: flex;
   align-items: center;
 }
-.header-equip input[type="checkbox"] { display: none; }
-.square-check {
-  width: 34px; height: 34px;
-  border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.06);
-  display: inline-block;
-}
-.header-equip input[type="checkbox"]:checked + .square-check {
-  background: #9c27b0; border-color: #9c27b0;
-}
-.square-check::after {
-  content: '✓'; color: transparent;
-  font-weight: 800; display: block;
-  text-align: center; line-height: 34px;
-}
-.header-equip input[type="checkbox"]:checked + .square-check::after { color: #fff; }
 
-/* Novo estilo Card Inventário (Maça Flamejante) */
+.header-equip input[type="checkbox"],
+.check-ativar input[type="checkbox"] {
+  display: none;
+}
+
+.square-check {
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: inline-block;
+  text-align: center;
+  font-weight: 800;
+}
+
+.header-equip .square-check {
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+}
+
+.check-ativar .square-check {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  line-height: 20px;
+}
+
+input:checked+.square-check {
+  background: #9c27b0;
+  border-color: #9c27b0;
+}
+
+.square-check::after {
+  content: '✓';
+  color: transparent;
+  display: block;
+}
+
+input:checked+.square-check::after {
+  color: #fff;
+}
+
+/* Versátil Checkbox Inline */
+.versatile-check-inline {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 12px;
+}
+
+.versatile-check-inline input {
+  display: none;
+}
+
+.versatile-check-inline .v-box {
+  font-size: 11px;
+  font-weight: 900;
+  color: #9c27b0;
+  border: 2px solid #9c27b0;
+  padding: 4px 10px;
+  border-radius: 5px;
+  transition: 0.2s;
+  line-height: 1;
+  text-transform: uppercase;
+  background: transparent;
+}
+
+.versatile-check-inline input:checked+.v-box {
+  background: #9c27b0;
+  color: #fff;
+}
+
+/* Detalhes do Item */
 .header-icon {
   margin-left: auto;
   padding-left: 10px;
@@ -354,13 +563,14 @@ body.no-scroll {
 .item-tags-line {
   color: #9c27b0;
   font-weight: 700;
-  font-size: 12px; 
+  font-size: 12px;
   margin-bottom: 6px;
   padding-bottom: 4px;
   border-bottom: 1px solid rgba(156, 39, 176, 0.2);
 }
 
-.item-stats-row {
+.item-stats-row,
+.item-data-row {
   display: flex;
   gap: 16px;
   margin-bottom: 6px;
@@ -370,12 +580,8 @@ body.no-scroll {
 }
 
 .item-data-row {
-  margin-bottom: 4px;
-  font-size: 13px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
   gap: 6px;
+  margin-bottom: 4px;
 }
 
 .item-description-text {
@@ -399,9 +605,263 @@ body.no-scroll {
 }
 
 /* ==========================================================================
-   ABA DESCRIÇÃO (TEXTAREAS)
+   SLOTS E RECURSOS (BOLINHAS)
    ========================================================================== */
+.slots-container {
+  background: #121212;
+  border: 1px solid rgba(156, 39, 176, 0.2);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 15px;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
 
+.slots-container.empty {
+  border-style: dashed;
+  border-color: #333;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Minimização dos Slots */
+.slots-container.collapsed {
+  padding-bottom: 0;
+  padding-top: 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(156, 39, 176, 0.3);
+}
+
+.slots-container.collapsed .slots-body-content {
+  display: none !important;
+}
+
+.slots-container.collapsed .slots-header-actions {
+  margin-bottom: 0;
+  border-bottom: none;
+  padding: 8px 0;
+}
+
+.slots-header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.slots-title {
+  font-weight: 800;
+  color: #9c27b0;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Botões de Configuração Slots */
+.btn-config-slots,
+#btnRestSlots,
+#btnConfigSlots {
+  background: transparent;
+  border: 1px solid #333;
+  color: #bbb;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-config-slots {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.btn-config-slots:hover {
+  background: #222;
+  color: #fff;
+  border-color: #9c27b0;
+}
+
+#btnRestSlots,
+#btnConfigSlots {
+  background: #1a1a1a;
+  padding: 4px 8px;
+  font-size: 11px;
+  color: #ddd;
+}
+
+#btnRestSlots:hover {
+  color: #fff;
+  border-color: #9c27b0;
+}
+
+.btn-config-gear {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px;
+  transition: transform 0.2s;
+  line-height: 1;
+}
+
+.btn-config-gear:hover {
+  transform: rotate(90deg);
+}
+
+/* Grid de Slots */
+.slots-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.slot-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #1b1b1b;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  min-width: 50px;
+}
+
+.slot-group.pact-group {
+  border-color: rgba(224, 170, 255, 0.2);
+}
+
+.slot-label {
+  font-size: 11px;
+  color: #888;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+/* Pips (Bolinhas) */
+.slot-pips {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.slot-pip {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid #555;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: transparent;
+}
+
+.slot-pip:hover {
+  transform: scale(1.2);
+}
+
+/* Cores dos Recursos */
+.slot-pip.used {
+  background-color: #111;
+  border-color: #333;
+}
+
+/* Padrão (Magia) */
+.slot-pip.available {
+  background-color: #9c27b0;
+  border-color: #9c27b0;
+  box-shadow: 0 0 4px rgba(156, 39, 176, 0.4);
+}
+
+/* Pacto (Bruxo) */
+.slot-pip.pact.available {
+  background-color: #e0aaff;
+  border-color: #e0aaff;
+}
+
+/* Ki (Monge) */
+.slot-pip.ki-pip.available {
+  background-color: #4db6ac;
+  border-color: #4db6ac;
+  box-shadow: 0 0 4px rgba(77, 182, 172, 0.4);
+}
+
+/* Fúria (Bárbaro) */
+.slot-pip.rage-pip.available {
+  background-color: #ff7043;
+  border-color: #ff7043;
+  box-shadow: 0 0 4px rgba(255, 112, 67, 0.4);
+}
+
+/* Feitiçaria (Feiticeiro) */
+.slot-pip.sorc-pip.available {
+  background-color: #64b5f6;
+  border-color: #64b5f6;
+  box-shadow: 0 0 4px rgba(100, 181, 246, 0.4);
+}
+
+/* Mutagênico (Caçador de Sangue) */
+.slot-pip.mut-pip.available {
+  background-color: #aeea00;
+  border-color: #aeea00;
+  box-shadow: 0 0 4px rgba(174, 234, 0, 0.4);
+}
+
+/* Maldição de Sangue */
+.slot-pip.curse-pip.available {
+  background-color: #b71c1c;
+  border-color: #b71c1c;
+  box-shadow: 0 0 4px rgba(183, 28, 28, 0.4);
+}
+
+/* Infusões (Artífice) */
+.slot-pip.infusion-pip.available {
+  background-color: #00e5ff;
+  border-color: #00e5ff;
+  box-shadow: 0 0 4px rgba(0, 229, 255, 0.4);
+}
+
+/* Customizado */
+.slot-pip.custom-pip.available {
+  background-color: #ffb74d;
+  border-color: #ffb74d;
+  box-shadow: 0 0 4px rgba(255, 183, 77, 0.4);
+}
+
+.mini-btn-res {
+  background: #333;
+  color: #fff;
+  border: 1px solid #555;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mini-btn-res:hover {
+  background: #555;
+}
+
+.custom-res-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #0f0f0f;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 6px;
+}
+
+/* ==========================================================================
+   EDITORES DE TEXTO (DESCRIÇÃO & RICO)
+   ========================================================================== */
 .desc-grid {
   display: flex;
   flex-direction: column;
@@ -419,7 +879,7 @@ body.no-scroll {
 }
 
 .desc-grid textarea {
-  background-color: #1f1f1f; 
+  background-color: #1f1f1f;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   color: #ccc;
@@ -430,7 +890,7 @@ body.no-scroll {
   width: 100%;
   box-sizing: border-box;
   resize: vertical;
-  overflow-y: auto; /* Permite scroll se reduzir altura */
+  overflow-y: auto;
   min-height: 80px;
   transition: border-color 0.2s, background-color 0.2s;
 }
@@ -445,505 +905,7 @@ body.no-scroll {
   color: #555;
 }
 
-/* Scrollbar da Descrição */
-.desc-grid textarea::-webkit-scrollbar { width: 8px; }
-.desc-grid textarea::-webkit-scrollbar-track { background: transparent; }
-.desc-grid textarea::-webkit-scrollbar-thumb {
-  background-color: #333;
-  border-radius: 4px;
-  border: 1px solid #1f1f1f;
-}
-.desc-grid textarea::-webkit-scrollbar-thumb:hover { background-color: #555; }
-
-/* ==========================================================================
-   MODAL GERAL E "NOVA MAGIA/ITEM"
-   ========================================================================== */
-
-.spell-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 32px;
-  z-index: 11000;
-  overflow-y: auto;
-}
-
-.spell-modal {
-  width: 920px;
-  max-width: calc(100% - 48px);
-  background: #1f1f1f;
-  border-radius: 6px;
-  padding: 18px;
-  box-sizing: border-box;
-  border: 1px solid rgba(0,0,0,0.45);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-  color: #e6e6e6;
-  max-height: none;
-  height: auto;
-  margin: 40px auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.spell-modal .modal-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: flex-start;
-  margin-bottom: 12px;
-}
-.spell-modal .modal-header h3 {
-  margin: 0; font-size: 22px; font-weight: 800; color: #fff;
-}
-
-.spell-modal .modal-body {
-  padding-top: 4px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* Inputs do Modal */
-.spell-modal label {
-  display: block; font-weight: 700; color: #ddd; font-size: 13px; margin-bottom: 6px; margin-top: 6px;
-}
-.spell-modal input[type="text"], 
-.spell-modal input[type="number"], 
-.spell-modal textarea, 
-.spell-modal select {
-  width: 100%;
-  padding: 8px 10px;
-  background: #0f0f0f;
-  border: 1px solid rgba(255,255,255,0.04);
-  color: #eee;
-  border-radius: 6px;
-  box-sizing: border-box;
-}
-
-/* Área de Descrição no Modal (Expandida) */
-.spell-modal textarea {
-  resize: vertical;
-  font-family: inherit;
-  line-height: 1.5;
-}
-#modal-desc {
-  min-height: 300px;
-  height: auto;
-}
-
-/* Estrutura Interna do Modal */
-.spell-modal .modal-row {
-  display: flex; gap: 12px;
-}
-.spell-modal .modal-row > div { flex: 1; }
-.spell-modal .modal-body > div[style*="display:grid"] { gap: 12px; }
-
-/* Botões de Ação do Modal */
-.spell-modal .modal-actions {
-  border-top: 1px solid rgba(255,255,255,0.03);
-  margin-top: 12px;
-  padding-top: 12px;
-  background: transparent;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
-.spell-modal .btn-add { padding: 10px 14px; border-radius: 6px; font-weight: 800; }
-.spell-modal .btn-add.btn-save-item { background: #9c27b0; color: #fff; border: none; }
-.spell-modal .btn-add.btn-cancel { background: transparent; color: #ddd; border: 1px solid rgba(255,255,255,0.03); }
-
-/* Header Tabs (Item/Arma/Armadura) */
-.modal-tabs-header {
-  display: flex; gap: 20px; align-items: center;
-}
-.modal-tab-btn {
-  background: transparent; border: 2px solid transparent;
-  color: #777; font-size: 28px; font-weight: 800;
-  cursor: pointer; padding: 4px 12px; transition: color 0.2s; position: relative; border-radius: 4px;
-}
-.modal-tab-btn:hover { color: #aaa; }
-.modal-tab-btn.active {
-  color: #9c27b0; border: 2px solid #9c27b0; padding: 4px 12px;
-}
-
-/* Multi-select e Danos Extras */
-.spell-modal .multi-select-field > div {
-  min-height: 36px; padding: 8px; border-radius: 6px;
-  background: #0f0f0f; border: 1px solid rgba(255,255,255,0.03);
-  color: #ddd; display: flex; align-items: center; justify-content: space-between; cursor: pointer;
-}
-.spell-modal .multi-select-field .panel {
-  background: #121212; border: 1px solid rgba(255,255,255,0.03);
-  padding: 8px; border-radius: 6px; margin-top: 6px; max-height: 220px; overflow: auto;
-}
-.spell-modal .damage-row {
-  display: flex; gap: 8px; align-items: center; margin-top: 8px;
-}
-.spell-modal .damage-row input[type="text"] { flex: 1 1 240px; }
-.spell-modal .damage-row .dmg-type { width: 220px; flex: 0 0 220px; }
-.spell-modal .damage-row .remove-dmg {
-  background: transparent; border: none; color: #f55;
-  font-weight: 800; cursor: pointer; padding: 6px 8px; border-radius: 6px;
-}
-.spell-modal .add-dmg-btn {
-  background: #9c27b0; color: #fff; border: none;
-  padding: 8px 10px; border-radius: 6px; cursor: pointer; font-weight: 800;
-}
-
-/* ==========================================================================
-   CATÁLOGO GRANDE
-   ========================================================================== */
-
-.catalog-overlay-large {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10050;
-  padding: 20px;
-}
-
-.catalog-large {
-  width: 920px;
-  max-width: calc(100% - 40px);
-  height: 90vh; /* Altura fixa */
-  background: #121212;
-  border-radius: 10px;
-  padding: 18px;
-  box-sizing: border-box;
-  border: 1px solid rgba(255,255,255,0.04);
-  overflow: hidden; /* Trava modal */
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.catalog-large-header {
-  display: flex; justify-content: space-between; align-items: center; gap: 12px;
-}
-.catalog-large-header h3 { margin: 0; color: #fff; font-size: 20px; font-weight: 800; }
-.catalog-large-close {
-  cursor: pointer; color: #ddd; font-size: 20px;
-  padding: 6px 10px; border-radius: 6px; background: transparent; border: 1px solid rgba(255,255,255,0.02);
-}
-
-.catalog-large-filters {
-  display: flex; gap: 8px; flex-wrap: wrap; padding: 6px 0; max-width: 100%;
-}
-
-.catalog-large-search { margin-top: 6px; }
-.catalog-large-search input {
-  width: 100%; padding: 12px; background: #0f0f0f;
-  border: 1px solid #262626; border-radius: 6px; color: #eee; box-sizing: border-box;
-}
-
-/* Lista do Catálogo */
-.catalog-large-list {
-  flex: 1; /* Ocupa espaço restante */
-  margin-top: 15px;
-  padding-right: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  overflow-y: auto !important;
-  min-height: 0;
-}
-
-/* Cards do Catálogo */
-.catalog-card-item, .catalog-card-ability {
-  background: #1b1b1b;
-  border: 1px solid rgba(255,255,255,0.03);
-  border-radius: 8px;
-  padding: 10px;
-  flex-shrink: 0; /* Impede encolhimento */
-  display: block;
-  margin-bottom: 12px;
-}
-.catalog-card-header { display: flex; justify-content: space-between; align-items: center; }
-.catalog-card-toggle {
-  background: transparent; border: none; color: #9c27b0;
-  font-weight: 800; cursor: pointer; font-size: 18px;
-}
-.catalog-card-title { font-weight: 800; color: #fff; font-size: 16px; }
-.catalog-card-dmg { color: #9c27b0; font-weight: 800; }
-.catalog-card-body { margin-top: 10px; color: #ddd; display: block; }
-
-/* Scrollbar do Catálogo */
-.catalog-large-list::-webkit-scrollbar { width: 8px; }
-.catalog-large-list::-webkit-scrollbar-track { background: #0a0a0a; border-radius: 10px; }
-.catalog-large-list::-webkit-scrollbar-thumb { background: #9c27b0; border-radius: 10px; }
-
-/* Filtros de Classe e Subclasse */
-.catalog-large-classes {
-  display: flex; gap: 12px; flex-wrap: wrap; padding-bottom: 6px; align-items: center;
-  -webkit-overflow-scrolling: touch;
-}
-.catalog-large-classes::-webkit-scrollbar { height: 8px; }
-.catalog-large-classes::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.04); border-radius: 6px; }
-
-.ability-class-btn {
-  background: transparent; border: none; color: #e6e6e6;
-  padding: 6px 10px; border-radius: 4px; cursor: pointer;
-  font-weight: 800; font-size: 15px; position: relative;
-  white-space: nowrap; transition: color .12s ease, transform .08s ease;
-}
-.ability-class-btn:hover { color: #fff; transform: translateY(-1px); }
-.ability-class-btn.active { color: #fff; }
-.ability-class-btn.active::after {
-  content: ""; position: absolute; left: 8px; right: 8px; bottom: -10px;
-  height: 3px; background: linear-gradient(90deg,#9c27b0,#7b1fa2); border-radius: 4px;
-}
-
-#catalog-subclasses-row {
-  display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; padding-bottom: 6px;
-  scrollbar-width: thin; scrollbar-color: #9c27b0 transparent; transition: all 0.3s ease;
-}
-#catalog-subclasses-row::-webkit-scrollbar { height: 6px; }
-#catalog-subclasses-row::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 10px; }
-#catalog-subclasses-row::-webkit-scrollbar-thumb { background: #9c27b0; border-radius: 10px; }
-
-.ability-sub-btn, 
-.catalog-class-hability-pill,
-#catalog-subclasses-row .ability-sub-btn[data-sub="__class__"] {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  background: #0f0f0f; color: #ddd; border-radius: 22px; padding: 8px 14px;
-  border: 1px solid rgba(255,255,255,0.04); font-weight: 800; cursor: pointer;
-  box-shadow: inset 0 -2px 0 rgba(0,0,0,0.5);
-  transition: background .12s ease, color .12s ease, box-shadow .12s ease, transform .08s ease;
-}
-.ability-sub-btn:hover,
-.catalog-class-hability-pill:hover,
-#catalog-subclasses-row .ability-sub-btn[data-sub="__class__"]:hover {
-  background: #151515; color: #fff; transform: translateY(-1px);
-}
-.ability-sub-btn.active,
-.catalog-class-hability-pill.active,
-#catalog-subclasses-row .ability-sub-btn[data-sub="__class__"].active {
-  background: #0f0f0f; color: #9c27b0; border-color: #9c27b0;
-  box-shadow: 0 6px 18px rgba(156,39,176,0.08);
-}
-
-/* ==========================================================================
-   UTILITÁRIOS E COMPONENTES MENORES
-   ========================================================================== */
-
-/* Scrollbars Gerais (Escondidas no conteúdo, mas funcionais) */
-.lado-direito .conteudo::-webkit-scrollbar,
-.inventory-list::-webkit-scrollbar,
-.abilities-list::-webkit-scrollbar,
-.spells-list::-webkit-scrollbar,
-.spell-modal::-webkit-scrollbar { 
-  display: none; 
-}
-
-.lado-direito .conteudo,
-.inventory-list,
-.abilities-list,
-.spells-list,
-.spell-modal {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* Links de Ação (Editar/Remover) */
-a.remover-item, a.remover-hab, a.remover-spell {
-  color: #c43f3f; text-decoration: none; font-weight: 700; margin-right: 8px;
-}
-a.editar-item, a.editar-hab, a.editar-spell {
-  color: #2e7d32; text-decoration: none; font-weight: 700;
-}
-.remover-item { color: #d32f2f !important; font-weight: 700; font-size: 13px; text-transform: uppercase; }
-.editar-item { color: #388e3c !important; font-weight: 700; font-size: 13px; text-transform: uppercase; }
-
-/* Pills e Filtros */
-.pill {
-  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 10px;
-  padding: 6px 10px; background: #fff; color: #111; font-weight: 700; border-radius: 6px;
-}
-.pill .pill-level {
-  background: #111; color: #ddd; padding: 4px 8px; border-radius: 6px; font-weight: 800; font-size: 13px;
-}
-.spell-modal .pill {
-  background: #0f0f0f; color: #ddd; padding: 8px 10px; border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.03); cursor: pointer; font-weight: 800;
-  box-shadow: inset 0 -2px 0 rgba(0,0,0,0.4);
-}
-.spell-modal .pill.active {
-  background: #111; border-color: #9c27b0; color: #fff; box-shadow: 0 6px 18px rgba(156,39,176,0.08);
-}
-.circle-filter {
-  background: #161616; color: #dcdcdc; border: 1px solid rgba(255,255,255,0.03);
-  padding: 6px 10px; border-radius: 20px; font-weight: 700; cursor: pointer;
-}
-.circle-filter.active {
-  background: #2b2b2b; border-color: #9c27b0; color: #fff; box-shadow: 0 2px 6px rgba(156,39,176,0.12);
-}
-
-/* Checkboxes Personalizados */
-.check-ativar input[type="checkbox"] { display: none; }
-.check-ativar .square-check {
-  width: 20px; height: 20px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.06);
-  display: inline-block; line-height: 20px; text-align: center; font-weight: 800;
-}
-.check-ativar input[type="checkbox"]:checked + .square-check { background: #9c27b0; border-color: #9c27b0; }
-.check-ativar .square-check::after {
-  content: '✓'; color: transparent; display: block; line-height: 20px; font-size: 14px;
-}
-.check-ativar input[type="checkbox"]:checked + .square-check::after { color: #fff; }
-
-.versatile-check-inline {
-  display: inline-flex; align-items: center; cursor: pointer; margin-left: 12px;
-}
-.versatile-check-inline input { display: none; }
-.versatile-check-inline .v-box {
-  font-size: 11px; font-weight: 900; color: #9c27b0; border: 2px solid #9c27b0;
-  padding: 4px 10px; border-radius: 5px; transition: 0.2s; line-height: 1;
-  text-transform: uppercase; background: transparent;
-}
-.versatile-check-inline input:checked + .v-box {
-  background: #9c27b0; color: #fff; box-shadow: none;
-}
-
-/* Labels e Textos Roxos */
-.purple { color: #9c27b0; font-weight: 700; }
-.purple-label { color: #9c27b0; font-weight: 700; font-size: 13px; line-height: 1.4; }
-.white-val { color: #e0e0e0; font-weight: 400; font-size: 13px; line-height: 1.4; }
-.white-val.bold { font-weight: 400; font-size: 13px; }
-.separator {
-  display: inline-block; margin: 0 6px; width: 1px; height: 12px;
-  background-color: rgba(255, 255, 255, 0.2); vertical-align: middle;
-}
-
-/* Botões Diversos */
-.btn-add {
-  background: #9c27b0; color: #fff; border: none; padding: 8px 14px;
-  border-radius: 6px; cursor: pointer; font-weight: 700;
-}
-.plus-btn {
-  background: #9c27b0; border: none; color: #fff; width: 38px; height: 38px;
-  border-radius: 6px; font-size: 18px; cursor: pointer;
-}
-.plus-btn.small-add { width: 34px; height: 34px; }
-.toggle-expansion-btn {
-  background: #1a1a1a; border: 1px solid #9c27b0; color: #9c27b0; border-radius: 6px;
-  padding: 0 10px; margin-left: 10px; cursor: pointer; font-weight: bold;
-  display: inline-flex; align-items: center; justify-content: center; height: 32px;
-  transition: 0.2s; font-size: 18px;
-}
-.toggle-expansion-btn:hover { background: #9c27b0; color: #fff; }
-
-/* Display de Classe (Tags) */
-.class-box-display {
-  display: inline-flex; align-items: center; justify-content: center;
-  background: #111; border: 1px solid rgba(255,255,255,0.04); border-radius: 6px;
-  color: #bbb; font-weight: 700; font-size: 11px; line-height: 1.3; text-align: center;
-  padding: 6px 8px; box-sizing: border-box;
-  min-width: 80px; max-width: 120px; height: auto; min-height: 32px;
-  white-space: normal; word-wrap: break-word;
-}
-
-/* Dropdown de Seleção de Classe */
-.class-select-root { position: relative; }
-.class-select-toggle {
-  min-width: 130px; height: 36px; background: #111;
-  border: 1px solid rgba(255,255,255,0.04); border-radius: 6px;
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 8px; padding: 6px 10px; cursor: pointer; color: #ddd; font-weight: 700;
-}
-.class-select-toggle .caret-small { color: #9c27b0; margin-left: 6px; font-size: 14px; }
-.class-select-options {
-  position: absolute; right: 0; top: 44px; background: #121212;
-  border: 1px solid rgba(255,255,255,0.04); border-radius: 8px;
-  padding: 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.6); z-index: 12000; min-width: 160px;
-}
-.class-select-options button {
-  display: block; width: 100%; background: transparent; border: none;
-  color: #ddd; text-align: left; padding: 8px 10px; border-radius: 6px;
-  cursor: pointer; font-weight: 700;
-}
-.class-select-options button:hover { background: rgba(156,39,176,0.06); color: #fff; }
-.class-select-label {
-  font-size: 12px; color: #cfcfcf; margin-top: 6px; font-weight: 700; text-align: right;
-}
-
-/* Selects Escuros */
-.dark-select {
-  width: 100%; padding: 8px; background: #0f0f0f;
-  border: 1px solid rgba(255,255,255,0.04); color: #eee;
-  border-radius: 6px; box-sizing: border-box; font-size: 14px;
-}
-.dark-select:focus { border-color: #9c27b0; outline: none; }
-
-/* Controles de Linha */
-.controls-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-.controls-row input {
-  flex: 1; padding: 10px; background: #111; border: 1px solid #272727;
-  color: #ddd; border-radius: 4px; min-width: 0;
-}
-.right-controls { display: flex; gap: 10px; align-items: center; }
-
-/* DT Magias */
-.dt-magias { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-.dt-magias label { font-size: 12px; color: #cfcfcf; font-weight: 700; }
-.dt-magias input {
-  width: 64px; padding: 6px; background: #0f0f0f; border: 1px solid #262626;
-  color: #eee; border-radius: 6px; text-align: center;
-}
-
-/* ==========================================================================
-   TABELAS D&D 5E
-   ========================================================================== */
-
-.dnd-table-container {
-  background-color: #fff; padding: 5px; border-radius: 6px;
-  margin-top: 10px; color: #000; font-family: 'Georgia', serif;
-}
-
-.dnd-table {
-  width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.4;
-}
-.dnd-table th {
-  background-color: #c9ad6a; color: #fff; font-weight: 800;
-  text-align: left; padding: 6px 10px; border: 1px solid #bfa35f;
-}
-.dnd-col-dice { width: 40px; text-align: center; }
-.dnd-table td {
-  padding: 6px 10px; border: 1px solid #e0e0e0; vertical-align: top;
-}
-.dnd-table tr:nth-child(odd) td { background-color: #ffffff; }
-.dnd-table tr:nth-child(even) td { background-color: #fdfae0; }
-.dnd-table td:first-child {
-  font-weight: bold; color: #c9ad6a; text-align: center;
-}
-
-/* ==========================================================================
-   RESPONSIVIDADE
-   ========================================================================== */
-
-@media (max-width: 980px) {
-  .spell-modal { width: calc(100% - 32px); padding: 12px; }
-  .spell-modal .damage-row { flex-direction: column; align-items: stretch; }
-  .spell-modal .damage-row .dmg-type { width: 100%; }
-}
-
-@media (max-width: 780px) {
-  .catalog-large { width: calc(100% - 24px); padding: 12px; }
-  .catalog-large-classes { gap: 8px; }
-  .ability-class-btn { font-size: 14px; padding: 6px 8px; }
-  .ability-sub-btn { padding: 6px 10px; font-size: 13px; border-radius: 18px; }
-}
-
-
-
-/* ==========================================================================
-   EDITOR DE TEXTO RICO (WYSIWYG)
-   ========================================================================== */
-
+/* Editor Rico (WYSIWYG) */
 .rich-editor-wrapper {
   display: flex;
   flex-direction: column;
@@ -985,12 +947,18 @@ a.editar-item, a.editar-hab, a.editar-spell {
   color: #fff;
 }
 
-/* Estilos específicos dos botões */
-.rich-btn[data-cmd="bold"] { font-weight: 900; }
-.rich-btn[data-cmd="italic"] { font-style: italic; }
-.rich-btn[data-cmd="underline"] { text-decoration: underline; }
+.rich-btn[data-cmd="bold"] {
+  font-weight: 900;
+}
 
-/* Área de edição */
+.rich-btn[data-cmd="italic"] {
+  font-style: italic;
+}
+
+.rich-btn[data-cmd="underline"] {
+  text-decoration: underline;
+}
+
 .rich-content {
   min-height: 150px;
   max-height: 400px;
@@ -1007,394 +975,925 @@ a.editar-item, a.editar-hab, a.editar-spell {
   background: #111;
 }
 
-/* --- REGRA IMPORTANTE: Negrito fica Roxo --- */
-.rich-content b, 
-.rich-content strong,
-.card-body b,
-.card-body strong {
+.rich-content:empty::before {
+  content: attr(placeholder);
+  color: #555;
+  display: block;
+  font-style: italic;
+}
+
+.rich-content b,
+.rich-content strong {
   color: #9c27b0;
   font-weight: 800;
 }
 
-.rich-content ul, .card-body ul {
-    padding-left: 20px;
-    margin: 5px 0;
+.rich-content ul {
+  padding-left: 20px;
+  margin: 5px 0;
 }
 
-/* Ajuste das scrollbars do editor */
-.rich-content::-webkit-scrollbar { width: 6px; }
-.rich-content::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+/* Scrollbars do Editor e Textarea */
+.desc-grid textarea::-webkit-scrollbar,
+.rich-content::-webkit-scrollbar {
+  width: 8px;
+}
 
+.desc-grid textarea::-webkit-scrollbar-track,
+.rich-content::-webkit-scrollbar-track {
+  background: transparent;
+}
 
+.desc-grid textarea::-webkit-scrollbar-thumb,
+.rich-content::-webkit-scrollbar-thumb {
+  background-color: #333;
+  border-radius: 4px;
+  border: 1px solid #1f1f1f;
+}
 
+/* ==========================================================================
+   MODAIS (GERAL E CATÁLOGO)
+   ========================================================================== */
+.spell-modal-overlay,
+.catalog-overlay-large {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 11000;
+  overflow-y: auto;
+}
 
-/* Estilo para os títulos que minimizam seções */
-.toggle-section-header {
-  cursor: pointer;
-  user-select: none;
+.spell-modal-overlay {
+  padding: 32px;
+}
+
+.catalog-overlay-large {
+  z-index: 10050;
+  padding: 20px;
+  align-items: center;
+}
+
+/* Modal de Edição/Adição */
+.spell-modal {
+  width: 920px;
+  max-width: calc(100% - 48px);
+  background: #1f1f1f;
+  border-radius: 6px;
+  padding: 18px;
+  box-sizing: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.45);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  color: #e6e6e6;
+  max-height: none;
+  height: auto;
+  margin: 40px auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.spell-modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.spell-modal .modal-header h3 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.spell-modal .modal-body {
+  padding-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Inputs e Grid do Modal */
+.spell-modal label {
+  display: block;
+  font-weight: 700;
+  color: #ddd;
+  font-size: 13px;
+  margin-bottom: 6px;
+  margin-top: 6px;
+}
+
+.spell-modal input[type="text"],
+.spell-modal input[type="number"],
+.spell-modal textarea,
+.spell-modal select {
+  width: 100%;
+  padding: 8px 10px;
+  background: #0f0f0f;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  color: #eee;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.spell-modal textarea {
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+#modal-desc {
+  min-height: 300px;
+  height: auto;
+}
+
+.spell-modal .modal-row {
+  display: flex;
+  gap: 12px;
+}
+
+.spell-modal .modal-row>div {
+  flex: 1;
+}
+
+.spell-modal .modal-body>div[style*="display:grid"] {
+  gap: 12px;
+}
+
+/* Multi-Select e Danos Extras */
+.spell-modal .multi-select-field>div {
+  min-height: 36px;
+  padding: 8px;
+  border-radius: 6px;
+  background: #0f0f0f;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  color: #ddd;
   display: flex;
   align-items: center;
-  gap: 6px;
-  transition: color 0.2s;
+  justify-content: space-between;
+  cursor: pointer;
 }
 
-.toggle-section-header:hover {
-  color: #fff !important; /* Realça ao passar o mouse */
+.spell-modal .multi-select-field .panel {
+  background: #121212;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  padding: 8px;
+  border-radius: 6px;
+  margin-top: 6px;
+  max-height: 220px;
+  overflow: auto;
 }
 
-/* Garante que o container oculte o conteúdo suavemente se quiser (opcional, aqui faremos display none direto) */
-.section-content {
-  display: block;
-}
-.section-content.hidden {
-  display: none;
-}
-
-/* =============================================================
-   ESTILOS DOS SLOTS DE MAGIA (CÍRCULOS)
-============================================================= */
-
-.slots-container {
-    background: #121212;
-    border: 1px solid rgba(156, 39, 176, 0.2);
-    border-radius: 8px;
-    padding: 10px 12px;
-    margin-bottom: 15px;
-    transition: all 0.2s ease;
-    overflow: hidden; 
+.spell-modal .damage-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
 }
 
-.slots-container.empty {
-    border-style: dashed;
-    border-color: #333;
-    text-align: center;
-    padding: 20px;
+.spell-modal .damage-row input[type="text"] {
+  flex: 1 1 240px;
 }
 
-.slots-header-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+.spell-modal .damage-row .dmg-type {
+  width: 220px;
+  flex: 0 0 220px;
 }
 
-.slots-title {
-    font-weight: 800;
-    color: #9c27b0;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+.spell-modal .damage-row .remove-dmg {
+  background: transparent;
+  border: none;
+  color: #f55;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 6px;
 }
 
-.btn-config-slots {
-    background: transparent;
-    border: 1px solid #333;
-    color: #bbb;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 12px;
-    transition: 0.2s;
-}
-.btn-config-slots:hover { background: #222; color: #fff; border-color: #9c27b0; }
-
-#btnRestSlots, #btnConfigSlots {
-    background: #1a1a1a;
-    border: 1px solid #333;
-    color: #ddd;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    cursor: pointer;
-}
-#btnRestSlots:hover { color: #fff; border-color: #9c27b0; }
-
-/* GRID DE SLOTS */
-.slots-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
+.spell-modal .add-dmg-btn {
+  background: #9c27b0;
+  color: #fff;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 800;
 }
 
-.slot-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: #1b1b1b;
-    padding: 6px 10px;
-    border-radius: 6px;
-    border: 1px solid rgba(255,255,255,0.03);
-    min-width: 50px;
-}
-
-.slot-label {
-    font-size: 11px;
-    color: #888;
-    font-weight: 700;
-    margin-bottom: 6px;
-}
-
-.slot-pips {
-    display: flex;
-    gap: 5px;
-}
-
-/* BOLINHAS (PIPS) */
-.slot-pip {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    border: 1px solid #555;
-    cursor: pointer;
-    transition: all 0.2s;
-    background-color: transparent;
-}
-
-/* Disponível (Cheio/Roxo) */
-.slot-pip.available {
-    background-color: #9c27b0;
-    border-color: #9c27b0;
-    box-shadow: 0 0 4px rgba(156, 39, 176, 0.4);
-}
-
-/* Gasto (Vazio/Cinza Escuro) */
-.slot-pip.used {
-    background-color: #111;
-    border-color: #333;
-}
-
-.slot-pip:hover {
-    transform: scale(1.2);
-}
-
-.slot-group.pact-group {
-    border-color: rgba(224, 170, 255, 0.2);
-}
-.slot-pip.pact.available {
-    background-color: #e0aaff;
-    border-color: #e0aaff;
-}
-
-/* --- Estilos Extras para Recursos Especiais --- */
-
-/* Ki - Verde Água */
-.slot-pip.ki-pip.available {
-    background-color: #4db6ac;
-    border-color: #4db6ac;
-    box-shadow: 0 0 4px rgba(77, 182, 172, 0.4);
-}
-
-/* Fúria - Vermelho/Laranja */
-.slot-pip.rage-pip.available {
-    background-color: #ff7043;
-    border-color: #ff7043;
-    box-shadow: 0 0 4px rgba(255, 112, 67, 0.4);
-}
-
-/* Feitiçaria - Azul */
-.slot-pip.sorc-pip.available {
-    background-color: #64b5f6;
-    border-color: #64b5f6;
-    box-shadow: 0 0 4px rgba(100, 181, 246, 0.4);
-}
-
-/* Mutagênico - Verde Tóxico */
-.slot-pip.mut-pip.available {
-    background-color: #aeea00;
-    border-color: #aeea00;
-    box-shadow: 0 0 4px rgba(174, 234, 0, 0.4);
-}
-
-/* Botões pequenos para contador numérico */
-.mini-btn-res {
-    background: #333;
-    color: #fff;
-    border: 1px solid #555;
-    width: 24px;
-    height: 24px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.mini-btn-res:hover {
-    background: #555;
-}
-
-.slot-pips {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap; /* ISSO FAZ AS BOLINHAS QUEBRAREM LINHA */
-    justify-content: center;
-    max-width: 100%; /* Garante que não estoure o container pai */
-}
-
-/* Maldição de Sangue - Vermelho Escuro */
-.slot-pip.curse-pip.available {
-    background-color: #b71c1c;
-    border-color: #b71c1c;
-    box-shadow: 0 0 4px rgba(183, 28, 28, 0.4);
-}
-
-/* Infusões (Artífice) - Ciano Neon */
-.slot-pip.infusion-pip.available {
-    background-color: #00e5ff;
-    border-color: #00e5ff;
-    box-shadow: 0 0 4px rgba(0, 229, 255, 0.4);
-}
-
-/* ESTILOS DO RADIO GROUP (MODAL HABILIDADE) */
+/* Radio Group Modal */
 .radio-group-container {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .radio-box {
-    position: relative;
-    cursor: pointer;
-    user-select: none;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
 }
 
 .radio-box input {
-    display: none; /* Esconde a bolinha padrão */
+  display: none;
 }
 
 .radio-box .radio-label {
-    display: inline-block;
-    padding: 8px 16px;
-    background: #111;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 6px;
-    color: #bbb;
-    font-weight: 700;
-    font-size: 13px;
-    transition: all 0.2s;
+  display: inline-block;
+  padding: 8px 16px;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: #bbb;
+  font-weight: 700;
+  font-size: 13px;
+  transition: all 0.2s;
 }
 
-.radio-box input:checked + .radio-label {
-    background: #9c27b0;
-    color: #fff;
-    border-color: #9c27b0;
-    box-shadow: 0 0 10px rgba(156, 39, 176, 0.3);
+.radio-box input:checked+.radio-label {
+  background: #9c27b0;
+  color: #fff;
+  border-color: #9c27b0;
+  box-shadow: 0 0 10px rgba(156, 39, 176, 0.3);
 }
 
-.radio-box:hover .radio-label {
-    border-color: #7b1fa2;
-    color: #fff;
+/* Ações do Modal */
+.spell-modal .modal-actions {
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  margin-top: 12px;
+  padding-top: 12px;
+  background: transparent;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
 }
 
-/* --- PLACEHOLDER PARA O EDITOR DE TEXTO RICO --- */
-.rich-content:empty::before {
-  content: attr(placeholder);
-  color: #555;
-  display: block; /* Garante que o cursor fique no lugar certo */
-  font-style: italic;
+.spell-modal .btn-add {
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-weight: 800;
 }
 
-
-
-.slots-container.collapsed {
-    padding-bottom: 0;    /* Remove espaço extra embaixo */
-    padding-top: 0;       /* Remove espaço extra em cima */
-    background: transparent; /* Remove o fundo se quiser que fique só a linha */
-    border: none;         /* Remove borda se preferir */
-    border-bottom: 1px solid rgba(156, 39, 176, 0.3); /* Mantém uma linha fina */
+.spell-modal .btn-add.btn-save-item {
+  background: #9c27b0;
+  color: #fff;
+  border: none;
 }
 
-/* Esconde o corpo imediatamente quando collapsed */
-.slots-container.collapsed .slots-body-content {
-    display: none !important;
+.spell-modal .btn-add.btn-cancel {
+  background: transparent;
+  color: #ddd;
+  border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
-/* Ajuste do Header quando minimizado */
-.slots-container.collapsed .slots-header-actions {
-    margin-bottom: 0;
-    border-bottom: none;
-    padding-top: 8px;
-    padding-bottom: 8px;
+.modal-tabs-header {
+  display: flex;
+  gap: 20px;
+  align-items: center;
 }
 
-/* Botão de Configuração (Engrenagem) */
-.btn-config-gear {
-    background: transparent;
-    border: none;
-    cursor: pointer;
+.modal-tab-btn {
+  background: transparent;
+  border: 2px solid transparent;
+  color: #777;
+  font-size: 28px;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 4px 12px;
+  transition: color 0.2s;
+  position: relative;
+  border-radius: 4px;
+}
+
+.modal-tab-btn.active {
+  color: #9c27b0;
+  border: 2px solid #9c27b0;
+  padding: 4px 12px;
+}
+
+/* --- Catálogo Grande --- */
+.catalog-large {
+  width: 920px;
+  max-width: calc(100% - 40px);
+  height: 90vh;
+  background: #121212;
+  border-radius: 10px;
+  padding: 18px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.catalog-large-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.catalog-large-header h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.catalog-large-close {
+  cursor: pointer;
+  color: #ddd;
+  font-size: 20px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.catalog-large-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 6px 0;
+  max-width: 100%;
+}
+
+.catalog-large-search {
+  margin-top: 6px;
+}
+
+.catalog-large-search input {
+  width: 100%;
+  padding: 12px;
+  background: #0f0f0f;
+  border: 1px solid #262626;
+  border-radius: 6px;
+  color: #eee;
+  box-sizing: border-box;
+}
+
+.catalog-large-list {
+  flex: 1;
+  margin-top: 15px;
+  padding-right: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto !important;
+  min-height: 0;
+}
+
+/* Scrollbar Catálogo */
+.catalog-large-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.catalog-large-list::-webkit-scrollbar-track {
+  background: #0a0a0a;
+  border-radius: 10px;
+}
+
+.catalog-large-list::-webkit-scrollbar-thumb {
+  background: #9c27b0;
+  border-radius: 10px;
+}
+
+.catalog-card-item,
+.catalog-card-ability {
+  background: #1b1b1b;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 10px;
+  flex-shrink: 0;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.catalog-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.catalog-card-toggle {
+  background: transparent;
+  border: none;
+  color: #9c27b0;
+  font-weight: 800;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.catalog-card-title {
+  font-weight: 800;
+  color: #fff;
+  font-size: 16px;
+}
+
+.catalog-card-dmg {
+  color: #9c27b0;
+  font-weight: 800;
+}
+
+.catalog-card-body {
+  margin-top: 10px;
+  color: #ddd;
+  display: block;
+}
+
+/* Filtros Classes Catálogo */
+.catalog-large-classes {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-bottom: 6px;
+  align-items: center;
+  -webkit-overflow-scrolling: touch;
+}
+
+.catalog-large-classes::-webkit-scrollbar {
+  height: 8px;
+}
+
+.catalog-large-classes::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+}
+
+.ability-class-btn {
+  background: transparent;
+  border: none;
+  color: #e6e6e6;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 15px;
+  position: relative;
+  white-space: nowrap;
+  transition: color .12s ease, transform .08s ease;
+}
+
+.ability-class-btn:hover {
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.ability-class-btn.active {
+  color: #fff;
+}
+
+.ability-class-btn.active::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: -10px;
+  height: 3px;
+  background: linear-gradient(90deg, #9c27b0, #7b1fa2);
+  border-radius: 4px;
+}
+
+#catalog-subclasses-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: #9c27b0 transparent;
+  transition: all 0.3s ease;
+}
+
+#catalog-subclasses-row::-webkit-scrollbar {
+  height: 6px;
+}
+
+#catalog-subclasses-row::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+#catalog-subclasses-row::-webkit-scrollbar-thumb {
+  background: #9c27b0;
+  border-radius: 10px;
+}
+
+.ability-sub-btn,
+.catalog-class-hability-pill,
+#catalog-subclasses-row .ability-sub-btn[data-sub="__class__"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #0f0f0f;
+  color: #ddd;
+  border-radius: 22px;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.5);
+  transition: background .12s ease, color .12s ease, box-shadow .12s ease, transform .08s ease;
+}
+
+.ability-sub-btn:hover,
+.catalog-class-hability-pill:hover,
+#catalog-subclasses-row .ability-sub-btn[data-sub="__class__"]:hover {
+  background: #151515;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.ability-sub-btn.active,
+.catalog-class-hability-pill.active,
+#catalog-subclasses-row .ability-sub-btn[data-sub="__class__"].active {
+  background: #0f0f0f;
+  color: #9c27b0;
+  border-color: #9c27b0;
+  box-shadow: 0 6px 18px rgba(156, 39, 176, 0.08);
+}
+
+/* ==========================================================================
+   UTILITÁRIOS (LINKS, BOTÕES, PILLS, TABELAS)
+   ========================================================================== */
+a.remover-item,
+a.remover-hab,
+a.remover-spell {
+  color: #d32f2f !important;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  text-decoration: none;
+  margin-right: 8px;
+}
+
+a.editar-item,
+a.editar-hab,
+a.editar-spell {
+  color: #388e3c !important;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+/* Pills e Tags */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  background: #fff;
+  color: #111;
+  font-weight: 700;
+  border-radius: 6px;
+}
+
+.pill .pill-level {
+  background: #111;
+  color: #ddd;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.spell-modal .pill {
+  background: #0f0f0f;
+  color: #ddd;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  font-weight: 800;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.4);
+}
+
+.spell-modal .pill.active {
+  background: #111;
+  border-color: #9c27b0;
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(156, 39, 176, 0.08);
+}
+
+.circle-filter {
+  background: #161616;
+  color: #dcdcdc;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.circle-filter.active {
+  background: #2b2b2b;
+  border-color: #9c27b0;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(156, 39, 176, 0.12);
+}
+
+.purple {
+  color: #9c27b0;
+  font-weight: 700;
+}
+
+.purple-label {
+  color: #9c27b0;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.white-val {
+  color: #e0e0e0;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.white-val.bold {
+  font-weight: 400;
+  font-size: 13px;
+}
+
+.separator {
+  display: inline-block;
+  margin: 0 6px;
+  width: 1px;
+  height: 12px;
+  background-color: rgba(255, 255, 255, 0.2);
+  vertical-align: middle;
+}
+
+/* Botões Genéricos */
+.btn-add {
+  background: #9c27b0;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.plus-btn {
+  background: #9c27b0;
+  border: none;
+  color: #fff;
+  width: 38px;
+  height: 38px;
+  border-radius: 6px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.plus-btn.small-add {
+  width: 34px;
+  height: 34px;
+}
+
+.toggle-expansion-btn {
+  background: #1a1a1a;
+  border: 1px solid #9c27b0;
+  color: #9c27b0;
+  border-radius: 6px;
+  padding: 0 10px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  transition: 0.2s;
+  font-size: 18px;
+}
+
+.toggle-expansion-btn:hover {
+  background: #9c27b0;
+  color: #fff;
+}
+
+/* Selects e Inputs */
+.class-box-display {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  color: #bbb;
+  font-weight: 700;
+  font-size: 11px;
+  line-height: 1.3;
+  text-align: center;
+  padding: 6px 8px;
+  box-sizing: border-box;
+  min-width: 80px;
+  max-width: 120px;
+  white-space: normal;
+  word-wrap: break-word;
+  min-height: 32px;
+}
+
+.class-select-root {
+  position: relative;
+}
+
+.class-select-toggle {
+  min-width: 130px;
+  height: 36px;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  color: #ddd;
+  font-weight: 700;
+}
+
+.class-select-toggle .caret-small {
+  color: #9c27b0;
+  margin-left: 6px;
+  font-size: 14px;
+}
+
+.class-select-options {
+  position: absolute;
+  right: 0;
+  top: 44px;
+  background: #121212;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  z-index: 12000;
+  min-width: 160px;
+}
+
+.class-select-options button {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #ddd;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.class-select-options button:hover {
+  background: rgba(156, 39, 176, 0.06);
+  color: #fff;
+}
+
+.class-select-label {
+  font-size: 12px;
+  color: #cfcfcf;
+  margin-top: 6px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.dark-select {
+  width: 100%;
+  padding: 8px;
+  background: #0f0f0f;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  color: #eee;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.dark-select:focus {
+  border-color: #9c27b0;
+  outline: none;
+}
+
+.controls-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.controls-row input {
+  flex: 1;
+  padding: 10px;
+  background: #111;
+  border: 1px solid #272727;
+  color: #ddd;
+  border-radius: 4px;
+  min-width: 0;
+}
+
+.right-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Tabela D&D */
+.dnd-table-container {
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 6px;
+  margin-top: 10px;
+  color: #000;
+  font-family: 'Georgia', serif;
+}
+
+.dnd-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.dnd-table th {
+  background-color: #c9ad6a;
+  color: #fff;
+  font-weight: 800;
+  text-align: left;
+  padding: 6px 10px;
+  border: 1px solid #bfa35f;
+}
+
+.dnd-col-dice {
+  width: 40px;
+  text-align: center;
+}
+
+.dnd-table td {
+  padding: 6px 10px;
+  border: 1px solid #e0e0e0;
+  vertical-align: top;
+}
+
+.dnd-table tr:nth-child(odd) td {
+  background-color: #ffffff;
+}
+
+.dnd-table tr:nth-child(even) td {
+  background-color: #fdfae0;
+}
+
+.dnd-table td:first-child {
+  font-weight: bold;
+  color: #c9ad6a;
+  text-align: center;
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE
+   ========================================================================== */
+@media (max-width: 980px) {
+  .spell-modal {
+    width: calc(100% - 32px);
+    padding: 12px;
+  }
+
+  .spell-modal .damage-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .spell-modal .damage-row .dmg-type {
+    width: 100%;
+  }
+}
+
+@media (max-width: 780px) {
+  .catalog-large {
+    width: calc(100% - 24px);
+    padding: 12px;
+  }
+
+  .catalog-large-classes {
+    gap: 8px;
+  }
+
+  .ability-class-btn {
     font-size: 14px;
-    padding: 4px;
-    transition: transform 0.2s;
-    line-height: 1;
-}
-.btn-config-gear:hover {
-    transform: rotate(90deg);
-}
+    padding: 6px 8px;
+  }
 
-/* Lista de Recursos no Modal de Config */
-.custom-res-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #0f0f0f;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid rgba(255,255,255,0.05);
-    margin-bottom: 6px;
-}
-
-/* Pip de Recurso Customizado (Cor Laranja/Dourado) */
-.slot-pip.custom-pip.available {
-    background-color: #ffb74d;
-    border-color: #ffb74d;
-    box-shadow: 0 0 4px rgba(255, 183, 77, 0.4);
-}
-
-/* =============================================================
-   CARDS MINIMIZÁVEIS (COLLAPSED STATE)
-============================================================= */
-
-/* Quando o card tem a classe .collapsed (ou não tem .expanded, dependendo da sua lógica atual) */
-/* Mas vamos padronizar: .card por padrão é FECHADO, .expanded é ABERTO. */
-
-/* Ajuste fino para cards fechados */
-.card:not(.expanded) {
-    padding-bottom: 4px; /* Mais compacto */
-    border-bottom-color: rgba(255,255,255,0.05); /* Borda mais sutil */
-}
-
-.card:not(.expanded) .card-header {
-    border-bottom: none; /* Remove a linha divisória interna quando fechado */
-    padding-bottom: 4px;
-}
-
-/* Esconde o corpo se não tiver a classe .expanded */
-.card:not(.expanded) .card-body {
-    display: none !important;
-}
-
-/* Rotação da setinha (Caret) */
-.card .caret {
-    transition: transform 0.2s ease;
-    display: inline-block;
-}
-
-/* Se estiver expandido, seta para baixo. Se não, seta para direita (padrão texto) */
-.card.expanded .caret {
-    transform: rotate(0deg); /* ▾ já aponta para baixo, então ok */
-}
-/* Se você usa o caractere ▸ para fechado e ▾ para aberto via JS, a rotação CSS é opcional,
-   mas ajuda na animação se você usar um ícone SVG fixo. 
-   Como seu código troca o texto (textContent), o CSS de display none acima é o principal. */
-
-
-/* Ajuste para listas dentro de seções de Habilidade */
-.hab-section-group .section-content {
-    transition: all 0.2s ease;
-}
-/* Se a seção inteira estiver fechada */
-.hab-section-group .section-content[style*="display:none"] {
-    /* Já é tratado pelo style inline do JS, mas podemos adicionar animação futura aqui */
+  .ability-sub-btn {
+    padding: 6px 10px;
+    font-size: 13px;
+    border-radius: 18px;
+  }
 }

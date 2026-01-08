@@ -434,50 +434,37 @@ function renderInventory() {
 }
 
 /* =============================================================
-   CORREÇÃO DEFINITIVA SCROLL: DOM DIRETO (SEM RE-RENDER)
-   Substitua a função "bindInventoryCardEvents" por esta:
+   CORREÇÃO DEFINITIVA SCROLL: JS/DireitaJS.js
 ============================================================= */
 
 function bindInventoryCardEvents() {
-  
-  // --- 1. EXPANDIR CARD (Sem Recarregar) ---
+  // --- 1. EXPANDIR/RECOLHER (DOM DIRETO - SEM PULO) ---
   document.querySelectorAll('.item-card').forEach(card => {
     const id = Number(card.getAttribute('data-id'));
     const header = card.querySelector('.card-header');
 
-    header.addEventListener('click', (ev) => {
-      // Ignora cliques nos controles
-      if (ev.target.closest('.right') || ev.target.closest('.header-equip') || ev.target.closest('.item-equip-checkbox')) return;
+    header.onclick = (ev) => {
+      // Impede o clique se for no checkbox ou nos botões de editar/remover
+      if (ev.target.closest('.header-equip') || ev.target.closest('.item-actions-footer')) return;
       
       const it = state.inventory.find(x => x.id === id);
       if(!it) return;
 
-      // Inverte estado no JSON
       it.expanded = !it.expanded;
       saveStateToServer();
 
-      // Manipula o HTML direto (Zero Lag, Zero Scroll)
+      // Atualiza apenas este card no DOM
       const body = card.querySelector('.card-body');
       const caret = card.querySelector('.caret');
-
-      if (it.expanded) {
-          body.style.display = 'block';
-          card.classList.add('expanded');
-          caret.textContent = '▾';
-      } else {
-          body.style.display = 'none';
-          card.classList.remove('expanded');
-          caret.textContent = '▸';
-      }
-    });
+      body.style.display = it.expanded ? 'block' : 'none';
+      caret.textContent = it.expanded ? '▾' : '▸';
+      card.classList.toggle('expanded', it.expanded);
+    };
   });
 
-  // --- 2. CHECKBOX EQUIPAR (Sem Recarregar) ---
+  // --- 2. CHECKBOX EQUIPAR (DOM DIRETO - SEM RE-RENDER) ---
   document.querySelectorAll('.item-equip-checkbox').forEach(ch => {
-    ch.addEventListener('change', (ev) => {
-      // Não propaga para o header (não expande)
-      ev.stopPropagation(); 
-      
+    ch.onchange = (ev) => {
       const id = Number(ev.target.getAttribute('data-id'));
       const item = state.inventory.find(x => x.id === id);
       const isChecked = ev.target.checked;
@@ -488,14 +475,11 @@ function bindInventoryCardEvents() {
           const isEscudo = item.tipoItem?.toLowerCase() === 'escudo' || item.proficiency?.toLowerCase() === 'escudo';
 
           state.inventory.forEach(other => {
-            // Se for outro item do mesmo tipo, desmarca
             if (other.id !== id && (other.type === 'Proteção' || other.type === 'protecao')) {
               const otherIsEscudo = other.tipoItem?.toLowerCase() === 'escudo' || other.proficiency?.toLowerCase() === 'escudo';
-              
               if (isEscudo === otherIsEscudo) {
-                // Atualiza State
                 other.equip = false;
-                // Atualiza Visual (Desmarca o checkbox do outro item sem recarregar a tela)
+                // Desmarca o outro checkbox visualmente sem recarregar a lista
                 const otherChk = document.querySelector(`.item-equip-checkbox[data-id="${other.id}"]`);
                 if(otherChk) otherChk.checked = false;
               }
@@ -504,85 +488,34 @@ function bindInventoryCardEvents() {
         }
       }
 
-      // Atualiza o item clicado
       if (item) item.equip = isChecked;
-      
-      // Salva no banco
       saveStateToServer();
       
-      // Apenas avisa a esquerda para recalcular a CA. 
-      // NÃO CHAMAMOS renderActiveTab(), então a tela não mexe.
-      window.dispatchEvent(new CustomEvent('sheet-updated'));
-    });
-    
-    // Previne comportamento padrão de clique duplo ou seleção
-    ch.addEventListener('click', ev => ev.stopPropagation());
-  });
-
-  // --- 3. REMOVER (Precisa recarregar, mas usamos o hack do scroll) ---
-  document.querySelectorAll('.remover-item').forEach(el => {
-    el.addEventListener('click', (ev) => {
-      ev.preventDefault();
-      const id = Number(el.getAttribute('data-id'));
-      
-      // Salva scroll
-      const scrollPos = window.scrollY || document.documentElement.scrollTop;
-      const innerContainer = document.querySelector('.lado-direito .conteudo');
-      const innerScroll = innerContainer ? innerContainer.scrollTop : 0;
-
-      state.inventory = state.inventory.filter(i => i.id !== id);
-      
-      // Aqui somos obrigados a renderizar pois o elemento sumiu
-      renderActiveTab();
-      saveStateToServer();
-      window.dispatchEvent(new CustomEvent('sheet-updated'));
-
-      // Restaura scroll
-      window.scrollTo(0, scrollPos);
-      if(innerContainer) innerContainer.scrollTop = innerScroll;
-    });
-  });
-
-  // --- 4. VERSÁTIL (Recarrega para atualizar dano, com hack de scroll) ---
-  document.querySelectorAll('.toggle-versatile').forEach(chk => {
-    chk.addEventListener('change', (ev) => {
-      const id = Number(ev.target.getAttribute('data-id'));
-      const item = state.inventory.find(x => x.id === id);
-      
-      if (item) {
-        const scrollPos = window.scrollY || document.documentElement.scrollTop;
-        item.useTwoHands = ev.target.checked;
-        saveStateToServer();
-        renderActiveTab(); // Recarrega para mudar o texto do dano
-        window.scrollTo(0, scrollPos);
+      // Se estiver na aba Combate, precisamos remover/adicionar o item, então salvamos o scroll
+      if (state.activeTab === 'Combate') {
+          const scrollY = window.scrollY;
+          renderActiveTab();
+          window.scrollTo(0, scrollY);
       }
-    });
-    chk.addEventListener('click', ev => ev.stopPropagation());
+
+      // Avisa a esquerda (CA) para atualizar sem destruir a direita
+      if (typeof atualizarAC === 'function') atualizarAC();
+    };
   });
 
-  // Editar e Filtros (Mantidos)
-  document.querySelectorAll('.editar-item').forEach(el => {
-    el.addEventListener('click', (ev) => {
+  // --- 3. REMOVER/EDITAR (Estes ainda precisam de re-render) ---
+  document.querySelectorAll('.remover-item').forEach(el => {
+    el.onclick = (ev) => {
       ev.preventDefault();
       const id = Number(el.getAttribute('data-id'));
-      const it = state.inventory.find(i => i.id === id);
-      if (it) openItemModal(it);
-    });
-  });
-
-  const botAdd = document.getElementById('botAddItem');
-  if (botAdd) botAdd.onclick = () => openItemModal(null);
-
-  const filtro = document.getElementById('filterItens');
-  if (filtro) {
-    filtro.oninput = (e) => {
-      const q = e.target.value.toLowerCase();
-      document.querySelectorAll('.item-card').forEach(card => {
-        const title = card.querySelector('.card-title').textContent.toLowerCase();
-        card.style.display = title.includes(q) ? '' : 'none';
-      });
+      const scrollY = window.scrollY;
+      state.inventory = state.inventory.filter(i => i.id !== id);
+      renderActiveTab();
+      window.scrollTo(0, scrollY);
+      saveStateToServer();
+      window.dispatchEvent(new CustomEvent('sheet-updated'));
     };
-  }
+  });
 }
 
 
@@ -1250,127 +1183,53 @@ function renderAbilitySection(titulo, listaCards, chaveUnica) {
 }
 
 // --- EVENTOS ---
-// --- FUNÇÃO AUXILIAR: BIND DE EVENTOS (ATUALIZADA: REMOÇÃO DIRETA) ---
 function bindAbilityEvents() {
-    // 1. Alternar Seções
-    document.querySelectorAll('.toggle-section-header').forEach(header => {
-        header.addEventListener('click', (e) => {
-            e.preventDefault(); 
-            const key = header.getAttribute('data-key');
-            state.collapsedSections[key] = !state.collapsedSections[key];
-            saveStateToServer();
-
-            const contentDiv = header.nextElementSibling;
-            const arrowSpan = header.querySelector('span');
-
-            if (contentDiv) {
-                if (contentDiv.style.display === 'none') {
-                    contentDiv.style.display = 'block';
-                    if(arrowSpan) arrowSpan.textContent = '▾';
-                } else {
-                    contentDiv.style.display = 'none';
-                    if(arrowSpan) arrowSpan.textContent = '▸';
-                }
-            }
-        });
-    });
-
-    // 2. Filtro de Busca
-    const filtro = document.getElementById('filterHabs');
-    if (filtro) {
-        filtro.addEventListener('input', () => {
-            renderAbilities(); 
-        });
-    }
-
-    // 3. Botão Adicionar
-    const botAdd = document.getElementById('botOpenCatalogHab');
-    if (botAdd) botAdd.addEventListener('click', () => openAbilityCatalogOverlay());
-
-    // 4. Cards
-    document.querySelectorAll('.hab-card').forEach(card => {
-        const id = Number(card.getAttribute('data-id'));
-        const header = card.querySelector('.card-header');
-        const leftDiv = card.querySelector('.left');
-        
-        if(leftDiv) {
-            leftDiv.addEventListener('click', (ev) => {
-                const hab = state.abilities.find(h => h.id === id);
-                if (hab) {
-                    hab.expanded = !hab.expanded;
-                    saveStateToServer();
-
-                    const body = card.querySelector('.card-body');
-                    const caret = header.querySelector('.caret');
-                    
-                    if (body.style.display === 'none') {
-                        body.style.display = 'block';
-                        caret.textContent = '▾';
-                        card.classList.add('expanded');
-                    } else {
-                        body.style.display = 'none';
-                        caret.textContent = '▸';
-                        card.classList.remove('expanded');
-                    }
-                }
-            });
-        }
-
-        const ch = card.querySelector('.hab-activate');
-        if(ch) {
-            ch.addEventListener('change', (ev) => {
-                const hab = state.abilities.find(h => h.id === id);
-                if (hab) {
-                    hab.active = ev.target.checked;
-                    
-                    // Exclusividade
-                    if (hab.active) {
-                        if (hab.title.includes("Defesa sem Armadura(Bárbaro)")) {
-                            const m = state.abilities.find(a => a.title.includes("Defesa sem Armadura(Monge)"));
-                            if (m) m.active = false;
-                        }
-                        if (hab.title.includes("Defesa sem Armadura(Monge)")) {
-                            const b = state.abilities.find(a => a.title.includes("Defesa sem Armadura(Bárbaro)"));
-                            if (b) b.active = false;
-                        }
-                    }
-
-                    saveStateToServer();
-                    window.dispatchEvent(new CustomEvent('sheet-updated'));
-                    
-                    const scrollPos = document.documentElement.scrollTop || document.body.scrollTop;
-                    renderAbilities();
-                    window.scrollTo(0, scrollPos);
-                }
-            });
-        }
-    });
-
-    // 5. Remover (SEM CONFIRMAÇÃO)
-    document.querySelectorAll('.remover-hab').forEach(btn => {
-        btn.addEventListener('click', (ev) => {
-            ev.preventDefault();
-            const id = Number(btn.getAttribute('data-id'));
-            
-            // REMOVE DIRETO
-            state.abilities = state.abilities.filter(h => h.id !== id);
-            
-            const scrollPos = window.scrollY;
-            renderAbilities();
-            window.scrollTo(0, scrollPos);
-            saveStateToServer();
-            window.dispatchEvent(new CustomEvent('sheet-updated'));
-        });
-    });
-
-    // 6. Editar
-    document.querySelectorAll('.editar-hab').forEach(btn => {
-        btn.addEventListener('click', (ev) => {
-            ev.preventDefault();
-            const id = Number(btn.getAttribute('data-id'));
+    // 1. Checkbox Ativar (DOM DIRETO - SEM PULO)
+    document.querySelectorAll('.hab-activate').forEach(ch => {
+        ch.onchange = (ev) => {
+            const id = Number(ch.getAttribute('data-id'));
             const hab = state.abilities.find(h => h.id === id);
-            if (hab) openNewAbilityModal(hab);
-        });
+            if (hab) {
+                hab.active = ev.target.checked;
+                saveStateToServer();
+                
+                // Exclusividade Monge/Bárbaro
+                if (hab.active) {
+                    if (hab.title.includes("Bárbaro")) {
+                        const m = state.abilities.find(a => a.title.includes("Monge"));
+                        if (m) { m.active = false; const mChk = document.querySelector(`.hab-activate[data-id="${m.id}"]`); if(mChk) mChk.checked = false; }
+                    }
+                    if (hab.title.includes("Monge")) {
+                        const b = state.abilities.find(a => a.title.includes("Bárbaro"));
+                        if (b) { b.active = false; const bChk = document.querySelector(`.hab-activate[data-id="${b.id}"]`); if(bChk) bChk.checked = false; }
+                    }
+                }
+
+                // Apenas atualiza a esquerda (CA/Status)
+                if (typeof atualizarAC === 'function') atualizarAC();
+                
+                // Opcional: Se quiser que as habilidades ativas subam pro topo na hora, 
+                // aí precisa de re-render, mas vamos priorizar o scroll parado aqui.
+            }
+        };
+    });
+
+    // 2. Expandir Card (DOM DIRETO)
+    document.querySelectorAll('.hab-card .left').forEach(leftDiv => {
+        leftDiv.onclick = () => {
+            const id = Number(leftDiv.getAttribute('data-id'));
+            const hab = state.abilities.find(h => h.id === id);
+            const card = leftDiv.closest('.hab-card');
+            if (hab) {
+                hab.expanded = !hab.expanded;
+                const body = card.querySelector('.card-body');
+                const caret = card.querySelector('.caret');
+                body.style.display = hab.expanded ? 'block' : 'none';
+                caret.textContent = hab.expanded ? '▾' : '▸';
+                card.classList.toggle('expanded', hab.expanded);
+                saveStateToServer();
+            }
+        };
     });
 }
 

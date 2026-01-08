@@ -1,7 +1,7 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Habilidades",
+  "activeTab": "Combate",
   "spellDCConfig": {
     "selectedAttr": "int",
     "extraMod": 0,
@@ -14,7 +14,7 @@
       "name": "leve",
       "description": "",
       "expanded": true,
-      "equip": false,
+      "equip": true,
       "type": "Proteção",
       "isEquipable": true,
       "proficiency": "Leve",
@@ -106,8 +106,8 @@
     }
   ],
   "description": {
-    "anotacoes": "",
-    "aparencia": "",
+    "anotacoes": "ee",
+    "aparencia": "e",
     "personalidade": "",
     "objetivo": "",
     "ideais": "",
@@ -116,8 +116,8 @@
     "historia": ""
   },
   "sanidade": {
-    "estresse": 45,
-    "vazio": 144
+    "estresse": 100,
+    "vazio": 2
   },
   "spells": [
     {
@@ -346,9 +346,9 @@
     "1": {
       "used": 0,
       "status": [
-        false,
-        false,
-        false,
+        true,
+        true,
+        true,
         false
       ]
     },
@@ -435,8 +435,8 @@
     "inv-armaduras": false
   },
   "antecedente": "Artesão de Guilda",
-  "personagem": "123",
-  "jogador": "321",
-  "raca": "paiu",
+  "personagem": "123w",
+  "jogador": "321w",
+  "raca": "paiuw",
   "customResources": []
 }
