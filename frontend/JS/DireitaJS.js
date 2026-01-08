@@ -379,10 +379,15 @@ function formatInventoryItem(item) {
   `;
 }
 
+
+/* =============================================================
+   SUBSTITUA ESTAS DUAS FUNÇÕES NO: DireitaJS.js
+============================================================= */
+
 function renderInventory() {
   const termo = (document.getElementById('filterItens')?.value || '').toLowerCase();
 
-  // 1. Filtra itens pelo texto de busca
+  // 1. Filtra itens
   const itensFiltrados = state.inventory.filter(i => {
     const text = (i.name + (i.description || "") + (i.type || "")).toLowerCase();
     return text.includes(termo);
@@ -395,14 +400,11 @@ function renderInventory() {
 
   // 3. Monta o HTML
   let listaHTML = '';
-
   if (armas.length > 0) listaHTML += renderItemGroup('Armas', armas, 'inv-armas');
   if (armaduras.length > 0) listaHTML += renderItemGroup('Armaduras & Proteção', armaduras, 'inv-armaduras');
   if (gerais.length > 0) listaHTML += renderItemGroup('Itens Gerais', gerais, 'inv-gerais');
 
-  if (!listaHTML) {
-    listaHTML = `<div class="empty-tip">Nenhum item encontrado.</div>`;
-  }
+  if (!listaHTML) listaHTML = `<div class="empty-tip">Nenhum item encontrado.</div>`;
 
   const html = `
         <div class="inventory-controls controls-row">
@@ -418,9 +420,12 @@ function renderInventory() {
 
   conteudoEl.innerHTML = html;
 
-  // Vincula eventos
+  // --- CORREÇÃO 1: Ligar o botão ADICIONAR ---
+  document.getElementById('botAddItem').addEventListener('click', () => openItemModal(null));
+
+  // Vincula eventos dos cards
   bindInventoryCardEvents();
-  bindInventorySectionEvents(); // <--- NOVA FUNÇÃO DE EVENTOS DE SEÇÃO
+  bindInventorySectionEvents();
   aplicarEnterNosInputs(conteudoEl);
 
   // Mantém foco no filtro
@@ -429,12 +434,18 @@ function renderInventory() {
     const len = inputFiltro.value.length;
     inputFiltro.focus();
     inputFiltro.setSelectionRange(len, len);
-    inputFiltro.oninput = renderInventory; // Auto-render ao digitar
+    inputFiltro.oninput = renderInventory;
   }
 }
 
+
+
 /* =============================================================
    CORREÇÃO DEFINITIVA SCROLL: JS/DireitaJS.js
+============================================================= */
+
+/* =============================================================
+   CORREÇÃO DEFINITIVA SCROLL + EDIÇÃO: JS/DireitaJS.js
 ============================================================= */
 
 function bindInventoryCardEvents() {
@@ -503,17 +514,29 @@ function bindInventoryCardEvents() {
     };
   });
 
-  // --- 3. REMOVER/EDITAR (Estes ainda precisam de re-render) ---
+  // --- 3. REMOVER ---
   document.querySelectorAll('.remover-item').forEach(el => {
     el.onclick = (ev) => {
       ev.preventDefault();
       const id = Number(el.getAttribute('data-id'));
-      const scrollY = window.scrollY;
-      state.inventory = state.inventory.filter(i => i.id !== id);
-      renderActiveTab();
-      window.scrollTo(0, scrollY);
-      saveStateToServer();
-      window.dispatchEvent(new CustomEvent('sheet-updated'));
+      if(confirm('Tem certeza que deseja remover este item?')) {
+          const scrollY = window.scrollY;
+          state.inventory = state.inventory.filter(i => i.id !== id);
+          renderActiveTab();
+          window.scrollTo(0, scrollY);
+          saveStateToServer();
+          window.dispatchEvent(new CustomEvent('sheet-updated'));
+      }
+    };
+  });
+
+  // --- 4. EDITAR (ESTAVA FALTANDO) ---
+  document.querySelectorAll('.editar-item').forEach(el => {
+    el.onclick = (ev) => {
+      ev.preventDefault();
+      const id = Number(el.getAttribute('data-id'));
+      const item = state.inventory.find(i => i.id === id);
+      if (item) openItemModal(item);
     };
   });
 }
@@ -1018,63 +1041,46 @@ const LISTA_CLASSES_RPG = [
   'Paladino', 'Patrulheiro'
 ];
 
+/* =============================================================
+   SUBSTITUA ESTAS DUAS FUNÇÕES NO: DireitaJS.js
+============================================================= */
+
 function renderAbilities() {
   const termoBusca = (document.getElementById('filterHabs')?.value || '').toLowerCase();
 
-  // 1. Filtra a lista
+  // 1. Filtra
   let habilidadesFiltradas = state.abilities.filter(a => {
     const text = (a.title + (a.description || "")).toLowerCase();
     return text.includes(termoBusca);
   });
 
-  // 2. Estrutura de Agrupamento
-  const grupos = {
-    classes: {},     // { "Guerreiro": [...], "Mago": [...] }
-    talentos: [],
-    origem: [],      // Raça e Antecedentes
-    outros: []
-  };
+  // 2. Agrupamento
+  const grupos = { classes: {}, talentos: [], origem: [], outros: [] };
 
-  // 3. Distribuição (Lógica Reforçada)
   habilidadesFiltradas.forEach(hab => {
     const cat = (hab.category || "").toLowerCase().trim();
-    const classeOriginal = (hab.class || "").trim(); // Mantém maiúsculas para o título
+    const classeOriginal = (hab.class || "").trim();
     const classeLower = classeOriginal.toLowerCase();
 
-    // --- CHECAGEM DE CLASSE ---
-    // Verifica se a categoria é 'classe' OU se o nome da classe está na lista padrão
     if (cat === 'classe' || LISTA_CLASSES_RPG.includes(classeOriginal)) {
-      // Se o nome da classe estiver vazio, joga para "Geral" dentro de classes
       const nomeGrupo = classeOriginal || "Classe Indefinida";
-
       if (!grupos.classes[nomeGrupo]) grupos.classes[nomeGrupo] = [];
       grupos.classes[nomeGrupo].push(hab);
-    }
-    // --- CHECAGEM DE TALENTOS ---
-    else if (cat.includes('talento') || classeLower === 'talentos' || classeLower === 'talento') {
+    } else if (cat.includes('talento') || classeLower === 'talentos') {
       grupos.talentos.push(hab);
-    }
-    // --- CHECAGEM DE ORIGEM (Antecedente/Raça) ---
-    else if (
-      cat.includes('antecedente') || cat.includes('raça') || cat.includes('raca') ||
-      classeLower === 'antecedente' || classeLower === 'raça'
-    ) {
+    } else if (cat.includes('antecedente') || cat.includes('raça')) {
       grupos.origem.push(hab);
-    }
-    // --- OUTROS ---
-    else {
+    } else {
       grupos.outros.push(hab);
     }
   });
 
-  // 4. Função de Ordenação (Ativos no topo)
   const sortActiveFirst = (a, b) => {
     if (a.active && !b.active) return -1;
     if (!a.active && b.active) return 1;
     return a.title.localeCompare(b.title);
   };
 
-  // 5. Construção do HTML
   let htmlFinal = `
         <div class="abilities-controls controls-row">
             <input id="filterHabs" placeholder="Filtrar habilidades..." value="${document.getElementById('filterHabs')?.value || ''}" />
@@ -1086,8 +1092,6 @@ function renderAbilities() {
     `;
 
   let temConteudo = false;
-
-  // A) Classes (Ordem Alfabética dos Grupos)
   Object.keys(grupos.classes).sort().forEach(nomeClasse => {
     const lista = grupos.classes[nomeClasse].sort(sortActiveFirst);
     if (lista.length > 0) {
@@ -1096,45 +1100,29 @@ function renderAbilities() {
     }
   });
 
-  // B) Talentos
-  if (grupos.talentos.length > 0) {
-    grupos.talentos.sort(sortActiveFirst);
-    htmlFinal += renderAbilitySection("Talentos", grupos.talentos, "talentos");
-    temConteudo = true;
-  }
+  if (grupos.talentos.length > 0) { grupos.talentos.sort(sortActiveFirst); htmlFinal += renderAbilitySection("Talentos", grupos.talentos, "talentos"); temConteudo = true; }
+  if (grupos.origem.length > 0) { grupos.origem.sort(sortActiveFirst); htmlFinal += renderAbilitySection("Raça & Antecedente", grupos.origem, "origem"); temConteudo = true; }
+  if (grupos.outros.length > 0) { grupos.outros.sort(sortActiveFirst); htmlFinal += renderAbilitySection("Outras Habilidades", grupos.outros, "outros"); temConteudo = true; }
 
-  // C) Origem
-  if (grupos.origem.length > 0) {
-    grupos.origem.sort(sortActiveFirst);
-    htmlFinal += renderAbilitySection("Raça & Antecedente", grupos.origem, "origem");
-    temConteudo = true;
-  }
-
-  // D) Outros
-  if (grupos.outros.length > 0) {
-    grupos.outros.sort(sortActiveFirst);
-    htmlFinal += renderAbilitySection("Outras Habilidades", grupos.outros, "outros");
-    temConteudo = true;
-  }
-
-  if (!temConteudo) {
-    htmlFinal += `<div class="empty-tip">Nenhuma habilidade encontrada.</div>`;
-  }
-
+  if (!temConteudo) htmlFinal += `<div class="empty-tip">Nenhuma habilidade encontrada.</div>`;
   htmlFinal += `</div>`;
+  
   conteudoEl.innerHTML = htmlFinal;
+
+  // --- CORREÇÃO 3: Ligar o botão ADICIONAR ---
+  document.getElementById('botOpenCatalogHab').addEventListener('click', () => openAbilityCatalogOverlay());
 
   bindAbilityEvents();
 
-  // Mantém o foco no input
   const novoInput = document.getElementById('filterHabs');
   if (novoInput) {
-    // Coloca o cursor no final
     const len = novoInput.value.length;
     novoInput.focus();
     novoInput.setSelectionRange(len, len);
   }
 }
+
+
 
 // --- HTML DA SEÇÃO (Design Preservado) ---
 function renderAbilitySection(titulo, listaCards, chaveUnica) {
@@ -1183,6 +1171,7 @@ function renderAbilitySection(titulo, listaCards, chaveUnica) {
 }
 
 // --- EVENTOS ---
+// --- EVENTOS DE HABILIDADES ---
 function bindAbilityEvents() {
   // 1. Checkbox Ativar (DOM DIRETO - SEM PULO)
   document.querySelectorAll('.hab-activate').forEach(ch => {
@@ -1207,9 +1196,6 @@ function bindAbilityEvents() {
 
         // Apenas atualiza a esquerda (CA/Status)
         if (typeof atualizarAC === 'function') atualizarAC();
-
-        // Opcional: Se quiser que as habilidades ativas subam pro topo na hora, 
-        // aí precisa de re-render, mas vamos priorizar o scroll parado aqui.
       }
     };
   });
@@ -1230,6 +1216,30 @@ function bindAbilityEvents() {
         saveStateToServer();
       }
     };
+  });
+
+  // 3. REMOVER (Adicionado de volta)
+  document.querySelectorAll('.remover-hab').forEach(btn => {
+      btn.onclick = (e) => {
+          e.preventDefault();
+          const id = Number(btn.getAttribute('data-id'));
+          if(confirm('Remover habilidade?')) {
+              state.abilities = state.abilities.filter(h => h.id !== id);
+              renderActiveTab();
+              saveStateToServer();
+              window.dispatchEvent(new CustomEvent('sheet-updated'));
+          }
+      }
+  });
+
+  // 4. EDITAR (Adicionado de volta)
+  document.querySelectorAll('.editar-hab').forEach(btn => {
+      btn.onclick = (e) => {
+          e.preventDefault();
+          const id = Number(btn.getAttribute('data-id'));
+          const hab = state.abilities.find(h => h.id === id);
+          if (hab) openNewAbilityModal(hab);
+      }
   });
 }
 

@@ -1,7 +1,7 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Combate",
+  "activeTab": "Habilidades",
   "spellDCConfig": {
     "selectedAttr": "int",
     "extraMod": 0,
@@ -10,10 +10,26 @@
   "dtMagias": 13,
   "inventory": [
     {
+      "id": 1767902588309,
+      "name": "testeitme",
+      "description": "",
+      "expanded": true,
+      "equip": true,
+      "type": "Geral",
+      "isEquipable": true,
+      "acertoBonus": "12",
+      "damageBonus": "32",
+      "damageType": "1111",
+      "defenseBonus": "12",
+      "defenseType": "geral",
+      "disadvantageSkill": [],
+      "advantageSkill": []
+    },
+    {
       "id": 1767845070275,
       "name": "leve",
       "description": "",
-      "expanded": true,
+      "expanded": false,
       "equip": true,
       "type": "Proteção",
       "isEquipable": true,
@@ -70,8 +86,8 @@
       "id": 1767843923754,
       "name": "espad",
       "description": "",
-      "expanded": false,
-      "equip": false,
+      "expanded": true,
+      "equip": true,
       "type": "Arma",
       "isEquipable": true,
       "proficiency": "Armas Simples",
@@ -94,6 +110,16 @@
     }
   ],
   "abilities": [
+    {
+      "id": 1767902406676,
+      "title": "Feitiços de Esporos",
+      "description": "<p>Aprende <em>Toque Gélido</em>. Magias preparadas:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 3º:</strong> Cegueira/Surdez, Repouso Suave</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 5º:</strong> Animar Mortos, Forma Gasosa</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 7º:</strong> Praga, Confusão</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 9º:</strong> Nuvem Assassina, Contágio</li></ul>",
+      "expanded": true,
+      "class": "Druida",
+      "subclass": "Círculo dos Esporos",
+      "category": "Classe",
+      "active": false
+    },
     {
       "id": 1767849138160,
       "title": "(1º nível) Defesa sem Armadura(Bárbaro)",
@@ -301,7 +327,7 @@
     "v2": 1
   },
   "marco": 2,
-  "vidaAtual": 9,
+  "vidaAtual": 4,
   "vidaTempAtual": 71,
   "danoNecroAtual": 60,
   "metros": 364.5,
@@ -435,7 +461,8 @@
     "class-Blood Hunter": false,
     "origem": false,
     "inv-armas": false,
-    "inv-armaduras": false
+    "inv-armaduras": true,
+    "cmb-ataques": false
   },
   "antecedente": "Artesão de Guilda",
   "personagem": "123w",

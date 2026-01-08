@@ -618,3 +618,43 @@ input[type=number] {
     padding: 2px 4px;
   }
 }
+
+
+/* Em meioCS.css */
+.pericia-item {
+  display: grid;
+  /* ANTES: grid-template-columns: 22px 1fr 42px 42px 32px 42px; */
+  /* DEPOIS (Aumentei o penúltimo valor para 50px): */
+  grid-template-columns: 22px 1fr 42px 42px 50px 42px; 
+  
+  align-items: center;
+  gap: 3px;
+  padding: 3px 5px;
+  background-color: #1f1f1f;
+  border-radius: 6px;
+  width: 100%;
+  margin-bottom: 2px;
+  box-sizing: border-box;
+  font-size: 13.5px;
+}
+
+
+/* Em meioCS.css */
+.lado-centro {
+  /* ANTES: width: 30%; flex: 0 0 30%; */
+  /* DEPOIS: */
+  width: 35%;
+  max-width: 35%;
+  flex: 0 0 35%;
+  
+  flex-shrink: 0;
+  min-width: 220px;
+  box-sizing: border-box;
+  background-color: #121212;
+  border-radius: 8px;
+  padding: 1px;
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+  overflow: visible;
+  margin-bottom: 8px;
+}

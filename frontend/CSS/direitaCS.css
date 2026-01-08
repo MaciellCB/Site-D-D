@@ -1897,3 +1897,28 @@ a.editar-spell {
     border-radius: 18px;
   }
 }
+
+/* No final do arquivo DireitaJS.js (dentro das tags <style> ou string CSS) */
+
+.lado-direito {
+  /* ANTES: flex: 0 0 400px !important; width: 400px !important; */
+  /* DEPOIS: */
+  flex: 0 0 340px !important;
+  width: 340px !important;
+  max-width: 340px !important;
+
+  height: fit-content !important;
+  min-height: 100vh;
+  max-height: none !important;
+  background-color: #171717;
+  border-radius: 5px;
+  padding: 12px;
+  padding-bottom: 60px;
+  color: #e6e6e6;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: visible !important;
+  flex-shrink: 0;
+  overflow-anchor: none;
+}
