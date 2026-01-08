@@ -41,7 +41,7 @@ const DADOS_VALORES = {
 
 // --- LISTAS DE SELEÇÃO (Solicitadas) ---
 const TIPOS_DANO_LISTA = [
-    'Ácido', 'Contundente', 'Cortante', 'Perfurante', 'Fogo', 'Frio', 
+    'Ácido', 'Contundente', 'Cortante', 'Perfurante', 'Fogo', 'Frio',
     'Elétrico', 'Trovão', 'Veneno', 'Radiante', 'Necrótico', 'Psíquico', 'Energético'
 ];
 
@@ -85,7 +85,7 @@ function inicializarDadosEsquerda() {
     if (!state.atributos) state.atributos = { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 };
     if (!state.niveisClasses) state.niveisClasses = {};
     if (!state.vidaDadosSalvos) state.vidaDadosSalvos = {};
-    
+
     // Inicializa arrays para os status (listas)
     if (!state.fraquezasList) state.fraquezasList = [];
     if (!state.resistenciasList) state.resistenciasList = [];
@@ -105,17 +105,17 @@ function inicializarDadosEsquerda() {
     state.metros = parseFloat(state.metros) || 0;
 
     // Preenche inputs básicos
-    const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
-    const setText = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+    const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
 
     setVal('xpAtual', state.xp);
     setVal('marcoAtual', state.marco);
     setText('inspiraValor', state.inspiracao);
     setVal('metros', state.metros);
     setVal('quadrados', (state.metros / 1.5).toFixed(1));
-    
+
     // IMPORTANTE: Preenche o bônus de iniciativa
-    setVal('iniciativaBonus', state.iniciativaBonus); 
+    setVal('iniciativaBonus', state.iniciativaBonus);
 
     // Renderiza os Multi-Selects nas divs criadas no HTML
     renderMultiSelect('sel-fraquezas', TIPOS_DANO_LISTA, state.fraquezasList, 'fraquezasList');
@@ -126,11 +126,11 @@ function inicializarDadosEsquerda() {
 
     // Atualiza Hexagrama
     numerosHex.forEach(n => {
-        const id = n.classList[1]; 
+        const id = n.classList[1];
         const val = state.atributos[id] || 10;
         n.dataset.attrValue = val;
         n.textContent = mostrandoAtributos ? val : formatMod(calcularModificador(val));
-        
+
         n.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -150,7 +150,7 @@ function renderMultiSelect(elementId, optionsList, currentSelection, stateKey) {
 
     // Verifica se já foi renderizado para não duplicar eventos ou HTML
     let display = container.querySelector('.multi-select-display');
-    
+
     // Se não existe, cria a estrutura
     if (!display) {
         container.innerHTML = `
@@ -167,7 +167,7 @@ function renderMultiSelect(elementId, optionsList, currentSelection, stateKey) {
             </div>
         `;
         display = container.querySelector('.multi-select-display');
-        
+
         // Adiciona eventos APENAS na criação
         const box = container.querySelector('.multi-select-box');
         const optsContainer = container.querySelector('.multi-select-options');
@@ -175,7 +175,7 @@ function renderMultiSelect(elementId, optionsList, currentSelection, stateKey) {
 
         // Toggle Abrir/Fechar
         box.addEventListener('click', (e) => {
-            if(e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
             const isVisible = optsContainer.style.display === 'block';
             document.querySelectorAll('.multi-select-options').forEach(el => el.style.display = 'none'); // Fecha outros
             optsContainer.style.display = isVisible ? 'none' : 'block';
@@ -190,7 +190,7 @@ function renderMultiSelect(elementId, optionsList, currentSelection, stateKey) {
                 } else {
                     state[stateKey] = state[stateKey].filter(item => item !== newVal);
                 }
-                
+
                 // Atualiza visual
                 updateDisplayText(display, state[stateKey]);
                 saveStateToServer();
@@ -247,7 +247,7 @@ function atualizarProficiencia() {
 
 if (hexOverlay) {
     hexOverlay.onclick = () => {
-        if (editMode) toggleEditMode(); 
+        if (editMode) toggleEditMode();
         mostrandoAtributos = !mostrandoAtributos;
         hexOverlay.src = mostrandoAtributos ? 'img/atributos.png' : 'img/modificador.png';
         numerosHex.forEach(n => {
@@ -258,7 +258,7 @@ if (hexOverlay) {
 }
 
 const btnEditarHex = document.querySelector('.editar-hex');
-if(btnEditarHex) {
+if (btnEditarHex) {
     btnEditarHex.onclick = () => {
         if (!mostrandoAtributos) {
             mostrandoAtributos = true;
@@ -291,7 +291,7 @@ function toggleEditMode() {
 // ======================================
 
 const elClasseFocus = document.getElementById('classeFocus');
-if(elClasseFocus) {
+if (elClasseFocus) {
     elClasseFocus.onclick = (e) => {
         const painel = document.getElementById('painelClasses');
         const lista = document.getElementById('listaClasses');
@@ -323,13 +323,13 @@ if(elClasseFocus) {
 window.salvarNivelClasse = (key, val) => {
     // 1. Garante que é número (se vazio, vira 0)
     const nivelNumerico = parseInt(val) || 0;
-    
+
     // 2. Atualiza o estado
     if (!state.niveisClasses) state.niveisClasses = {};
     state.niveisClasses[key] = nivelNumerico;
 
     // 3. Limpa dados de vida excedentes se o nível baixou
-    const totalNiv = Object.values(state.niveisClasses).reduce((a, b) => a + (parseInt(b)||0), 0);
+    const totalNiv = Object.values(state.niveisClasses).reduce((a, b) => a + (parseInt(b) || 0), 0);
     if (state.vidaDadosSalvos) {
         Object.keys(state.vidaDadosSalvos).forEach(k => {
             const numNivel = parseInt(k.replace('v', ''));
@@ -343,7 +343,7 @@ window.salvarNivelClasse = (key, val) => {
 
     // 5. Atualiza a lista de dados de vida se estiver aberta
     const containerVida = document.querySelector('.classes-lista-container');
-    if(containerVida && containerVida.style.display === 'block') {
+    if (containerVida && containerVida.style.display === 'block') {
         renderizarDadosVida();
     }
 
@@ -351,7 +351,7 @@ window.salvarNivelClasse = (key, val) => {
     // Pequeno delay de 10ms ajuda o navegador a processar o input antes de redesenhar
     setTimeout(() => {
         window.dispatchEvent(new CustomEvent('sheet-updated'));
-        
+
         // SEGURANÇA EXTRA: Chama o Header diretamente se a função existir
         if (typeof atualizarTextoClassesHeader === 'function') {
             atualizarTextoClassesHeader();
@@ -359,10 +359,10 @@ window.salvarNivelClasse = (key, val) => {
     }, 10);
 };
 const btnFecharPainel = document.getElementById('fecharPainel');
-if(btnFecharPainel) btnFecharPainel.onclick = () => document.getElementById('painelClasses').style.display = 'none';
+if (btnFecharPainel) btnFecharPainel.onclick = () => document.getElementById('painelClasses').style.display = 'none';
 
 const btnVida = document.getElementById('btnVida');
-if(btnVida) {
+if (btnVida) {
     btnVida.onclick = () => {
         const container = document.querySelector('.classes-lista-container');
         container.style.display = container.style.display === 'none' ? 'block' : 'none';
@@ -430,7 +430,7 @@ window.salvarDadoVida = (id, val) => {
 function atualizarVidaCalculada() {
     const vidaMax = Object.values(state.vidaDadosSalvos || {}).reduce((acc, val) => acc + (parseInt(val) || 0), 0);
     const elVidaTotal = document.getElementById('vida-total');
-    if(elVidaTotal) elVidaTotal.textContent = vidaMax;
+    if (elVidaTotal) elVidaTotal.textContent = vidaMax;
 
     atualizarBarraUI('vida', state.vidaAtual, vidaMax);
     atualizarBarraUI('vida-temp', state.vidaTempAtual, 100);
@@ -451,19 +451,19 @@ function atualizarBarraUI(prefixo, atual, total) {
 function atualizarMarcosEXP() {
     const nivelTotal = Object.values(state.niveisClasses).reduce((a, b) => a + b, 0) || 1;
     const tabela = xpPorNivel[Math.min(20, Math.max(1, nivelTotal))];
-    
+
     const elXPText = document.getElementById('xpTotalText');
-    if(elXPText) elXPText.textContent = `/ ${tabela.max}`;
-    
+    if (elXPText) elXPText.textContent = `/ ${tabela.max}`;
+
     const elXPBar = document.getElementById('xpBar');
-    if(elXPBar) elXPBar.style.width = Math.min(100, (parseInt(state.xp || 0) / tabela.max) * 100) + "%";
+    if (elXPBar) elXPBar.style.width = Math.min(100, (parseInt(state.xp || 0) / tabela.max) * 100) + "%";
 
     const marcoMax = tabela.marco;
     const elMarcoMax = document.getElementById('marcoMax');
-    if(elMarcoMax) elMarcoMax.value = marcoMax;
-    
+    if (elMarcoMax) elMarcoMax.value = marcoMax;
+
     const elMarcoBar = document.getElementById('marcoBar');
-    if(elMarcoBar) elMarcoBar.style.width = marcoMax > 0 ? Math.min(100, (parseInt(state.marco || 0) / marcoMax) * 100) + "%" : "0%";
+    if (elMarcoBar) elMarcoBar.style.width = marcoMax > 0 ? Math.min(100, (parseInt(state.marco || 0) / marcoMax) * 100) + "%" : "0%";
 }
 
 function atualizarFocoClasseRotativo() {
@@ -472,16 +472,16 @@ function atualizarFocoClasseRotativo() {
     const elNivel = document.getElementById('classeFocusNivel');
 
     if (!ativas.length) {
-        if(elNome) elNome.textContent = "Sem Classe";
-        if(elNivel) elNivel.textContent = "0";
+        if (elNome) elNome.textContent = "Sem Classe";
+        if (elNivel) elNivel.textContent = "0";
         return;
     }
     let i = 0;
     if (rotateInterval) clearInterval(rotateInterval);
     const mudar = () => {
         const c = ativas[i % ativas.length];
-        if(elNome) elNome.textContent = c.nome;
-        if(elNivel) elNivel.textContent = state.niveisClasses[c.key];
+        if (elNome) elNome.textContent = c.nome;
+        if (elNivel) elNivel.textContent = state.niveisClasses[c.key];
         i++;
     };
     mudar();
@@ -494,12 +494,12 @@ function atualizarIniciativaTotal() {
     const dexMod = Math.floor((dexScore - 10) / 2);
     // Lê diretamente do estado, garantindo que seja número
     const bonus = parseInt(state.iniciativaBonus) || 0;
-    
+
     const total = dexMod + bonus;
     const sinal = total >= 0 ? "+" : "";
-    
+
     const elIni = document.getElementById('iniciativaValor');
-    if(elIni) elIni.textContent = `${sinal}${total}`;
+    if (elIni) elIni.textContent = `${sinal}${total}`;
 }
 
 /* =============================================================
@@ -515,10 +515,10 @@ function atualizarAC() {
     const modSab = getMod('n3');
 
     // 2. Identifica itens equipados
-    const armadura = state.inventory.find(i => 
+    const armadura = state.inventory.find(i =>
         i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'armadura'
     );
-    const escudo = state.inventory.find(i => 
+    const escudo = state.inventory.find(i =>
         i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'escudo'
     );
 
@@ -527,8 +527,8 @@ function atualizarAC() {
     const monkDef = state.abilities.some(a => a.active && a.title.includes("Defesa sem Armadura") && a.title.includes("Monge"));
 
     // Variáveis Visuais
-    let visualDex = 0;      
-    let visualDexText = "DEX"; 
+    let visualDex = 0;
+    let visualDexText = "DEX";
     let visualEquip = 0; // O valor que vai aparecer na bolinha "Equip"
     let tipoTag = "SEM ARMADURA";
     let isHeavy = false;
@@ -537,7 +537,7 @@ function atualizarAC() {
     // Bônus Extras
     let bonusEscudo = escudo ? (parseInt(escudo.defense) || 2) : 0;
     let bonusOutros = parseInt(state.acOutros) || 0;
-    
+
     if (state.inventory) {
         state.inventory.filter(i => i.equip && i.type === 'Geral' && i.defenseBonus).forEach(item => {
             bonusOutros += (parseInt(item.defenseBonus) || 0);
@@ -569,7 +569,7 @@ function atualizarAC() {
             visualDexText = "-";
             isHeavy = true;
             tipoTag = "PESADA";
-            
+
             // AC = Valor Total da Armadura + Escudo + Outros
             acTotal = valArmaduraTotal + bonusEscudo + bonusOutros;
 
@@ -635,20 +635,20 @@ function atualizarAC() {
 
     // 3. Texto da DEX e Efeito do 10
     const elFormulaDex = document.querySelector('.formula-attr');
-    const elFormulaPlus = document.querySelector('.inline-formula .formula-plus'); 
-    
+    const elFormulaPlus = document.querySelector('.inline-formula .formula-plus');
+
     if (elFormulaDex) {
         elFormulaDex.textContent = visualDexText;
         const visibility = (visualDexText === "-") ? "hidden" : "visible";
         elFormulaDex.style.visibility = visibility;
         if (elFormulaPlus) elFormulaPlus.style.visibility = visibility;
-        
+
         if (visualDexText.length > 5) {
-             elFormulaDex.style.transform = "translateY(-26px)";
-             elFormulaDex.style.fontSize = "10px";
+            elFormulaDex.style.transform = "translateY(-26px)";
+            elFormulaDex.style.fontSize = "10px";
         } else {
-             elFormulaDex.style.transform = "translateY(-30px)";
-             elFormulaDex.style.fontSize = "12px";
+            elFormulaDex.style.transform = "translateY(-30px)";
+            elFormulaDex.style.fontSize = "12px";
         }
     }
 
@@ -684,11 +684,11 @@ function atualizarTudoVisual() {
     atualizarVidaCalculada();
     atualizarProficiencia();
     atualizarIniciativaTotal();
-    atualizarAC(); 
-    
+    atualizarAC();
+
     const nivelTotal = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0);
     const elNivel = document.getElementById('nivelFoco');
-    if(elNivel) elNivel.textContent = nivelTotal;
+    if (elNivel) elNivel.textContent = nivelTotal;
 }
 
 function vincularEventosInputs() {
@@ -732,10 +732,10 @@ function vincularEventosInputs() {
     // Iniciativa Bônus - Listener corrigido
     const iniBonus = document.getElementById('iniciativaBonus');
     if (iniBonus) {
-        iniBonus.oninput = (e) => { 
-            state.iniciativaBonus = parseInt(e.target.value) || 0; 
-            atualizarIniciativaTotal(); 
-            saveStateToServer(); 
+        iniBonus.oninput = (e) => {
+            state.iniciativaBonus = parseInt(e.target.value) || 0;
+            atualizarIniciativaTotal();
+            saveStateToServer();
         };
         iniBonus.addEventListener('keydown', (e) => { if (e.key === 'Enter') iniBonus.blur(); });
     }

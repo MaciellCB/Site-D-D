@@ -6,7 +6,7 @@
 // Função utilitária para auto-resize do textarea
 function autoResize(el) {
     if (!el) return;
-    el.style.height = 'auto'; 
+    el.style.height = 'auto';
     el.style.height = el.scrollHeight + 'px';
 }
 
@@ -46,7 +46,7 @@ function atualizarHeader() {
 function atualizarTextoClassesHeader() {
     const el = document.getElementById('input-classesHeader');
     if (!el) return;
-    
+
     // Se não houver classes salvas, limpa o campo
     if (!state.niveisClasses || Object.keys(state.niveisClasses).length === 0) {
         el.value = "";
@@ -67,7 +67,7 @@ function atualizarTextoClassesHeader() {
     // Itera sobre as chaves do objeto niveisClasses
     Object.keys(state.niveisClasses).forEach(key => {
         const nivel = parseInt(state.niveisClasses[key]); // Sem || 0 aqui para checar NaN
-        
+
         // Só adiciona se o nível for realmente maior que 0
         if (!isNaN(nivel) && nivel > 0) {
             let nomeDisplay = mapNomes[key] || key.charAt(0).toUpperCase() + key.slice(1);
@@ -75,11 +75,11 @@ function atualizarTextoClassesHeader() {
             // Lógica de Subclasse (busca nas habilidades)
             if (state.abilities && state.abilities.length > 0) {
                 const norm = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-                
+
                 // Procura uma habilidade que tenha essa classe e uma subclasse definida
-                const habilidadeSubclasse = state.abilities.find(a => 
-                    a.subclass && 
-                    a.subclass !== "" && 
+                const habilidadeSubclasse = state.abilities.find(a =>
+                    a.subclass &&
+                    a.subclass !== "" &&
                     a.subclass !== "Infusão" &&
                     norm(a.class) === norm(nomeDisplay)
                 );
@@ -95,7 +95,7 @@ function atualizarTextoClassesHeader() {
 
     // Atualiza o valor do input
     const novoTexto = partes.join(' / ');
-    
+
     // Só mexe no DOM se mudou (evita cursor pular, mas garante atualização)
     if (el.value !== novoTexto) {
         el.value = novoTexto;
@@ -179,7 +179,7 @@ function abrirModalAntecedentes() {
     if (typeof checkScrollLock === 'function') checkScrollLock();
 
     overlay.querySelector('.catalog-large-close').onclick = () => { overlay.remove(); if (typeof checkScrollLock === 'function') checkScrollLock(); };
-    
+
     const inputSearch = overlay.querySelector('#searchAntecedente');
     inputSearch.focus();
     inputSearch.oninput = (e) => {
@@ -211,7 +211,7 @@ function bindAntecedenteClicks(overlay) {
         item.onclick = () => {
             const nome = item.getAttribute('data-nome');
             const antData = ANTECEDENTES_CATALOGO.find(a => a.nome === nome);
-            
+
             selecionarAntecedente(antData);
             overlay.remove();
             if (typeof checkScrollLock === 'function') checkScrollLock();
@@ -227,7 +227,7 @@ function selecionarAntecedente(antData) {
     // 2. Atualiza State
     if (typeof state !== 'undefined') {
         state.antecedente = antData.nome;
-    
+
         // 3. Adiciona Habilidades do Antecedente (Proficiências e Feature)
         const adicionarHabilidadePeloID = (idAlvo, subclasseNome) => {
             // Verifica se o catálogo global de habilidades já carregou (DireitaJS carrega isso)
@@ -242,7 +242,7 @@ function selecionarAntecedente(antData) {
 
                 if (!jaTem) {
                     const novaHab = {
-                        id: Date.now() + Math.floor(Math.random() * 1000), 
+                        id: Date.now() + Math.floor(Math.random() * 1000),
                         title: habilidadeRef.name,
                         description: habilidadeRef.description,
                         expanded: false,
@@ -258,10 +258,10 @@ function selecionarAntecedente(antData) {
 
         if (antData.idHabilidade) adicionarHabilidadePeloID(antData.idHabilidade, antData.nome);
         if (antData.idProficiencia) adicionarHabilidadePeloID(antData.idProficiencia, antData.nome);
-                
+
         // 4. Salva e Atualiza a Tela
         if (typeof saveStateToServer === 'function') saveStateToServer();
-        
+
         // Dispara evento para atualizar a lista de habilidades na direita
         window.dispatchEvent(new CustomEvent('sheet-updated'));
     }

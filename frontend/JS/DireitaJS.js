@@ -160,21 +160,21 @@ let state = {
 };
 
 const CLASSES_WITH_SUBCLASSES = {
-  'Artífice': ['Alquimista', 'Armeiro', 'Artilheiro', 'Ferreiro de Batalha','Arquivista', 'Infusão'],
-  'Bárbaro': ['Caminho do Berserker', 'Caminho do Guerreiro Totêmico', 'Caminho do Guardião Ancestral','Caminho da Alma Selvagem', 'Caminho do Arauto da Tempestade', 'Caminho do Fanático', 'Caminho da Besta', 'Caminho da Magia Selvagem'],
-  'Bardo': ['Colégio do Conhecimento','Colégio da Criação', 'Colégio da Bravura', 'Colégio do Glamour', 'Colégio das Espadas', 'Colégio dos Sussurros', 'Colégio da Criação', 'Colégio da Eloquência', 'Colégio dos Espíritos'],
-  'Bruxo': ['O Arquifada', 'O Corruptor', 'O Grande Antigo', 'O Celestial', 'Hexblade', 'O Insondável', 'O Gênio','A Luz Imortal', 'O Morto-Vivo', 'Shinigami', 'Fantasma do Maquinario','O Buscador' ],
-  'Blood Hunter': ['Ordem do Caça-Fantasmas', 'Ordem do Licantropo', 'Ordem do Mutante', 'Ordem da Alma Profana','Maldições de Sangue'],
-  'Clérigo': ['Domínio do Conhecimento', 'Domínio da Vida', 'Domínio da Luz','Domínio do Zelo', 'Domínio da Natureza','Domínio do Destino','Domínio da Solidariedade', 'Domínio da Tempestade','Domínio da Cidade ','Domínio da Força','Domínio da Unidade','Domínio da Ambição', 'Domínio da Enganação','Domínio de Proteção', 'Domínio da Guerra','Domínio do Crepúsculo', 'Domínio da Forja', 'Domínio da Sepultura', 'Domínio da Ordem', 'Domínio da Paz', 'Domínio do Crepúsculo', 'Domínio Arcano', 'Domínio da Morte'],
-  'Druida': ['Círculo da Terra', 'Círculo da Lua', 'Círculo dos Sonhos', 'Círculo do Pastor', 'Círculo dos Esporos', 'Círculo das Estrelas', 'Círculo do Fogo Selvagem','Círculo do Primordial', 'Círculo do Crepúsculo'],
-  'Feiticeiro': ['Linhagem Dracônica', 'Magia Selvagem', 'Alma Divina', 'Magia das Sombras', 'Mente Sombria', 'Feitiçaria da Tempestade','Mente Marinha','Feitiçaria de Pedra', 'Feitiçaria da Fênix', 'Alma Gigante', 'Alma Piromantica', 'Mente Aberrante','Alma Psiônica', 'Alma Lunar','Alma Favorecida', 'Alma do Relógio', 'Alma Mecânica', ],
-  'Guerreiro': ['Campeão', 'Mestre de Batalha', 'Cavaleiro Arcano','Porta-Estandarte', 'Arqueiro Arcano','Brutamontes', 'Cavaleiro', 'Samurai', 'Guerreiro Psiônico', 'Cavaleiro Rúnico', 'Cavaleiro do Eco', 'Atirador de Elite'],
-  'Ladino': ['Ladrão', 'Assassino', 'Trapaceiro Arcano', 'Inquisitivo', 'Mestre do Crime','Espadachim', 'Batedor','Revivido', 'Fantasma', 'Lâmina da Alma'],
-  'Mago': ['Abjuração', 'Conjuração', 'Adivinhação', 'Encantamento', 'Evocação', 'Ilusão','Cronurgia', 'Necromancia', 'Criador de Runas','Tecnomancia', 'Teurgia', 'Transmutação','Graviturgia', 'Mago de Guerra', 'Cantor da Lâmina', 'Ordem dos Escribas'],
-  'Monge': ['Caminho da Mão Aberta', 'Caminho das Sombras', ,'Caminho da Tranquilidade','Caminho dos Quatro Elementos', 'Longa Morte', 'Kensei', 'Mestre Bêbado', 'Alma Solar', 'Misericórdia', 'Forma Astral', 'Dragão Ascendente'],
-  'Paladino': ['Juramento dos Anciões','Juramento da Conquista','Juramento da Coroa','Juramento de Devoção','Juramento de Glória', 'Juramento de Redenção','Juramento de Vingança', 'Juramento dos Observadores','Quebrador de Juramento','Juramento da Traição','Juramento de Heroísmo', ''],
-  'Patrulheiro': ['Caçador', 'Mestre das Feras','Guardião Primordial','Guardião Dracônico', 'Perseguidor Sombrio', 'Andarilho do Horizonte', 'Matador de Monstros', 'Peregrino Feérico', 'Guardião do Enxame', 'Guardião Dracônico'],
-  'Antecedentes': ['Acólito', "Artesão de Guilda",'Artista',"Charlatão","Criminoso","Eremita","Forasteiro","Herói Popular","Marinheiro","Morador de Rua","Nobre", "Sábio", "Soldado",   ],
+  'Artífice': ['Alquimista', 'Armeiro', 'Artilheiro', 'Ferreiro de Batalha', 'Arquivista', 'Infusão'],
+  'Bárbaro': ['Caminho do Berserker', 'Caminho do Guerreiro Totêmico', 'Caminho do Guardião Ancestral', 'Caminho da Alma Selvagem', 'Caminho do Arauto da Tempestade', 'Caminho do Fanático', 'Caminho da Besta', 'Caminho da Magia Selvagem'],
+  'Bardo': ['Colégio do Conhecimento', 'Colégio da Criação', 'Colégio da Bravura', 'Colégio do Glamour', 'Colégio das Espadas', 'Colégio dos Sussurros', 'Colégio da Criação', 'Colégio da Eloquência', 'Colégio dos Espíritos'],
+  'Bruxo': ['O Arquifada', 'O Corruptor', 'O Grande Antigo', 'O Celestial', 'Hexblade', 'O Insondável', 'O Gênio', 'A Luz Imortal', 'O Morto-Vivo', 'Shinigami', 'Fantasma do Maquinario', 'O Buscador'],
+  'Blood Hunter': ['Ordem do Caça-Fantasmas', 'Ordem do Licantropo', 'Ordem do Mutante', 'Ordem da Alma Profana', 'Maldições de Sangue'],
+  'Clérigo': ['Domínio do Conhecimento', 'Domínio da Vida', 'Domínio da Luz', 'Domínio do Zelo', 'Domínio da Natureza', 'Domínio do Destino', 'Domínio da Solidariedade', 'Domínio da Tempestade', 'Domínio da Cidade ', 'Domínio da Força', 'Domínio da Unidade', 'Domínio da Ambição', 'Domínio da Enganação', 'Domínio de Proteção', 'Domínio da Guerra', 'Domínio do Crepúsculo', 'Domínio da Forja', 'Domínio da Sepultura', 'Domínio da Ordem', 'Domínio da Paz', 'Domínio do Crepúsculo', 'Domínio Arcano', 'Domínio da Morte'],
+  'Druida': ['Círculo da Terra', 'Círculo da Lua', 'Círculo dos Sonhos', 'Círculo do Pastor', 'Círculo dos Esporos', 'Círculo das Estrelas', 'Círculo do Fogo Selvagem', 'Círculo do Primordial', 'Círculo do Crepúsculo'],
+  'Feiticeiro': ['Linhagem Dracônica', 'Magia Selvagem', 'Alma Divina', 'Magia das Sombras', 'Mente Sombria', 'Feitiçaria da Tempestade', 'Mente Marinha', 'Feitiçaria de Pedra', 'Feitiçaria da Fênix', 'Alma Gigante', 'Alma Piromantica', 'Mente Aberrante', 'Alma Psiônica', 'Alma Lunar', 'Alma Favorecida', 'Alma do Relógio', 'Alma Mecânica',],
+  'Guerreiro': ['Campeão', 'Mestre de Batalha', 'Cavaleiro Arcano', 'Porta-Estandarte', 'Arqueiro Arcano', 'Brutamontes', 'Cavaleiro', 'Samurai', 'Guerreiro Psiônico', 'Cavaleiro Rúnico', 'Cavaleiro do Eco', 'Atirador de Elite'],
+  'Ladino': ['Ladrão', 'Assassino', 'Trapaceiro Arcano', 'Inquisitivo', 'Mestre do Crime', 'Espadachim', 'Batedor', 'Revivido', 'Fantasma', 'Lâmina da Alma'],
+  'Mago': ['Abjuração', 'Conjuração', 'Adivinhação', 'Encantamento', 'Evocação', 'Ilusão', 'Cronurgia', 'Necromancia', 'Criador de Runas', 'Tecnomancia', 'Teurgia', 'Transmutação', 'Graviturgia', 'Mago de Guerra', 'Cantor da Lâmina', 'Ordem dos Escribas'],
+  'Monge': ['Caminho da Mão Aberta', 'Caminho das Sombras', , 'Caminho da Tranquilidade', 'Caminho dos Quatro Elementos', 'Longa Morte', 'Kensei', 'Mestre Bêbado', 'Alma Solar', 'Misericórdia', 'Forma Astral', 'Dragão Ascendente'],
+  'Paladino': ['Juramento dos Anciões', 'Juramento da Conquista', 'Juramento da Coroa', 'Juramento de Devoção', 'Juramento de Glória', 'Juramento de Redenção', 'Juramento de Vingança', 'Juramento dos Observadores', 'Quebrador de Juramento', 'Juramento da Traição', 'Juramento de Heroísmo', ''],
+  'Patrulheiro': ['Caçador', 'Mestre das Feras', 'Guardião Primordial', 'Guardião Dracônico', 'Perseguidor Sombrio', 'Andarilho do Horizonte', 'Matador de Monstros', 'Peregrino Feérico', 'Guardião do Enxame', 'Guardião Dracônico'],
+  'Antecedentes': ['Acólito', "Artesão de Guilda", 'Artista', "Charlatão", "Criminoso", "Eremita", "Forasteiro", "Herói Popular", "Marinheiro", "Morador de Rua", "Nobre", "Sábio", "Soldado",],
   'Talentos': []
 };
 
@@ -196,38 +196,38 @@ function checkScrollLock() {
    LISTENER GLOBAL: ATUALIZA A TELA QUANDO DADOS MUDAM
 ============================================================= */
 window.addEventListener('sheet-updated', () => {
-    // 1. Atualiza DT Magias
-    state.dtMagias = calculateSpellDC();
-    const inputDT = document.getElementById('dtMagiasInput');
-    if (inputDT) inputDT.value = state.dtMagias;
+  // 1. Atualiza DT Magias
+  state.dtMagias = calculateSpellDC();
+  const inputDT = document.getElementById('dtMagiasInput');
+  if (inputDT) inputDT.value = state.dtMagias;
 
-    // 2. Atualiza Classe de Armadura
-    const armorClass = calculateArmorClass();
-    const inputCA = document.getElementById('caTotal') || document.querySelector('.hexagrama-ca .valor');
-    if (inputCA) {
-        if (inputCA.tagName === 'INPUT') inputCA.value = armorClass;
-        else inputCA.textContent = armorClass;
+  // 2. Atualiza Classe de Armadura
+  const armorClass = calculateArmorClass();
+  const inputCA = document.getElementById('caTotal') || document.querySelector('.hexagrama-ca .valor');
+  if (inputCA) {
+    if (inputCA.tagName === 'INPUT') inputCA.value = armorClass;
+    else inputCA.textContent = armorClass;
+  }
+
+  // 3. ATUALIZAÇÃO AUTOMÁTICA DA DIREITA
+  if (['Magias', 'Mag. Preparadas', 'Habilidades', 'Combate'].includes(state.activeTab)) {
+    // Salva estado de scroll e foco
+    const scrollContainer = document.querySelector('.lado-direito .conteudo') || document.querySelector('.lado-direito');
+    const savedScroll = scrollContainer ? scrollContainer.scrollTop : 0;
+
+    const activeElement = document.activeElement;
+    const activeId = activeElement ? activeElement.id : null;
+
+    // FORÇA O REDESENHO DA ABA ATIVA
+    renderActiveTab();
+
+    // Restaura Scroll e Foco
+    if (scrollContainer) scrollContainer.scrollTop = savedScroll;
+    if (activeId) {
+      const el = document.getElementById(activeId);
+      if (el) el.focus();
     }
-
-    // 3. ATUALIZAÇÃO AUTOMÁTICA DA DIREITA
-    if (['Magias', 'Mag. Preparadas', 'Habilidades', 'Combate'].includes(state.activeTab)) {
-        // Salva estado de scroll e foco
-        const scrollContainer = document.querySelector('.lado-direito .conteudo') || document.querySelector('.lado-direito');
-        const savedScroll = scrollContainer ? scrollContainer.scrollTop : 0;
-        
-        const activeElement = document.activeElement;
-        const activeId = activeElement ? activeElement.id : null;
-        
-        // FORÇA O REDESENHO DA ABA ATIVA
-        renderActiveTab(); 
-
-        // Restaura Scroll e Foco
-        if (scrollContainer) scrollContainer.scrollTop = savedScroll;
-        if (activeId) {
-            const el = document.getElementById(activeId);
-            if (el) el.focus();
-        }
-    }
+  }
 });
 
 function setActiveTab(tabName) {
@@ -251,7 +251,7 @@ function formatInventoryItem(item) {
     // LÓGICA VERSÁTIL
     let baseDamage = item.damage;
     if (item.empunhadura === 'Versátil' && item.useTwoHands && item.damage2Hands) {
-        baseDamage = item.damage2Hands;
+      baseDamage = item.damage2Hands;
     }
 
     let dmgParts = [baseDamage];
@@ -303,7 +303,7 @@ function formatInventoryItem(item) {
     statsHTML += createStat('Critico', item.crit);
     statsHTML += createStat('Mult', item.multiplicador);
     statsHTML += createStat('Alcance', item.alcance);
-    
+
     const empHTML = `
         <div style="display:flex; align-items:center; gap:5px;">
             <span class="purple-label">Empunhadura:</span> 
@@ -380,31 +380,31 @@ function formatInventoryItem(item) {
 }
 
 function renderInventory() {
-    const termo = (document.getElementById('filterItens')?.value || '').toLowerCase();
-    
-    // 1. Filtra itens pelo texto de busca
-    const itensFiltrados = state.inventory.filter(i => {
-        const text = (i.name + (i.description || "") + (i.type || "")).toLowerCase();
-        return text.includes(termo);
-    });
+  const termo = (document.getElementById('filterItens')?.value || '').toLowerCase();
 
-    // 2. Separa em Grupos
-    const armas = itensFiltrados.filter(i => i.type === 'Arma');
-    const armaduras = itensFiltrados.filter(i => i.type === 'Proteção' || i.type === 'protecao');
-    const gerais = itensFiltrados.filter(i => i.type !== 'Arma' && i.type !== 'Proteção' && i.type !== 'protecao');
+  // 1. Filtra itens pelo texto de busca
+  const itensFiltrados = state.inventory.filter(i => {
+    const text = (i.name + (i.description || "") + (i.type || "")).toLowerCase();
+    return text.includes(termo);
+  });
 
-    // 3. Monta o HTML
-    let listaHTML = '';
-    
-    if (armas.length > 0) listaHTML += renderItemGroup('Armas', armas, 'inv-armas');
-    if (armaduras.length > 0) listaHTML += renderItemGroup('Armaduras & Proteção', armaduras, 'inv-armaduras');
-    if (gerais.length > 0) listaHTML += renderItemGroup('Itens Gerais', gerais, 'inv-gerais');
+  // 2. Separa em Grupos
+  const armas = itensFiltrados.filter(i => i.type === 'Arma');
+  const armaduras = itensFiltrados.filter(i => i.type === 'Proteção' || i.type === 'protecao');
+  const gerais = itensFiltrados.filter(i => i.type !== 'Arma' && i.type !== 'Proteção' && i.type !== 'protecao');
 
-    if (!listaHTML) {
-        listaHTML = `<div class="empty-tip">Nenhum item encontrado.</div>`;
-    }
+  // 3. Monta o HTML
+  let listaHTML = '';
 
-    const html = `
+  if (armas.length > 0) listaHTML += renderItemGroup('Armas', armas, 'inv-armas');
+  if (armaduras.length > 0) listaHTML += renderItemGroup('Armaduras & Proteção', armaduras, 'inv-armaduras');
+  if (gerais.length > 0) listaHTML += renderItemGroup('Itens Gerais', gerais, 'inv-gerais');
+
+  if (!listaHTML) {
+    listaHTML = `<div class="empty-tip">Nenhum item encontrado.</div>`;
+  }
+
+  const html = `
         <div class="inventory-controls controls-row">
             <input id="filterItens" placeholder="Filtrar itens..." value="${document.getElementById('filterItens')?.value || ''}" />
             <div class="right-controls">
@@ -416,21 +416,21 @@ function renderInventory() {
         </div>
     `;
 
-    conteudoEl.innerHTML = html;
-    
-    // Vincula eventos
-    bindInventoryCardEvents();
-    bindInventorySectionEvents(); // <--- NOVA FUNÇÃO DE EVENTOS DE SEÇÃO
-    aplicarEnterNosInputs(conteudoEl);
+  conteudoEl.innerHTML = html;
 
-    // Mantém foco no filtro
-    const inputFiltro = document.getElementById('filterItens');
-    if(inputFiltro) {
-        const len = inputFiltro.value.length;
-        inputFiltro.focus();
-        inputFiltro.setSelectionRange(len, len);
-        inputFiltro.oninput = renderInventory; // Auto-render ao digitar
-    }
+  // Vincula eventos
+  bindInventoryCardEvents();
+  bindInventorySectionEvents(); // <--- NOVA FUNÇÃO DE EVENTOS DE SEÇÃO
+  aplicarEnterNosInputs(conteudoEl);
+
+  // Mantém foco no filtro
+  const inputFiltro = document.getElementById('filterItens');
+  if (inputFiltro) {
+    const len = inputFiltro.value.length;
+    inputFiltro.focus();
+    inputFiltro.setSelectionRange(len, len);
+    inputFiltro.oninput = renderInventory; // Auto-render ao digitar
+  }
 }
 
 /* =============================================================
@@ -446,9 +446,9 @@ function bindInventoryCardEvents() {
     header.onclick = (ev) => {
       // Impede o clique se for no checkbox ou nos botões de editar/remover
       if (ev.target.closest('.header-equip') || ev.target.closest('.item-actions-footer')) return;
-      
+
       const it = state.inventory.find(x => x.id === id);
-      if(!it) return;
+      if (!it) return;
 
       it.expanded = !it.expanded;
       saveStateToServer();
@@ -481,7 +481,7 @@ function bindInventoryCardEvents() {
                 other.equip = false;
                 // Desmarca o outro checkbox visualmente sem recarregar a lista
                 const otherChk = document.querySelector(`.item-equip-checkbox[data-id="${other.id}"]`);
-                if(otherChk) otherChk.checked = false;
+                if (otherChk) otherChk.checked = false;
               }
             }
           });
@@ -490,12 +490,12 @@ function bindInventoryCardEvents() {
 
       if (item) item.equip = isChecked;
       saveStateToServer();
-      
+
       // Se estiver na aba Combate, precisamos remover/adicionar o item, então salvamos o scroll
       if (state.activeTab === 'Combate') {
-          const scrollY = window.scrollY;
-          renderActiveTab();
-          window.scrollTo(0, scrollY);
+        const scrollY = window.scrollY;
+        renderActiveTab();
+        window.scrollTo(0, scrollY);
       }
 
       // Avisa a esquerda (CA) para atualizar sem destruir a direita
@@ -520,53 +520,53 @@ function bindInventoryCardEvents() {
 
 
 function bindInventorySectionEvents() {
-    document.querySelectorAll('.toggle-inv-header').forEach(header => {
-        header.addEventListener('click', (e) => {
-            e.preventDefault();
-            
-            const key = header.getAttribute('data-key');
-            state.collapsedSections[key] = !state.collapsedSections[key];
-            saveStateToServer();
+  document.querySelectorAll('.toggle-inv-header').forEach(header => {
+    header.addEventListener('click', (e) => {
+      e.preventDefault();
 
-            // Atualiza DOM direto para não perder foco/scroll
-            const contentDiv = header.nextElementSibling;
-            const arrowSpan = header.querySelector('span');
+      const key = header.getAttribute('data-key');
+      state.collapsedSections[key] = !state.collapsedSections[key];
+      saveStateToServer();
 
-            if (contentDiv) {
-                if (contentDiv.style.display === 'none') {
-                    contentDiv.style.display = 'block';
-                    if(arrowSpan) arrowSpan.textContent = '▾';
-                } else {
-                    contentDiv.style.display = 'none';
-                    if(arrowSpan) arrowSpan.textContent = '▸';
-                }
-            }
-        });
+      // Atualiza DOM direto para não perder foco/scroll
+      const contentDiv = header.nextElementSibling;
+      const arrowSpan = header.querySelector('span');
+
+      if (contentDiv) {
+        if (contentDiv.style.display === 'none') {
+          contentDiv.style.display = 'block';
+          if (arrowSpan) arrowSpan.textContent = '▾';
+        } else {
+          contentDiv.style.display = 'none';
+          if (arrowSpan) arrowSpan.textContent = '▸';
+        }
+      }
     });
+  });
 }
 function renderCombat() {
-    const termo = (document.getElementById('filterCombat')?.value || '').toLowerCase();
+  const termo = (document.getElementById('filterCombat')?.value || '').toLowerCase();
 
-    // 1. Filtra apenas equipados e pelo texto
-    const equipados = state.inventory.filter(i => i.equip && (i.name + (i.description||"")).toLowerCase().includes(termo));
+  // 1. Filtra apenas equipados e pelo texto
+  const equipados = state.inventory.filter(i => i.equip && (i.name + (i.description || "")).toLowerCase().includes(termo));
 
-    // 2. Agrupa
-    const armas = equipados.filter(i => i.type === 'Arma');
-    const defesas = equipados.filter(i => i.type === 'Proteção' || i.type === 'protecao');
-    const outros = equipados.filter(i => i.type !== 'Arma' && i.type !== 'Proteção' && i.type !== 'protecao');
+  // 2. Agrupa
+  const armas = equipados.filter(i => i.type === 'Arma');
+  const defesas = equipados.filter(i => i.type === 'Proteção' || i.type === 'protecao');
+  const outros = equipados.filter(i => i.type !== 'Arma' && i.type !== 'Proteção' && i.type !== 'protecao');
 
-    // 3. Monta HTML
-    let listaHTML = '';
+  // 3. Monta HTML
+  let listaHTML = '';
 
-    if (armas.length > 0) listaHTML += renderItemGroup('Ataques Disponíveis', armas, 'cmb-ataques');
-    if (defesas.length > 0) listaHTML += renderItemGroup('Equipamento Defensivo', defesas, 'cmb-defesa');
-    if (outros.length > 0) listaHTML += renderItemGroup('Acessórios & Outros', outros, 'cmb-outros');
+  if (armas.length > 0) listaHTML += renderItemGroup('Ataques Disponíveis', armas, 'cmb-ataques');
+  if (defesas.length > 0) listaHTML += renderItemGroup('Equipamento Defensivo', defesas, 'cmb-defesa');
+  if (outros.length > 0) listaHTML += renderItemGroup('Acessórios & Outros', outros, 'cmb-outros');
 
-    if (!listaHTML) {
-        listaHTML = `<p class="empty-tip">Nada equipado para combate.</p>`;
-    }
+  if (!listaHTML) {
+    listaHTML = `<p class="empty-tip">Nada equipado para combate.</p>`;
+  }
 
-    const html = `
+  const html = `
         <div class="controls-row">
             <input id="filterCombat" placeholder="Filtrar combate..." value="${document.getElementById('filterCombat')?.value || ''}" />
         </div>
@@ -575,18 +575,18 @@ function renderCombat() {
         </div>
     `;
 
-    conteudoEl.innerHTML = html;
-    
-    bindInventoryCardEvents();
-    bindInventorySectionEvents(); // <--- NOVA FUNÇÃO DE EVENTOS DE SEÇÃO
+  conteudoEl.innerHTML = html;
 
-    const inputFiltro = document.getElementById('filterCombat');
-    if(inputFiltro) {
-        const len = inputFiltro.value.length;
-        inputFiltro.focus();
-        inputFiltro.setSelectionRange(len, len);
-        inputFiltro.oninput = renderCombat;
-    }
+  bindInventoryCardEvents();
+  bindInventorySectionEvents(); // <--- NOVA FUNÇÃO DE EVENTOS DE SEÇÃO
+
+  const inputFiltro = document.getElementById('filterCombat');
+  if (inputFiltro) {
+    const len = inputFiltro.value.length;
+    inputFiltro.focus();
+    inputFiltro.setSelectionRange(len, len);
+    inputFiltro.oninput = renderCombat;
+  }
 }
 
 /* ---------------- MODAL UNIFICADO (Item, Arma, Armadura) ---------------- */
@@ -668,9 +668,9 @@ function openItemModal(existingItem = null) {
   if (btnLista) {
     btnLista.addEventListener('click', (ev) => {
       ev.preventDefault();
-      modal.remove(); 
+      modal.remove();
       checkScrollLock();
-      openItemCatalogOverlay(); 
+      openItemCatalogOverlay();
     });
   }
   checkScrollLock();
@@ -723,7 +723,7 @@ function openItemModal(existingItem = null) {
             <div style="grid-column: 2.5 / span 1.5;"><label>Vantagem</label>${renderPericiaMulti('adv-field-item', adv)}</div>
             ${descLabel}
          </div>`;
-    } 
+    }
     else if (tab === 'Arma') {
       const profSelected = pre.proficiency || '';
       const tipoSelected = pre.tipoArma || '';
@@ -793,7 +793,7 @@ function openItemModal(existingItem = null) {
           <div style="grid-column:1 / span 4;"><label>Descrição</label>${editorHTML}</div>
         </div>
       `;
-    } 
+    }
     else if (tab === 'Armadura') {
       const profSelected = pre.proficiency || '';
       const tipoSelected = pre.tipoItem || 'Armadura';
@@ -843,70 +843,70 @@ function openItemModal(existingItem = null) {
     contentBody.innerHTML = html;
     bindTabEvents(tab);
     initRichEditorEvents('item-editor-content');
-    
+
     // Foca no nome
     const iName = contentBody.querySelector('#item-name');
-    if(iName) iName.focus();
+    if (iName) iName.focus();
   }
 
   // (createDamageRow e bindTabEvents mantidos como estavam, mas são necessários para o funcionamento)
   function createDamageRow(danoVal = '', typesVal = []) {
-     // ... Código de createDamageRow (igual ao anterior) ...
-     const row = document.createElement('div');
-      row.className = 'extra-dmg-row';
-      row.style.display = 'grid';
-      row.style.gridTemplateColumns = '1fr 1fr 1fr 1fr';
-      row.style.gap = '12px';
-      row.style.alignItems = 'start';
-      const html = `<div style="grid-column:1/span 2;"><input type="text" class="extra-dmg-input" value="${escapeHtml(danoVal)}" placeholder="Ex: +1d6"/></div>
+    // ... Código de createDamageRow (igual ao anterior) ...
+    const row = document.createElement('div');
+    row.className = 'extra-dmg-row';
+    row.style.display = 'grid';
+    row.style.gridTemplateColumns = '1fr 1fr 1fr 1fr';
+    row.style.gap = '12px';
+    row.style.alignItems = 'start';
+    const html = `<div style="grid-column:1/span 2;"><input type="text" class="extra-dmg-input" value="${escapeHtml(danoVal)}" placeholder="Ex: +1d6"/></div>
       <div style="grid-column:3/span 2;position:relative;" class="extra-dmg-select-container"><div class="multi-select-field"><div class="display"><span>${typesVal.length ? typesVal.join(', ') : 'Tipo'}</span> <span style="color:#9c27b0;">▾</span></div><div class="panel" style="display:none;position:absolute;z-index:12000;width:100%;">${TIPOS_DANO.map(c => `<label style="display:block;padding:6px;"><input type="checkbox" value="${c}" ${typesVal.includes(c) ? 'checked' : ''} /> ${c}</label>`).join('')}</div></div><button type="button" class="remove-dmg-row" style="position:absolute;right:-25px;top:5px;background:none;border:none;color:#d88;font-weight:bold;cursor:pointer;">✖</button></div>`;
-      row.innerHTML = html;
-      const field = row.querySelector('.multi-select-field'); const display = field.querySelector('.display'); const panel = field.querySelector('.panel');
-      display.addEventListener('click', (e) => { e.stopPropagation(); const isOpen = panel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); panel.style.display = isOpen ? 'none' : 'block'; });
-      panel.querySelectorAll('input').forEach(chk => { chk.addEventListener('change', () => { const vals = Array.from(panel.querySelectorAll('input:checked')).map(x => x.value); display.querySelector('span').textContent = vals.length ? vals.join(', ') : 'Tipo'; }); });
-      row.querySelector('.remove-dmg-row').addEventListener('click', () => row.remove());
-      return row;
+    row.innerHTML = html;
+    const field = row.querySelector('.multi-select-field'); const display = field.querySelector('.display'); const panel = field.querySelector('.panel');
+    display.addEventListener('click', (e) => { e.stopPropagation(); const isOpen = panel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); panel.style.display = isOpen ? 'none' : 'block'; });
+    panel.querySelectorAll('input').forEach(chk => { chk.addEventListener('change', () => { const vals = Array.from(panel.querySelectorAll('input:checked')).map(x => x.value); display.querySelector('span').textContent = vals.length ? vals.join(', ') : 'Tipo'; }); });
+    row.querySelector('.remove-dmg-row').addEventListener('click', () => row.remove());
+    return row;
   }
-  
+
   function bindTabEvents(tab) {
-      // ... Código do bindTabEvents (igual ao anterior, resumido aqui) ...
-      modal.querySelectorAll('.pill.single-select').forEach(p => { p.addEventListener('click', () => { p.parentElement.querySelectorAll('.pill').forEach(x => x.classList.remove('active')); p.classList.add('active'); }); });
-      modal.querySelectorAll('.multi-select-field').forEach(field => { if (field.id === 'dmg-field' || field.closest('.extra-dmg-row')) return; let trigger = field.querySelector('.label-dropdown-trigger') || field.querySelector('.display'); const panel = field.querySelector('.panel'); trigger.onclick = (e) => { e.stopPropagation(); const isOpen = panel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); panel.style.display = isOpen ? 'none' : 'block'; }; panel.querySelectorAll('input[type="checkbox"]').forEach(chk => { chk.onchange = () => { const vals = Array.from(panel.querySelectorAll('input:checked')).map(x => x.value); const span = trigger.querySelector('span:first-child') || modal.querySelector('#min-req-label-text'); if(span) span.textContent = vals.length ? vals.join(', ') : (field.id === 'min-req-container' ? '' : 'Selecione...'); }; }); });
-      if (tab === 'Arma') {
-        const empPills = modal.querySelectorAll('#emp-pills .pill');
-        const inputDanoPrincipal = modal.querySelector('#item-damage');
-        const inputDano1Mao = modal.querySelector('#item-damage-1hand');
-        const dmgWrapper = modal.querySelector('#dmg-field-wrapper');
-        const layoutStd = modal.querySelector('#layout-standard');
-        const layoutVer = modal.querySelector('#layout-versatile');
-        const containerStd = modal.querySelector('#dmg-type-container-std');
-        const containerVer = modal.querySelector('#dmg-type-container-ver');
+    // ... Código do bindTabEvents (igual ao anterior, resumido aqui) ...
+    modal.querySelectorAll('.pill.single-select').forEach(p => { p.addEventListener('click', () => { p.parentElement.querySelectorAll('.pill').forEach(x => x.classList.remove('active')); p.classList.add('active'); }); });
+    modal.querySelectorAll('.multi-select-field').forEach(field => { if (field.id === 'dmg-field' || field.closest('.extra-dmg-row')) return; let trigger = field.querySelector('.label-dropdown-trigger') || field.querySelector('.display'); const panel = field.querySelector('.panel'); trigger.onclick = (e) => { e.stopPropagation(); const isOpen = panel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); panel.style.display = isOpen ? 'none' : 'block'; }; panel.querySelectorAll('input[type="checkbox"]').forEach(chk => { chk.onchange = () => { const vals = Array.from(panel.querySelectorAll('input:checked')).map(x => x.value); const span = trigger.querySelector('span:first-child') || modal.querySelector('#min-req-label-text'); if (span) span.textContent = vals.length ? vals.join(', ') : (field.id === 'min-req-container' ? '' : 'Selecione...'); }; }); });
+    if (tab === 'Arma') {
+      const empPills = modal.querySelectorAll('#emp-pills .pill');
+      const inputDanoPrincipal = modal.querySelector('#item-damage');
+      const inputDano1Mao = modal.querySelector('#item-damage-1hand');
+      const dmgWrapper = modal.querySelector('#dmg-field-wrapper');
+      const layoutStd = modal.querySelector('#layout-standard');
+      const layoutVer = modal.querySelector('#layout-versatile');
+      const containerStd = modal.querySelector('#dmg-type-container-std');
+      const containerVer = modal.querySelector('#dmg-type-container-ver');
 
-        const organizarLayoutDano = (isVersatil) => {
-            dmgWrapper.style.display = 'block';
-            if (isVersatil) {
-                layoutStd.style.display = 'none'; layoutVer.style.display = 'contents';
-                if (containerVer) containerVer.appendChild(dmgWrapper);
-                if (inputDanoPrincipal.value) inputDano1Mao.value = inputDanoPrincipal.value;
-            } else {
-                layoutStd.style.display = 'contents'; layoutVer.style.display = 'none';
-                if (containerStd) containerStd.appendChild(dmgWrapper);
-                if (inputDano1Mao.value) inputDanoPrincipal.value = inputDano1Mao.value;
-            }
-        };
-        inputDano1Mao.oninput = () => { inputDanoPrincipal.value = inputDano1Mao.value; };
-        empPills.forEach(p => { p.addEventListener('click', () => { organizarLayoutDano(p.getAttribute('data-val') === 'Versátil'); }); });
-        const empInicial = modal.querySelector('#emp-pills .pill.active')?.getAttribute('data-val');
-        organizarLayoutDano(empInicial === 'Versátil');
+      const organizarLayoutDano = (isVersatil) => {
+        dmgWrapper.style.display = 'block';
+        if (isVersatil) {
+          layoutStd.style.display = 'none'; layoutVer.style.display = 'contents';
+          if (containerVer) containerVer.appendChild(dmgWrapper);
+          if (inputDanoPrincipal.value) inputDano1Mao.value = inputDanoPrincipal.value;
+        } else {
+          layoutStd.style.display = 'contents'; layoutVer.style.display = 'none';
+          if (containerStd) containerStd.appendChild(dmgWrapper);
+          if (inputDano1Mao.value) inputDanoPrincipal.value = inputDano1Mao.value;
+        }
+      };
+      inputDano1Mao.oninput = () => { inputDanoPrincipal.value = inputDano1Mao.value; };
+      empPills.forEach(p => { p.addEventListener('click', () => { organizarLayoutDano(p.getAttribute('data-val') === 'Versátil'); }); });
+      const empInicial = modal.querySelector('#emp-pills .pill.active')?.getAttribute('data-val');
+      organizarLayoutDano(empInicial === 'Versátil');
 
-        const dmgField = dmgWrapper.querySelector('.multi-select-field'); const dmgDisplay = dmgField.querySelector('.display'); const dmgPanel = dmgField.querySelector('.panel');
-        dmgDisplay.onclick = (e) => { e.stopPropagation(); const isNowOpen = dmgPanel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); dmgPanel.style.display = isNowOpen ? 'none' : 'block'; };
-        dmgPanel.querySelectorAll('input').forEach(chk => { chk.onchange = () => { const vals = Array.from(dmgPanel.querySelectorAll('input:checked')).map(x => x.value); dmgDisplay.querySelector('span').textContent = vals.length ? vals.join(', ') : 'Selecione...'; }; });
+      const dmgField = dmgWrapper.querySelector('.multi-select-field'); const dmgDisplay = dmgField.querySelector('.display'); const dmgPanel = dmgField.querySelector('.panel');
+      dmgDisplay.onclick = (e) => { e.stopPropagation(); const isNowOpen = dmgPanel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); dmgPanel.style.display = isNowOpen ? 'none' : 'block'; };
+      dmgPanel.querySelectorAll('input').forEach(chk => { chk.onchange = () => { const vals = Array.from(dmgPanel.querySelectorAll('input:checked')).map(x => x.value); dmgDisplay.querySelector('span').textContent = vals.length ? vals.join(', ') : 'Selecione...'; }; });
 
-        const extraDmgContainer = modal.querySelector('#extra-dmg-list'); const btnAddExtra = modal.querySelector('#btn-add-dmg');
-        if (pre.moreDmgList?.length && extraDmgContainer.children.length === 0) { pre.moreDmgList.forEach(item => extraDmgContainer.appendChild(createDamageRow(item.dano, item.types))); }
-        btnAddExtra.onclick = (ev) => { ev.preventDefault(); extraDmgContainer.appendChild(createDamageRow()); };
-      }
+      const extraDmgContainer = modal.querySelector('#extra-dmg-list'); const btnAddExtra = modal.querySelector('#btn-add-dmg');
+      if (pre.moreDmgList?.length && extraDmgContainer.children.length === 0) { pre.moreDmgList.forEach(item => extraDmgContainer.appendChild(createDamageRow(item.dano, item.types))); }
+      btnAddExtra.onclick = (ev) => { ev.preventDefault(); extraDmgContainer.appendChild(createDamageRow()); };
+    }
   }
 
   renderBody(currentTab);
@@ -941,12 +941,12 @@ function openItemModal(existingItem = null) {
 
     // --- VALIDAÇÃO OBRIGATÓRIA ---
     if (!name) {
-        alert("O nome do item é obrigatório!");
-        nameInput.style.borderColor = "#ff5555";
-        nameInput.focus();
-        return;
+      alert("O nome do item é obrigatório!");
+      nameInput.style.borderColor = "#ff5555";
+      nameInput.focus();
+      return;
     }
-    
+
     const desc = document.getElementById('item-editor-content').innerHTML;
 
     let newItem = {
@@ -956,7 +956,7 @@ function openItemModal(existingItem = null) {
       expanded: true,
       equip: existingItem ? !!existingItem.equip : false
     };
-    
+
     // ... (Mantendo a captura de dados dos inputs) ...
     if (currentTab === 'Item') {
       newItem.type = 'Geral'; newItem.isEquipable = true;
@@ -1013,69 +1013,69 @@ function openItemModal(existingItem = null) {
 
 // Lista de classes padrão para garantir o agrupamento mesmo se a categoria estiver vazia
 const LISTA_CLASSES_RPG = [
-    'Artífice', 'Bárbaro', 'Bardo', 'Blood Hunter', 'Bruxo', 'Clérigo', 
-    'Druida', 'Feiticeiro', 'Guerreiro', 'Ladino', 'Mago', 'Monge', 
-    'Paladino', 'Patrulheiro'
+  'Artífice', 'Bárbaro', 'Bardo', 'Blood Hunter', 'Bruxo', 'Clérigo',
+  'Druida', 'Feiticeiro', 'Guerreiro', 'Ladino', 'Mago', 'Monge',
+  'Paladino', 'Patrulheiro'
 ];
 
 function renderAbilities() {
-    const termoBusca = (document.getElementById('filterHabs')?.value || '').toLowerCase();
+  const termoBusca = (document.getElementById('filterHabs')?.value || '').toLowerCase();
 
-    // 1. Filtra a lista
-    let habilidadesFiltradas = state.abilities.filter(a => {
-        const text = (a.title + (a.description || "")).toLowerCase();
-        return text.includes(termoBusca);
-    });
+  // 1. Filtra a lista
+  let habilidadesFiltradas = state.abilities.filter(a => {
+    const text = (a.title + (a.description || "")).toLowerCase();
+    return text.includes(termoBusca);
+  });
 
-    // 2. Estrutura de Agrupamento
-    const grupos = {
-        classes: {},     // { "Guerreiro": [...], "Mago": [...] }
-        talentos: [],
-        origem: [],      // Raça e Antecedentes
-        outros: []
-    };
+  // 2. Estrutura de Agrupamento
+  const grupos = {
+    classes: {},     // { "Guerreiro": [...], "Mago": [...] }
+    talentos: [],
+    origem: [],      // Raça e Antecedentes
+    outros: []
+  };
 
-    // 3. Distribuição (Lógica Reforçada)
-    habilidadesFiltradas.forEach(hab => {
-        const cat = (hab.category || "").toLowerCase().trim();
-        const classeOriginal = (hab.class || "").trim(); // Mantém maiúsculas para o título
-        const classeLower = classeOriginal.toLowerCase();
+  // 3. Distribuição (Lógica Reforçada)
+  habilidadesFiltradas.forEach(hab => {
+    const cat = (hab.category || "").toLowerCase().trim();
+    const classeOriginal = (hab.class || "").trim(); // Mantém maiúsculas para o título
+    const classeLower = classeOriginal.toLowerCase();
 
-        // --- CHECAGEM DE CLASSE ---
-        // Verifica se a categoria é 'classe' OU se o nome da classe está na lista padrão
-        if (cat === 'classe' || LISTA_CLASSES_RPG.includes(classeOriginal)) {
-            // Se o nome da classe estiver vazio, joga para "Geral" dentro de classes
-            const nomeGrupo = classeOriginal || "Classe Indefinida";
-            
-            if (!grupos.classes[nomeGrupo]) grupos.classes[nomeGrupo] = [];
-            grupos.classes[nomeGrupo].push(hab);
-        }
-        // --- CHECAGEM DE TALENTOS ---
-        else if (cat.includes('talento') || classeLower === 'talentos' || classeLower === 'talento') {
-            grupos.talentos.push(hab);
-        }
-        // --- CHECAGEM DE ORIGEM (Antecedente/Raça) ---
-        else if (
-            cat.includes('antecedente') || cat.includes('raça') || cat.includes('raca') ||
-            classeLower === 'antecedente' || classeLower === 'raça'
-        ) {
-            grupos.origem.push(hab);
-        }
-        // --- OUTROS ---
-        else {
-            grupos.outros.push(hab);
-        }
-    });
+    // --- CHECAGEM DE CLASSE ---
+    // Verifica se a categoria é 'classe' OU se o nome da classe está na lista padrão
+    if (cat === 'classe' || LISTA_CLASSES_RPG.includes(classeOriginal)) {
+      // Se o nome da classe estiver vazio, joga para "Geral" dentro de classes
+      const nomeGrupo = classeOriginal || "Classe Indefinida";
 
-    // 4. Função de Ordenação (Ativos no topo)
-    const sortActiveFirst = (a, b) => {
-        if (a.active && !b.active) return -1;
-        if (!a.active && b.active) return 1;
-        return a.title.localeCompare(b.title);
-    };
+      if (!grupos.classes[nomeGrupo]) grupos.classes[nomeGrupo] = [];
+      grupos.classes[nomeGrupo].push(hab);
+    }
+    // --- CHECAGEM DE TALENTOS ---
+    else if (cat.includes('talento') || classeLower === 'talentos' || classeLower === 'talento') {
+      grupos.talentos.push(hab);
+    }
+    // --- CHECAGEM DE ORIGEM (Antecedente/Raça) ---
+    else if (
+      cat.includes('antecedente') || cat.includes('raça') || cat.includes('raca') ||
+      classeLower === 'antecedente' || classeLower === 'raça'
+    ) {
+      grupos.origem.push(hab);
+    }
+    // --- OUTROS ---
+    else {
+      grupos.outros.push(hab);
+    }
+  });
 
-    // 5. Construção do HTML
-    let htmlFinal = `
+  // 4. Função de Ordenação (Ativos no topo)
+  const sortActiveFirst = (a, b) => {
+    if (a.active && !b.active) return -1;
+    if (!a.active && b.active) return 1;
+    return a.title.localeCompare(b.title);
+  };
+
+  // 5. Construção do HTML
+  let htmlFinal = `
         <div class="abilities-controls controls-row">
             <input id="filterHabs" placeholder="Filtrar habilidades..." value="${document.getElementById('filterHabs')?.value || ''}" />
             <div class="right-controls">
@@ -1085,66 +1085,66 @@ function renderAbilities() {
         <div class="abilities-list">
     `;
 
-    let temConteudo = false;
+  let temConteudo = false;
 
-    // A) Classes (Ordem Alfabética dos Grupos)
-    Object.keys(grupos.classes).sort().forEach(nomeClasse => {
-        const lista = grupos.classes[nomeClasse].sort(sortActiveFirst);
-        if (lista.length > 0) {
-            htmlFinal += renderAbilitySection(`Habilidades de ${nomeClasse}`, lista, `class-${nomeClasse}`);
-            temConteudo = true;
-        }
-    });
-
-    // B) Talentos
-    if (grupos.talentos.length > 0) {
-        grupos.talentos.sort(sortActiveFirst);
-        htmlFinal += renderAbilitySection("Talentos", grupos.talentos, "talentos");
-        temConteudo = true;
+  // A) Classes (Ordem Alfabética dos Grupos)
+  Object.keys(grupos.classes).sort().forEach(nomeClasse => {
+    const lista = grupos.classes[nomeClasse].sort(sortActiveFirst);
+    if (lista.length > 0) {
+      htmlFinal += renderAbilitySection(`Habilidades de ${nomeClasse}`, lista, `class-${nomeClasse}`);
+      temConteudo = true;
     }
+  });
 
-    // C) Origem
-    if (grupos.origem.length > 0) {
-        grupos.origem.sort(sortActiveFirst);
-        htmlFinal += renderAbilitySection("Raça & Antecedente", grupos.origem, "origem");
-        temConteudo = true;
-    }
+  // B) Talentos
+  if (grupos.talentos.length > 0) {
+    grupos.talentos.sort(sortActiveFirst);
+    htmlFinal += renderAbilitySection("Talentos", grupos.talentos, "talentos");
+    temConteudo = true;
+  }
 
-    // D) Outros
-    if (grupos.outros.length > 0) {
-        grupos.outros.sort(sortActiveFirst);
-        htmlFinal += renderAbilitySection("Outras Habilidades", grupos.outros, "outros");
-        temConteudo = true;
-    }
+  // C) Origem
+  if (grupos.origem.length > 0) {
+    grupos.origem.sort(sortActiveFirst);
+    htmlFinal += renderAbilitySection("Raça & Antecedente", grupos.origem, "origem");
+    temConteudo = true;
+  }
 
-    if (!temConteudo) {
-        htmlFinal += `<div class="empty-tip">Nenhuma habilidade encontrada.</div>`;
-    }
+  // D) Outros
+  if (grupos.outros.length > 0) {
+    grupos.outros.sort(sortActiveFirst);
+    htmlFinal += renderAbilitySection("Outras Habilidades", grupos.outros, "outros");
+    temConteudo = true;
+  }
 
-    htmlFinal += `</div>`;
-    conteudoEl.innerHTML = htmlFinal;
+  if (!temConteudo) {
+    htmlFinal += `<div class="empty-tip">Nenhuma habilidade encontrada.</div>`;
+  }
 
-    bindAbilityEvents();
+  htmlFinal += `</div>`;
+  conteudoEl.innerHTML = htmlFinal;
 
-    // Mantém o foco no input
-    const novoInput = document.getElementById('filterHabs');
-    if (novoInput) {
-        // Coloca o cursor no final
-        const len = novoInput.value.length;
-        novoInput.focus();
-        novoInput.setSelectionRange(len, len);
-    }
+  bindAbilityEvents();
+
+  // Mantém o foco no input
+  const novoInput = document.getElementById('filterHabs');
+  if (novoInput) {
+    // Coloca o cursor no final
+    const len = novoInput.value.length;
+    novoInput.focus();
+    novoInput.setSelectionRange(len, len);
+  }
 }
 
 // --- HTML DA SEÇÃO (Design Preservado) ---
 function renderAbilitySection(titulo, listaCards, chaveUnica) {
-    if (!state.collapsedSections) state.collapsedSections = {};
-    const isCollapsed = !!state.collapsedSections[chaveUnica];
-    const arrow = isCollapsed ? '▸' : '▾';
-    const displayStyle = isCollapsed ? 'display:none;' : '';
+  if (!state.collapsedSections) state.collapsedSections = {};
+  const isCollapsed = !!state.collapsedSections[chaveUnica];
+  const arrow = isCollapsed ? '▸' : '▾';
+  const displayStyle = isCollapsed ? 'display:none;' : '';
 
-    // HTML DOS CARDS (Seu design original)
-    const cardsHtml = listaCards.map(a => `
+  // HTML DOS CARDS (Seu design original)
+  const cardsHtml = listaCards.map(a => `
         <div class="card hab-card ${a.expanded ? 'expanded' : ''}" data-id="${a.id}">
           <div class="card-header">
             <div class="left" data-id="${a.id}">
@@ -1168,7 +1168,7 @@ function renderAbilitySection(titulo, listaCards, chaveUnica) {
         </div>
     `).join('');
 
-    return `
+  return `
         <div class="hab-section-group" style="margin-bottom:12px;">
             <div class="toggle-section-header" data-key="${chaveUnica}" style="cursor:pointer; display:flex; align-items:center; background:rgba(255,255,255,0.03); padding:8px; border-radius:4px; margin-bottom:5px; border: 1px solid rgba(255,255,255,0.05);">
                 <span style="font-size:14px; color:#9c27b0; width:15px;">${arrow}</span> 
@@ -1184,53 +1184,53 @@ function renderAbilitySection(titulo, listaCards, chaveUnica) {
 
 // --- EVENTOS ---
 function bindAbilityEvents() {
-    // 1. Checkbox Ativar (DOM DIRETO - SEM PULO)
-    document.querySelectorAll('.hab-activate').forEach(ch => {
-        ch.onchange = (ev) => {
-            const id = Number(ch.getAttribute('data-id'));
-            const hab = state.abilities.find(h => h.id === id);
-            if (hab) {
-                hab.active = ev.target.checked;
-                saveStateToServer();
-                
-                // Exclusividade Monge/Bárbaro
-                if (hab.active) {
-                    if (hab.title.includes("Bárbaro")) {
-                        const m = state.abilities.find(a => a.title.includes("Monge"));
-                        if (m) { m.active = false; const mChk = document.querySelector(`.hab-activate[data-id="${m.id}"]`); if(mChk) mChk.checked = false; }
-                    }
-                    if (hab.title.includes("Monge")) {
-                        const b = state.abilities.find(a => a.title.includes("Bárbaro"));
-                        if (b) { b.active = false; const bChk = document.querySelector(`.hab-activate[data-id="${b.id}"]`); if(bChk) bChk.checked = false; }
-                    }
-                }
+  // 1. Checkbox Ativar (DOM DIRETO - SEM PULO)
+  document.querySelectorAll('.hab-activate').forEach(ch => {
+    ch.onchange = (ev) => {
+      const id = Number(ch.getAttribute('data-id'));
+      const hab = state.abilities.find(h => h.id === id);
+      if (hab) {
+        hab.active = ev.target.checked;
+        saveStateToServer();
 
-                // Apenas atualiza a esquerda (CA/Status)
-                if (typeof atualizarAC === 'function') atualizarAC();
-                
-                // Opcional: Se quiser que as habilidades ativas subam pro topo na hora, 
-                // aí precisa de re-render, mas vamos priorizar o scroll parado aqui.
-            }
-        };
-    });
+        // Exclusividade Monge/Bárbaro
+        if (hab.active) {
+          if (hab.title.includes("Bárbaro")) {
+            const m = state.abilities.find(a => a.title.includes("Monge"));
+            if (m) { m.active = false; const mChk = document.querySelector(`.hab-activate[data-id="${m.id}"]`); if (mChk) mChk.checked = false; }
+          }
+          if (hab.title.includes("Monge")) {
+            const b = state.abilities.find(a => a.title.includes("Bárbaro"));
+            if (b) { b.active = false; const bChk = document.querySelector(`.hab-activate[data-id="${b.id}"]`); if (bChk) bChk.checked = false; }
+          }
+        }
 
-    // 2. Expandir Card (DOM DIRETO)
-    document.querySelectorAll('.hab-card .left').forEach(leftDiv => {
-        leftDiv.onclick = () => {
-            const id = Number(leftDiv.getAttribute('data-id'));
-            const hab = state.abilities.find(h => h.id === id);
-            const card = leftDiv.closest('.hab-card');
-            if (hab) {
-                hab.expanded = !hab.expanded;
-                const body = card.querySelector('.card-body');
-                const caret = card.querySelector('.caret');
-                body.style.display = hab.expanded ? 'block' : 'none';
-                caret.textContent = hab.expanded ? '▾' : '▸';
-                card.classList.toggle('expanded', hab.expanded);
-                saveStateToServer();
-            }
-        };
-    });
+        // Apenas atualiza a esquerda (CA/Status)
+        if (typeof atualizarAC === 'function') atualizarAC();
+
+        // Opcional: Se quiser que as habilidades ativas subam pro topo na hora, 
+        // aí precisa de re-render, mas vamos priorizar o scroll parado aqui.
+      }
+    };
+  });
+
+  // 2. Expandir Card (DOM DIRETO)
+  document.querySelectorAll('.hab-card .left').forEach(leftDiv => {
+    leftDiv.onclick = () => {
+      const id = Number(leftDiv.getAttribute('data-id'));
+      const hab = state.abilities.find(h => h.id === id);
+      const card = leftDiv.closest('.hab-card');
+      if (hab) {
+        hab.expanded = !hab.expanded;
+        const body = card.querySelector('.card-body');
+        const caret = card.querySelector('.caret');
+        body.style.display = hab.expanded ? 'block' : 'none';
+        caret.textContent = hab.expanded ? '▾' : '▸';
+        card.classList.toggle('expanded', hab.expanded);
+        saveStateToServer();
+      }
+    };
+  });
 }
 
 // --- FUNÇÃO DE ABERTURA DO CATÁLOGO DE HABILIDADES (CORRIGIDA PARA SALVAR CATEGORIA) ---
@@ -1303,7 +1303,7 @@ function openAbilityCatalogOverlay() {
     row.style.display = 'flex';
     let html = '';
     if (activeClass !== 'Antecedentes') {
-        html += `<button class="catalog-class-hability-pill ${activeClassHabilitySelected ? 'active' : ''}">Habilidades de ${activeClass}</button>`;
+      html += `<button class="catalog-class-hability-pill ${activeClassHabilitySelected ? 'active' : ''}">Habilidades de ${activeClass}</button>`;
     }
     if (hasSubclasses) {
       html += `<button id="toggle-sub-expansion" class="toggle-expansion-btn" title="Alternar">${isSubclassesExpanded ? '⇄' : '⊞'}</button>`;
@@ -1312,13 +1312,13 @@ function openAbilityCatalogOverlay() {
 
     const pillBtn = row.querySelector('.catalog-class-hability-pill');
     if (pillBtn) {
-        pillBtn.onclick = function () {
-            activeClassHabilitySelected = true;
-            activeSubclass = null;
-            renderClassHabilitiesRow();
-            overlay.querySelectorAll('.ability-sub-btn').forEach(b => b.classList.remove('active'));
-            renderCatalogList();
-        };
+      pillBtn.onclick = function () {
+        activeClassHabilitySelected = true;
+        activeSubclass = null;
+        renderClassHabilitiesRow();
+        overlay.querySelectorAll('.ability-sub-btn').forEach(b => b.classList.remove('active'));
+        renderCatalogList();
+      };
     }
     if (hasSubclasses) {
       row.querySelector('#toggle-sub-expansion').onclick = () => {
@@ -1336,7 +1336,7 @@ function openAbilityCatalogOverlay() {
     row.style.display = 'flex';
     if (isSubclassesExpanded) { row.style.flexWrap = 'wrap'; row.style.overflowX = 'visible'; }
     else { row.style.flexWrap = 'nowrap'; row.style.overflowX = 'auto'; }
-    
+
     row.innerHTML = subs.map(s => `<button class="ability-sub-btn ${s === activeSubclass ? 'active' : ''}" data-sub="${s}">${s}</button>`).join('');
     row.querySelectorAll('.ability-sub-btn').forEach(b => {
       b.onclick = () => {
@@ -1360,7 +1360,7 @@ function openAbilityCatalogOverlay() {
 /* ---------------- MAGIAS ---------------- */
 function formatMySpellCard(s) {
   const schoolPill = `<div class="pill">${s.school || '—'}${s.levelNumber !== undefined ? ` <span class="pill-level">${s.levelNumber}</span>` : ''}</div>`;
-  
+
   const compRow = `
       <div class="comp-block">
         <div class="comp-title">Componente</div>
@@ -1372,7 +1372,7 @@ function formatMySpellCard(s) {
         <div class="comp-material">Material: ${s.material || '-'}</div>
       </div>
     `;
-  
+
   const caretSymbol = s.expanded ? '▾' : '▸';
   const classDisplay = `<div class="class-box-display">${s.spellClass || '—'}</div>`;
 
@@ -1430,12 +1430,12 @@ function formatMySpellCard(s) {
 
 
 function renderSpells() {
-    state.dtMagias = calculateSpellDC();
+  state.dtMagias = calculateSpellDC();
 
-    // Gera HTML dos Slots (agora automático)
-    const slotsHTML = renderSpellSlotsHTML();
+  // Gera HTML dos Slots (agora automático)
+  const slotsHTML = renderSpellSlotsHTML();
 
-    const html = `
+  const html = `
     <div class="spells-wrapper" style="position:relative;">
       
       ${slotsHTML}
@@ -1460,7 +1460,7 @@ function renderSpells() {
       </div>
     </div>
   `;
-  
+
   conteudoEl.innerHTML = html;
   bindSpellEvents();
   bindSlotEvents();
@@ -1486,38 +1486,38 @@ function renderSpells() {
    LISTENER GLOBAL: ATUALIZA A TELA QUANDO DADOS MUDAM
 ============================================================= */
 window.addEventListener('sheet-updated', () => {
-    // 1. Atualiza DT Magias
-    state.dtMagias = calculateSpellDC();
-    const inputDT = document.getElementById('dtMagiasInput');
-    if (inputDT) inputDT.value = state.dtMagias;
+  // 1. Atualiza DT Magias
+  state.dtMagias = calculateSpellDC();
+  const inputDT = document.getElementById('dtMagiasInput');
+  if (inputDT) inputDT.value = state.dtMagias;
 
-    // 2. Atualiza Classe de Armadura
-    const armorClass = calculateArmorClass();
-    const inputCA = document.getElementById('caTotal') || document.querySelector('.hexagrama-ca .valor');
-    if (inputCA) {
-        if (inputCA.tagName === 'INPUT') inputCA.value = armorClass;
-        else inputCA.textContent = armorClass;
+  // 2. Atualiza Classe de Armadura
+  const armorClass = calculateArmorClass();
+  const inputCA = document.getElementById('caTotal') || document.querySelector('.hexagrama-ca .valor');
+  if (inputCA) {
+    if (inputCA.tagName === 'INPUT') inputCA.value = armorClass;
+    else inputCA.textContent = armorClass;
+  }
+
+  // 3. ATUALIZAÇÃO AUTOMÁTICA DA DIREITA
+  if (['Magias', 'Mag. Preparadas', 'Habilidades', 'Combate'].includes(state.activeTab)) {
+    // Salva estado de scroll e foco
+    const scrollContainer = document.querySelector('.lado-direito .conteudo') || document.querySelector('.lado-direito');
+    const savedScroll = scrollContainer ? scrollContainer.scrollTop : 0;
+
+    const activeElement = document.activeElement;
+    const activeId = activeElement ? activeElement.id : null;
+
+    // FORÇA O REDESENHO DA ABA ATIVA
+    renderActiveTab();
+
+    // Restaura Scroll e Foco
+    if (scrollContainer) scrollContainer.scrollTop = savedScroll;
+    if (activeId) {
+      const el = document.getElementById(activeId);
+      if (el) el.focus();
     }
-
-    // 3. ATUALIZAÇÃO AUTOMÁTICA DA DIREITA
-    if (['Magias', 'Mag. Preparadas', 'Habilidades', 'Combate'].includes(state.activeTab)) {
-        // Salva estado de scroll e foco
-        const scrollContainer = document.querySelector('.lado-direito .conteudo') || document.querySelector('.lado-direito');
-        const savedScroll = scrollContainer ? scrollContainer.scrollTop : 0;
-        
-        const activeElement = document.activeElement;
-        const activeId = activeElement ? activeElement.id : null;
-        
-        // FORÇA O REDESENHO DA ABA ATIVA
-        renderActiveTab(); 
-
-        // Restaura Scroll e Foco
-        if (scrollContainer) scrollContainer.scrollTop = savedScroll;
-        if (activeId) {
-            const el = document.getElementById(activeId);
-            if (el) el.focus();
-        }
-    }
+  }
 });
 
 /* =============================================================
@@ -1525,41 +1525,41 @@ window.addEventListener('sheet-updated', () => {
 ============================================================= */
 
 function initSpellSlotsState() {
-    if (!state.spellSlots) state.spellSlots = {};
-    if (!state.customResources) state.customResources = []; // Array para recursos extras
+  if (!state.spellSlots) state.spellSlots = {};
+  if (!state.customResources) state.customResources = []; // Array para recursos extras
 
-    // Chaves padrão
-    const keys = ['1','2','3','4','5','6','7','8','9','pact','ki','furia','sorcery','mutagen','blood_curse','infusions'];
-    
-    // Adiciona chaves dos recursos customizados (ex: custom_0, custom_1)
-    state.customResources.forEach((res, idx) => {
-        keys.push(`custom_${idx}`);
-    });
+  // Chaves padrão
+  const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'pact', 'ki', 'furia', 'sorcery', 'mutagen', 'blood_curse', 'infusions'];
 
-    keys.forEach(k => {
-        if (!state.spellSlots[k]) state.spellSlots[k] = { status: [] }; 
-        if (!Array.isArray(state.spellSlots[k].status)) state.spellSlots[k].status = [];
-    });
+  // Adiciona chaves dos recursos customizados (ex: custom_0, custom_1)
+  state.customResources.forEach((res, idx) => {
+    keys.push(`custom_${idx}`);
+  });
+
+  keys.forEach(k => {
+    if (!state.spellSlots[k]) state.spellSlots[k] = { status: [] };
+    if (!Array.isArray(state.spellSlots[k].status)) state.spellSlots[k].status = [];
+  });
 }
 
 function renderSpellSlotsHTML() {
-    initSpellSlotsState();
-    
-    // Calcula Recursos Totais
-    const recursosTotais = calcularRecursosTotais(state.niveisClasses, state.abilities, state.atributos);
+  initSpellSlotsState();
 
-    // Estado do Accordion
-    if (typeof state.isSlotsCollapsed === 'undefined') state.isSlotsCollapsed = false;
-    const isCollapsed = state.isSlotsCollapsed;
-    const arrowIcon = isCollapsed ? '▸' : '▾';
-    
-    // CLASSE DINÂMICA PARA O CONTAINER
-    const containerClass = isCollapsed ? 'slots-container collapsed' : 'slots-container';
+  // Calcula Recursos Totais
+  const recursosTotais = calcularRecursosTotais(state.niveisClasses, state.abilities, state.atributos);
 
-    let html = `<div class="${containerClass}" style="border: 1px solid rgba(156, 39, 176, 0.3); background: #121212;">`;
+  // Estado do Accordion
+  if (typeof state.isSlotsCollapsed === 'undefined') state.isSlotsCollapsed = false;
+  const isCollapsed = state.isSlotsCollapsed;
+  const arrowIcon = isCollapsed ? '▸' : '▾';
 
-    // Cabeçalho
-    html += `
+  // CLASSE DINÂMICA PARA O CONTAINER
+  const containerClass = isCollapsed ? 'slots-container collapsed' : 'slots-container';
+
+  let html = `<div class="${containerClass}" style="border: 1px solid rgba(156, 39, 176, 0.3); background: #121212;">`;
+
+  // Cabeçalho
+  html += `
         <div class="slots-header-actions" id="headerSlotsToggle" style="cursor:pointer; user-select:none;">
             <div style="display:flex; align-items:center; gap:8px;">
                 <span style="color:#9c27b0; font-size:18px; width:15px;">${arrowIcon}</span>
@@ -1575,168 +1575,168 @@ function renderSpellSlotsHTML() {
             <div class="slots-grid">
     `;
 
-    let hasAnySlot = false;
+  let hasAnySlot = false;
 
-    // Função Auxiliar de Renderização
-    const renderPips = (key, maxVal, label, colorClass) => {
-        if (maxVal > 0) {
-            hasAnySlot = true;
-            const slotState = state.spellSlots[key];
-            
-            // Garante tamanho do array de status
-            while(slotState.status.length < maxVal) slotState.status.push(false);
+  // Função Auxiliar de Renderização
+  const renderPips = (key, maxVal, label, colorClass) => {
+    if (maxVal > 0) {
+      hasAnySlot = true;
+      const slotState = state.spellSlots[key];
 
-            let contentHtml = '';
+      // Garante tamanho do array de status
+      while (slotState.status.length < maxVal) slotState.status.push(false);
 
-            if (maxVal === 99) {
-                contentHtml = `<div class="slot-pips"><span style="color:#fff; font-weight:bold; font-size:12px;">ILIMITADO</span></div>`;
-            } else {
-                let pips = '';
-                for (let i = 0; i < maxVal; i++) {
-                    const isSpent = slotState.status[i]; 
-                    pips += `<span class="slot-pip ${colorClass} ${isSpent ? 'used' : 'available'}" data-key="${key}" data-idx="${i}"></span>`;
-                }
-                contentHtml = `<div class="slot-pips" style="flex-wrap: wrap;">${pips}</div>`;
-            }
+      let contentHtml = '';
 
-            html += `
+      if (maxVal === 99) {
+        contentHtml = `<div class="slot-pips"><span style="color:#fff; font-weight:bold; font-size:12px;">ILIMITADO</span></div>`;
+      } else {
+        let pips = '';
+        for (let i = 0; i < maxVal; i++) {
+          const isSpent = slotState.status[i];
+          pips += `<span class="slot-pip ${colorClass} ${isSpent ? 'used' : 'available'}" data-key="${key}" data-idx="${i}"></span>`;
+        }
+        contentHtml = `<div class="slot-pips" style="flex-wrap: wrap;">${pips}</div>`;
+      }
+
+      html += `
                 <div class="slot-group ${key === 'pact' ? 'pact-group' : ''}">
                     <div class="slot-label" style="${key === 'pact' ? 'color:#e0aaff;' : ''}">${label}</div>
                     ${contentHtml}
                 </div>
             `;
-        }
-    };
-
-    // Renderiza Slots e Recursos
-    for (let i = 1; i <= 9; i++) renderPips(String(i), recursosTotais.slots[i-1], `${i}º Círculo`, '');
-    if (recursosTotais.pact.qtd > 0) renderPips('pact', recursosTotais.pact.qtd, `Pacto (${recursosTotais.pact.nivel}º)`, 'pact');
-    
-    renderPips('ki', recursosTotais.ki, 'Ki', 'ki-pip');
-    renderPips('furia', recursosTotais.furia, 'Fúria', 'rage-pip');
-    renderPips('sorcery', recursosTotais.sorcery, 'Feitiçaria', 'sorc-pip');
-    renderPips('mutagen', recursosTotais.mutagen, 'Mutagênicos', 'mut-pip');
-    renderPips('infusions', recursosTotais.infusions, 'Itens Infundidos', 'infusion-pip');
-    renderPips('blood_curse', recursosTotais.blood_curse, 'Maldições', 'curse-pip');
-
-    // --- RENDERIZA RECURSOS CUSTOMIZADOS (ADICIONADOS PELO USUÁRIO) ---
-    if (state.customResources && state.customResources.length > 0) {
-        state.customResources.forEach((res, idx) => {
-            renderPips(`custom_${idx}`, parseInt(res.max), res.name, 'custom-pip');
-        });
     }
+  };
 
-    html += `</div>`; // Fecha grid
+  // Renderiza Slots e Recursos
+  for (let i = 1; i <= 9; i++) renderPips(String(i), recursosTotais.slots[i - 1], `${i}º Círculo`, '');
+  if (recursosTotais.pact.qtd > 0) renderPips('pact', recursosTotais.pact.qtd, `Pacto (${recursosTotais.pact.nivel}º)`, 'pact');
 
-    // --- ÁREA DE INFORMAÇÕES ---
-    if (recursosTotais.infoConjuracao.length > 0) {
-        html += `<div class="spell-info-footer" style="margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">`;
-        
-        const infosUnicas = recursosTotais.infoConjuracao.filter((v,i,a)=>a.findIndex(t=>(t.classe === v.classe))===i);
+  renderPips('ki', recursosTotais.ki, 'Ki', 'ki-pip');
+  renderPips('furia', recursosTotais.furia, 'Fúria', 'rage-pip');
+  renderPips('sorcery', recursosTotais.sorcery, 'Feitiçaria', 'sorc-pip');
+  renderPips('mutagen', recursosTotais.mutagen, 'Mutagênicos', 'mut-pip');
+  renderPips('infusions', recursosTotais.infusions, 'Itens Infundidos', 'infusion-pip');
+  renderPips('blood_curse', recursosTotais.blood_curse, 'Maldições', 'curse-pip');
 
-        infosUnicas.forEach(info => {
-            let texto = `<strong style="color:#9c27b0;">${info.classe}</strong>: `;
-            let partes = [];
-            
-            if (info.truques !== undefined) partes.push(`${info.truques} Truques`);
-            if (info.tipo === 'preparadas') partes.push(`${info.preparadas} Preparadas`);
-            else if (info.tipo === 'conhecidas' && info.conhecidas > 0) partes.push(`${info.conhecidas} Conhecidas`);
-            if (info.maldicoes !== undefined) partes.push(`${info.maldicoes} Maldições Conhecidas`);
-            if (info.extra) partes.push(info.extra);
+  // --- RENDERIZA RECURSOS CUSTOMIZADOS (ADICIONADOS PELO USUÁRIO) ---
+  if (state.customResources && state.customResources.length > 0) {
+    state.customResources.forEach((res, idx) => {
+      renderPips(`custom_${idx}`, parseInt(res.max), res.name, 'custom-pip');
+    });
+  }
 
-            texto += partes.join(' • ');
-            html += `<div style="font-size:12px; color:#ccc; margin-bottom:4px;">${texto}</div>`;
-        });
-        html += `</div>`;
-    }
+  html += `</div>`; // Fecha grid
 
-    html += `</div></div>`; // Fecha container
-    
-    // Se não tiver nada e nem customizados, esconde
-    if (!hasAnySlot && (!state.customResources || state.customResources.length === 0) && recursosTotais.infoConjuracao.length === 0) return '';
-    return html;
+  // --- ÁREA DE INFORMAÇÕES ---
+  if (recursosTotais.infoConjuracao.length > 0) {
+    html += `<div class="spell-info-footer" style="margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">`;
+
+    const infosUnicas = recursosTotais.infoConjuracao.filter((v, i, a) => a.findIndex(t => (t.classe === v.classe)) === i);
+
+    infosUnicas.forEach(info => {
+      let texto = `<strong style="color:#9c27b0;">${info.classe}</strong>: `;
+      let partes = [];
+
+      if (info.truques !== undefined) partes.push(`${info.truques} Truques`);
+      if (info.tipo === 'preparadas') partes.push(`${info.preparadas} Preparadas`);
+      else if (info.tipo === 'conhecidas' && info.conhecidas > 0) partes.push(`${info.conhecidas} Conhecidas`);
+      if (info.maldicoes !== undefined) partes.push(`${info.maldicoes} Maldições Conhecidas`);
+      if (info.extra) partes.push(info.extra);
+
+      texto += partes.join(' • ');
+      html += `<div style="font-size:12px; color:#ccc; margin-bottom:4px;">${texto}</div>`;
+    });
+    html += `</div>`;
+  }
+
+  html += `</div></div>`; // Fecha container
+
+  // Se não tiver nada e nem customizados, esconde
+  if (!hasAnySlot && (!state.customResources || state.customResources.length === 0) && recursosTotais.infoConjuracao.length === 0) return '';
+  return html;
 }
 /* ---------------- EVENTOS DOS SLOTS (ATUALIZADO: SEM POPUP DE DESCANSO) ---------------- */
 function bindSlotEvents() {
-    // 1. Toggle Minimizar
-    const headerToggle = document.getElementById('headerSlotsToggle');
-    if (headerToggle) {
-        headerToggle.addEventListener('click', (e) => {
-            // Evita disparar se clicar nos botões (engrenagem ou descanso)
-            if(e.target.closest('button')) return;
+  // 1. Toggle Minimizar
+  const headerToggle = document.getElementById('headerSlotsToggle');
+  if (headerToggle) {
+    headerToggle.addEventListener('click', (e) => {
+      // Evita disparar se clicar nos botões (engrenagem ou descanso)
+      if (e.target.closest('button')) return;
 
-            state.isSlotsCollapsed = !state.isSlotsCollapsed;
-            saveStateToServer();
-            renderSpells(); // Re-renderiza para aplicar a classe 'collapsed'
-        });
-    }
-
-    // 2. Botão Configurar (Engrenagem)
-    const btnConfig = document.getElementById('btnConfigRes');
-    if (btnConfig) {
-        btnConfig.addEventListener('click', (e) => {
-            e.stopPropagation();
-            openResourceConfigModal();
-        });
-    }
-
-    // 3. Descanso Longo (DIRETO, SEM CONFIRMAÇÃO)
-    const btnRest = document.getElementById('btnRestSlots');
-    if (btnRest) {
-        btnRest.onclick = (e) => {
-            e.stopPropagation();
-            
-            // Reseta todos os slots imediatamente
-            for (let key in state.spellSlots) {
-                state.spellSlots[key].status = []; 
-            }
-            
-            saveStateToServer();
-            renderSpells(); // Atualiza a tela na hora
-        };
-    }
-
-    // 4. Clique nas Bolinhas (Gastar/Recuperar individual)
-    document.querySelectorAll('.slot-pip').forEach(pip => {
-        pip.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const key = pip.dataset.key;
-            const idx = parseInt(pip.dataset.idx);
-            
-            if (!state.spellSlots[key]) state.spellSlots[key] = { status: [] };
-            if (!state.spellSlots[key].status) state.spellSlots[key].status = [];
-            
-            // Alterna o estado (Gasto <-> Disponível)
-            state.spellSlots[key].status[idx] = !state.spellSlots[key].status[idx];
-            
-            saveStateToServer();
-            
-            // Atualização visual instantânea (sem re-renderizar tudo)
-            const isNowSpent = state.spellSlots[key].status[idx];
-            if (isNowSpent) {
-                pip.classList.remove('available');
-                pip.classList.add('used');
-            } else {
-                pip.classList.remove('used');
-                pip.classList.add('available');
-            }
-        });
+      state.isSlotsCollapsed = !state.isSlotsCollapsed;
+      saveStateToServer();
+      renderSpells(); // Re-renderiza para aplicar a classe 'collapsed'
     });
+  }
+
+  // 2. Botão Configurar (Engrenagem)
+  const btnConfig = document.getElementById('btnConfigRes');
+  if (btnConfig) {
+    btnConfig.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openResourceConfigModal();
+    });
+  }
+
+  // 3. Descanso Longo (DIRETO, SEM CONFIRMAÇÃO)
+  const btnRest = document.getElementById('btnRestSlots');
+  if (btnRest) {
+    btnRest.onclick = (e) => {
+      e.stopPropagation();
+
+      // Reseta todos os slots imediatamente
+      for (let key in state.spellSlots) {
+        state.spellSlots[key].status = [];
+      }
+
+      saveStateToServer();
+      renderSpells(); // Atualiza a tela na hora
+    };
+  }
+
+  // 4. Clique nas Bolinhas (Gastar/Recuperar individual)
+  document.querySelectorAll('.slot-pip').forEach(pip => {
+    pip.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const key = pip.dataset.key;
+      const idx = parseInt(pip.dataset.idx);
+
+      if (!state.spellSlots[key]) state.spellSlots[key] = { status: [] };
+      if (!state.spellSlots[key].status) state.spellSlots[key].status = [];
+
+      // Alterna o estado (Gasto <-> Disponível)
+      state.spellSlots[key].status[idx] = !state.spellSlots[key].status[idx];
+
+      saveStateToServer();
+
+      // Atualização visual instantânea (sem re-renderizar tudo)
+      const isNowSpent = state.spellSlots[key].status[idx];
+      if (isNowSpent) {
+        pip.classList.remove('available');
+        pip.classList.add('used');
+      } else {
+        pip.classList.remove('used');
+        pip.classList.add('available');
+      }
+    });
+  });
 }
 /* ---------------- MODAL CONFIGURAR RECURSOS EXTRAS ---------------- */
 function openResourceConfigModal() {
-    const existing = document.querySelector('.config-res-modal');
-    if (existing) existing.remove();
+  const existing = document.querySelector('.config-res-modal');
+  if (existing) existing.remove();
 
-    const overlay = document.createElement('div');
-    overlay.className = 'spell-modal-overlay config-res-modal';
-    overlay.style.zIndex = '13000';
+  const overlay = document.createElement('div');
+  overlay.className = 'spell-modal-overlay config-res-modal';
+  overlay.style.zIndex = '13000';
 
-    // Garante que o array existe
-    if (!state.customResources) state.customResources = [];
+  // Garante que o array existe
+  if (!state.customResources) state.customResources = [];
 
-    const renderList = () => {
-        return state.customResources.map((res, idx) => `
+  const renderList = () => {
+    return state.customResources.map((res, idx) => `
             <div class="custom-res-item">
                 <div style="flex:1;">
                     <strong style="color:#e0e0e0; font-size:13px;">${escapeHtml(res.name)}</strong>
@@ -1745,9 +1745,9 @@ function openResourceConfigModal() {
                 <button class="remove-res-btn" data-idx="${idx}" style="background:#b71c1c; border:none; color:white; border-radius:4px; padding:4px 8px; cursor:pointer; font-size:11px;">Remover</button>
             </div>
         `).join('');
-    };
+  };
 
-    overlay.innerHTML = `
+  overlay.innerHTML = `
         <div class="spell-modal" style="width:360px;">
             <div class="modal-header">
                 <h3>Recursos Extras</h3>
@@ -1771,113 +1771,113 @@ function openResourceConfigModal() {
         </div>
     `;
 
-    document.body.appendChild(overlay);
-    checkScrollLock();
+  document.body.appendChild(overlay);
+  checkScrollLock();
 
-    // Eventos
-    overlay.querySelector('.modal-close').onclick = () => { overlay.remove(); checkScrollLock(); };
+  // Eventos
+  overlay.querySelector('.modal-close').onclick = () => { overlay.remove(); checkScrollLock(); };
 
-    // Adicionar
-    overlay.querySelector('#btn-add-res').onclick = () => {
-        const name = document.getElementById('new-res-name').value.trim();
-        const max = parseInt(document.getElementById('new-res-max').value);
+  // Adicionar
+  overlay.querySelector('#btn-add-res').onclick = () => {
+    const name = document.getElementById('new-res-name').value.trim();
+    const max = parseInt(document.getElementById('new-res-max').value);
 
-        if (name && max > 0) {
-            state.customResources.push({ name, max });
-            saveStateToServer();
-            renderSpells(); // Atualiza a tela de trás
-            
-            // Atualiza a lista do modal
-            document.getElementById('custom-res-list').innerHTML = renderList();
-            document.getElementById('new-res-name').value = '';
-            document.getElementById('new-res-max').value = '';
-            
-            // Re-bind dos botões de remover
-            bindRemoveBtns();
-        }
-    };
+    if (name && max > 0) {
+      state.customResources.push({ name, max });
+      saveStateToServer();
+      renderSpells(); // Atualiza a tela de trás
 
-    function bindRemoveBtns() {
-        overlay.querySelectorAll('.remove-res-btn').forEach(btn => {
-            btn.onclick = (e) => {
-                const idx = parseInt(e.target.dataset.idx);
-                
-                // Remove do state
-                state.customResources.splice(idx, 1);
-                
-                // Limpa também o estado de "usados" (slots) para não ficar lixo na memória
-                // Nota: Isso é um pouco mais complexo pois os índices mudam. 
-                // Para simplificar, vamos limpar a chave específica do custom removido e renomear as outras?
-                // Solução simples: Resetar todos os custom slots no spellSlots object.
-                // Mas isso perderia o progresso dos outros.
-                // Melhor: Recriar o objeto de spellSlots para custom.
-                
-                // Limpeza rápida (reseta customs para evitar bugs de índice)
-                // Se quiser manter o estado, teria que remapear as chaves custom_1 -> custom_0, etc.
-                // Vamos resetar por segurança.
-                Object.keys(state.spellSlots).forEach(k => {
-                    if(k.startsWith('custom_')) delete state.spellSlots[k];
-                });
+      // Atualiza a lista do modal
+      document.getElementById('custom-res-list').innerHTML = renderList();
+      document.getElementById('new-res-name').value = '';
+      document.getElementById('new-res-max').value = '';
 
-                saveStateToServer();
-                renderSpells();
-                document.getElementById('custom-res-list').innerHTML = renderList();
-                bindRemoveBtns();
-            };
-        });
+      // Re-bind dos botões de remover
+      bindRemoveBtns();
     }
+  };
 
-    bindRemoveBtns();
+  function bindRemoveBtns() {
+    overlay.querySelectorAll('.remove-res-btn').forEach(btn => {
+      btn.onclick = (e) => {
+        const idx = parseInt(e.target.dataset.idx);
+
+        // Remove do state
+        state.customResources.splice(idx, 1);
+
+        // Limpa também o estado de "usados" (slots) para não ficar lixo na memória
+        // Nota: Isso é um pouco mais complexo pois os índices mudam. 
+        // Para simplificar, vamos limpar a chave específica do custom removido e renomear as outras?
+        // Solução simples: Resetar todos os custom slots no spellSlots object.
+        // Mas isso perderia o progresso dos outros.
+        // Melhor: Recriar o objeto de spellSlots para custom.
+
+        // Limpeza rápida (reseta customs para evitar bugs de índice)
+        // Se quiser manter o estado, teria que remapear as chaves custom_1 -> custom_0, etc.
+        // Vamos resetar por segurança.
+        Object.keys(state.spellSlots).forEach(k => {
+          if (k.startsWith('custom_')) delete state.spellSlots[k];
+        });
+
+        saveStateToServer();
+        renderSpells();
+        document.getElementById('custom-res-list').innerHTML = renderList();
+        bindRemoveBtns();
+      };
+    });
+  }
+
+  bindRemoveBtns();
 }
 // Função global para botões numéricos (+/-) de recursos altos
 window.changeResource = (key, delta, max) => {
-    if (!state.spellSlots[key]) state.spellSlots[key] = { used: 0 };
-    
-    // Se delta for positivo (botão -), estamos AUMENTANDO o uso (gastando)
-    // Se delta for negativo (botão +), estamos DIMINUINDO o uso (recuperando)
-    // Mas visualmente o botão é "+" para ter mais recursos disponíveis.
-    // Então: Botão "+" -> Diminui Used. Botão "-" -> Aumenta Used.
-    
-    // Correção: O parametro delta vem do onclick.
-    // changeResource('ki', 1, 20) -> Clicou no "-" (Gastou 1) -> used + 1
-    // changeResource('ki', -1, 20) -> Clicou no "+" (Recuperou 1) -> used - 1
-    
-    let newUsed = (state.spellSlots[key].used || 0) + delta;
-    
-    if (max !== 99 && newUsed > max) newUsed = max;
-    if (newUsed < 0) newUsed = 0;
+  if (!state.spellSlots[key]) state.spellSlots[key] = { used: 0 };
 
-    state.spellSlots[key].used = newUsed;
-    saveStateToServer();
-    renderSpells();
+  // Se delta for positivo (botão -), estamos AUMENTANDO o uso (gastando)
+  // Se delta for negativo (botão +), estamos DIMINUINDO o uso (recuperando)
+  // Mas visualmente o botão é "+" para ter mais recursos disponíveis.
+  // Então: Botão "+" -> Diminui Used. Botão "-" -> Aumenta Used.
+
+  // Correção: O parametro delta vem do onclick.
+  // changeResource('ki', 1, 20) -> Clicou no "-" (Gastou 1) -> used + 1
+  // changeResource('ki', -1, 20) -> Clicou no "+" (Recuperou 1) -> used - 1
+
+  let newUsed = (state.spellSlots[key].used || 0) + delta;
+
+  if (max !== 99 && newUsed > max) newUsed = max;
+  if (newUsed < 0) newUsed = 0;
+
+  state.spellSlots[key].used = newUsed;
+  saveStateToServer();
+  renderSpells();
 };
 
 // --- MODAL DE CONFIGURAÇÃO DE SLOTS ---
 function openSlotConfigModal() {
-    const existing = document.querySelector('.slots-modal-overlay');
-    if (existing) existing.remove();
+  const existing = document.querySelector('.slots-modal-overlay');
+  if (existing) existing.remove();
 
-    const overlay = document.createElement('div');
-    overlay.className = 'spell-modal-overlay slots-modal-overlay';
-    overlay.style.zIndex = '13000'; // Acima de tudo
+  const overlay = document.createElement('div');
+  overlay.className = 'spell-modal-overlay slots-modal-overlay';
+  overlay.style.zIndex = '13000'; // Acima de tudo
 
-    // Gera inputs de 1 a 9
-    let inputsHtml = '';
-    for(let i=1; i<=9; i++) {
-        const val = state.spellSlots[i].max;
-        inputsHtml += `
+  // Gera inputs de 1 a 9
+  let inputsHtml = '';
+  for (let i = 1; i <= 9; i++) {
+    const val = state.spellSlots[i].max;
+    inputsHtml += `
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; background:#111; padding:6px 10px; border-radius:4px;">
                 <span style="color:#ddd; font-weight:bold;">${i}º Círculo</span>
                 <input type="number" min="0" max="10" class="slot-cfg-input" data-level="${i}" value="${val}" style="width:50px; text-align:center;"/>
             </div>
         `;
-    }
+  }
 
-    // Pact Magic
-    const pactVal = state.spellSlots['pact'].max;
-    const pactLvl = state.spellSlots['pact'].level;
-    
-    const pactHtml = `
+  // Pact Magic
+  const pactVal = state.spellSlots['pact'].max;
+  const pactLvl = state.spellSlots['pact'].level;
+
+  const pactHtml = `
         <div style="margin-top:15px; border-top:1px solid #333; padding-top:10px;">
             <div style="color:#e0aaff; font-weight:800; margin-bottom:8px;">Magia de Pacto (Bruxo)</div>
             <div style="display:flex; gap:10px;">
@@ -1893,7 +1893,7 @@ function openSlotConfigModal() {
         </div>
     `;
 
-    overlay.innerHTML = `
+  overlay.innerHTML = `
         <div class="spell-modal" style="width:340px;">
             <div class="modal-header">
                 <h3>Configurar Espaços</h3>
@@ -1912,105 +1912,105 @@ function openSlotConfigModal() {
         </div>
     `;
 
-    document.body.appendChild(overlay);
+  document.body.appendChild(overlay);
+  checkScrollLock();
+
+  overlay.querySelector('.modal-close').onclick = () => { overlay.remove(); checkScrollLock(); };
+
+  overlay.querySelector('.btn-save-slots').onclick = () => {
+    // Salva 1-9
+    overlay.querySelectorAll('.slot-cfg-input').forEach(inp => {
+      const lvl = inp.dataset.level;
+      state.spellSlots[lvl].max = parseInt(inp.value) || 0;
+      // Se reduziu max abaixo do usado, ajusta usado
+      if (state.spellSlots[lvl].used > state.spellSlots[lvl].max) {
+        state.spellSlots[lvl].used = state.spellSlots[lvl].max;
+      }
+    });
+
+    // Salva Pacto
+    const pMax = parseInt(document.getElementById('pact-max').value) || 0;
+    const pLvl = parseInt(document.getElementById('pact-lvl').value) || 1;
+    state.spellSlots['pact'].max = pMax;
+    state.spellSlots['pact'].level = pLvl;
+    if (state.spellSlots['pact'].used > pMax) state.spellSlots['pact'].used = pMax;
+
+    saveStateToServer();
+    renderSpells();
+    overlay.remove();
     checkScrollLock();
-
-    overlay.querySelector('.modal-close').onclick = () => { overlay.remove(); checkScrollLock(); };
-    
-    overlay.querySelector('.btn-save-slots').onclick = () => {
-        // Salva 1-9
-        overlay.querySelectorAll('.slot-cfg-input').forEach(inp => {
-            const lvl = inp.dataset.level;
-            state.spellSlots[lvl].max = parseInt(inp.value) || 0;
-            // Se reduziu max abaixo do usado, ajusta usado
-            if(state.spellSlots[lvl].used > state.spellSlots[lvl].max) {
-                state.spellSlots[lvl].used = state.spellSlots[lvl].max;
-            }
-        });
-
-        // Salva Pacto
-        const pMax = parseInt(document.getElementById('pact-max').value) || 0;
-        const pLvl = parseInt(document.getElementById('pact-lvl').value) || 1;
-        state.spellSlots['pact'].max = pMax;
-        state.spellSlots['pact'].level = pLvl;
-        if(state.spellSlots['pact'].used > pMax) state.spellSlots['pact'].used = pMax;
-
-        saveStateToServer();
-        renderSpells();
-        overlay.remove();
-        checkScrollLock();
-    };
+  };
 }
 
 // --- FUNÇÃO AUXILIAR PARA RELIGAR OS EVENTOS DE MAGIAS (SEPARADA PARA ORGANIZAÇÃO) ---
 function bindSpellEvents() {
-    // 1. Re-conectar botões do topo
-    const botAdd = document.getElementById('botAddSpell');
-    const btnDT = document.getElementById('btnOpenDTConfig');
+  // 1. Re-conectar botões do topo
+  const botAdd = document.getElementById('botAddSpell');
+  const btnDT = document.getElementById('btnOpenDTConfig');
 
-    if (botAdd) botAdd.addEventListener('click', () => openSpellCatalogOverlay());
-    if (btnDT) btnDT.addEventListener('click', openDTConfigModal);
+  if (botAdd) botAdd.addEventListener('click', () => openSpellCatalogOverlay());
+  if (btnDT) btnDT.addEventListener('click', openDTConfigModal);
 
-    // 2. Filtro de busca
-    const filtro = document.getElementById('filterMagias');
-    if (filtro) filtro.addEventListener('input', (e) => {
-        const q = e.target.value.toLowerCase();
-        document.querySelectorAll('.spell-card').forEach(card => {
-            const title = card.querySelector('.spell-title').textContent.toLowerCase();
-            card.style.display = title.includes(q) ? '' : 'none';
-        });
-    });
-
-    // 3. Listeners dos Cards
+  // 2. Filtro de busca
+  const filtro = document.getElementById('filterMagias');
+  if (filtro) filtro.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase();
     document.querySelectorAll('.spell-card').forEach(card => {
-        const id = Number(card.getAttribute('data-id'));
-        const header = card.querySelector('.card-header');
+      const title = card.querySelector('.spell-title').textContent.toLowerCase();
+      card.style.display = title.includes(q) ? '' : 'none';
+    });
+  });
 
-        // Expandir
-        header.addEventListener('click', (ev) => {
-            if (ev.target.closest('.spell-right') || ev.target.closest('.check-ativar')) return;
-            const s = state.spells.find(x => x.id === id);
-            if (s) {
-                s.expanded = !s.expanded;
-                renderSpells();
-                saveStateToServer();
-            }
-        });
+  // 3. Listeners dos Cards
+  document.querySelectorAll('.spell-card').forEach(card => {
+    const id = Number(card.getAttribute('data-id'));
+    const header = card.querySelector('.card-header');
 
-        // Preparar
-        const ch = card.querySelector('.spell-activate');
-        if (ch) {
-            ch.addEventListener('change', (ev) => {
-                const s = state.spells.find(x => x.id === id);
-                if (s) {
-                    s.active = ev.target.checked;
-                    saveStateToServer();
-                }
-            });
-            ch.addEventListener('click', ev => ev.stopPropagation());
+    // Expandir
+    header.addEventListener('click', (ev) => {
+      if (ev.target.closest('.spell-right') || ev.target.closest('.check-ativar')) return;
+      const s = state.spells.find(x => x.id === id);
+      if (s) {
+        s.expanded = !s.expanded;
+        renderSpells();
+        saveStateToServer();
+      }
+    });
+
+    // Preparar
+    const ch = card.querySelector('.spell-activate');
+    if (ch) {
+      ch.addEventListener('change', (ev) => {
+        const s = state.spells.find(x => x.id === id);
+        if (s) {
+          s.active = ev.target.checked;
+          saveStateToServer();
         }
-    });
+      });
+      ch.addEventListener('click', ev => ev.stopPropagation());
+    }
+  });
 
-    // Remover
-    document.querySelectorAll('.remover-spell').forEach(a => {
-        a.addEventListener('click', (ev) => {
-            ev.preventDefault();
-            const id = Number(a.getAttribute('data-id'));
-            state.spells = state.spells.filter(s => s.id !== id);
-            renderSpells();
-            saveStateToServer();
-        });
+  // Remover
+  document.querySelectorAll('.remover-spell').forEach(a => {
+    a.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      const id = Number(a.getAttribute('data-id'));
+      state.spells = state.spells.filter(s => s.id !== id);
+      renderSpells();
+      saveStateToServer();
     });
+  });
 
-    // Editar
-    document.querySelectorAll('.editar-spell').forEach(a => {
-        a.addEventListener('click', (ev) => {
-            ev.preventDefault();
-            const id = Number(a.getAttribute('data-id'));
-            const s = state.spells.find(x => x.id === id);
-            if (s) openSpellModal(s);
-        });
+  // Editar
+  document.querySelectorAll('.editar-spell').forEach(a => {
+    a.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      const id = Number(a.getAttribute('data-id'));
+      const s = state.spells.find(x => x.id === id);
+      if (s) openSpellModal(s);
     });
+  });
 }
 
 function openDTConfigModal() {
@@ -2200,7 +2200,7 @@ function openSpellModal(existingSpell = null) {
   if (saveBtn) {
     saveBtn.addEventListener('click', (ev) => {
       ev.preventDefault();
-      
+
       // --- LER DO EDITOR ---
       const desc = document.getElementById('spell-editor-content').innerHTML;
 
@@ -2300,7 +2300,7 @@ function openSpellCatalogOverlay(parentModal = null) {
     btn.onclick = () => {
       overlay.querySelectorAll('.circle-filter').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      
+
       // Re-aplica o filtro de texto + círculo
       triggerSearch();
     };
@@ -2313,7 +2313,7 @@ function openSpellCatalogOverlay(parentModal = null) {
   function triggerSearch() {
     const q = inputSearch.value.toLowerCase();
     const searchTerms = q.split(',').map(t => t.trim()).filter(t => t);
-    
+
     const activeCircleBtn = overlay.querySelector('.circle-filter.active');
     const circleFilter = activeCircleBtn ? activeCircleBtn.dataset.filter : 'all';
 
@@ -2329,29 +2329,29 @@ function openSpellCatalogOverlay(parentModal = null) {
         // O ideal seria ter o objeto original, mas vamos pegar do DOM para simplificar a referência
         // ou buscar no spellCatalog pelo ID se precisar de mais precisão.
         // Vamos usar o spellCatalog global para busca precisa.
-        
+
         const id = card.dataset.id;
         const spell = spellCatalog.find(s => s.id === id);
-        
-        if (spell) {
-            const fullText = [
-                spell.name,
-                spell.school,
-                spell.spellClass,
-                spell.levelNumber.toString(),
-                spell.damage,
-                spell.description,
-                spell.material,
-                // Componentes
-                (spell.components?.V ? 'verbal' : ''),
-                (spell.components?.S ? 'somatico' : ''),
-                (spell.components?.M ? 'material' : '')
-            ].filter(Boolean).join(' ').toLowerCase();
 
-            passText = searchTerms.every(term => fullText.includes(term));
+        if (spell) {
+          const fullText = [
+            spell.name,
+            spell.school,
+            spell.spellClass,
+            spell.levelNumber.toString(),
+            spell.damage,
+            spell.description,
+            spell.material,
+            // Componentes
+            (spell.components?.V ? 'verbal' : ''),
+            (spell.components?.S ? 'somatico' : ''),
+            (spell.components?.M ? 'material' : '')
+          ].filter(Boolean).join(' ').toLowerCase();
+
+          passText = searchTerms.every(term => fullText.includes(term));
         } else {
-            // Fallback se não achar no catalogo (raro)
-            passText = card.textContent.toLowerCase().includes(searchTerms[0]);
+          // Fallback se não achar no catalogo (raro)
+          passText = card.textContent.toLowerCase().includes(searchTerms[0]);
         }
       }
 
@@ -2362,7 +2362,7 @@ function openSpellCatalogOverlay(parentModal = null) {
   // BOTÃO ADICIONAR (+)
   overlay.querySelectorAll('.catalog-add-btn').forEach(btn => {
     btn.onclick = (ev) => {
-      ev.stopPropagation(); 
+      ev.stopPropagation();
       const id = btn.dataset.id;
       const c = spellCatalog.find(x => x.id === id);
       if (!c) return;
@@ -2462,27 +2462,27 @@ function formatCatalogSpellCard(c) {
 
 /* ---------------- PREPARADAS (DIREITA) - CORRIGIDA (SEM SCROLL JUMP) ---------------- */
 function renderPreparedSpells() {
-    const habilidadesPreparadas = state.abilities.filter(h => h.active);
-    const magiasPreparadas = state.spells.filter(s => s.active);
+  const habilidadesPreparadas = state.abilities.filter(h => h.active);
+  const magiasPreparadas = state.spells.filter(s => s.active);
 
-    if (!habilidadesPreparadas.length && !magiasPreparadas.length) {
-        conteudoEl.innerHTML = `<div class="empty-tip">Nenhuma habilidade ou magia preparada/ativa no momento.</div>`;
-        return;
-    }
+  if (!habilidadesPreparadas.length && !magiasPreparadas.length) {
+    conteudoEl.innerHTML = `<div class="empty-tip">Nenhuma habilidade ou magia preparada/ativa no momento.</div>`;
+    return;
+  }
 
-    // Estados iniciais
-    const isMagiasMin = !!state.minimizedPreparedSpells;
-    const isHabsMin = !!state.minimizedPreparedAbilities;
+  // Estados iniciais
+  const isMagiasMin = !!state.minimizedPreparedSpells;
+  const isHabsMin = !!state.minimizedPreparedAbilities;
 
-    const arrowMagias = isMagiasMin ? '▸' : '▾';
-    const arrowHabs = isHabsMin ? '▸' : '▾';
-    const styleMagias = isMagiasMin ? 'display:none;' : '';
-    const styleHabs = isHabsMin ? 'display:none;' : '';
+  const arrowMagias = isMagiasMin ? '▸' : '▾';
+  const arrowHabs = isHabsMin ? '▸' : '▾';
+  const styleMagias = isMagiasMin ? 'display:none;' : '';
+  const styleHabs = isHabsMin ? 'display:none;' : '';
 
-    // HTML Magias
-    let magiasHTML = '';
-    if (magiasPreparadas.length > 0) {
-        magiasHTML = `
+  // HTML Magias
+  let magiasHTML = '';
+  if (magiasPreparadas.length > 0) {
+    magiasHTML = `
             <h4 id="toggle-magias" class="toggle-section-header" style="margin: 10px 0 6px 4px; color: #ddd; text-transform: uppercase; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px; cursor:pointer;">
                 <span style="font-size:14px; color:#9c27b0; width:12px;">${arrowMagias}</span> Magias Preparadas
             </h4>
@@ -2490,12 +2490,12 @@ function renderPreparedSpells() {
                 ${magiasPreparadas.map(formatMySpellCard).join('')}
             </div>
         `;
-    }
+  }
 
-    // HTML Habilidades
-    let habilidadesHTML = '';
-    if (habilidadesPreparadas.length > 0) {
-        habilidadesHTML = `
+  // HTML Habilidades
+  let habilidadesHTML = '';
+  if (habilidadesPreparadas.length > 0) {
+    habilidadesHTML = `
             <h4 id="toggle-habs" class="toggle-section-header" style="margin: 20px 0 6px 4px; color: #b39cff; text-transform: uppercase; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px; cursor:pointer;">
                 <span style="font-size:14px; color:#9c27b0; width:12px;">${arrowHabs}</span> Habilidades Ativas
             </h4>
@@ -2521,9 +2521,9 @@ function renderPreparedSpells() {
                 `).join('')}
             </div>
         `;
-    }
+  }
 
-    conteudoEl.innerHTML = `
+  conteudoEl.innerHTML = `
         <div class="controls-row">
             <input id="filterPrepared" placeholder="Filtrar preparados..." />
         </div>
@@ -2533,124 +2533,124 @@ function renderPreparedSpells() {
         </div>
     `;
 
-    // --- EVENT LISTENERS DE MINIMIZAR (DOM DIRETO) ---
-    const btnToggleMagias = document.getElementById('toggle-magias');
-    if (btnToggleMagias) {
-        btnToggleMagias.addEventListener('click', () => {
-            state.minimizedPreparedSpells = !state.minimizedPreparedSpells;
-            saveStateToServer();
-            
-            // DOM direto
-            const content = document.getElementById('content-magias');
-            const arrow = btnToggleMagias.querySelector('span');
-            if(content) {
-                content.style.display = state.minimizedPreparedSpells ? 'none' : 'block';
-                arrow.textContent = state.minimizedPreparedSpells ? '▸' : '▾';
-            }
-        });
-    }
+  // --- EVENT LISTENERS DE MINIMIZAR (DOM DIRETO) ---
+  const btnToggleMagias = document.getElementById('toggle-magias');
+  if (btnToggleMagias) {
+    btnToggleMagias.addEventListener('click', () => {
+      state.minimizedPreparedSpells = !state.minimizedPreparedSpells;
+      saveStateToServer();
 
-    const btnToggleHabs = document.getElementById('toggle-habs');
-    if (btnToggleHabs) {
-        btnToggleHabs.addEventListener('click', () => {
-            state.minimizedPreparedAbilities = !state.minimizedPreparedAbilities;
-            saveStateToServer();
+      // DOM direto
+      const content = document.getElementById('content-magias');
+      const arrow = btnToggleMagias.querySelector('span');
+      if (content) {
+        content.style.display = state.minimizedPreparedSpells ? 'none' : 'block';
+        arrow.textContent = state.minimizedPreparedSpells ? '▸' : '▾';
+      }
+    });
+  }
 
-            // DOM direto
-            const content = document.getElementById('content-habs');
-            const arrow = btnToggleHabs.querySelector('span');
-            if(content) {
-                content.style.display = state.minimizedPreparedAbilities ? 'none' : 'block';
-                arrow.textContent = state.minimizedPreparedAbilities ? '▸' : '▾';
-            }
-        });
-    }
+  const btnToggleHabs = document.getElementById('toggle-habs');
+  if (btnToggleHabs) {
+    btnToggleHabs.addEventListener('click', () => {
+      state.minimizedPreparedAbilities = !state.minimizedPreparedAbilities;
+      saveStateToServer();
 
-    // Filtro
-    const filtro = document.getElementById('filterPrepared');
-    if (filtro) {
-        filtro.addEventListener('input', (e) => {
-            const q = e.target.value.toLowerCase();
-            conteudoEl.querySelectorAll('.hab-card, .spell-card').forEach(card => {
-                const title = card.querySelector('.card-title').textContent.toLowerCase();
-                card.style.display = title.includes(q) ? '' : 'none';
-            });
-        });
-    }
+      // DOM direto
+      const content = document.getElementById('content-habs');
+      const arrow = btnToggleHabs.querySelector('span');
+      if (content) {
+        content.style.display = state.minimizedPreparedAbilities ? 'none' : 'block';
+        arrow.textContent = state.minimizedPreparedAbilities ? '▸' : '▾';
+      }
+    });
+  }
 
-    // --- LISTENERS DE CARDS (Expansão e Checkbox) ---
-    // (Lógica DOM direto para expansão)
-    
-    const toggleCardExpansion = (card, itemId, isSpell) => {
-        const item = isSpell ? state.spells.find(x => x.id === itemId) : state.abilities.find(x => x.id === itemId);
-        if (item) {
-            item.expanded = !item.expanded;
-            saveStateToServer();
+  // Filtro
+  const filtro = document.getElementById('filterPrepared');
+  if (filtro) {
+    filtro.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      conteudoEl.querySelectorAll('.hab-card, .spell-card').forEach(card => {
+        const title = card.querySelector('.card-title').textContent.toLowerCase();
+        card.style.display = title.includes(q) ? '' : 'none';
+      });
+    });
+  }
 
-            const body = card.querySelector('.card-body');
-            const caret = card.querySelector('.caret');
-            // Exemplo genérico que você já usa:
-const toggleCardExpansion = (card, itemId, isSpell) => {
-    // ...
+  // --- LISTENERS DE CARDS (Expansão e Checkbox) ---
+  // (Lógica DOM direto para expansão)
+
+  const toggleCardExpansion = (card, itemId, isSpell) => {
+    const item = isSpell ? state.spells.find(x => x.id === itemId) : state.abilities.find(x => x.id === itemId);
     if (item) {
-        item.expanded = !item.expanded; // Inverte estado no JSON
+      item.expanded = !item.expanded;
+      saveStateToServer();
+
+      const body = card.querySelector('.card-body');
+      const caret = card.querySelector('.caret');
+      // Exemplo genérico que você já usa:
+      const toggleCardExpansion = (card, itemId, isSpell) => {
         // ...
-        if (body.style.display === 'none') {
-             body.style.display = 'block';
-             card.classList.add('expanded'); // Adiciona classe visual
-             caret.textContent = '▾';
-        } else {
-             body.style.display = 'none';
-             card.classList.remove('expanded'); // Remove classe visual
-             caret.textContent = '▸';
+        if (item) {
+          item.expanded = !item.expanded; // Inverte estado no JSON
+          // ...
+          if (body.style.display === 'none') {
+            body.style.display = 'block';
+            card.classList.add('expanded'); // Adiciona classe visual
+            caret.textContent = '▾';
+          } else {
+            body.style.display = 'none';
+            card.classList.remove('expanded'); // Remove classe visual
+            caret.textContent = '▸';
+          }
         }
+      };
     }
-};
-        }
+    saveStateToServer();
+  };
+
+  conteudoEl.querySelectorAll('.hab-card').forEach(card => {
+    const id = Number(card.getAttribute('data-id'));
+    card.querySelector('.card-header .left').addEventListener('click', () => toggleCardExpansion(card, id, false));
+
+    card.querySelector('.hab-activate').addEventListener('change', (ev) => {
+      const hab = state.abilities.find(h => h.id === id);
+      if (hab) {
+        hab.active = ev.target.checked;
         saveStateToServer();
-    };
+        window.dispatchEvent(new CustomEvent('sheet-updated'));
+        // Aqui re-renderizamos pois removemos o item da lista
+        const scrollPos = window.scrollY;
+        renderPreparedSpells();
+        window.scrollTo(0, scrollPos);
+      }
+    });
+  });
 
-    conteudoEl.querySelectorAll('.hab-card').forEach(card => {
-        const id = Number(card.getAttribute('data-id'));
-        card.querySelector('.card-header .left').addEventListener('click', () => toggleCardExpansion(card, id, false));
-
-        card.querySelector('.hab-activate').addEventListener('change', (ev) => {
-            const hab = state.abilities.find(h => h.id === id);
-            if (hab) {
-                hab.active = ev.target.checked;
-                saveStateToServer();
-                window.dispatchEvent(new CustomEvent('sheet-updated'));
-                // Aqui re-renderizamos pois removemos o item da lista
-                const scrollPos = window.scrollY;
-                renderPreparedSpells();
-                window.scrollTo(0, scrollPos);
-            }
-        });
+  conteudoEl.querySelectorAll('.spell-card').forEach(card => {
+    const id = Number(card.getAttribute('data-id'));
+    card.querySelector('.card-header').addEventListener('click', (ev) => {
+      if (ev.target.closest('.spell-right') || ev.target.closest('.check-ativar')) return;
+      toggleCardExpansion(card, id, true);
     });
 
-    conteudoEl.querySelectorAll('.spell-card').forEach(card => {
-        const id = Number(card.getAttribute('data-id'));
-        card.querySelector('.card-header').addEventListener('click', (ev) => {
-             if (ev.target.closest('.spell-right') || ev.target.closest('.check-ativar')) return;
-             toggleCardExpansion(card, id, true);
-        });
-
-        const ch = card.querySelector('.spell-activate');
-        if(ch) {
-            ch.addEventListener('change', (ev) => {
-                const s = state.spells.find(x => x.id === id);
-                if (s) {
-                    s.active = ev.target.checked;
-                    saveStateToServer();
-                    window.dispatchEvent(new CustomEvent('sheet-updated'));
-                    // Re-renderiza para remover
-                    const scrollPos = window.scrollY;
-                    renderPreparedSpells();
-                    window.scrollTo(0, scrollPos);
-                }
-            });
+    const ch = card.querySelector('.spell-activate');
+    if (ch) {
+      ch.addEventListener('change', (ev) => {
+        const s = state.spells.find(x => x.id === id);
+        if (s) {
+          s.active = ev.target.checked;
+          saveStateToServer();
+          window.dispatchEvent(new CustomEvent('sheet-updated'));
+          // Re-renderiza para remover
+          const scrollPos = window.scrollY;
+          renderPreparedSpells();
+          window.scrollTo(0, scrollPos);
         }
-    });
+      });
+    }
+  });
 }
 
 
@@ -2703,7 +2703,7 @@ window.openItemCatalogOverlay = () => {
   function renderSubs() {
     const row = overlay.querySelector('#item-subs-row');
     const subs = ITEM_SUBCATEGORIES[activeCat] || [];
-    if (subs.length === 0) { row.style.display = 'none'; } 
+    if (subs.length === 0) { row.style.display = 'none'; }
     else {
       row.style.display = 'flex';
       row.innerHTML = subs.map(s => `<button class="ability-sub-btn ${s === activeSub ? 'active' : ''}" data-sub="${s}">${s}</button>`).join('');
@@ -2716,7 +2716,7 @@ window.openItemCatalogOverlay = () => {
   function renderList() {
     const container = overlay.querySelector('.item-list-large');
     const searchInput = overlay.querySelector('#catalogItemSearch').value.toLowerCase();
-    
+
     // Divide os termos por vírgula e remove espaços extras
     const searchTerms = searchInput.split(',').map(t => t.trim()).filter(t => t);
 
@@ -2912,7 +2912,7 @@ function openAbilityCatalogOverlay() {
   let activeClass = CLASSES_AVAILABLE.includes('Talentos') ? 'Talentos' : CLASSES_AVAILABLE[0];
   let activeClassHabilitySelected = true;
   let activeSubclass = null;
-  
+
   // Controle de Expansão (false = Recluso/Scroll, true = Expandido)
   let isSubclassesExpanded = false;
 
@@ -2969,12 +2969,12 @@ function openAbilityCatalogOverlay() {
       overlay.querySelectorAll('.ability-class-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       activeClass = btn.dataset.class;
-      
+
       // Se for Antecedentes, não selecionamos a "Habilidade Geral" por padrão visualmente,
       // mas mantemos a lógica interna funcionando.
       activeClassHabilitySelected = true;
       activeSubclass = null;
-      
+
       renderClassHabilitiesRow();
       renderSubclassesRow();
       renderCatalogList();
@@ -2991,14 +2991,14 @@ function openAbilityCatalogOverlay() {
 
     row.style.display = 'flex';
     row.style.alignItems = 'center';
-    
+
     let html = '';
-    
+
     // --- ALTERAÇÃO AQUI: Remove o botão se for Antecedentes ---
     if (activeClass !== 'Antecedentes') {
-        html += `<button class="catalog-class-hability-pill ${activeClassHabilitySelected ? 'active' : ''}">Habilidades de ${activeClass}</button>`;
+      html += `<button class="catalog-class-hability-pill ${activeClassHabilitySelected ? 'active' : ''}">Habilidades de ${activeClass}</button>`;
     }
-    
+
     if (hasSubclasses) {
       // Ícone ⊞ para expandir (grid) e ⇄ para recluso (scroll)
       html += `<button id="toggle-sub-expansion" class="toggle-expansion-btn" title="Alternar visualização">
@@ -3011,13 +3011,13 @@ function openAbilityCatalogOverlay() {
     // Só adiciona o evento de clique se o botão existir (não for Antecedentes)
     const pillBtn = row.querySelector('.catalog-class-hability-pill');
     if (pillBtn) {
-        pillBtn.onclick = function () {
-            activeClassHabilitySelected = true;
-            activeSubclass = null;
-            renderClassHabilitiesRow();
-            overlay.querySelectorAll('.ability-sub-btn').forEach(b => b.classList.remove('active'));
-            renderCatalogList();
-        };
+      pillBtn.onclick = function () {
+        activeClassHabilitySelected = true;
+        activeSubclass = null;
+        renderClassHabilitiesRow();
+        overlay.querySelectorAll('.ability-sub-btn').forEach(b => b.classList.remove('active'));
+        renderCatalogList();
+      };
     }
 
     if (hasSubclasses) {
@@ -3036,7 +3036,7 @@ function openAbilityCatalogOverlay() {
     if (!subs.length) { row.style.display = 'none'; return; }
 
     row.style.display = 'flex';
-    
+
     // Ajuste dinâmico do estilo baseado no botão de toggle
     if (isSubclassesExpanded) {
       row.style.flexWrap = 'wrap';
@@ -3060,7 +3060,7 @@ function openAbilityCatalogOverlay() {
     });
   }
 
-/* SUBSTITUA A FUNÇÃO renderCatalogList POR ESTA */
+  /* SUBSTITUA A FUNÇÃO renderCatalogList POR ESTA */
   function renderCatalogList() {
     const container = overlay.querySelector('.abilities-list-large');
     const searchInput = overlay.querySelector('#catalogAbilitySearch').value.toLowerCase();
@@ -3148,7 +3148,7 @@ function openAbilityCatalogOverlay() {
 
 // Função auxiliar para pegar modificadores do DOM (segurança contra valores nulos)
 function getAttributeMod(attrKey) {
-  const selector = DOM_SELECTORS[attrKey]; 
+  const selector = DOM_SELECTORS[attrKey];
   const hexEl = document.querySelector(selector);
   if (hexEl) {
     let rawVal = hexEl.dataset.attrValue || hexEl.textContent;
@@ -3157,7 +3157,7 @@ function getAttributeMod(attrKey) {
       return Math.floor((score - 10) / 2);
     }
   }
-  return 0; 
+  return 0;
 }
 
 function calculateArmorClass() {
@@ -3167,13 +3167,13 @@ function calculateArmorClass() {
   const modSab = getAttributeMod('sab');
 
   // 2. Verifica Inventário (Itens equipados)
-  const equippedArmor = state.inventory.find(i => 
-    i.equip && (i.type === 'Proteção' || i.type === 'protecao') && 
+  const equippedArmor = state.inventory.find(i =>
+    i.equip && (i.type === 'Proteção' || i.type === 'protecao') &&
     (i.tipoItem || '').toLowerCase() === 'armadura'
   );
 
-  const equippedShield = state.inventory.find(i => 
-    i.equip && (i.type === 'Proteção' || i.type === 'protecao') && 
+  const equippedShield = state.inventory.find(i =>
+    i.equip && (i.type === 'Proteção' || i.type === 'protecao') &&
     (i.tipoItem || '').toLowerCase() === 'escudo'
   );
 
@@ -3188,7 +3188,7 @@ function calculateArmorClass() {
   if (equippedArmor) {
     // CASO 1: TEM ARMADURA EQUIPADA
     // Regra: Armadura anula Defesa sem Armadura de Monge e Bárbaro
-    
+
     let baseArmor = parseInt(equippedArmor.defense) || 10;
     let prof = (equippedArmor.proficiency || '').toLowerCase();
 
@@ -3203,22 +3203,22 @@ function calculateArmorClass() {
 
   } else {
     // CASO 2: SEM ARMADURA (Verifica habilidades)
-    
+
     if (barbDefense) {
       // Bárbaro: 10 + Des + Con (Permite escudo)
       ac = 10 + modDex + modCon;
       // Nota: Bárbaro soma escudo normalmente no final
-    } 
+    }
     else if (monkDefense) {
       // Monge: 10 + Des + Sab
       // Regra: Monge perde o benefício se usar escudo
       if (equippedShield) {
-         // Se tiver escudo, a habilidade "quebra" e vira CA base normal (10 + Des)
-         ac = 10 + modDex; 
+        // Se tiver escudo, a habilidade "quebra" e vira CA base normal (10 + Des)
+        ac = 10 + modDex;
       } else {
-         ac = 10 + modDex + modSab;
+        ac = 10 + modDex + modSab;
       }
-    } 
+    }
     else {
       // Nenhuma habilidade especial: 10 + Des
       ac = 10 + modDex;
@@ -3234,7 +3234,7 @@ function calculateArmorClass() {
   // 5. Verifica itens mágicos ou outros bônus de "Defesa" que não sejam armadura/escudo
   // Ex: Anel de Proteção (+1 na CA) - Itens do tipo "Geral" com defenseBonus
   state.inventory.filter(i => i.equip && i.type === 'Geral' && i.defenseBonus).forEach(item => {
-      ac += (parseInt(item.defenseBonus) || 0);
+    ac += (parseInt(item.defenseBonus) || 0);
   });
 
   return ac;
@@ -3303,8 +3303,8 @@ function openNewAbilityModal(existingAbility = null) {
 
   // Dropdown de Classes (só aparece se "Classe" estiver selecionado)
   const classDropdownStyle = currentCategory === 'Classe' ? 'display:block;' : 'display:none;';
-  const classOptionsHTML = CLASSES_AVAILABLE.map(c => 
-      `<option value="${c}" ${currentClass === c ? 'selected' : ''}>${c}</option>`
+  const classOptionsHTML = CLASSES_AVAILABLE.map(c =>
+    `<option value="${c}" ${currentClass === c ? 'selected' : ''}>${c}</option>`
   ).join('');
 
   modal.innerHTML = `
@@ -3357,35 +3357,35 @@ function openNewAbilityModal(existingAbility = null) {
     `;
 
   document.body.appendChild(modal);
-  checkScrollLock(); 
+  checkScrollLock();
   initRichEditorEvents('hab-editor-content');
-  
+
   // Foca no nome se for novo
   if (!existingAbility) {
-      document.getElementById('hab-name').focus();
+    document.getElementById('hab-name').focus();
   }
 
   // --- LÓGICA DE INTERFACE ---
-  
+
   const radios = modal.querySelectorAll('input[name="hab-type"]');
   const classSelectorDiv = modal.querySelector('#hab-class-selector');
 
   radios.forEach(radio => {
-      radio.addEventListener('change', (e) => {
-          if (e.target.value === 'Classe') {
-              classSelectorDiv.style.display = 'block';
-          } else {
-              classSelectorDiv.style.display = 'none';
-              modal.querySelector('#hab-class-select').value = "";
-              modal.querySelector('#hab-subclass-input').value = "";
-          }
-      });
+    radio.addEventListener('change', (e) => {
+      if (e.target.value === 'Classe') {
+        classSelectorDiv.style.display = 'block';
+      } else {
+        classSelectorDiv.style.display = 'none';
+        modal.querySelector('#hab-class-select').value = "";
+        modal.querySelector('#hab-subclass-input').value = "";
+      }
+    });
   });
 
   // Fechar Modal
   const closeAll = () => {
     modal.remove();
-    checkScrollLock(); 
+    checkScrollLock();
   };
   modal.querySelector('.modal-close').addEventListener('click', closeAll);
   modal.querySelector('.btn-cancel-hab').addEventListener('click', (ev) => { ev.preventDefault(); closeAll(); });
@@ -3395,54 +3395,54 @@ function openNewAbilityModal(existingAbility = null) {
     ev.preventDefault();
     const nomeInput = modal.querySelector('#hab-name');
     const nome = nomeInput.value.trim();
-    
+
     // --- VALIDAÇÃO OBRIGATÓRIA ---
     if (!nome) {
-        alert("O nome da habilidade é obrigatório!");
-        nomeInput.style.borderColor = "#ff5555"; // Destaca erro
-        nomeInput.focus();
-        return; // Para a execução aqui
+      alert("O nome da habilidade é obrigatório!");
+      nomeInput.style.borderColor = "#ff5555"; // Destaca erro
+      nomeInput.focus();
+      return; // Para a execução aqui
     }
 
     const desc = document.getElementById('hab-editor-content').innerHTML;
-    
+
     const selectedCategory = modal.querySelector('input[name="hab-type"]:checked')?.value || 'Geral';
-    
+
     let finalClass = "";
     let finalSubclass = "";
 
     if (selectedCategory === 'Classe') {
-        finalClass = modal.querySelector('#hab-class-select').value;
-        finalSubclass = modal.querySelector('#hab-subclass-input').value.trim();
+      finalClass = modal.querySelector('#hab-class-select').value;
+      finalSubclass = modal.querySelector('#hab-subclass-input').value.trim();
     } else if (selectedCategory === 'Antecedente') {
-        finalClass = 'Antecedente'; 
+      finalClass = 'Antecedente';
     }
 
     if (existingAbility) {
-      state.abilities = state.abilities.map(h => h.id === existingAbility.id ? { 
-          ...h, 
-          title: nome, 
-          description: desc,
-          category: selectedCategory,
-          class: finalClass,
-          subclass: finalSubclass
+      state.abilities = state.abilities.map(h => h.id === existingAbility.id ? {
+        ...h,
+        title: nome,
+        description: desc,
+        category: selectedCategory,
+        class: finalClass,
+        subclass: finalSubclass
       } : h);
     } else {
-      state.abilities.unshift({ 
-          id: uid(), 
-          title: nome, 
-          description: desc, 
-          expanded: true, 
-          active: false,
-          category: selectedCategory,
-          class: finalClass,
-          subclass: finalSubclass
+      state.abilities.unshift({
+        id: uid(),
+        title: nome,
+        description: desc,
+        expanded: true,
+        active: false,
+        category: selectedCategory,
+        class: finalClass,
+        subclass: finalSubclass
       });
     }
 
     closeAll();
     renderAbilities();
-    saveStateToServer(); 
+    saveStateToServer();
 
     window.dispatchEvent(new CustomEvent('sheet-updated'));
   });
@@ -3523,19 +3523,19 @@ function renderDescription() {
 }
 /* --- FUNÇÃO AUXILIAR: RENDERIZA GRUPO DE ITENS (COM TOGGLE) --- */
 function renderItemGroup(titulo, listaItens, chaveUnica) {
-    if (!listaItens || listaItens.length === 0) return '';
+  if (!listaItens || listaItens.length === 0) return '';
 
-    // Inicializa o estado de colapso se não existir
-    if (!state.collapsedSections) state.collapsedSections = {};
-    const isCollapsed = !!state.collapsedSections[chaveUnica];
-    
-    const arrow = isCollapsed ? '▸' : '▾';
-    const displayStyle = isCollapsed ? 'display:none;' : '';
+  // Inicializa o estado de colapso se não existir
+  if (!state.collapsedSections) state.collapsedSections = {};
+  const isCollapsed = !!state.collapsedSections[chaveUnica];
 
-    // Gera o HTML dos cards internos
-    const cardsHtml = listaItens.map(item => formatInventoryItem(item)).join('');
+  const arrow = isCollapsed ? '▸' : '▾';
+  const displayStyle = isCollapsed ? 'display:none;' : '';
 
-    return `
+  // Gera o HTML dos cards internos
+  const cardsHtml = listaItens.map(item => formatInventoryItem(item)).join('');
+
+  return `
         <div class="inv-section-group" style="margin-bottom:12px;">
             <div class="toggle-inv-header" data-key="${chaveUnica}" style="cursor:pointer; display:flex; align-items:center; background:rgba(255,255,255,0.03); padding:8px; border-radius:4px; margin-bottom:5px; border: 1px solid rgba(255,255,255,0.05);">
                 <span style="font-size:14px; color:#9c27b0; width:15px;">${arrow}</span> 
@@ -3573,13 +3573,13 @@ function initAbas() {
 ============================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Inicializa os listeners das abas
-    initAbas();
-    
-    // 2. Força uma renderização inicial se já tivermos dados
-    if (state && state.niveisClasses) {
-        renderActiveTab();
-    }
+  // 1. Inicializa os listeners das abas
+  initAbas();
+
+  // 2. Força uma renderização inicial se já tivermos dados
+  if (state && state.niveisClasses) {
+    renderActiveTab();
+  }
 });
 function escapeHtml(str) {
   if (str === 0) return '0';
@@ -3697,10 +3697,10 @@ function aplicarEnterNosInputs(container) {
 // Função para gerar o HTML do editor
 /* ---------------- FUNÇÃO DO EDITOR DE TEXTO RICO (COM PLACEHOLDER) ---------------- */
 function createRichEditorHTML(content, idContainer) {
-    // Se content for exatamente o texto padrão antigo, limpa para mostrar o placeholder
-    if (content === 'Minha nova habilidade' || content === 'Sem descrição.') content = '';
+  // Se content for exatamente o texto padrão antigo, limpa para mostrar o placeholder
+  if (content === 'Minha nova habilidade' || content === 'Sem descrição.') content = '';
 
-    return `
+  return `
       <div class="rich-editor-wrapper" id="${idContainer}-wrapper">
         <div class="rich-toolbar">
           <button type="button" class="rich-btn" data-cmd="bold" title="Negrito (Roxo)">B</button>
@@ -3716,18 +3716,18 @@ function createRichEditorHTML(content, idContainer) {
 
 // Função para ativar os botões do editor
 function initRichEditorEvents(idContainer) {
-    const wrapper = document.getElementById(idContainer + '-wrapper');
-    if (!wrapper) return;
+  const wrapper = document.getElementById(idContainer + '-wrapper');
+  if (!wrapper) return;
 
-    const btns = wrapper.querySelectorAll('.rich-btn');
-    btns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const cmd = btn.getAttribute('data-cmd');
-            document.execCommand(cmd, false, null);
-            // Mantém o foco na área de edição
-            document.getElementById(idContainer).focus();
-        });
+  const btns = wrapper.querySelectorAll('.rich-btn');
+  btns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const cmd = btn.getAttribute('data-cmd');
+      document.execCommand(cmd, false, null);
+      // Mantém o foco na área de edição
+      document.getElementById(idContainer).focus();
     });
+  });
 }

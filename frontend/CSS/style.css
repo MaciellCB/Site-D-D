@@ -52,7 +52,6 @@ header {
 
 /* =============================================================
    CONTAINER PRINCIPAL
-   (Consolidado da versão "LAYOUT ÚNICO" e "CONTAINER AMPLIADO")
 ============================================================= */
 .container {
   display: flex;
@@ -82,11 +81,10 @@ header {
 ============================================================= */
 
 /* LADO ESQUERDO 
-   Prioridade: Tamanho fixo aumentado para caber a Armadura */
+   (Atualizado com base na regra mais recente do final do arquivo) */
 .lado-esquerdo {
-  flex: 0 0 385px !important;
-  /* Tamanho fixo (não estica nem encolhe) */
-  min-width: 360px;
+  flex: 2 1 420px !important;
+  min-width: 400px;
   background-color: #121212;
   border-radius: 10px;
   padding: 15px;
@@ -115,8 +113,6 @@ header {
   flex: 1.5 1 auto !important;
   /* Cresce mais (1.5) que o centro (1) */
   min-width: 350px;
-  /* Adicionei o visual padrão dos outros blocos para consistência, 
-     já que não estava explícito no último bloco mas é o esperado */
   background-color: #121212;
   border-radius: 10px;
   padding: 15px;
@@ -124,28 +120,22 @@ header {
 }
 
 /* =============================================================
-   RESPONSIVIDADE
+   RESPONSIVIDADE (MEDIA QUERIES)
 ============================================================= */
 
-/* Ajuste para Tablets/Notebooks menores (ex: 1100px para baixo) */
 @media (max-width: 1100px) {
 
   .lado-esquerdo,
   .lado-centro,
   .lado-direito {
-    /* Faz os blocos ocuparem quase metade da tela, forçando quebra de linha 
-       organizada (2 em cima, 1 embaixo ou todos empilhados) */
     flex: 1 1 45% !important;
     max-width: 100%;
-    /* Remove travas de largura em telas pequenas */
   }
 }
 
-/* Ajuste para Celulares (ex: 768px para baixo) */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
-    /* Empilha tudo verticalmente */
     align-items: center;
   }
 

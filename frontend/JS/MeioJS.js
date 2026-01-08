@@ -120,15 +120,15 @@ document.addEventListener("DOMContentLoaded", () => {
     ========================= */
 
     function renderizarEstruturaSanidade() {
-    const containerCentro = document.querySelector('.lado-centro');
-    if (!containerCentro || document.getElementById('sanidade-wrapper')) return;
+        const containerCentro = document.querySelector('.lado-centro');
+        if (!containerCentro || document.getElementById('sanidade-wrapper')) return;
 
-    const wrap = document.createElement('div');
-    wrap.id = 'sanidade-wrapper';
-    wrap.className = 'sanidade-wrapper';
-    
-    // HTML com o Tooltip dentro do label interativo
-    wrap.innerHTML = `
+        const wrap = document.createElement('div');
+        wrap.id = 'sanidade-wrapper';
+        wrap.className = 'sanidade-wrapper';
+
+        // HTML com o Tooltip dentro do label interativo
+        wrap.innerHTML = `
         <img src="img/sanidade.png" id="btn-open-sanidade" class="btn-sanidade-img" alt="Abrir Sanidade" />
         
         <div id="sanidade-panel" class="sanidade-panel" style="display: none;">
@@ -161,178 +161,178 @@ document.addEventListener("DOMContentLoaded", () => {
             <img src="img/sanidade.png" id="btn-close-sanidade" class="btn-sanidade1-img" alt="Fechar" style="margin-top: 10px; width: 300px;" />
         </div>
     `;
-    containerCentro.appendChild(wrap);
+        containerCentro.appendChild(wrap);
 
-    // Inicializa state se não existir
-    if (!state.sanidade) state.sanidade = { estresse: 0, vazio: 0 };
+        // Inicializa state se não existir
+        if (!state.sanidade) state.sanidade = { estresse: 0, vazio: 0 };
 
-    // Eventos de Abrir/Fechar
-    const btnOpen = wrap.querySelector('#btn-open-sanidade');
-    const panel = wrap.querySelector('#sanidade-panel');
-    const btnClose = wrap.querySelector('#btn-close-sanidade');
+        // Eventos de Abrir/Fechar
+        const btnOpen = wrap.querySelector('#btn-open-sanidade');
+        const panel = wrap.querySelector('#sanidade-panel');
+        const btnClose = wrap.querySelector('#btn-close-sanidade');
 
-    btnOpen.onclick = () => { 
-        btnOpen.style.display = 'none'; 
-        panel.style.display = 'flex'; 
-        atualizarSanidadeInterface(); 
-    };
-    btnClose.onclick = () => { 
-        panel.style.display = 'none'; 
-        btnOpen.style.display = 'block'; 
-    };
+        btnOpen.onclick = () => {
+            btnOpen.style.display = 'none';
+            panel.style.display = 'flex';
+            atualizarSanidadeInterface();
+        };
+        btnClose.onclick = () => {
+            panel.style.display = 'none';
+            btnOpen.style.display = 'block';
+        };
 
-    // Eventos de Input (Estresse)
-    const inEstresse = document.getElementById('input-estresse');
-    inEstresse.addEventListener('input', () => {
-        state.sanidade.estresse = parseInt(inEstresse.value) || 0;
-        atualizarSanidadeInterface();
-    });
-    inEstresse.addEventListener('blur', () => saveStateToServer());
-    inEstresse.addEventListener('keydown', (e) => { if(e.key === 'Enter') inEstresse.blur(); });
+        // Eventos de Input (Estresse)
+        const inEstresse = document.getElementById('input-estresse');
+        inEstresse.addEventListener('input', () => {
+            state.sanidade.estresse = parseInt(inEstresse.value) || 0;
+            atualizarSanidadeInterface();
+        });
+        inEstresse.addEventListener('blur', () => saveStateToServer());
+        inEstresse.addEventListener('keydown', (e) => { if (e.key === 'Enter') inEstresse.blur(); });
 
-    // Eventos de Input (Vazio)
-    const inVazio = document.getElementById('input-vazio');
+        // Eventos de Input (Vazio)
+        const inVazio = document.getElementById('input-vazio');
 
-    // Focus: Se estiver "Sincronizado", mostra o número para editar
-    inVazio.addEventListener('focus', () => {
-        if (state.sanidade.vazio >= 144) {
-            inVazio.value = state.sanidade.vazio;
-            inVazio.style.width = "60px";
-            inVazio.select();
-        }
-    });
+        // Focus: Se estiver "Sincronizado", mostra o número para editar
+        inVazio.addEventListener('focus', () => {
+            if (state.sanidade.vazio >= 144) {
+                inVazio.value = state.sanidade.vazio;
+                inVazio.style.width = "60px";
+                inVazio.select();
+            }
+        });
 
-    // Input: Atualiza valor
-    inVazio.addEventListener('input', () => {
-        let val = inVazio.value;
-        if (val.toLowerCase() === "sincronizado") {
-            state.sanidade.vazio = 144;
+        // Input: Atualiza valor
+        inVazio.addEventListener('input', () => {
+            let val = inVazio.value;
+            if (val.toLowerCase() === "sincronizado") {
+                state.sanidade.vazio = 144;
+            } else {
+                state.sanidade.vazio = parseInt(val) || 0;
+            }
+            // Fallback visual se a função auxiliar não estiver disponível no escopo
+            if (typeof atualizarVisualVazio === 'function') atualizarVisualVazio(state.sanidade.vazio);
+            else atualizarSanidadeInterface();
+        });
+
+        inVazio.addEventListener('blur', () => {
+            saveStateToServer();
+            if (typeof atualizarVisualVazio === 'function') atualizarVisualVazio(state.sanidade.vazio);
+            else atualizarSanidadeInterface();
+        });
+
+        inVazio.addEventListener('keydown', (e) => { if (e.key === 'Enter') inVazio.blur(); });
+    }
+
+    function atualizarVisualVazio(valor) {
+        const inVazio = document.getElementById('input-vazio');
+        const rowVazio = document.getElementById('row-vazio');
+        if (!inVazio || !rowVazio) return;
+
+        // Limites
+        const val = Math.max(0, valor);
+
+        // Se chegou no máximo (144) ou passou
+        if (val >= 144) {
+
+            // Só muda o texto para "Sincronizado" se o usuário NÃO estiver digitando agora
+            if (document.activeElement !== inVazio) {
+                inVazio.value = "Sincronizado";
+                inVazio.style.width = "120px"; // Expande para caber texto
+            }
+
+            inVazio.classList.add('input-sincronizado');
+            rowVazio.classList.add('row-infundido');
+
+            // Visual Roxo Sólido/Forte
+            rowVazio.style.background = `radial-gradient(circle, rgba(148, 0, 211, 0.8) 0%, rgba(74, 20, 140, 0.9) 100%)`;
+            rowVazio.style.boxShadow = `0 0 20px rgba(148, 0, 211, 0.8)`;
+            rowVazio.style.border = `1px solid #e040fb`;
+
         } else {
-            state.sanidade.vazio = parseInt(val) || 0;
-        }
-        // Fallback visual se a função auxiliar não estiver disponível no escopo
-        if (typeof atualizarVisualVazio === 'function') atualizarVisualVazio(state.sanidade.vazio);
-        else atualizarSanidadeInterface();
-    });
+            // Abaixo de 144
+            if (document.activeElement !== inVazio) {
+                inVazio.value = val;
+                inVazio.style.width = "60px"; // Volta ao tamanho normal
+            }
 
-    inVazio.addEventListener('blur', () => {
-        saveStateToServer();
-        if (typeof atualizarVisualVazio === 'function') atualizarVisualVazio(state.sanidade.vazio);
-        else atualizarSanidadeInterface();
-    });
-    
-    inVazio.addEventListener('keydown', (e) => { if(e.key === 'Enter') inVazio.blur(); });
-}
+            inVazio.classList.remove('input-sincronizado');
+            rowVazio.classList.remove('row-infundido');
 
-function atualizarVisualVazio(valor) {
-    const inVazio = document.getElementById('input-vazio');
-    const rowVazio = document.getElementById('row-vazio');
-    if (!inVazio || !rowVazio) return;
+            // Gradiente Crescente (Roxo se espalhando do centro)
+            const ratio = Math.min(1, val / 144);
+            const spread = Math.floor(ratio * 80); // Espalha até 80% do box
+            const alpha = ratio * 0.7;
 
-    // Limites
-    const val = Math.max(0, valor);
-    
-    // Se chegou no máximo (144) ou passou
-    if (val >= 144) {
-        
-        // Só muda o texto para "Sincronizado" se o usuário NÃO estiver digitando agora
-        if (document.activeElement !== inVazio) {
-            inVazio.value = "Sincronizado";
-            inVazio.style.width = "120px"; // Expande para caber texto
-        }
-        
-        inVazio.classList.add('input-sincronizado');
-        rowVazio.classList.add('row-infundido');
-        
-        // Visual Roxo Sólido/Forte
-        rowVazio.style.background = `radial-gradient(circle, rgba(148, 0, 211, 0.8) 0%, rgba(74, 20, 140, 0.9) 100%)`;
-        rowVazio.style.boxShadow = `0 0 20px rgba(148, 0, 211, 0.8)`;
-        rowVazio.style.border = `1px solid #e040fb`;
-        
-    } else {
-        // Abaixo de 144
-        if (document.activeElement !== inVazio) {
-            inVazio.value = val;
-            inVazio.style.width = "60px"; // Volta ao tamanho normal
-        }
-        
-        inVazio.classList.remove('input-sincronizado');
-        rowVazio.classList.remove('row-infundido');
-
-        // Gradiente Crescente (Roxo se espalhando do centro)
-        const ratio = Math.min(1, val / 144);
-        const spread = Math.floor(ratio * 80); // Espalha até 80% do box
-        const alpha = ratio * 0.7; 
-        
-        rowVazio.style.background = `radial-gradient(circle at center, rgba(148,0,211, ${alpha}) ${spread}%, transparent ${spread + 30}%)`;
-        rowVazio.style.boxShadow = `0 0 ${spread/3}px rgba(148,0,211, ${alpha * 0.5})`;
-        rowVazio.style.border = '1px solid transparent';
-    }
-}
-
-   function atualizarSanidadeInterface() {
-    if (!state.sanidade) state.sanidade = { estresse: 0, vazio: 0 };
-
-    // --- 1. CÁLCULO MÁXIMO ESTRESSE (LENDO DO STATE) ---
-    // (Sabedoria x 5) + (Proficiência x 10)
-    
-    const sabScore = parseInt(state.atributos?.n3 || 10);
-    
-    // Função auxiliar para proficiência (mesma lógica usada antes)
-    const getProficiencia = () => {
-        if (!state.niveisClasses) return 2;
-        const nivelTotal = Object.values(state.niveisClasses).reduce((a, b) => a + (parseInt(b) || 0), 0) || 1;
-        return Math.floor((nivelTotal - 1) / 4) + 2;
-    };
-    const profVal = getProficiencia();
-
-    const maxEstresse = (sabScore * 5) + (profVal * 10);
-    const atualEstresse = state.sanidade.estresse;
-
-    // Atualiza Input e Footer
-    const inEstresse = document.getElementById('input-estresse');
-    const footerEstresse = document.getElementById('estresse-footer');
-    
-    if (inEstresse && document.activeElement !== inEstresse) inEstresse.value = atualEstresse;
-    if (footerEstresse) footerEstresse.textContent = `${atualEstresse} / ${maxEstresse}`;
-
-    // --- 2. BARRA DE ESTRESSE ---
-    const bar = document.getElementById('estresse-bar');
-    if (bar) {
-        let pct = 0;
-        if (maxEstresse > 0) {
-            // Arredondamento para baixo conforme solicitado
-            pct = Math.floor((atualEstresse / maxEstresse) * 100);
-        }
-        // Garante limite visual 0-100% (mas a lógica de cor usa o valor calculado real)
-        const visualPct = Math.min(100, Math.max(0, pct));
-        
-        bar.style.width = `${visualPct}%`;
-        bar.className = 'sanidade-progress-bar'; // Limpa classes
-
-        // Lógica de Cores exata:
-        // 0-24% : Verde
-        // 25-49%: Amarelo
-        // 50-74%: Laranja
-        // 75-99%: Vermelho
-        // >=100%: Surto (Pisca)
-
-        if (pct >= 100) {
-            bar.classList.add('estresse-surto');
-        } else if (pct >= 75) {
-            bar.classList.add('estresse-vermelho');
-        } else if (pct >= 50) {
-            bar.classList.add('estresse-laranja');
-        } else if (pct >= 25) {
-            bar.classList.add('estresse-amarelo');
-        } else {
-            bar.classList.add('estresse-verde');
+            rowVazio.style.background = `radial-gradient(circle at center, rgba(148,0,211, ${alpha}) ${spread}%, transparent ${spread + 30}%)`;
+            rowVazio.style.boxShadow = `0 0 ${spread / 3}px rgba(148,0,211, ${alpha * 0.5})`;
+            rowVazio.style.border = '1px solid transparent';
         }
     }
 
-    // --- 3. ATUALIZA VAZIO (Chama função visual se existir) ---
-    if (typeof atualizarVisualVazio === 'function') {
-        atualizarVisualVazio(state.sanidade.vazio);
+    function atualizarSanidadeInterface() {
+        if (!state.sanidade) state.sanidade = { estresse: 0, vazio: 0 };
+
+        // --- 1. CÁLCULO MÁXIMO ESTRESSE (LENDO DO STATE) ---
+        // (Sabedoria x 5) + (Proficiência x 10)
+
+        const sabScore = parseInt(state.atributos?.n3 || 10);
+
+        // Função auxiliar para proficiência (mesma lógica usada antes)
+        const getProficiencia = () => {
+            if (!state.niveisClasses) return 2;
+            const nivelTotal = Object.values(state.niveisClasses).reduce((a, b) => a + (parseInt(b) || 0), 0) || 1;
+            return Math.floor((nivelTotal - 1) / 4) + 2;
+        };
+        const profVal = getProficiencia();
+
+        const maxEstresse = (sabScore * 5) + (profVal * 10);
+        const atualEstresse = state.sanidade.estresse;
+
+        // Atualiza Input e Footer
+        const inEstresse = document.getElementById('input-estresse');
+        const footerEstresse = document.getElementById('estresse-footer');
+
+        if (inEstresse && document.activeElement !== inEstresse) inEstresse.value = atualEstresse;
+        if (footerEstresse) footerEstresse.textContent = `${atualEstresse} / ${maxEstresse}`;
+
+        // --- 2. BARRA DE ESTRESSE ---
+        const bar = document.getElementById('estresse-bar');
+        if (bar) {
+            let pct = 0;
+            if (maxEstresse > 0) {
+                // Arredondamento para baixo conforme solicitado
+                pct = Math.floor((atualEstresse / maxEstresse) * 100);
+            }
+            // Garante limite visual 0-100% (mas a lógica de cor usa o valor calculado real)
+            const visualPct = Math.min(100, Math.max(0, pct));
+
+            bar.style.width = `${visualPct}%`;
+            bar.className = 'sanidade-progress-bar'; // Limpa classes
+
+            // Lógica de Cores exata:
+            // 0-24% : Verde
+            // 25-49%: Amarelo
+            // 50-74%: Laranja
+            // 75-99%: Vermelho
+            // >=100%: Surto (Pisca)
+
+            if (pct >= 100) {
+                bar.classList.add('estresse-surto');
+            } else if (pct >= 75) {
+                bar.classList.add('estresse-vermelho');
+            } else if (pct >= 50) {
+                bar.classList.add('estresse-laranja');
+            } else if (pct >= 25) {
+                bar.classList.add('estresse-amarelo');
+            } else {
+                bar.classList.add('estresse-verde');
+            }
+        }
+
+        // --- 3. ATUALIZA VAZIO (Chama função visual se existir) ---
+        if (typeof atualizarVisualVazio === 'function') {
+            atualizarVisualVazio(state.sanidade.vazio);
+        }
     }
-}
 });

@@ -117,7 +117,7 @@
   },
   "sanidade": {
     "estresse": 100,
-    "vazio": 2
+    "vazio": 344
   },
   "spells": [
     {
@@ -296,9 +296,12 @@
   },
   "xp": "2345667",
   "inspiracao": 4,
-  "vidaDadosSalvos": {},
+  "vidaDadosSalvos": {
+    "v1": 8,
+    "v2": 1
+  },
   "marco": 2,
-  "vidaAtual": 0,
+  "vidaAtual": 9,
   "vidaTempAtual": 71,
   "danoNecroAtual": 60,
   "metros": 364.5,
