@@ -1060,6 +1060,8 @@ a.editar-item, a.editar-hab, a.editar-spell {
     border-radius: 8px;
     padding: 10px 12px;
     margin-bottom: 15px;
+    transition: all 0.2s ease;
+    overflow: hidden; 
 }
 
 .slots-container.empty {
@@ -1243,4 +1245,156 @@ a.editar-item, a.editar-hab, a.editar-spell {
     background-color: #00e5ff;
     border-color: #00e5ff;
     box-shadow: 0 0 4px rgba(0, 229, 255, 0.4);
+}
+
+/* ESTILOS DO RADIO GROUP (MODAL HABILIDADE) */
+.radio-group-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.radio-box {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+}
+
+.radio-box input {
+    display: none; /* Esconde a bolinha padrão */
+}
+
+.radio-box .radio-label {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #111;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    color: #bbb;
+    font-weight: 700;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.radio-box input:checked + .radio-label {
+    background: #9c27b0;
+    color: #fff;
+    border-color: #9c27b0;
+    box-shadow: 0 0 10px rgba(156, 39, 176, 0.3);
+}
+
+.radio-box:hover .radio-label {
+    border-color: #7b1fa2;
+    color: #fff;
+}
+
+/* --- PLACEHOLDER PARA O EDITOR DE TEXTO RICO --- */
+.rich-content:empty::before {
+  content: attr(placeholder);
+  color: #555;
+  display: block; /* Garante que o cursor fique no lugar certo */
+  font-style: italic;
+}
+
+
+
+.slots-container.collapsed {
+    padding-bottom: 0;    /* Remove espaço extra embaixo */
+    padding-top: 0;       /* Remove espaço extra em cima */
+    background: transparent; /* Remove o fundo se quiser que fique só a linha */
+    border: none;         /* Remove borda se preferir */
+    border-bottom: 1px solid rgba(156, 39, 176, 0.3); /* Mantém uma linha fina */
+}
+
+/* Esconde o corpo imediatamente quando collapsed */
+.slots-container.collapsed .slots-body-content {
+    display: none !important;
+}
+
+/* Ajuste do Header quando minimizado */
+.slots-container.collapsed .slots-header-actions {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+/* Botão de Configuração (Engrenagem) */
+.btn-config-gear {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+    transition: transform 0.2s;
+    line-height: 1;
+}
+.btn-config-gear:hover {
+    transform: rotate(90deg);
+}
+
+/* Lista de Recursos no Modal de Config */
+.custom-res-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #0f0f0f;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.05);
+    margin-bottom: 6px;
+}
+
+/* Pip de Recurso Customizado (Cor Laranja/Dourado) */
+.slot-pip.custom-pip.available {
+    background-color: #ffb74d;
+    border-color: #ffb74d;
+    box-shadow: 0 0 4px rgba(255, 183, 77, 0.4);
+}
+
+/* =============================================================
+   CARDS MINIMIZÁVEIS (COLLAPSED STATE)
+============================================================= */
+
+/* Quando o card tem a classe .collapsed (ou não tem .expanded, dependendo da sua lógica atual) */
+/* Mas vamos padronizar: .card por padrão é FECHADO, .expanded é ABERTO. */
+
+/* Ajuste fino para cards fechados */
+.card:not(.expanded) {
+    padding-bottom: 4px; /* Mais compacto */
+    border-bottom-color: rgba(255,255,255,0.05); /* Borda mais sutil */
+}
+
+.card:not(.expanded) .card-header {
+    border-bottom: none; /* Remove a linha divisória interna quando fechado */
+    padding-bottom: 4px;
+}
+
+/* Esconde o corpo se não tiver a classe .expanded */
+.card:not(.expanded) .card-body {
+    display: none !important;
+}
+
+/* Rotação da setinha (Caret) */
+.card .caret {
+    transition: transform 0.2s ease;
+    display: inline-block;
+}
+
+/* Se estiver expandido, seta para baixo. Se não, seta para direita (padrão texto) */
+.card.expanded .caret {
+    transform: rotate(0deg); /* ▾ já aponta para baixo, então ok */
+}
+/* Se você usa o caractere ▸ para fechado e ▾ para aberto via JS, a rotação CSS é opcional,
+   mas ajuda na animação se você usar um ícone SVG fixo. 
+   Como seu código troca o texto (textContent), o CSS de display none acima é o principal. */
+
+
+/* Ajuste para listas dentro de seções de Habilidade */
+.hab-section-group .section-content {
+    transition: all 0.2s ease;
+}
+/* Se a seção inteira estiver fechada */
+.hab-section-group .section-content[style*="display:none"] {
+    /* Já é tratado pelo style inline do JS, mas podemos adicionar animação futura aqui */
 }

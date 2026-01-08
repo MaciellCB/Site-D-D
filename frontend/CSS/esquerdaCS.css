@@ -1070,3 +1070,21 @@ input[type=number] {
 .multi-select-options::-webkit-scrollbar { width: 6px; }
 .multi-select-options::-webkit-scrollbar-track { background: #0f0f0f; }
 .multi-select-options::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
+
+
+
+/* Efeito visual para o "10" na fórmula quando usa Armadura Pesada */
+.formula-text {
+    transition: all 0.3s ease;
+    display: inline-block;
+    vertical-align: middle;
+    /* Posição padrão alinhada com o resto */
+    transform: translateY(-30px); 
+}
+
+.formula-text.heavy-armor-mode {
+    
+    font-weight: 900;
+    /* Ajuste fino: sobe um pouco mais e escala */
+    transform: translateY(-30px) scale(1.2); 
+}

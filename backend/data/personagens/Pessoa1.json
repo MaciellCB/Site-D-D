@@ -1,24 +1,24 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Magias",
+  "activeTab": "Habilidades",
   "spellDCConfig": {
-    "selectedAttr": "for",
+    "selectedAttr": "int",
     "extraMod": 0,
     "lastKnownLevel": 0
   },
-  "dtMagias": 19,
+  "dtMagias": 13,
   "inventory": [
     {
-      "id": 1766973012649,
-      "name": "Escudo",
-      "description": "<p>Pode ser de madeira ou metal.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>",
+      "id": 1767845070275,
+      "name": "leve",
+      "description": "",
       "expanded": true,
-      "equip": true,
+      "equip": false,
       "type": "Proteção",
       "isEquipable": true,
-      "proficiency": "",
-      "tipoItem": "Escudo",
+      "proficiency": "Leve",
+      "tipoItem": "Armadura",
       "minStrength": "0",
       "attunement": "Não",
       "minReqAttrs": [
@@ -29,9 +29,28 @@
       "defense": "2"
     },
     {
-      "id": 1766806036855,
-      "name": "Meia-Armadura",
-      "description": "<p>Placas de metal moldadas cobrindo a maior parte do corpo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 750 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 20 kg</li></ul>",
+      "id": 1767845058510,
+      "name": "pesada",
+      "description": "",
+      "expanded": true,
+      "equip": false,
+      "type": "Proteção",
+      "isEquipable": true,
+      "proficiency": "Pesada",
+      "tipoItem": "Armadura",
+      "minStrength": "0",
+      "attunement": "Não",
+      "minReqAttrs": [
+        "Força"
+      ],
+      "disadvantageSkill": [],
+      "advantageSkill": [],
+      "defense": "10,2"
+    },
+    {
+      "id": 1767845044267,
+      "name": "meida",
+      "description": "",
       "expanded": false,
       "equip": false,
       "type": "Proteção",
@@ -45,36 +64,44 @@
       ],
       "disadvantageSkill": [],
       "advantageSkill": [],
-      "defense": "123"
+      "defense": "2"
     },
     {
-      "id": 1766806010141,
-      "name": "Armadura de Batalha",
-      "description": "<p>Armadura pesada robusta.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 16 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 28 kg</li></ul>",
+      "id": 1767843923754,
+      "name": "espad",
+      "description": "",
       "expanded": false,
       "equip": false,
-      "type": "Proteção",
+      "type": "Arma",
       "isEquipable": true,
-      "proficiency": "Pesada",
-      "tipoItem": "Armadura",
-      "minStrength": "0",
+      "proficiency": "Armas Simples",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Uma mao",
+      "crit": "20",
+      "multiplicador": "2",
+      "alcance": "1.5m",
       "attunement": "Não",
-      "minReqAttrs": [
-        "Força"
+      "damage": "22",
+      "damage2Hands": "",
+      "useTwoHands": false,
+      "caracteristicas": [
+        "Alcance"
       ],
-      "disadvantageSkill": [],
-      "advantageSkill": [],
-      "defense": "2"
+      "damageTypes": [
+        "Contundente"
+      ],
+      "moreDmgList": []
     }
   ],
   "abilities": [
     {
-      "id": 1767820786188,
-      "title": "(Alma Profana, 3º nível) Magia do Pacto",
-      "description": "<p>Você ganha conjuração de Bruxo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Recuperação:</strong> Espaços de magia recuperam em descanso curto ou longo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Atributo:</strong> Hemomancia (INT ou SAB).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Foco:</strong> Arma com Rito ativo.</li></ul>",
-      "expanded": false,
-      "class": "Blood Hunter",
-      "subclass": "Ordem da Alma Profana",
+      "id": 1767849138160,
+      "title": "(1º nível) Defesa sem Armadura(Bárbaro)",
+      "description": "<p>Enquanto você não estiver usando nenhuma armadura, sua Classe de Armadura (CA) é:</p><p style='text-align:center; font-weight:bold; color:#fff; background:#222; padding:8px; border-radius:4px;'>10 + Mod. Destreza + Mod. Constituição</p><p>Você pode usar um escudo e ainda obter esse benefício.</p>",
+      "expanded": true,
+      "class": "Bárbaro",
+      "subclass": "",
+      "category": "Classe",
       "active": false
     }
   ],
@@ -89,35 +116,10 @@
     "historia": ""
   },
   "sanidade": {
-    "estresse": 4,
+    "estresse": 45,
     "vazio": 144
   },
   "spells": [
-    {
-      "id": 1766798046234,
-      "name": "Sono",
-      "levelNumber": 1,
-      "damage": "-",
-      "expanded": false,
-      "active": true,
-      "components": {
-        "V": true,
-        "S": true,
-        "M": true
-      },
-      "material": "Areia, pétalas ou grilo",
-      "attrs": {
-        "execucao": "1 ação",
-        "alcance": "36m",
-        "area": "Esfera 6m",
-        "alvo": "Vários",
-        "duracao": "1 min",
-        "resistencia": "-"
-      },
-      "school": "Encantamento",
-      "spellClass": "Blood Hunter",
-      "description": "<p>Role <strong>5d8</strong>. Adormece criaturas na área em ordem ascendente de seus PV atuais.</p><p><strong>Níveis Superiores:</strong> +2d8 por nível de slot.</p>"
-    },
     {
       "id": 1766798008908,
       "name": "Sono",
@@ -140,8 +142,8 @@
         "resistencia": "-"
       },
       "description": "<p>Role <strong>5d8</strong>. Adormece criaturas na área em ordem ascendente de seus PV atuais.</p><p><strong>Níveis Superiores:</strong> +2d8 por nível de slot.</p>",
-      "expanded": false,
-      "active": false
+      "expanded": true,
+      "active": true
     }
   ],
   "abilityCatalog": [],
@@ -279,10 +281,10 @@
   "niveisClasses": {
     "artifice": 0,
     "barbaro": 0,
-    "bardo": 0,
-    "blood hunter": 20,
-    "bruxo": 0,
-    "clerigo": 0,
+    "bardo": 3,
+    "blood hunter": 2,
+    "bruxo": 4,
+    "clerigo": 5,
     "monge": 0,
     "druida": 0,
     "feiticeiro": 0,
@@ -296,7 +298,7 @@
   "inspiracao": 4,
   "vidaDadosSalvos": {},
   "marco": 2,
-  "vidaAtual": 105,
+  "vidaAtual": 0,
   "vidaTempAtual": 71,
   "danoNecroAtual": 60,
   "metros": 364.5,
@@ -306,7 +308,7 @@
   "imunidades": "234",
   "fraquezas": "234",
   "proficiencias": "q3r",
-  "minimizedPreparedSpells": false,
+  "minimizedPreparedSpells": true,
   "minimizedPreparedAbilities": false,
   "fraquezasList": [
     "Ácido",
@@ -370,236 +372,71 @@
       "used": 0,
       "status": [
         false,
-        false,
         false
       ]
     },
     "5": {
       "used": 0,
-      "status": [
-        false,
-        false,
-        false
-      ]
+      "status": []
     },
     "6": {
       "used": 0,
-      "status": [
-        false,
-        false
-      ]
+      "status": []
     },
     "7": {
       "used": 0,
-      "status": [
-        false,
-        false
-      ]
+      "status": []
     },
     "8": {
       "used": 0,
-      "status": [
-        false
-      ]
+      "status": []
     },
     "9": {
       "used": 0,
-      "status": [
-        false
-      ]
+      "status": []
     },
     "pact": {
       "used": 0,
       "status": [
-        false,
-        false,
         false,
         false
       ]
     },
     "ki": {
       "used": 0,
-      "status": [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ]
+      "status": []
     },
     "furia": {
       "used": 0,
-      "status": [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ]
+      "status": []
     },
     "sorcery": {
       "used": 0,
-      "status": [
-        false,
-        false,
-        false,
-        false,
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        true,
-        false,
-        false
-      ]
+      "status": []
     },
     "mutagen": {
       "used": 0,
-      "status": [
-        false,
-        false,
-        false
-      ]
+      "status": []
     },
     "blood_curse": {
       "status": [
-        false,
-        false,
-        false,
         false
       ]
     },
     "infusions": {
-      "status": [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ]
+      "status": []
     }
   },
   "isSlotsCollapsed": false,
   "collapsedSections": {
-    "class-Blood Hunter": false
-  }
+    "class-Blood Hunter": false,
+    "origem": false,
+    "inv-armas": false,
+    "inv-armaduras": false
+  },
+  "antecedente": "Artesão de Guilda",
+  "personagem": "123",
+  "jogador": "321",
+  "raca": "paiu",
+  "customResources": []
 }

@@ -1,22 +1,58 @@
 /* =============================================================
-   HEADER: ANTECEDENTES E EXIBIÇÃO DE CLASSES
+   HEADER: ANTECEDENTES, CLASSES E RAÇA
+   Gerencia a parte superior da ficha e atualizações visuais.
 ============================================================= */
 
-// Função para ajustar altura do textarea automaticamente
+// Função utilitária para auto-resize do textarea
 function autoResize(el) {
     if (!el) return;
-    el.style.height = 'auto'; // Reseta para calcular
-    el.style.height = el.scrollHeight + 'px'; // Ajusta para o conteúdo
+    el.style.height = 'auto'; 
+    el.style.height = el.scrollHeight + 'px';
 }
 
 /* -------------------------------------------------------------
-   1. LÓGICA DE EXIBIÇÃO DE CLASSES NO HEADER (COM PRIORIDADE DE DATA)
+   1. FUNÇÃO PRINCIPAL DE ATUALIZAÇÃO DO HEADER
+   Esta função roda sempre que o evento 'sheet-updated' dispara.
    ------------------------------------------------------------- */
-window.addEventListener('sheet-updated', atualizarTextoClassesHeader);
+function atualizarHeader() {
+    if (typeof state === 'undefined') return;
+
+    // --- 1. ATUALIZA O ANTECEDENTE ---
+    const btnAntecedente = document.getElementById('btn-antecedente');
+    if (btnAntecedente) {
+        // Se existir no state, mostra. Se não, mostra "Escolher..."
+        btnAntecedente.textContent = state.antecedente || "Escolher...";
+    }
+
+    // --- 2. ATUALIZA A RAÇA ---
+    const inputRaca = document.getElementById('input-raca');
+    if (inputRaca) {
+        if (state.raca !== undefined && inputRaca.value !== state.raca) {
+            inputRaca.value = state.raca;
+        }
+        autoResize(inputRaca);
+    }
+
+    // --- 3. ATUALIZA A LISTA DE CLASSES ---
+    atualizarTextoClassesHeader();
+}
+
+// Lógica específica para montar a string "Mago [Evocação], Clérigo"
+/* =============================================================
+   ATUALIZAÇÃO: JS/HeaderJS.js
+   Substitua a função "atualizarTextoClassesHeader" por esta:
+============================================================= */
 
 function atualizarTextoClassesHeader() {
     const el = document.getElementById('input-classesHeader');
-    if (!el || !state.niveisClasses) return;
+    if (!el) return;
+    
+    // Se não houver classes salvas, limpa o campo
+    if (!state.niveisClasses || Object.keys(state.niveisClasses).length === 0) {
+        el.value = "";
+        autoResize(el);
+        return;
+    }
 
     const mapNomes = {
         'artifice': 'Artífice', 'barbaro': 'Bárbaro', 'bardo': 'Bardo',
@@ -28,59 +64,56 @@ function atualizarTextoClassesHeader() {
 
     let partes = [];
 
-    // Itera sobre os níveis salvos
+    // Itera sobre as chaves do objeto niveisClasses
     Object.keys(state.niveisClasses).forEach(key => {
-        const nivel = parseInt(state.niveisClasses[key]) || 0;
+        const nivel = parseInt(state.niveisClasses[key]); // Sem || 0 aqui para checar NaN
         
-        if (nivel > 0) {
+        // Só adiciona se o nível for realmente maior que 0
+        if (!isNaN(nivel) && nivel > 0) {
             let nomeDisplay = mapNomes[key] || key.charAt(0).toUpperCase() + key.slice(1);
 
-            // Lógica de Subclasse: Pega a mais antiga
+            // Lógica de Subclasse (busca nas habilidades)
             if (state.abilities && state.abilities.length > 0) {
+                const norm = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
                 
-                // 1. Filtra todas as habilidades que pertencem a essa classe E têm subclasse
-                const habilidadesDessaClasse = state.abilities.filter(a => 
-                    a.class === nomeDisplay && 
+                // Procura uma habilidade que tenha essa classe e uma subclasse definida
+                const habilidadeSubclasse = state.abilities.find(a => 
                     a.subclass && 
-                    a.subclass !== "" &&
-                    a.subclass !== "Infusão" // Ignora categorias que não são subclasses reais
+                    a.subclass !== "" && 
+                    a.subclass !== "Infusão" &&
+                    norm(a.class) === norm(nomeDisplay)
                 );
 
-                // 2. Ordena por ID Crescente (do menor para o maior = mais antigo para mais novo)
-                // Isso garante que a primeira subclasse adicionada seja a "dona" do slot
-                habilidadesDessaClasse.sort((a, b) => a.id - b.id);
-
-                // 3. Pega a subclasse da habilidade mais antiga encontrada
-                if (habilidadesDessaClasse.length > 0) {
-                    const subclasseDominante = habilidadesDessaClasse[0].subclass;
-                    nomeDisplay += ` [${subclasseDominante}]`;
+                if (habilidadeSubclasse) {
+                    nomeDisplay += ` [${habilidadeSubclasse.subclass}]`;
                 }
             }
 
-            partes.push(nomeDisplay);
+            partes.push(`${nomeDisplay} ${nivel}`);
         }
     });
 
-    el.value = partes.join(', ');
+    // Atualiza o valor do input
+    const novoTexto = partes.join(' / ');
     
-    // Ajusta a altura automaticamente após preencher
-    autoResize(el);
+    // Só mexe no DOM se mudou (evita cursor pular, mas garante atualização)
+    if (el.value !== novoTexto) {
+        el.value = novoTexto;
+        autoResize(el);
+    }
 }
 
 /* -------------------------------------------------------------
-   2. INICIALIZAÇÃO DE EVENTOS DE RESIZE (RAÇA E CLASSES)
+   2. LISTENERS E INICIALIZAÇÃO
    ------------------------------------------------------------- */
+
+// Escuta o evento global de atualização (disparado pelo Login, EsquerdaJS e DireitaJS)
+window.addEventListener('sheet-updated', atualizarHeader);
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Input Raça (Manual)
+    // Input Raça (Salvar ao digitar)
     const elRaca = document.getElementById('input-raca');
     if (elRaca) {
-        // Carrega valor inicial
-        if (state && state.raca) {
-            elRaca.value = state.raca;
-            autoResize(elRaca);
-        }
-        
-        // Evento ao digitar
         elRaca.addEventListener('input', () => {
             autoResize(elRaca);
             if (typeof state !== 'undefined') {
@@ -90,108 +123,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Input Classes (Readonly - Ajuste inicial)
-    const elClasses = document.getElementById('input-classesHeader');
-    if(elClasses) autoResize(elClasses);
-    
-    // Configuração do botão de Antecedentes (Mantido)
+    // Botão Antecedente (Abrir Modal)
     const btnAntecedente = document.getElementById('btn-antecedente');
-    if (btnAntecedente && typeof state !== 'undefined' && state.antecedente) {
-        btnAntecedente.textContent = state.antecedente;
-    }
-
     if (btnAntecedente) {
         btnAntecedente.addEventListener('click', abrirModalAntecedentes);
-        btnAntecedente.addEventListener('keydown', (e) => {
-            if(e.key === 'Enter') abrirModalAntecedentes();
-        });
     }
 });
 
 /* -------------------------------------------------------------
-   3. LÓGICA DE ANTECEDENTES (CATÁLOGO)
+   3. CATÁLOGO DE ANTECEDENTES E MODAL
    ------------------------------------------------------------- */
 
-// Catálogo com ID da Habilidade Principal e ID das Proficiências
 const ANTECEDENTES_CATALOGO = [
-    {
-        nome: "Acólito",
-        resumo: "Você passou sua vida a serviço de um templo, agindo como intermediário entre o reino sagrado e o mundo mortal.",
-        idHabilidade: "bg_aco_feat",
-        idProficiencia: "bg_aco_prof"
-    },
-    {
-        nome: "Artesão de Guilda",
-        resumo: "Você é membro de uma guilda de artesãos, habilidoso em criar itens de valor. (Variante: Mercador da Guilda).",
-        idHabilidade: "bg_guild_feat",
-        idProficiencia: "bg_guild_prof"
-    },
-    {
-        nome: "Artista",
-        resumo: "Sua vida é o palco. Você sabe como cativar, entreter e inspirar multidões. (Variante: Gladiador).",
-        idHabilidade: "bg_ent_feat",
-        idProficiencia: "bg_ent_prof"
-    },
-    {
-        nome: "Charlatão",
-        resumo: "Você é um mestre da manipulação. Sabe ler os desejos e medos das pessoas, usando disfarces e jogos.",
-        idHabilidade: "bg_charlatan_feat",
-        idProficiencia: "bg_charlatan_prof"
-    },
-    {
-        nome: "Criminoso",
-        resumo: "Você tem um histórico de infringir a lei e possui contatos no submundo. (Variante: Espião).",
-        idHabilidade: "bg_criminal_feat",
-        idProficiencia: "bg_criminal_prof"
-    },
-    {
-        nome: "Eremita",
-        resumo: "Você viveu em reclusão total, obtendo uma compreensão única sobre o multiverso ou um segredo.",
-        idHabilidade: "bg_hermit_feat",
-        idProficiencia: "bg_hermit_prof"
-    },
-    {
-        nome: "Forasteiro",
-        resumo: "Você cresceu longe da civilização. Testemunhou a natureza em sua forma mais pura e sabe sobreviver.",
-        idHabilidade: "bg_outlander_feat",
-        idProficiencia: "bg_outlander_prof"
-    },
-    {
-        nome: "Herói Popular",
-        resumo: "Vindo de origem humilde, o destino o escolheu. O povo comum o vê como seu campeão contra tiranos.",
-        idHabilidade: "bg_folk_feat",
-        idProficiencia: "bg_folk_prof"
-    },
-    {
-        nome: "Marinheiro",
-        resumo: "O mar é seu lar. Você navegou por anos, enfrentando tempestades. (Variante: Pirata).",
-        idHabilidade: "bg_sailor_feat",
-        idProficiencia: "bg_sailor_prof"
-    },
-    {
-        nome: "Morador de Rua",
-        resumo: "Você cresceu nas ruas, sozinho e pobre. Aprendeu a sobreviver nas áreas urbanas mais perigosas.",
-        idHabilidade: "bg_urchin_feat",
-        idProficiencia: "bg_urchin_prof"
-    },
-    {
-        nome: "Nobre",
-        resumo: "Você nasceu com título e riqueza. Entende a diplomacia e carrega o peso do nome de sua família. (Variante: Cavaleiro).",
-        idHabilidade: "bg_noble_feat",
-        idProficiencia: "bg_noble_prof"
-    },
-    {
-        nome: "Sábio",
-        resumo: "Você passou anos estudando manuscritos. Busca conhecimento e segredos do multiverso.",
-        idHabilidade: "bg_sage_feat",
-        idProficiencia: "bg_sage_prof"
-    },
-    {
-        nome: "Soldado",
-        resumo: "A guerra foi sua vida. Você treinou, lutou e possui uma patente militar.",
-        idHabilidade: "bg_soldier_feat",
-        idProficiencia: "bg_soldier_prof"
-    }
+    { nome: "Acólito", idHabilidade: "bg_aco_feat", idProficiencia: "bg_aco_prof", resumo: "Servo de um templo." },
+    { nome: "Artesão de Guilda", idHabilidade: "bg_guild_feat", idProficiencia: "bg_guild_prof", resumo: "Membro de guilda comercial." },
+    { nome: "Artista", idHabilidade: "bg_ent_feat", idProficiencia: "bg_ent_prof", resumo: "Mestre do entretenimento." },
+    { nome: "Charlatão", idHabilidade: "bg_charlatan_feat", idProficiencia: "bg_charlatan_prof", resumo: "Mestre da enganação." },
+    { nome: "Criminoso", idHabilidade: "bg_criminal_feat", idProficiencia: "bg_criminal_prof", resumo: "Fora da lei com contatos." },
+    { nome: "Eremita", idHabilidade: "bg_hermit_feat", idProficiencia: "bg_hermit_prof", resumo: "Viveu em reclusão." },
+    { nome: "Forasteiro", idHabilidade: "bg_outlander_feat", idProficiencia: "bg_outlander_prof", resumo: "Sobrevivente dos ermos." },
+    { nome: "Herói Popular", idHabilidade: "bg_folk_feat", idProficiencia: "bg_folk_prof", resumo: "Campeão do povo comum." },
+    { nome: "Marinheiro", idHabilidade: "bg_sailor_feat", idProficiencia: "bg_sailor_prof", resumo: "Familiarizado com o mar." },
+    { nome: "Morador de Rua", idHabilidade: "bg_urchin_feat", idProficiencia: "bg_urchin_prof", resumo: "Cresceu pobre nas ruas." },
+    { nome: "Nobre", idHabilidade: "bg_noble_feat", idProficiencia: "bg_noble_prof", resumo: "Nascido com título." },
+    { nome: "Sábio", idHabilidade: "bg_sage_feat", idProficiencia: "bg_sage_prof", resumo: "Acadêmico estudioso." },
+    { nome: "Soldado", idHabilidade: "bg_soldier_feat", idProficiencia: "bg_soldier_prof", resumo: "Veterano de guerra." }
 ];
 
 function abrirModalAntecedentes() {
@@ -233,7 +189,6 @@ function abrirModalAntecedentes() {
             .filter(ant => ant.nome.toLowerCase().includes(term))
             .map(ant => criarCardAntecedente(ant))
             .join('');
-        
         bindAntecedenteClicks(overlay);
     };
 
@@ -265,31 +220,36 @@ function bindAntecedenteClicks(overlay) {
 }
 
 function selecionarAntecedente(antData) {
+    // 1. Atualiza visualmente
     const btn = document.getElementById('btn-antecedente');
     if (btn) btn.textContent = antData.nome;
 
+    // 2. Atualiza State
     if (typeof state !== 'undefined') {
         state.antecedente = antData.nome;
     
+        // 3. Adiciona Habilidades do Antecedente (Proficiências e Feature)
         const adicionarHabilidadePeloID = (idAlvo, subclasseNome) => {
+            // Verifica se o catálogo global de habilidades já carregou (DireitaJS carrega isso)
             if (!idAlvo || typeof abilityCatalog === 'undefined') return;
 
             const habilidadeRef = abilityCatalog.find(h => h.id === idAlvo);
             if (habilidadeRef) {
                 if (!state.abilities) state.abilities = [];
 
-                const jaTem = state.abilities.some(h => h.title === habilidadeRef.name || (h.idRef && h.idRef === habilidadeRef.id));
+                // Evita duplicatas
+                const jaTem = state.abilities.some(h => h.title === habilidadeRef.name);
 
                 if (!jaTem) {
                     const novaHab = {
-                        id: Date.now() + Math.floor(Math.random() * 1000), // ID único
-                        idRef: habilidadeRef.id,
+                        id: Date.now() + Math.floor(Math.random() * 1000), 
                         title: habilidadeRef.name,
                         description: habilidadeRef.description,
                         expanded: false,
                         active: false,
                         class: 'Antecedente',
-                        subclass: subclasseNome
+                        subclass: subclasseNome,
+                        category: 'Origem' // Importante para agrupar corretamente
                     };
                     state.abilities.unshift(novaHab);
                 }
@@ -299,10 +259,10 @@ function selecionarAntecedente(antData) {
         if (antData.idHabilidade) adicionarHabilidadePeloID(antData.idHabilidade, antData.nome);
         if (antData.idProficiencia) adicionarHabilidadePeloID(antData.idProficiencia, antData.nome);
                 
-        if (typeof renderAbilities === 'function') {
-            renderAbilities();
-        }
-        
+        // 4. Salva e Atualiza a Tela
         if (typeof saveStateToServer === 'function') saveStateToServer();
+        
+        // Dispara evento para atualizar a lista de habilidades na direita
+        window.dispatchEvent(new CustomEvent('sheet-updated'));
     }
 }

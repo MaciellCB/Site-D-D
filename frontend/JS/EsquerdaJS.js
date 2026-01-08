@@ -315,21 +315,49 @@ if(elClasseFocus) {
     };
 }
 
-window.salvarNivelClasse = (key, val) => {
-    state.niveisClasses[key] = parseInt(val) || 0;
-    const totalNiv = Object.values(state.niveisClasses).reduce((a, b) => a + b, 0);
-    Object.keys(state.vidaDadosSalvos).forEach(k => {
-        const numNivel = parseInt(k.replace('v', ''));
-        if (numNivel > totalNiv) delete state.vidaDadosSalvos[k];
-    });
+/* =============================================================
+   ATUALIZAÇÃO: JS/EsquerdaJS.js
+   Procure a função "window.salvarNivelClasse" e substitua por esta:
+============================================================= */
 
+window.salvarNivelClasse = (key, val) => {
+    // 1. Garante que é número (se vazio, vira 0)
+    const nivelNumerico = parseInt(val) || 0;
+    
+    // 2. Atualiza o estado
+    if (!state.niveisClasses) state.niveisClasses = {};
+    state.niveisClasses[key] = nivelNumerico;
+
+    // 3. Limpa dados de vida excedentes se o nível baixou
+    const totalNiv = Object.values(state.niveisClasses).reduce((a, b) => a + (parseInt(b)||0), 0);
+    if (state.vidaDadosSalvos) {
+        Object.keys(state.vidaDadosSalvos).forEach(k => {
+            const numNivel = parseInt(k.replace('v', ''));
+            if (numNivel > totalNiv) delete state.vidaDadosSalvos[k];
+        });
+    }
+
+    // 4. Salva e Atualiza a Visualização da Esquerda
     saveStateToServer();
     atualizarTudoVisual();
-    if(document.querySelector('.classes-lista-container').style.display === 'block') {
+
+    // 5. Atualiza a lista de dados de vida se estiver aberta
+    const containerVida = document.querySelector('.classes-lista-container');
+    if(containerVida && containerVida.style.display === 'block') {
         renderizarDadosVida();
     }
-};
 
+    // 6. DISPARA A ATUALIZAÇÃO GLOBAL (Para Header e Direita)
+    // Pequeno delay de 10ms ajuda o navegador a processar o input antes de redesenhar
+    setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('sheet-updated'));
+        
+        // SEGURANÇA EXTRA: Chama o Header diretamente se a função existir
+        if (typeof atualizarTextoClassesHeader === 'function') {
+            atualizarTextoClassesHeader();
+        }
+    }, 10);
+};
 const btnFecharPainel = document.getElementById('fecharPainel');
 if(btnFecharPainel) btnFecharPainel.onclick = () => document.getElementById('painelClasses').style.display = 'none';
 
@@ -474,13 +502,19 @@ function atualizarIniciativaTotal() {
     if(elIni) elIni.textContent = `${sinal}${total}`;
 }
 
-/* ---------------- CÁLCULO DE CA (ARMADURA SOBREPÕE HABILIDADE) ---------------- */
+/* =============================================================
+   CORREÇÃO DEFINITIVA CA: JS/EsquerdaJS.js
+   Substitua a função "atualizarAC" por esta:
+============================================================= */
+
 function atualizarAC() {
+    // 1. Pega modificadores
     const getMod = (n) => Math.floor((parseInt(state.atributos?.[n] || 10) - 10) / 2);
     const modDex = getMod('n2');
     const modCon = getMod('n1');
     const modSab = getMod('n3');
 
+    // 2. Identifica itens equipados
     const armadura = state.inventory.find(i => 
         i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'armadura'
     );
@@ -488,91 +522,127 @@ function atualizarAC() {
         i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'escudo'
     );
 
+    // 3. Habilidades Especiais
     const barbDef = state.abilities.some(a => a.active && a.title.includes("Defesa sem Armadura") && a.title.includes("Bárbaro"));
     const monkDef = state.abilities.some(a => a.active && a.title.includes("Defesa sem Armadura") && a.title.includes("Monge"));
 
-    let acFinal = 10;
-    let visualEquip = 0;
-    let visualDexText = "DEX";
+    // Variáveis Visuais
+    let visualDex = 0;      
+    let visualDexText = "DEX"; 
+    let visualEquip = 0; // O valor que vai aparecer na bolinha "Equip"
     let tipoTag = "SEM ARMADURA";
-    let escudoBonus = escudo ? (parseInt(escudo.defense) || 2) : 0;
+    let isHeavy = false;
+    let acTotal = 0;
+
+    // Bônus Extras
+    let bonusEscudo = escudo ? (parseInt(escudo.defense) || 2) : 0;
     let bonusOutros = parseInt(state.acOutros) || 0;
-
-    if (armadura) {
-        const defArmadura = parseInt(armadura.defense) || 10;
-        const prof = (armadura.proficiency || '').toLowerCase();
-        let dexConsiderado = modDex;
-
-        visualEquip = (defArmadura - 10) + escudoBonus;
-        tipoTag = armadura.proficiency?.toUpperCase() || "LEVE";
-
-        if (prof.includes('pesada')) {
-            dexConsiderado = 0;
-            visualDexText = "-"; 
-            tipoTag = "PESADA";
-        } else if (prof.includes('media') || prof.includes('média')) {
-            dexConsiderado = Math.min(modDex, 2);
-            visualDexText = "DEX (Máx 2)";
-            tipoTag = "MÉDIA";
-        } else {
-            visualDexText = "DEX";
-            tipoTag = "LEVE";
-        }
-        
-        acFinal = 10 + (defArmadura - 10) + dexConsiderado + escudoBonus;
-
-    } else {
-        if (barbDef) {
-            acFinal = 10 + modDex + modCon + escudoBonus;
-            tipoTag = "DEF. BÁRBARO";
-            visualDexText = "DEX + CON";
-            visualEquip = escudoBonus; 
-        } else if (monkDef) {
-            if (escudo) {
-                acFinal = 10 + modDex + escudoBonus;
-                tipoTag = "SEM ARMADURA";
-                visualDexText = "DEX";
-                visualEquip = escudoBonus;
-            } else {
-                acFinal = 10 + modDex + modSab;
-                tipoTag = "DEF. MONGE";
-                visualDexText = "DEX + SAB";
-                visualEquip = 0;
-            }
-        } else {
-            acFinal = 10 + modDex + escudoBonus;
-            tipoTag = "SEM ARMADURA";
-            visualDexText = "DEX";
-            visualEquip = escudoBonus;
-        }
-    }
-
-    acFinal += bonusOutros;
-
+    
     if (state.inventory) {
         state.inventory.filter(i => i.equip && i.type === 'Geral' && i.defenseBonus).forEach(item => {
-            const b = parseInt(item.defenseBonus) || 0;
-            acFinal += b;
+            bonusOutros += (parseInt(item.defenseBonus) || 0);
         });
     }
 
-    const elValor = document.getElementById('armaduraValor');
-    if (elValor) elValor.textContent = acFinal;
+    // --- LÓGICA DE CÁLCULO ---
 
+    if (armadura) {
+        let valInput = parseInt(armadura.defense);
+        if (isNaN(valInput)) valInput = 11; // Valor padrão se vazio
+
+        // --- CORREÇÃO DO VALOR NEGATIVO E DO LIMITE ---
+        // Se o valor for <= 10 (ex: 2, 8, 10), assumimos que é BÔNUS e somamos 10.
+        // Se for >= 11 (ex: 12, 18), usamos como valor TOTAL.
+        let valArmaduraTotal = valInput <= 10 ? 10 + valInput : valInput;
+
+        const prof = (armadura.proficiency || '').toLowerCase();
+        tipoTag = armadura.proficiency?.toUpperCase() || "LEVE";
+
+        // CÁLCULO DIRETO DO "EQUIP" VISUAL
+        // É simplesmente: (Quanto a armadura dá além de 10) + (Escudo)
+        // Isso impede valores negativos.
+        visualEquip = (valArmaduraTotal - 10) + bonusEscudo;
+
+        if (prof.includes('pesada')) {
+            // PESADA: Ignora Dex
+            visualDex = 0;
+            visualDexText = "-";
+            isHeavy = true;
+            tipoTag = "PESADA";
+            
+            // AC = Valor Total da Armadura + Escudo + Outros
+            acTotal = valArmaduraTotal + bonusEscudo + bonusOutros;
+
+        } else if (prof.includes('media') || prof.includes('média')) {
+            // MÉDIA: Dex máx 2
+            visualDex = Math.min(modDex, 2);
+            visualDexText = "DEX (Máx 2)";
+            tipoTag = "MÉDIA";
+
+            // AC = Valor Total da Armadura + Dex Limitada + Escudo + Outros
+            acTotal = valArmaduraTotal + visualDex + bonusEscudo + bonusOutros;
+
+        } else {
+            // LEVE: Dex Total
+            visualDex = modDex;
+            visualDexText = "DEX";
+            tipoTag = "LEVE";
+
+            // AC = Valor Total da Armadura + Dex + Escudo + Outros
+            acTotal = valArmaduraTotal + visualDex + bonusEscudo + bonusOutros;
+        }
+
+    } else {
+        // SEM ARMADURA
+        visualEquip = bonusEscudo; // Se tiver só escudo
+
+        if (barbDef) {
+            // Bárbaro: 10 + Dex + Con + Escudo
+            acTotal = 10 + modDex + modCon + bonusEscudo + bonusOutros;
+            tipoTag = "DEF. BÁRBARO";
+            visualDexText = "DEX + CON";
+            visualDex = modDex + modCon; // Hack visual para a soma bater
+        } else if (monkDef && !escudo) {
+            // Monge: 10 + Dex + Sab (Sem escudo)
+            acTotal = 10 + modDex + modSab + bonusOutros;
+            tipoTag = "DEF. MONGE";
+            visualDexText = "DEX + SAB";
+            visualDex = modDex + modSab; // Hack visual
+        } else {
+            // Pelado: 10 + Dex + Escudo
+            acTotal = 10 + modDex + bonusEscudo + bonusOutros;
+            tipoTag = "SEM ARMADURA";
+            visualDexText = "DEX";
+            visualDex = modDex;
+        }
+    }
+
+    // --- ATUALIZAÇÃO DO DOM ---
+
+    // 1. Valor Total Grande
+    const elValor = document.getElementById('armaduraValor');
+    if (elValor) elValor.textContent = acTotal;
+
+    // 2. Tag da Armadura
     const elTag = document.querySelector('.armadura-tag');
     if (elTag) {
         elTag.textContent = tipoTag;
-        elTag.style.cssText = `display: flex; align-items: center; justify-content: center; border: 2px solid #fff; padding: 8px 15px; border-radius: 8px; background: transparent; color: #fff; font-weight: 900; font-size: 15px; margin-top: 12px; min-width: 130px; text-transform: uppercase; white-space: nowrap;`;
+        elTag.className = 'armadura-tag';
+        elTag.classList.add(isHeavy ? 'pesado' : 'leve');
+        const bg = isHeavy ? '#131313' : 'transparent';
+        elTag.style.cssText = `display: flex; align-items: center; justify-content: center; border: 2px solid #fff; padding: 8px 15px; border-radius: 8px; background: ${bg}; color: #fff; font-weight: 900; font-size: 15px; margin-top: 12px; min-width: 130px; text-transform: uppercase; white-space: nowrap;`;
     }
 
+    // 3. Texto da DEX e Efeito do 10
     const elFormulaDex = document.querySelector('.formula-attr');
     const elFormulaPlus = document.querySelector('.inline-formula .formula-plus'); 
     
     if (elFormulaDex) {
         elFormulaDex.textContent = visualDexText;
-        elFormulaDex.style.visibility = (visualDexText === "-") ? "hidden" : "visible";
-        if (elFormulaPlus) elFormulaPlus.style.visibility = (visualDexText === "-") ? "hidden" : "visible";
-
+        const visibility = (visualDexText === "-") ? "hidden" : "visible";
+        elFormulaDex.style.visibility = visibility;
+        if (elFormulaPlus) elFormulaPlus.style.visibility = visibility;
+        
         if (visualDexText.length > 5) {
              elFormulaDex.style.transform = "translateY(-26px)";
              elFormulaDex.style.fontSize = "10px";
@@ -582,10 +652,27 @@ function atualizarAC() {
         }
     }
 
-    const zeros = document.querySelectorAll('.hexagrama-ca .zero-num');
-    if (zeros.length >= 1) zeros[0].textContent = visualEquip;
-    if (zeros.length >= 2 && document.activeElement !== zeros[1]) zeros[1].textContent = bonusOutros;
+    // Aumenta o "10" se for pesada
+    const baseTen = document.querySelector('.formula-text');
+    if (baseTen) {
+        if (isHeavy) baseTen.classList.add('heavy-armor-mode');
+        else baseTen.classList.remove('heavy-armor-mode');
+    }
+
+    // 4. Preenche os Zeros (Equip e Outros)
+    const zeroNums = document.querySelectorAll('.zero-pair .zero-num');
+    if (zeroNums.length >= 1) {
+        // Agora visualEquip é calculado diretamente, sem chance de negativo
+        zeroNums[0].textContent = visualEquip;
+    }
+    if (zeroNums.length >= 2) {
+        if (document.activeElement !== zeroNums[1]) {
+            zeroNums[1].textContent = bonusOutros;
+        }
+    }
 }
+
+
 
 // ======================================
 // 8. Função Mestre e Listeners

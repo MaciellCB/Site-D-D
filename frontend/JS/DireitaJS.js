@@ -192,27 +192,42 @@ function checkScrollLock() {
   }
 }
 
-// Escuta atualizações do lado Esquerdo e Inventário
+/* =============================================================
+   LISTENER GLOBAL: ATUALIZA A TELA QUANDO DADOS MUDAM
+============================================================= */
 window.addEventListener('sheet-updated', () => {
-  // 1. Atualiza DT Magias
-  state.dtMagias = calculateSpellDC();
-  const inputDT = document.getElementById('dtMagiasInput');
-  if (inputDT) inputDT.value = state.dtMagias;
+    // 1. Atualiza DT Magias
+    state.dtMagias = calculateSpellDC();
+    const inputDT = document.getElementById('dtMagiasInput');
+    if (inputDT) inputDT.value = state.dtMagias;
 
-  // 2. Atualiza Classe de Armadura (CA)
-  const armorClass = calculateArmorClass();
-  
-  // Tenta encontrar o elemento onde a CA é exibida
-  // Prioridade: ID direto > Classe do Hexagrama > Input genérico
-  const inputCA = document.getElementById('caTotal') || document.querySelector('.hexagrama-ca .valor');
-  
-  if (inputCA) {
-      if (inputCA.tagName === 'INPUT') {
-          inputCA.value = armorClass;
-      } else {
-          inputCA.textContent = armorClass;
-      }
-  }
+    // 2. Atualiza Classe de Armadura
+    const armorClass = calculateArmorClass();
+    const inputCA = document.getElementById('caTotal') || document.querySelector('.hexagrama-ca .valor');
+    if (inputCA) {
+        if (inputCA.tagName === 'INPUT') inputCA.value = armorClass;
+        else inputCA.textContent = armorClass;
+    }
+
+    // 3. ATUALIZAÇÃO AUTOMÁTICA DA DIREITA
+    if (['Magias', 'Mag. Preparadas', 'Habilidades', 'Combate'].includes(state.activeTab)) {
+        // Salva estado de scroll e foco
+        const scrollContainer = document.querySelector('.lado-direito .conteudo') || document.querySelector('.lado-direito');
+        const savedScroll = scrollContainer ? scrollContainer.scrollTop : 0;
+        
+        const activeElement = document.activeElement;
+        const activeId = activeElement ? activeElement.id : null;
+        
+        // FORÇA O REDESENHO DA ABA ATIVA
+        renderActiveTab(); 
+
+        // Restaura Scroll e Foco
+        if (scrollContainer) scrollContainer.scrollTop = savedScroll;
+        if (activeId) {
+            const el = document.getElementById(activeId);
+            if (el) el.focus();
+        }
+    }
 });
 
 function setActiveTab(tabName) {
@@ -365,105 +380,187 @@ function formatInventoryItem(item) {
 }
 
 function renderInventory() {
-  const html = `
-    <div class="inventory-controls controls-row">
-      <input id="filterItens" placeholder="Filtrar itens" />
-      <div class="right-controls">
-        <button id="botAddItem" class="btn-add">Adicionar</button>
-      </div>
-    </div>
-    <div class="inventory-list">
-      ${state.inventory.map(formatInventoryItem).join('')}
-    </div>
-  `;
-  conteudoEl.innerHTML = html;
-  bindInventoryCardEvents();
-  aplicarEnterNosInputs(conteudoEl);
+    const termo = (document.getElementById('filterItens')?.value || '').toLowerCase();
+    
+    // 1. Filtra itens pelo texto de busca
+    const itensFiltrados = state.inventory.filter(i => {
+        const text = (i.name + (i.description || "") + (i.type || "")).toLowerCase();
+        return text.includes(termo);
+    });
+
+    // 2. Separa em Grupos
+    const armas = itensFiltrados.filter(i => i.type === 'Arma');
+    const armaduras = itensFiltrados.filter(i => i.type === 'Proteção' || i.type === 'protecao');
+    const gerais = itensFiltrados.filter(i => i.type !== 'Arma' && i.type !== 'Proteção' && i.type !== 'protecao');
+
+    // 3. Monta o HTML
+    let listaHTML = '';
+    
+    if (armas.length > 0) listaHTML += renderItemGroup('Armas', armas, 'inv-armas');
+    if (armaduras.length > 0) listaHTML += renderItemGroup('Armaduras & Proteção', armaduras, 'inv-armaduras');
+    if (gerais.length > 0) listaHTML += renderItemGroup('Itens Gerais', gerais, 'inv-gerais');
+
+    if (!listaHTML) {
+        listaHTML = `<div class="empty-tip">Nenhum item encontrado.</div>`;
+    }
+
+    const html = `
+        <div class="inventory-controls controls-row">
+            <input id="filterItens" placeholder="Filtrar itens..." value="${document.getElementById('filterItens')?.value || ''}" />
+            <div class="right-controls">
+                <button id="botAddItem" class="btn-add">Adicionar</button>
+            </div>
+        </div>
+        <div class="inventory-list-wrapper">
+            ${listaHTML}
+        </div>
+    `;
+
+    conteudoEl.innerHTML = html;
+    
+    // Vincula eventos
+    bindInventoryCardEvents();
+    bindInventorySectionEvents(); // <--- NOVA FUNÇÃO DE EVENTOS DE SEÇÃO
+    aplicarEnterNosInputs(conteudoEl);
+
+    // Mantém foco no filtro
+    const inputFiltro = document.getElementById('filterItens');
+    if(inputFiltro) {
+        const len = inputFiltro.value.length;
+        inputFiltro.focus();
+        inputFiltro.setSelectionRange(len, len);
+        inputFiltro.oninput = renderInventory; // Auto-render ao digitar
+    }
 }
 
-/* ---------------- EVENTOS DO INVENTÁRIO (ATUALIZADO) ---------------- */
+/* =============================================================
+   CORREÇÃO DEFINITIVA SCROLL: DOM DIRETO (SEM RE-RENDER)
+   Substitua a função "bindInventoryCardEvents" por esta:
+============================================================= */
+
 function bindInventoryCardEvents() {
-  // Expandir Card
+  
+  // --- 1. EXPANDIR CARD (Sem Recarregar) ---
   document.querySelectorAll('.item-card').forEach(card => {
     const id = Number(card.getAttribute('data-id'));
     const header = card.querySelector('.card-header');
 
     header.addEventListener('click', (ev) => {
+      // Ignora cliques nos controles
       if (ev.target.closest('.right') || ev.target.closest('.header-equip') || ev.target.closest('.item-equip-checkbox')) return;
+      
       const it = state.inventory.find(x => x.id === id);
-      it.expanded = !it.expanded;
-      renderActiveTab();
-      saveStateToServer();
-    });
-  });
+      if(!it) return;
 
-  // Checkbox "Versátil" (2 Mãos)
-  document.querySelectorAll('.toggle-versatile').forEach(chk => {
-    chk.addEventListener('change', (ev) => {
-      const id = Number(ev.target.getAttribute('data-id'));
-      const item = state.inventory.find(x => x.id === id);
-      if (item) {
-        item.useTwoHands = ev.target.checked;
-        saveStateToServer();
-        renderActiveTab(); 
+      // Inverte estado no JSON
+      it.expanded = !it.expanded;
+      saveStateToServer();
+
+      // Manipula o HTML direto (Zero Lag, Zero Scroll)
+      const body = card.querySelector('.card-body');
+      const caret = card.querySelector('.caret');
+
+      if (it.expanded) {
+          body.style.display = 'block';
+          card.classList.add('expanded');
+          caret.textContent = '▾';
+      } else {
+          body.style.display = 'none';
+          card.classList.remove('expanded');
+          caret.textContent = '▸';
       }
     });
-    chk.addEventListener('click', ev => ev.stopPropagation());
   });
 
-  // Checkbox "Equipar" (CRÍTICO PARA A CA)
+  // --- 2. CHECKBOX EQUIPAR (Sem Recarregar) ---
   document.querySelectorAll('.item-equip-checkbox').forEach(ch => {
     ch.addEventListener('change', (ev) => {
-      ev.stopPropagation();
+      // Não propaga para o header (não expande)
+      ev.stopPropagation(); 
+      
       const id = Number(ev.target.getAttribute('data-id'));
       const item = state.inventory.find(x => x.id === id);
+      const isChecked = ev.target.checked;
 
-      if (item && ev.target.checked) {
-        // Lógica de exclusividade (se equipar uma armadura, tira a outra)
+      if (item && isChecked) {
+        // Lógica de Exclusividade (Só 1 Armadura / Só 1 Escudo)
         if (item.type === 'Proteção' || item.type === 'protecao') {
           const isEscudo = item.tipoItem?.toLowerCase() === 'escudo' || item.proficiency?.toLowerCase() === 'escudo';
 
-          state.inventory.forEach(i => {
-            if (i.id !== id && (i.type === 'Proteção' || i.type === 'protecao')) {
-              const otherIsEscudo = i.tipoItem?.toLowerCase() === 'escudo' || i.proficiency?.toLowerCase() === 'escudo';
+          state.inventory.forEach(other => {
+            // Se for outro item do mesmo tipo, desmarca
+            if (other.id !== id && (other.type === 'Proteção' || other.type === 'protecao')) {
+              const otherIsEscudo = other.tipoItem?.toLowerCase() === 'escudo' || other.proficiency?.toLowerCase() === 'escudo';
               
-              // Se é o mesmo tipo (armadura com armadura, escudo com escudo), desequipa o antigo
               if (isEscudo === otherIsEscudo) {
-                i.equip = false;
+                // Atualiza State
+                other.equip = false;
+                // Atualiza Visual (Desmarca o checkbox do outro item sem recarregar a tela)
+                const otherChk = document.querySelector(`.item-equip-checkbox[data-id="${other.id}"]`);
+                if(otherChk) otherChk.checked = false;
               }
             }
           });
         }
       }
 
-      if (item) {
-        item.equip = ev.target.checked;
-        saveStateToServer();
-        
-        // --- O SEGREDO ESTÁ AQUI ---
-        // Renderiza a aba atual (para atualizar visual dos checks)
-        renderActiveTab();
-        // E FORÇA a esquerda a recalcular a CA imediatamente
-        window.dispatchEvent(new CustomEvent('sheet-updated'));
-        // ---------------------------
-      }
+      // Atualiza o item clicado
+      if (item) item.equip = isChecked;
+      
+      // Salva no banco
+      saveStateToServer();
+      
+      // Apenas avisa a esquerda para recalcular a CA. 
+      // NÃO CHAMAMOS renderActiveTab(), então a tela não mexe.
+      window.dispatchEvent(new CustomEvent('sheet-updated'));
     });
+    
+    // Previne comportamento padrão de clique duplo ou seleção
     ch.addEventListener('click', ev => ev.stopPropagation());
   });
 
-  // Remover Item
+  // --- 3. REMOVER (Precisa recarregar, mas usamos o hack do scroll) ---
   document.querySelectorAll('.remover-item').forEach(el => {
     el.addEventListener('click', (ev) => {
       ev.preventDefault();
       const id = Number(el.getAttribute('data-id'));
+      
+      // Salva scroll
+      const scrollPos = window.scrollY || document.documentElement.scrollTop;
+      const innerContainer = document.querySelector('.lado-direito .conteudo');
+      const innerScroll = innerContainer ? innerContainer.scrollTop : 0;
+
       state.inventory = state.inventory.filter(i => i.id !== id);
+      
+      // Aqui somos obrigados a renderizar pois o elemento sumiu
       renderActiveTab();
       saveStateToServer();
-      window.dispatchEvent(new CustomEvent('sheet-updated')); // Atualiza CA se remover armadura equipada
+      window.dispatchEvent(new CustomEvent('sheet-updated'));
+
+      // Restaura scroll
+      window.scrollTo(0, scrollPos);
+      if(innerContainer) innerContainer.scrollTop = innerScroll;
     });
   });
 
-  // Editar Item
+  // --- 4. VERSÁTIL (Recarrega para atualizar dano, com hack de scroll) ---
+  document.querySelectorAll('.toggle-versatile').forEach(chk => {
+    chk.addEventListener('change', (ev) => {
+      const id = Number(ev.target.getAttribute('data-id'));
+      const item = state.inventory.find(x => x.id === id);
+      
+      if (item) {
+        const scrollPos = window.scrollY || document.documentElement.scrollTop;
+        item.useTwoHands = ev.target.checked;
+        saveStateToServer();
+        renderActiveTab(); // Recarrega para mudar o texto do dano
+        window.scrollTo(0, scrollPos);
+      }
+    });
+    chk.addEventListener('click', ev => ev.stopPropagation());
+  });
+
+  // Editar e Filtros (Mantidos)
   document.querySelectorAll('.editar-item').forEach(el => {
     el.addEventListener('click', (ev) => {
       ev.preventDefault();
@@ -473,7 +570,6 @@ function bindInventoryCardEvents() {
     });
   });
 
-  // Botões gerais
   const botAdd = document.getElementById('botAddItem');
   if (botAdd) botAdd.onclick = () => openItemModal(null);
 
@@ -489,45 +585,75 @@ function bindInventoryCardEvents() {
   }
 }
 
-function renderCombat() {
-  let equipped = state.inventory.filter(i => i.equip);
 
-  equipped.sort((a, b) => {
-    const getOrder = (type) => {
-      const t = (type || '').toLowerCase();
-      if (t === 'arma') return 1;
-      if (t === 'geral') return 2;
-      if (t === 'proteção' || t === 'protecao') return 3;
-      return 4;
-    };
-    return getOrder(a.type) - getOrder(b.type);
-  });
+function bindInventorySectionEvents() {
+    document.querySelectorAll('.toggle-inv-header').forEach(header => {
+        header.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            const key = header.getAttribute('data-key');
+            state.collapsedSections[key] = !state.collapsedSections[key];
+            saveStateToServer();
 
-  if (!equipped.length) {
-    conteudoEl.innerHTML = `<p class="empty-tip">Você ainda não possui ataques ou equipamentos equipados para combate.</p>`;
-    return;
-  }
+            // Atualiza DOM direto para não perder foco/scroll
+            const contentDiv = header.nextElementSibling;
+            const arrowSpan = header.querySelector('span');
 
-  const html = `
-    <div class="controls-row">
-      <input id="filterCombat" placeholder="Filtrar combate..." />
-    </div>
-    <div class="inventory-list">${equipped.map(formatInventoryItem).join('')}</div>
-  `;
-  conteudoEl.innerHTML = html;
-  bindInventoryCardEvents();
-
-  // Lógica de filtro para Combate
-  const filtro = document.getElementById('filterCombat');
-  if (filtro) {
-    filtro.addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase();
-      conteudoEl.querySelectorAll('.item-card').forEach(card => {
-        const title = card.querySelector('.card-title').textContent.toLowerCase();
-        card.style.display = title.includes(q) ? '' : 'none';
-      });
+            if (contentDiv) {
+                if (contentDiv.style.display === 'none') {
+                    contentDiv.style.display = 'block';
+                    if(arrowSpan) arrowSpan.textContent = '▾';
+                } else {
+                    contentDiv.style.display = 'none';
+                    if(arrowSpan) arrowSpan.textContent = '▸';
+                }
+            }
+        });
     });
-  }
+}
+function renderCombat() {
+    const termo = (document.getElementById('filterCombat')?.value || '').toLowerCase();
+
+    // 1. Filtra apenas equipados e pelo texto
+    const equipados = state.inventory.filter(i => i.equip && (i.name + (i.description||"")).toLowerCase().includes(termo));
+
+    // 2. Agrupa
+    const armas = equipados.filter(i => i.type === 'Arma');
+    const defesas = equipados.filter(i => i.type === 'Proteção' || i.type === 'protecao');
+    const outros = equipados.filter(i => i.type !== 'Arma' && i.type !== 'Proteção' && i.type !== 'protecao');
+
+    // 3. Monta HTML
+    let listaHTML = '';
+
+    if (armas.length > 0) listaHTML += renderItemGroup('Ataques Disponíveis', armas, 'cmb-ataques');
+    if (defesas.length > 0) listaHTML += renderItemGroup('Equipamento Defensivo', defesas, 'cmb-defesa');
+    if (outros.length > 0) listaHTML += renderItemGroup('Acessórios & Outros', outros, 'cmb-outros');
+
+    if (!listaHTML) {
+        listaHTML = `<p class="empty-tip">Nada equipado para combate.</p>`;
+    }
+
+    const html = `
+        <div class="controls-row">
+            <input id="filterCombat" placeholder="Filtrar combate..." value="${document.getElementById('filterCombat')?.value || ''}" />
+        </div>
+        <div class="inventory-list-wrapper">
+            ${listaHTML}
+        </div>
+    `;
+
+    conteudoEl.innerHTML = html;
+    
+    bindInventoryCardEvents();
+    bindInventorySectionEvents(); // <--- NOVA FUNÇÃO DE EVENTOS DE SEÇÃO
+
+    const inputFiltro = document.getElementById('filterCombat');
+    if(inputFiltro) {
+        const len = inputFiltro.value.length;
+        inputFiltro.focus();
+        inputFiltro.setSelectionRange(len, len);
+        inputFiltro.oninput = renderCombat;
+    }
 }
 
 /* ---------------- MODAL UNIFICADO (Item, Arma, Armadura) ---------------- */
@@ -548,6 +674,10 @@ const PERICIAS_LISTA = [
   'Arcanismo', 'História', 'Investigação', 'Natureza', 'Religião',
   'Adestrar Animais', 'Intuição', 'Medicina', 'Percepção', 'Sobrevivência'
 ];
+
+/* ---------------- MODAL UNIFICADO (Item, Arma, Armadura - COM VALIDAÇÃO) ---------------- */
+
+// ... (Mantenha as constantes PROFICIENCIAS_ARMA, etc. no topo do arquivo como estavam) ...
 
 function openItemModal(existingItem = null) {
   const existingOverlay = document.querySelector('.spell-modal-overlay');
@@ -615,7 +745,6 @@ function openItemModal(existingItem = null) {
   const contentBody = modal.querySelector('#modal-content-body');
   const btns = modal.querySelectorAll('.modal-tab-btn');
 
-  // ... (código do renderPericiaMulti se mantém igual, ou pode ser movido para fora) ...
   const renderPericiaMulti = (id, selectedList) => `
       <div id="${id}" class="multi-select-field" style="margin-top:0;">
          <div class="display"><span>${selectedList.length ? selectedList.join(', ') : 'Selecione...'}</span> <span style="color:#9c27b0;">▾</span></div>
@@ -637,17 +766,12 @@ function openItemModal(existingItem = null) {
       });
     }
 
-    // Prepara o editor de texto
     const descContent = pre.description || '';
     const editorHTML = createRichEditorHTML(descContent, 'item-editor-content');
-
     let html = '';
 
-    // Lógica dos inputs (simplificada para focar na mudança da descrição)
-    // Mantendo estrutura original mas substituindo o textarea pelo editorHTML
-    
-    // CAMPOS COMUNS
-    const nameInput = `<div style="grid-column: 1 / -1;"><label>Nome*</label><input id="item-name" type="text" value="${escapeHtml(pre.name || '')}" placeholder="Nome do item" /></div>`;
+    // --- CORREÇÃO: INPUT VAZIO COM PLACEHOLDER OBRIGATÓRIO ---
+    const nameInput = `<div style="grid-column: 1 / -1;"><label>Nome <span style="color:#ff5555">*</span></label><input id="item-name" type="text" value="${escapeHtml(pre.name || '')}" placeholder="Nome do item (Obrigatório)" /></div>`;
     const descLabel = `<div style="grid-column: 1 / -1;"><label>Descrição</label>${editorHTML}</div>`;
 
     if (tab === 'Item') {
@@ -668,16 +792,18 @@ function openItemModal(existingItem = null) {
          </div>`;
     } 
     else if (tab === 'Arma') {
-      // (Lógica da Arma mantida, só a descrição muda)
       const profSelected = pre.proficiency || '';
       const tipoSelected = pre.tipoArma || '';
       const empSelected = pre.empunhadura || '';
       const carSelected = pre.caracteristicas || [];
       const dmgTypesSelected = pre.damageTypes || [];
 
+      // Input de nome modificado para Arma também
+      const nameInputArma = `<div style="grid-column: 1 / span 4;"><label>Nome <span style="color:#ff5555">*</span></label><input id="item-name" type="text" value="${escapeHtml(pre.name || '')}" placeholder="Nome da Arma (Obrigatório)" /></div>`;
+
       html = `
         <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:12px; align-items:start;">
-          <div style="grid-column: 1 / span 4;"><label>Nome*</label><input id="item-name" type="text" value="${escapeHtml(pre.name || 'Nova Arma')}" /></div>
+          ${nameInputArma}
           
           <div><label>Proficiência</label><div class="pills-container" id="prof-pills">${PROFICIENCIAS_ARMA.map(p => `<button type="button" class="pill single-select ${p === profSelected ? 'active' : ''}" data-val="${escapeHtml(p)}">${escapeHtml(p)}</button>`).join('')}</div></div>
           <div><label>Tipo</label><div class="pills-container" id="tipo-pills">${TIPOS_ARMA.map(p => `<button type="button" class="pill single-select ${p === tipoSelected ? 'active' : ''}" data-val="${escapeHtml(p)}">${escapeHtml(p)}</button>`).join('')}</div></div>
@@ -742,9 +868,12 @@ function openItemModal(existingItem = null) {
       const disadv = Array.isArray(pre.disadvantageSkill) ? pre.disadvantageSkill : (pre.disadvantageSkill ? [pre.disadvantageSkill] : []);
       const adv = Array.isArray(pre.advantageSkill) ? pre.advantageSkill : (pre.advantageSkill ? [pre.advantageSkill] : []);
 
+      // Input de nome modificado para Armadura
+      const nameInputArmadura = `<div style="grid-column: 1 / span 3;"><label>Nome <span style="color:#ff5555">*</span></label><input id="item-name" type="text" value="${escapeHtml(pre.name || '')}" placeholder="Nome da Armadura (Obrigatório)" /></div>`;
+
       html = `
         <div style="display:grid; grid-template-columns: 1.2fr 0.8fr 1.2fr; gap:12px; align-items:start;">
-           <div style="grid-column: 1 / span 3;"><label>Nome*</label><input id="item-name" type="text" value="${escapeHtml(pre.name || 'Nova Armadura')}" /></div>
+           ${nameInputArmadura}
            
            <div><label>Proficiência</label><div class="pills-container" id="arm-prof-pills">${PROFICIENCIAS_ARMADURA.map(p => `<button type="button" class="pill single-select ${p === profSelected ? 'active' : ''}" data-val="${escapeHtml(p)}">${escapeHtml(p)}</button>`).join('')}</div></div>
            <div style="text-align:center;"><label style="text-align:left;">Defesa (CA)</label><input id="item-defense" type="text" value="${escapeHtml(pre.defense || '')}" placeholder="+2 ou 14" /></div>
@@ -780,15 +909,17 @@ function openItemModal(existingItem = null) {
 
     contentBody.innerHTML = html;
     bindTabEvents(tab);
-    
-    // --- INICIALIZA OS EVENTOS DO EDITOR RICO ---
     initRichEditorEvents('item-editor-content');
+    
+    // Foca no nome
+    const iName = contentBody.querySelector('#item-name');
+    if(iName) iName.focus();
   }
 
-  // (Mantenha a função createDamageRow igual...)
+  // (createDamageRow e bindTabEvents mantidos como estavam, mas são necessários para o funcionamento)
   function createDamageRow(danoVal = '', typesVal = []) {
-      // ... seu código existente para createDamageRow ...
-      const row = document.createElement('div');
+     // ... Código de createDamageRow (igual ao anterior) ...
+     const row = document.createElement('div');
       row.className = 'extra-dmg-row';
       row.style.display = 'grid';
       row.style.gridTemplateColumns = '1fr 1fr 1fr 1fr';
@@ -804,15 +935,11 @@ function openItemModal(existingItem = null) {
       return row;
   }
   
-  // (Mantenha bindTabEvents igual...)
-  function bindTabEvents(tab) { /* ... Código existente do bindTabEvents ... */ 
-      // ... Copie o conteúdo da sua função bindTabEvents anterior aqui, é grande, mas essencial ...
-      // Certifique-se de que a lógica de "Versátil" etc continua funcionando.
-      // Vou resumir para não estourar, mas você deve manter a lógica que já tem.
+  function bindTabEvents(tab) {
+      // ... Código do bindTabEvents (igual ao anterior, resumido aqui) ...
       modal.querySelectorAll('.pill.single-select').forEach(p => { p.addEventListener('click', () => { p.parentElement.querySelectorAll('.pill').forEach(x => x.classList.remove('active')); p.classList.add('active'); }); });
       modal.querySelectorAll('.multi-select-field').forEach(field => { if (field.id === 'dmg-field' || field.closest('.extra-dmg-row')) return; let trigger = field.querySelector('.label-dropdown-trigger') || field.querySelector('.display'); const panel = field.querySelector('.panel'); trigger.onclick = (e) => { e.stopPropagation(); const isOpen = panel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); panel.style.display = isOpen ? 'none' : 'block'; }; panel.querySelectorAll('input[type="checkbox"]').forEach(chk => { chk.onchange = () => { const vals = Array.from(panel.querySelectorAll('input:checked')).map(x => x.value); const span = trigger.querySelector('span:first-child') || modal.querySelector('#min-req-label-text'); if(span) span.textContent = vals.length ? vals.join(', ') : (field.id === 'min-req-container' ? '' : 'Selecione...'); }; }); });
       if (tab === 'Arma') {
-        // ... (Lógica da Arma: Versátil, Dano principal, Botão Adicionar Dano) ...
         const empPills = modal.querySelectorAll('#emp-pills .pill');
         const inputDanoPrincipal = modal.querySelector('#item-damage');
         const inputDano1Mao = modal.querySelector('#item-damage-1hand');
@@ -876,9 +1003,17 @@ function openItemModal(existingItem = null) {
   modal.querySelector('.btn-save-item').addEventListener('click', (ev) => {
     ev.preventDefault();
 
-    const name = modal.querySelector('#item-name').value.trim() || 'Sem nome';
+    const nameInput = modal.querySelector('#item-name');
+    const name = nameInput.value.trim();
+
+    // --- VALIDAÇÃO OBRIGATÓRIA ---
+    if (!name) {
+        alert("O nome do item é obrigatório!");
+        nameInput.style.borderColor = "#ff5555";
+        nameInput.focus();
+        return;
+    }
     
-    // --- MUDANÇA: LER DO EDITOR RICO ---
     const desc = document.getElementById('item-editor-content').innerHTML;
 
     let newItem = {
@@ -889,8 +1024,7 @@ function openItemModal(existingItem = null) {
       equip: existingItem ? !!existingItem.equip : false
     };
     
-    // ... (Restante da lógica de salvamento igual) ...
-    // Vou incluir para garantir a integridade
+    // ... (Mantendo a captura de dados dos inputs) ...
     if (currentTab === 'Item') {
       newItem.type = 'Geral'; newItem.isEquipable = true;
       newItem.acertoBonus = modal.querySelector('#item-acerto').value;
@@ -938,7 +1072,6 @@ function openItemModal(existingItem = null) {
     window.dispatchEvent(new CustomEvent('sheet-updated'));
   });
 }
-
 /* ---------------- HABILIDADES (DIREITA) - ATUALIZADO COM EXCLUSIVIDADE ---------------- */
 /* =============================================================
    LÓGICA DE HABILIDADES (RENDERIZAÇÃO, EVENTOS E CATÁLOGO)
@@ -1117,22 +1250,18 @@ function renderAbilitySection(titulo, listaCards, chaveUnica) {
 }
 
 // --- EVENTOS ---
-// --- FUNÇÃO AUXILIAR: BIND DE EVENTOS (CORRIGIDA: SEM SCROLL JUMP) ---
+// --- FUNÇÃO AUXILIAR: BIND DE EVENTOS (ATUALIZADA: REMOÇÃO DIRETA) ---
 function bindAbilityEvents() {
-    // 1. Alternar Seções (Minimizar/Maximizar) - Lógica Direta no DOM
+    // 1. Alternar Seções
     document.querySelectorAll('.toggle-section-header').forEach(header => {
         header.addEventListener('click', (e) => {
-            e.preventDefault(); // Previne comportamentos padrão
-            
+            e.preventDefault(); 
             const key = header.getAttribute('data-key');
-            
-            // Atualiza estado (silencioso)
             state.collapsedSections[key] = !state.collapsedSections[key];
             saveStateToServer();
 
-            // Manipula o DOM direto sem re-renderizar tudo
-            const contentDiv = header.nextElementSibling; // A div .section-content logo abaixo
-            const arrowSpan = header.querySelector('span'); // A seta
+            const contentDiv = header.nextElementSibling;
+            const arrowSpan = header.querySelector('span');
 
             if (contentDiv) {
                 if (contentDiv.style.display === 'none') {
@@ -1146,11 +1275,11 @@ function bindAbilityEvents() {
         });
     });
 
-    // 2. Filtro de Busca (Input)
+    // 2. Filtro de Busca
     const filtro = document.getElementById('filterHabs');
     if (filtro) {
         filtro.addEventListener('input', () => {
-            renderAbilities(); // Aqui precisa re-renderizar pois muda o conteúdo
+            renderAbilities(); 
         });
     }
 
@@ -1158,11 +1287,9 @@ function bindAbilityEvents() {
     const botAdd = document.getElementById('botOpenCatalogHab');
     if (botAdd) botAdd.addEventListener('click', () => openAbilityCatalogOverlay());
 
-    // 4. Cards (Expandir, Ativar, Remover, Editar)
+    // 4. Cards
     document.querySelectorAll('.hab-card').forEach(card => {
         const id = Number(card.getAttribute('data-id'));
-        
-        // Expandir ao clicar no header (DOM direto para evitar scroll)
         const header = card.querySelector('.card-header');
         const leftDiv = card.querySelector('.left');
         
@@ -1173,7 +1300,6 @@ function bindAbilityEvents() {
                     hab.expanded = !hab.expanded;
                     saveStateToServer();
 
-                    // DOM Direto
                     const body = card.querySelector('.card-body');
                     const caret = header.querySelector('.caret');
                     
@@ -1190,7 +1316,6 @@ function bindAbilityEvents() {
             });
         }
 
-        // Checkbox Ativar
         const ch = card.querySelector('.hab-activate');
         if(ch) {
             ch.addEventListener('change', (ev) => {
@@ -1198,7 +1323,7 @@ function bindAbilityEvents() {
                 if (hab) {
                     hab.active = ev.target.checked;
                     
-                    // Exclusividade Monge/Bárbaro
+                    // Exclusividade
                     if (hab.active) {
                         if (hab.title.includes("Defesa sem Armadura(Bárbaro)")) {
                             const m = state.abilities.find(a => a.title.includes("Defesa sem Armadura(Monge)"));
@@ -1212,8 +1337,7 @@ function bindAbilityEvents() {
 
                     saveStateToServer();
                     window.dispatchEvent(new CustomEvent('sheet-updated'));
-                    // Aqui precisamos re-renderizar para reordenar (ativos no topo)
-                    // Para evitar o pulo, salvamos o scroll antes
+                    
                     const scrollPos = document.documentElement.scrollTop || document.body.scrollTop;
                     renderAbilities();
                     window.scrollTo(0, scrollPos);
@@ -1222,23 +1346,24 @@ function bindAbilityEvents() {
         }
     });
 
-    // Remover
+    // 5. Remover (SEM CONFIRMAÇÃO)
     document.querySelectorAll('.remover-hab').forEach(btn => {
         btn.addEventListener('click', (ev) => {
             ev.preventDefault();
             const id = Number(btn.getAttribute('data-id'));
-            if(confirm("Tem certeza que deseja remover esta habilidade?")) {
-                state.abilities = state.abilities.filter(h => h.id !== id);
-                const scrollPos = window.scrollY;
-                renderAbilities();
-                window.scrollTo(0, scrollPos);
-                saveStateToServer();
-                window.dispatchEvent(new CustomEvent('sheet-updated'));
-            }
+            
+            // REMOVE DIRETO
+            state.abilities = state.abilities.filter(h => h.id !== id);
+            
+            const scrollPos = window.scrollY;
+            renderAbilities();
+            window.scrollTo(0, scrollPos);
+            saveStateToServer();
+            window.dispatchEvent(new CustomEvent('sheet-updated'));
         });
     });
 
-    // Editar
+    // 6. Editar
     document.querySelectorAll('.editar-hab').forEach(btn => {
         btn.addEventListener('click', (ev) => {
             ev.preventDefault();
@@ -1251,22 +1376,22 @@ function bindAbilityEvents() {
 
 // --- FUNÇÃO DE ABERTURA DO CATÁLOGO DE HABILIDADES (CORRIGIDA PARA SALVAR CATEGORIA) ---
 function openAbilityCatalogOverlay() {
-    const existing = document.querySelector('.catalog-overlay-large-abilities');
-    if (existing) { existing.remove(); return; }
+  const existing = document.querySelector('.catalog-overlay-large-abilities');
+  if (existing) { existing.remove(); return; }
 
-    let activeClass = CLASSES_AVAILABLE.includes('Talentos') ? 'Talentos' : CLASSES_AVAILABLE[0];
-    let activeClassHabilitySelected = true;
-    let activeSubclass = null;
-    let isSubclassesExpanded = false;
+  let activeClass = CLASSES_AVAILABLE.includes('Talentos') ? 'Talentos' : CLASSES_AVAILABLE[0];
+  let activeClassHabilitySelected = true;
+  let activeSubclass = null;
+  let isSubclassesExpanded = false;
 
-    const overlay = document.createElement('div');
-    overlay.className = 'catalog-overlay-large catalog-overlay-large-abilities';
+  const overlay = document.createElement('div');
+  overlay.className = 'catalog-overlay-large catalog-overlay-large-abilities';
 
-    const classesHtml = CLASSES_AVAILABLE.map(c =>
-        `<button class="ability-class-btn ${c === activeClass ? 'active' : ''}" data-class="${c}">${c}</button>`
-    ).join('');
+  const classesHtml = CLASSES_AVAILABLE.map(c =>
+    `<button class="ability-class-btn ${c === activeClass ? 'active' : ''}" data-class="${c}">${c}</button>`
+  ).join('');
 
-    overlay.innerHTML = `
+  overlay.innerHTML = `
       <div class="catalog-large" role="dialog" aria-modal="true">
         <div class="catalog-fixed-header" style="flex-shrink: 0;">
           <div class="catalog-large-header">
@@ -1287,147 +1412,91 @@ function openAbilityCatalogOverlay() {
       </div>
     `;
 
-    document.body.appendChild(overlay);
-    checkScrollLock();
+  document.body.appendChild(overlay);
+  checkScrollLock();
 
-    overlay.querySelector('.catalog-large-close').onclick = () => { overlay.remove(); checkScrollLock(); };
+  overlay.querySelector('.catalog-large-close').onclick = () => { overlay.remove(); checkScrollLock(); };
 
-    overlay.querySelector('#catalog-new-hab').onclick = () => {
-        overlay.remove();
-        openNewAbilityModal(null);
+  overlay.querySelector('#catalog-new-hab').onclick = () => {
+    overlay.remove();
+    openNewAbilityModal(null);
+  };
+
+  overlay.querySelectorAll('.ability-class-btn').forEach(btn => {
+    btn.onclick = () => {
+      overlay.querySelectorAll('.ability-class-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeClass = btn.dataset.class;
+      activeClassHabilitySelected = true;
+      activeSubclass = null;
+      renderClassHabilitiesRow();
+      renderSubclassesRow();
+      renderCatalogList();
+      btn.scrollIntoView({ inline: 'center', behavior: 'smooth' });
     };
+  });
 
-    overlay.querySelectorAll('.ability-class-btn').forEach(btn => {
-        btn.onclick = () => {
-            overlay.querySelectorAll('.ability-class-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            activeClass = btn.dataset.class;
+  function renderClassHabilitiesRow() {
+    const row = overlay.querySelector('#catalog-class-habilities-row');
+    if (!activeClass) { row.style.display = 'none'; return; }
+    const subs = CLASSES_WITH_SUBCLASSES[activeClass] || [];
+    const hasSubclasses = subs.length > 0;
+    row.style.display = 'flex';
+    let html = '';
+    if (activeClass !== 'Antecedentes') {
+        html += `<button class="catalog-class-hability-pill ${activeClassHabilitySelected ? 'active' : ''}">Habilidades de ${activeClass}</button>`;
+    }
+    if (hasSubclasses) {
+      html += `<button id="toggle-sub-expansion" class="toggle-expansion-btn" title="Alternar">${isSubclassesExpanded ? '⇄' : '⊞'}</button>`;
+    }
+    row.innerHTML = html;
+
+    const pillBtn = row.querySelector('.catalog-class-hability-pill');
+    if (pillBtn) {
+        pillBtn.onclick = function () {
             activeClassHabilitySelected = true;
             activeSubclass = null;
             renderClassHabilitiesRow();
-            renderSubclassesRow();
+            overlay.querySelectorAll('.ability-sub-btn').forEach(b => b.classList.remove('active'));
             renderCatalogList();
-            btn.scrollIntoView({ inline: 'center', behavior: 'smooth' });
         };
+    }
+    if (hasSubclasses) {
+      row.querySelector('#toggle-sub-expansion').onclick = () => {
+        isSubclassesExpanded = !isSubclassesExpanded;
+        renderClassHabilitiesRow();
+        renderSubclassesRow();
+      };
+    }
+  }
+
+  function renderSubclassesRow() {
+    const row = overlay.querySelector('#catalog-subclasses-row');
+    const subs = CLASSES_WITH_SUBCLASSES[activeClass] || [];
+    if (!subs.length) { row.style.display = 'none'; return; }
+    row.style.display = 'flex';
+    if (isSubclassesExpanded) { row.style.flexWrap = 'wrap'; row.style.overflowX = 'visible'; }
+    else { row.style.flexWrap = 'nowrap'; row.style.overflowX = 'auto'; }
+    
+    row.innerHTML = subs.map(s => `<button class="ability-sub-btn ${s === activeSubclass ? 'active' : ''}" data-sub="${s}">${s}</button>`).join('');
+    row.querySelectorAll('.ability-sub-btn').forEach(b => {
+      b.onclick = () => {
+        overlay.querySelectorAll('.ability-sub-btn').forEach(x => x.classList.remove('active'));
+        overlay.querySelector('.catalog-class-hability-pill')?.classList.remove('active');
+        b.classList.add('active');
+        activeClassHabilitySelected = false;
+        activeSubclass = b.dataset.sub;
+        renderCatalogList();
+      };
     });
+  }
 
-    function renderClassHabilitiesRow() {
-        const row = overlay.querySelector('#catalog-class-habilities-row');
-        if (!activeClass) { row.style.display = 'none'; return; }
-        const subs = CLASSES_WITH_SUBCLASSES[activeClass] || [];
-        const hasSubclasses = subs.length > 0;
-        row.style.display = 'flex';
-        let html = '';
-        if (activeClass !== 'Antecedentes') {
-            html += `<button class="catalog-class-hability-pill ${activeClassHabilitySelected ? 'active' : ''}">Habilidades de ${activeClass}</button>`;
-        }
-        if (hasSubclasses) {
-            html += `<button id="toggle-sub-expansion" class="toggle-expansion-btn" title="Alternar">${isSubclassesExpanded ? '⇄' : '⊞'}</button>`;
-        }
-        row.innerHTML = html;
 
-        const pillBtn = row.querySelector('.catalog-class-hability-pill');
-        if (pillBtn) {
-            pillBtn.onclick = function () {
-                activeClassHabilitySelected = true;
-                activeSubclass = null;
-                renderClassHabilitiesRow();
-                overlay.querySelectorAll('.ability-sub-btn').forEach(b => b.classList.remove('active'));
-                renderCatalogList();
-            };
-        }
-        if (hasSubclasses) {
-            row.querySelector('#toggle-sub-expansion').onclick = () => {
-                isSubclassesExpanded = !isSubclassesExpanded;
-                renderClassHabilitiesRow();
-                renderSubclassesRow();
-            };
-        }
-    }
 
-    function renderSubclassesRow() {
-        const row = overlay.querySelector('#catalog-subclasses-row');
-        const subs = CLASSES_WITH_SUBCLASSES[activeClass] || [];
-        if (!subs.length) { row.style.display = 'none'; return; }
-        row.style.display = 'flex';
-        if (isSubclassesExpanded) { row.style.flexWrap = 'wrap'; row.style.overflowX = 'visible'; }
-        else { row.style.flexWrap = 'nowrap'; row.style.overflowX = 'auto'; }
-        
-        row.innerHTML = subs.map(s => `<button class="ability-sub-btn ${s === activeSubclass ? 'active' : ''}" data-sub="${s}">${s}</button>`).join('');
-        row.querySelectorAll('.ability-sub-btn').forEach(b => {
-            b.onclick = () => {
-                overlay.querySelectorAll('.ability-sub-btn').forEach(x => x.classList.remove('active'));
-                overlay.querySelector('.catalog-class-hability-pill')?.classList.remove('active');
-                b.classList.add('active');
-                activeClassHabilitySelected = false;
-                activeSubclass = b.dataset.sub;
-                renderCatalogList();
-            };
-        });
-    }
-
-    function renderCatalogList() {
-        const container = overlay.querySelector('.abilities-list-large');
-        const searchInput = overlay.querySelector('#catalogAbilitySearch').value.toLowerCase();
-        let items = abilityCatalog.filter(it => {
-            if (activeClass) {
-                if (activeClassHabilitySelected) {
-                    if (it.class !== activeClass || (it.subclass && it.subclass !== '')) return false;
-                } else if (activeSubclass) {
-                    if (it.class !== activeClass || it.subclass !== activeSubclass) return false;
-                }
-            }
-            if (searchInput && !it.name.toLowerCase().includes(searchInput)) return false;
-            return true;
-        });
-
-        container.innerHTML = items.length ? items.map(c => formatCatalogAbilityCard(c)).join('') : `<div style="color:#ddd;padding:18px;">Nenhuma habilidade encontrada.</div>`;
-
-        // Expandir/Recolher no Catálogo
-        container.querySelectorAll('.catalog-card-header .left').forEach(divLeft => {
-            divLeft.addEventListener('click', (ev) => {
-                const card = divLeft.closest('.catalog-card-ability');
-                const body = card.querySelector('.catalog-card-ability-body');
-                const toggle = card.querySelector('.catalog-ability-toggle');
-                const isHidden = body.style.display === 'none';
-                body.style.display = isHidden ? 'block' : 'none';
-                toggle.textContent = isHidden ? '▾' : '▸';
-            });
-        });
-
-        // --- CORREÇÃO IMPORTANTE: ADICIONAR COM A CATEGORIA CORRETA ---
-        container.querySelectorAll('.catalog-add-ability-btn').forEach(btn => {
-            btn.onclick = (e) => {
-                e.stopPropagation();
-                const id = btn.dataset.id;
-                const c = abilityCatalog.find(x => x.id === id);
-                if (!c) return;
-
-                const novo = {
-                    id: uid(),
-                    title: c.name,
-                    description: c.description || '',
-                    expanded: true,
-                    class: c.class || '',
-                    subclass: c.subclass || '',
-                    category: c.category || 'Geral', // <--- AQUI ESTAVA FALTANDO!
-                    active: false
-                };
-
-                state.abilities.unshift(novo);
-                renderAbilities();
-                saveStateToServer();
-
-                btn.textContent = '✓';
-                setTimeout(() => btn.textContent = '+', 1000);
-            };
-        });
-    }
-
-    overlay.querySelector('#catalogAbilitySearch').oninput = renderCatalogList;
-    renderClassHabilitiesRow();
-    renderSubclassesRow();
-    renderCatalogList();
+  overlay.querySelector('#catalogAbilitySearch').oninput = renderCatalogList;
+  renderClassHabilitiesRow();
+  renderSubclassesRow();
+  renderCatalogList();
 }
 /* ---------------- MAGIAS ---------------- */
 function formatMySpellCard(s) {
@@ -1546,10 +1615,68 @@ function renderSpells() {
    RENDERIZAÇÃO DE SLOTS (ATUALIZADA: ARTÍFICE, BH E INFOS)
 ============================================================= */
 
+/* =============================================================
+   RENDERIZAÇÃO DE SLOTS (ATUALIZADA: SOMA DE RECURSOS)
+============================================================= */
+
+/* =============================================================
+   RENDERIZAÇÃO DE SLOTS (ATUALIZADA: SOMA DE RECURSOS)
+============================================================= */
+
+/* =============================================================
+   LISTENER GLOBAL: ATUALIZA A TELA QUANDO DADOS MUDAM
+============================================================= */
+window.addEventListener('sheet-updated', () => {
+    // 1. Atualiza DT Magias
+    state.dtMagias = calculateSpellDC();
+    const inputDT = document.getElementById('dtMagiasInput');
+    if (inputDT) inputDT.value = state.dtMagias;
+
+    // 2. Atualiza Classe de Armadura
+    const armorClass = calculateArmorClass();
+    const inputCA = document.getElementById('caTotal') || document.querySelector('.hexagrama-ca .valor');
+    if (inputCA) {
+        if (inputCA.tagName === 'INPUT') inputCA.value = armorClass;
+        else inputCA.textContent = armorClass;
+    }
+
+    // 3. ATUALIZAÇÃO AUTOMÁTICA DA DIREITA
+    if (['Magias', 'Mag. Preparadas', 'Habilidades', 'Combate'].includes(state.activeTab)) {
+        // Salva estado de scroll e foco
+        const scrollContainer = document.querySelector('.lado-direito .conteudo') || document.querySelector('.lado-direito');
+        const savedScroll = scrollContainer ? scrollContainer.scrollTop : 0;
+        
+        const activeElement = document.activeElement;
+        const activeId = activeElement ? activeElement.id : null;
+        
+        // FORÇA O REDESENHO DA ABA ATIVA
+        renderActiveTab(); 
+
+        // Restaura Scroll e Foco
+        if (scrollContainer) scrollContainer.scrollTop = savedScroll;
+        if (activeId) {
+            const el = document.getElementById(activeId);
+            if (el) el.focus();
+        }
+    }
+});
+
+/* =============================================================
+   RENDERIZAÇÃO DE SLOTS (ATUALIZADA)
+============================================================= */
+
 function initSpellSlotsState() {
     if (!state.spellSlots) state.spellSlots = {};
-    // Adicionei 'infusions' na lista de chaves
-    const keys = ['1','2','3','4','5','6','7','8','9','pact','ki','furia','sorcery','mutagen','blood_curse', 'infusions'];
+    if (!state.customResources) state.customResources = []; // Array para recursos extras
+
+    // Chaves padrão
+    const keys = ['1','2','3','4','5','6','7','8','9','pact','ki','furia','sorcery','mutagen','blood_curse','infusions'];
+    
+    // Adiciona chaves dos recursos customizados (ex: custom_0, custom_1)
+    state.customResources.forEach((res, idx) => {
+        keys.push(`custom_${idx}`);
+    });
+
     keys.forEach(k => {
         if (!state.spellSlots[k]) state.spellSlots[k] = { status: [] }; 
         if (!Array.isArray(state.spellSlots[k].status)) state.spellSlots[k].status = [];
@@ -1559,15 +1686,18 @@ function initSpellSlotsState() {
 function renderSpellSlotsHTML() {
     initSpellSlotsState();
     
-    // Calcula Recursos
+    // Calcula Recursos Totais
     const recursosTotais = calcularRecursosTotais(state.niveisClasses, state.abilities, state.atributos);
 
+    // Estado do Accordion
     if (typeof state.isSlotsCollapsed === 'undefined') state.isSlotsCollapsed = false;
     const isCollapsed = state.isSlotsCollapsed;
     const arrowIcon = isCollapsed ? '▸' : '▾';
-    const displayStyle = isCollapsed ? 'display:none;' : '';
+    
+    // CLASSE DINÂMICA PARA O CONTAINER
+    const containerClass = isCollapsed ? 'slots-container collapsed' : 'slots-container';
 
-    let html = `<div class="slots-container" style="border: 1px solid rgba(156, 39, 176, 0.3); background: #121212;">`;
+    let html = `<div class="${containerClass}" style="border: 1px solid rgba(156, 39, 176, 0.3); background: #121212;">`;
 
     // Cabeçalho
     html += `
@@ -1576,23 +1706,29 @@ function renderSpellSlotsHTML() {
                 <span style="color:#9c27b0; font-size:18px; width:15px;">${arrowIcon}</span>
                 <span class="slots-title">Recursos de Classe</span>
             </div>
-            <button id="btnRestSlots" class="mini-btn-res" title="Recuperar Tudo" style="padding:4px 8px; width:auto; font-size:11px;">🌙</button>
+            <div style="display:flex; gap: 5px; align-items:center;">
+                <button id="btnConfigRes" class="btn-config-gear" title="Adicionar/Editar Slots Extras">⚙️</button>
+                <button id="btnRestSlots" class="mini-btn-res" title="Recuperar Tudo" style="padding:4px 8px; width:auto; font-size:11px;">🌙</button>
+            </div>
         </div>
         
-        <div class="slots-body-content" style="${displayStyle}">
+        <div class="slots-body-content">
             <div class="slots-grid">
     `;
 
     let hasAnySlot = false;
 
-    // Render Pips
+    // Função Auxiliar de Renderização
     const renderPips = (key, maxVal, label, colorClass) => {
         if (maxVal > 0) {
             hasAnySlot = true;
             const slotState = state.spellSlots[key];
+            
+            // Garante tamanho do array de status
             while(slotState.status.length < maxVal) slotState.status.push(false);
 
             let contentHtml = '';
+
             if (maxVal === 99) {
                 contentHtml = `<div class="slot-pips"><span style="color:#fff; font-weight:bold; font-size:12px;">ILIMITADO</span></div>`;
             } else {
@@ -1613,19 +1749,23 @@ function renderSpellSlotsHTML() {
         }
     };
 
-    // Slots Padrão
+    // Renderiza Slots e Recursos
     for (let i = 1; i <= 9; i++) renderPips(String(i), recursosTotais.slots[i-1], `${i}º Círculo`, '');
     if (recursosTotais.pact.qtd > 0) renderPips('pact', recursosTotais.pact.qtd, `Pacto (${recursosTotais.pact.nivel}º)`, 'pact');
     
-    // Especiais
     renderPips('ki', recursosTotais.ki, 'Ki', 'ki-pip');
     renderPips('furia', recursosTotais.furia, 'Fúria', 'rage-pip');
     renderPips('sorcery', recursosTotais.sorcery, 'Feitiçaria', 'sorc-pip');
-    
-    // Novos Especiais
     renderPips('mutagen', recursosTotais.mutagen, 'Mutagênicos', 'mut-pip');
-    renderPips('infusions', recursosTotais.infusions, 'Itens Infundidos', 'infusion-pip'); // <--- NOVO (Artífice)
+    renderPips('infusions', recursosTotais.infusions, 'Itens Infundidos', 'infusion-pip');
     renderPips('blood_curse', recursosTotais.blood_curse, 'Maldições', 'curse-pip');
+
+    // --- RENDERIZA RECURSOS CUSTOMIZADOS (ADICIONADOS PELO USUÁRIO) ---
+    if (state.customResources && state.customResources.length > 0) {
+        state.customResources.forEach((res, idx) => {
+            renderPips(`custom_${idx}`, parseInt(res.max), res.name, 'custom-pip');
+        });
+    }
 
     html += `</div>`; // Fecha grid
 
@@ -1633,7 +1773,6 @@ function renderSpellSlotsHTML() {
     if (recursosTotais.infoConjuracao.length > 0) {
         html += `<div class="spell-info-footer" style="margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">`;
         
-        // Remove duplicatas de infos (caso tenha adicionado duas vezes por erro)
         const infosUnicas = recursosTotais.infoConjuracao.filter((v,i,a)=>a.findIndex(t=>(t.classe === v.classe))===i);
 
         infosUnicas.forEach(info => {
@@ -1643,11 +1782,7 @@ function renderSpellSlotsHTML() {
             if (info.truques !== undefined) partes.push(`${info.truques} Truques`);
             if (info.tipo === 'preparadas') partes.push(`${info.preparadas} Preparadas`);
             else if (info.tipo === 'conhecidas' && info.conhecidas > 0) partes.push(`${info.conhecidas} Conhecidas`);
-            
-            // Maldições Conhecidas
             if (info.maldicoes !== undefined) partes.push(`${info.maldicoes} Maldições Conhecidas`);
-            
-            // Texto Extra (ex: Infusões Conhecidas, Fórmulas)
             if (info.extra) partes.push(info.extra);
 
             texto += partes.join(' • ');
@@ -1656,48 +1791,53 @@ function renderSpellSlotsHTML() {
         html += `</div>`;
     }
 
-    html += `</div></div>`;
+    html += `</div></div>`; // Fecha container
     
-    if (!hasAnySlot && recursosTotais.infoConjuracao.length === 0) return '';
+    // Se não tiver nada e nem customizados, esconde
+    if (!hasAnySlot && (!state.customResources || state.customResources.length === 0) && recursosTotais.infoConjuracao.length === 0) return '';
     return html;
 }
-
-// --- EVENTOS DOS SLOTS ---
+/* ---------------- EVENTOS DOS SLOTS (ATUALIZADO: SEM POPUP DE DESCANSO) ---------------- */
 function bindSlotEvents() {
     // 1. Toggle Minimizar
     const headerToggle = document.getElementById('headerSlotsToggle');
     if (headerToggle) {
         headerToggle.addEventListener('click', (e) => {
-            if(e.target.closest('#btnRestSlots')) return;
+            // Evita disparar se clicar nos botões (engrenagem ou descanso)
+            if(e.target.closest('button')) return;
 
             state.isSlotsCollapsed = !state.isSlotsCollapsed;
             saveStateToServer();
-            
-            const content = document.querySelector('.slots-body-content');
-            const arrow = headerToggle.querySelector('span');
-            if (content) {
-                content.style.display = state.isSlotsCollapsed ? 'none' : 'block';
-                arrow.textContent = state.isSlotsCollapsed ? '▸' : '▾';
-            }
+            renderSpells(); // Re-renderiza para aplicar a classe 'collapsed'
         });
     }
 
-    // 2. Descanso Longo
+    // 2. Botão Configurar (Engrenagem)
+    const btnConfig = document.getElementById('btnConfigRes');
+    if (btnConfig) {
+        btnConfig.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openResourceConfigModal();
+        });
+    }
+
+    // 3. Descanso Longo (DIRETO, SEM CONFIRMAÇÃO)
     const btnRest = document.getElementById('btnRestSlots');
     if (btnRest) {
         btnRest.onclick = (e) => {
             e.stopPropagation();
-            if(confirm("Recuperar todos os recursos?")) {
-                for (let key in state.spellSlots) {
-                    state.spellSlots[key].status = []; // Reseta
-                }
-                saveStateToServer();
-                renderSpells();
+            
+            // Reseta todos os slots imediatamente
+            for (let key in state.spellSlots) {
+                state.spellSlots[key].status = []; 
             }
+            
+            saveStateToServer();
+            renderSpells(); // Atualiza a tela na hora
         };
     }
 
-    // 3. Clique nas Bolinhas (Individual)
+    // 4. Clique nas Bolinhas (Gastar/Recuperar individual)
     document.querySelectorAll('.slot-pip').forEach(pip => {
         pip.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1707,12 +1847,12 @@ function bindSlotEvents() {
             if (!state.spellSlots[key]) state.spellSlots[key] = { status: [] };
             if (!state.spellSlots[key].status) state.spellSlots[key].status = [];
             
-            // Toggle
+            // Alterna o estado (Gasto <-> Disponível)
             state.spellSlots[key].status[idx] = !state.spellSlots[key].status[idx];
             
             saveStateToServer();
             
-            // Atualização visual rápida
+            // Atualização visual instantânea (sem re-renderizar tudo)
             const isNowSpent = state.spellSlots[key].status[idx];
             if (isNowSpent) {
                 pip.classList.remove('available');
@@ -1724,7 +1864,112 @@ function bindSlotEvents() {
         });
     });
 }
+/* ---------------- MODAL CONFIGURAR RECURSOS EXTRAS ---------------- */
+function openResourceConfigModal() {
+    const existing = document.querySelector('.config-res-modal');
+    if (existing) existing.remove();
 
+    const overlay = document.createElement('div');
+    overlay.className = 'spell-modal-overlay config-res-modal';
+    overlay.style.zIndex = '13000';
+
+    // Garante que o array existe
+    if (!state.customResources) state.customResources = [];
+
+    const renderList = () => {
+        return state.customResources.map((res, idx) => `
+            <div class="custom-res-item">
+                <div style="flex:1;">
+                    <strong style="color:#e0e0e0; font-size:13px;">${escapeHtml(res.name)}</strong>
+                    <div style="color:#999; font-size:11px;">Máximo: ${res.max}</div>
+                </div>
+                <button class="remove-res-btn" data-idx="${idx}" style="background:#b71c1c; border:none; color:white; border-radius:4px; padding:4px 8px; cursor:pointer; font-size:11px;">Remover</button>
+            </div>
+        `).join('');
+    };
+
+    overlay.innerHTML = `
+        <div class="spell-modal" style="width:360px;">
+            <div class="modal-header">
+                <h3>Recursos Extras</h3>
+                <button class="modal-close">✖</button>
+            </div>
+            <div class="modal-body">
+                <div style="background:#151515; padding:10px; border-radius:6px; margin-bottom:10px;">
+                    <label style="margin-top:0;">Novo Recurso</label>
+                    <div style="display:flex; gap:8px; margin-top:5px;">
+                        <input id="new-res-name" type="text" placeholder="Nome (ex: Varinha)" style="flex:2;">
+                        <input id="new-res-max" type="number" placeholder="Qtd" min="1" style="flex:1;">
+                    </div>
+                    <button id="btn-add-res" class="btn-add" style="width:100%; margin-top:8px; background:#2e7d32;">+ Adicionar</button>
+                </div>
+                
+                <label>Lista Atual</label>
+                <div id="custom-res-list" style="max-height:200px; overflow-y:auto;">
+                    ${renderList()}
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+    checkScrollLock();
+
+    // Eventos
+    overlay.querySelector('.modal-close').onclick = () => { overlay.remove(); checkScrollLock(); };
+
+    // Adicionar
+    overlay.querySelector('#btn-add-res').onclick = () => {
+        const name = document.getElementById('new-res-name').value.trim();
+        const max = parseInt(document.getElementById('new-res-max').value);
+
+        if (name && max > 0) {
+            state.customResources.push({ name, max });
+            saveStateToServer();
+            renderSpells(); // Atualiza a tela de trás
+            
+            // Atualiza a lista do modal
+            document.getElementById('custom-res-list').innerHTML = renderList();
+            document.getElementById('new-res-name').value = '';
+            document.getElementById('new-res-max').value = '';
+            
+            // Re-bind dos botões de remover
+            bindRemoveBtns();
+        }
+    };
+
+    function bindRemoveBtns() {
+        overlay.querySelectorAll('.remove-res-btn').forEach(btn => {
+            btn.onclick = (e) => {
+                const idx = parseInt(e.target.dataset.idx);
+                
+                // Remove do state
+                state.customResources.splice(idx, 1);
+                
+                // Limpa também o estado de "usados" (slots) para não ficar lixo na memória
+                // Nota: Isso é um pouco mais complexo pois os índices mudam. 
+                // Para simplificar, vamos limpar a chave específica do custom removido e renomear as outras?
+                // Solução simples: Resetar todos os custom slots no spellSlots object.
+                // Mas isso perderia o progresso dos outros.
+                // Melhor: Recriar o objeto de spellSlots para custom.
+                
+                // Limpeza rápida (reseta customs para evitar bugs de índice)
+                // Se quiser manter o estado, teria que remapear as chaves custom_1 -> custom_0, etc.
+                // Vamos resetar por segurança.
+                Object.keys(state.spellSlots).forEach(k => {
+                    if(k.startsWith('custom_')) delete state.spellSlots[k];
+                });
+
+                saveStateToServer();
+                renderSpells();
+                document.getElementById('custom-res-list').innerHTML = renderList();
+                bindRemoveBtns();
+            };
+        });
+    }
+
+    bindRemoveBtns();
+}
 // Função global para botões numéricos (+/-) de recursos altos
 window.changeResource = (key, delta, max) => {
     if (!state.spellSlots[key]) state.spellSlots[key] = { used: 0 };
@@ -2485,16 +2730,25 @@ function renderPreparedSpells() {
 
             const body = card.querySelector('.card-body');
             const caret = card.querySelector('.caret');
-            if (body.style.display === 'none') {
-                body.style.display = 'block';
-                caret.textContent = '▾';
-                card.classList.add('expanded');
-            } else {
-                body.style.display = 'none';
-                caret.textContent = '▸';
-                card.classList.remove('expanded');
-            }
+            // Exemplo genérico que você já usa:
+const toggleCardExpansion = (card, itemId, isSpell) => {
+    // ...
+    if (item) {
+        item.expanded = !item.expanded; // Inverte estado no JSON
+        // ...
+        if (body.style.display === 'none') {
+             body.style.display = 'block';
+             card.classList.add('expanded'); // Adiciona classe visual
+             caret.textContent = '▾';
+        } else {
+             body.style.display = 'none';
+             card.classList.remove('expanded'); // Remove classe visual
+             caret.textContent = '▸';
         }
+    }
+};
+        }
+        saveStateToServer();
     };
 
     conteudoEl.querySelectorAll('.hab-card').forEach(card => {
@@ -2947,33 +3201,22 @@ function openAbilityCatalogOverlay() {
     });
   }
 
+/* SUBSTITUA A FUNÇÃO renderCatalogList POR ESTA */
   function renderCatalogList() {
     const container = overlay.querySelector('.abilities-list-large');
     const searchInput = overlay.querySelector('#catalogAbilitySearch').value.toLowerCase();
     const searchTerms = searchInput.split(',').map(t => t.trim()).filter(t => t);
 
     let items = abilityCatalog.filter(it => {
-      // 1. Lógica das Abas (Classe/Subclasse)
       if (activeClass) {
         if (activeClassHabilitySelected) {
-          // Se estiver na aba principal da classe
           if (it.class !== activeClass || (it.subclass && it.subclass !== '')) return false;
         } else if (activeSubclass) {
-          // Se estiver numa subclasse específica
           if (it.class !== activeClass || it.subclass !== activeSubclass) return false;
         }
       }
-      
-      // 2. Filtro de Texto (separado por vírgula)
       if (searchTerms.length > 0) {
-        const fullText = [
-            it.name,
-            it.description,
-            it.class,
-            it.subclass,
-            it.category // Geral, Ação, etc.
-        ].filter(Boolean).join(' ').toLowerCase();
-
+        const fullText = [it.name, it.description, it.class, it.subclass, it.category].filter(Boolean).join(' ').toLowerCase();
         return searchTerms.every(term => fullText.includes(term));
       }
       return true;
@@ -2986,19 +3229,20 @@ function openAbilityCatalogOverlay() {
 
     container.innerHTML = items.map(c => formatCatalogAbilityCard(c)).join('');
 
+    // Expandir Card do Catálogo
     container.querySelectorAll('.catalog-card-header .left').forEach(divLeft => {
       divLeft.addEventListener('click', (ev) => {
         ev.stopPropagation();
         const card = divLeft.closest('.catalog-card-ability');
         const body = card.querySelector('.catalog-card-ability-body');
         const toggle = card.querySelector('.catalog-ability-toggle');
-
         const isHidden = body.style.display === 'none';
         body.style.display = isHidden ? 'block' : 'none';
         toggle.textContent = isHidden ? '▾' : '▸';
       });
     });
 
+    // Adicionar Habilidade
     container.querySelectorAll('.catalog-add-ability-btn').forEach(btn => {
       btn.onclick = (e) => {
         e.stopPropagation();
@@ -3013,12 +3257,16 @@ function openAbilityCatalogOverlay() {
           expanded: true,
           class: c.class || '',
           subclass: c.subclass || '',
+          category: c.category || 'Geral',
           active: false
         };
 
         state.abilities.unshift(novo);
         renderAbilities();
         saveStateToServer();
+
+        // --- ESTA LINHA É OBRIGATÓRIA PARA O HEADER MUDAR O NOME DA CLASSE ---
+        window.dispatchEvent(new CustomEvent('sheet-updated'));
 
         btn.textContent = '✓';
         setTimeout(() => btn.textContent = '+', 1000);
@@ -3168,13 +3416,37 @@ function formatCatalogAbilityCard(c) {
   `;
 }
 
+/* ---------------- MODAL NOVA HABILIDADE (COM VALIDAÇÃO E PLACEHOLDER) ---------------- */
 function openNewAbilityModal(existingAbility = null) {
   const modal = document.createElement('div');
   modal.className = 'spell-modal-overlay';
   modal.style.zIndex = '11000';
 
-  const descContent = existingAbility ? existingAbility.description : 'Minha nova habilidade';
+  // Se for edição, mantém a descrição. Se for novo, começa vazio.
+  const descContent = existingAbility ? existingAbility.description : '';
   const editorHTML = createRichEditorHTML(descContent, 'hab-editor-content');
+
+  // Valores iniciais
+  let currentCategory = existingAbility ? existingAbility.category : 'Geral';
+  let currentClass = existingAbility ? existingAbility.class : '';
+  let currentSubclass = existingAbility ? existingAbility.subclass : '';
+
+  // Lista de Categorias
+  const CATEGORIAS = ['Geral', 'Raça', 'Talento', 'Antecedente', 'Classe'];
+
+  // Gera HTML dos Checkboxes de Tipo
+  const typeCheckboxesHTML = CATEGORIAS.map(cat => `
+      <label class="radio-box">
+          <input type="radio" name="hab-type" value="${cat}" ${currentCategory === cat ? 'checked' : ''}>
+          <span class="radio-label">${cat}</span>
+      </label>
+  `).join('');
+
+  // Dropdown de Classes (só aparece se "Classe" estiver selecionado)
+  const classDropdownStyle = currentCategory === 'Classe' ? 'display:block;' : 'display:none;';
+  const classOptionsHTML = CLASSES_AVAILABLE.map(c => 
+      `<option value="${c}" ${currentClass === c ? 'selected' : ''}>${c}</option>`
+  ).join('');
 
   modal.innerHTML = `
       <div class="spell-modal" style="width:760px; max-width:calc(100% - 40px);">
@@ -3184,11 +3456,38 @@ function openNewAbilityModal(existingAbility = null) {
         </div>
 
         <div class="modal-body">
-          <label>Nome*</label>
-          <input id="hab-name" type="text" value="${existingAbility ? escapeHtml(existingAbility.title) : 'Nova Habilidade'}" />
+          <div>
+              <label>Nome da Habilidade <span style="color:#ff5555">*</span></label>
+              <input id="hab-name" type="text" value="${existingAbility ? escapeHtml(existingAbility.title) : ''}" placeholder="Ex: Fúria, Visão no Escuro (Obrigatório)..." />
+          </div>
 
-          <label>Descrição*</label>
-          ${editorHTML}
+          <div style="margin-top:10px;">
+              <label style="margin-bottom:8px;">Tipo de Habilidade</label>
+              <div class="radio-group-container">
+                  ${typeCheckboxesHTML}
+              </div>
+          </div>
+
+          <div id="hab-class-selector" style="${classDropdownStyle} margin-top:12px; background:#151515; padding:10px; border-radius:6px; border:1px solid rgba(255,255,255,0.05);">
+              <div style="display:flex; gap:12px;">
+                  <div style="flex:1;">
+                      <label>Classe</label>
+                      <select id="hab-class-select" class="dark-select">
+                          <option value="">Selecione...</option>
+                          ${classOptionsHTML}
+                      </select>
+                  </div>
+                  <div style="flex:1;">
+                      <label>Subclasse (Opcional)</label>
+                      <input id="hab-subclass-input" type="text" value="${currentSubclass}" placeholder="Ex: Berserker, Evocação..." />
+                  </div>
+              </div>
+          </div>
+
+          <div style="margin-top:15px;">
+              <label>Descrição</label>
+              ${editorHTML}
+          </div>
         </div>
 
         <div class="modal-actions">
@@ -3201,7 +3500,30 @@ function openNewAbilityModal(existingAbility = null) {
   document.body.appendChild(modal);
   checkScrollLock(); 
   initRichEditorEvents('hab-editor-content');
+  
+  // Foca no nome se for novo
+  if (!existingAbility) {
+      document.getElementById('hab-name').focus();
+  }
 
+  // --- LÓGICA DE INTERFACE ---
+  
+  const radios = modal.querySelectorAll('input[name="hab-type"]');
+  const classSelectorDiv = modal.querySelector('#hab-class-selector');
+
+  radios.forEach(radio => {
+      radio.addEventListener('change', (e) => {
+          if (e.target.value === 'Classe') {
+              classSelectorDiv.style.display = 'block';
+          } else {
+              classSelectorDiv.style.display = 'none';
+              modal.querySelector('#hab-class-select').value = "";
+              modal.querySelector('#hab-subclass-input').value = "";
+          }
+      });
+  });
+
+  // Fechar Modal
   const closeAll = () => {
     modal.remove();
     checkScrollLock(); 
@@ -3209,25 +3531,61 @@ function openNewAbilityModal(existingAbility = null) {
   modal.querySelector('.modal-close').addEventListener('click', closeAll);
   modal.querySelector('.btn-cancel-hab').addEventListener('click', (ev) => { ev.preventDefault(); closeAll(); });
 
+  // Salvar
   modal.querySelector('.btn-save-hab').addEventListener('click', (ev) => {
     ev.preventDefault();
-    const nome = modal.querySelector('#hab-name').value.trim() || 'Habilidade sem nome';
+    const nomeInput = modal.querySelector('#hab-name');
+    const nome = nomeInput.value.trim();
     
-    // --- LER DO EDITOR ---
-    const desc = document.getElementById('hab-editor-content').innerHTML;
+    // --- VALIDAÇÃO OBRIGATÓRIA ---
+    if (!nome) {
+        alert("O nome da habilidade é obrigatório!");
+        nomeInput.style.borderColor = "#ff5555"; // Destaca erro
+        nomeInput.focus();
+        return; // Para a execução aqui
+    }
 
-    const cls = '';
-    const sub = '';
+    const desc = document.getElementById('hab-editor-content').innerHTML;
+    
+    const selectedCategory = modal.querySelector('input[name="hab-type"]:checked')?.value || 'Geral';
+    
+    let finalClass = "";
+    let finalSubclass = "";
+
+    if (selectedCategory === 'Classe') {
+        finalClass = modal.querySelector('#hab-class-select').value;
+        finalSubclass = modal.querySelector('#hab-subclass-input').value.trim();
+    } else if (selectedCategory === 'Antecedente') {
+        finalClass = 'Antecedente'; 
+    }
 
     if (existingAbility) {
-      state.abilities = state.abilities.map(h => h.id === existingAbility.id ? { ...h, title: nome, description: desc, class: cls, subclass: sub } : h);
+      state.abilities = state.abilities.map(h => h.id === existingAbility.id ? { 
+          ...h, 
+          title: nome, 
+          description: desc,
+          category: selectedCategory,
+          class: finalClass,
+          subclass: finalSubclass
+      } : h);
     } else {
-      state.abilities.unshift({ id: uid(), title: nome, description: desc, expanded: true, class: cls, subclass: sub });
+      state.abilities.unshift({ 
+          id: uid(), 
+          title: nome, 
+          description: desc, 
+          expanded: true, 
+          active: false,
+          category: selectedCategory,
+          class: finalClass,
+          subclass: finalSubclass
+      });
     }
 
     closeAll();
     renderAbilities();
     saveStateToServer(); 
+
+    window.dispatchEvent(new CustomEvent('sheet-updated'));
   });
 }
 
@@ -3304,6 +3662,33 @@ function renderDescription() {
     // O overflow-y: auto garante o scroll se o usuário forçar um tamanho pequeno.
   });
 }
+/* --- FUNÇÃO AUXILIAR: RENDERIZA GRUPO DE ITENS (COM TOGGLE) --- */
+function renderItemGroup(titulo, listaItens, chaveUnica) {
+    if (!listaItens || listaItens.length === 0) return '';
+
+    // Inicializa o estado de colapso se não existir
+    if (!state.collapsedSections) state.collapsedSections = {};
+    const isCollapsed = !!state.collapsedSections[chaveUnica];
+    
+    const arrow = isCollapsed ? '▸' : '▾';
+    const displayStyle = isCollapsed ? 'display:none;' : '';
+
+    // Gera o HTML dos cards internos
+    const cardsHtml = listaItens.map(item => formatInventoryItem(item)).join('');
+
+    return `
+        <div class="inv-section-group" style="margin-bottom:12px;">
+            <div class="toggle-inv-header" data-key="${chaveUnica}" style="cursor:pointer; display:flex; align-items:center; background:rgba(255,255,255,0.03); padding:8px; border-radius:4px; margin-bottom:5px; border: 1px solid rgba(255,255,255,0.05);">
+                <span style="font-size:14px; color:#9c27b0; width:15px;">${arrow}</span> 
+                <span style="font-weight:700; font-size:12px; color:#ccc; text-transform:uppercase;">${titulo}</span>
+                <span style="margin-left:auto; font-size:10px; color:#666; background:#111; padding:2px 6px; border-radius:4px;">${listaItens.length}</span>
+            </div>
+            <div class="inv-section-content" style="${displayStyle}">
+                ${cardsHtml}
+            </div>
+        </div>
+    `;
+}
 
 function renderActiveTab() {
   switch (state.activeTab) {
@@ -3324,8 +3709,19 @@ function initAbas() {
   renderActiveTab();
 }
 
-document.addEventListener('DOMContentLoaded', initAbas);
+/* =============================================================
+   INICIALIZAÇÃO (FINAL DO ARQUIVO DIREITA.JS)
+============================================================= */
 
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Inicializa os listeners das abas
+    initAbas();
+    
+    // 2. Força uma renderização inicial se já tivermos dados
+    if (state && state.niveisClasses) {
+        renderActiveTab();
+    }
+});
 function escapeHtml(str) {
   if (str === 0) return '0';
   if (!str) return '';
@@ -3440,7 +3836,11 @@ function aplicarEnterNosInputs(container) {
 /* ---------------- FUNÇÕES DO EDITOR DE TEXTO RICO ---------------- */
 
 // Função para gerar o HTML do editor
+/* ---------------- FUNÇÃO DO EDITOR DE TEXTO RICO (COM PLACEHOLDER) ---------------- */
 function createRichEditorHTML(content, idContainer) {
+    // Se content for exatamente o texto padrão antigo, limpa para mostrar o placeholder
+    if (content === 'Minha nova habilidade' || content === 'Sem descrição.') content = '';
+
     return `
       <div class="rich-editor-wrapper" id="${idContainer}-wrapper">
         <div class="rich-toolbar">
@@ -3450,7 +3850,7 @@ function createRichEditorHTML(content, idContainer) {
           <div style="width:1px; background:#444; margin:0 4px;"></div>
           <button type="button" class="rich-btn" data-cmd="insertUnorderedList" title="Lista">≣</button>
         </div>
-        <div class="rich-content" id="${idContainer}" contenteditable="true">${content}</div>
+        <div class="rich-content" id="${idContainer}" contenteditable="true" placeholder="Digite a descrição ou detalhes aqui...">${content}</div>
       </div>
     `;
 }
