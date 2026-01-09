@@ -63,85 +63,57 @@ body.no-scroll {
 }
 
 /* ==========================================================================
-   ABAS DE NAVEGAÇÃO
+   ABAS DE NAVEGAÇÃO (AJUSTADO PARA NÃO VAZAR)
    ========================================================================== */
 .abas {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 4px; /* Reduzido de 10px para 4px para caber melhor */
   margin-bottom: 14px;
   align-items: center;
 }
 
 /* Posicionamento Fixo no Grid */
-.abas button:nth-child(1) {
-  grid-column: 1;
-  grid-row: 1;
-}
-
-/* Combate */
-.abas button:nth-child(2) {
-  grid-column: 2;
-  grid-row: 1;
-}
-
-/* Mag. Preparadas */
-.abas button:nth-child(3) {
-  grid-column: 3;
-  grid-row: 1;
-}
-
-/* Habilidades */
-.abas button:nth-child(4) {
-  grid-column: 1;
-  grid-row: 2;
-}
-
-/* Magias */
-.abas button:nth-child(5) {
-  grid-column: 2;
-  grid-row: 2;
-}
-
-/* Inventário */
-.abas button:nth-child(6) {
-  grid-column: 3;
-  grid-row: 2;
-}
-
-/* Descrição */
+.abas button:nth-child(1) { grid-column: 1; grid-row: 1; } /* Combate */
+.abas button:nth-child(2) { grid-column: 2; grid-row: 1; } /* Mag. Preparadas */
+.abas button:nth-child(3) { grid-column: 3; grid-row: 1; } /* Habilidades */
+.abas button:nth-child(4) { grid-column: 1; grid-row: 2; } /* Magias */
+.abas button:nth-child(5) { grid-column: 2; grid-row: 2; } /* Inventário */
+.abas button:nth-child(6) { grid-column: 3; grid-row: 2; } /* Descrição */
 
 .abas button {
   background-color: transparent;
   border: none;
   color: #cfcfcf;
-  padding: 8px 10px;
+  padding: 6px 2px; 
   border-radius: 4px;
   cursor: pointer;
   font-weight: 700;
-  letter-spacing: 0.4px;
-  font-size: 14px;
+  letter-spacing: 0.2px; 
+  font-size: 12.5px; 
   position: relative;
   white-space: nowrap;
+  overflow: hidden;
+  
+  width: 100%;
 }
 
 .abas button.ativa {
-  color: #fff;
-}
+  color: #c237b6;
+} 
 
 .abas button.ativa::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -10px;
-  height: 3px;
+  bottom: -4px; /* Ajustado a posição da linha */
+  height: 2px;
   background: linear-gradient(90deg, #9c27b0, #7b1fa2);
   border-radius: 4px;
   margin: 0 auto;
-  width: 60%;
+  width: 80%; /* Aumentado a largura da linha */
 }
-
 /* ==========================================================================
    CARDS (BASE E COMPORTAMENTO)
    ========================================================================== */
@@ -1921,4 +1893,86 @@ a.editar-spell {
   overflow: visible !important;
   flex-shrink: 0;
   overflow-anchor: none;
+}
+
+
+/* ==========================================================================
+   CORREÇÃO DE MODAIS (POSICIONAMENTO E SCROLL)
+   ========================================================================== */
+
+/* Overlay ocupa toda a tela e centraliza o conteúdo */
+.spell-modal-overlay {
+  position: fixed;
+  inset: 0; /* top:0, left:0, right:0, bottom:0 */
+  background: rgba(0, 0, 0, 0.85); /* Fundo um pouco mais escuro para foco */
+  display: flex;
+  align-items: center; /* Centraliza verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
+  z-index: 11000;
+  padding: 20px; /* Margem de segurança nas bordas */
+  overflow: hidden; /* O scroll é dentro do modal, não no overlay */
+}
+
+/* O Modal em si */
+.spell-modal {
+  /* Tamanho e Limites */
+  width: 900px;
+  max-width: 100%;
+  max-height: 90vh; /* Máximo 90% da altura da tela */
+  
+  /* Layout Flex para cabeçalho fixo e corpo rolável */
+  display: flex;
+  flex-direction: column;
+  
+  /* Visual */
+  background: #1f1f1f;
+  border: 1px solid #444;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+  border-radius: 8px;
+  
+  /* Reset de margens antigas que causavam problemas */
+  margin: 0 !important; 
+  position: relative;
+}
+
+/* Cabeçalho fixo no topo do modal */
+.spell-modal .modal-header {
+  flex-shrink: 0; /* Não encolhe */
+  padding: 15px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin: 0;
+  background: #252525;
+  border-radius: 8px 8px 0 0;
+}
+
+/* Corpo com Rolagem */
+.spell-modal .modal-body {
+  flex: 1; /* Ocupa o espaço restante */
+  overflow-y: auto; /* Scroll vertical se necessário */
+  padding: 20px;
+  gap: 15px;
+}
+
+/* Rodapé fixo (Ações) */
+.spell-modal .modal-actions {
+  flex-shrink: 0;
+  padding: 15px 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  background: #252525;
+  border-radius: 0 0 8px 8px;
+  margin: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Ajuste para telas pequenas */
+@media (max-width: 600px) {
+  .spell-modal-overlay {
+    padding: 10px;
+    align-items: flex-start; /* Em mobile, sobe um pouco */
+  }
+  .spell-modal {
+    max-height: 95vh;
+  }
 }
