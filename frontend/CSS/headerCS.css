@@ -107,57 +107,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* =============================================================
    MODAL DE RAÇAS E CRIAÇÃO CUSTOMIZADA
 ============================================================= */
@@ -789,4 +738,151 @@
 
 .remove-trait-btn:hover {
   color: #ff5252 !important;
+}
+
+
+/* =============================================================
+   ESTILOS MELHORADOS PARA VARIANTES (CARDS)
+============================================================= */
+
+.variations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.variation-card-wrapper {
+  background: #151515; /* Fundo base */
+  border: 1px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Estado Selecionado/Aberto */
+.variation-card-wrapper.open {
+  border-color: #9c27b0; /* Borda roxa */
+  background: #1a1a1a;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+/* Header do Card */
+.variation-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 15px;
+  cursor: pointer;
+  background: linear-gradient(to right, rgba(255,255,255,0.02), transparent);
+  border-bottom: 1px solid transparent; /* Invisível se fechado */
+  transition: background 0.2s;
+}
+
+.variation-card-wrapper.open .variation-header {
+  border-bottom: 1px solid #333;
+  background: rgba(156, 39, 176, 0.05); /* Leve fundo roxo no header */
+}
+
+.variation-header:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.variation-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.variation-arrow {
+  font-size: 10px;
+  color: #666;
+  transition: transform 0.3s;
+}
+
+.variation-card-wrapper.open .variation-arrow {
+  transform: rotate(180deg);
+  color: #9c27b0;
+}
+
+/* Radio Button Customizado */
+.variation-header input[type="radio"] {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #555;
+  border-radius: 50%;
+  margin-right: 10px;
+  cursor: pointer;
+  position: relative;
+  display: grid;
+  place-content: center;
+}
+
+.variation-header input[type="radio"]::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: 0.2s transform;
+  box-shadow: inset 1em 1em #9c27b0;
+}
+
+.variation-header input[type="radio"]:checked {
+  border-color: #9c27b0;
+}
+
+.variation-header input[type="radio"]:checked::before {
+  transform: scale(1);
+}
+
+/* Corpo do Card */
+.variation-body {
+  display: none; /* Escondido por padrão */
+  padding: 15px;
+  animation: slideDown 0.3s ease-out;
+}
+
+.variation-card-wrapper.open .variation-body {
+  display: block;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Texto Descritivo da Variante */
+.variation-desc-text {
+  font-size: 14px;
+  color: #ccc;
+  font-style: italic;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+/* Box da Habilidade (Feature) dentro da Variante */
+.variation-feature-box {
+  background: #0a0a0a;
+  border: 1px solid #333;
+  border-left: 3px solid #e0aaff;
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 5px;
+}
+
+.variation-feature-title {
+  color: #e0aaff;
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+
+.variation-feature-content {
+  color: #bbb;
+  font-size: 13px;
+  line-height: 1.4;
 }

@@ -1,7 +1,7 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Magias",
+  "activeTab": "Habilidades",
   "spellDCConfig": {
     "selectedAttr": "none",
     "extraMod": 0,
@@ -10,295 +10,122 @@
   "dtMagias": "Selecione",
   "inventory": [
     {
-      "id": 1767902588309,
-      "name": "testeitme",
-      "description": "wwweew",
-      "expanded": true,
-      "equip": true,
-      "type": "Geral",
-      "isEquipable": true,
-      "acertoBonus": "12",
-      "damageBonus": "32",
-      "damageType": "1111",
-      "defenseBonus": "",
-      "defenseType": "",
-      "disadvantageSkill": [
-        "Furtividade"
-      ],
-      "advantageSkill": [
-        "Acrobacia"
-      ]
-    },
-    {
-      "id": 1767845070275,
-      "name": "leve",
-      "description": "",
+      "id": 1768240511286,
+      "name": "Machado de Batalha",
+      "description": "<p>Um machado de lâmina única ou dupla, equilibrado para golpes poderosos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>",
       "expanded": false,
-      "equip": true,
-      "type": "Proteção",
-      "isEquipable": true,
-      "proficiency": "Leve",
-      "tipoItem": "Armadura",
-      "minStrength": "0",
-      "attunement": "Não",
-      "minReqAttrs": [
-        "Força"
-      ],
-      "disadvantageSkill": [],
-      "advantageSkill": [],
-      "defense": "2"
-    },
-    {
-      "id": 1767845058510,
-      "name": "pesada",
-      "description": "",
-      "expanded": true,
       "equip": false,
-      "type": "Proteção",
-      "isEquipable": true,
-      "proficiency": "Pesada",
-      "tipoItem": "Armadura",
-      "minStrength": "0",
-      "attunement": "Não",
-      "minReqAttrs": [
-        "Força"
-      ],
-      "disadvantageSkill": [],
-      "advantageSkill": [],
-      "defense": "10,2"
-    },
-    {
-      "id": 1767845044267,
-      "name": "meida",
-      "description": "",
-      "expanded": true,
-      "equip": true,
-      "type": "Proteção",
-      "isEquipable": true,
-      "proficiency": "Media",
-      "tipoItem": "Escudo",
-      "minStrength": "02",
-      "attunement": "Sim",
-      "minReqAttrs": [
-        "Força"
-      ],
-      "disadvantageSkill": [
-        "Furtividade"
-      ],
-      "advantageSkill": [
-        "Furtividade"
-      ],
-      "defense": "2"
-    },
-    {
-      "id": 1767843923754,
-      "name": "espad",
-      "description": "",
-      "expanded": true,
-      "equip": true,
       "type": "Arma",
       "isEquipable": true,
-      "proficiency": "Armas Simples",
+      "proficiency": "Armas Marciais",
       "tipoArma": "Corpo a Corpo",
-      "empunhadura": "Uma mao",
+      "empunhadura": "Versátil",
       "crit": "20",
       "multiplicador": "2",
       "alcance": "1.5m",
       "attunement": "Não",
-      "damage": "22",
-      "damage2Hands": "",
+      "damage": "1d8",
+      "damage2Hands": "1d10",
       "useTwoHands": false,
-      "caracteristicas": [
-        "Alcance"
-      ],
       "damageTypes": [
-        "Contundente"
+        "Cortante"
       ],
-      "moreDmgList": []
+      "moreDmgList": [],
+      "caracteristicas": []
     },
     {
-      "id": 1768195783477,
-      "name": "Malagueta (porrete)",
+      "id": 1768241530125,
+      "name": "Cajado",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d6",
+      "damage2Hands": "1d8",
+      "useTwoHands": false,
+      "damageType": "Contundente",
+      "proficiency": "Armas Simples",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Versátil",
+      "caracteristicas": [],
+      "description": "<p>Bastão de madeira simples, mas eficaz.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>",
+      "originalId": "i_cajado",
+      "quantidade": 1,
+      "equip": false,
+      "expanded": false
+    },
+    {
+      "id": 1768241472901,
+      "name": "Armadilha de Caça",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>Dano 1d4 e imobiliza (CD 13).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 11 kg</li></ul>",
+      "originalId": "i_armadilha_caca",
+      "quantidade": 1,
+      "equip": false,
+      "expanded": false
+    },
+    {
+      "id": 1768241538005,
+      "name": "Um troféu de caça",
       "type": "Geral",
       "description": "Item de Antecedente",
       "expanded": false,
-      "equip": false
+      "equip": false,
+      "weight": 0,
+      "quantity": 1
     },
     {
-      "id": 1768195734499,
-      "name": "Corda de seda (15m)",
+      "id": 1768241450092,
+      "name": "Roupas de viajante",
       "type": "Geral",
       "description": "Item de Antecedente",
       "expanded": false,
-      "equip": false
-    },
-    {
-      "id": 1768195748666,
-      "name": "Amuleto da sorte",
-      "type": "Geral",
-      "description": "Item de Antecedente",
-      "expanded": false,
-      "equip": false
-    },
-    {
-      "id": 1768195763594,
-      "name": "Roupas comuns",
-      "type": "Geral",
-      "description": "Item de Antecedente",
-      "expanded": false,
-      "equip": false
-    },
-    {
-      "id": 1768195772336,
-      "name": "10 PO",
-      "type": "Geral",
-      "description": "Item de Antecedente",
-      "expanded": false,
-      "equip": false
-    },
-    {
-      "id": 1768196166248,
-      "name": "Roupas finas",
-      "type": "Geral",
-      "description": "Item de Antecedente",
-      "expanded": false,
-      "equip": false
-    },
-    {
-      "id": 1768196228121,
-      "name": "Kit de disfarce",
-      "type": "Geral",
-      "description": "Item de Antecedente",
-      "expanded": false,
-      "equip": false
-    },
-    {
-      "id": 1768196214198,
-      "name": "Ferramentas de fraude",
-      "type": "Geral",
-      "description": "Item de Antecedente",
-      "expanded": false,
-      "equip": false
-    },
-    {
-      "id": 1768196257199,
-      "name": "15 PO",
-      "type": "Geral",
-      "description": "Item de Antecedente",
-      "expanded": false,
-      "equip": false
+      "equip": false,
+      "weight": 0,
+      "quantity": 1
     }
   ],
   "abilities": [
     {
-      "id": 1768196164181,
-      "title": "Identidade Falsa",
-      "description": "Você possui uma segunda identidade completa com documentos e pode forjar papéis oficiais.",
+      "id": 1768241446556,
+      "title": "Andarilho",
+      "description": "Você tem memória excelente para mapas e geografia. Além disso, pode encontrar comida e água fresca para você e até 5 outras pessoas diariamente, se a terra oferecer.",
       "expanded": false,
       "active": true,
       "category": "Antecedente",
       "class": "",
-      "subclass": "Charlatão"
+      "subclass": "Forasteiro"
     },
     {
-      "id": 1768192692637,
-      "title": "Mordida Vampírica",
-      "description": "Ataque natural (1d4 + Con perfurante) com vantagem se estiver com metade dos PV ou menos. Ao acertar (não constructo/morto-vivo), pode se curar ou ganhar bônus no próximo teste igual ao dano causado. Usos igual bônus proficiência por descanso longo.",
+      "id": 1768240029834,
+      "title": "Resistência Psíquica",
+      "description": "Você tem resistência a dano psíquico.",
       "expanded": false,
       "active": false,
       "category": "Raça",
       "class": "Raça",
-      "subclass": "Dampir"
+      "subclass": "Githzerai"
     },
     {
-      "id": 1768192721371,
-      "title": "Escalada Aracnídea",
-      "description": "Deslocamento de escalada igual à caminhada. No nv 3, pode andar em paredes/tetos com mãos livres.",
-      "expanded": true,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Dampir"
-    },
-    {
-      "id": 1768192698059,
-      "title": "Natureza Imortal",
-      "description": "Não precisa respirar.",
+      "id": 1768240022508,
+      "title": "Disciplina Mental",
+      "description": "Você tem <b>vantagem</b> em salvaguardas para não ser enfeitiçado ou amedrontado.",
       "expanded": false,
       "active": false,
       "category": "Raça",
       "class": "Raça",
-      "subclass": "Dampir"
+      "subclass": "Githzerai"
     },
     {
-      "id": 1768192727179,
-      "title": "Visão no Escuro",
-      "description": "18 metros.",
+      "id": 1768240056796,
+      "title": "Psionismo Githzerai",
+      "description": "Truque <i>mãos mágicas</i> (invisível). Nv 3: <i>égide</i> (1/longo). Nv 5: <i>detectar pensamentos</i> (1/longo). Sem componentes. (Int, Sab ou Car).",
       "expanded": false,
       "active": false,
       "category": "Raça",
       "class": "Raça",
-      "subclass": "Dampir"
-    },
-    {
-      "id": 1768192705979,
-      "title": "Legado Ancestral",
-      "description": "Se substituir uma raça, mantém perícias e deslocamentos (escalada/voo/natação). Caso contrário, ganha 2 perícias.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Dampir"
-    },
-    {
-      "id": 1768192697432,
-      "title": "Presença Enérgica",
-      "description": "Vantagem em um teste de Intimidação ou Persuasão uma vez por descanso curto/longo.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Variante: Sangue de Dragão"
-    },
-    {
-      "id": 1768192762776,
-      "title": "Visão no Escuro",
-      "description": "18 metros.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Variante: Sangue de Dragão"
-    },
-    {
-      "id": 1768192707685,
-      "title": "Resistência a Dano",
-      "description": "Resistência ao tipo de dano da sua herança.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Draconatos"
-    },
-    {
-      "id": 1768192678739,
-      "title": "Ataque de Sopro",
-      "description": "Ação para exalar energia. Dano 2d6 (aumenta nos níveis 6, 11, 16), CD baseada em Con. Recupera com descanso curto ou longo.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Draconatos"
-    },
-    {
-      "id": 1768192752641,
-      "title": "Herança Dracônica",
-      "description": "Escolha um tipo de dragão (Tabela do Livro do Jogador). Determina seu ataque de sopro e resistência.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Draconatos"
+      "subclass": "Githzerai"
     },
     {
       "id": 1768158519683,
@@ -397,7 +224,7 @@
   "pericias": {
     "Atletismo": {
       "atributo": "FOR",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Acrobacia": {
@@ -407,7 +234,7 @@
     },
     "Furtividade": {
       "atributo": "DEX",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Prestidigitação": {
@@ -457,12 +284,12 @@
     },
     "Percepção": {
       "atributo": "SAB",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Sobrevivência": {
       "atributo": "SAB",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Atuação": {
@@ -472,17 +299,17 @@
     },
     "Enganação": {
       "atributo": "CAR",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Intimidação": {
       "atributo": "CAR",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Persuasão": {
       "atributo": "CAR",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Salvaguarda (Força)": {
@@ -559,7 +386,7 @@
   "vidaAtual": 0,
   "vidaTempAtual": 71,
   "danoNecroAtual": 60,
-  "metros": 10.5,
+  "metros": 9,
   "iniciativaBonus": 87,
   "acOutros": 0,
   "resistencias": "23",
@@ -568,11 +395,32 @@
   "proficiencias": "q3r",
   "minimizedPreparedSpells": false,
   "minimizedPreparedAbilities": false,
-  "fraquezasList": [],
-  "resistenciasList": [],
-  "imunidadesList": [],
-  "proficienciasList": [],
-  "idiomasList": [],
+  "fraquezasList": [
+    "Cortante",
+    "Contundente"
+  ],
+  "resistenciasList": [
+    "Psíquico"
+  ],
+  "imunidadesList": [
+    "Contundente",
+    "Psíquico"
+  ],
+  "proficienciasList": [
+    "Viola",
+    "Lira"
+  ],
+  "idiomasList": [
+    "Élfico",
+    "Comum",
+    "Druídico",
+    "Gith",
+    "Gigante",
+    "Anão",
+    "Goblin",
+    "Orc",
+    "Halfling"
+  ],
   "spellSlots": {
     "1": {
       "used": 0,
@@ -671,20 +519,27 @@
     "class-Blood Hunter": false,
     "origem": false,
     "inv-armas": false,
-    "inv-armaduras": false,
+    "inv-armaduras": true,
     "cmb-ataques": false,
     "class-Bárbaro": true,
     "class-Druida": true,
     "talentos": true,
     "inv-gerais": false
   },
-  "antecedente": "Charlatão",
+  "antecedente": "Forasteiro",
   "personagem": "123w",
   "jogador": "321w",
-  "raca": "Draconatos (Dampir)",
+  "raca": "Githzerai",
   "customResources": [],
   "deslocamentoVoo": 0,
-  "subRaca": "Variante: Sangue de Dragão",
+  "subRaca": "",
   "racaTipo": "Humanoide",
-  "racaTamanho": "Médio ou Pequeno"
+  "racaTamanho": "Médio",
+  "money": {
+    "pc": 0,
+    "pp": 0,
+    "po": 0,
+    "pl": 0,
+    "pd": 0
+  }
 }

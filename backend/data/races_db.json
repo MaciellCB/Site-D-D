@@ -4,23 +4,24 @@
     "type": "Humanoide",
     "size": "Médio",
     "speed": 9,
-    "flySpeed": 9,
+    "flySpeed": 15,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Seres alados originários do Plano Elemental do Ar, personificando a liberdade dos ventos. Parecem aves majestosas quando voam, mas revelam sua natureza humanoide ao pousar. Possuem plumagem vibrante e cabeças semelhantes a aves de rapina.",
+    "description": "Descendentes dos ventos uivantes do <b>Plano Elemental do Ar</b>, os Aarakocra são a personificação da liberdade. Eles planam pelos céus onde quer que vão, observando o mundo de uma perspectiva que os habitantes da terra não conseguem compreender. Suas penas variam de cores vibrantes de papagaios a tons sóbrios de águias, e eles abominam o confinamento acima de tudo.",
     "image": "img/races/Aaracokra.png",
+    "languages": ["Comum", "Aarakocra", "Auran"],
     "traits": [
       {
         "name": "Voo",
-        "desc": "Você possui deslocamento de voo igual ao de caminhada. Não pode usar se vestir armadura média ou pesada."
+        "desc": "Você possui um deslocamento de voo igual ao seu deslocamento de caminhada. <u>Você não pode usar esse deslocamento se estiver vestindo armadura média ou pesada.</u>"
       },
       {
         "name": "Garras",
-        "desc": "Seus ataques desarmados causam 1d6 + Força de dano cortante."
+        "desc": "Suas garras são armas naturais. Seus ataques desarmados causam <b>1d6 + Força</b> de dano cortante."
       },
       {
         "name": "Chamador do Vento",
-        "desc": "A partir do 3º nível, você pode conjurar 'lufada de vento' uma vez por descanso longo sem componentes (ou usando espaços de magia). Escolha Int, Sab ou Car como atributo."
+        "desc": "A partir do <b>3º nível</b>, você pode conjurar a magia <i>lufada de vento</i> com este traço, sem necessitar de componentes materiais. Uma vez que o faça, você não pode fazê-lo novamente até terminar um <b>descanso longo</b>. Você também pode conjurar esta magia usando quaisquer espaços de magia que possua. Escolha Inteligência, Sabedoria ou Carisma como seu atributo de conjuração."
       }
     ],
     "variations": []
@@ -33,28 +34,30 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Mortais que carregam uma centelha dos Planos Superiores em suas almas, descendentes de seres celestiais ou imbuidos com poder divino. Podem avivar essa centelha para trazer luz e curar.",
+    "description": "Portadores de uma centelha celestial, os Aasimar são campeões do destino. Seja descendendo de um anjo benevolente ou tocados por uma divindade, eles nascem para servir como defensores da lei e do bem. Suas almas brilham com luz interior, e embora sejam mortais, sua presença inspira esperança ou temor.",
     "image": "img/races/Aasimar.png",
+    "resistances": ["Necrótico", "Radiante"],
+    "languages": ["Comum", "Celestial"],
     "traits": [
       {
         "name": "Resistência Celestial",
-        "desc": "Resistência a dano necrótico e radiante."
+        "desc": "Você possui resistência a dano <b>necrótico</b> e <b>radiante</b>."
       },
       {
         "name": "Visão no Escuro",
-        "desc": "Enxerga na meia-luz a 18m como luz plena, e na escuridão como meia-luz (tons de cinza)."
+        "desc": "Você enxerga na meia-luz a até <b>18 metros</b> como se fosse luz plena, e na escuridão como se fosse meia-luz. Você discerne cores na escuridão apenas como tons de cinza."
       },
       {
         "name": "Mãos Curativas",
-        "desc": "Como ação, toque uma criatura para curar um número de d4s igual ao seu bônus de proficiência. Uma vez por descanso longo."
+        "desc": "Como uma <b>ação</b>, você pode tocar uma criatura e curá-la em um número de d4s igual ao seu <b>Bônus de Proficiência</b>. Você recupera o uso desta habilidade após um <b>descanso longo</b>."
       },
       {
         "name": "Portador da Luz",
-        "desc": "Você conhece o truque 'luz' (Carisma)."
+        "desc": "Você conhece o truque <i>luz</i>. O Carisma é seu atributo de conjuração para ele."
       },
       {
         "name": "Revelação Celestial",
-        "desc": "No 3º nível, escolha uma transformação (Alma Radiante, Consumo Radiante ou Sudário Necrótico) para ativar como ação bônus uma vez por descanso longo. Dura 1 minuto."
+        "desc": "No <b>3º nível</b>, escolha uma transformação mística (Alma Radiante, Consumo Radiante ou Sudário Necrótico). Você pode ativá-la como uma <b>ação bônus</b> para ganhar benefícios (como voo ou dano extra) por 1 minuto. Uma vez usada, requer um <b>descanso longo</b> para recuperar."
       }
     ],
     "variations": []
@@ -67,52 +70,58 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Raça robusta e longeva, conhecida por habilidades em guerra, mineração e forja. Valorizam tradições, clãs e têm forte senso de justiça.",
+    "description": "Reinos ricos em grandeza antiga, salões esculpidos nas raízes das montanhas e o eco de picaretas e martelos: essa é a herança dos anões. Robustos e resilientes como a pedra que amam, eles valorizam o clã, a tradição e o trabalho duro acima de tudo.",
     "image": "img/races/Anões.png",
+    "resistances": ["Veneno"],
+    "proficiencies": ["Machado de batalha", "Machadinha", "Martelo leve", "Martelo de guerra"],
+    "languages": ["Comum", "Anão"],
+    "chooseToolFrom": ["Ferramentas de ferreiro", "Suprimentos de cervejeiro", "Ferramentas de pedreiro"],
     "traits": [
       {
         "name": "Deslocamento Anão",
-        "desc": "Seu deslocamento não é reduzido ao usar armadura pesada."
+        "desc": "Seu deslocamento <u>não é reduzido</u> quando você está usando armadura pesada."
       },
       {
         "name": "Visão no Escuro",
-        "desc": "Enxerga na meia-luz a 18m como luz plena, e na escuridão como meia-luz."
+        "desc": "Acostumado à vida subterrânea, você enxerga na meia-luz a até <b>18 metros</b> como luz plena, e na escuridão como meia-luz."
       },
       {
-        "name": "Resistência a Toxinas",
-        "desc": "Vantagem em salvaguardas contra veneno e resistência a dano venenoso."
+        "name": "Resiliência Anã",
+        "desc": "Você possui <b>vantagem</b> em salvaguardas contra veneno e <b>resistência</b> contra dano de veneno."
       },
       {
         "name": "Treinamento Anão em Combate",
-        "desc": "Proficiência com machados de batalha, machadinhas, martelos leves e martelos de guerra."
+        "desc": "Você tem proficiência com machados de batalha, machadinhas, martelos leves e martelos de guerra."
       },
       {
         "name": "Proficiência em Ferramentas",
-        "desc": "Proficiência com ferramentas de ferreiro, cervejeiro ou pedreiro (escolha uma)."
+        "desc": "Você tem proficiência em uma ferramenta de artesão à sua escolha: <b>ferramentas de ferreiro</b>, <b>suprimentos de cervejeiro</b> ou <b>ferramentas de pedreiro</b>."
       },
       {
         "name": "Conhecimento de Pedras",
-        "desc": "Adiciona o dobro do bônus de proficiência em testes de História relacionados a trabalhos em pedra."
+        "desc": "Sempre que realizar um teste de Inteligência (História) relacionado à origem de um trabalho em pedra, você é considerado proficiente e adiciona o <b>dobro do seu bônus de proficiência</b> ao teste."
       }
     ],
     "variations": [
       {
         "name": "Anão da Colina",
-        "description": "Possuem sentidos apurados, intuição profunda e notável resistência.",
+        "description": "Com sentidos aguçados e intuição profunda, os anões da colina são incrivelmente resistentes.",
+        "hpBonusPerLevel": 1,
         "traits": [
           {
             "name": "Tenacidade Anã",
-            "desc": "Seu máximo de PV aumenta em 1 por nível."
+            "desc": "Seu máximo de pontos de vida aumenta em 1, e aumenta em 1 novamente sempre que você ganhar um nível."
           }
         ]
       },
       {
         "name": "Anão da Montanha",
-        "description": "Fortes e resistentes, acostumados a terrenos acidentados.",
+        "description": "Fortes e resistentes, acostumados a uma vida difícil em terrenos acidentados.",
+        "proficiencies": ["Armaduras leves", "Armaduras médias"],
         "traits": [
           {
             "name": "Treinamento com Armaduras",
-            "desc": "Proficiência com armaduras leves e médias."
+            "desc": "Você adquire proficiência com armaduras <b>leves</b> e <b>médias</b>."
           }
         ]
       }
@@ -126,32 +135,36 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Seres mecânicos construídos por gnomos das pedras, que ganharam autonomia ou se separaram de seus criadores. Assemelham-se aos seus criadores e podem ser feitos de diversos materiais e fontes de energia.",
+    "description": "Maravilhas da engenharia gnomica, os Autogonomos são seres mecânicos dotados de livre arbítrio. Construídos com metais, engrenagens e cristais, cada um possui um design único que reflete seu criador ou sua função original, mas sua alma é inteiramente sua.",
     "image": "img/races/Autogonomo.png",
+    "resistances": ["Veneno"],
+    "immunities": ["Doenças"],
+    "languages": ["Comum", "Gnômico"],
+    "chooseToolAny": 2,
     "traits": [
       {
         "name": "Invólucro Blindado",
-        "desc": "Quando sem armadura, sua CA base é 13 + modificador de Destreza."
+        "desc": "Seu corpo é reforçado. Quando não estiver usando armadura, sua CA é <b>13 + seu modificador de Destreza</b>."
       },
       {
         "name": "Feito para o Sucesso",
-        "desc": "Adicione 1d4 a uma jogada de ataque, teste de atributo ou salvaguarda após ver o resultado do d20. Usos igual ao bônus de proficiência por descanso longo."
+        "desc": "Você pode adicionar <b>1d4</b> a uma jogada de ataque, teste de atributo ou salvaguarda após ver o resultado do d20, mas antes do efeito ocorrer. Você pode usar isso um número de vezes igual ao seu <b>Bônus de Proficiência</b> por descanso longo."
       },
       {
         "name": "Máquina de Cura",
-        "desc": "Se o truque 'reparar' for usado em você, pode gastar um Dado de Vida para se curar. Você também se beneficia de magias de cura normais."
+        "desc": "Se o truque <i>reparar</i> for usado em você, você pode gastar um Dado de Vida para se curar. Você também se beneficia de magias de cura normais (como <i>curar ferimentos</i>)."
       },
       {
         "name": "Natureza Mecânica",
-        "desc": "Resistência a dano venenoso, imunidade a doenças, vantagem contra paralisia/envenenamento. Não precisa comer, beber ou respirar."
+        "desc": "Você tem resistência a dano de <b>veneno</b> e imunidade a doenças. Você tem vantagem em salvaguardas contra ser paralisado ou envenenado. Você não precisa comer, beber ou respirar."
       },
       {
         "name": "Descanso do Sentinela",
-        "desc": "Descanso longo em 6 horas inativo e consciente, em vez de dormir."
+        "desc": "Você não precisa dormir. Você termina um descanso longo em <b>6 horas</b> se permanecer inativo e consciente."
       },
       {
         "name": "Design Especializado",
-        "desc": "Proficiência com duas ferramentas de artesão à sua escolha."
+        "desc": "Você ganha proficiência com duas ferramentas de artesão à sua escolha."
       }
     ],
     "variations": []
@@ -164,36 +177,38 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Primos grandalhões dos goblins, originários de Faéria. Possuem pelos grossos, membros longos e uma astúcia natural para se esconderem, apesar de seu tamanho.",
+    "description": "Pesadelos peludos que espreitam nas sombras, os Bugursos são primos brutais dos goblins. Apesar de sua estrutura maciça e força bruta, eles movem-se com uma furtividade surpreendente, nascidos para emboscar e dominar.",
     "image": "img/races/Bugurso.png",
+    "skills": ["Furtividade"],
+    "languages": ["Comum", "Goblin"],
     "traits": [
       {
         "name": "Tipo de Criatura",
-        "desc": "Considerado também um goblinoide."
+        "desc": "Você é um Humanoide. Você também é considerado um <b>goblinoide</b> para qualquer pré-requisito ou efeito."
       },
       {
         "name": "Visão no Escuro",
-        "desc": "Enxerga na meia-luz a 18m como luz plena, e na escuridão como meia-luz."
+        "desc": "Você enxerga na meia-luz a até <b>18 metros</b> como se fosse luz plena, e na escuridão como meia-luz."
       },
       {
         "name": "Ancestralidade Feérica",
-        "desc": "Vantagem em salvaguardas contra ser enfeitiçado."
+        "desc": "Você tem <b>vantagem</b> em salvaguardas contra ser enfeitiçado."
       },
       {
         "name": "Membros Longos",
-        "desc": "Seu alcance para ataques corpo a corpo é 1,5m maior que o normal."
+        "desc": "Quando você realiza um ataque corpo a corpo no seu turno, seu alcance é <b>1,5 metro maior</b> que o normal."
       },
       {
         "name": "Porte Poderoso",
-        "desc": "Conta como um tamanho maior para capacidade de carga, empurrar, arrastar ou levantar."
+        "desc": "Você conta como uma categoria de tamanho maior ao determinar sua capacidade de carga e o peso que pode empurrar, arrastar ou levantar."
       },
       {
         "name": "Furtivo",
-        "desc": "Proficiência em Furtividade. Pode se mover e parar em espaços de criaturas Pequenas sem se espremer."
+        "desc": "Você ganha proficiência na perícia <b>Furtividade</b>. Além disso, você pode se mover e parar em espaços ocupados por criaturas Pequenas sem se espremer."
       },
       {
         "name": "Ataque Surpresa",
-        "desc": "Se acertar uma criatura que ainda não agiu no combate, causa 2d6 de dano extra."
+        "desc": "Se você acertar uma criatura com uma jogada de ataque e ela ainda não tiver agido no combate atual, você causa <b>2d6</b> de dano extra a ela."
       }
     ],
     "variations": []
@@ -206,24 +221,27 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Criaturas com a parte superior de elfo e a inferior de cavalo, originárias de Faéria. Possuem uma conexão mística profunda com a natureza e são guardiões das florestas e planícies.",
+    "description": "Galopando pelas vastas planícies e florestas antigas, os Centauros unem a força e velocidade de um cavalo com a adaptabilidade humana. Nativos de Faéria, eles têm uma conexão mística com a natureza e são guerreiros e druidas formidáveis.",
     "image": "img/races/Centauro.png",
+    "languages": ["Comum", "Silvestre"],
+    "chooseSkillFrom": ["Lidar com Animais", "Medicina", "Natureza", "Sobrevivência"],
+    "countSkills": 1,
     "traits": [
       {
         "name": "Investida",
-        "desc": "Se mover pelo menos 9m em linha reta e acertar um ataque corpo a corpo, pode fazer um ataque de cascos como ação bônus."
+        "desc": "Se você se mover pelo menos <b>9 metros</b> em linha reta em direção a um alvo e acertá-lo com um ataque corpo a corpo com arma no mesmo turno, você pode usar uma <b>ação bônus</b> para fazer um ataque com seus cascos contra o alvo."
       },
       {
         "name": "Porte Equino",
-        "desc": "Conta como um tamanho maior para carga. Escaladas que exigem mãos e pés custam 1,2m extra por 0,3m movido."
+        "desc": "Você conta como um tamanho maior para capacidade de carga. No entanto, qualquer escalada que exija mãos e pés custa <b>1,2m extra</b> de movimento para cada 0,3m percorrido."
       },
       {
         "name": "Cascos",
-        "desc": "Ataques desarmados com cascos causam 1d6 + Força de dano contundente."
+        "desc": "Seus cascos são armas naturais. Seus ataques desarmados causam <b>1d6 + Força</b> de dano contundente."
       },
       {
         "name": "Afinidade com a Natureza",
-        "desc": "Proficiência em uma perícia: Lidar com Animais, Medicina, Natureza ou Sobrevivência."
+        "desc": "Você ganha proficiência em uma das seguintes perícias: <b>Lidar com Animais</b>, <b>Medicina</b>, <b>Natureza</b> ou <b>Sobrevivência</b>."
       }
     ],
     "variations": []
@@ -236,48 +254,51 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Humanoides orgulhosos com características de dragão, como escamas coloridas. Valorizam seus clãs acima de tudo e buscam autoaperfeiçoamento constante.",
+    "description": "Nascidos de dragões, como o nome sugere, os Draconatos caminham orgulhosamente por um mundo que muitas vezes os teme. Honrados e devotados aos seus clãs, eles carregam a marca de seus ancestrais na forma de sopros elementais e escamas resistentes.",
     "image": "img/races/Draconatos.png",
+    "languages": ["Comum", "Dracônico"],
     "traits": [
       {
         "name": "Herança Dracônica",
-        "desc": "Escolha um tipo de dragão (Tabela do Livro do Jogador). Determina seu ataque de sopro e resistência."
+        "desc": "Sua herança determina seu ataque de sopro e resistência a dano (Ex: Ouro = Fogo, Azul = Elétrico, etc)."
       },
       {
         "name": "Ataque de Sopro",
-        "desc": "Ação para exalar energia. Dano 2d6 (aumenta nos níveis 6, 11, 16), CD baseada em Con. Recupera com descanso curto ou longo."
+        "desc": "Como uma <b>ação</b>, você pode exalar energia destrutiva. O tamanho, forma e tipo de dano dependem da sua herança. O dano é <b>2d6</b> (aumenta para 3d6 no 6º nível, 4d6 no 11º, 5d6 no 16º). CD de Destreza ou Constituição para metade do dano. Recupera com <b>descanso curto ou longo</b>."
       },
       {
         "name": "Resistência a Dano",
-        "desc": "Resistência ao tipo de dano da sua herança."
+        "desc": "Você possui resistência ao tipo de dano associado à sua herança dracônica."
       }
     ],
     "variations": [
       {
         "name": "Variante: Sangue de Dragão",
-        "description": "Possuem caudas longas e habilidades sociais, lembrando dias de conquista. Substitui a Resistência a Dano.",
+        "description": "Draconatos com caudas longas e uma aptidão social mais refinada, lembrando os dias de conquista antiga.",
+        "replaces": ["Resistência a Dano"],
         "traits": [
           {
             "name": "Visão no Escuro",
-            "desc": "18 metros."
+            "desc": "Você enxerga na meia-luz a até <b>18 metros</b> como se fosse luz plena."
           },
           {
             "name": "Presença Enérgica",
-            "desc": "Vantagem em um teste de Intimidação ou Persuasão uma vez por descanso curto/longo."
+            "desc": "Você pode usar sua ação para ganhar <b>vantagem</b> em um teste de Intimidação ou Persuasão. Uma vez por descanso curto ou longo."
           }
         ]
       },
       {
         "name": "Variante: Ravenita",
-        "description": "Sem caudas, constituição robusta, lembrando os dias em que derrubaram seus mestres. Substitui a Resistência a Dano.",
+        "description": "Guerreiros sem cauda e de constituição robusta, sobreviventes de uma longa servidão que os tornou durões.",
+        "replaces": ["Resistência a Dano"],
         "traits": [
           {
             "name": "Visão no Escuro",
-            "desc": "18 metros."
+            "desc": "Você enxerga na meia-luz a até <b>18 metros</b> como se fosse luz plena."
           },
           {
             "name": "Ataque Vingativo",
-            "desc": "Reação para atacar quem te causou dano (alcance da arma). Uma vez por descanso curto/longo."
+            "desc": "Quando sofre dano de uma criatura a até 1,5m, você pode usar sua <b>reação</b> para fazer um ataque com arma contra ela. Uma vez por descanso curto ou longo."
           }
         ]
       }
@@ -291,24 +312,29 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Draconatos que canalizam o poder bruto dos dragões cromáticos (preto, azul, verde, vermelho, branco). Têm uma relação profunda com os elementos naturais brutos.",
+    "description": "Herdeiros da fúria elemental dos dragões cromáticos (Vermelho, Azul, Verde, Preto, Branco). Estes draconatos manifestam o poder bruto e destrutivo de seus ancestrais lendários.",
     "image": "img/races/Draconato Cromático.png",
+    "languages": ["Comum", "Dracônico"],
     "traits": [
       {
         "name": "Ascendência Cromática",
-        "desc": "Escolha um dragão cromático (Azul, Branco, Negro, Verde, Vermelho) para determinar o tipo de dano."
+        "desc": "Escolha um dragão cromático (Azul, Branco, Negro, Verde, Vermelho) para determinar o tipo de dano de seu sopro e resistência."
       },
       {
         "name": "Sopro de Dragão (Cromático)",
-        "desc": "Substitui um ataque na ação de Ataque. Linha de 1,5m x 9m. Dano 1d10 (aumenta no nv 5, 11, 17). Usos igual ao bônus de proficiência por descanso longo."
+        "desc": "Você pode substituir um de seus ataques na ação de Ataque para exalar energia em uma <b>linha de 1,5m x 9m</b>. Dano <b>1d10</b> (aumenta nos níveis 5, 11, 17). Usos igual ao seu Bônus de Proficiência por descanso longo."
       },
       {
         "name": "Resistência Dracônica",
-        "desc": "Resistência ao tipo de dano da ascendência."
+        "desc": "Você tem resistência ao tipo de dano da sua ascendência."
       },
       {
         "name": "Proteção Cromática",
-        "desc": "A partir do 5º nível, ação para se tornar imune ao tipo de dano da ascendência por 1 minuto. Uma vez por descanso longo."
+        "desc": "A partir do <b>5º nível</b>, como uma ação, você pode se tornar <b>imune</b> ao tipo de dano da sua ascendência por 1 minuto. Uma vez por descanso longo."
+      },
+      {
+        "name": "Visão no Escuro",
+        "desc": "Você enxerga na meia-luz a até <b>18 metros</b> como se fosse luz plena."
       }
     ],
     "variations": []
@@ -321,28 +347,33 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Draconatos com herança dos dragões de gemas, conhecidos por poderes mentais e cores vibrantes (ametista, cristal, esmeralda, safira, topázio).",
+    "description": "Herdeiros dos dragões de gema (Ametista, Cristal, Esmeralda, Safira, Topázio), estes draconatos possuem escamas cristalinas e poderes psíquicos latentes.",
     "image": "img/races/Draconato de Gema.png",
+    "languages": ["Comum", "Dracônico"],
     "traits": [
       {
         "name": "Ascendência de Gema",
-        "desc": "Escolha um dragão de gema para determinar o tipo de dano (Energético, Radiante, Psíquico, Trovejante, Necrótico)."
+        "desc": "Escolha um dragão de gema. Isso determina o tipo de dano (Energético, Radiante, Psíquico, Trovejante, Necrótico)."
       },
       {
         "name": "Sopro de Dragão (Gema)",
-        "desc": "Substitui um ataque na ação de Ataque. Cone de 4,5m. Dano 1d10 (aumenta no nv 5, 11, 17). Usos igual ao bônus de proficiência por descanso longo."
+        "desc": "Substitui um ataque. Exala energia em um <b>cone de 4,5m</b>. Dano <b>1d10</b> do tipo escolhido. Usos igual ao Bônus de Proficiência por descanso longo."
       },
       {
         "name": "Resistência Dracônica",
-        "desc": "Resistência ao tipo de dano da ascendência."
+        "desc": "Resistência ao tipo de dano da sua ascendência."
       },
       {
         "name": "Mente Psíquica",
-        "desc": "Telepatia com qualquer criatura que você possa ver a até 9m."
+        "desc": "Você pode falar telepaticamente com qualquer criatura que possa ver a até <b>9 metros</b> de você."
       },
       {
         "name": "Voo de Gema",
-        "desc": "A partir do 5º nível, ação bônus para ganhar voo igual à caminhada e pairar por 1 minuto. Uma vez por descanso longo."
+        "desc": "A partir do <b>5º nível</b>, como ação bônus, você manifesta asas espectrais e ganha deslocamento de voo por 1 minuto. Uma vez por descanso longo."
+      },
+      {
+        "name": "Visão no Escuro",
+        "desc": "Você enxerga na meia-luz a até <b>18 metros</b> como se fosse luz plena."
       }
     ],
     "variations": []
@@ -355,24 +386,29 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Draconatos que celebram a tenacidade dos dragões metálicos (latão, bronze, cobre, ouro, prata). Incorporam virtudes de resiliência e espírito indomável.",
+    "description": "Com escamas que brilham como ouro, prata ou bronze, os Draconatos Metálicos carregam a nobreza e a tenacidade dos dragões metálicos, servindo frequentemente como protetores.",
     "image": "img/races/Draconato Metálico.png",
+    "languages": ["Comum", "Dracônico"],
     "traits": [
       {
         "name": "Ascendência Metálica",
-        "desc": "Escolha um dragão metálico para determinar o tipo de dano."
+        "desc": "Escolha um dragão metálico (Latão, Bronze, Cobre, Ouro, Prata) para determinar seu tipo de dano."
       },
       {
         "name": "Sopro de Dragão (Metálico)",
-        "desc": "Substitui um ataque na ação de Ataque. Cone de 4,5m. Dano 1d10 (aumenta no nv 5, 11, 17). Usos igual ao bônus de proficiência por descanso longo."
+        "desc": "Substitui um ataque. Exala energia em um <b>cone de 4,5m</b>. Dano <b>1d10</b> do tipo escolhido. Usos igual ao Bônus de Proficiência por descanso longo."
       },
       {
         "name": "Resistência Dracônica",
-        "desc": "Resistência ao tipo de dano da ascendência."
+        "desc": "Resistência ao tipo de dano da sua ascendência."
       },
       {
         "name": "Sopro Metálico",
-        "desc": "No 5º nível, ganha um segundo sopro (Cone 4,5m). Escolha entre Enfraquecedor (incapacitado) ou Repulsão (empurrado 6m e derrubado). Uma vez por descanso longo."
+        "desc": "No <b>5º nível</b>, você ganha um segundo tipo de sopro (Cone 4,5m) que causa condições em vez de dano. Escolha entre <i>Enfraquecedor</i> (incapacita) ou <i>Repulsão</i> (empurra 6m e derruba). Uma vez por descanso longo."
+      },
+      {
+        "name": "Visão no Escuro",
+        "desc": "Você enxerga na meia-luz a até <b>18 metros</b> como se fosse luz plena."
       }
     ],
     "variations": []
@@ -385,28 +421,30 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Anões das profundezas da Umbreterna, transformados por magia estranha e experimentos de devoradores de mentes. Possuem habilidades psíquicas e são resilientes.",
+    "description": "Anões cinzentos das profundezas escuras. Escravizados por devoradores de mentes por eras, eles conquistaram sua liberdade através de resiliência mental e pactos sombrios, tornando-se mestres da psionismo e da invisibilidade.",
     "image": "img/races/Duergar.png",
+    "resistances": ["Veneno"],
+    "languages": ["Comum", "Anão", "Dialeto Subterrâneo"],
     "traits": [
       {
         "name": "Tipo de Criatura",
-        "desc": "Considerado também um anão."
+        "desc": "Você é um anão."
       },
       {
         "name": "Visão no Escuro Superior",
-        "desc": "Enxerga na meia-luz a 36m como luz plena, e na escuridão como meia-luz."
+        "desc": "Sua visão no escuro tem alcance de <b>36 metros</b>."
       },
       {
         "name": "Magia Duergar",
-        "desc": "Conjura 'aumentar/reduzir' (nível 3) e 'invisibilidade' (nível 5) em si mesmo uma vez por descanso longo cada. (Escolha Int, Sab ou Car)."
+        "desc": "A partir do 3º nível, você pode conjurar <i>aumentar/reduzir</i> (em si mesmo). A partir do 5º nível, pode conjurar <i>invisibilidade</i> (em si mesmo). Uma vez cada por descanso longo. Atributo: Int, Sab ou Car."
       },
       {
         "name": "Resistência Anã",
-        "desc": "Vantagem contra veneno e resistência a dano venenoso."
+        "desc": "Vantagem contra veneno e resistência a dano de veneno."
       },
       {
         "name": "Fortitude Psíquica",
-        "desc": "Vantagem em salvaguardas contra ser enfeitiçado ou atordoado."
+        "desc": "Você tem <b>vantagem</b> em salvaguardas para não ser enfeitiçado ou atordoado."
       }
     ],
     "variations": []
@@ -419,16 +457,20 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Seres metamorfos originários de Faéria, capazes de adotar a aparência de outros humanoides. Vivem imersos em outras sociedades, usando suas habilidades para diversos fins.",
+    "description": "Os Duplicantes (Changelings) são os mestres das mil faces. Sua verdadeira forma é pálida e inexpressiva, mas eles podem moldar suas feições com um pensamento, vivendo entre outras raças como espiões, artistas ou simplesmente sobreviventes.",
     "image": "img/races/Duplicante.png",
+    "languages": ["Comum"],
+    "chooseLanguages": 1,
+    "chooseSkillFrom": ["Enganação", "Percepção", "Intimidação", "Atuação", "Persuasão"],
+    "countSkills": 2,
     "traits": [
       {
         "name": "Instintos de Duplicante",
-        "desc": "Proficiência em duas perícias: Enganação, Percepção, Intimidação, Atuação ou Persuasão."
+        "desc": "Você ganha proficiência em duas das seguintes perícias: <b>Enganação, Percepção, Intimidação, Atuação ou Persuasão</b>."
       },
       {
         "name": "Metamorfose",
-        "desc": "Como ação, mude sua aparência e voz para a de outro humanoide (do mesmo tamanho básico e disposição de membros). Altera altura, peso, sexo, coloração. Não muda estatísticas de jogo."
+        "desc": "Como uma <b>ação</b>, você pode mudar sua aparência e voz para a de outro humanoide que você tenha visto (do mesmo tamanho básico). Suas estatísticas de jogo não mudam, mas você se torna indistinguível visualmente."
       }
     ],
     "variations": []
@@ -441,35 +483,74 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Elfos de Faéria, ligados às estações que afetam seu humor e aparência. Podem se teleportar usando magia feérica.",
+    "description": "Elfos nativos da Agrestia das Fadas, os Eladrin são criaturas de pura emoção e magia. Sua aparência e temperamento mudam conforme as estações do ano, refletindo a natureza caótica e bela de seu plano natal.",
     "image": "img/races/Eladrin.png",
+    "skills": ["Percepção"],
+    "languages": ["Comum", "Élfico"],
     "traits": [
       {
         "name": "Tipo de Criatura",
-        "desc": "Considerado também um elfo."
+        "desc": "Você é considerado um elfo."
       },
       {
         "name": "Visão no Escuro",
-        "desc": "18 metros."
+        "desc": "Você enxerga na escuridão a até 18 metros."
       },
       {
         "name": "Ancestralidade Feérica",
-        "desc": "Vantagem contra ser enfeitiçado."
-      },
-      {
-        "name": "Sentidos Aguçados",
-        "desc": "Proficiência em Percepção."
+        "desc": "Você tem vantagem contra ser enfeitiçado e magia não pode colocá-lo para dormir."
       },
       {
         "name": "Transe",
-        "desc": "Medita por 4 horas em vez de dormir. Pode mudar sua estação e adquirir duas proficiências temporárias (arma/ferramenta) após o transe."
+        "desc": "Você medita por 4 horas em vez de dormir. Ao terminar o transe, você pode mudar sua <b>Estação</b> e ganhar duas proficiências temporárias (arma ou ferramenta)."
       },
       {
         "name": "Passo Feérico",
-        "desc": "Ação bônus para teleportar 9m. Usos igual bônus proficiência por descanso longo. No 3º nível, ganha efeito adicional baseado na estação (Outono: enfeitiçar; Inverno: amedrontar; Primavera: teleportar aliado; Verão: dano ígneo)."
+        "desc": "Como <b>ação bônus</b>, você pode se teleportar magicamente até 9m para um espaço desocupado que possa ver. Usos iguais ao seu Bônus de Proficiência por descanso longo."
       }
     ],
-    "variations": []
+    "variations": [
+      {
+        "name": "Outono",
+        "description": "A estação da paz e da colheita. Seu teleporte acalma a violência.",
+        "traits": [
+          {
+            "name": "Passo Feérico (Outono)",
+            "desc": "Imediatamente após usar seu Passo Feérico, até duas criaturas a até 3m de você devem ter sucesso em uma salvaguarda de Sabedoria ou ficarão <b>enfeitiçadas</b> por você por 1 minuto (ou até sofrerem dano)."
+          }
+        ]
+      },
+      {
+        "name": "Inverno",
+        "description": "A estação da melancolia e do frio. Seu teleporte gela o coração dos inimigos.",
+        "traits": [
+          {
+            "name": "Passo Feérico (Inverno)",
+            "desc": "Quando usa seu Passo Feérico, uma criatura a até 1,5m de você (antes de teleportar) deve ter sucesso em uma salvaguarda de Sabedoria ou ficará <b>amedrontada</b> por você até o final do seu próximo turno."
+          }
+        ]
+      },
+      {
+        "name": "Primavera",
+        "description": "A estação da alegria e do florescer. Você compartilha sua vitalidade.",
+        "traits": [
+          {
+            "name": "Passo Feérico (Primavera)",
+            "desc": "Quando usa seu Passo Feérico, você pode tocar uma criatura disposta a até 1,5m. <b>Ela se teleporta</b> em seu lugar, aparecendo em um espaço a até 9m de você."
+          }
+        ]
+      },
+      {
+        "name": "Verão",
+        "description": "A estação da fúria e do calor. Sua presença queima.",
+        "traits": [
+          {
+            "name": "Passo Feérico (Verão)",
+            "desc": "Imediatamente após usar seu Passo Feérico, cada criatura à sua escolha a até 1,5m de você sofre <b>dano ígneo</b> igual ao seu bônus de proficiência."
+          }
+        ]
+      }
+    ]
   },
   {
     "name": "Elfos",
@@ -479,93 +560,99 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Povo mágico de beleza sobrenatural e conexão com a natureza. Longevos, graciosos e habilidosos tanto na diplomacia quanto na guerra.",
+    "description": "Graciosos, longevos e intrinsecamente mágicos, os elfos vivem em harmonia com a natureza ou em cidades de torres cristalinas. Eles valorizam a arte, a diplomacia e a maestria em magia e espada.",
     "image": "img/races/Elfos.png",
+    "skills": ["Percepção"],
+    "languages": ["Comum", "Élfico"],
     "traits": [
       {
         "name": "Visão no Escuro",
-        "desc": "18 metros."
+        "desc": "Você enxerga na escuridão a até 18 metros."
       },
       {
         "name": "Sentidos Aguçados",
-        "desc": "Proficiência em Percepção."
+        "desc": "Você tem proficiência na perícia <b>Percepção</b>."
       },
       {
         "name": "Ancestralidade Feérica",
-        "desc": "Vantagem contra ser enfeitiçado, imune a sono mágico."
+        "desc": "Você tem vantagem em salvaguardas contra ser enfeitiçado e a magia não pode colocá-lo para dormir."
       },
       {
         "name": "Transe",
-        "desc": "Medita por 4 horas em vez de dormir 8."
+        "desc": "Elfos não dormem. Em vez disso, meditam profundamente por <b>4 horas</b> por dia."
       }
     ],
     "variations": [
       {
         "name": "Alto Elfo",
-        "description": "Mente perspicaz e domínio básico da magia.",
+        "description": "Elfos nobres e estudiosos, com uma forte afinidade pela magia arcana.",
+        "proficiencies": ["Espada longa", "Espada curta", "Arco longo", "Arco curto"],
+        "chooseLanguages": 1,
         "traits": [
           {
             "name": "Treinamento com Armas",
-            "desc": "Proficiência com espadas longas/curtas e arcos longos/curtos."
+            "desc": "Proficiência com espadas longas, espadas curtas, arcos longos e arcos curtos."
           },
           {
             "name": "Truque",
-            "desc": "Conhece um truque de mago (Inteligência)."
+            "desc": "Você conhece um truque da lista de magias de Mago (Inteligência)."
           },
           {
             "name": "Idioma Adicional",
-            "desc": "Um idioma extra à sua escolha."
+            "desc": "Você fala um idioma extra à sua escolha."
           }
         ]
       },
       {
         "name": "Elfo Silvestre",
-        "description": "Sentidos aguçados e pés ágeis nas florestas.",
+        "description": "Elfos das florestas, rápidos e furtivos, com sentidos aguçados.",
         "speed": 10.5,
+        "proficiencies": ["Espada longa", "Espada curta", "Arco longo", "Arco curto"],
         "traits": [
           {
             "name": "Treinamento com Armas",
-            "desc": "Proficiência com espadas longas/curtas e arcos longos/curtos."
+            "desc": "Proficiência com espadas longas, espadas curtas, arcos longos e arcos curtos."
           },
           {
             "name": "Máscara da Natureza",
-            "desc": "Pode se esconder quando levemente obscurecido por fenômenos naturais."
+            "desc": "Você pode tentar se esconder mesmo quando estiver apenas <b>levemente obscurecido</b> por folhagem, chuva forte ou neve."
           }
         ]
       },
       {
         "name": "Elfo Negro (Drow)",
-        "description": "Habitantes da Umbreterna, muitas vezes seguidores de Lolth.",
+        "description": "Habitantes das profundezas da Umbreterna, adaptados à escuridão total e magia sombria.",
+        "proficiencies": ["Rapieira", "Espada curta", "Besta de mão"],
         "traits": [
           {
             "name": "Visão no Escuro Superior",
-            "desc": "36 metros."
+            "desc": "Seu alcance de visão no escuro aumenta para <b>36 metros</b>."
           },
           {
             "name": "Sensibilidade à Luz Solar",
-            "desc": "Desvantagem em ataques e Percepção sob luz solar direta."
+            "desc": "Você tem desvantagem nas jogadas de ataque e testes de Percepção (visão) quando você ou seu alvo estão sob luz solar direta."
           },
           {
             "name": "Magia Drow",
-            "desc": "Truque 'luzes dançantes'. Nv 3: 'fogo das fadas' (1/dia). Nv 5: 'escuridão' (1/dia). (Carisma)."
+            "desc": "Conhece o truque <i>luzes dançantes</i>. Nv 3: <i>fogo das fadas</i> (1/dia). Nv 5: <i>escuridão</i> (1/dia). Carisma é seu atributo."
           },
           {
-            "name": "Treinamento Drow com Armas",
-            "desc": "Proficiência com rapieiras, espadas curtas e bestas leves."
+            "name": "Treinamento Drow",
+            "desc": "Proficiência com rapieiras, espadas curtas e bestas de mão."
           }
         ]
       },
       {
         "name": "Elfo Pálido",
-        "description": "Povo místico do Bosque Pálido, com pele muito clara e curiosidade infantil.",
+        "description": "Elfos misteriosos do Bosque Pálido, com pele branca como alabastro e uma curiosidade infantil.",
         "traits": [
           {
             "name": "Sentido Incisivo",
-            "desc": "Vantagem em Investigação e Intuição."
+            "desc": "Você tem <b>vantagem</b> em testes de Investigação e Intuição."
           },
           {
             "name": "Bênção da Tecelã da Lua",
-            "desc": "Truque 'luz'. Nv 3: 'sono' (1/longo). Nv 5: 'invisibilidade' (auto, 1/longo). (Sabedoria)."
+            "desc": "Conhece o truque <i>luz</i>. Nv 3: <i>sono</i> (1/longo). Nv 5: <i>invisibilidade</i> (apenas em si mesmo, 1/longo). Sabedoria é seu atributo."
           }
         ]
       }
@@ -579,32 +666,22 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Elfos que se aventuraram no Plano Astral para ficar mais perto de seus deuses, imbuídos com uma centelha de luz divina que brilha em seus olhos. Sua longevidade no plano astral lhes dá uma perspectiva única do tempo.",
+    "description": "Elfos que migraram para o Plano Astral para viverem mais próximos de seus deuses. O tempo não passa para eles em seu lar, e seus olhos brilham com a luz das estrelas distantes.",
     "image": "img/races/Elfo Astral.png",
+    "skills": ["Percepção"],
+    "languages": ["Comum", "Élfico"],
     "traits": [
       {
         "name": "Fogo Astral",
-        "desc": "Conhece um truque: 'luzes dançantes', 'luz' ou 'chama sagrada'. (Escolha Int, Sab ou Car)."
-      },
-      {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
-      {
-        "name": "Ancestralidade Feérica",
-        "desc": "Vantagem contra ser enfeitiçado."
-      },
-      {
-        "name": "Sentidos Aguçados",
-        "desc": "Proficiência em Percepção."
+        "desc": "Você conhece um dos seguintes truques: <i>luzes dançantes</i>, <i>luz</i> ou <i>chama sagrada</i>. Escolha Int, Sab ou Car."
       },
       {
         "name": "Passo Estelar",
-        "desc": "Ação bônus para teleportar 9m. Usos igual bônus proficiência por descanso longo."
+        "desc": "Como <b>ação bônus</b>, você pode se teleportar magicamente até 9m. Usos igual ao seu Bônus de Proficiência por descanso longo."
       },
       {
         "name": "Transe Astral",
-        "desc": "Medita por 4 horas. Após o transe, ganha proficiência temporária em uma perícia e uma arma/ferramenta até o próximo descanso longo."
+        "desc": "Ao terminar um descanso longo (4h de meditação), você ganha proficiência em uma perícia e uma arma ou ferramenta à sua escolha até o próximo descanso."
       }
     ],
     "variations": []
@@ -617,36 +694,23 @@
     "swimSpeed": 9,
     "flySpeed": 0,
     "climbSpeed": 0,
-    "description": "Elfos adaptados à vida nos oceanos e no Plano Elemental da Água. Navegadores habilidosos com uma profunda conexão com o mar e suas criaturas.",
+    "description": "Elfos que se adaptaram à vida nas profundezas dos oceanos. Com pele azulada e brânquias, eles protegem os mares ao lado de aliados aquáticos.",
     "image": "img/races/Elfo Marinho.png",
+    "resistances": ["Frio"],
+    "skills": ["Percepção"],
+    "languages": ["Comum", "Élfico", "Primordial"],
     "traits": [
       {
-        "name": "Tipo de Criatura",
-        "desc": "Considerado também um elfo."
-      },
-      {
         "name": "Filho do Mar",
-        "desc": "Pode respirar ar e água. Resistência a dano gélido."
-      },
-      {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
-      {
-        "name": "Ancestralidade Feérica",
-        "desc": "Vantagem contra ser enfeitiçado."
+        "desc": "Você pode respirar ar e água, e tem resistência a dano de <b>frio</b>."
       },
       {
         "name": "Amigo do Mar",
-        "desc": "Pode comunicar ideias simples a qualquer Fera com deslocamento de natação."
-      },
-      {
-        "name": "Sentidos Aguçados",
-        "desc": "Proficiência em Percepção."
+        "desc": "Você pode comunicar ideias simples a qualquer Besta que tenha deslocamento de natação."
       },
       {
         "name": "Transe",
-        "desc": "Medita por 4 horas. Pode adquirir duas proficiências temporárias (arma/ferramenta) após o transe."
+        "desc": "Meditação de 4 horas. Pode ganhar duas proficiências em ferramentas ou armas após o descanso."
       }
     ],
     "variations": []
@@ -659,16 +723,17 @@
     "flySpeed": 9,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Seres pequenos e alados de Faéria, frequentemente lembrando elfos diminutos com asas de inseto, mas com características únicas e mágicas.",
+    "description": "Pequenos seres mágicos da Agrestia das Fadas, as Fadas possuem asas de inseto ou borboleta e uma disposição para travessuras ou bondade cintilante.",
     "image": "img/races/Fada.png",
+    "languages": ["Comum", "Silvestre"],
     "traits": [
       {
         "name": "Voo",
-        "desc": "Deslocamento de voo igual ao de caminhada. Não pode usar se vestir armadura média ou pesada."
+        "desc": "Você tem deslocamento de voo igual ao seu deslocamento de caminhada. <u>Não pode usar com armadura média ou pesada.</u>"
       },
       {
         "name": "Magia das Fadas",
-        "desc": "Conhece o truque 'druidismo'. Nv 3: 'fogo das fadas' (1/longo). Nv 5: 'aumentar/reduzir' (1/longo). (Escolha Int, Sab ou Car)."
+        "desc": "Conhece o truque <i>druidismo</i>. Nv 3: <i>fogo das fadas</i> (1/longo). Nv 5: <i>aumentar/reduzir</i> (1/longo). Escolha Int, Sab ou Car."
       }
     ],
     "variations": []
@@ -681,24 +746,25 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Parentes distantes dos gigantes, guardiões das florestas com uma conexão profunda com a magia natural. São mestres da camuflagem e longevos.",
+    "description": "Guardiões gentis das florestas profundas, os Firbolgs preferem a paz e a discrição. Com sua magia natural, eles podem se disfarçar e ficar invisíveis para proteger seus lares.",
     "image": "img/races/Firbolg.png",
+    "languages": ["Comum", "Élfico", "Gigante"],
     "traits": [
       {
         "name": "Magia Firbolg",
-        "desc": "Conjura 'detectar magia' e 'disfarçar-se' (pode parecer mais alto/baixo) uma vez cada por descanso longo. (Escolha Int, Sab ou Car)."
+        "desc": "Você pode conjurar <i>detectar magia</i> e <i>disfarçar-se</i> uma vez cada por descanso longo. (Int, Sab ou Car)."
       },
       {
         "name": "Passo Oculto",
-        "desc": "Ação bônus para ficar invisível até o início do próximo turno ou até atacar/rolar dano/forçar salvaguarda. Usos igual bônus proficiência por descanso longo."
+        "desc": "Como <b>ação bônus</b>, você pode ficar invisível até o início do seu próximo turno ou até atacar. Usos igual ao Bônus de Proficiência por descanso longo."
       },
       {
         "name": "Porte Poderoso",
-        "desc": "Conta como um tamanho maior para capacidade de carga, empurrar, arrastar ou levantar."
+        "desc": "Você conta como um tamanho maior para capacidade de carga."
       },
       {
         "name": "Discurso da Fera e da Folha",
-        "desc": "Pode comunicar ideias simples a Feras e Plantas. Vantagem em testes de Carisma para influenciá-los."
+        "desc": "Você pode comunicar ideias simples a bestas e plantas, e tem vantagem em testes de Carisma com elas."
       }
     ],
     "variations": []
@@ -711,20 +777,26 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Autômatos sencientes criados para a guerra, feitos de materiais orgânicos e inorgânicos. Buscam um propósito além do combate.",
+    "description": "Criados para a guerra, os Forjados Bélicos são soldados artificiais feitos de madeira e aço, mas dotados de alma. Com o fim da Última Guerra, eles buscam um novo propósito na paz.",
     "image": "img/races/Forjado Bélico.png",
+    "resistances": ["Veneno"],
+    "immunities": ["Doenças"],
+    "languages": ["Comum"],
+    "chooseLanguages": 1,
+    "chooseSkills": 1,
+    "chooseToolAny": 1,
     "traits": [
       {
         "name": "Resiliência Constructa",
-        "desc": "Vantagem contra veneno, resistência a dano venenoso. Imune a doenças e envelhecimento mágico. Não precisa comer, beber, respirar ou dormir."
-      },
-      {
-        "name": "Descanso do Sentinela",
-        "desc": "Descanso longo em 6 horas inativo e consciente."
+        "desc": "Você tem vantagem contra veneno e resistência a dano de veneno. Imune a doenças e sono mágico. Não precisa comer, beber ou respirar."
       },
       {
         "name": "Proteção Integrada",
-        "desc": "+1 na CA. Só pode usar armaduras proficientes, que devem ser incorporadas ao corpo (1 hora)."
+        "desc": "Você ganha <b>+1 na Classe de Armadura</b>. Você só pode usar armaduras com as quais tem proficiência e deve incorporá-las ao seu corpo (processo de 1 hora)."
+      },
+      {
+        "name": "Descanso do Sentinela",
+        "desc": "Você não dorme. Descanso longo de 6 horas inativo e consciente."
       },
       {
         "name": "Design Especializado",
@@ -741,24 +813,22 @@
     "swimSpeed": 9,
     "flySpeed": 0,
     "climbSpeed": 0,
-    "description": "Descendentes de marids (gênios da água), com afinidade natural pela vida subaquática. Sua pele e cabelo refletem as cores e texturas da água.",
+    "description": "Descendentes de gênios Marid, os Genasi da Água ouvem o chamado das ondas. Sua pele pode ser azul ou verde, e seus cabelos flutuam como se estivessem submersos.",
     "image": "img/races/Genasi da Água.png",
+    "resistances": ["Ácido"],
+    "languages": ["Comum", "Primordial"],
     "traits": [
       {
         "name": "Resistência a Ácido",
-        "desc": "Resistência a dano ácido."
+        "desc": "Você tem resistência a dano ácido."
       },
       {
         "name": "Anfíbio",
-        "desc": "Pode respirar ar e água."
+        "desc": "Você pode respirar ar e água."
       },
       {
         "name": "Chamado da Onda",
-        "desc": "Truque 'espirro ácido'. Nv 3: 'criar ou destruir água' (1/longo). Nv 5: 'caminhar sobre a água' (1/longo). (Escolha Int, Sab ou Car)."
-      },
-      {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
+        "desc": "Truque <i>espirro ácido</i>. Nv 3: <i>criar ou destruir água</i>. Nv 5: <i>caminhar sobre a água</i>. Uma vez cada por descanso longo. (Int, Sab ou Car)."
       }
     ],
     "variations": []
@@ -771,24 +841,22 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Descendentes de djinn (gênios do ar), com conexão aos ventos. Sua aparência reflete o céu, nuvens e correntes de ar.",
+    "description": "Filhos dos céus e descendentes de gênios Djinn. Os Genasi do Ar são inconstantes como os ventos, com pele azul pálida e uma brisa constante ao seu redor.",
     "image": "img/races/Genasi do Ar.png",
+    "resistances": ["Elétrico"],
+    "languages": ["Comum", "Primordial"],
     "traits": [
       {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
-      {
         "name": "Respiração Infindável",
-        "desc": "Pode prender a respiração indefinidamente enquanto não estiver incapacitado."
+        "desc": "Você pode prender a respiração indefinidamente enquanto não estiver incapacitado."
       },
       {
         "name": "Resistência a Eletricidade",
-        "desc": "Resistência a dano elétrico."
+        "desc": "Você tem resistência a dano elétrico."
       },
       {
         "name": "Misturar-se com o Vento",
-        "desc": "Truque 'toque chocante'. Nv 3: 'queda suave' (1/longo). Nv 5: 'levitação' (1/longo). (Escolha Int, Sab ou Car)."
+        "desc": "Truque <i>toque chocante</i>. Nv 3: <i>queda suave</i>. Nv 5: <i>levitação</i>. Uma vez cada por descanso longo. (Int, Sab ou Car)."
       }
     ],
     "variations": []
@@ -801,20 +869,18 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Descendentes de efreet (gênios do fogo), imbuídos da essência ardente. Sua pele e cabelo lembram chamas, carvão ou brasas.",
+    "description": "Com sangue de gênios Efreet, os Genasi do Fogo têm temperamentos explosivos e pele em tons de brasa ou carvão. Chamas parecem dançar em seus olhos.",
     "image": "img/races/Genasi do Fogo.png",
+    "resistances": ["Fogo"],
+    "languages": ["Comum", "Primordial"],
     "traits": [
       {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
-      {
         "name": "Resistência a Fogo",
-        "desc": "Resistência a dano ígneo."
+        "desc": "Você tem resistência a dano ígneo."
       },
       {
         "name": "Toque das Chamas",
-        "desc": "Truque 'criar chamas'. Nv 3: 'mãos flamejantes' (1/longo). Nv 5: 'lâmina flamejante' (1/longo). (Escolha Int, Sab ou Car)."
+        "desc": "Truque <i>criar chamas</i>. Nv 3: <i>mãos flamejantes</i>. Nv 5: <i>lâmina flamejante</i>. Uma vez cada por descanso longo. (Int, Sab ou Car)."
       }
     ],
     "variations": []
@@ -827,20 +893,17 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Descendentes de dao (gênios da terra), mestres da firmeza e estabilidade. Sua pele e cabelo refletem pedra, terra e cristais.",
+    "description": "Sólidos e resistentes como a rocha, os Genasi da Terra descendem dos gênios Dao. Sua pele tem textura de pedra ou terra, e eles raramente recuam diante de um desafio.",
     "image": "img/races/Genasi da Terra.png",
+    "languages": ["Comum", "Primordial"],
     "traits": [
       {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
-      {
         "name": "Andar na Terra",
-        "desc": "Ignora terreno difícil feito de terra ou pedra se estiver caminhando."
+        "desc": "Você pode se mover através de terreno difícil feito de terra ou pedra sem gastar movimento extra."
       },
       {
         "name": "Fundir-se com a Pedra",
-        "desc": "Truque 'proteção contra lâminas' (pode usar como ação bônus proficiência vezes/longo). Nv 5: 'passo sem pegadas' (1/longo). (Escolha Int, Sab ou Car)."
+        "desc": "Truque <i>proteção contra lâminas</i> (pode usar como ação bônus prof vezes/dia). Nv 5: <i>passo sem pegadas</i> (1/longo). (Int, Sab ou Car)."
       }
     ],
     "variations": []
@@ -853,20 +916,22 @@
     "swimSpeed": 9,
     "flySpeed": 0,
     "climbSpeed": 0,
-    "description": "Seres robustos e imponentes com aparência de hipopótamos e uma conexão ancestral com o Plano Astral e armas de fogo.",
+    "description": "Hipopótamos humanoides do espaço astral, famosos por sua bravura militar e fascínio por explosivos e armas de fogo. Apesar da aparência cômica para alguns, são combatentes letais.",
     "image": "img/races/Giff.png",
+    "proficiencies": ["Armas de fogo"],
+    "languages": ["Comum"],
     "traits": [
       {
         "name": "Faísca Astral",
-        "desc": "Ao acertar com arma simples/marcial, causa dano energético extra igual ao bônus de proficiência. Usos igual bônus proficiência por descanso longo (uma vez por turno)."
+        "desc": "Uma vez por turno ao acertar um ataque com arma, você pode causar dano extra de <b>Força</b> igual ao seu Bônus de Proficiência. Usos por dia igual ao Bônus de Proficiência."
       },
       {
         "name": "Mestre em Armas de Fogo",
-        "desc": "Proficiência com armas de fogo, ignora propriedade de recarga, e não tem desvantagem em ataques a longa distância com elas."
+        "desc": "Você tem proficiência com armas de fogo, ignora a propriedade de recarga delas e não tem desvantagem ao atacar a longa distância."
       },
       {
         "name": "Constituição de Hipopótamo",
-        "desc": "Vantagem em testes e salvaguardas de Força. Conta como um tamanho maior para capacidade de carga."
+        "desc": "Você tem vantagem em testes e salvaguardas de Força."
       }
     ],
     "variations": []
@@ -879,20 +944,22 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Povo que escapou da escravidão dos devoradores de mente e se refugiou no Plano Astral, onde aprimoraram habilidades psíquicas e construíram cidades.",
+    "description": "Guerreiros psíquicos do Plano Astral, os Githyanki foram escravos dos devoradores de mentes e agora vivem para a conquista e a pilhagem sob o comando de sua Rainha Lich.",
     "image": "img/races/Githyanki.png",
+    "resistances": ["Psíquico"],
+    "languages": ["Comum", "Gith"],
     "traits": [
       {
         "name": "Conhecimento Astral",
-        "desc": "Após um descanso longo, ganha proficiência temporária em uma perícia e uma arma/ferramenta de sua escolha até o próximo descanso longo."
+        "desc": "Ao terminar um descanso longo, você ganha proficiência em uma perícia e uma arma/ferramenta à sua escolha até o próximo descanso."
       },
       {
-        "name": "Psionicismo dos Githyanki",
-        "desc": "Truque 'mãos mágicas' (invisível). Nv 3: 'salto' (1/longo). Nv 5: 'passo nebuloso' (1/longo). Sem componentes. (Escolha Int, Sab ou Car)."
+        "name": "Psionicismo Githyanki",
+        "desc": "Truque <i>mãos mágicas</i> (invisível). Nv 3: <i>salto</i> (1/longo). Nv 5: <i>passo nebuloso</i> (1/longo). Sem componentes. (Int, Sab ou Car)."
       },
       {
         "name": "Resistência Psíquica",
-        "desc": "Resistência a dano psíquico."
+        "desc": "Você tem resistência a dano psíquico."
       }
     ],
     "variations": []
@@ -905,20 +972,22 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Parentes dos Githyanki que buscaram refúgio no caos do Limbo, usando o poder de suas mentes para impor estabilidade e criar lares.",
+    "description": "Monges ascetas que habitam o caos do Limbo. Os Githzerai usam o poder de suas mentes para impor ordem à realidade e se protegerem de seus antigos mestres ilitides.",
     "image": "img/races/Githzerai.png",
+    "resistances": ["Psíquico"],
+    "languages": ["Comum", "Gith"],
     "traits": [
       {
-        "name": "Psionismo dos Githzerai",
-        "desc": "Truque 'mãos mágicas' (invisível). Nv 3: 'égide' (1/longo). Nv 5: 'detectar pensamentos' (1/longo). Sem componentes. (Escolha Int, Sab ou Car)."
+        "name": "Psionismo Githzerai",
+        "desc": "Truque <i>mãos mágicas</i> (invisível). Nv 3: <i>égide</i> (1/longo). Nv 5: <i>detectar pensamentos</i> (1/longo). Sem componentes. (Int, Sab ou Car)."
       },
       {
         "name": "Disciplina Mental",
-        "desc": "Vantagem em salvaguardas contra ser enfeitiçado ou amedrontado."
+        "desc": "Você tem <b>vantagem</b> em salvaguardas para não ser enfeitiçado ou amedrontado."
       },
       {
         "name": "Resistência Psíquica",
-        "desc": "Resistência a dano psíquico."
+        "desc": "Você tem resistência a dano psíquico."
       }
     ],
     "variations": []
@@ -931,44 +1000,42 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Seres diminutos, alegres e curiosos, mestres da invenção e experimentação. Vivem longas vidas cheias de entusiasmo.",
+    "description": "Uma raça de energia vibrante e curiosidade insaciável. Os gnomos vivem em tocas escondidas ou cidades movimentadas, sempre inventando, explorando ou pregando peças.",
     "image": "img/races/Gnomos.png",
+    "languages": ["Comum", "Gnômico"],
     "traits": [
       {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
-      {
         "name": "Astúcia de Gnomo",
-        "desc": "Vantagem em todas as salvaguardas de Inteligência, Sabedoria e Carisma contra magia."
+        "desc": "Você tem <b>vantagem</b> em todas as salvaguardas de Inteligência, Sabedoria e Carisma contra magia."
       }
     ],
     "variations": [
       {
         "name": "Gnomo dos Bosques",
-        "description": "Talento natural para ilusão e comunicação com pequenos animais.",
+        "description": "Gnomos reclusos e amigos da natureza, mestres em ilusão e conversa com pequenos animais.",
         "traits": [
           {
             "name": "Ilusionista Nato",
-            "desc": "Conhece o truque 'ilusão menor' (Inteligência)."
+            "desc": "Você conhece o truque <i>ilusão menor</i> (Inteligência)."
           },
           {
             "name": "Falar com Pequenos Animais",
-            "desc": "Pode comunicar ideias simples com animais pequenos ou menores."
+            "desc": "Você pode comunicar ideias simples com bestas de tamanho Pequeno ou menor."
           }
         ]
       },
       {
         "name": "Gnomo das Rochas",
-        "description": "Inventividade natural e resistência superior.",
+        "description": "Inventores naturais e robustos, fascinados por mecânica e minerais.",
+        "proficiencies": ["Ferramentas de engenhoqueiro"],
         "traits": [
           {
             "name": "Conhecimento de Artífice",
-            "desc": "Adiciona o dobro do bônus de proficiência em testes de História sobre itens mágicos, alquímicos ou tecnológicos."
+            "desc": "Adiciona o <b>dobro da proficiência</b> em testes de História sobre itens mágicos, alquímicos ou tecnológicos."
           },
           {
             "name": "Engenhoqueiro",
-            "desc": "Proficiência com ferramentas de engenhoqueiro. Pode criar pequenos dispositivos mecânicos (brinquedo, isqueiro, caixa de música)."
+            "desc": "Você pode gastar 1 hora e 10 po para criar um dispositivo mecânico minúsculo (brinquedo, isqueiro ou caixa de música)."
           }
         ]
       }
@@ -984,26 +1051,23 @@
     "climbSpeed": 0,
     "description": "Também conhecidos como svirfneblin, são habitantes nativos da Umbreterna, mestres da camuflagem e sobrevivência subterrânea.",
     "image": "img/races/Gnomo das Profundezas.png",
+    "languages": ["Comum", "Gnômico", "Dialeto Subterrâneo"],
     "traits": [
       {
-        "name": "Tipo de Criatura",
-        "desc": "Considerado também um gnomo."
-      },
-      {
         "name": "Visão no Escuro Superior",
-        "desc": "36 metros."
-      },
-      {
-        "name": "Dom dos Svirfneblin",
-        "desc": "Nv 3: 'disfarçar-se' (1/longo). Nv 5: 'indetectável' (1/longo, sem componentes). (Escolha Int, Sab ou Car)."
+        "desc": "Alcance de <b>36 metros</b>."
       },
       {
         "name": "Resistência Mágica dos Gnomos",
         "desc": "Vantagem em salvaguardas de Int, Sab e Car contra magias."
       },
       {
+        "name": "Dom dos Svirfneblin",
+        "desc": "Nv 3: <i>disfarçar-se</i> (1/longo). Nv 5: <i>indetectável</i> (1/longo, sem componentes). (Int, Sab ou Car)."
+      },
+      {
         "name": "Camuflagem Svirfneblin",
-        "desc": "Pode ter vantagem em um teste de Furtividade. Usos igual bônus proficiência por descanso longo."
+        "desc": "Você pode se dar vantagem em um teste de Furtividade. Usos igual ao Bônus de Proficiência por descanso longo."
       }
     ],
     "variations": []
@@ -1016,28 +1080,21 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Povo subterrâneo pequeno e resiliente, com uma ancestralidade ligada a Faéria que lhes confere astúcia e a habilidade de encontrar fraquezas.",
+    "description": "Pequenos, ágeis e perversamente astutos. Os goblins aprenderam a sobreviver em um mundo de gigantes sendo rápidos e impiedosos, aproveitando qualquer vantagem.",
     "image": "img/races/Goblin.png",
+    "languages": ["Comum", "Goblin"],
     "traits": [
       {
-        "name": "Tipo de Criatura",
-        "desc": "Considerado também um goblinoide."
-      },
-      {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
-      {
         "name": "Ancestralidade Feérica",
-        "desc": "Vantagem contra ser enfeitiçado."
+        "desc": "Você tem vantagem contra ser enfeitiçado."
       },
       {
         "name": "Fúria do Pequeno",
-        "desc": "Ao causar dano a uma criatura maior que você, causa dano extra igual ao bônus de proficiência. Usos igual bônus proficiência por descanso longo (uma vez por turno)."
+        "desc": "Quando causa dano a uma criatura maior que você, pode causar dano extra igual ao seu <b>Bônus de Proficiência</b>. Usos igual ao Bônus de Proficiência por descanso longo."
       },
       {
         "name": "Escape Ágil",
-        "desc": "Pode usar Desengajar ou Ocultar como ação bônus."
+        "desc": "Você pode usar a ação <b>Desengajar</b> ou <b>Esconder</b> como uma ação bônus em cada um dos seus turnos."
       }
     ],
     "variations": []
@@ -1050,20 +1107,23 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Seres imponentes parentes distantes dos gigantes, habitantes dos picos das montanhas mais altas. Sua pele se assemelha à pedra.",
+    "description": "Habitantes das montanhas mais altas, os Golias vivem onde o ar é rarefeito e o frio é mortal. Eles competem constantemente para provar sua força, acreditando que a autossuficiência é a maior virtude.",
     "image": "img/races/Golias.png",
+    "resistances": ["Frio"],
+    "skills": ["Atletismo"],
+    "languages": ["Comum", "Gigante"],
     "traits": [
       {
         "name": "Pequeno Gigante",
-        "desc": "Proficiência em Atletismo. Conta como um tamanho maior para capacidade de carga."
+        "desc": "Você tem proficiência em <b>Atletismo</b> e conta como um tamanho maior para capacidade de carga."
       },
       {
         "name": "Nascido nas Montanhas",
-        "desc": "Resistência a dano gélido. Aclimatado a altitudes elevadas."
+        "desc": "Você tem resistência a dano de <b>frio</b> e é aclimatado a grandes altitudes."
       },
       {
         "name": "Resistência da Pedra",
-        "desc": "Reação quando sofre dano para reduzir o dano em 1d12 + modificador de Constituição. Usos igual bônus proficiência por descanso longo."
+        "desc": "Quando sofre dano, você pode usar sua reação para reduzir o dano em <b>1d12 + modificador de Constituição</b>. Usos igual ao Bônus de Proficiência por descanso longo."
       }
     ],
     "variations": []
@@ -1076,32 +1136,31 @@
     "climbSpeed": 7.5,
     "flySpeed": 0,
     "swimSpeed": 0,
-    "description": "Humanoides semelhantes a sapos de florestas tropicais, vivendo em uma sociedade rígida de castas baseadas na cor da pele. Possuem pele venenosa.",
+    "description": "Pequenos humanoides anfíbios com pele venenosa, nativos de florestas tropicais. Embora pequenos, são ferozmente territoriais e organizados em uma sociedade rígida de castas.",
     "image": "img/races/Grung.png",
+    "immunities": ["Veneno"],
+    "skills": ["Percepção"],
+    "languages": ["Grung"],
     "traits": [
       {
-        "name": "Alerta Arborícola",
-        "desc": "Proficiência em Percepção."
-      },
-      {
         "name": "Anfíbio",
-        "desc": "Pode respirar ar e água."
+        "desc": "Você pode respirar ar e água."
       },
       {
         "name": "Imunidade ao Veneno",
-        "desc": "Imune a dano venenoso e à condição envenenada."
+        "desc": "Você é imune a dano de veneno e à condição envenenado."
       },
       {
         "name": "Pele Venenosa",
-        "desc": "Criaturas que te agarram ou tocam podem ficar envenenadas (CD Con). Pode aplicar veneno em armas perfurantes para causar 2d4 dano extra (aumenta no nv 5, 11, 17). Usos igual bônus proficiência por dia."
+        "desc": "Criaturas que tocam sua pele devem fazer uma salvaguarda ou ficar envenenadas. Você pode aplicar seu veneno em armas perfurantes para causar <b>2d4</b> de dano extra."
       },
       {
         "name": "Salto em Pé",
-        "desc": "Adiciona 2d4 metros à distância de seus saltos."
+        "desc": "Seu salto longo é de até 7,5m e seu salto em altura é de até 4,5m, com ou sem corrida."
       },
       {
         "name": "Dependência de Água",
-        "desc": "Deve se imergir em água por 1 hora por dia ou sofre exaustão."
+        "desc": "Você deve se imergir em água por 1 hora por dia ou sofrerá exaustão."
       }
     ],
     "variations": []
@@ -1114,20 +1173,21 @@
     "climbSpeed": 9,
     "flySpeed": 0,
     "swimSpeed": 0,
-    "description": "Seres símios que evoluíram para planar entre árvores e foram aprimorados magicamente, ganhando tamanho e inteligência. São exploradores do espaço sideral.",
+    "description": "Viajantes das estrelas com membranas planadoras, os Hadoze são ágeis e adaptáveis. Originalmente símios, foram modificados magicamente para se tornarem a tripulação perfeita para navios voadores.",
     "image": "img/races/Hadoze.png",
+    "languages": ["Comum"],
     "traits": [
       {
         "name": "Pés Ágeis",
-        "desc": "Ação bônus para usar os pés para manipular objetos, abrir portas ou pegar itens minúsculos."
+        "desc": "Você pode usar uma ação bônus para usar seus pés para manipular objetos."
       },
       {
         "name": "Planar",
-        "desc": "Se não estiver incapacitado/com armadura pesada, pode estender membranas para planar (move 1,5m horizontal para cada 0,3m vertical). Reação para reduzir dano de queda a 0."
+        "desc": "Se não estiver com armadura pesada, você pode planar (1,5m horizontal para cada 0,3m de queda). Você pode usar sua reação para reduzir o dano de queda a 0."
       },
       {
         "name": "Resiliência dos Hadozes",
-        "desc": "Reação quando sofre dano para reduzir o dano em 1d6 + bônus de proficiência. Usos igual bônus proficiência por descanso longo."
+        "desc": "Quando você sofre dano, pode usar sua reação para reduzir o dano em <b>1d6 + Bônus de Proficiência</b>. Usos igual ao Bônus de Proficiência por descanso longo."
       }
     ],
     "variations": []
@@ -1140,20 +1200,17 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Humanoides fundidos magicamente com características de animais aquáticos, répteis ou anfíbios pela Combinação Símica, criados como guardiões adaptáveis.",
+    "description": "Resultados de experimentos mágicos e biológicos, os Híbridos Símicos combinam traços humanos, élficos ou vedalken com características de caranguejos, lulas ou outras bestas, criados para serem os guardiões perfeitos.",
     "image": "img/races/Híbrido Símico.png",
+    "languages": ["Comum", "Élfico"],
     "traits": [
       {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
-      {
         "name": "Aprimoramento Animal (Nv 1)",
-        "desc": "Escolha um: Planar de Arraia (reduz queda), Escalador Ágil (deslocamento escalada), ou Adaptação Subaquática (respirar água e deslocamento natação)."
+        "desc": "Escolha um: <i>Planar de Arraia</i> (reduz queda e plana), <i>Escalador Ágil</i> (deslocamento de escalada), ou <i>Adaptação Subaquática</i> (natação e respira água)."
       },
       {
         "name": "Aprimoramento Animal (Nv 5)",
-        "desc": "Escolha um novo ou: Apêndices de Agarrar (garras/tentáculos para ataque bônus e agarrar), Carapaça (+1 CA), ou Cuspe Ácido (ação de dano ácido)."
+        "desc": "Escolha um novo ou: <i>Apêndices de Agarrar</i> (ataque bônus e agarrar), <i>Carapaça</i> (+1 CA), ou <i>Cuspe Ácido</i> (ação de dano ácido)."
       }
     ],
     "variations": []
@@ -1166,28 +1223,21 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Goblinoides mais altos e disciplinados, com origens em Faéria e um forte senso de reciprocidade e união militar.",
+    "description": "Disciplina, honra e estratégia definem os Hobgoblins. Fortalecidos por laços de lealdade e uma antiga conexão com a Agrestia das Fadas, eles sabem que a força de um é a força de muitos.",
     "image": "img/races/Hobgoblin.png",
+    "languages": ["Comum", "Goblin"],
     "traits": [
-      {
-        "name": "Tipo de Criatura",
-        "desc": "Considerado também um goblinoide."
-      },
-      {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
       {
         "name": "Ancestralidade Feérica",
         "desc": "Vantagem contra ser enfeitiçado."
       },
       {
         "name": "Presente Feérico",
-        "desc": "Pode usar a ação Ajudar como ação bônus (usos igual bônus proficiência). A partir do 3º nível, a ação Ajudar concede um benefício extra (PV temporários, movimento extra ou desvantagem ao inimigo)."
+        "desc": "Você pode usar a ação <b>Ajudar</b> como uma ação bônus. A partir do 3º nível, ao Ajudar, você concede benefícios extras (PV temporários, movimento ou desvantagem ao inimigo)."
       },
       {
         "name": "Fortuna dos Muitos",
-        "desc": "Se falhar em um teste, pode adicionar um bônus igual ao número de aliados a até 9m (máx +3). Usos igual bônus proficiência por descanso longo."
+        "desc": "Se você falhar em um teste ou ataque, pode adicionar um bônus igual ao número de aliados visíveis a até 9m (máximo +3). Usos igual ao Bônus de Proficiência por descanso longo."
       }
     ],
     "variations": []
@@ -1200,20 +1250,23 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "A raça comum mais jovem, conhecida por sua adaptabilidade, ambição e diversidade. Constroem instituições duradouras apesar de suas vidas curtas.",
+    "description": "Os mais jovens e adaptáveis das raças comuns. Sem a longevidade dos elfos ou a resistência dos anões, os humanos compensam com uma ambição inigualável, construindo impérios e moldando o mundo através de pura determinação.",
     "image": "img/races/Humano.png",
+    "languages": ["Comum"],
+    "chooseLanguages": 1,
+    "chooseSkills": 1,
     "traits": [
       {
         "name": "Engenhoso",
-        "desc": "Adquire inspiração sempre que terminar um descanso longo."
+        "desc": "Você adquire <b>Inspiração</b> sempre que terminar um descanso longo."
       },
       {
         "name": "Habilidoso",
-        "desc": "Adquire proficiência em uma perícia a sua escolha."
+        "desc": "Você ganha proficiência em uma perícia à sua escolha."
       },
       {
         "name": "Versátil",
-        "desc": "Adquire um talento a sua escolha."
+        "desc": "Você ganha um <b>Talento</b> à sua escolha."
       }
     ],
     "variations": []
@@ -1226,24 +1279,27 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Fusão entre humanos e espíritos quori do plano dos sonhos. Conhecidos por sabedoria, espiritualidade e habilidades psíquicas menores.",
+    "description": "Kalashtar são a união de humanos com espíritos renegados do plano dos sonhos. Eles possuem uma graça sobrenatural e poderes mentais sutis, travando uma guerra eterna contra a escuridão em seus sonhos.",
     "image": "img/races/Kalashtar.png",
+    "resistances": ["Psíquico"],
+    "languages": ["Comum", "Quori"],
+    "chooseLanguages": 1,
     "traits": [
       {
         "name": "Mente Dupla",
-        "desc": "Vantagem em todas as salvaguardas de Sabedoria."
+        "desc": "Você tem <b>vantagem</b> em todas as salvaguardas de Sabedoria."
       },
       {
         "name": "Disciplina Mental",
-        "desc": "Resistência contra dano psíquico."
+        "desc": "Você tem resistência a dano <b>psíquico</b>."
       },
       {
         "name": "Ligação Mental",
-        "desc": "Telepatia com criaturas que possa ver (alcance 3m x nível). Pode conceder a habilidade telepática a uma criatura como ação."
+        "desc": "Você pode falar telepaticamente com qualquer criatura que possa ver (alcance 3m x seu nível)."
       },
       {
         "name": "Separado dos Sonhos",
-        "desc": "Imune a magias e efeitos que exigem que você sonhe, mas ainda pode ser colocado para dormir."
+        "desc": "Você é imune a magias que exigem que você sonhe, mas ainda pode dormir."
       }
     ],
     "variations": []
@@ -1256,20 +1312,24 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Humanoides diminutos de Krynn, conhecidos por sua curiosidade sobrenatural, destemor e hábito de 'pegar emprestado' coisas.",
+    "description": "Pequenos e destemidos exploradores cuja curiosidade é lendária (e perigosa). Kenders não sentem medo comum e têm um hábito mágico de encontrar coisas 'perdidas' em seus bolsos.",
     "image": "img/races/Kender.png",
+    "languages": ["Comum"],
+    "chooseLanguages": 1,
+    "chooseSkillFrom": ["Percepção", "Investigação", "Prestidigitação", "Furtividade", "Sobrevivência"],
+    "countSkills": 1,
     "traits": [
       {
         "name": "Destemido",
-        "desc": "Vantagem contra ser amedrontado. Se falhar, pode escolher ter sucesso uma vez por descanso longo."
+        "desc": "Você tem vantagem em salvaguardas contra ser amedrontado."
+      },
+      {
+        "name": "Provocação",
+        "desc": "Como ação bônus, você provoca uma criatura a até 18m. Ela tem desvantagem em ataques contra outros alvos que não você."
       },
       {
         "name": "Aptidão Kender",
         "desc": "Proficiência em uma perícia: Percepção, Investigação, Prestidigitação, Furtividade ou Sobrevivência."
-      },
-      {
-        "name": "Provocação",
-        "desc": "Ação bônus para provocar uma criatura a 18m (CD Sabedoria). Alvo tem desvantagem em ataques contra outros que não você. Usos igual bônus proficiência."
       }
     ],
     "variations": []
@@ -1282,8 +1342,10 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Povo com penas semelhantes a corvos, incapazes de voar. Possuem memória extraordinária e só podem falar através de mímica perfeita de sons que ouviram.",
+    "description": "Homens-pássaro amaldiçoados a perder suas asas e sua voz criativa. Kenkus se comunicam através de mímica perfeita e são mestres em copiar qualquer habilidade ou som que testemunhem.",
     "image": "img/races/Kenku.png",
+    "languages": ["Comum", "Auran"],
+    "chooseSkills": 2,
     "traits": [
       {
         "name": "Duplicação Expert",
@@ -1291,11 +1353,11 @@
       },
       {
         "name": "Memória Kenku",
-        "desc": "Proficiência em duas perícias. Pode se dar vantagem em um teste de perícia proficiente (usos igual bônus proficiência por descanso longo)."
+        "desc": "Proficiência em duas perícias. Você pode se dar <b>vantagem</b> em um teste de perícia proficiente. Usos igual ao Bônus de Proficiência por descanso longo."
       },
       {
         "name": "Mímica",
-        "desc": "Pode imitar sons e vozes com precisão. Discernir a imitação requer um teste de Intuição (CD Carisma)."
+        "desc": "Você pode imitar sons e vozes com precisão assustadora."
       }
     ],
     "variations": []
@@ -1308,20 +1370,17 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Humanoides diminutos e dracônicos, muitas vezes vivendo nas profundezas e servindo ou se aliando a dragões. Conhecidos por sua astúcia e grito poderoso.",
+    "description": "Pequenos parentes reptilianos dos dragões. Embora fisicamente fracos, os Kobolds compensam com números, armadilhas e um grito de batalha que inspira seus aliados.",
     "image": "img/races/Kobold.png",
+    "languages": ["Comum", "Dracônico"],
     "traits": [
       {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
-      {
         "name": "Grito Dracônico",
-        "desc": "Ação bônus para dar vantagem a você e seus aliados contra inimigos a até 3m até o próximo turno. Usos igual bônus proficiência por descanso longo."
+        "desc": "Ação bônus. Você e seus aliados têm <b>vantagem</b> nos ataques contra inimigos a até 3m de você até o final do seu próximo turno. Usos igual ao Bônus de Proficiência."
       },
       {
         "name": "Legado Kobold",
-        "desc": "Escolha um: Astúcia (proficiência em uma perícia), Desafiador (vantagem contra medo), ou Feitiçaria Dracônica (conhece um truque de feiticeiro)."
+        "desc": "Escolha um: <i>Astúcia</i> (proficiência em perícia), <i>Desafiador</i> (vantagem contra medo), ou <i>Feitiçaria Dracônica</i> (um truque de feiticeiro)."
       }
     ],
     "variations": []
@@ -1334,24 +1393,22 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Povo leporino (coelho) originário de Faéria, conhecido por sua energia, agilidade e sorte feérica. Viajantes e exploradores entusiastas.",
+    "description": "Povo-coelho das fadas, os Laparlonj (Harengon) são viajantes energéticos que nunca ficam parados. Sua sorte feérica e reflexos rápidos os permitem escapar do perigo num piscar de olhos.",
     "image": "img/races/Laparlonj.png",
+    "skills": ["Percepção"],
+    "languages": ["Comum", "Silvestre"],
     "traits": [
       {
         "name": "Gatilhebre",
-        "desc": "Adiciona bônus de proficiência à iniciativa."
-      },
-      {
-        "name": "Sentidos Leporinos",
-        "desc": "Proficiência em Percepção."
+        "desc": "Você adiciona seu Bônus de Proficiência à sua Iniciativa."
       },
       {
         "name": "Sorte Escorregaginga",
-        "desc": "Reação ao falhar em um teste de Destreza para adicionar 1d4 à jogada."
+        "desc": "Se falhar em um teste de Destreza, use sua reação para adicionar <b>1d4</b> ao resultado, podendo transformar em sucesso."
       },
       {
         "name": "Pulo do Coelho",
-        "desc": "Ação bônus para saltar 5x o bônus de proficiência em metros sem provocar ataques de oportunidade. Usos igual bônus proficiência por descanso longo."
+        "desc": "Ação bônus para saltar (1,5m x Proficiência) sem provocar ataques de oportunidade."
       }
     ],
     "variations": []
@@ -1364,24 +1421,23 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Nômades humanoides imponentes que lembram leões, nativos das planícies de Oreskos. São orgulhosos, confiantes e valorizam suas alcateias.",
+    "description": "Guerreiros nobres com cabeças de leão e corpos poderosos. Os Leoninos valorizam o orgulho e a autossuficiência, e seu rugido é capaz de abalar a coragem dos inimigos.",
     "image": "img/races/Leonino.png",
+    "languages": ["Comum", "Leonin"],
+    "chooseSkillFrom": ["Atletismo", "Intimidação", "Percepção", "Sobrevivência"],
+    "countSkills": 1,
     "traits": [
       {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
-      {
         "name": "Garras",
-        "desc": "Ataques desarmados causam 1d6 + Força de dano cortante."
-      },
-      {
-        "name": "Instintos de Caçador",
-        "desc": "Proficiência em uma perícia: Atletismo, Intimidação, Percepção ou Sobrevivência."
+        "desc": "Ataques desarmados causam <b>1d6 + Força</b> de dano cortante."
       },
       {
         "name": "Rugido Intimidador",
-        "desc": "Ação bônus para amedrontar criaturas a até 3m (CD Constituição). Uma vez por descanso curto/longo."
+        "desc": "Ação bônus. Criaturas a até 3m devem passar em salvaguarda de Constituição ou ficarão <b>amedrontadas</b>. Uma vez por descanso curto/longo."
+      },
+      {
+        "name": "Instintos de Caçador",
+        "desc": "Proficiência em Atletismo, Intimidação, Percepção ou Sobrevivência."
       }
     ],
     "variations": []
@@ -1394,24 +1450,22 @@
     "swimSpeed": 9,
     "flySpeed": 0,
     "climbSpeed": 0,
-    "description": "Seres aquáticos resilientes e orgulhosos com aparência de peixe, que sobreviveram a muitas adversidades. Valorizam a compaixão e a justiça.",
+    "description": "Povo-peixe resiliente e estoico. Os Locathah sobreviveram a séculos de escravidão e perigo nos mares profundos graças à sua vontade inquebrável e pele dura.",
     "image": "img/races/Locathah.png",
+    "skills": ["Atletismo", "Percepção"],
+    "languages": ["Comum", "Aquan"],
     "traits": [
       {
         "name": "Armadura Natural",
-        "desc": "Quando sem armadura, sua CA é 12 + modificador de Destreza."
-      },
-      {
-        "name": "Observador e Atlético",
-        "desc": "Proficiência em Atletismo e Percepção."
+        "desc": "Sua CA base é <b>12 + modificador de Destreza</b>."
       },
       {
         "name": "Vontade do Leviatã",
-        "desc": "Vantagem contra charme, medo, paralisia, veneno, atordoamento ou sono."
+        "desc": "Você tem vantagem contra charme, medo, paralisia, veneno, atordoamento ou sono."
       },
       {
         "name": "Anfíbio Limitado",
-        "desc": "Pode respirar ar e água, mas precisa ser submerso a cada 4 horas para não sufocar."
+        "desc": "Respira ar e água, mas precisa ser submerso a cada 4 horas."
       }
     ],
     "variations": []
@@ -1424,8 +1478,9 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Humanoides imponentes com aparência de elefante, conhecidos por sua serenidade, lealdade inabalável e sabedoria.",
+    "description": "Gigantes gentis com cabeças de elefante. Os Loxodontes são conhecidos por sua sabedoria, lealdade inabalável e uma pele tão grossa que serve como armadura natural.",
     "image": "img/races/Loxodonte.png",
+    "languages": ["Comum", "Loxodon"],
     "traits": [
       {
         "name": "Porte Poderoso",
@@ -1437,20 +1492,16 @@
       },
       {
         "name": "Armadura Natural",
-        "desc": "Quando sem armadura, sua CA é 12 + modificador de Constituição."
+        "desc": "Sua CA é <b>12 + modificador de Constituição</b>."
       },
       {
         "name": "Tromba",
-        "desc": "Pode ser usada para agarrar, levantar e realizar tarefas simples (alcance 1,5m). Não pode usar armas, escudos ou itens mágicos com precisão."
-      },
-      {
-        "name": "Olfato Aguçado",
-        "desc": "Vantagem em testes de Percepção, Sobrevivência e Investigação baseados no olfato."
+        "desc": "Pode ser usada para agarrar, levantar objetos ou realizar tarefas simples."
       }
     ],
     "variations": []
   },
- {
+  {
     "name": "Meio-Elfo",
     "type": "Humanoide",
     "size": "Médio",
@@ -1458,65 +1509,60 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "A fusão de humanos e elfos, combinando a ambição humana com a reverência élfica pela natureza.",
+    "description": "Caminhando entre dois mundos, os meio-elfos combinam a graça élfica com a versatilidade humana. Frequentemente diplomatas ou andarilhos, eles constroem pontes entre culturas.",
     "image": "img/races/Meio-Elfo.png",
+    "languages": ["Comum", "Élfico"],
+    "chooseLanguages": 1,
+    "chooseSkills": 2,
     "traits": [
       {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
-      {
         "name": "Ancestralidade Feérica",
-        "desc": "Vantagem contra ser enfeitiçado, imune a sono mágico."
+        "desc": "Vantagem contra ser enfeitiçado e imunidade a sono mágico."
       },
       {
         "name": "Versatilidade em Perícia (Padrão)",
-        "desc": "Proficiência em duas perícias de sua escolha. (Nota: Se escolher uma variante abaixo, você perde este traço)."
+        "desc": "Proficiência em duas perícias à sua escolha."
       }
     ],
     "variations": [
       {
         "name": "Variante: Sentidos Aguçados",
-        "description": "Descendência generalista que apura os sentidos.",
-        "traits": [{ "name": "Sentidos Aguçados", "desc": "Proficiência em Percepção (Substitui Versatilidade)." }]
+        "description": "Herança que aguça a percepção.",
+        "replaces": ["Versatilidade em Perícia (Padrão)"],
+        "skills": ["Percepção"],
+        "traits": [{ "name": "Sentidos Aguçados", "desc": "Proficiência em Percepção." }]
       },
       {
         "name": "Variante: Alto Elfo",
-        "description": "Descendência de Alto Elfo.",
+        "description": "Herança de magia arcana.",
+        "replaces": ["Versatilidade em Perícia (Padrão)"],
+        "proficiencies": ["Espada longa", "Espada curta", "Arco longo", "Arco curto"],
         "traits": [
-            { "name": "Treinamento com Armas", "desc": "Proficiência com espadas e arcos (Substitui Versatilidade)." },
-            { "name": "Truque", "desc": "Conhece um truque de mago, usando Inteligência (Substitui Versatilidade)." }
+            { "name": "Treinamento com Armas", "desc": "Proficiência com espadas e arcos." },
+            { "name": "Truque", "desc": "Conhece um truque de mago (Inteligência)." }
         ]
       },
       {
         "name": "Variante: Elfo Silvestre",
-        "description": "Descendência de Elfo Silvestre.",
+        "description": "Herança da velocidade e camuflagem.",
         "speed": 10.5,
+        "replaces": ["Versatilidade em Perícia (Padrão)"],
         "traits": [
-            { "name": "Pés Velozes", "desc": "Deslocamento aumenta para 10,5m (Substitui Versatilidade)." },
-            { "name": "Máscara da Natureza", "desc": "Pode se esconder com cobertura leve (Substitui Versatilidade)." }
+            { "name": "Máscara da Natureza", "desc": "Pode se esconder com cobertura leve." }
         ]
       },
       {
-        "name": "Variante: Drow (Elfo Negro)",
-        "description": "Descendência de Drow.",
-        "traits": [{ "name": "Magia Drow", "desc": "Luzes dançantes, Fogo das Fadas (nv3), Escuridão (nv5). Usa Carisma. (Substitui Versatilidade)." }]
+        "name": "Variante: Drow",
+        "description": "Herança da magia sombria.",
+        "replaces": ["Versatilidade em Perícia (Padrão)"],
+        "traits": [{ "name": "Magia Drow", "desc": "<i>Luzes dançantes</i>. Nv 3: <i>fogo das fadas</i>. Nv 5: <i>escuridão</i>. (Carisma)." }]
       },
       {
         "name": "Variante: Elfo Aquático",
-        "description": "Descendência de Elfo Marinho.",
+        "description": "Herança do mar.",
         "swimSpeed": 9,
-        "traits": [{ "name": "Natação", "desc": "Deslocamento de natação de 9m (Substitui Versatilidade)." }]
-      },
-      {
-        "name": "Variante: Elfo Pálido",
-        "description": "Descendência do Bosque Pálido.",
-        "traits": [{ "name": "Sentido Incisivo", "desc": "Vantagem em Investigação e Intuição (Substitui Versatilidade)." }]
-      },
-      {
-        "name": "Variante: Eladrin",
-        "description": "Descendência de Eladrin.",
-        "traits": [{ "name": "Passo Feérico", "desc": "Teleporte 9m como ação bônus (Substitui Versatilidade)." }]
+        "replaces": ["Versatilidade em Perícia (Padrão)"],
+        "traits": [{ "name": "Natação", "desc": "Deslocamento de natação de 9m." }]
       }
     ]
   },
@@ -1528,24 +1574,22 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Descendentes de humanos e orcs, conhecidos por sua força física, determinação e intensidade emocional. Muitas vezes se tornam aventureiros ou líderes.",
+    "description": "Com força bruta e determinação feroz, os meio-orcs buscam seu lugar no mundo. Suas cicatrizes são medalhas de honra, e sua fúria em combate é lendária.",
     "image": "img/races/Meio-Orc.png",
+    "skills": ["Intimidação"],
+    "languages": ["Comum", "Orc"],
     "traits": [
       {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
-      {
         "name": "Ameaçador",
-        "desc": "Proficiência em Intimidação."
+        "desc": "Proficiência em <b>Intimidação</b>."
       },
       {
         "name": "Vigor Implacável",
-        "desc": "Quando reduzido a 0 PV (mas não morto), pode cair para 1 PV uma vez por descanso longo."
+        "desc": "Quando reduzido a 0 PV mas não morto, você pode cair para <b>1 PV</b>. Uma vez por descanso longo."
       },
       {
         "name": "Ataque Selvagem",
-        "desc": "Em um acerto crítico corpo a corpo, adiciona um dado de dano da arma extra."
+        "desc": "Quando acerta um crítico corpo a corpo, você rola um dos dados de dano da arma mais uma vez."
       }
     ],
     "variations": []
@@ -1558,24 +1602,22 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Humanoides robustos com cabeças de touro, conhecidos por seu senso de direção sobrenatural e força em combate.",
+    "description": "Poderosos guerreiros com cabeças de touro, os Minotauros são a encarnação da força bruta e da fúria do labirinto. Em batalha, eles atropelam seus inimigos com seus chifres letais.",
     "image": "img/races/Minotauro.png",
+    "skills": ["Intimidação", "Persuasão"],
+    "languages": ["Comum", "Minotaur"],
     "traits": [
       {
         "name": "Chifres",
-        "desc": "Ataques desarmados causam 1d6 + Força de dano perfurante."
+        "desc": "Ataques desarmados causam <b>1d6 + Força</b> de dano perfurante."
       },
       {
         "name": "Investida Perfurante",
-        "desc": "Se usar a ação Correr e mover pelo menos 6m, pode fazer um ataque de chifres como ação bônus."
+        "desc": "Se você Correr e mover 6m, pode fazer um ataque de chifres como <b>ação bônus</b>."
       },
       {
         "name": "Chifres Martelantes",
-        "desc": "Após acertar um ataque corpo a corpo, ação bônus para tentar empurrar o alvo (CD Força) até 3m."
-      },
-      {
-        "name": "Memória do Labirinto",
-        "desc": "Sempre sabe o norte e tem vantagem em testes de Sobrevivência para navegação."
+        "desc": "Após acertar um ataque corpo a corpo, ação bônus para empurrar o alvo."
       }
     ],
     "variations": []
@@ -1588,20 +1630,19 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Humanoides tocados pela licantropia, com aparência bestial e a capacidade de aprimorar temporariamente suas características animalescas através do 'morfismo'.",
+    "description": "Descendentes de licantropos, os Morfos (Shifters) andam no limite entre a civilização e a besta. Eles podem liberar sua natureza animal interior, alterando fisicamente seu corpo para ganhar presas, garras ou sentidos aguçados.",
     "image": "img/races/Morfo.png",
+    "languages": ["Comum"],
+    "chooseSkillFrom": ["Acrobacia", "Atletismo", "Intimidação", "Sobrevivência"],
+    "countSkills": 1,
     "traits": [
-      {
-        "name": "Instintos Bestiais",
-        "desc": "Proficiência em uma perícia: Acrobacia, Atletismo, Intimidação ou Sobrevivência."
-      },
       {
         "name": "Visão no Escuro",
         "desc": "18 metros."
       },
       {
         "name": "Morfismo",
-        "desc": "Ação bônus para assumir aparência bestial por 1 minuto (ganha PV temporários). Escolha um benefício ao criar o personagem (Pele de Fera, Presa Longa, Passo Ágil, Caça Selvagem). Usos igual bônus proficiência por descanso longo."
+        "desc": "Como <b>ação bônus</b>, assuma uma aparência bestial por 1 minuto, ganhando PV temporários e benefícios baseados na sua sub-raça (Pele de Fera, Presa Longa, etc). Usos igual Proficiência/longo."
       }
     ],
     "variations": []
@@ -1614,24 +1655,17 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Raça feroz e determinada, moldada pelo deus Gruumsh. Conhecidos por sua força, coragem e tenacidade em combate.",
+    "description": "Criados para a batalha e a sobrevivência, os Orcs são uma força da natureza. Movidos pela adrenalina e abençoados com uma resistência sobrenatural, eles avançam onde outros cairiam.",
     "image": "img/races/Orc.png",
+    "languages": ["Comum", "Orc"],
     "traits": [
       {
         "name": "Explosão de Adrenalina",
-        "desc": "Pode usar a ação Correr como ação bônus e ganhar PV temporários. Usos igual bônus proficiência por descanso longo."
-      },
-      {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
-      {
-        "name": "Porte Poderoso",
-        "desc": "Conta como um tamanho maior para capacidade de carga."
+        "desc": "Você pode usar a ação <b>Correr</b> como uma ação bônus. Ao fazê-lo, ganha PV temporários."
       },
       {
         "name": "Vigor Implacável",
-        "desc": "Quando reduzido a 0 PV (mas não morto), pode cair para 1 PV uma vez por descanso longo."
+        "desc": "Quando reduzido a 0 PV mas não morto, pode voltar para 1 PV. Uma vez por descanso longo."
       }
     ],
     "variations": []
@@ -1644,20 +1678,22 @@
     "flySpeed": 9,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Parentes distantes de corujas gigantes de Faéria, humanoides com asas que lhes permitem voar silenciosamente.",
+    "description": "Parentes distantes das corujas gigantes de Faéria, os Owlin deslizam silenciosamente pela noite. Curiosos e perceptivos, eles são caçadores e estudiosos naturais.",
     "image": "img/races/Owlin.png",
+    "skills": ["Furtividade"],
+    "languages": ["Comum"],
     "traits": [
       {
-        "name": "Visão no Escuro Superior",
-        "desc": "36 metros."
-      },
-      {
         "name": "Voo",
-        "desc": "Deslocamento de voo igual ao de caminhada. Não pode usar se vestir armadura média ou pesada."
+        "desc": "Deslocamento de voo igual ao de caminhada se não usar armadura média/pesada."
       },
       {
         "name": "Penas Silenciosas",
-        "desc": "Proficiência em Furtividade."
+        "desc": "Você tem proficiência na perícia <b>Furtividade</b>."
+      },
+      {
+        "name": "Visão no Escuro Superior",
+        "desc": "Alcance de 36 metros."
       }
     ],
     "variations": []
@@ -1670,64 +1706,42 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Humanoides de estatura diminuta que valorizam o conforto, a família e a simplicidade. São discretos, sortudos e corajosos quando necessário.",
+    "description": "Pequenos em estatura mas grandes em espírito, os Pequeninos (Halflings) vivem vidas simples de conforto e agricultura, mas mostram uma coragem e sorte surpreendentes quando a aventura chama.",
     "image": "img/races/Pequeninos.png",
+    "languages": ["Comum", "Halfling"],
     "traits": [
       {
         "name": "Sortudo",
-        "desc": "Pode rerrolar um 1 natural em ataques, testes e salvaguardas (deve usar o novo resultado)."
+        "desc": "Quando rolar um <b>1 natural</b> no d20 (ataque, teste ou salvaguarda), você pode rerrolar o dado."
       },
       {
         "name": "Corajoso",
-        "desc": "Vantagem contra ser amedrontado."
+        "desc": "Você tem vantagem em salvaguardas contra ser amedrontado."
       },
       {
         "name": "Agilidade Pequenina",
-        "desc": "Pode atravessar o espaço de criaturas maiores que você."
+        "desc": "Você pode se mover através do espaço de qualquer criatura que for de um tamanho maior que o seu."
       }
     ],
     "variations": [
       {
         "name": "Pés-Ligeiros",
-        "description": "Carismáticos e furtivos, conseguem se esconder facilmente.",
+        "description": "Naturalmente furtivos e sociáveis.",
         "traits": [
           {
             "name": "Furtividade Natural",
-            "desc": "Pode se esconder usando uma criatura maior como cobertura."
+            "desc": "Você pode tentar se esconder mesmo quando possuir apenas a cobertura de uma criatura que seja, no mínimo, um tamanho maior que o seu."
           }
         ]
       },
       {
         "name": "Robustos",
-        "description": "Mais resistentes, talvez com sangue anão.",
+        "description": "Mais resistentes e parrudos, possivelmente com sangue anão.",
+        "resistances": ["Veneno"],
         "traits": [
           {
             "name": "Resistência a Toxinas",
-            "desc": "Vantagem contra veneno e resistência a dano venenoso."
-          }
-        ]
-      },
-      {
-        "name": "Fantasmassábios",
-        "description": "Raros e reclusos, comunicam-se telepaticamente.",
-        "traits": [
-          {
-            "name": "Fala Silenciosa",
-            "desc": "Telepatia com alcance de 9m (uma criatura por vez)."
-          }
-        ]
-      },
-      {
-        "name": "Lotusden",
-        "description": "Adaptados à natureza selvagem da Floresta de Lotusden.",
-        "traits": [
-          {
-            "name": "Filho da Floresta",
-            "desc": "Truque 'druidismo'. Nv 3: 'emaranhar' (1/longo). Nv 5: 'crescer espinhos' (1/longo). (Sabedoria)."
-          },
-          {
-            "name": "Caminhar na Madeira",
-            "desc": "Ignora terreno difícil de plantas não mágicas. Desvantagem para rastreá-lo."
+            "desc": "Vantagem contra veneno e resistência a dano de veneno."
           }
         ]
       }
@@ -1741,28 +1755,22 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Seres amorfos e translúcidos que podem alterar sua forma. Alimentam-se por osmose e podem endurecer para parecer humanoides.",
+    "description": "Seres amorfos de protoplasma senciente. Plasmoides podem alterar sua forma à vontade, espremendo-se por frestas ou endurecendo para parecerem humanoides. A vida para eles é uma constante adaptação.",
     "image": "img/races/Plasmoide.png",
+    "resistances": ["Ácido", "Veneno"],
+    "languages": ["Comum"],
     "traits": [
       {
         "name": "Amorfo",
-        "desc": "Pode se espremer por espaços de 2,5cm. Vantagem para escapar de imobilização."
-      },
-      {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
+        "desc": "Você pode se espremer por espaços de até <b>2,5 cm</b> de largura. Vantagem para escapar de agarrões."
       },
       {
         "name": "Prender a Respiração",
-        "desc": "Pode prender a respiração por 1 hora."
-      },
-      {
-        "name": "Resistência Natural",
-        "desc": "Resistência a dano ácido e venenoso, vantagem contra envenenamento."
+        "desc": "Você pode prender a respiração por 1 hora."
       },
       {
         "name": "Moldar-se",
-        "desc": "Ação para remodelar o corpo para forma humanoide ou de massa. Ação bônus para criar um pseudópode para manipular objetos pequenos."
+        "desc": "Ação para mudar de forma (humanoide com membros ou massa amorfa). Ação bônus para criar um pseudópode capaz de manipular objetos leves a até 3m."
       }
     ],
     "variations": []
@@ -1775,28 +1783,23 @@
     "swimSpeed": 9,
     "flySpeed": 0,
     "climbSpeed": 0,
-    "description": "Humanoides com características de lagartos, pele escamosa e uma conexão mística com a natureza. São resilientes e adaptáveis.",
+    "description": "Povo-lagarto das selvas e pântanos. Pragmáticos e sobrevivencialistas, eles veem o mundo através de lentes de predador e presa, e suas escamas oferecem proteção natural.",
     "image": "img/races/Reptante.png",
+    "languages": ["Comum", "Dracônico"],
+    "chooseSkillFrom": ["Lidar com Animais", "Natureza", "Percepção", "Furtividade", "Sobrevivência"],
+    "countSkills": 2,
     "traits": [
       {
         "name": "Mordida",
-        "desc": "Ataque desarmado causa 1d6 + Força de dano cortante."
-      },
-      {
-        "name": "Prender a Respiração",
-        "desc": "Pode prender a respiração por até 15 minutos."
+        "desc": "Ataque desarmado causa <b>1d6 + Força</b> de dano cortante."
       },
       {
         "name": "Fome Voraz",
-        "desc": "Ação bônus para atacar com a mordida e ganhar PV temporários. Usos igual bônus proficiência por descanso longo."
+        "desc": "Ação bônus para atacar com mordida. Se acertar, ganha PV temporários. Usos igual Proficiência/longo."
       },
       {
         "name": "Armadura Natural",
-        "desc": "Quando sem armadura, sua CA é 13 + modificador de Destreza."
-      },
-      {
-        "name": "Intuição da Natureza",
-        "desc": "Proficiência em duas perícias de natureza/sobrevivência."
+        "desc": "Sua CA é <b>13 + modificador de Destreza</b>."
       }
     ],
     "variations": []
@@ -1809,24 +1812,23 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Criaturas de Faéria com pernas de cabra e chifres, conhecidas por sua natureza festiva, alegria contagiante e resistência à magia.",
+    "description": "Encarnação da folia e da natureza selvagem, os Sátiros vivem para a música, a bebida e o prazer. Com pernas de bode e chifres curvos, eles saltam através da vida com uma alegria contagiante.",
     "image": "img/races/Sátiro.png",
+    "skills": ["Atuação", "Persuasão"],
+    "languages": ["Comum", "Silvestre"],
+    "chooseToolFrom": ["Instrumento Musical"],
     "traits": [
       {
-        "name": "Investida",
-        "desc": "Ataques desarmados com cabeça/chifres causam 1d6 + Força de dano contundente."
+        "name": "Resistência Mágica",
+        "desc": "Você tem <b>vantagem</b> em testes de resistência contra magias."
       },
       {
-        "name": "Resistência Mágica",
-        "desc": "Vantagem em testes de resistência contra magias."
+        "name": "Investida",
+        "desc": "Seus chifres são armas naturais (1d6 dano contundente)."
       },
       {
         "name": "Saltos Alegres",
-        "desc": "Adiciona 1d4/2 metros à distância de seus saltos."
-      },
-      {
-        "name": "Festeiro",
-        "desc": "Proficiência em Performance, Persuasão e um instrumento musical."
+        "desc": "Adicione <b>1d8</b> (aprox. 1,5m a 2m) à distância dos seus saltos."
       }
     ],
     "variations": []
@@ -1839,36 +1841,19 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Elfos da Sombra Eterna, transformados pela essência sombria do plano. Servem à Rainha Corvo e existem em um estado entre a vida e a morte.",
+    "description": "Elfos do Pendor das Sombras, servos da Rainha de Rapina. Marcados pela melancolia e pelo poder da morte, eles podem se tornar formas espectrais para escapar do perigo.",
     "image": "img/races/Shadar-Kai.png",
+    "resistances": ["Necrótico"],
+    "skills": ["Percepção"],
+    "languages": ["Comum", "Élfico"],
     "traits": [
       {
-        "name": "Tipo de Criatura",
-        "desc": "Considerado também um elfo."
-      },
-      {
         "name": "Bênção da Rainha Corvo",
-        "desc": "Ação bônus para teleportar 9m. A partir do 3º nível, ganha resistência a todos os danos após teleportar. Usos igual bônus proficiência por descanso longo."
-      },
-      {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
-      {
-        "name": "Ancestralidade Feérica",
-        "desc": "Vantagem contra ser enfeitiçado."
-      },
-      {
-        "name": "Sentidos Aguçados",
-        "desc": "Proficiência em Percepção."
+        "desc": "<b>Ação bônus</b> para teleportar 9m. A partir do 3º nível, você ganha <b>resistência a todo dano</b> até o início do seu próximo turno após teleportar."
       },
       {
         "name": "Resistência Necrótica",
         "desc": "Resistência a dano necrótico."
-      },
-      {
-        "name": "Transe",
-        "desc": "Medita por 4 horas. Pode adquirir duas proficiências temporárias (arma/ferramenta) após o transe."
       }
     ],
     "variations": []
@@ -1881,24 +1866,18 @@
     "climbSpeed": 9,
     "flySpeed": 0,
     "swimSpeed": 0,
-    "description": "Povo felino curioso e ágil, criado pelo Senhor dos Gatos. Sua aparência varia desde gatos domésticos a grandes felinos.",
+    "description": "Homens-gato curiosos e ágeis, vindos de terras distantes. Tabaxis são colecionadores de histórias e artefatos, movendo-se com explosões de velocidade felina.",
     "image": "img/races/Tabaxi.png",
+    "skills": ["Percepção", "Furtividade"],
+    "languages": ["Comum"],
     "traits": [
       {
-        "name": "Garras de Gato",
-        "desc": "Ataques desarmados causam 1d6 + Força de dano perfurante."
-      },
-      {
-        "name": "Talento do Gato",
-        "desc": "Proficiência em Percepção e Furtividade."
-      },
-      {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
-      {
         "name": "Agilidade Felina",
-        "desc": "Pode dobrar o deslocamento por um turno. Deve passar um turno sem se mover para usar novamente."
+        "desc": "Você pode <b>dobrar seu deslocamento</b> até o final do turno. Você deve ficar parado por um turno para recarregar essa habilidade."
+      },
+      {
+        "name": "Garras de Gato",
+        "desc": "Dano desarmado de 1d6 + Força. Deslocamento de escalada igual ao de caminhada."
       }
     ],
     "variations": []
@@ -1911,28 +1890,21 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Humanoides insetoides com exoesqueleto camaleônico e quatro braços. Comunicam-se por sons de mandíbula, antenas ou telepatia.",
+    "description": "Nômades insetoides de quatro braços que vagam pelos desertos. Com uma carapaça protetora e comunicação telepática, eles são sobreviventes alienígenas em um mundo hostil.",
     "image": "img/races/Thri-Krin.png",
+    "languages": ["Thri-Kreen"],
     "traits": [
       {
         "name": "Carapaça Camaleônica",
-        "desc": "CA base 13 + Destreza. Ação para mudar de cor e ganhar vantagem em Furtividade."
-      },
-      {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
+        "desc": "Sua CA é <b>13 + Destreza</b>. Ação para mudar a cor da carapaça e ganhar vantagem em Furtividade."
       },
       {
         "name": "Braços Secundários",
-        "desc": "Dois braços menores que podem manipular objetos ou empunhar armas leves."
-      },
-      {
-        "name": "Insone",
-        "desc": "Não precisa dormir e permanece consciente durante descanso longo."
+        "desc": "Você tem dois braços menores extras que podem manipular objetos leves ou empunhar armas leves."
       },
       {
         "name": "Telepatia Thri-Krin",
-        "desc": "Telepatia com alcance de 36m para transmitir pensamentos."
+        "desc": "Alcance de 36m."
       }
     ],
     "variations": []
@@ -1945,20 +1917,22 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Humanos com herança infernal. Sua aparência e habilidades dependem da linhagem do arquidiabo ou de mutações únicas.",
+    "description": "Tocados pelo inferno, os Tiferinos (Tieflings) carregam chifres, caudas e a marca de um pacto ancestral. Frequentemente párias, eles forjam seu próprio destino com carisma e magia infernal.",
     "image": "img/races/Tiferinos.png",
+    "resistances": ["Fogo"],
+    "languages": ["Comum", "Infernal"],
     "traits": [
       {
         "name": "Visão no Escuro",
-        "desc": "18 metros."
+        "desc": "Você enxerga na escuridão a até 18 metros."
       },
       {
         "name": "Resistência Infernal",
-        "desc": "Resistência a dano ígneo."
+        "desc": "Você tem resistência a dano <b>ígneo</b>."
       },
       {
         "name": "Legado Infernal (Padrão)",
-        "desc": "Se não escolher variante: Taumaturgia, Repreensão Infernal (nv3), Escuridão (nv5). (Carisma)."
+        "desc": "Você conhece o truque <i>taumaturgia</i>. Nv 3: <i>repreensão infernal</i> (2º círculo, 1/dia). Nv 5: <i>escuridão</i> (1/dia). (Carisma)."
       }
     ],
     "variations": [
@@ -1966,57 +1940,123 @@
         "name": "Variante: Alado",
         "description": "Possui asas de morcego em vez de magia infernal.",
         "flySpeed": 9,
-        "traits": [{ "name": "Alado", "desc": "Voo de 9m se não usar armadura pesada (Substitui Legado Infernal)." }]
+        "replaces": ["Legado Infernal (Padrão)"],
+        "traits": [
+          { 
+            "name": "Alado", 
+            "desc": "Você tem asas de morcego. Deslocamento de voo de <b>9 metros</b> se não usar armadura pesada." 
+          }
+        ]
       },
       {
         "name": "Variante: Fogo Infernal",
-        "description": "Foca no poder destrutivo do fogo.",
-        "traits": [{ "name": "Fogo Infernal", "desc": "Mãos Flamejantes (nv3) em vez de Repreensão Infernal." }]
+        "description": "Canaliza o fogo de Nessus.",
+        "replaces": ["Legado Infernal (Padrão)"],
+        "traits": [
+          { 
+            "name": "Legado do Fogo Infernal", 
+            "desc": "Truque <i>taumaturgia</i>. Nv 3: <i>mãos flamejantes</i> (2º círculo, 1/dia). Nv 5: <i>escuridão</i> (1/dia). (Carisma)." 
+          }
+        ]
       },
       {
         "name": "Variante: Língua do Diabo",
-        "description": "Manipuladores natos.",
-        "traits": [{ "name": "Língua do Diabo", "desc": "Zombaria Viciosa, Enfeitiçar Pessoa (nv3), Cativar (nv5). (Substitui Legado Infernal)." }]
+        "description": "Mestres da manipulação e charme.",
+        "replaces": ["Legado Infernal (Padrão)"],
+        "traits": [
+          { 
+            "name": "Língua do Diabo", 
+            "desc": "Truque <i>zombaria viciosa</i>. Nv 3: <i>enfeitiçar pessoa</i> (2º círculo, 1/dia). Nv 5: <i>cativar</i> (1/dia). (Carisma)." 
+          }
+        ]
       },
       {
         "name": "Legado: Belzebu",
-        "description": "Ligados ao Senhor da Corrupção (Maladomini).",
-        "traits": [{ "name": "Legado de Maladomini", "desc": "Taumaturgia, Raio Adoecente (nv3), Coroa da Loucura (nv5). (Carisma)." }]
+        "description": "Corrupção e decadência.",
+        "replaces": ["Legado Infernal (Padrão)"],
+        "traits": [
+          { 
+            "name": "Legado de Maladomini", 
+            "desc": "Truque <i>taumaturgia</i>. Nv 3: <i>raio adoecente</i> (2º círculo, 1/dia). Nv 5: <i>coroa da loucura</i> (1/dia). (Carisma)." 
+          }
+        ]
       },
       {
         "name": "Legado: Dis Pater",
-        "description": "Ligados ao Senhor da Cidade de Ferro (Dis). Espiões naturais.",
-        "traits": [{ "name": "Legado de Dis", "desc": "Taumaturgia, Disfarçar-se (nv3), Detectar Pensamentos (nv5). (Carisma)." }]
+        "description": "Espiões e traficantes de segredos.",
+        "replaces": ["Legado Infernal (Padrão)"],
+        "traits": [
+          { 
+            "name": "Legado de Dis", 
+            "desc": "Truque <i>taumaturgia</i>. Nv 3: <i>disfarçar-se</i> (1/dia). Nv 5: <i>detectar pensamentos</i> (1/dia). (Carisma)." 
+          }
+        ]
       },
       {
         "name": "Legado: Fierna",
-        "description": "Ligados à Senhora das Chamas (Phlegethos). Manipuladores.",
-        "traits": [{ "name": "Legado de Phlegethos", "desc": "Amizade, Enfeitiçar Pessoa (nv3), Sugestão (nv5). (Carisma)." }]
+        "description": "Manipuladores das emoções.",
+        "replaces": ["Legado Infernal (Padrão)"],
+        "traits": [
+          { 
+            "name": "Legado de Phlegethos", 
+            "desc": "Truque <i>amizade</i>. Nv 3: <i>enfeitiçar pessoa</i> (2º círculo, 1/dia). Nv 5: <i>sugestão</i> (1/dia). (Carisma)." 
+          }
+        ]
       },
       {
         "name": "Legado: Glasya",
-        "description": "Ligados à Senhora de Malbolge. Criminosos mestres.",
-        "traits": [{ "name": "Legado de Malbolge", "desc": "Ilusão Menor, Disfarçar-se (nv3), Invisibilidade (nv5). (Carisma)." }]
+        "description": "Criminosos mestres e ilusionistas.",
+        "replaces": ["Legado Infernal (Padrão)"],
+        "traits": [
+          { 
+            "name": "Legado de Malbolge", 
+            "desc": "Truque <i>ilusão menor</i>. Nv 3: <i>disfarçar-se</i> (1/dia). Nv 5: <i>invisibilidade</i> (1/dia). (Carisma)." 
+          }
+        ]
       },
       {
         "name": "Legado: Levistus",
-        "description": "Ligados ao Senhor de Stygia. Sobrevivência e gelo.",
-        "traits": [{ "name": "Legado de Stygia", "desc": "Raio de Gelo, Armadura de Agathys (nv3), Escuridão (nv5). (Carisma)." }]
+        "description": "Sobrevivência no gelo e escuridão.",
+        "replaces": ["Legado Infernal (Padrão)"],
+        "traits": [
+          { 
+            "name": "Legado de Stygia", 
+            "desc": "Truque <i>raio de gelo</i>. Nv 3: <i>armadura de Agathys</i> (2º círculo, 1/dia). Nv 5: <i>escuridão</i> (1/dia). (Carisma)." 
+          }
+        ]
       },
       {
         "name": "Legado: Mamon",
-        "description": "Ligados ao Senhor de Minauros. Avareza e proteção de bens.",
-        "traits": [{ "name": "Legado de Minauros", "desc": "Mãos Mágicas, Disco Flutuante (nv3), Tranca Arcana (nv5). (Carisma)." }]
+        "description": "Avareza e proteção de riquezas.",
+        "replaces": ["Legado Infernal (Padrão)"],
+        "traits": [
+          { 
+            "name": "Legado de Minauros", 
+            "desc": "Truque <i>mãos mágicas</i>. Nv 3: <i>disco flutuante de Tenser</i> (1/descanso curto). Nv 5: <i>tranca arcana</i> (sem material, 1/dia). (Carisma)." 
+          }
+        ]
       },
       {
         "name": "Legado: Mefistófeles",
-        "description": "Ligados ao Senhor de Cania. Magia arcana e fogo.",
-        "traits": [{ "name": "Legado de Cania", "desc": "Mãos Mágicas, Mãos Flamejantes (nv3), Lâmina Flamejante (nv5). (Carisma)." }]
+        "description": "Mestres do fogo arcano.",
+        "replaces": ["Legado Infernal (Padrão)"],
+        "traits": [
+          { 
+            "name": "Legado de Cania", 
+            "desc": "Truque <i>mãos mágicas</i>. Nv 3: <i>mãos flamejantes</i> (2º círculo, 1/dia). Nv 5: <i>lâmina flamejante</i> (1/dia). (Carisma)." 
+          }
+        ]
       },
       {
         "name": "Legado: Zariel",
-        "description": "Ligados à Senhora de Avernus. Força marcial.",
-        "traits": [{ "name": "Legado de Avernus", "desc": "Taumaturgia, Destruição Lancinante (nv3), Marca da Punição (nv5). (Carisma)." }]
+        "description": "Guerreiros marciais brutais.",
+        "replaces": ["Legado Infernal (Padrão)"],
+        "traits": [
+          { 
+            "name": "Legado de Avernus", 
+            "desc": "Truque <i>taumaturgia</i>. Nv 3: <i>destruição lancinante</i> (2º círculo, 1/dia). Nv 5: <i>marca da punição</i> (1/dia). (Carisma)." 
+          }
+        ]
       }
     ]
   },
@@ -2028,28 +2068,22 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Humanoides semelhantes a tartarugas, com cascos protetores e uma natureza serena. Conectados à natureza e aventureiros resistentes.",
+    "description": "Com cascos pesados e uma natureza contemplativa, os Tortugas são andarilhos que carregam suas casas nas costas. Pacíficos por natureza, tornam-se tanques de guerra impenetráveis quando provocados.",
     "image": "img/races/Tortuga.png",
+    "skills": ["Sobrevivência"],
+    "languages": ["Comum", "Aquan"],
     "traits": [
       {
-        "name": "Garras",
-        "desc": "Ataques desarmados causam 1d6 + Força de dano perfurante."
-      },
-      {
-        "name": "Prender a Respiração",
-        "desc": "Pode prender a respiração por até 1 hora."
-      },
-      {
         "name": "Armadura Natural",
-        "desc": "CA base de 17 (sem mod. de Destreza). Não pode usar armaduras, mas pode usar escudo."
+        "desc": "Sua CA base é <b>17</b> (Destreza não afeta). Você não pode usar armaduras, mas pode usar escudos."
       },
       {
-        "name": "Intuição da Natureza",
-        "desc": "Proficiência em uma perícia de natureza/sobrevivência."
+        "name": "Garras",
+        "desc": "Ataques desarmados causam <b>1d6 + Força</b> de dano cortante."
       },
       {
         "name": "Defesa do Casco",
-        "desc": "Ação para se recolher (+4 CA, vantagem em For/Con, caído, velocidade 0)."
+        "desc": "Ação para se recolher no casco. Ganha <b>+4 na CA</b> e vantagem em For/Con, mas fica caído e velocidade 0."
       }
     ],
     "variations": []
@@ -2062,28 +2096,22 @@
     "swimSpeed": 9,
     "flySpeed": 0,
     "climbSpeed": 0,
-    "description": "Guardiões dos oceanos originários do Plano Elemental da Água. Adaptados à vida marinha com pele azul/verde e membranas.",
+    "description": "Nobres guardiões das profundezas oceânicas. Os Tritões patrulham as fossas abissais para impedir que horrores como krakens e sahuagins ameacem o mundo da superfície.",
     "image": "img/races/Tritão.png",
+    "resistances": ["Frio"],
+    "languages": ["Comum", "Primordial"],
     "traits": [
       {
         "name": "Anfíbio",
-        "desc": "Pode respirar ar e água."
+        "desc": "Você respira ar e água."
       },
       {
         "name": "Controle do Ar e da Água",
-        "desc": "Nv 1: 'névoa obscurescente'. Nv 3: 'lufada de vento'. Nv 5: 'andar sobre a água'. Uma vez cada por descanso longo. (Escolha Int, Sab ou Car)."
-      },
-      {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
-      {
-        "name": "Emissário do Mar",
-        "desc": "Pode comunicar ideias simples a bestas, elementais ou monstruosidades aquáticas."
+        "desc": "Nv 1: <i>névoa obscurescente</i>. Nv 3: <i>lufada de vento</i>. Nv 5: <i>caminhar sobre a água</i>. Uma vez cada por descanso longo. (Int, Sab ou Car)."
       },
       {
         "name": "Guardião das Profundezas",
-        "desc": "Resistência a dano gélido."
+        "desc": "Você tem resistência a dano de <b>frio</b>."
       }
     ],
     "variations": []
@@ -2096,20 +2124,24 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Humanoides altos, azuis e racionais que buscam a perfeição através do progresso e experimentação. Frequentemente parecem frios, mas sentem emoções intensamente.",
+    "description": "De pele azul e intelecto afiado, os Vedalken buscam a perfeição em tudo o que fazem. Lógicos e racionais, eles muitas vezes parecem frios, mas possuem uma dedicação ardente ao progresso.",
     "image": "img/races/Vedalken.png",
+    "languages": ["Comum", "Vedalken"],
+    "chooseSkillFrom": ["Arcanismo", "História", "Investigação", "Medicina", "Atuação", "Furtividade"],
+    "countSkills": 1,
+    "chooseToolAny": 1,
     "traits": [
       {
         "name": "Vedalken Desapaixonados",
-        "desc": "Vantagem em todas as salvaguardas de Inteligência, Sabedoria e Carisma."
+        "desc": "Você tem <b>vantagem</b> em todas as salvaguardas de Inteligência, Sabedoria e Carisma."
       },
       {
         "name": "Precisão Incansável",
-        "desc": "Proficiência em uma perícia (Arcana, História, Investigação, Medicina, Atuação, Furtividade) e uma ferramenta. Adiciona 1d4 aos testes com elas."
+        "desc": "Proficiência em uma perícia e uma ferramenta. Adicione <b>1d4</b> aos testes com elas."
       },
       {
         "name": "Parcialmente Anfíbio",
-        "desc": "Pode respirar debaixo d’água por até 1 hora por descanso longo."
+        "desc": "Pode respirar debaixo d'água por 1 hora."
       }
     ],
     "variations": []
@@ -2117,33 +2149,27 @@
   {
     "name": "Verdan",
     "type": "Humanoide",
-    "size": "Pequeno (torna-se Médio no nv 5)",
+    "size": "Pequeno",
     "speed": 9,
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Descendentes de goblins e hobgoblins transformados pelo caos. Possuem pele de jade, sangue negro e sofrem mutações físicas ao longo da vida.",
+    "description": "Goblins transformados pelo caos e pela entropia. Com pele cor de jade e sangue negro, os Verdan sofrem mutações constantes ao longo da vida, mudando de tamanho e gênero, sempre buscando novas experiências.",
     "image": "img/races/Verdan.png",
+    "skills": ["Persuasão"],
+    "languages": ["Comum", "Goblin"],
     "traits": [
       {
-        "name": "Tipo de Criatura",
-        "desc": "Considerado também um goblinoide."
-      },
-      {
         "name": "Cura com Sangue Negro",
-        "desc": "Pode rerrolar 1s e 2s em Dados de Vida durante descanso curto."
-      },
-      {
-        "name": "Telepatia Limitada",
-        "desc": "Telepatia com alcance de 9m para ideias simples."
-      },
-      {
-        "name": "Persuasivo",
-        "desc": "Proficiência em Persuasão."
+        "desc": "Quando rola Dados de Vida para se curar, você rerrola os <b>1s e 2s</b>."
       },
       {
         "name": "Intuição Telepática",
-        "desc": "Vantagem em todas as salvaguardas de Sabedoria e Carisma."
+        "desc": "Você tem vantagem em salvaguardas de <b>Sabedoria</b> e <b>Carisma</b>."
+      },
+      {
+        "name": "Telepatia Limitada",
+        "desc": "Telepatia com alcance de 9m para transmitir ideias simples."
       }
     ],
     "variations": []
@@ -2156,24 +2182,23 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "Humanos transformados por rituais antigos em seres com características de serpente. Possuem resistência a magia e veneno.",
+    "description": "Outrora humanos, transformados em um povo serpente por rituais antigos. Frios e calculistas, os Yuan-Ti veem as emoções como fraqueza e buscam dominar os outros através de astúcia e magia.",
     "image": "img/races/Yuan-Ti.png",
+    "resistances": ["Veneno"],
+    "immunities": ["Veneno"],
+    "languages": ["Comum", "Abissal", "Dracônico"],
     "traits": [
       {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
-      {
         "name": "Resistência Mágica",
-        "desc": "Vantagem em salvaguardas contra magias."
+        "desc": "Você tem <b>vantagem</b> em salvaguardas contra magias."
       },
       {
         "name": "Resistência a Veneno",
-        "desc": "Vantagem contra envenenamento e resistência a dano venenoso."
+        "desc": "Você tem vantagem contra veneno e resistência a dano de veneno."
       },
       {
         "name": "Feitiçaria Ofídica",
-        "desc": "Truque 'rajada de veneno'. 'amizade animal' (apenas cobras, ilimitado). Nv 3: 'sugestão' (1/longo). (Escolha Int, Sab ou Car)."
+        "desc": "Truque <i>rajada de veneno</i>. <i>Amizade animal</i> (apenas cobras, ilimitado). Nv 3: <i>sugestão</i> (1/longo). (Int, Sab ou Car)."
       }
     ],
     "variations": []
@@ -2187,28 +2212,21 @@
     "climbSpeed": 10.5,
     "flySpeed": 0,
     "swimSpeed": 0,
-    "description": "LINHAGEM: Seres na fronteira entre vida e morte, com fome insaciável e poderes vampíricos como velocidade e escalada aracnídea.",
+    "description": "Presos entre a vida e a morte, os Dampiros sentem uma fome insaciável — seja por sangue, sonhos ou energia vital. Eles herdam a velocidade e a predação dos vampiros, mas mantêm seu livre arbítrio.",
     "image": "img/races/Dampir.png",
+    "chooseSkills": 2,
     "traits": [
       {
-        "name": "Legado Ancestral",
-        "desc": "Se substituir uma raça, mantém perícias e deslocamentos (escalada/voo/natação). Caso contrário, ganha 2 perícias."
-      },
-      {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
-      {
         "name": "Natureza Imortal",
-        "desc": "Não precisa respirar."
+        "desc": "Você não precisa respirar."
       },
       {
         "name": "Escalada Aracnídea",
-        "desc": "Deslocamento de escalada igual à caminhada. No nv 3, pode andar em paredes/tetos com mãos livres."
+        "desc": "Você tem deslocamento de escalada igual à sua caminhada. No <b>3º nível</b>, pode andar em paredes e tetos com as mãos livres."
       },
       {
         "name": "Mordida Vampírica",
-        "desc": "Ataque natural (1d4 + Con perfurante) com vantagem se estiver com metade dos PV ou menos. Ao acertar (não constructo/morto-vivo), pode se curar ou ganhar bônus no próximo teste igual ao dano causado. Usos igual bônus proficiência por descanso longo."
+        "desc": "Sua mordida é uma arma natural (1d4 + Con). Se estiver com metade dos PV ou menos, tem vantagem no ataque. Ao acertar, pode se curar ou ganhar bônus no próximo teste igual ao dano causado (Prof/longo)."
       }
     ],
     "variations": []
@@ -2222,20 +2240,19 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "LINHAGEM: Indivíduos que enganaram a morte, mantendo-se vivos através de magia, ciência ou circunstâncias misteriosas. Frequentemente carregam cicatrizes de sua morte passada.",
+    "description": "Você morreu, mas algo o trouxe de volta. Os Renascidos são ecos de uma vida passada, habitando um corpo que não envelhece, não dorme e mal precisa respirar, assombrados por memórias fragmentadas.",
     "image": "img/races/Renascido.png",
+    "resistances": ["Veneno"],
+    "immunities": ["Doenças"],
+    "chooseSkills": 2,
     "traits": [
       {
-        "name": "Legado Ancestral",
-        "desc": "Se substituir uma raça, mantém perícias e deslocamentos (escalada/voo/natação). Caso contrário, ganha 2 perícias."
-      },
-      {
         "name": "Natureza Imperecível",
-        "desc": "Vantagem contra doenças/venenos, resistência a veneno. Vantagem em testes de morte. Não precisa comer, beber, respirar ou dormir (descanso longo de 4h consciente)."
+        "desc": "Vantagem contra doenças e venenos, resistência a veneno. Vantagem em testes de morte. Não precisa comer, beber, respirar ou dormir."
       },
       {
         "name": "Conhecimento de uma Vida Passada",
-        "desc": "Ao fazer um teste de perícia, pode adicionar 1d6 ao resultado após ver o d20. Usos igual bônus proficiência por descanso longo."
+        "desc": "Ao fazer um teste de perícia, você pode canalizar memórias antigas e adicionar <b>1d6</b> ao resultado. Usos igual ao Bônus de Proficiência por descanso longo."
       }
     ],
     "variations": []
@@ -2249,24 +2266,17 @@
     "flySpeed": 0,
     "swimSpeed": 0,
     "climbSpeed": 0,
-    "description": "LINHAGEM: Indivíduos infundidos com magia feérica ou bruxaria, frequentemente resultado de pactos com bruxas. Possuem características distintas como uma coroa viva.",
+    "description": "Transformados por um pacto com uma Bruxa ou pela magia estranha da Agrestia das Fadas. Esses indivíduos possuem características bizarras, como sombras vivas ou coroas de chifres, e magia enganosa.",
     "image": "img/races/Sangue de Bruxa.png",
+    "chooseSkills": 2,
     "traits": [
       {
-        "name": "Legado Ancestral",
-        "desc": "Se substituir uma raça, mantém perícias e deslocamentos (escalada/voo/natação). Caso contrário, ganha 2 perícias."
-      },
-      {
-        "name": "Visão no Escuro",
-        "desc": "18 metros."
-      },
-      {
         "name": "Amuleto Bizarro",
-        "desc": "Ação bônus para criar um amuleto com parte do corpo. Pode enviar mensagem telepática para o portador ou ver/ouvir através dele (ação, 1 minuto). Uma vez por descanso longo."
+        "desc": "Ação bônus para criar um amuleto. Você pode enviar mensagens telepáticas para quem o segura ou ver através dele."
       },
       {
         "name": "Magia de Bruxa",
-        "desc": "Conjura 'disfarçar-se' e 'maldição' uma vez cada por descanso longo. (Escolha Int, Sab ou Car)."
+        "desc": "Você pode conjurar <i>disfarçar-se</i> e <i>maldição</i> uma vez cada por descanso longo. (Int, Sab ou Car)."
       }
     ],
     "variations": []

@@ -1,33 +1,32 @@
 /* =============================================================
-   LÓGICA DO CENTRO (PERÍCIAS E SANIDADE)
+   LÓGICA DO CENTRO (PERÍCIAS, DINHEIRO E SANIDADE)
 ============================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
     const listaPericias = document.querySelector(".pericias");
     const containerCentro = document.querySelector('.lado-centro');
 
-    // Inicializa a Sanidade assim que o DOM carregar
+    // 1. Inicializa componentes fixos na ordem correta
+    renderizarEstruturaDinheiro(); // Dinheiro vem antes da Sanidade
     renderizarEstruturaSanidade();
 
-    // Quando a ficha carrega ou muda, atualizamos tudo
+    // 2. Listener de Atualização
     window.addEventListener('sheet-updated', () => {
         renderizarPericias();
+        atualizarDinheiroInterface();
         atualizarSanidadeInterface();
     });
 
     /* =========================
-       1. HELPER: CÁLCULOS SEGUROS (LENDO DO STATE)
+       1. HELPER: CÁLCULOS SEGUROS
     ========================= */
-    // Calcula proficiência direto do State para não depender do HTML da esquerda estar pronto
     function getProficienciaDoState() {
         if (!state.niveisClasses) return 2;
         const nivelTotal = Object.values(state.niveisClasses).reduce((a, b) => a + (parseInt(b) || 0), 0) || 1;
         return Math.floor((nivelTotal - 1) / 4) + 2;
     }
 
-    // Pega o modificador direto do State
     function getModificadorDoState(attrKey) {
-        // Mapeamento: n1=CON, n2=DEX, n3=SAB, n4=CAR, n5=INT, n6=FOR
         const val = parseInt(state.atributos?.[attrKey] || 10);
         return Math.floor((val - 10) / 2);
     }
@@ -35,7 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
     /* =========================
        2. LÓGICA DE PERÍCIAS
     ========================= */
-    // Mapeamento visual para renderização (mantido para compatibilidade visual)
     const atributoParaChave = {
         "FOR": "n6", "DEX": "n2", "CON": "n1", "INT": "n5", "SAB": "n3", "CAR": "n4"
     };
@@ -60,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const prof = getProficienciaDoState();
 
         Object.entries(state.pericias).forEach(([nome, dados]) => {
-            const chaveAttr = atributoParaChave[dados.atributo] || "n2"; // Default Dex se der erro
+            const chaveAttr = atributoParaChave[dados.atributo] || "n2"; 
             const mod = getModificadorDoState(chaveAttr);
             const bonusTotal = mod + (dados.treinado ? prof : 0) + (parseInt(dados.outros) || 0);
 
@@ -83,7 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
             `;
 
-            // Listeners
             li.querySelector('.atributo-select').addEventListener('change', (e) => {
                 state.pericias[nome].atributo = e.target.value;
                 atualizarBonusVisual(li, nome);
@@ -115,8 +112,179 @@ document.addEventListener("DOMContentLoaded", () => {
         li.querySelector('.bonus-span').textContent = `(${bonusTotal >= 0 ? '+' : ''}${bonusTotal})`;
     }
 
+   /* =========================
+       3. LÓGICA DE DINHEIRO (2 BOTÕES COM CASCATA)
+    ========================= */
+    function renderizarEstruturaDinheiro() {
+        const containerCentro = document.querySelector('.lado-centro');
+        if (!containerCentro || document.getElementById('money-wrapper')) return;
+
+        const moneyWrap = document.createElement('div');
+        moneyWrap.id = 'money-wrapper';
+        moneyWrap.className = 'money-wrapper';
+        
+        moneyWrap.style.cssText = `
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            margin: 10px 0; 
+            padding: 8px 15px; 
+            background: rgba(0,0,0,0.4); 
+            border-radius: 6px; 
+            border: 1px solid #333;
+            position: relative;
+        `;
+
+        // Definição das Moedas
+        const currencies = [
+            { id: 'pd', label: 'PD', name: 'Peça Dracônica', color: '#d32f2f' },
+            { id: 'pl', label: 'PL', name: 'Peça de Platina', color: '#e5e4e2' }, 
+            { id: 'po', label: 'PO', name: 'Peça de Ouro', color: '#ffd700' },
+            { id: 'pp', label: 'PP', name: 'Peça de Prata', color: '#c0c0c0' },
+            { id: 'pc', label: 'PC', name: 'Peça de Cobre', color: '#b87333' }
+        ];
+
+        // Gera o HTML na ordem visual: PC -> PP -> PO -> PL -> PD
+        let html = '';
+        const visualOrder = ['pc', 'pp', 'po', 'pl', 'pd'];
+
+        visualOrder.forEach(key => {
+            const c = currencies.find(x => x.id === key);
+            html += `
+                <div class="money-slot" style="display:flex; flex-direction:column; align-items:center; gap:3px;">
+                    <span title="${c.name}" style="
+                        font-weight:900; 
+                        font-size:11px; 
+                        color:${c.color}; 
+                        cursor:help; 
+                        text-shadow: 0 1px 2px #000;
+                        letter-spacing: 1px;
+                    ">${c.label}</span>
+                    <input type="number" id="input-money-${c.id}" value="0" style="
+                        width: 50px; 
+                        text-align: center; 
+                        background: #111; 
+                        border: 1px solid #444; 
+                        color: #fff; 
+                        border-radius: 4px; 
+                        padding: 4px;
+                        font-size: 13px;
+                    ">
+                </div>
+            `;
+        });
+
+        // Adiciona os DOIS botões
+        html += `
+            <div style="display:flex; flex-direction:column; gap:4px; margin-left: 8px;">
+                <div title="Converter: Agrupa moedas menores em maiores (Base 100)" id="btn-money-up" style="
+                    cursor: pointer; opacity: 0.8; font-size: 14px; line-height: 1; user-select: none;
+                ">⬆️</div>
+                <div title="Desconverter: Quebra em cascata se > 100" id="btn-money-down" style="
+                    cursor: pointer; opacity: 0.8; font-size: 14px; line-height: 1; user-select: none;
+                ">⬇️</div>
+            </div>
+        `;
+
+        moneyWrap.innerHTML = html;
+
+        // Inserção no DOM
+        const sanidadeEl = document.getElementById('sanidade-wrapper');
+        if (sanidadeEl) {
+            containerCentro.insertBefore(moneyWrap, sanidadeEl);
+        } else {
+            containerCentro.appendChild(moneyWrap);
+        }
+
+        // --- FUNÇÕES DE CONVERSÃO ---
+
+        // 1. BOTÃO SUBIR (⬆️): Agrupa tudo para cima (Padrão)
+        document.getElementById('btn-money-up').onclick = () => {
+            if (!state.money) return;
+            let { pc, pp, po, pl, pd } = state.money;
+            pc = parseInt(pc)||0; pp = parseInt(pp)||0; po = parseInt(po)||0; pl = parseInt(pl)||0; pd = parseInt(pd)||0;
+
+            if (pc >= 100) { pp += Math.floor(pc / 100); pc = pc % 100; }
+            if (pp >= 100) { po += Math.floor(pp / 100); pp = pp % 100; }
+            if (po >= 100) { pl += Math.floor(po / 100); po = po % 100; }
+            if (pl >= 100) { pd += Math.floor(pl / 100); pl = pl % 100; }
+
+            state.money = { pc, pp, po, pl, pd };
+            atualizarDinheiroInterface();
+            saveStateToServer();
+        };
+
+        // 2. BOTÃO DESCER (⬇️): Quebra em Cascata se >= 100
+        document.getElementById('btn-money-down').onclick = () => {
+            if (!state.money) return;
+            let { pc, pp, po, pl, pd } = state.money;
+            pc = parseInt(pc)||0; pp = parseInt(pp)||0; po = parseInt(po)||0; pl = parseInt(pl)||0; pd = parseInt(pd)||0;
+
+            // Passo 1: Quebra a moeda mais alta disponível (Gatilho inicial)
+            if (pd > 0) {
+                pd--; pl += 100;
+            } else if (pl > 0) {
+                pl--; po += 100;
+            } else if (po > 0) {
+                po--; pp += 100;
+            } else if (pp > 0) {
+                pp--; pc += 100;
+            }
+
+            // Passo 2: Cascata (Se alguma moeda ficou >= 100, quebra ela para a próxima)
+            // A ordem aqui é importante: do maior para o menor para propagar a onda.
+            
+            if (pl >= 100) {
+                pl--; po += 100;
+            }
+            if (po >= 100) {
+                po--; pp += 100;
+            }
+            if (pp >= 100) {
+                pp--; pc += 100;
+            }
+
+            state.money = { pc, pp, po, pl, pd };
+            atualizarDinheiroInterface();
+            saveStateToServer();
+        };
+
+        // Bind Inputs
+        visualOrder.forEach(key => {
+            const input = moneyWrap.querySelector(`#input-money-${key}`);
+            input.addEventListener('input', () => {
+                if (!state.money) state.money = { pc:0, pp:0, pd:0, po:0, pl:0 };
+                state.money[key] = parseInt(input.value) || 0;
+            });
+            input.addEventListener('blur', () => saveStateToServer());
+            input.addEventListener('keydown', (e) => { if(e.key === 'Enter') input.blur(); });
+        });
+    }
+
+    function atualizarDinheiroInterface() {
+        if (!state.money) state.money = { pc:0, pp:0, pd:0, po:0, pl:0 };
+
+        ['pc', 'pp', 'pd', 'po', 'pl'].forEach(key => {
+            const el = document.getElementById(`input-money-${key}`);
+            if (el && document.activeElement !== el) {
+                el.value = state.money[key] || 0;
+            }
+        });
+    }
+
+    function atualizarDinheiroInterface() {
+        if (!state.money) state.money = { pc:0, pp:0, pd:0, po:0, pl:0 };
+
+        ['pc', 'pp', 'pd', 'po', 'pl'].forEach(key => {
+            const el = document.getElementById(`input-money-${key}`);
+            if (el && document.activeElement !== el) {
+                el.value = state.money[key] || 0;
+            }
+        });
+    }
+
     /* =========================
-       3. LÓGICA DE SANIDADE (ESTRESSE & VAZIO) - BLINDADA
+       4. LÓGICA DE SANIDADE (ESTRESSE & VAZIO) - BLINDADA
     ========================= */
 
     function renderizarEstruturaSanidade() {

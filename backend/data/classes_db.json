@@ -1,0 +1,75 @@
+[
+  {
+    "name": "Guerreiro",
+    "hitDie": 10,
+    "description": "Um mestre do combate marcial, perito em uma variedade de armas e armaduras.",
+    "savingThrows": ["Força", "Constituição"],
+    "proficiencies": ["Todas as armaduras", "Escudos", "Armas simples", "Armas marciais"],
+    "subclassLevel": 3, 
+    "chooseSkills": {
+      "count": 2,
+      "from": ["Acrobacia", "Adestrar Animais", "Atletismo", "História", "Intuição", "Intimidação", "Percepção", "Sobrevivência"]
+    },
+    "equipment": [
+      "Cota de malha",
+      "Espada longa",
+      "Escudo",
+      "Besta leve e 20 virotes",
+      "Pacote de explorador"
+    ],
+    "features": [
+      {
+        "name": "Retomar o Fôlego",
+        "level": 1,
+        "desc": "Você possui uma reserva de vitalidade limitada que pode usar para se proteger. No seu turno, você pode usar uma ação bônus para recuperar pontos de vida igual a 1d10 + seu nível de guerreiro."
+      },
+      {
+        "name": "Estilo de Luta",
+        "level": 1,
+        "desc": "Você adota um estilo de combate particular que será sua especialidade."
+      }
+    ],
+    "subclasses": [
+      {
+        "name": "Campeão",
+        "description": "O arquétipo do Campeão foca no desenvolvimento da força bruta e excelência física.",
+        "features": [
+           { "name": "Crítico Aprimorado", "desc": "Seus ataques com arma adquirem margem de crítico 19-20." }
+        ]
+      },
+      {
+        "name": "Mestre de Batalha",
+        "description": "Aqueles que seguem o arquétipo do Mestre de Batalha empregam técnicas marciais passadas de geração em geração.",
+        "features": [
+           { "name": "Superioridade em Combate", "desc": "Você aprende manobras abastecidas por dados de superioridade." }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Mago",
+    "hitDie": 6,
+    "description": "Um usuário de magia escolástico capaz de manipular as estruturas da realidade.",
+    "savingThrows": ["Inteligência", "Sabedoria"],
+    "proficiencies": ["Adagas", "Dardos", "Fundas", "Bordões", "Bestas leves"],
+    "subclassLevel": 2,
+    "chooseSkills": {
+      "count": 2,
+      "from": ["Arcanismo", "História", "Intuição", "Investigação", "Medicina", "Religião"]
+    },
+    "equipment": ["Bordão", "Bolsa de componentes", "Livro de magias", "Pacote de estudioso"],
+    "features": [
+      {
+        "name": "Conjuração",
+        "level": 1,
+        "desc": "Como um estudante de magia arcana, você possui um livro de magias contendo magias que mostram os primeiros vislumbres do seu verdadeiro poder."
+      },
+      {
+        "name": "Recuperação Arcana",
+        "level": 1,
+        "desc": "Você aprendeu a recuperar um pouco de sua energia mágica estudando seu livro de magias."
+      }
+    ],
+    "subclasses": [] 
+  }
+]

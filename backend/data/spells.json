@@ -2586,7 +2586,7 @@
     "name": "Restauração Menor",
     "levelNumber": 2,
     "school": "Abjuração",
-    "spellClass": "Artífice, Bardo, Clérigo, Druida, Paladino, Ranger",
+    "spellClass": "Artífice, Bardo, Clérigo, Druida, Paladino, Patrulheiro",
     "damage": "-",
     "components": { "V": true, "S": true, "M": false },
     "attrs": {

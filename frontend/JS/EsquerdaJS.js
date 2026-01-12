@@ -224,73 +224,233 @@ function inicializarDadosEsquerda() {
 // 3. Sistema de Multi-Select (Dropdowns)
 // ======================================
 
+/* =============================================================
+   SISTEMA DE MULTI-SELECT (CORRIGIDO: NÃO FECHA AO CLICAR)
+   ============================================================= */
 function renderMultiSelect(elementId, optionsList, currentSelection, stateKey) {
     const container = document.getElementById(elementId);
-    if (!container) return; // Se a div não existir no HTML, para aqui.
+    if (!container) return;
 
-    // Verifica se já foi renderizado para não duplicar eventos ou HTML
+    // 1. Garante que currentSelection seja um array
+    if (!Array.isArray(currentSelection)) currentSelection = [];
+
+    // 2. Função interna para atualizar o texto do display
+    const updateDisplay = () => {
+        const display = container.querySelector('.multi-select-display');
+        if (display) {
+            display.textContent = state[stateKey].length > 0 ? state[stateKey].join(', ') : 'Selecionar...';
+        }
+    };
+
+    // 3. Verifica se a estrutura HTML já existe
     let display = container.querySelector('.multi-select-display');
-
-    // Se não existe, cria a estrutura
+    
     if (!display) {
+        // Renderiza a estrutura inicial (fechada)
         container.innerHTML = `
             <div class="multi-select-box" tabindex="0">
                 <div class="multi-select-display">Selecionar...</div>
                 <div class="multi-select-options" style="display:none;">
-                    ${optionsList.map(opt => `
-                        <label>
-                            <input type="checkbox" value="${opt}">
-                            ${opt}
-                        </label>
-                    `).join('')}
+                    <div class="options-list-container"></div>
+                    
+                    <div class="extra-option-container" style="padding: 8px; border-top: 1px solid #333; margin-top: 5px; background: #1a1a1a;">
+                        <input type="text" placeholder="+ Add Outro (Enter)" class="extra-input" style="width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 6px; border-radius: 4px; font-size: 12px;">
+                    </div>
                 </div>
             </div>
         `;
+        
         display = container.querySelector('.multi-select-display');
-
-        // Adiciona eventos APENAS na criação
         const box = container.querySelector('.multi-select-box');
         const optsContainer = container.querySelector('.multi-select-options');
-        const inputs = optsContainer.querySelectorAll('input');
+        const listContainer = container.querySelector('.options-list-container');
+        const extraInput = container.querySelector('.extra-input');
 
-        // Toggle Abrir/Fechar
+        // --- CORREÇÃO AQUI: Toggle Abrir/Fechar ---
         box.addEventListener('click', (e) => {
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
+            // Verifica se o clique foi DENTRO da lista de opções (checkboxes, labels, input extra).
+            // Se foi, paramos a função aqui para NÃO fechar o menu.
+            if (optsContainer.contains(e.target)) return;
+            
             const isVisible = optsContainer.style.display === 'block';
-            document.querySelectorAll('.multi-select-options').forEach(el => el.style.display = 'none'); // Fecha outros
-            optsContainer.style.display = isVisible ? 'none' : 'block';
+            
+            // Fecha outros dropdowns que estejam abertos na página para evitar bagunça
+            document.querySelectorAll('.multi-select-options').forEach(el => el.style.display = 'none'); 
+            
+            if (!isVisible) {
+                optsContainer.style.display = 'block';
+                // Recalcula a lista ao abrir para garantir que itens novos apareçam
+                renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
+            } else {
+                optsContainer.style.display = 'none';
+            }
         });
 
-        // Evento de Change nos checkboxes
-        inputs.forEach(input => {
-            input.addEventListener('change', () => {
-                const newVal = input.value;
-                if (input.checked) {
-                    if (!state[stateKey].includes(newVal)) state[stateKey].push(newVal);
-                } else {
-                    state[stateKey] = state[stateKey].filter(item => item !== newVal);
-                }
-
-                // Atualiza visual
-                updateDisplayText(display, state[stateKey]);
-                saveStateToServer();
-            });
-        });
-
-        // Fechar ao clicar fora
+        // Fechar ao clicar fora do componente
         document.addEventListener('click', (e) => {
             if (!container.contains(e.target)) {
                 optsContainer.style.display = 'none';
             }
         });
-    }
 
-    // Atualiza estado visual (checks e texto) sempre que chamado
-    const inputs = container.querySelectorAll('input');
-    inputs.forEach(chk => {
-        chk.checked = currentSelection.includes(chk.value);
+        // Evento para adicionar item Customizado via Input (Enter)
+        extraInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const val = extraInput.value.trim();
+                
+                // Adiciona apenas se não for vazio e não existir ainda
+                if (val && !state[stateKey].includes(val)) {
+                    state[stateKey].push(val);
+                    saveStateToServer();
+                    updateDisplay();
+                    
+                    // Re-renderiza a lista para o novo item aparecer como checkbox marcado imediatamente
+                    renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
+                    
+                    extraInput.value = ''; // Limpa input
+                    // Mantém o foco no input para adicionar mais se quiser
+                    extraInput.focus();
+                }
+            }
+        });
+
+        // Renderização inicial dos checkboxes
+        renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
+    } else {
+        // Se já existe HTML, apenas atualiza o texto do display
+        updateDisplay();
+        
+        // Se estiver aberto, atualiza a lista em tempo real
+        const optsContainer = container.querySelector('.multi-select-options');
+        if (optsContainer.style.display === 'block') {
+            const listContainer = container.querySelector('.options-list-container');
+            renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
+        }
+    }
+}
+
+// Função auxiliar para gerar os checkboxes HTML
+function renderCheckboxes(container, defaultOptions, currentSelection, stateKey, displayElement) {
+    if (!Array.isArray(currentSelection)) currentSelection = [];
+
+    // Une opções padrão com o que está no state (customizados)
+    // Cria um Set para garantir unicidade e converte de volta para array
+    const allItems = [...new Set([...defaultOptions, ...currentSelection])].sort();
+
+    container.innerHTML = allItems.map(opt => {
+        const isChecked = currentSelection.includes(opt);
+        // Destaca visualmente itens que não são padrão (customizados)
+        const isCustom = !defaultOptions.includes(opt);
+        const styleColor = isCustom ? '#e0aaff' : '#fff';
+        
+        return `
+            <label style="display:flex; align-items:center; padding: 4px 8px; cursor:pointer; user-select: none;">
+                <input type="checkbox" value="${opt}" ${isChecked ? 'checked' : ''} style="margin-right: 8px;">
+                <span style="color:${styleColor}; font-size:13px;">${opt}</span>
+            </label>
+        `;
+    }).join('');
+
+    // Reatribui eventos aos novos checkboxes
+    const inputs = container.querySelectorAll('input[type="checkbox"]');
+    inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            const val = input.value;
+            if (input.checked) {
+                if (!state[stateKey].includes(val)) state[stateKey].push(val);
+            } else {
+                state[stateKey] = state[stateKey].filter(item => item !== val);
+            }
+            
+            // Atualiza texto do display
+            if (displayElement) {
+                displayElement.textContent = state[stateKey].length > 0 ? state[stateKey].join(', ') : 'Selecionar...';
+            }
+            saveStateToServer();
+        });
     });
-    updateDisplayText(display, currentSelection);
+}
+
+// Função auxiliar para gerar os checkboxes HTML
+function renderCheckboxes(container, defaultOptions, currentSelection, stateKey, displayElement) {
+    if (!Array.isArray(currentSelection)) currentSelection = [];
+
+    // Une opções padrão com o que está no state (customizados)
+    // Cria um Set para garantir unicidade e converte de volta para array
+    const allItems = [...new Set([...defaultOptions, ...currentSelection])].sort();
+
+    container.innerHTML = allItems.map(opt => {
+        const isChecked = currentSelection.includes(opt);
+        // Destaca visualmente itens que não são padrão (customizados)
+        const isCustom = !defaultOptions.includes(opt);
+        const styleColor = isCustom ? '#e0aaff' : '#fff';
+        
+        return `
+            <label style="display:flex; align-items:center; padding: 4px 8px; cursor:pointer;">
+                <input type="checkbox" value="${opt}" ${isChecked ? 'checked' : ''} style="margin-right: 8px;">
+                <span style="color:${styleColor}; font-size:13px;">${opt}</span>
+            </label>
+        `;
+    }).join('');
+
+    // Reatribui eventos aos novos checkboxes
+    const inputs = container.querySelectorAll('input[type="checkbox"]');
+    inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            const val = input.value;
+            if (input.checked) {
+                if (!state[stateKey].includes(val)) state[stateKey].push(val);
+            } else {
+                state[stateKey] = state[stateKey].filter(item => item !== val);
+            }
+            
+            // Atualiza texto do display
+            if (displayElement) {
+                displayElement.textContent = state[stateKey].length > 0 ? state[stateKey].join(', ') : 'Selecionar...';
+            }
+            saveStateToServer();
+        });
+    });
+}
+
+// Função auxiliar para gerar os checkboxes HTML
+function renderCheckboxes(container, defaultOptions, currentSelection, stateKey, displayElement) {
+    // Une opções padrão com o que está no state (customizados)
+    const allItems = [...new Set([...defaultOptions, ...currentSelection])].sort();
+
+    container.innerHTML = allItems.map(opt => {
+        const isChecked = currentSelection.includes(opt);
+        // Destaca visualmente itens que não são padrão (customizados)
+        const isCustom = !defaultOptions.includes(opt);
+        const styleColor = isCustom ? '#e0aaff' : '#fff';
+        
+        return `
+            <label style="display:flex; align-items:center; padding: 4px 8px; cursor:pointer;">
+                <input type="checkbox" value="${opt}" ${isChecked ? 'checked' : ''} style="margin-right: 8px;">
+                <span style="color:${styleColor}; font-size:13px;">${opt}</span>
+            </label>
+        `;
+    }).join('');
+
+    // Reatribui eventos aos novos checkboxes
+    const inputs = container.querySelectorAll('input[type="checkbox"]');
+    inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            const val = input.value;
+            if (input.checked) {
+                if (!state[stateKey].includes(val)) state[stateKey].push(val);
+            } else {
+                state[stateKey] = state[stateKey].filter(item => item !== val);
+            }
+            
+            // Atualiza texto do display
+            if (displayElement) {
+                displayElement.textContent = state[stateKey].length > 0 ? state[stateKey].join(', ') : 'Selecionar...';
+            }
+            saveStateToServer();
+        });
+    });
 }
 
 function updateDisplayText(element, list) {

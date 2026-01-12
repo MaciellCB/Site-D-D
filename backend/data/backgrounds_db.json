@@ -1,127 +1,131 @@
 [
   {
     "name": "Acólito",
-    "description": "Você passou sua vida a serviço de um templo. Age como intermediário entre o reino divino e o mortal.",
+    "description": "Você passou sua vida a serviço de um templo, agindo como intermediário entre o reino divino e o mortal. Você realizou ritos sagrados e ofereceu sacrifícios para conduzir os fiéis à presença do divino. Você não é necessariamente um clérigo, mas a fé é sua bússola.",
     "image": "img/backgrounds/Acolito.png",
     "skills": ["Intuição", "Religião"],
     "tools": [],
     "languages": 2,
-    "equipment": ["Símbolo sagrado", "Livro de orações", "5 incensos", "Vestimentas", "Roupas comuns", "15 PO"],
+    "equipment": ["Símbolo sagrado (um presente de ordenação)", "Livro de orações ou roda de preces", "5 palitos de incenso", "Vestimentas", "Roupas comuns", "15 PO"],
     "feature": {
       "name": "Abrigo dos Fiéis",
-      "desc": "Você e seus companheiros recebem cura e caridade em templos de sua fé."
+      "desc": "Você impõe respeito àqueles que compartilham sua fé. Você e seus companheiros podem receber cura e caridade (hospedagem e comida modesta) em templos de sua divindade."
     },
     "variants": []
   },
   {
     "name": "Artesão de Guilda",
-    "description": "Membro de uma guilda de artesãos, hábil em um ofício e parte do mundo mercantil.",
+    "description": "Você é membro de uma guilda de artesãos, hábil em um ofício específico e bem inserido no mundo mercantil. Você aprendeu que o ouro brilha tanto quanto a espada de um aventureiro, e sua perícia é sua moeda de troca.",
     "image": "img/backgrounds/Artesao.png",
     "skills": ["Intuição", "Persuasão"],
     "tools": ["Ferramentas de artesão"],
     "languages": 1,
-    "equipment": ["Ferramentas de artesão", "Carta da guilda", "Roupas de viagem", "15 PO"],
+    "equipment": ["Ferramentas de artesão", "Carta de apresentação da guilda", "Roupas de viagem", "15 PO"],
     "feature": {
       "name": "Membro de Guilda",
-      "desc": "A guilda oferece proteção e suporte, mediante pagamento de 5 po mensais."
+      "desc": "A guilda oferece proteção legal, acesso a políticos e suporte material, desde que você pague as mensalidades de 5 po. Crimes contra você são vistos como crimes contra a guilda."
     },
     "variants": [
       {
         "name": "Comerciante de Guilda",
-        "description": "Você não cria itens, mas compra e vende mercadorias, viajando em caravanas ou navios.",
+        "description": "Em vez de fabricar, você transporta mercadorias pelo mundo. Você conhece as rotas comerciais, sabe evitar bandidos e entende o valor de tudo o que carrega.",
         "tools": ["Ferramentas de navegação"],
-        "equipment": ["Mula e carroça", "Carta da guilda", "Roupas de viagem", "15 PO"]
+        "equipment": ["Mula e carroça", "Carta de apresentação da guilda", "Roupas de viagem", "15 PO"]
       }
     ]
   },
   {
     "name": "Artista",
-    "description": "Sua arte é sua vida. Você sabe como arrebatar, entreter e inspirar plateias.",
+    "description": "Sua arte é sua vida. Seja com poesia, música ou atuação, você sabe como arrebatar corações, entreter a nobreza e inspirar o povo comum. O mundo é seu palco e você prospera sob os holofotes.",
     "image": "img/backgrounds/Artista.png",
     "skills": ["Acrobacia", "Performance"],
     "tools": ["Kit de disfarce", "Instrumento musical"],
     "languages": 0,
-    "equipment": ["Instrumento musical", "Item de admirador", "Roupas de artista", "15 PO"],
+    "equipment": ["Instrumento musical", "O favor de um admirador (carta ou prenda)", "Roupas de artista", "15 PO"],
     "feature": {
       "name": "Pela Demanda Popular",
-      "desc": "Você encontra lugar para se apresentar e recebe hospedagem gratuita em troca."
+      "desc": "Você sempre encontra um lugar para se apresentar (tavernas, circos ou festas nobres). Em troca, recebe hospedagem e comida gratuita de padrão modesto ou confortável."
     },
     "variants": [
       {
         "name": "Gladiador",
-        "description": "Você entretém através do combate e espetáculos físicos em arenas.",
-        "equipment": ["Arma barata incomum (ex: Tridente)", "Item de admirador", "Roupas de artista", "15 PO"],
+        "description": "Sua arte é o combate. Você entretém as massas com sangue e aço, transformando a violência em um espetáculo coreografado em arenas e fossos de luta.",
+        "equipment": ["Arma barata incomum (ex: Tridente ou Rede)", "O favor de um admirador", "Roupas de artista", "15 PO"],
         "feature": {
             "name": "Pela Demanda Popular (Gladiador)",
-            "desc": "Você encontra lugares de luta e arenas para se apresentar em troca de estadia."
+            "desc": "Você encontra lugares de luta e arenas para se apresentar. O combate lhe garante estadia gratuita, embora não garanta segurança."
         }
       }
     ]
   },
   {
     "name": "Charlatão",
-    "description": "Você sabe o que as pessoas querem e usa isso para vender sonhos e falsas promessas.",
+    "description": "Você domina a arte de vender o que não existe. Seja com poções falsas, jogos viciados ou identidades forjadas, você sabe ler as pessoas e usar seus desejos contra elas mesmas.",
     "image": "img/backgrounds/Charlatao.png",
     "skills": ["Enganação", "Prestidigitação"],
     "tools": ["Kit de disfarce", "Kit de falsificação"],
     "languages": 0,
-    "equipment": ["Roupas finas", "Kit de disfarce", "Ferramentas de fraude", "15 PO"],
+    "equipment": ["Roupas finas", "Kit de disfarce", "Ferramentas de fraude (dados viciados, cartas marcadas, etc)", "15 PO"],
     "feature": {
       "name": "Identidade Falsa",
-      "desc": "Você possui uma segunda identidade completa com documentos e pode forjar papéis oficiais."
+      "desc": "Você criou uma segunda identidade completa, com documentos, conhecidos e disfarces estabelecidos. Você pode forjar documentos oficiais se tiver amostras da caligrafia."
     },
     "variants": []
   },
   {
     "name": "Criminoso",
-    "description": "Um fora da lei experiente com histórico de crimes e contatos no submundo.",
+    "description": "Você é um fora da lei experiente, com um histórico de crimes e conexões profundas no submundo. Você desdenha das leis da sociedade, preferindo seguir o código de honra (ou a falta dele) dos ladrões e assassinos.",
     "image": "img/backgrounds/Criminoso.png",
     "skills": ["Enganação", "Furtividade"],
-    "tools": ["Um jogo", "Ferramentas de ladino"],
+    "tools": ["Um jogo (baralho ou dados)", "Ferramentas de ladino"],
     "languages": 0,
-    "equipment": ["Pé de cabra", "Roupas escuras com capuz", "15 PO"],
+    "equipment": ["Pé de cabra", "Roupas comuns escuras com capuz", "15 PO"],
     "feature": {
       "name": "Contato Criminoso",
-      "desc": "Você tem um contato confiável no submundo para trocar informações."
+      "desc": "Você possui um contato confiável no submundo (um receptador, espião ou chefe de gangue) com quem pode trocar informações através de mensageiros secretos."
     },
     "variants": [
       {
         "name": "Espião",
-        "description": "Você usa suas habilidades de ladino para espionagem, vendendo segredos ou servindo a coroa."
+        "description": "Embora use as mesmas técnicas de um criminoso, seu objetivo não é o roubo, mas a informação. Você vende segredos para coroas, guildas ou quem pagar mais.",
+        "feature": {
+           "name": "Contato de Espionagem",
+           "desc": "Seu contato é um manipulador de informações, capaz de fornecer segredos de estado ou rotas seguras em troca de serviços."
+        }
       }
     ]
   },
   {
     "name": "Eremita",
-    "description": "Viveu em reclusão buscando respostas, iluminação ou fugindo da sociedade.",
+    "description": "Você viveu em reclusão, longe da sociedade, em busca de iluminação espiritual, fugindo de um passado sombrio ou comungando com a natureza. A solidão lhe trouxe sabedoria que poucos compreendem.",
     "image": "img/backgrounds/Eremita.png",
     "skills": ["Medicina", "Religião"],
     "tools": ["Kit de herbalismo"],
     "languages": 1,
-    "equipment": ["Notas de estudo", "Cobertor de inverno", "Roupas comuns", "Kit de herbalismo", "5 PO"],
+    "equipment": ["Estojo de pergaminhos com notas de estudo", "Cobertor de inverno", "Roupas comuns", "Kit de herbalismo", "5 PO"],
     "feature": {
       "name": "Descoberta",
-      "desc": "Você descobriu uma grande verdade única sobre o cosmos, deuses ou o passado."
+      "desc": "Durante sua reclusão, você descobriu uma verdade única sobre o cosmos, os deuses, ou um fato esquecido da história que pode abalar o mundo."
     },
     "variants": []
   },
   {
     "name": "Forasteiro",
-    "description": "Cresceu nos ermos, longe da civilização, sobrevivendo pela caça e conhecimento da natureza.",
+    "description": "Você cresceu nos ermos, longe das muralhas da civilização. Você testemunhou a migração de manadas maiores que florestas e sobreviveu a invernos que congelariam um cidadão comum. A natureza não é um desafio, é sua casa.",
     "image": "img/backgrounds/Forasteiro.png",
     "skills": ["Atletismo", "Sobrevivência"],
     "tools": ["Instrumento musical"],
     "languages": 1,
-    "equipment": ["Cajado", "Armadilha de caça", "Troféu", "Roupas de viajante", "10 PO"],
+    "equipment": ["Cajado", "Armadilha de caça", "Um troféu de caça", "Roupas de viajante", "10 PO"],
     "feature": {
       "name": "Andarilho",
-      "desc": "Memória excelente para mapas e geografia. Pode encontrar comida/água para 6 pessoas."
+      "desc": "Você tem memória excelente para mapas e geografia. Além disso, pode encontrar comida e água fresca para você e até 5 outras pessoas diariamente, se a terra oferecer."
     },
     "variants": []
   },
   {
     "name": "Herói Popular",
-    "description": "De origem humilde, o destino o marcou para enfrentar tiranos e monstros.",
+    "description": "Você vem de origem humilde, mas o destino o escolheu. Seja por ter enfrentado um tirano, matado uma besta ou liderado uma revolta, o povo comum o vê como um deles, um campeão que entende suas dores.",
     "image": "img/backgrounds/Heroi.png",
     "skills": ["Adestrar Animais", "Sobrevivência"],
     "tools": ["Ferramentas de artesão", "Veículos terrestres"],
@@ -129,96 +133,96 @@
     "equipment": ["Ferramentas de artesão", "Pá", "Panela de ferro", "Roupas comuns", "10 PO"],
     "feature": {
       "name": "Hospitalidade Rústica",
-      "desc": "Camponeses oferecem abrigo e o escondem da lei, desde que não haja risco de vida."
+      "desc": "Camponeses e plebeus oferecem abrigo, comida e o escondem da lei, desde que isso não coloque a vida deles em risco iminente."
     },
     "variants": []
   },
   {
     "name": "Marinheiro",
-    "description": "Navegou por anos, enfrentando o mar e suas criaturas. Confortável em qualquer embarcação.",
+    "description": "Você navegou por anos, enfrentando tempestades e monstros das profundezas. O convés é seu chão e o vento sua guia. Você trabalha bem em equipe e não teme o horizonte infinito.",
     "image": "img/backgrounds/Marinheiro.png",
     "skills": ["Atletismo", "Percepção"],
     "tools": ["Ferramentas de navegador", "Veículos marítimos"],
     "languages": 0,
-    "equipment": ["Malagueta (porrete)", "Corda de seda (15m)", "Amuleto da sorte", "Roupas comuns", "10 PO"],
+    "equipment": ["Malagueta (porrete)", "Corda de seda (15m)", "Uma pedra de amuleto", "Roupas comuns", "10 PO"],
     "feature": {
       "name": "Passagem de Navio",
-      "desc": "Garante passagem grátis em navios para o grupo em troca de trabalho."
+      "desc": "Você pode garantir passagem gratuita em navios para você e seu grupo em troca de trabalho braçal durante a viagem."
     },
     "variants": [
       {
         "name": "Pirata",
-        "description": "Você serviu sob um capitão cruel e tem uma reputação temível.",
+        "description": "Você serviu sob a bandeira negra. Sua reputação é manchada por saques e violência, e você conhece os portos onde a lei não alcança.",
         "feature": {
             "name": "Má Reputação",
-            "desc": "As pessoas têm medo de você. Você pode cometer crimes menores sem ser denunciado."
+            "desc": "As pessoas têm medo de você. Você pode cometer delitos menores (como não pagar uma conta ou arrombar uma porta) sem que cidadãos comuns tenham coragem de denunciá-lo."
         }
       }
     ]
   },
   {
     "name": "Morador de Rua",
-    "description": "Cresceu sozinho na pobreza urbana, aprendendo a sobreviver e se esconder.",
+    "description": "Você cresceu sozinho nas ruas cruéis, lutando por comida e lugar para dormir. Você conhece os becos, os telhados e o pulso da cidade melhor do que qualquer guarda ou nobre.",
     "image": "img/backgrounds/Rua.png",
     "skills": ["Prestidigitação", "Furtividade"],
     "tools": ["Kit de disfarces", "Ferramentas de ladino"],
     "languages": 0,
-    "equipment": ["Faca pequena", "Mapa da cidade", "Rato de estimação", "Símbolo dos pais", "Roupas comuns", "10 PO"],
+    "equipment": ["Faca pequena", "Mapa da cidade", "Rato de estimação", "Símbolo dos pais falecidos", "Roupas comuns", "10 PO"],
     "feature": {
       "name": "Segredos da Cidade",
-      "desc": "Conhece atalhos urbanos, viajando o dobro da velocidade na cidade fora de combate."
+      "desc": "Fora de combate, você guia seu grupo pela cidade com o dobro da velocidade, usando atalhos e passagens secretas que só você conhece."
     },
     "variants": []
   },
   {
     "name": "Nobre",
-    "description": "Nascido com título, terras e influência. Acostumado ao privilégio.",
+    "description": "Você nasceu com sangue azul, terras e títulos. Sua família possui influência política e você foi educado para liderar. Mesmo que seja um aventureiro agora, o privilégio social nunca o abandonou.",
     "image": "img/backgrounds/Nobre.png",
     "skills": ["História", "Persuasão"],
-    "tools": ["Um tipo de jogo"],
+    "tools": ["Um tipo de jogo (xadrez, cartas)"],
     "languages": 1,
     "equipment": ["Roupas finas", "Anel de sinete", "Pergaminho de linhagem", "25 PO"],
     "feature": {
       "name": "Posição de Privilégio",
-      "desc": "Bem-vindo na alta sociedade, consegue audiências com nobres locais."
+      "desc": "Você é bem-vindo na alta sociedade. Pode conseguir audiências com nobres locais e as pessoas comuns tendem a evitar desagradá-lo."
     },
     "variants": [
       {
         "name": "Cavaleiro",
-        "description": "Um título menor de nobreza focado em dever marcial e serviço.",
-        "equipment": ["Roupas finas", "Anel de sinete", "Estandarte/Símbolo do Lorde", "25 PO"],
+        "description": "Seu título é focado no dever marcial. Você jurou proteger o reino ou uma causa, e as pessoas esperam de você honra e coragem.",
+        "equipment": ["Roupas finas", "Anel de sinete", "Estandarte ou Símbolo do Lorde", "25 PO"],
         "feature": {
             "name": "Servos",
-            "desc": "Você tem três servos leais (não combatentes) para realizar tarefas mundanas."
+            "desc": "Você tem três servos leais (não combatentes) que realizam tarefas mundanas como cuidar do cavalo, montar acampamento e levar mensagens."
         }
       }
     ]
   },
   {
     "name": "Sábio",
-    "description": "Acadêmico dedicado ao estudo dos segredos do multiverso.",
+    "description": "Você passou anos debruçado sobre pergaminhos e tomos antigos, aprendendo sobre o multiverso. Seu conhecimento é vasto e você busca resolver os grandes mistérios da existência, preferindo a biblioteca ao campo de batalha.",
     "image": "img/backgrounds/Sabio.png",
     "skills": ["Arcanismo", "História"],
     "tools": [],
     "languages": 2,
-    "equipment": ["Tinta negra", "Pena", "Faca pequena", "Carta de colega", "Roupas comuns", "10 PO"],
+    "equipment": ["Frasco de tinta negra", "Pena de escrita", "Faca pequena", "Carta de um colega morto", "Roupas comuns", "10 PO"],
     "feature": {
       "name": "Pesquisador",
-      "desc": "Se não sabe uma informação, sabe onde encontrá-la (bibliotecas, outros sábios)."
+      "desc": "Se você não sabe uma informação, você sabe exatamente onde encontrá-la (bibliotecas, universidades ou com outros sábios) e quem perguntar."
     },
     "variants": []
   },
   {
     "name": "Soldado",
-    "description": "Treinado para a guerra, servindo em exércitos ou milícias.",
+    "description": "A guerra foi sua profissão. Você serviu em um exército, guarda ou milícia. Você viu a morte de perto, conhece a importância da disciplina e tem a lealdade de seus antigos companheiros de armas.",
     "image": "img/backgrounds/Soldado.png",
     "skills": ["Atletismo", "Intimidação"],
-    "tools": ["Um jogo", "Veículos terrestres"],
+    "tools": ["Um jogo (dados ou cartas)", "Veículos terrestres"],
     "languages": 0,
-    "equipment": ["Insígnia de patente", "Troféu de inimigo", "Jogo de dados/cartas", "Roupas comuns", "10 PO"],
+    "equipment": ["Insígnia de patente", "Troféu de um inimigo caído", "Jogo de dados ou cartas", "Roupas comuns", "10 PO"],
     "feature": {
       "name": "Patente Militar",
-      "desc": "Soldados reconhecem sua autoridade. Acesso a acampamentos aliados e requisição de equipamentos simples."
+      "desc": "Soldados leais à sua antiga organização reconhecem sua autoridade. Você tem acesso a acampamentos aliados e pode requisitar equipamentos simples (cavalos, armas) temporariamente."
     },
     "variants": []
   }
