@@ -1,19 +1,50 @@
 /* =============================================================
-   INTEGRAÇÃO COM O BACKEND (Adicionado ao seu código original)
+   JS/DireitaJS.js - INTEGRAÇÃO E LÓGICA PRINCIPAL
 ============================================================= */
 
 const API_URL = 'http://localhost:3000/api';
 
-// --- ADICIONE ESTAS 3 LINHAS AQUI ---
+// --- VARIÁVEIS GLOBAIS DE CATÁLOGO ---
 let spellCatalog = [];
 let abilityCatalog = [];
 let itemCatalog = [];
 
-// ------------------------------------
+// --- CARREGAMENTO IMEDIATO DOS DADOS (Correção do Erro) ---
+async function carregarCatalogosDireita() {
+    try {
+        console.log("Buscando catálogos de itens, magias e habilidades...");
+        
+        // Faz as 3 requisições ao mesmo tempo
+        const [resSpells, resAbilities, resItems] = await Promise.all([
+            fetch(`${API_URL}/catalog/spells`),
+            fetch(`${API_URL}/catalog/abilities`),
+            fetch(`${API_URL}/catalog/items`)
+        ]);
 
-// Função para sincronizar state com o servidor
+        if (resSpells.ok) spellCatalog = await resSpells.json();
+        if (resAbilities.ok) abilityCatalog = await resAbilities.json();
+        if (resItems.ok) itemCatalog = await resItems.json();
+
+        console.log("Catálogos carregados:", {
+            Magias: spellCatalog.length,
+            Habilidades: abilityCatalog.length,
+            Itens: itemCatalog.length
+        });
+
+    } catch (e) {
+        console.error("Erro ao carregar catálogos da Direita:", e);
+        alert("Erro: Não foi possível carregar Itens/Magias/Habilidades. Verifique se o servidor está rodando e se os arquivos .json existem na pasta data.");
+    }
+}
+
+// Executa assim que o arquivo é lido
+carregarCatalogosDireita();
+
+
+// --- FUNÇÕES DE LOGIN E SALVAMENTO ---
+
 async function saveStateToServer() {
-  if (!state.nome) return; // Não salva se não tiver feito login
+  if (!state.nome) return; 
   try {
     await fetch(`${API_URL}/save-ficha`, {
       method: 'POST',
@@ -23,7 +54,6 @@ async function saveStateToServer() {
   } catch (e) { console.error("Erro ao salvar:", e); }
 }
 
-// Função chamada pelo botão de Login no HTML
 async function carregarDadosIniciais(nome, senha) {
   try {
     const response = await fetch(`${API_URL}/load-ficha`, {
@@ -36,19 +66,17 @@ async function carregarDadosIniciais(nome, senha) {
       const data = await response.json();
       Object.assign(state, data);
 
-      // Carrega TODOS os catálogos (incluindo itens agora)
-      const [sRes, aRes, iRes] = await Promise.all([
-        fetch(`${API_URL}/catalog/spells`),
-        fetch(`${API_URL}/catalog/abilities`),
-        fetch(`${API_URL}/catalog/items`) // <--- NOVA LINHA PARA ITENS
-      ]);
-      spellCatalog = await sRes.json();
-      abilityCatalog = await aRes.json();
-      itemCatalog = await iRes.json(); // <--- SALVA NO ARRAY LOCAL
+      // Se por acaso ainda estiver vazio (internet lenta ou erro anterior), tenta de novo
+      if (spellCatalog.length === 0) await carregarCatalogosDireita();
 
       document.getElementById('login-overlay').style.display = 'none';
       setActiveTab(state.activeTab || 'Combate');
+      
+      // Atualiza tudo
       window.dispatchEvent(new CustomEvent('sheet-updated'));
+      if(typeof atualizarHeader === 'function') atualizarHeader();
+      if(typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+      
     } else {
       alert("Nome ou senha incorretos.");
     }
@@ -56,6 +84,8 @@ async function carregarDadosIniciais(nome, senha) {
     alert("Erro de conexão com o servidor.");
   }
 }
+
+// ... (Mantenha o restante do código original a partir daqui: const CLASS_SPELL_ATTR, DOM_SELECTORS, let state, etc...)
 
 
 /* =============================================================
@@ -174,7 +204,7 @@ const CLASSES_WITH_SUBCLASSES = {
   'Monge': ['Caminho da Mão Aberta', 'Caminho das Sombras', , 'Caminho da Tranquilidade', 'Caminho dos Quatro Elementos', 'Longa Morte', 'Kensei', 'Mestre Bêbado', 'Alma Solar', 'Misericórdia', 'Forma Astral', 'Dragão Ascendente'],
   'Paladino': ['Juramento dos Anciões', 'Juramento da Conquista', 'Juramento da Coroa', 'Juramento de Devoção', 'Juramento de Glória', 'Juramento de Redenção', 'Juramento de Vingança', 'Juramento dos Observadores', 'Quebrador de Juramento', 'Juramento da Traição', 'Juramento de Heroísmo', ''],
   'Patrulheiro': ['Caçador', 'Mestre das Feras', 'Guardião Primordial', 'Guardião Dracônico', 'Perseguidor Sombrio', 'Andarilho do Horizonte', 'Matador de Monstros', 'Peregrino Feérico', 'Guardião do Enxame', 'Guardião Dracônico'],
-  'Antecedentes': ['Acólito', "Artesão de Guilda", 'Artista', "Charlatão", "Criminoso", "Eremita", "Forasteiro", "Herói Popular", "Marinheiro", "Morador de Rua", "Nobre", "Sábio", "Soldado",],
+ 
   'Talentos': []
 };
 
@@ -3122,8 +3152,7 @@ function openAbilityCatalogOverlay() {
       btn.classList.add('active');
       activeClass = btn.dataset.class;
 
-      // Se for Antecedentes, não selecionamos a "Habilidade Geral" por padrão visualmente,
-      // mas mantemos a lógica interna funcionando.
+    
       activeClassHabilitySelected = true;
       activeSubclass = null;
 

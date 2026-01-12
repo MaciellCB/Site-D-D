@@ -1,7 +1,7 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Descrição",
+  "activeTab": "Magias",
   "spellDCConfig": {
     "selectedAttr": "none",
     "extraMod": 0,
@@ -115,78 +115,190 @@
         "Contundente"
       ],
       "moreDmgList": []
+    },
+    {
+      "id": 1768195783477,
+      "name": "Malagueta (porrete)",
+      "type": "Geral",
+      "description": "Item de Antecedente",
+      "expanded": false,
+      "equip": false
+    },
+    {
+      "id": 1768195734499,
+      "name": "Corda de seda (15m)",
+      "type": "Geral",
+      "description": "Item de Antecedente",
+      "expanded": false,
+      "equip": false
+    },
+    {
+      "id": 1768195748666,
+      "name": "Amuleto da sorte",
+      "type": "Geral",
+      "description": "Item de Antecedente",
+      "expanded": false,
+      "equip": false
+    },
+    {
+      "id": 1768195763594,
+      "name": "Roupas comuns",
+      "type": "Geral",
+      "description": "Item de Antecedente",
+      "expanded": false,
+      "equip": false
+    },
+    {
+      "id": 1768195772336,
+      "name": "10 PO",
+      "type": "Geral",
+      "description": "Item de Antecedente",
+      "expanded": false,
+      "equip": false
+    },
+    {
+      "id": 1768196166248,
+      "name": "Roupas finas",
+      "type": "Geral",
+      "description": "Item de Antecedente",
+      "expanded": false,
+      "equip": false
+    },
+    {
+      "id": 1768196228121,
+      "name": "Kit de disfarce",
+      "type": "Geral",
+      "description": "Item de Antecedente",
+      "expanded": false,
+      "equip": false
+    },
+    {
+      "id": 1768196214198,
+      "name": "Ferramentas de fraude",
+      "type": "Geral",
+      "description": "Item de Antecedente",
+      "expanded": false,
+      "equip": false
+    },
+    {
+      "id": 1768196257199,
+      "name": "15 PO",
+      "type": "Geral",
+      "description": "Item de Antecedente",
+      "expanded": false,
+      "equip": false
     }
   ],
   "abilities": [
     {
-      "id": 1768183721910,
-      "title": "Conhecimento de uma Vida Passada",
-      "description": "Ao fazer um teste de perícia, pode adicionar 1d6 ao resultado após ver o d20. Usos igual bônus proficiência por descanso longo.",
+      "id": 1768196164181,
+      "title": "Identidade Falsa",
+      "description": "Você possui uma segunda identidade completa com documentos e pode forjar papéis oficiais.",
+      "expanded": false,
+      "active": true,
+      "category": "Antecedente",
+      "class": "",
+      "subclass": "Charlatão"
+    },
+    {
+      "id": 1768192692637,
+      "title": "Mordida Vampírica",
+      "description": "Ataque natural (1d4 + Con perfurante) com vantagem se estiver com metade dos PV ou menos. Ao acertar (não constructo/morto-vivo), pode se curar ou ganhar bônus no próximo teste igual ao dano causado. Usos igual bônus proficiência por descanso longo.",
       "expanded": false,
       "active": false,
       "category": "Raça",
       "class": "Raça",
-      "subclass": "Renascido"
+      "subclass": "Dampir"
     },
     {
-      "id": 1768183727035,
-      "title": "Natureza Imperecível",
-      "description": "Vantagem contra doenças/venenos, resistência a veneno. Vantagem em testes de morte. Não precisa comer, beber, respirar ou dormir (descanso longo de 4h consciente).",
+      "id": 1768192721371,
+      "title": "Escalada Aracnídea",
+      "description": "Deslocamento de escalada igual à caminhada. No nv 3, pode andar em paredes/tetos com mãos livres.",
+      "expanded": true,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Dampir"
+    },
+    {
+      "id": 1768192698059,
+      "title": "Natureza Imortal",
+      "description": "Não precisa respirar.",
       "expanded": false,
       "active": false,
       "category": "Raça",
       "class": "Raça",
-      "subclass": "Renascido"
+      "subclass": "Dampir"
     },
     {
-      "id": 1768183765867,
-      "title": "Legado Ancestral",
-      "description": "Se substituir uma raça, mantém perícias e deslocamentos (escalada/voo/natação). Caso contrário, ganha 2 perícias.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Renascido"
-    },
-    {
-      "id": 1768183696779,
-      "title": "Feitiçaria Ofídica",
-      "description": "Truque 'rajada de veneno'. 'amizade animal' (apenas cobras, ilimitado). Nv 3: 'sugestão' (1/longo). (Escolha Int, Sab ou Car).",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Yuan-Ti"
-    },
-    {
-      "id": 1768183702432,
-      "title": "Resistência a Veneno",
-      "description": "Vantagem contra envenenamento e resistência a dano venenoso.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Yuan-Ti"
-    },
-    {
-      "id": 1768183720375,
-      "title": "Resistência Mágica",
-      "description": "Vantagem em salvaguardas contra magias.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Yuan-Ti"
-    },
-    {
-      "id": 1768183738103,
+      "id": 1768192727179,
       "title": "Visão no Escuro",
       "description": "18 metros.",
       "expanded": false,
       "active": false,
       "category": "Raça",
       "class": "Raça",
-      "subclass": "Yuan-Ti"
+      "subclass": "Dampir"
+    },
+    {
+      "id": 1768192705979,
+      "title": "Legado Ancestral",
+      "description": "Se substituir uma raça, mantém perícias e deslocamentos (escalada/voo/natação). Caso contrário, ganha 2 perícias.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Dampir"
+    },
+    {
+      "id": 1768192697432,
+      "title": "Presença Enérgica",
+      "description": "Vantagem em um teste de Intimidação ou Persuasão uma vez por descanso curto/longo.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Variante: Sangue de Dragão"
+    },
+    {
+      "id": 1768192762776,
+      "title": "Visão no Escuro",
+      "description": "18 metros.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Variante: Sangue de Dragão"
+    },
+    {
+      "id": 1768192707685,
+      "title": "Resistência a Dano",
+      "description": "Resistência ao tipo de dano da sua herança.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Draconatos"
+    },
+    {
+      "id": 1768192678739,
+      "title": "Ataque de Sopro",
+      "description": "Ação para exalar energia. Dano 2d6 (aumenta nos níveis 6, 11, 16), CD baseada em Con. Recupera com descanso curto ou longo.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Draconatos"
+    },
+    {
+      "id": 1768192752641,
+      "title": "Herança Dracônica",
+      "description": "Escolha um tipo de dragão (Tabela do Livro do Jogador). Determina seu ataque de sopro e resistência.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Draconatos"
     },
     {
       "id": 1768158519683,
@@ -406,7 +518,7 @@
   },
   "atributos": {
     "n1": 32,
-    "n2": 30,
+    "n2": 10,
     "n3": 10,
     "n4": 10,
     "n5": 10,
@@ -430,12 +542,24 @@
   },
   "xp": "0",
   "inspiracao": 4,
-  "vidaDadosSalvos": {},
+  "vidaDadosSalvos": {
+    "v1": 8,
+    "v2": 4,
+    "v3": 5,
+    "v4": 2,
+    "v5": 5,
+    "v6": 7,
+    "v7": 8,
+    "v8": 12,
+    "v10": 8,
+    "v11": 6,
+    "v9": 11
+  },
   "marco": 0,
   "vidaAtual": 0,
   "vidaTempAtual": 71,
   "danoNecroAtual": 60,
-  "metros": 9,
+  "metros": 10.5,
   "iniciativaBonus": 87,
   "acOutros": 0,
   "resistencias": "23",
@@ -444,38 +568,11 @@
   "proficiencias": "q3r",
   "minimizedPreparedSpells": false,
   "minimizedPreparedAbilities": false,
-  "fraquezasList": [
-    "Ácido",
-    "Contundente",
-    "Cortante",
-    "Perfurante",
-    "Fogo",
-    "Elétrico",
-    "Veneno",
-    "Trovão",
-    "Radiante",
-    "Necrótico"
-  ],
-  "resistenciasList": [
-    "Contundente",
-    "Perfurante",
-    "Frio"
-  ],
+  "fraquezasList": [],
+  "resistenciasList": [],
   "imunidadesList": [],
-  "proficienciasList": [
-    "Armaduras médias",
-    "Armaduras leves",
-    "Armaduras pesadas"
-  ],
-  "idiomasList": [
-    "Gíria de Ladrões",
-    "Druídico",
-    "Silvestre",
-    "Primordial",
-    "Infernal",
-    "Dialeto Subterrâneo",
-    "Dracônico"
-  ],
+  "proficienciasList": [],
+  "idiomasList": [],
   "spellSlots": {
     "1": {
       "used": 0,
@@ -578,15 +675,16 @@
     "cmb-ataques": false,
     "class-Bárbaro": true,
     "class-Druida": true,
-    "talentos": false
+    "talentos": true,
+    "inv-gerais": false
   },
-  "antecedente": "Artesão de Guilda",
+  "antecedente": "Charlatão",
   "personagem": "123w",
   "jogador": "321w",
-  "raca": "Yuan-Ti (Renascido)",
+  "raca": "Draconatos (Dampir)",
   "customResources": [],
   "deslocamentoVoo": 0,
-  "subRaca": "Renascido",
+  "subRaca": "Variante: Sangue de Dragão",
   "racaTipo": "Humanoide",
   "racaTamanho": "Médio ou Pequeno"
 }

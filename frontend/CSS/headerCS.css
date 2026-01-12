@@ -565,136 +565,31 @@
 
 
 
-
 /* =============================================================
-   IMAGEM DA RAÇA E LIGHTBOX (ZOOM) - CORRIGIDO
+   1. IMAGEM DA RAÇA E DETALHES
 ============================================================= */
 
 .race-detail-header {
   display: flex;
-  flex-direction: row; /* Garante lado a lado */
-  align-items: flex-start;
-  gap: 20px; /* Espaço entre imagem e texto */
-  margin-bottom: 15px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  padding-bottom: 15px;
-}
-
-/* Container da imagem */
-.race-img-container {
-  flex-shrink: 0; /* Impede que a imagem seja esmagada */
-  width: 100px;     /* Largura fixa base */
-  height: 100px;    /* Altura fixa base */
-  background: #050505;
-  border: 1px solid #333;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  cursor: zoom-in;
-  transition: border-color 0.2s;
-}
-
-.race-img-container:hover {
-  border-color: #9c27b0;
-}
-
-.race-img-display {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* Ajusta sem cortar */
-}
-
-/* Texto à direita da imagem */
-.race-title-box {
-  flex: 1; /* Ocupa o resto do espaço */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 200px; /* Alinha verticalmente com a imagem se quiser */
-}
-
-.race-title-box h2 {
-  font-size: 32px;
-  margin: 0 0 10px 0;
-  color: #fff;
-  line-height: 1.1;
-}
-
-/* --- LIGHTBOX (ZOOM TELA CHEIA) --- */
-.lightbox-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.95);
-  z-index: 99999; /* Z-Index altíssimo */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  animation: fadeIn 0.3s forwards;
-  cursor: zoom-out;
-}
-
-.lightbox-content {
-  position: relative;
-  max-width: 90vw;
-  max-height: 90vh;
-}
-
-.lightbox-image-full {
-  max-width: 100%;
-  max-height: 90vh;
-  border: 2px solid #333;
-  border-radius: 4px;
-  box-shadow: 0 0 50px rgba(0,0,0,1);
-}
-
-.lightbox-close {
-  position: absolute;
-  top: -40px;
-  right: -40px;
-  color: #fff;
-  font-size: 40px;
-  cursor: pointer;
-  font-weight: bold;
-  opacity: 0.8;
-}
-
-@keyframes fadeIn { to { opacity: 1; } }
-
-
-
-/* =============================================================
-   IMAGEM DA RAÇA E LIGHTBOX (ZOOM) - CORRIGIDO
-============================================================= */
-
-.race-detail-header {
-  display: flex;
-  flex-direction: row; 
-  align-items: flex-start; /* IMPORTANTE: Alinha tudo ao topo */
-  gap: 25px; 
+  flex-direction: row;
+  align-items: flex-start; /* Alinha ao topo */
+  gap: 25px;
   margin-bottom: 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 20px;
 }
 
-/* Container da Imagem (Tamanho maior e ajustável) */
+/* Container da Imagem */
 .race-img-container {
   flex-shrink: 0;
-  width: 200px;      /* Largura base maior */
-  height: 180px;     /* Altura base maior (limite vertical) */
+  width: 200px;      /* Largura maior */
+  height: 180px;     /* Altura maior */
   background: #050505;
   border: 1px solid #333;
   border-radius: 8px;
-  
   display: flex;
   align-items: center;
   justify-content: center;
-  
   overflow: hidden;
   cursor: zoom-in;
   transition: border-color 0.2s, transform 0.2s;
@@ -705,44 +600,45 @@
   transform: scale(1.01);
 }
 
-/* A imagem se ajusta dentro sem cortar (Contain) */
 .race-img-display {
   width: 100%;
   height: 100%;
-  object-fit: contain; 
+  object-fit: contain;
   display: block;
 }
 
-/* Container do Texto (Direita) */
+/* Texto e Títulos */
 .race-title-box {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* IMPORTANTE: Texto começa no topo */
-  padding-top: 5px; /* Pequeno ajuste fino */
+  justify-content: flex-start;
+  padding-top: 5px;
 }
 
 .race-title-box h2 {
-  font-size: 36px; /* Título maior */
+  font-size: 36px;
   color: #fff;
   margin: 0 0 10px 0;
   line-height: 1.1;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* Linha com as infos (Tipo, Tamanho, etc) */
 .race-info-line {
   font-size: 15px;
   color: #ccc;
   line-height: 1.6;
-  background: rgba(255,255,255,0.03);
+  background: rgba(255, 255, 255, 0.03);
   padding: 12px;
   border-radius: 6px;
   border-left: 3px solid #9c27b0;
   margin-top: 5px;
 }
 
-/* --- LIGHTBOX (ZOOM TELA CHEIA) --- */
+/* =============================================================
+   2. LIGHTBOX (ZOOM TELA CHEIA)
+============================================================= */
+
 .lightbox-overlay {
   position: fixed;
   top: 0;
@@ -750,7 +646,7 @@
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.95);
-  z-index: 999999; /* Z-Index altíssimo para ficar acima de tudo */
+  z-index: 999999;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -775,28 +671,27 @@
   max-height: 95vh;
   border: 2px solid #333;
   border-radius: 4px;
-  box-shadow: 0 0 50px rgba(0,0,0,1);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 1);
   object-fit: contain;
 }
 
+/* O estilo visual do botão fechar está no bloco GLOBAL abaixo.
+   Aqui ficam apenas o posicionamento específico do Lightbox. */
 .lightbox-close {
   position: absolute;
   top: -40px;
   right: -40px;
-  color: #fff;
-  font-size: 40px;
-  cursor: pointer;
-  font-weight: bold;
-  opacity: 0.8;
   z-index: 1000000;
 }
 
-.lightbox-close:hover { opacity: 1; color: #f44336; }
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
 
-@keyframes fadeIn { to { opacity: 1; } }
+/* =============================================================
+   3. WIZARD E FORMULÁRIOS
+============================================================= */
 
-
-/* Correção do Layout do Wizard (Deslocamento e Checkbox) */
 .wizard-input-group {
   display: flex;
   align-items: center;
@@ -811,10 +706,13 @@
   font-size: 13px;
   color: #ddd;
   font-weight: bold;
-  white-space: nowrap; /* Impede quebra de texto */
+  white-space: nowrap;
 }
 
-/* Botão de Adicionar Habilidade */
+.wizard-label {
+  margin-bottom: 4px;
+}
+
 .btn-add-trait {
   background: #1a1a1a;
   color: #9c27b0;
@@ -832,61 +730,48 @@
   background: rgba(156, 39, 176, 0.1);
 }
 
-/* Garante que labels dentro de flex não quebrem o layout */
-.wizard-label {
-  margin-bottom: 4px; /* Pequeno ajuste */
-}
-
-
 /* =============================================================
-   ESTILIZAÇÃO GLOBAL DE SCROLLBAR E BOTÕES FECHAR
+   4. ESTILIZAÇÃO GLOBAL (SCROLLBAR E BOTÕES)
 ============================================================= */
 
-/* --- 1. SCROLLBAR (Barra de Rolagem) CUSTOMIZADA --- */
-/* Isso afeta todas as listas e o modal */
-
-/* Largura da barra */
+/* Scrollbar Customizada */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-/* O fundo da barra (Onde estava branco) -> Agora transparente */
 ::-webkit-scrollbar-track {
-  background: transparent; 
+  background: transparent;
 }
 
-/* A "peça" que mexe (o scroll em si) -> Cinza escuro */
 ::-webkit-scrollbar-thumb {
-  background: #333; 
+  background: #333;
   border-radius: 4px;
 }
 
-/* Quando passa o mouse no scroll -> Fica roxo */
 ::-webkit-scrollbar-thumb:hover {
-  background: #9c27b0; 
+  background: #9c27b0;
 }
 
-/* --- 2. BOTÕES DE FECHAR (X) --- */
-/* Remove fundo, borda e deixa o X branco */
-
+/* Botões de Fechar (X) - Estilo Compartilhado */
 .modal-close, 
 .catalog-large-close, 
 .lightbox-close,
-.remove-trait-btn { /* Inclui o botão de remover habilidade do wizard */
+.remove-trait-btn {
   background: transparent !important;
   border: none !important;
   color: #fff !important;
-  font-size: 24px;
+  font-size: 24px; /* Nota: O Lightbox usava 40px antes, mas a regra mais recente (24px) prevaleceu */
   font-weight: bold;
   cursor: pointer;
   padding: 0 8px;
   line-height: 1;
   opacity: 0.7;
   transition: 0.2s;
-  box-shadow: none !important; /* Remove sombra se tiver */
+  box-shadow: none !important;
 }
 
+/* Hover Compartilhado */
 .modal-close:hover, 
 .catalog-large-close:hover,
 .lightbox-close:hover,
@@ -896,11 +781,12 @@
   opacity: 1;
 }
 
-/* Ajuste específico para o botão de remover habilidade no Wizard (para não ficar gigante) */
+/* Ajuste específico para o botão de remover habilidade (sobrescreve o compartilhado) */
 .remove-trait-btn {
-    font-size: 18px !important;
-    color: #d32f2f !important;
+  font-size: 18px !important;
+  color: #d32f2f !important;
 }
+
 .remove-trait-btn:hover {
-    color: #ff5252 !important;
+  color: #ff5252 !important;
 }
