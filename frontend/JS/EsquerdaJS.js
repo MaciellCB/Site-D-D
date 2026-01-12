@@ -80,20 +80,24 @@ window.addEventListener('sheet-updated', () => {
     vincularEventosInputs();
 });
 
+/* =============================================================
+   ATUALIZAÇÃO: inicializarDadosEsquerda (VOO TOTALMENTE EDITÁVEL)
+============================================================= */
+
 function inicializarDadosEsquerda() {
-    // Inicializa objetos do state se não existirem
+    // Inicializa objetos
     if (!state.atributos) state.atributos = { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 };
     if (!state.niveisClasses) state.niveisClasses = {};
     if (!state.vidaDadosSalvos) state.vidaDadosSalvos = {};
 
-    // Inicializa arrays para os status (listas)
+    // Arrays e Listas
     if (!state.fraquezasList) state.fraquezasList = [];
     if (!state.resistenciasList) state.resistenciasList = [];
     if (!state.imunidadesList) state.imunidadesList = [];
     if (!state.proficienciasList) state.proficienciasList = [];
     if (!state.idiomasList) state.idiomasList = [];
 
-    // Garantir valores seguros para números
+    // Números seguros
     state.acOutros = parseInt(state.acOutros) || 0;
     state.iniciativaBonus = parseInt(state.iniciativaBonus) || 0;
     state.vidaAtual = parseInt(state.vidaAtual) || 0;
@@ -103,6 +107,7 @@ function inicializarDadosEsquerda() {
     state.marco = parseInt(state.marco) || 0;
     state.inspiracao = parseInt(state.inspiracao) || 0;
     state.metros = parseFloat(state.metros) || 0;
+    state.deslocamentoVoo = parseFloat(state.deslocamentoVoo) || 0;
 
     // Preenche inputs básicos
     const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
@@ -111,26 +116,101 @@ function inicializarDadosEsquerda() {
     setVal('xpAtual', state.xp);
     setVal('marcoAtual', state.marco);
     setText('inspiraValor', state.inspiracao);
-    setVal('metros', state.metros);
-    setVal('quadrados', (state.metros / 1.5).toFixed(1));
+    
+    // --- LÓGICA DE DESLOCAMENTO (TERRA E VOO) ---
+    const elMetros = document.getElementById('metros');
+    const elQuadrados = document.getElementById('quadrados');
+    
+    if (elMetros && elQuadrados) {
+        // 1. Preenche valores de terra (padrão)
+        elMetros.value = state.metros; 
+        elQuadrados.value = (state.metros / 1.5).toFixed(1);
 
-    // IMPORTANTE: Preenche o bônus de iniciativa
+        // Remove label antigo se existir
+        const oldLabel = document.getElementById('voo-label-display');
+        if (oldLabel) oldLabel.remove();
+        
+        // 2. Verifica/Cria os Blocos de Voo Dinâmicos
+        let containerVooM = document.getElementById('container-voo-m');
+        let containerVooQ = document.getElementById('container-voo-q');
+        
+        if (!containerVooM) {
+            const linhaPai = elQuadrados.parentNode.parentNode; 
+
+            // Cria bloco Voo Metros (EDITÁVEL)
+            containerVooM = document.createElement('div');
+            containerVooM.id = 'container-voo-m';
+            containerVooM.className = 'metros-box'; 
+            containerVooM.innerHTML = `<label style="color:#4fc3f7;">Voo (m)</label><input id="voo-metros" type="number" style="border-color:#4fc3f7; color:#4fc3f7;">`;
+            
+            // Cria bloco Voo Quadrados (AGORA EDITÁVEL - removido readonly disabled)
+            containerVooQ = document.createElement('div');
+            containerVooQ.id = 'container-voo-q';
+            containerVooQ.className = 'quadrados-box'; 
+            containerVooQ.innerHTML = `<label style="color:#4fc3f7;">Voo (q)</label><input id="voo-quadrados" type="number" style="border-color:#4fc3f7; color:#4fc3f7;">`;
+
+            // Insere na tela
+            linhaPai.appendChild(containerVooM);
+            linhaPai.appendChild(containerVooQ);
+        }
+
+        // 3. Atualiza Valores e Visibilidade
+        const inputVooM = document.getElementById('voo-metros');
+        const inputVooQ = document.getElementById('voo-quadrados');
+
+        // Define valor inicial vindo do Estado
+        if (state.deslocamentoVoo > 0) {
+            inputVooM.value = state.deslocamentoVoo;
+            inputVooQ.value = (state.deslocamentoVoo / 1.5).toFixed(1);
+            
+            containerVooM.style.display = 'flex';
+            containerVooQ.style.display = 'flex';
+        } else {
+            containerVooM.style.display = 'none';
+            containerVooQ.style.display = 'none';
+        }
+
+        // 4. EVENTOS DE EDIÇÃO DO VOO (BIDIRECIONAL)
+        
+        // Editou Metros -> Calcula Quadrados
+        inputVooM.oninput = (e) => {
+            const novoVoo = parseFloat(e.target.value) || 0;
+            state.deslocamentoVoo = novoVoo;
+            
+            // Atualiza visualmente os quadrados
+            inputVooQ.value = (novoVoo / 1.5).toFixed(1);
+            saveStateToServer();
+        };
+
+        // Editou Quadrados -> Calcula Metros
+        inputVooQ.oninput = (e) => {
+            const novosQuadrados = parseFloat(e.target.value) || 0;
+            const novoVooMetros = novosQuadrados * 1.5;
+            
+            state.deslocamentoVoo = novoVooMetros;
+            
+            // Atualiza visualmente os metros
+            inputVooM.value = novoVooMetros; // Pode usar .toFixed(1) se quiser arredondar visualmente
+            saveStateToServer();
+        };
+    }
+
     setVal('iniciativaBonus', state.iniciativaBonus);
 
-    // Renderiza os Multi-Selects nas divs criadas no HTML
+    // Renderiza Multi-Selects
     renderMultiSelect('sel-fraquezas', TIPOS_DANO_LISTA, state.fraquezasList, 'fraquezasList');
     renderMultiSelect('sel-resistencias', TIPOS_DANO_LISTA, state.resistenciasList, 'resistenciasList');
     renderMultiSelect('sel-imunidades', TIPOS_DANO_LISTA, state.imunidadesList, 'imunidadesList');
     renderMultiSelect('sel-proficiencias', PROFICIENCIAS_LISTA_ESQUERDA, state.proficienciasList, 'proficienciasList');
     renderMultiSelect('sel-idiomas', IDIOMAS_LISTA, state.idiomasList, 'idiomasList');
 
-    // Atualiza Hexagrama
+    // Hexagrama
     numerosHex.forEach(n => {
         const id = n.classList[1];
         const val = state.atributos[id] || 10;
         n.dataset.attrValue = val;
         n.textContent = mostrandoAtributos ? val : formatMod(calcularModificador(val));
-
+        
         n.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -287,13 +367,14 @@ function toggleEditMode() {
 }
 
 // ======================================
-// 6. Classes e Dados de Vida
+// 6. Classes e Dados de Vida (COM ARRASTAR)
 // ======================================
 
 const elClasseFocus = document.getElementById('classeFocus');
-if (elClasseFocus) {
+const painelClasses = document.getElementById('painelClasses'); // Referência global
+
+if (elClasseFocus && painelClasses) {
     elClasseFocus.onclick = (e) => {
-        const painel = document.getElementById('painelClasses');
         const lista = document.getElementById('listaClasses');
         lista.innerHTML = '';
 
@@ -308,12 +389,60 @@ if (elClasseFocus) {
             lista.appendChild(div);
         });
 
-        painel.style.display = 'block';
+        painelClasses.style.display = 'block';
+        
+        // Posiciona apenas se o painel ainda não foi movido manualmente (opcional, ou reseta sempre)
+        // Aqui mantemos o comportamento de abrir perto do botão:
         const rect = e.currentTarget.getBoundingClientRect();
-        painel.style.left = `${rect.left}px`;
-        painel.style.top = `${rect.bottom + 5}px`;
+        painelClasses.style.left = `${rect.left}px`;
+        painelClasses.style.top = `${rect.bottom + 5}px`;
     };
+
+    // --- FUNÇÃO PARA ARRASTAR O PAINEL ---
+    tornarPainelArrastavel(painelClasses);
 }
+
+function tornarPainelArrastavel(elemento) {
+    const header = elemento.querySelector('.painel-header');
+    let isDragging = false;
+    let startX, startY, initialLeft, initialTop;
+
+    header.addEventListener('mousedown', (e) => {
+        // Impede arrastar se clicar no botão de fechar (X)
+        if (e.target.tagName === 'BUTTON') return;
+
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        
+        // Pega a posição atual computada (caso seja 'auto' ou porcentagem)
+        const rect = elemento.getBoundingClientRect();
+        initialLeft = rect.left;
+        initialTop = rect.top;
+
+        header.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault(); // Evita seleção de texto
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        elemento.style.left = `${initialLeft + dx}px`;
+        elemento.style.top = `${initialTop + dy}px`;
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (isDragging) {
+            isDragging = false;
+            header.style.cursor = 'grab';
+        }
+    });
+}
+
+
 
 /* =============================================================
    ATUALIZAÇÃO: JS/EsquerdaJS.js
@@ -671,6 +800,8 @@ function atualizarAC() {
         }
     }
 }
+
+
 
 
 

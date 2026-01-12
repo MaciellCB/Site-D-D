@@ -3,11 +3,11 @@
   "senha": "123",
   "activeTab": "Descrição",
   "spellDCConfig": {
-    "selectedAttr": "int",
+    "selectedAttr": "none",
     "extraMod": 0,
     "lastKnownLevel": 0
   },
-  "dtMagias": 13,
+  "dtMagias": "Selecione",
   "inventory": [
     {
       "id": 1767902588309,
@@ -119,10 +119,100 @@
   ],
   "abilities": [
     {
+      "id": 1768183721910,
+      "title": "Conhecimento de uma Vida Passada",
+      "description": "Ao fazer um teste de perícia, pode adicionar 1d6 ao resultado após ver o d20. Usos igual bônus proficiência por descanso longo.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Renascido"
+    },
+    {
+      "id": 1768183727035,
+      "title": "Natureza Imperecível",
+      "description": "Vantagem contra doenças/venenos, resistência a veneno. Vantagem em testes de morte. Não precisa comer, beber, respirar ou dormir (descanso longo de 4h consciente).",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Renascido"
+    },
+    {
+      "id": 1768183765867,
+      "title": "Legado Ancestral",
+      "description": "Se substituir uma raça, mantém perícias e deslocamentos (escalada/voo/natação). Caso contrário, ganha 2 perícias.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Renascido"
+    },
+    {
+      "id": 1768183696779,
+      "title": "Feitiçaria Ofídica",
+      "description": "Truque 'rajada de veneno'. 'amizade animal' (apenas cobras, ilimitado). Nv 3: 'sugestão' (1/longo). (Escolha Int, Sab ou Car).",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Yuan-Ti"
+    },
+    {
+      "id": 1768183702432,
+      "title": "Resistência a Veneno",
+      "description": "Vantagem contra envenenamento e resistência a dano venenoso.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Yuan-Ti"
+    },
+    {
+      "id": 1768183720375,
+      "title": "Resistência Mágica",
+      "description": "Vantagem em salvaguardas contra magias.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Yuan-Ti"
+    },
+    {
+      "id": 1768183738103,
+      "title": "Visão no Escuro",
+      "description": "18 metros.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Yuan-Ti"
+    },
+    {
+      "id": 1768158519683,
+      "title": "(Alquimista, 3º nível) Proficiência com Ferramentas",
+      "description": "<p>Você ganha proficiência com suprimentos de alquimista. Se já tiver, ganha proficiência com outra ferramenta de artesão à sua escolha.</p>",
+      "expanded": true,
+      "class": "Artífice",
+      "subclass": "Alquimista",
+      "category": "Classe",
+      "active": false
+    },
+    {
+      "id": 1768158517180,
+      "title": "(1º nível) Funilaria Mágica",
+      "description": "<p><strong>Magia em Objetos Mundanos</strong></p><p>(Ação) Você imbuí um objeto minúsculo não mágico com uma propriedade mágica. O efeito dura indefinidamente até você encerrá-lo ou exceder seu limite de objetos ativos (igual ao seu Modificador de Inteligência).</p><strong style='display:block; margin-bottom:8px; color:#fff;'>Efeitos Possíveis:</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Luz:</strong> O objeto emite luz plena em 1,5m e penumbra em mais 1,5m.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Áudio:</strong> Uma mensagem gravada de até 6 segundos.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Sensorial:</strong> O objeto emite continuamente um odor ou som não verbal.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Visual:</strong> Um efeito visual estático (texto ou imagem) em uma das superfícies.</li></ul>",
+      "expanded": true,
+      "class": "Artífice",
+      "subclass": "",
+      "category": "Classe",
+      "active": false
+    },
+    {
       "id": 1767979105931,
       "title": "Adepto Elemental",
       "description": "<p><strong>Pré-requisito:</strong> Capacidade de conjurar pelo menos uma magia.</p><p>Escolha um tipo de dano: ácido, fogo, frio, eletricidade ou trovão.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Potência:</strong> Sempre que rolar dano desse tipo com magias, trate qualquer 1 rolado como 2.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Penetração:</strong> Suas magias desse tipo ignoram Resistência (mas não Imunidade).</li></ul><p style='color:#bbb; font-size:13px;'>Pode ser escolhido diversas vezes para elementos diferentes.</p>",
-      "expanded": true,
+      "expanded": false,
       "class": "Talentos",
       "subclass": "",
       "category": "Talentos",
@@ -323,12 +413,12 @@
     "n6": 20
   },
   "niveisClasses": {
-    "artifice": 0,
-    "barbaro": 0,
-    "bardo": 3,
-    "blood hunter": 2,
-    "bruxo": 4,
-    "clerigo": 5,
+    "artifice": 6,
+    "barbaro": 5,
+    "bardo": 0,
+    "blood hunter": 0,
+    "bruxo": 0,
+    "clerigo": 0,
     "monge": 0,
     "druida": 0,
     "feiticeiro": 0,
@@ -338,17 +428,14 @@
     "paladino": 0,
     "patrulheiro": 0
   },
-  "xp": "2345667",
+  "xp": "0",
   "inspiracao": 4,
-  "vidaDadosSalvos": {
-    "v1": 8,
-    "v2": 1
-  },
-  "marco": 2,
-  "vidaAtual": 4,
+  "vidaDadosSalvos": {},
+  "marco": 0,
+  "vidaAtual": 0,
   "vidaTempAtual": 71,
   "danoNecroAtual": 60,
-  "metros": 364.5,
+  "metros": 9,
   "iniciativaBonus": 87,
   "acOutros": 0,
   "resistencias": "23",
@@ -455,7 +542,11 @@
     },
     "furia": {
       "used": 0,
-      "status": []
+      "status": [
+        false,
+        false,
+        false
+      ]
     },
     "sorcery": {
       "used": 0,
@@ -471,20 +562,31 @@
       ]
     },
     "infusions": {
-      "status": []
+      "status": [
+        false,
+        false,
+        false
+      ]
     }
   },
-  "isSlotsCollapsed": false,
+  "isSlotsCollapsed": true,
   "collapsedSections": {
     "class-Blood Hunter": false,
     "origem": false,
     "inv-armas": false,
     "inv-armaduras": false,
-    "cmb-ataques": false
+    "cmb-ataques": false,
+    "class-Bárbaro": true,
+    "class-Druida": true,
+    "talentos": false
   },
   "antecedente": "Artesão de Guilda",
   "personagem": "123w",
   "jogador": "321w",
-  "raca": "paiuw",
-  "customResources": []
+  "raca": "Yuan-Ti (Renascido)",
+  "customResources": [],
+  "deslocamentoVoo": 0,
+  "subRaca": "Renascido",
+  "racaTipo": "Humanoide",
+  "racaTamanho": "Médio ou Pequeno"
 }

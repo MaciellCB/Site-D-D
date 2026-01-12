@@ -1102,7 +1102,7 @@ const LISTA_CLASSES_RPG = [
   'Paladino', 'Patrulheiro'
 ];
 
-/* ---------------- HABILIDADES (COMEÇA FECHADO + FOCO NA PESQUISA) ---------------- */
+/* ---------------- HABILIDADES (CORRIGIDO: COM CLICK NAS SEÇÕES) ---------------- */
 function renderAbilities() {
   const termoBusca = (document.getElementById('filterHabs')?.value || '').toLowerCase();
 
@@ -1149,7 +1149,7 @@ function renderAbilities() {
         <div class="abilities-list">
     `;
 
-  // Se tem busca, força expandir. Se não, força fechar (exceto se o usuário abriu manualmente antes)
+  // Se tem busca, força expandir. Se não, força fechar.
   const forceExpand = termoBusca.length > 0;
 
   let temConteudo = false;
@@ -1173,6 +1173,9 @@ function renderAbilities() {
   document.getElementById('botOpenCatalogHab').addEventListener('click', () => openAbilityCatalogOverlay());
 
   bindAbilityEvents();
+  
+  // --- ADICIONADO: LIGA O EVENTO DE CLICK NAS SEÇÕES ---
+  bindAbilitySectionEvents(); 
 
   // --- FOCO AUTOMÁTICO ---
   const novoInput = document.getElementById('filterHabs');
@@ -1182,7 +1185,40 @@ function renderAbilities() {
         const len = novoInput.value.length;
         novoInput.setSelectionRange(len, len);
     }
+    novoInput.oninput = renderAbilities;
   }
+}
+
+// --- FUNÇÃO NOVA: EVENTOS DAS SEÇÕES DE HABILIDADE ---
+function bindAbilitySectionEvents() {
+  document.querySelectorAll('.toggle-section-header').forEach(header => {
+    header.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const key = header.getAttribute('data-key');
+      // Se era undefined (nunca clicado), assume que estava fechado (true), então agora vira false (aberto)
+      // Se já tinha valor, inverte.
+      const current = state.collapsedSections[key] !== undefined ? state.collapsedSections[key] : true;
+      state.collapsedSections[key] = !current;
+      
+      saveStateToServer();
+
+      // Atualiza DOM direto
+      const contentDiv = header.nextElementSibling;
+      const arrowSpan = header.querySelector('span');
+
+      if (contentDiv) {
+        // Se agora está colapsado (true) -> esconde
+        if (state.collapsedSections[key]) {
+             contentDiv.style.display = 'none';
+             if (arrowSpan) arrowSpan.textContent = '▸';
+        } else {
+             contentDiv.style.display = 'block';
+             if (arrowSpan) arrowSpan.textContent = '▾';
+        }
+      }
+    });
+  });
 }
 
 
@@ -2140,7 +2176,7 @@ function openDTConfigModal() {
   };
 }
 
-/* ---------------- MODAL MAGIA ---------------- */
+/* ---------------- MODAL MAGIA (DESCRIÇÃO CORRIGIDA) ---------------- */
 function openSpellModal(existingSpell = null) {
   const modal = document.createElement('div');
   modal.className = 'spell-modal-overlay';
@@ -2150,67 +2186,75 @@ function openSpellModal(existingSpell = null) {
   const descContent = existingSpell ? existingSpell.description : '';
   const editorHTML = createRichEditorHTML(descContent, 'spell-editor-content');
 
-  // Mantendo o resto do HTML igual, apenas trocando o textarea
+  // Mantendo o resto do HTML igual, mas garantindo que o editor fique num bloco visível
   modal.innerHTML = `
       <div class="spell-modal">
         <div class="modal-header">
-          <h3>${existingSpell ? 'Editar Magia' : 'Novo Magia'}</h3>
+          <h3>${existingSpell ? 'Editar Magia' : 'Nova Magia'}</h3>
           <div style="display:flex;gap:8px;align-items:center;">
             <button class="modal-close">✖</button>
           </div>
         </div>
+        
         <div class="modal-body">
-          <label>Nome*</label>
-          <input id="modal-name" type="text" value="${existingSpell ? escapeHtml(existingSpell.name) : 'Nova Magia'}" />
-          <div class="modal-row">
-            <div>
-              <label>Escola</label>
-              <select id="modal-school">
-                <option>Abjuração</option><option>Conjuração</option><option>Adivinhação</option><option>Encantamento</option>
-                <option>Evocação</option><option>Ilusão</option><option>Necromancia</option><option>Transmutação</option>
-              </select>
-            </div>
-            <div style="width:84px;">
-              <label>Nível</label>
-              <input id="modal-level" type="number" min="0" value="${existingSpell && typeof existingSpell.levelNumber !== 'undefined' ? existingSpell.levelNumber : 1}" />
-            </div>
-            <div style="flex:0 0 160px;">
-              <label>Classe</label>
-              <div class="class-select-root" id="class-select-root">
-                <div class="class-select-toggle" id="class-select-toggle">
-                  <span id="class-select-value">${existingSpell && existingSpell.spellClass ? escapeHtml(existingSpell.spellClass) : 'Selecione'}</span>
-                  <span class="caret-small">▾</span>
+          <div style="flex-shrink:0;"> <label>Nome*</label>
+              <input id="modal-name" type="text" value="${existingSpell ? escapeHtml(existingSpell.name) : 'Nova Magia'}" />
+              
+              <div class="modal-row" style="margin-top:10px;">
+                <div>
+                  <label>Escola</label>
+                  <select id="modal-school">
+                    <option>Abjuração</option><option>Conjuração</option><option>Adivinhação</option><option>Encantamento</option>
+                    <option>Evocação</option><option>Ilusão</option><option>Necromancia</option><option>Transmutação</option>
+                  </select>
                 </div>
-                <div class="class-select-options" id="class-select-options" style="display:none;">
-                  ${CLASSES_AVAILABLE.map(c => `<button class="class-option" data-val="${c}">${c}</button>`).join('')}
+                <div style="width:84px;">
+                  <label>Nível</label>
+                  <input id="modal-level" type="number" min="0" value="${existingSpell && typeof existingSpell.levelNumber !== 'undefined' ? existingSpell.levelNumber : 1}" />
                 </div>
+                <div style="flex:0 0 160px;">
+                  <label>Classe</label>
+                  <div class="class-select-root" id="class-select-root">
+                    <div class="class-select-toggle" id="class-select-toggle">
+                      <span id="class-select-value">${existingSpell && existingSpell.spellClass ? escapeHtml(existingSpell.spellClass) : 'Selecione'}</span>
+                      <span class="caret-small">▾</span>
+                    </div>
+                    <div class="class-select-options" id="class-select-options" style="display:none;">
+                      ${CLASSES_AVAILABLE.map(c => `<button class="class-option" data-val="${c}">${c}</button>`).join('')}
+                    </div>
+                  </div>
+                </div>
+                <div><label>Execução</label><input id="modal-exec" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.execucao ? escapeHtml(existingSpell.attrs.execucao) : 'padrão'}" /></div>
+                <div><label>Alcance</label><input id="modal-alc" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.alcance ? escapeHtml(existingSpell.attrs.alcance) : 'pessoal'}" /></div>
               </div>
-              <div class="class-select-label">Escolha 1 classe</div>
-            </div>
-            <div><label>Execução</label><input id="modal-exec" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.execucao ? escapeHtml(existingSpell.attrs.execucao) : 'padrão'}" /></div>
-            <div><label>Alcance</label><input id="modal-alc" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.alcance ? escapeHtml(existingSpell.attrs.alcance) : 'pessoal'}" /></div>
-          </div>
-          <div class="modal-row">
-            <div><label>Área</label><input id="modal-area" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.area ? escapeHtml(existingSpell.attrs.area) : ''}" /></div>
-            <div><label>Alvo</label><input id="modal-alvo" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.alvo ? escapeHtml(existingSpell.attrs.alvo) : ''}" /></div>
-            <div><label>Duração</label><input id="modal-dur" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.duracao ? escapeHtml(existingSpell.attrs.duracao) : ''}" /></div>
-            <div><label>Resistência</label><input id="modal-res" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.resistencia ? escapeHtml(existingSpell.attrs.resistencia) : ''}" /></div>
-          </div>
-          <div class="modal-row">
-            <div>
-              <label>Componentes</label>
-              <div style="display:flex;gap:8px;margin-top:6px;">
-                <label><input id="comp-v" type="checkbox" /> V</label>
-                <label><input id="comp-s" type="checkbox" /> S</label>
-                <label><input id="comp-m" type="checkbox" /> M</label>
+
+              <div class="modal-row">
+                <div><label>Área</label><input id="modal-area" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.area ? escapeHtml(existingSpell.attrs.area) : ''}" /></div>
+                <div><label>Alvo</label><input id="modal-alvo" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.alvo ? escapeHtml(existingSpell.attrs.alvo) : ''}" /></div>
+                <div><label>Duração</label><input id="modal-dur" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.duracao ? escapeHtml(existingSpell.attrs.duracao) : ''}" /></div>
+                <div><label>Resistência</label><input id="modal-res" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.resistencia ? escapeHtml(existingSpell.attrs.resistencia) : ''}" /></div>
               </div>
-            </div>
-            <div><label>Material</label><input id="modal-material" type="text" value="${existingSpell && existingSpell.material ? escapeHtml(existingSpell.material) : ''}" /></div>
-            <div style="flex:1"><label>Damage / Observações</label><input id="modal-damage" type="text" value="${existingSpell && existingSpell.damage ? escapeHtml(existingSpell.damage) : ''}" /></div>
+
+              <div class="modal-row">
+                <div>
+                  <label>Componentes</label>
+                  <div style="display:flex;gap:8px;margin-top:6px;">
+                    <label><input id="comp-v" type="checkbox" /> V</label>
+                    <label><input id="comp-s" type="checkbox" /> S</label>
+                    <label><input id="comp-m" type="checkbox" /> M</label>
+                  </div>
+                </div>
+                <div><label>Material</label><input id="modal-material" type="text" value="${existingSpell && existingSpell.material ? escapeHtml(existingSpell.material) : ''}" /></div>
+                <div style="flex:1"><label>Damage / Observações</label><input id="modal-damage" type="text" value="${existingSpell && existingSpell.damage ? escapeHtml(existingSpell.damage) : ''}" /></div>
+              </div>
           </div>
-          <label>Descrição</label>
-          ${editorHTML}
+
+          <div style="flex:1; display:flex; flex-direction:column; min-height:200px; margin-top:10px;">
+              <label>Descrição</label>
+              ${editorHTML}
+          </div>
         </div>
+
         <div class="modal-actions">
           <button class="btn-add btn-save-modal">${existingSpell ? 'Salvar' : 'Adicionar'}</button>
           <button class="btn-add btn-cancel">Cancelar</button>
@@ -2220,8 +2264,8 @@ function openSpellModal(existingSpell = null) {
   document.body.appendChild(modal);
   checkScrollLock();
 
-  // Inicializa eventos do editor
-  initRichEditorEvents('spell-editor-content');
+  // Inicializa eventos do editor (CRUCIAL PARA FUNCIONAR)
+  setTimeout(() => initRichEditorEvents('spell-editor-content'), 50);
 
   // ... (Lógica de dropdowns e selects mantida igual) ...
   const schoolSel = modal.querySelector('#modal-school');
@@ -2267,7 +2311,8 @@ function openSpellModal(existingSpell = null) {
       ev.preventDefault();
 
       // --- LER DO EDITOR ---
-      const desc = document.getElementById('spell-editor-content').innerHTML;
+      const descElement = document.getElementById('spell-editor-content');
+      const desc = descElement ? descElement.innerHTML : '';
 
       const novo = {
         id: existingSpell ? existingSpell.id : uid(),

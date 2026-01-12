@@ -1249,3 +1249,51 @@ input[type=number] {
     padding: 6px 10px;
   }
 }
+
+
+
+.painel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  
+  /* NOVAS PROPRIEDADES PARA ARRASTAR */
+  cursor: grab;       /* Mostra a mãozinha */
+  user-select: none;  /* Impede selecionar o texto "Classes" ao arrastar */
+  padding: 5px;       /* Área de clique um pouco maior */
+  background: rgba(255, 255, 255, 0.03); /* Leve destaque visual no header */
+  border-radius: 6px;
+}
+
+.painel-header:active {
+  cursor: grabbing;   /* Mãozinha fechada ao clicar */
+}
+
+/* Adicione isso ao final do seu EsquerdaCS.css */
+
+/* Garante que os boxes de voo tenham o mesmo estilo */
+.voo-box, .voo-quad-box {
+    display: none; /* Escondido por padrão, JS mostra se tiver voo */
+    flex-direction: column;
+    align-items: center;
+    width: 100px; /* Mesmo tamanho base do marco-box */
+}
+
+.voo-box input, .voo-quad-box input {
+    text-align: center;
+    background: transparent;
+    border: 1px solid #4fc3f7; /* Cor azulada para destacar que é voo */
+    color: #4fc3f7;
+    border-radius: 6px;
+    padding: 4px 0;
+    width: 38px;
+    font-size: 14px;
+}
+
+.voo-box label, .voo-quad-box label {
+    color: #4fc3f7;
+    font-size: 11px; /* Um pouco menor para caber "Voo (m)" */
+    margin-bottom: 4px;
+    font-weight: bold;
+}

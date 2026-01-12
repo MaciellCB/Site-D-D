@@ -97,3 +97,810 @@
   outline: none;
   border-bottom-color: #9c27b0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =============================================================
+   MODAL DE RAÇAS E CRIAÇÃO CUSTOMIZADA
+============================================================= */
+
+/* Layout de Duas Colunas para o Catálogo de Raças */
+.race-catalog-container {
+  display: flex;
+  height: 100%;
+  gap: 20px;
+  overflow: hidden;
+}
+
+.race-list-col {
+  flex: 0 0 250px; /* Largura fixa para a lista */
+  border-right: 1px solid rgba(255,255,255,0.1);
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.race-details-col {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 8px;
+}
+
+/* Item da Lista de Raças */
+.race-list-item {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #aaa;
+  font-weight: 700;
+}
+
+.race-list-item:hover,
+.race-list-item.selected {
+  background: rgba(156, 39, 176, 0.1);
+  color: #fff;
+  border-left: 3px solid #9c27b0;
+  padding-left: 9px; /* Compensa a borda */
+}
+
+/* Detalhes da Raça */
+.race-detail-header {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 15px;
+}
+
+.race-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #000;
+  border: 1px solid #444;
+}
+
+.race-title-box h2 {
+  margin: 0 0 5px 0;
+  color: #9c27b0;
+  font-size: 24px;
+}
+
+.race-desc {
+  font-size: 14px;
+  color: #ddd;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  margin-bottom: 20px;
+}
+
+.race-traits-title {
+  font-size: 16px;
+  color: #fff;
+  font-weight: 800;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.race-trait-item {
+  background: #1a1a1a;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  border: 1px solid #333;
+}
+
+.race-trait-name {
+  color: #e0aaff;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.race-trait-desc {
+  font-size: 12px;
+  color: #bbb;
+}
+
+/* Wizard de Criação Customizada */
+.wizard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 10px;
+}
+
+.wizard-step-indicator {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #333;
+}
+
+.step-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #333;
+}
+
+.step-dot.active {
+  background: #9c27b0;
+  box-shadow: 0 0 8px #9c27b0;
+}
+
+.wizard-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.wizard-btn-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+/* ESTILOS PARA O SISTEMA DE RAÇAS E WIZARD */
+
+/* Variações (Sub-raças) */
+.variations-list {
+  margin-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 10px;
+}
+
+.variation-card-wrapper {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.variation-header {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  background: rgba(255,255,255,0.02);
+  transition: background 0.2s;
+}
+
+.variation-header:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.variation-header input[type="radio"] {
+  margin-right: 10px;
+  accent-color: #9c27b0;
+  transform: scale(1.2);
+}
+
+.variation-name {
+  font-weight: 700;
+  color: #fff;
+  flex: 1;
+}
+
+.variation-arrow {
+  color: #9c27b0;
+  font-weight: bold;
+}
+
+.variation-body {
+  padding: 0 10px 10px 34px; /* Indentado */
+  display: none; /* Fechado por padrão */
+  border-top: 1px solid #222;
+  color: #ccc;
+  font-size: 13px;
+}
+
+.variation-card-wrapper.open .variation-body {
+  display: block;
+}
+
+.variation-card-wrapper.open .variation-arrow {
+  transform: rotate(180deg);
+}
+
+/* Wizard Styles */
+.wizard-input-main {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  background: #111;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 6px;
+}
+
+.wizard-label {
+  display: block;
+  color: #aaa;
+  font-size: 12px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.wizard-select {
+  width: 100%;
+  padding: 8px;
+  background: #111;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 6px;
+}
+
+.wizard-input-small {
+  width: 100%;
+  padding: 6px;
+  background: #111;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.wizard-textarea {
+  width: 100%;
+  height: 200px;
+  padding: 10px;
+  background: #111;
+  color: #ddd;
+  border: 1px solid #444;
+  border-radius: 6px;
+  resize: none;
+}
+
+.wizard-trait-box {
+  margin-bottom: 15px;
+  background: #151515;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #333;
+}
+
+/* =============================================================
+   CORREÇÃO: WIZARD E VARIAÇÕES
+============================================================= */
+
+/* 1. Correção do Wizard (Evitar vazamento) */
+.wizard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ocupa altura total do modal */
+  overflow: hidden; /* Impede vazar para fora */
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.wizard-step-indicator {
+  flex-shrink: 0; /* Não encolhe */
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #333;
+}
+
+.wizard-content {
+  flex: 1; /* Ocupa todo o espaço disponível no meio */
+  overflow-y: auto; /* Scroll apenas aqui dentro se passar */
+  padding-right: 5px; /* Espaço para scrollbar */
+  min-height: 0; /* Fix para flexbox scrolling */
+  display: flex;
+  flex-direction: column;
+}
+
+.wizard-btn-row {
+  flex-shrink: 0; /* Botões fixos no fundo */
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #333;
+}
+
+/* 2. Estilos das Sub-raças (Variações) */
+.variations-list {
+  margin-top: 15px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 10px;
+}
+
+.variation-card-wrapper {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.variation-header {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  background: rgba(255,255,255,0.02);
+  transition: background 0.2s;
+  user-select: none;
+}
+
+.variation-header:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.variation-header input[type="radio"] {
+  margin-right: 10px;
+  accent-color: #9c27b0;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.variation-name {
+  font-weight: 700;
+  color: #fff;
+  flex: 1;
+}
+
+.variation-arrow {
+  color: #9c27b0;
+  font-weight: bold;
+  font-size: 16px;
+  transition: transform 0.2s;
+}
+
+.variation-body {
+  display: none; /* Fechado por padrão */
+  padding: 12px;
+  border-top: 1px solid #222;
+  color: #ccc;
+  font-size: 13px;
+  background: #0a0a0a;
+}
+
+/* Classe ativada pelo JS para abrir */
+.variation-card-wrapper.open .variation-body {
+  display: block;
+}
+
+.variation-card-wrapper.open .variation-arrow {
+  transform: rotate(180deg);
+}
+
+/* =============================================================
+   CORREÇÃO: SCROLL ÚNICO NO WIZARD
+============================================================= */
+
+/* Garante que o conteúdo ocupe o espaço e role apenas aqui */
+.wizard-content {
+  flex: 1; 
+  overflow-y: auto; /* A ÚNICA barra de rolagem permitida */
+  padding-right: 5px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Importante para o Firefox/Flexbox */
+}
+
+/* Removemos qualquer restrição de altura dos filhos diretos */
+.wizard-content > div {
+  max-height: none !important;
+  overflow: visible !important;
+  height: auto !important;
+}
+
+/* Ajuste visual para a descrição da sub-raça */
+.variation-desc {
+  font-style: italic;
+  font-size: 13px;
+  color: #999;
+  margin-bottom: 12px;
+  line-height: 1.4;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+
+
+
+/* =============================================================
+   IMAGEM DA RAÇA E LIGHTBOX (ZOOM) - CORRIGIDO
+============================================================= */
+
+.race-detail-header {
+  display: flex;
+  flex-direction: row; /* Garante lado a lado */
+  align-items: flex-start;
+  gap: 20px; /* Espaço entre imagem e texto */
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 15px;
+}
+
+/* Container da imagem */
+.race-img-container {
+  flex-shrink: 0; /* Impede que a imagem seja esmagada */
+  width: 100px;     /* Largura fixa base */
+  height: 100px;    /* Altura fixa base */
+  background: #050505;
+  border: 1px solid #333;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: zoom-in;
+  transition: border-color 0.2s;
+}
+
+.race-img-container:hover {
+  border-color: #9c27b0;
+}
+
+.race-img-display {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Ajusta sem cortar */
+}
+
+/* Texto à direita da imagem */
+.race-title-box {
+  flex: 1; /* Ocupa o resto do espaço */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 200px; /* Alinha verticalmente com a imagem se quiser */
+}
+
+.race-title-box h2 {
+  font-size: 32px;
+  margin: 0 0 10px 0;
+  color: #fff;
+  line-height: 1.1;
+}
+
+/* --- LIGHTBOX (ZOOM TELA CHEIA) --- */
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 99999; /* Z-Index altíssimo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
+  cursor: zoom-out;
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+.lightbox-image-full {
+  max-width: 100%;
+  max-height: 90vh;
+  border: 2px solid #333;
+  border-radius: 4px;
+  box-shadow: 0 0 50px rgba(0,0,0,1);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  color: #fff;
+  font-size: 40px;
+  cursor: pointer;
+  font-weight: bold;
+  opacity: 0.8;
+}
+
+@keyframes fadeIn { to { opacity: 1; } }
+
+
+
+/* =============================================================
+   IMAGEM DA RAÇA E LIGHTBOX (ZOOM) - CORRIGIDO
+============================================================= */
+
+.race-detail-header {
+  display: flex;
+  flex-direction: row; 
+  align-items: flex-start; /* IMPORTANTE: Alinha tudo ao topo */
+  gap: 25px; 
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 20px;
+}
+
+/* Container da Imagem (Tamanho maior e ajustável) */
+.race-img-container {
+  flex-shrink: 0;
+  width: 200px;      /* Largura base maior */
+  height: 180px;     /* Altura base maior (limite vertical) */
+  background: #050505;
+  border: 1px solid #333;
+  border-radius: 8px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  overflow: hidden;
+  cursor: zoom-in;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.race-img-container:hover {
+  border-color: #9c27b0;
+  transform: scale(1.01);
+}
+
+/* A imagem se ajusta dentro sem cortar (Contain) */
+.race-img-display {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; 
+  display: block;
+}
+
+/* Container do Texto (Direita) */
+.race-title-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* IMPORTANTE: Texto começa no topo */
+  padding-top: 5px; /* Pequeno ajuste fino */
+}
+
+.race-title-box h2 {
+  font-size: 36px; /* Título maior */
+  color: #fff;
+  margin: 0 0 10px 0;
+  line-height: 1.1;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Linha com as infos (Tipo, Tamanho, etc) */
+.race-info-line {
+  font-size: 15px;
+  color: #ccc;
+  line-height: 1.6;
+  background: rgba(255,255,255,0.03);
+  padding: 12px;
+  border-radius: 6px;
+  border-left: 3px solid #9c27b0;
+  margin-top: 5px;
+}
+
+/* --- LIGHTBOX (ZOOM TELA CHEIA) --- */
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 999999; /* Z-Index altíssimo para ficar acima de tudo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
+  cursor: zoom-out;
+}
+
+.lightbox-content {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 95vw;
+  max-height: 95vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lightbox-image-full {
+  max-width: 100%;
+  max-height: 95vh;
+  border: 2px solid #333;
+  border-radius: 4px;
+  box-shadow: 0 0 50px rgba(0,0,0,1);
+  object-fit: contain;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  color: #fff;
+  font-size: 40px;
+  cursor: pointer;
+  font-weight: bold;
+  opacity: 0.8;
+  z-index: 1000000;
+}
+
+.lightbox-close:hover { opacity: 1; color: #f44336; }
+
+@keyframes fadeIn { to { opacity: 1; } }
+
+
+/* Correção do Layout do Wizard (Deslocamento e Checkbox) */
+.wizard-input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wizard-check-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #ddd;
+  font-weight: bold;
+  white-space: nowrap; /* Impede quebra de texto */
+}
+
+/* Botão de Adicionar Habilidade */
+.btn-add-trait {
+  background: #1a1a1a;
+  color: #9c27b0;
+  border: 1px dashed #9c27b0;
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+  margin-top: 10px;
+}
+
+.btn-add-trait:hover {
+  background: rgba(156, 39, 176, 0.1);
+}
+
+/* Garante que labels dentro de flex não quebrem o layout */
+.wizard-label {
+  margin-bottom: 4px; /* Pequeno ajuste */
+}
+
+
+/* =============================================================
+   ESTILIZAÇÃO GLOBAL DE SCROLLBAR E BOTÕES FECHAR
+============================================================= */
+
+/* --- 1. SCROLLBAR (Barra de Rolagem) CUSTOMIZADA --- */
+/* Isso afeta todas as listas e o modal */
+
+/* Largura da barra */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* O fundo da barra (Onde estava branco) -> Agora transparente */
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+/* A "peça" que mexe (o scroll em si) -> Cinza escuro */
+::-webkit-scrollbar-thumb {
+  background: #333; 
+  border-radius: 4px;
+}
+
+/* Quando passa o mouse no scroll -> Fica roxo */
+::-webkit-scrollbar-thumb:hover {
+  background: #9c27b0; 
+}
+
+/* --- 2. BOTÕES DE FECHAR (X) --- */
+/* Remove fundo, borda e deixa o X branco */
+
+.modal-close, 
+.catalog-large-close, 
+.lightbox-close,
+.remove-trait-btn { /* Inclui o botão de remover habilidade do wizard */
+  background: transparent !important;
+  border: none !important;
+  color: #fff !important;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0 8px;
+  line-height: 1;
+  opacity: 0.7;
+  transition: 0.2s;
+  box-shadow: none !important; /* Remove sombra se tiver */
+}
+
+.modal-close:hover, 
+.catalog-large-close:hover,
+.lightbox-close:hover,
+.remove-trait-btn:hover {
+  color: #f44336 !important; /* Vermelho ao passar o mouse */
+  background: transparent !important;
+  opacity: 1;
+}
+
+/* Ajuste específico para o botão de remover habilidade no Wizard (para não ficar gigante) */
+.remove-trait-btn {
+    font-size: 18px !important;
+    color: #d32f2f !important;
+}
+.remove-trait-btn:hover {
+    color: #ff5252 !important;
+}
