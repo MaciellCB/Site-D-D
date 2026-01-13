@@ -51,6 +51,7 @@ const DRACONIC_ANCESTRIES = {
 // --- VARIÁVEIS GLOBAIS ---
 let RACES_DB = [];
 let BACKGROUNDS_DB = [];
+let CLASSES_DB = [];
 let items = []; // Nova variável global
 
 /* =============================================================
@@ -262,33 +263,32 @@ var BASE_API_URL = (typeof API_URL !== 'undefined') ? API_URL : 'http://localhos
 // --- CARREGAMENTO DOS JSONs ---
 async function carregarDadosHeader() {
     try {
+        // Carrega Raças
         const raceRes = await fetch(`${BASE_API_URL}/catalog/races_db`); 
         if (raceRes.ok) RACES_DB = await raceRes.json();
 
+        // Carrega Antecedentes
         const bgRes = await fetch(`${BASE_API_URL}/catalog/backgrounds_db`);
         if (bgRes.ok) BACKGROUNDS_DB = await bgRes.json();
 
-        // --- NOVO: Carregar Itens ---
-        const itemRes = await fetch(`${BASE_API_URL}/catalog/items`);
-        if (itemRes.ok) {
-            items = await itemRes.json();
-            console.log("Itens carregados:", items.length);
+        // --- NOVO: Carregar Classes ---
+        const classRes = await fetch(`${BASE_API_URL}/catalog/classes_db`); // <--- Certifique-se que essa rota existe ou aponte para o arquivo JSON local
+        if (classRes.ok) {
+            CLASSES_DB = await classRes.json();
+        } else {
+             // Fallback local se a API falhar
+             try {
+                const classLocal = await fetch('backend/data/classes_db.json');
+                if(classLocal.ok) CLASSES_DB = await classLocal.json();
+             } catch(e) {}
         }
 
+        // Carrega Itens
+        const itemRes = await fetch(`${BASE_API_URL}/catalog/items`);
+        if (itemRes.ok) items = await itemRes.json();
+
     } catch (e) {
-        console.warn("Tentando carregar localmente (fallback)...");
-        try {
-            const raceLocal = await fetch('backend/data/races_db.json');
-            if(raceLocal.ok) RACES_DB = await raceLocal.json();
-
-            const bgLocal = await fetch('backend/data/backgrounds_db.json');
-            if(bgLocal.ok) BACKGROUNDS_DB = await bgLocal.json();
-
-            // Fallback Itens
-            const itemLocal = await fetch('backend/data/items.json');
-            if(itemLocal.ok) items = await itemLocal.json();
-
-        } catch(e2) { console.error("Erro fatal ao carregar dados.", e2); }
+        console.warn("Erro ao carregar dados:", e);
     }
 }
 carregarDadosHeader();
@@ -364,6 +364,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Novo modal de antecedentes
     const btnAnt = document.getElementById('btn-antecedente');
     if(btnAnt) btnAnt.addEventListener('click', openBackgroundSelectionModal);
+const elClasses = document.getElementById('input-classesHeader');
+    if (elClasses) {
+        // Remove readonly visualmente mudando o cursor
+        elClasses.style.cursor = 'pointer'; 
+        
+        // Remove event listeners antigos clonando o elemento (truque rápido)
+        // Ou garanta que o código antigo não rode.
+        // Adiciona o novo evento:
+        elClasses.addEventListener('click', openClassSelectionModal);
+    }
 });
 
 /* =============================================================
@@ -1077,6 +1087,395 @@ function openRaceSelectionModal() {
             });
         }
     }
+}
+
+/* =============================================================
+   SISTEMA DE SELEÇÃO DE CLASSES (DESIGN IDÊNTICO A RAÇA)
+   ============================================================= */
+function openClassSelectionModal() {
+    if (CLASSES_DB.length === 0) {
+        carregarDadosHeader().then(() => {
+             if(CLASSES_DB.length > 0) openClassSelectionModal();
+             else alert("Erro: Banco de classes vazio.");
+        });
+        return;
+    }
+
+    const existing = document.querySelector('.race-modal-overlay');
+    if (existing) existing.remove();
+
+    const listHtml = CLASSES_DB.map(c => 
+        `<div class="race-list-item" data-name="${c.name}">${c.name}</div>`
+    ).join('');
+
+    const overlay = document.createElement('div');
+    overlay.className = 'spell-modal-overlay race-modal-overlay';
+    overlay.style.zIndex = '12000';
+
+    overlay.innerHTML = `
+        <div class="spell-modal" style="width: 850px; height: 650px; max-height: 95vh;">
+            <div class="modal-header">
+                <h3>Escolher Classe</h3>
+                <button class="modal-close">✖</button>
+            </div>
+            
+            <div class="modal-body" style="padding: 0; overflow: hidden; display:flex; flex-direction:column; flex:1;">
+                <div class="race-catalog-container" style="flex:1; overflow:hidden;">
+                    <div class="race-list-col">
+                        ${listHtml}
+                    </div>
+
+                    <div class="race-details-col" id="class-details-content">
+                        <div style="color: #666; text-align: center; margin-top: 50px;">
+                            Selecione uma classe para ver os detalhes.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button id="btn-select-class" class="btn-add btn-save-modal" disabled>Selecionar</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+    if(typeof checkScrollLock === 'function') checkScrollLock();
+
+    let selectedClass = null;
+    let selectedSubclass = null;
+
+    const btnSelect = overlay.querySelector('#btn-select-class');
+    const detailsContainer = overlay.querySelector('#class-details-content');
+
+    overlay.querySelector('.modal-close').onclick = () => { overlay.remove(); checkScrollLock(); };
+
+    const items = overlay.querySelectorAll('.race-list-item');
+    items.forEach(item => {
+        item.onclick = () => {
+            items.forEach(i => i.classList.remove('selected'));
+            item.classList.add('selected');
+            const className = item.getAttribute('data-name');
+            selectedClass = CLASSES_DB.find(c => c.name === className);
+            selectedSubclass = null;
+            renderClassDetails(selectedClass);
+        };
+    });
+
+    btnSelect.onclick = () => {
+        if(selectedClass) {
+            aplicarClasseNaFicha(selectedClass, selectedSubclass);
+            overlay.remove();
+            checkScrollLock();
+        }
+    };
+
+    function renderClassDetails(cls) {
+        if (!cls) return;
+
+        // Resetar botão
+        btnSelect.removeAttribute('disabled');
+        btnSelect.textContent = `Selecionar ${cls.name}`;
+        btnSelect.style.background = '#9c27b0';
+
+        const imagePath = cls.image || 'img/dado.png';
+        
+        // HTML de Proficiências
+        let profHtml = '';
+        if(cls.proficiencies) {
+            if(cls.proficiencies.armor) profHtml += `<div><strong style="color:#e0aaff;">Armaduras:</strong> ${cls.proficiencies.armor.join(', ')}</div>`;
+            if(cls.proficiencies.weapons) profHtml += `<div><strong style="color:#e0aaff;">Armas:</strong> ${cls.proficiencies.weapons.join(', ')}</div>`;
+            if(cls.proficiencies.tools && cls.proficiencies.tools.length) profHtml += `<div><strong style="color:#e0aaff;">Ferramentas:</strong> ${cls.proficiencies.tools.join(', ')}</div>`;
+        }
+
+        // HTML das Características Base
+        const traitsHtml = cls.features ? cls.features.map(t => `
+            <div class="race-trait-item">
+                <div class="race-trait-name">${t.name}</div>
+                <div class="race-trait-desc">${t.description}</div>
+            </div>
+        `).join('') : '';
+
+        // HTML das Subclasses (Variations) - Igual ao design de Raça
+        let subclassesHtml = '';
+        if (cls.subclasses && cls.subclasses.length > 0) {
+            subclassesHtml = `
+                <div class="race-traits-title" style="margin-top:25px; color:#ffeb3b; border-top:1px solid #333; padding-top:15px;">
+                    Subclasses (Arquétipos/Juramentos)
+                </div>
+                <div style="font-size:12px; color:#888; margin-bottom:10px;">
+                    Você pode selecionar uma subclasse agora ou deixar para o nível apropriado.
+                </div>
+                <div class="variations-list">
+                    ${cls.subclasses.map((sub, idx) => `
+                        <div class="variation-card-wrapper">
+                            <div class="variation-header" data-idx="${idx}">
+                                <div style="display:flex; align-items:center; gap:10px; flex:1;">
+                                    <input type="radio" name="class_subclass" value="${idx}" id="sub_${idx}" data-checked="false">
+                                    <span class="variation-name">${sub.name}</span>
+                                </div>
+                                <span class="variation-arrow">▼</span>
+                            </div>
+                            
+                            <div class="variation-body">
+                                <div class="variation-desc-text">${sub.description || ''}</div>
+                                ${sub.features ? sub.features.map(feat => `
+                                    <div class="variation-feature-box">
+                                        <div class="variation-feature-title">★ ${feat.name}</div>
+                                        <div class="variation-feature-content">${feat.description}</div>
+                                    </div>
+                                `).join('') : ''}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        detailsContainer.innerHTML = `
+            <div class="race-detail-header">
+                <div class="race-img-container" onclick="window.openImageLightbox('${imagePath}')">
+                    <img src="${imagePath}" class="race-img-display" onerror="this.src='img/dado.png'">
+                </div>
+                <div class="race-title-box">
+                    <h2>${cls.name}</h2>
+                    <div class="race-info-line">
+                        <strong style="color:#9c27b0;">Dado de Vida:</strong> d${cls.hit_die}<br>
+                        <strong style="color:#9c27b0;">Salvaguardas:</strong> ${cls.saving_throws.join(', ')}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="race-traits-title" style="margin-top:15px;">Proficiências Iniciais & Equipamento</div>
+            <div style="font-size:13px; color:#ccc; line-height:1.6; background:#111; padding:10px; border-radius:6px; border:1px solid #333;">
+                ${profHtml}
+                <div style="margin-top:6px; padding-top:6px; border-top:1px solid #333;">
+                    <strong style="color:#e0aaff;">Equipamento:</strong> ${cls.equipment ? cls.equipment.join('<br>') : '-'}
+                </div>
+            </div>
+
+            <div class="race-traits-title" style="margin-top:20px;">Características de Classe</div>
+            <div>${traitsHtml}</div>
+            
+            ${subclassesHtml}
+        `;
+
+        // Lógica dos Radio Buttons (Acordeão)
+        if (cls.subclasses && cls.subclasses.length > 0) {
+            const allRadios = detailsContainer.querySelectorAll('input[name="class_subclass"]');
+
+            detailsContainer.querySelectorAll('.variation-header').forEach(header => {
+                header.addEventListener('click', (e) => {
+                    if (e.target.type === 'radio') return;
+                    header.closest('.variation-card-wrapper').classList.toggle('open');
+                });
+            });
+
+            allRadios.forEach(radio => {
+                radio.addEventListener('click', (e) => {
+                    const idx = parseInt(radio.value);
+                    const isAlreadyChecked = radio.getAttribute('data-checked') === 'true';
+
+                    allRadios.forEach(r => r.setAttribute('data-checked', 'false'));
+
+                    if (isAlreadyChecked) {
+                        radio.checked = false;
+                        radio.setAttribute('data-checked', 'false');
+                        selectedSubclass = null;
+                        btnSelect.textContent = `Selecionar ${cls.name}`;
+                    } else {
+                        radio.checked = true;
+                        radio.setAttribute('data-checked', 'true');
+                        selectedSubclass = cls.subclasses[idx];
+                        btnSelect.textContent = `Selecionar ${cls.name} (${selectedSubclass.name})`;
+                        
+                        // Fecha outros e abre este
+                        detailsContainer.querySelectorAll('.variation-card-wrapper').forEach(c => c.classList.remove('open'));
+                        radio.closest('.variation-card-wrapper').classList.add('open');
+                    }
+                });
+            });
+        }
+    }
+}
+
+// Função de Aplicação Atualizada para suportar Subclasse
+function aplicarClasseNaFicha(cls, subCls) {
+    if (typeof state === 'undefined') return;
+
+    // 1. Atualizar Nível/Classes no Header
+    const classKey = cls.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    if (!state.niveisClasses) state.niveisClasses = {};
+    
+    // Lógica simples: Soma 1 nível ou define como 1
+    if (state.niveisClasses[classKey]) {
+        state.niveisClasses[classKey] = parseInt(state.niveisClasses[classKey]) + 1;
+    } else {
+        state.niveisClasses[classKey] = 1;
+    }
+    
+    // Define Dado de Vida Principal (se for a primeira classe ou maior)
+    state.hitDie = `d${cls.hit_die}`;
+
+    // 2. Adicionar Habilidades da Classe Base
+    if (cls.features) {
+        cls.features.forEach(feat => {
+            // Verifica se já tem para não duplicar (opcional)
+            const exists = state.abilities && state.abilities.find(a => a.title === feat.name && a.class === cls.name);
+            if (!exists) {
+                if (!state.abilities) state.abilities = [];
+                state.abilities.unshift({
+                    id: Date.now() + Math.floor(Math.random() * 100000),
+                    title: feat.name,
+                    description: feat.description,
+                    expanded: false,
+                    active: true,
+                    category: 'Classe',
+                    class: cls.name,
+                    subclass: ''
+                });
+            }
+        });
+    }
+
+    // 3. Adicionar Habilidades da Subclasse (se selecionada)
+    if (subCls && subCls.features) {
+        subCls.features.forEach(feat => {
+            const exists = state.abilities && state.abilities.find(a => a.title === feat.name && a.subclass === subCls.name);
+            if (!exists) {
+                if (!state.abilities) state.abilities = [];
+                state.abilities.unshift({
+                    id: Date.now() + Math.floor(Math.random() * 100000),
+                    title: feat.name,
+                    description: feat.description,
+                    expanded: false,
+                    active: true,
+                    category: 'Subclasse',
+                    class: cls.name,
+                    subclass: subCls.name
+                });
+            }
+        });
+    }
+
+    // 4. Processar Escolhas (Perícias) - Se for nível 1
+    let totalLevels = 0;
+    Object.values(state.niveisClasses).forEach(l => totalLevels += parseInt(l));
+    
+    if (totalLevels === 1 && cls.skills_list) { // Apenas no nível 1 global do personagem
+        processarMecanicas({
+            chooseSkillFrom: cls.skills_list,
+            countSkills: cls.skills_count,
+            name: cls.name
+        });
+    }
+
+    // Atualizar visual
+    atualizarTextoClassesHeader();
+    if (typeof saveStateToServer === 'function') saveStateToServer();
+    window.dispatchEvent(new CustomEvent('sheet-updated'));
+}
+
+// Função auxiliar para renderizar os detalhes (Direita do Modal)
+function renderClassDetails(cls, container, btnSelect) {
+    if (!cls) return;
+
+    btnSelect.removeAttribute('disabled');
+    btnSelect.textContent = `Selecionar ${cls.name}`;
+    btnSelect.style.background = '#9c27b0';
+
+    const imagePath = cls.image || 'img/dado.png'; // Garanta que tenha uma imagem ou fallback
+
+    // Formata Salvaguardas (Ex: "Força, Constituição")
+    const saves = cls.saving_throws ? cls.saving_throws.join(', ') : '-';
+    
+    // Formata Dado de Vida
+    const hitDie = cls.hit_die ? `d${cls.hit_die}` : '?';
+
+    // Monta HTML de Proficiências (Armaduras e Armas)
+    let profHtml = '';
+    if(cls.proficiencies) {
+        if(cls.proficiencies.armor) profHtml += `<div><strong style="color:#e0aaff;">Armaduras:</strong> ${cls.proficiencies.armor.join(', ')}</div>`;
+        if(cls.proficiencies.weapons) profHtml += `<div><strong style="color:#e0aaff;">Armas:</strong> ${cls.proficiencies.weapons.join(', ')}</div>`;
+    }
+
+    container.innerHTML = `
+        <div class="race-detail-header">
+            <div class="race-img-container" onclick="window.openImageLightbox('${imagePath}')">
+                <img src="${imagePath}" class="race-img-display" onerror="this.src='img/dado.png'">
+            </div>
+            <div class="race-title-box">
+                <h2>${cls.name}</h2>
+                <div class="race-info-line">
+                    <strong style="color:#9c27b0;">Dado de Vida:</strong> ${hitDie}<br>
+                    <strong style="color:#9c27b0;">Salvaguardas:</strong> ${saves}
+                </div>
+            </div>
+        </div>
+        
+        <div class="race-traits-title" style="margin-top:15px;">Proficiências Iniciais</div>
+        <div style="font-size:13px; color:#ccc; line-height:1.6; background:#111; padding:10px; border-radius:6px; border:1px solid #333;">
+            ${profHtml || "Nenhuma especificada."}
+        </div>
+
+        <div class="race-traits-title" style="margin-top:20px;">Características de Classe</div>
+        <div class="class-features-preview">
+            ${(cls.table || []).slice(0, 3).map(level => `
+                <div style="margin-bottom:5px; border-bottom:1px solid #333; padding-bottom:5px;">
+                    <strong style="color:#fff;">Nível ${level.level}:</strong> <span style="color:#aaa;">${level.features ? level.features.join(', ') : '-'}</span>
+                </div>
+            `).join('')}
+            <div style="font-size:11px; color:#666; margin-top:5px;">...veja mais na ficha após selecionar.</div>
+        </div>
+    `;
+}
+
+function aplicarClasseNaFicha(cls) {
+    if (typeof state === 'undefined') return;
+
+    // Normaliza a chave para o objeto state.niveisClasses (ex: "Mago" -> "mago")
+    const classKey = cls.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    // Inicializa se não existir
+    if (!state.niveisClasses) state.niveisClasses = {};
+
+    // LÓGICA SIMPLES: Se já tem a classe, soma +1 nível. Se não tem, define como 1.
+    // Se você quiser que o modal sempre "Resete" para nivel 1, mude para: state.niveisClasses = { [classKey]: 1 };
+    if (state.niveisClasses[classKey]) {
+        state.niveisClasses[classKey] = parseInt(state.niveisClasses[classKey]) + 1;
+    } else {
+        // Se for a primeira classe do personagem, talvez queira limpar as outras?
+        // Se quiser MULTICLASSE, mantenha como está.
+        // Se quiser SUBSTITUIR tudo pela nova, descomente a linha abaixo:
+        // state.niveisClasses = {}; 
+        
+        state.niveisClasses[classKey] = 1;
+    }
+
+    // Aplica Dado de Vida
+    if (cls.hit_die) {
+        state.hitDie = `d${cls.hit_die}`; // Ou lógica para multiclasse
+    }
+
+    // Aplica Proficiências de Salvaguarda (apenas se for nível 1 total, regra de D&D)
+    // Aqui estou aplicando sempre para simplificar, ajuste conforme sua regra.
+    if (cls.saving_throws) {
+        if(!state.proficiencias) state.proficiencias = {};
+        // Adicione lógica para marcar checkbox de salvaguarda nos atributos
+    }
+
+    // Adiciona Habilidades iniciais (Nível 1) na aba de Habilidades
+    // ... (Sua lógica de adicionar abilities baseada no array cls.features ou table) ...
+
+    // Processa escolhas (Perícias, Ferramentas) se houver no JSON da classe
+    // Exemplo: if (cls.chooseSkills) processarMecanicas({ chooseSkills: cls.chooseSkills, ... });
+
+    // Atualiza o Header Visualmente
+    atualizarTextoClassesHeader(); // Essa função já existe no seu código original
+    
+    // Salva
+    if (typeof saveStateToServer === 'function') saveStateToServer();
+    window.dispatchEvent(new CustomEvent('sheet-updated'));
 }
 
 /* =============================================================

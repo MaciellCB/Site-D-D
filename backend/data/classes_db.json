@@ -1,75 +1,1331 @@
 [
   {
-    "name": "Guerreiro",
-    "hitDie": 10,
-    "description": "Um mestre do combate marcial, perito em uma variedade de armas e armaduras.",
-    "savingThrows": ["Força", "Constituição"],
-    "proficiencies": ["Todas as armaduras", "Escudos", "Armas simples", "Armas marciais"],
-    "subclassLevel": 3, 
-    "chooseSkills": {
-      "count": 2,
-      "from": ["Acrobacia", "Adestrar Animais", "Atletismo", "História", "Intuição", "Intimidação", "Percepção", "Sobrevivência"]
+    "name": "Artífice",
+    "image": "img/classes/artifice.png",
+    "hit_die": 8,
+    "primary_ability": "Inteligência",
+    "subclass_level": 3,
+    "saving_throws": ["Constituição", "Inteligência"],
+    "proficiencies": {
+      "armor": ["Armaduras Leves", "Armaduras Médias", "Escudos"],
+      "weapons": ["Armas Simples", "Armas de Fogo"],
+      "tools": ["Ferramentas de Ladrão", "Ferramentas de Funileiro", "Um tipo de ferramenta de artesão à escolha"]
     },
+    "skills_count": 2,
+    "skills_list": ["Arcanismo", "História", "Investigação", "Medicina", "Natureza", "Percepção", "Prestidigitação"],
     "equipment": [
-      "Cota de malha",
-      "Espada longa",
-      "Escudo",
-      "Besta leve e 20 virotes",
-      "Pacote de explorador"
+      "Duas armas simples à sua escolha",
+      "Uma besta leve e 20 virotes",
+      "(a) Armadura de couro batido ou (b) Lórica de escamas",
+      "Ferramentas de ladrão e um kit de explorador"
     ],
     "features": [
-      {
-        "name": "Retomar o Fôlego",
-        "level": 1,
-        "desc": "Você possui uma reserva de vitalidade limitada que pode usar para se proteger. No seu turno, você pode usar uma ação bônus para recuperar pontos de vida igual a 1d10 + seu nível de guerreiro."
-      },
-      {
-        "name": "Estilo de Luta",
-        "level": 1,
-        "desc": "Você adota um estilo de combate particular que será sua especialidade."
-      }
+      { "name": "Funilaria Mágica", "description": "Imbua objetos mundanos com magia menor (luz, som, odores)." },
+      { "name": "Conjuração", "description": "Conjure magias através de suas ferramentas." },
+      { "name": "Infundir Item", "description": "Crie itens mágicos temporários com infusões conhecidas." }
     ],
     "subclasses": [
       {
-        "name": "Campeão",
-        "description": "O arquétipo do Campeão foca no desenvolvimento da força bruta e excelência física.",
+        "name": "Alquimista",
+        "description": "Mestre em poções e elixires.",
         "features": [
-           { "name": "Crítico Aprimorado", "desc": "Seus ataques com arma adquirem margem de crítico 19-20." }
+          { "name": "Proficiência com Ferramentas", "description": "Ganha proficiência com suprimentos de alquimista." },
+          { "name": "Elixir Experimental", "description": "Crie elixires com efeitos aleatórios ou escolhidos gastando magia." }
         ]
       },
       {
-        "name": "Mestre de Batalha",
-        "description": "Aqueles que seguem o arquétipo do Mestre de Batalha empregam técnicas marciais passadas de geração em geração.",
+        "name": "Armeiro",
+        "description": "Usa armadura como uma segunda pele e arma.",
         "features": [
-           { "name": "Superioridade em Combate", "desc": "Você aprende manobras abastecidas por dados de superioridade." }
+          { "name": "Ferramentas do Ofício", "description": "Proficiência em armadura pesada e ferreiro." },
+          { "name": "Armadura Arcana", "description": "Transforme armadura em canalizador mágico e arma (Guardião ou Infiltrador)." }
+        ]
+      },
+      {
+        "name": "Artilheiro",
+        "description": "Especialista em canhões mágicos e explosões.",
+        "features": [
+          { "name": "Canhão Eldritch", "description": "Crie um canhão mágico (Lança-chamas, Balista ou Protetor)." },
+          { "name": "Arma Arcana", "description": "Transforme varinha/cajado em arma de dano extra." }
+        ]
+      },
+      {
+        "name": "Ferreiro de Batalha",
+        "description": "Combatente com um constructo leal.",
+        "features": [
+          { "name": "Pronto para a Batalha", "description": "Use INT para ataques com armas mágicas. Proficiência marcial." },
+          { "name": "Defensor de Aço", "description": "Comande um constructo mecânico em batalha." }
+        ]
+      },
+      {
+        "name": "Arquivista",
+        "description": "Manipula informação e mentes artificiais.",
+        "features": [
+          { "name": "Mente Artificial", "description": "Desperte uma mente em um objeto para ganhar perícias e ataques psíquicos." }
         ]
       }
     ]
   },
   {
-    "name": "Mago",
-    "hitDie": 6,
-    "description": "Um usuário de magia escolástico capaz de manipular as estruturas da realidade.",
-    "savingThrows": ["Inteligência", "Sabedoria"],
-    "proficiencies": ["Adagas", "Dardos", "Fundas", "Bordões", "Bestas leves"],
-    "subclassLevel": 2,
-    "chooseSkills": {
-      "count": 2,
-      "from": ["Arcanismo", "História", "Intuição", "Investigação", "Medicina", "Religião"]
+    "name": "Bárbaro",
+    "image": "img/classes/barbaro.png",
+    "hit_die": 12,
+    "primary_ability": "Força",
+    "subclass_level": 3,
+    "saving_throws": ["Força", "Constituição"],
+    "proficiencies": {
+      "armor": ["Armaduras Leves", "Armaduras Médias", "Escudos"],
+      "weapons": ["Armas Simples", "Armas Marciais"],
+      "tools": []
     },
-    "equipment": ["Bordão", "Bolsa de componentes", "Livro de magias", "Pacote de estudioso"],
+    "skills_count": 2,
+    "skills_list": ["Atletismo", "Intimidação", "Lidar com Animais", "Natureza", "Percepção", "Sobrevivência"],
+    "equipment": [
+      "(a) Um machado grande ou (b) Qualquer arma marcial corpo a corpo",
+      "(a) Duas machadinhas ou (b) Qualquer arma simples",
+      "Um kit de aventureiro e quatro azagaias"
+    ],
     "features": [
+      { "name": "Fúria", "description": "Entre em fúria para ganhar resistência a dano físico e bônus de dano." },
+      { "name": "Defesa sem Armadura", "description": "Sua CA é 10 + DES + CON quando sem armadura." },
+      { "name": "Ataque Imprudente", "description": "Ganhe vantagem no ataque em troca de conceder vantagem aos inimigos." },
+      { "name": "Sentido de Perigo", "description": "Vantagem em salvaguardas de Destreza contra efeitos visíveis." }
+    ],
+    "subclasses": [
       {
-        "name": "Conjuração",
-        "level": 1,
-        "desc": "Como um estudante de magia arcana, você possui um livro de magias contendo magias que mostram os primeiros vislumbres do seu verdadeiro poder."
+        "name": "Caminho do Berserker",
+        "features": [
+          { "name": "Frenesi", "description": "Faça ataque extra como bônus em fúria (sofre exaustão)." }
+        ]
       },
       {
-        "name": "Recuperação Arcana",
-        "level": 1,
-        "desc": "Você aprendeu a recuperar um pouco de sua energia mágica estudando seu livro de magias."
+        "name": "Caminho Totêmico",
+        "features": [
+          { "name": "Espírito Totêmico", "description": "Escolha um animal (Urso, Águia, Lobo...) para ganhar benefícios passivos em fúria." },
+          { "name": "Buscador de Espíritos", "description": "Conjure Sentido Bestial e Falar com Animais como rituais." }
+        ]
+      },
+      {
+        "name": "Guardião Ancestral",
+        "features": [
+          { "name": "Protetores Ancestrais", "description": "Espíritos atrapalham inimigos que você ataca (desvantagem contra outros)." }
+        ]
+      },
+      {
+        "name": "Arauto da Tempestade",
+        "features": [
+          { "name": "Aura da Tempestade", "description": "Emana aura elemental (Fogo, Gelo ou Raio) enquanto em fúria." }
+        ]
+      },
+      {
+        "name": "Caminho do Fanático",
+        "features": [
+          { "name": "Fúria Divina", "description": "Cause dano extra radiante ou necrótico no primeiro ataque do turno." }
+        ]
+      },
+      {
+        "name": "Caminho da Besta",
+        "features": [
+          { "name": "Forma da Besta", "description": "Manifeste armas naturais (Mordida, Garras ou Cauda) ao entrar em fúria." }
+        ]
+      },
+      {
+        "name": "Magia Selvagem",
+        "features": [
+          { "name": "Onda Selvagem", "description": "Efeito mágico aleatório ocorre ao entrar em fúria." },
+          { "name": "Consciência Mágica", "description": "Detecte magia próxima." }
+        ]
+      },
+       {
+        "name": "Alma Selvagem",
+        "features": [
+          { "name": "Magia Persistente", "description": "Detectar magia sem gastar slots usando CON." },
+          { "name": "Onda Selvagem (UA)", "description": "Efeitos mágicos instáveis ao entrar em fúria." }
+        ]
       }
+    ]
+  },
+  {
+    "name": "Bardo",
+    "image": "img/classes/bardo.png",
+    "hit_die": 8,
+    "primary_ability": "Carisma",
+    "subclass_level": 3,
+    "saving_throws": ["Destreza", "Carisma"],
+    "proficiencies": {
+      "armor": ["Armaduras Leves"],
+      "weapons": ["Armas Simples", "Bestas de Mão", "Espadas Longas", "Rapieiras", "Espadas Curtas"],
+      "tools": ["Três instrumentos musicais à sua escolha"]
+    },
+    "skills_count": 3,
+    "skills_list": ["Qualquer perícia à sua escolha"],
+    "equipment": [
+      "(a) Uma rapieira, (b) Uma espada longa ou (c) Qualquer arma simples",
+      "(a) Kit de diplomata ou (b) Kit de artista",
+      "(a) Um alaúde ou (b) Qualquer outro instrumento musical",
+      "Uma armadura de couro e uma adaga"
     ],
-    "subclasses": [] 
+    "features": [
+      { "name": "Conjuração", "description": "Conjure magias usando Carisma e instrumentos." },
+      { "name": "Inspiração Bárdica", "description": "Conceda dados de bônus para aliados." },
+      { "name": "Pau para Toda Obra", "description": "Adicione meia proficiência em testes que não a possuam." },
+      { "name": "Cântico de Descanso", "description": "Cura extra durante descanso curto." }
+    ],
+    "subclasses": [
+      {
+        "name": "Colégio da Bravura",
+        "features": [
+          { "name": "Inspiração de Combate", "description": "Use inspiração para aumentar dano ou CA." },
+          { "name": "Proficiências Bônus", "description": "Armaduras médias, escudos e armas marciais." }
+        ]
+      },
+      {
+        "name": "Colégio do Conhecimento",
+        "features": [
+          { "name": "Palavras Cortantes", "description": "Use reação e inspiração para reduzir rolagens de inimigos." },
+          { "name": "Perícias Adicionais", "description": "Ganhe 3 perícias extras." }
+        ]
+      },
+      {
+        "name": "Colégio das Espadas",
+        "features": [
+          { "name": "Floreio de Lâmina", "description": "Use inspiração para manobras de combate e velocidade." },
+          { "name": "Estilo de Luta", "description": "Duelo ou Duas Armas." }
+        ]
+      },
+      {
+        "name": "Colégio do Glamour",
+        "features": [
+          { "name": "Manto de Inspiração", "description": "Conceda PV temporários e movimento tático aos aliados." },
+          { "name": "Performance Fascinante", "description": "Enfeitice espectadores com sua arte." }
+        ]
+      },
+      {
+        "name": "Colégio dos Sussurros",
+        "features": [
+          { "name": "Lâminas Psíquicas", "description": "Gaste inspiração para causar dano psíquico extra." },
+          { "name": "Palavras de Terror", "description": "Amedronte alguém conversando em particular." }
+        ]
+      },
+      {
+        "name": "Colégio da Eloquência",
+        "features": [
+          { "name": "Língua de Prata", "description": "Resultado mínimo de 10 em Persuasão/Enganação." },
+          { "name": "Palavras Perturbadoras", "description": "Reduza a salvaguarda do inimigo com inspiração." }
+        ]
+      },
+      {
+        "name": "Colégio da Criação",
+        "features": [
+          { "name": "Partícula de Potencial", "description": "Inspiração cria efeitos adicionais (dano, cura, vantagem)." },
+          { "name": "Desempenho da Criação", "description": "Crie itens não mágicos do nada." }
+        ]
+      },
+      {
+        "name": "Colégio dos Espíritos",
+        "features": [
+          { "name": "Contos do Além", "description": "Role na tabela de efeitos espirituais usando inspiração." },
+          { "name": "Sussurros Guiadores", "description": "Aprende o truque Orientação com alcance maior." }
+        ]
+      },
+      {
+          "name": "Colégio de Lorehold",
+          "features": [
+              { "name": "Companheiro Ancestral", "description": "Invoque um espírito em uma estátua (Curandeiro, Sábio ou Guerreiro)." }
+          ]
+      },
+      {
+          "name": "Colégio da Pena de Prata",
+          "features": [
+              { "name": "Espinhos Prateados", "description": "Reação para forçar rerrolagem em inimigos e conceder vantagem a aliados." }
+          ]
+      },
+      {
+          "name": "Colégio da Sátira",
+          "features": [
+              { "name": "Tolo Cambaleante", "description": "Cambalhota como ação bônus para disparar/desengajar e escalar." }
+          ]
+      }
+    ]
+  },
+  {
+    "name": "Bruxo",
+    "image": "img/classes/bruxo.png",
+    "hit_die": 8,
+    "primary_ability": "Carisma",
+    "subclass_level": 1,
+    "saving_throws": ["Sabedoria", "Carisma"],
+    "proficiencies": {
+      "armor": ["Armaduras Leves"],
+      "weapons": ["Armas Simples"],
+      "tools": []
+    },
+    "skills_count": 2,
+    "skills_list": ["Arcanismo", "Enganação", "História", "Intimidação", "Investigação", "Natureza", "Religião"],
+    "equipment": [
+      "(a) Uma besta leve e 20 virotes ou (b) Qualquer arma simples",
+      "(a) Uma bolsa de componentes ou (b) Um foco arcano",
+      "(a) Kit de erudito ou (b) Kit de explorador",
+      "Armadura de couro, qualquer arma simples e duas adagas"
+    ],
+    "features": [
+      { "name": "Magia de Pacto", "description": "Magias recuperam em descanso curto. Sempre no nível máximo." },
+      { "name": "Invocações Místicas", "description": "Poderes passivos e mágicos customizáveis (Nível 2)." },
+      { "name": "Dádiva do Pacto", "description": "Escolha no nível 3: Lâmina, Corrente, Tomo ou Talismã." }
+    ],
+    "subclasses": [
+      {
+        "name": "O Corruptor",
+        "features": [
+          { "name": "Bênção do Senhor das Trevas", "description": "Ganhe PV temporários ao matar inimigos." }
+        ]
+      },
+      {
+        "name": "O Grande Antigo",
+        "features": [
+          { "name": "Mente Desperta", "description": "Telepatia unilateral." }
+        ]
+      },
+      {
+        "name": "O Arquifada",
+        "features": [
+          { "name": "Presença Feérica", "description": "Ação para amedrontar ou enfeitiçar criaturas próximas." }
+        ]
+      },
+      {
+        "name": "Hexblade",
+        "features": [
+          { "name": "Guerreiro Hex", "description": "Usa Carisma para atacar. Proficiência média/escudo." },
+          { "name": "Maldição da Lâmina Hex", "description": "Bônus de dano, critico expandido e cura contra alvo." }
+        ]
+      },
+      {
+        "name": "O Celestial",
+        "features": [
+          { "name": "Luz de Cura", "description": "Reserva de dados d6 para curar como ação bônus." },
+          { "name": "Truques Bônus", "description": "Aprende Luz e Chama Sagrada." }
+        ]
+      },
+      {
+        "name": "O Gênio",
+        "features": [
+          { "name": "Vaso do Gênio", "description": "Foco que adiciona dano elemental e serve de refúgio." }
+        ]
+      },
+      {
+        "name": "O Insondável",
+        "features": [
+          { "name": "Tentáculo das Profundezas", "description": "Invoque tentáculo que ataca e reduz velocidade." }
+        ]
+      },
+      {
+        "name": "O Morto-Vivo",
+        "features": [
+          { "name": "Forma de Pavor", "description": "Transformação que causa medo ao atacar e dá PV temporários." }
+        ]
+      },
+      {
+          "name": "O Imortal",
+          "features": [
+              { "name": "Entre os Mortos", "description": "Imunidade temporária a ataques de mortos-vivos." }
+          ]
+      },
+      {
+          "name": "A Luz Imortal",
+          "features": [
+              { "name": "Alma Radiante", "description": "Resistência radiante e bônus de dano fogo/radiante." }
+          ]
+      },
+      {
+          "name": "Shinigami",
+          "features": [
+              { "name": "Corvo Sentinela", "description": "Espírito-corvo concede visão no escuro e percepção." }
+          ]
+      },
+      {
+          "name": "Fantasma do Maquinário",
+          "features": [
+              { "name": "Sobrecarga de Informação", "description": "Desabilite eletrônicos e cause dano a quem os segura." }
+          ]
+      },
+      {
+          "name": "O Buscador",
+          "features": [
+              { "name": "Proteção da Aurora", "description": "Ação bônus para resistência a tudo por 1 rodada." }
+          ]
+      }
+    ]
+  },
+  {
+    "name": "Clérigo",
+    "image": "img/classes/clerigo.png",
+    "hit_die": 8,
+    "primary_ability": "Sabedoria",
+    "subclass_level": 1,
+    "saving_throws": ["Sabedoria", "Carisma"],
+    "proficiencies": {
+      "armor": ["Armaduras Leves", "Armaduras Médias", "Escudos"],
+      "weapons": ["Armas Simples"],
+      "tools": []
+    },
+    "skills_count": 2,
+    "skills_list": ["História", "Intuição", "Medicina", "Persuasão", "Religião"],
+    "equipment": [
+      "(a) Uma maça ou (b) Um martelo de guerra (se proficiente)",
+      "(a) Loriga de escamas, (b) Armadura de couro ou (c) Cota de malha (se proficiente)",
+      "(a) Uma besta leve e 20 virotes ou (b) Qualquer arma simples",
+      "(a) Kit de sacerdote ou (b) Kit de explorador",
+      "Um escudo e um símbolo sagrado"
+    ],
+    "features": [
+      { "name": "Conjuração", "description": "Magias divinas preparadas diariamente." },
+      { "name": "Canalizar Divindade", "description": "Efeitos poderosos (como Expulsar Mortos-vivos) recarregáveis (Nível 2)." }
+    ],
+    "subclasses": [
+      {
+        "name": "Domínio da Vida",
+        "features": [{ "name": "Discípulo da Vida", "description": "Curas são mais potentes (2 + nível da magia)." }]
+      },
+      {
+        "name": "Domínio da Guerra",
+        "features": [{ "name": "Sacerdote da Guerra", "description": "Ataques com arma como ação bônus limitados." }]
+      },
+      {
+        "name": "Domínio da Luz",
+        "features": [{ "name": "Sinalizador de Proteção", "description": "Reação para impor desvantagem em ataques contra você." }]
+      },
+      {
+        "name": "Domínio da Tempestade",
+        "features": [{ "name": "Ira da Tempestade", "description": "Reação para causar dano elétrico ao ser atacado." }]
+      },
+      {
+        "name": "Domínio da Trapaça",
+        "features": [{ "name": "Bênção do Trapaceiro", "description": "Conceda vantagem em Furtividade a outros." }]
+      },
+      {
+        "name": "Domínio do Conhecimento",
+        "features": [{ "name": "Bênçãos do Conhecimento", "description": "Idiomas e perícias com dobro de proficiência." }]
+      },
+      {
+        "name": "Domínio da Natureza",
+        "features": [{ "name": "Acólito da Natureza", "description": "Truque de druida e perícia de natureza." }]
+      },
+      {
+        "name": "Domínio da Forja",
+        "features": [{ "name": "Bênção da Forja", "description": "Torne uma arma ou armadura mágica (+1)." }]
+      },
+      {
+        "name": "Domínio da Sepultura",
+        "features": [{ "name": "Círculo da Mortalidade", "description": "Cura máxima em alvos com 0 PV. Detecta mortos-vivos." }]
+      },
+      {
+        "name": "Domínio do Crepúsculo",
+        "features": [
+          { "name": "Olhos da Noite", "description": "Visão no escuro 90m compartilhável." },
+          { "name": "Bênção Vigilante", "description": "Dê vantagem na iniciativa." }
+        ]
+      },
+      {
+        "name": "Domínio da Paz",
+        "features": [{ "name": "Laço de Fortalecimento", "description": "Vínculo que adiciona d4 em jogadas." }]
+      },
+      {
+        "name": "Domínio da Ordem",
+        "features": [{ "name": "Voz da Autoridade", "description": "Aliado ataca como reação quando você conjura nele." }]
+      },
+      {
+        "name": "Domínio da Solidariedade",
+        "features": [{ "name": "Ação de Solidariedade", "description": "Ataque extra ao usar ação Ajudar. Proficiência armadura pesada." }]
+      },
+      {
+        "name": "Domínio da Força",
+        "features": [{ "name": "Acólito da Força", "description": "Truque de druida e proficiência em perícia física/natureza." }]
+      },
+      {
+        "name": "Domínio da Ambição",
+        "features": [{ "name": "Sinalizador de Proteção", "description": "Cegue atacantes com luz." }]
+      },
+      {
+        "name": "Domínio do Zelo",
+        "features": [{ "name": "Sacerdote do Zelo", "description": "Ataque extra com arma como ação bônus." }]
+      },
+      {
+        "name": "Domínio do Destino",
+        "features": [
+            { "name": "Presságios e Sinais", "description": "Conjure Augúrio sem slot." },
+            { "name": "Laços que Unem", "description": "Vínculo para aumentar dano ou cura." }
+        ]
+      },
+      {
+        "name": "Domínio da Cidade",
+        "features": [
+            { "name": "Coração da Cidade", "description": "Vantagem social em ambientes urbanos." },
+            { "name": "Habilidades Adicionais", "description": "Truque Ligar/Desligar e proficiência veículos/armas de fogo." }
+        ]
+      },
+      {
+        "name": "Domínio de Proteção",
+        "features": [{ "name": "Escudo dos Fiéis", "description": "Reação para impor desvantagem em ataque a aliado adjacente." }]
+      },
+      {
+        "name": "Domínio da Unidade",
+        "features": [{ "name": "Laço de Fortalecimento", "description": "Vínculo compartilhado para adicionar d4 em jogadas." }]
+      },
+      {
+        "name": "Domínio Arcano",
+        "features": [{ "name": "Iniciado Arcano", "description": "Aprende dois truques de Mago e perícia Arcanismo." }]
+      },
+      {
+        "name": "Domínio da Morte",
+        "features": [{ "name": "Ceifador", "description": "Truques de necromancia atingem dois alvos." }]
+      }
+    ]
+  },
+  {
+    "name": "Druida",
+    "image": "img/classes/druida.png",
+    "hit_die": 8,
+    "primary_ability": "Sabedoria",
+    "subclass_level": 2,
+    "saving_throws": ["Inteligência", "Sabedoria"],
+    "proficiencies": {
+      "armor": ["Armaduras Leves", "Armaduras Médias", "Escudos (apenas não-metálicos)"],
+      "weapons": ["Adagas", "Azagaias", "Bastões", "Cimitarras", "Clavas", "Dardos", "Foices curtas", "Fundas", "Lanças"],
+      "tools": ["Kit de Herbalismo"]
+    },
+    "skills_count": 2,
+    "skills_list": ["Arcanismo", "Intuição", "Lidar com Animais", "Medicina", "Natureza", "Percepção", "Religião", "Sobrevivência"],
+    "equipment": [
+      "(a) Um escudo de madeira ou (b) Qualquer arma simples",
+      "(a) Uma cimitarra ou (b) Qualquer arma simples corpo a corpo",
+      "Armadura de couro, kit de aventureiro e um foco druídico"
+    ],
+    "features": [
+      { "name": "Druídico", "description": "Língua secreta." },
+      { "name": "Conjuração", "description": "Magias da natureza preparadas." },
+      { "name": "Forma Selvagem", "description": "Transforme-se em bestas (Nível 2)." }
+    ],
+    "subclasses": [
+      {
+        "name": "Círculo da Terra",
+        "features": [{ "name": "Recuperação Natural", "description": "Recupere slots em descanso curto." }]
+      },
+      {
+        "name": "Círculo da Lua",
+        "features": [
+          { "name": "Forma Selvagem de Combate", "description": "Transforme-se como ação bônus. Formas mais fortes." }
+        ]
+      },
+      {
+        "name": "Círculo dos Sonhos",
+        "features": [{ "name": "Bálsamo da Corte de Verão", "description": "Reserva de dados de cura à distância." }]
+      },
+      {
+        "name": "Círculo do Pastor",
+        "features": [{ "name": "Totem Espiritual", "description": "Aura animal que buffa aliados." }]
+      },
+      {
+        "name": "Círculo dos Esporos",
+        "features": [
+          { "name": "Halo de Esporos", "description": "Dano necrótico reativo em área." },
+          { "name": "Entidade Simbiótica", "description": "PV temporários e dano extra melee usando Forma Selvagem." }
+        ]
+      },
+      {
+        "name": "Círculo das Estrelas",
+        "features": [
+          { "name": "Mapa Estelar", "description": "Truques e magias de guia gratuitos." },
+          { "name": "Forma Estrelada", "description": "Assuma forma de constelação (Arqueiro, Cálice, Dragão)." }
+        ]
+      },
+      {
+        "name": "Círculo do Fogo Selvagem",
+        "features": [{ "name": "Espírito de Fogo", "description": "Invoque um companheiro elemental de fogo." }]
+      },
+      {
+        "name": "Círculo do Primordial",
+        "features": [{ "name": "Companheiro Primordial", "description": "Invoque um guardião ancestral (dinossauro/besta) para lutar." }]
+      },
+      {
+        "name": "Círculo do Crepúsculo",
+        "features": [{ "name": "Foice da Colheita", "description": "Reserva de dados para causar dano necrótico e curar." }]
+      }
+    ]
+  },
+  {
+    "name": "Feiticeiro",
+    "image": "img/classes/feiticeiro.png",
+    "hit_die": 6,
+    "primary_ability": "Carisma",
+    "subclass_level": 1,
+    "saving_throws": ["Constituição", "Carisma"],
+    "proficiencies": {
+      "armor": [],
+      "weapons": ["Adagas", "Dardos", "Fundas", "Bastões", "Bestas Leves"],
+      "tools": []
+    },
+    "skills_count": 2,
+    "skills_list": ["Arcanismo", "Enganação", "Intimidação", "Intuição", "Persuasão", "Religião"],
+    "equipment": [
+      "(a) Uma besta leve e 20 virotes ou (b) Qualquer arma simples",
+      "(a) Uma bolsa de componentes ou (b) Um foco arcano",
+      "(a) Kit de aventureiro ou (b) Kit de explorador",
+      "Duas adagas"
+    ],
+    "features": [
+      { "name": "Conjuração", "description": "Magia inata. Conhece magias fixas." },
+      { "name": "Fonte de Magia", "description": "Pontos de Feitiçaria para criar slots (Nível 2)." },
+      { "name": "Metamagia", "description": "Modifique magias (Nível 3)." }
+    ],
+    "subclasses": [
+      {
+        "name": "Linhagem Dracônica",
+        "features": [
+          { "name": "Resiliência Dracônica", "description": "PV extra e CA natural 13+DES." },
+          { "name": "Ancestral Dragão", "description": "Afinidade elemental e idioma." }
+        ]
+      },
+      {
+        "name": "Magia Selvagem",
+        "features": [
+          { "name": "Onda de Magia Selvagem", "description": "Chance de efeitos aleatórios ao conjurar." },
+          { "name": "Marés do Caos", "description": "Ganhe vantagem à vontade (recarga com Onda)." }
+        ]
+      },
+      {
+        "name": "Alma Divina",
+        "features": [
+          { "name": "Magia Divina", "description": "Acesso à lista de Clérigo." },
+          { "name": "Favorecido pelos Deuses", "description": "Adicione 2d4 a um teste falho." }
+        ]
+      },
+      {
+        "name": "Magia das Sombras",
+        "features": [
+          { "name": "Olhos da Escuridão", "description": "Visão no escuro 36m." },
+          { "name": "Força da Sepultura", "description": "Chance de não cair a 0 PV." }
+        ]
+      },
+      {
+        "name": "Feitiçaria da Tempestade",
+        "features": [
+          { "name": "Magia Tempestuosa", "description": "Voo curto ao conjurar magias." }
+        ]
+      },
+      {
+        "name": "Mente Aberrante",
+        "features": [
+          { "name": "Feitiços Psiônicos", "description": "Magias extras trocáveis." },
+          { "name": "Fala Telepática", "description": "Comunicação mental." }
+        ]
+      },
+      {
+        "name": "Alma Mecânica",
+        "features": [
+          { "name": "Magia Mecânica", "description": "Magias de ordem e proteção." },
+          { "name": "Restaurar o Equilíbrio", "description": "Anule vantagem/desvantagem alheia." }
+        ]
+      },
+      {
+        "name": "Alma Lunar",
+        "features": [
+          { "name": "Fogo da Lua", "description": "Truques aprimorados." },
+          { "name": "Feitiços Lunares", "description": "Magias baseadas nas fases da lua." }
+        ]
+      },
+      {
+          "name": "Alma Piromantica",
+          "features": [
+              { "name": "Coração de Fogo", "description": "Cause dano de fogo em área ao conjurar magias de fogo." }
+          ]
+      },
+      {
+          "name": "Alma Favorecida",
+          "features": [
+              { "name": "Magia Divina / Resiliência", "description": "Acesso a clérigo, +1 PV por nível e bônus em testes." }
+          ]
+      },
+      {
+          "name": "Alma Gigante",
+          "features": [
+              { "name": "Marca da Ordenação", "description": "PV extra e magias baseadas no tipo de gigante." }
+          ]
+      },
+      {
+          "name": "Feitiçaria da Fênix",
+          "features": [
+              { "name": "Manto de Chamas", "description": "Aura de fogo que causa dano e aumenta suas magias." }
+          ]
+      },
+      {
+          "name": "Alma Psiônica",
+          "features": [
+              { "name": "Talento Psiônico", "description": "Dado psiônico para magias sutis e telepatia." }
+          ]
+      },
+      {
+          "name": "Mente Marinha",
+          "features": [
+              { "name": "Alma do Mar", "description": "Natação, respirar água e maldições elementais em truques." }
+          ]
+      },
+      {
+          "name": "Mente Sombria (UA)",
+          "features": [
+              { "name": "Olhos da Escuridão", "description": "Visão no escuro e ver através de escuridão mágica." },
+              { "name": "Força da Sepultura", "description": "Chance de não cair a 0 PV." }
+          ]
+      },
+      {
+          "name": "Feitiçaria de Pedra",
+          "features": [
+              { "name": "Durabilidade da Pedra", "description": "Proficiência em armas/escudos, +1 PV/nível e CA baseada em CON." }
+          ]
+      }
+    ]
+  },
+  {
+    "name": "Guerreiro",
+    "image": "img/classes/guerreiro.png",
+    "hit_die": 10,
+    "primary_ability": "Força ou Destreza",
+    "subclass_level": 3,
+    "saving_throws": ["Força", "Constituição"],
+    "proficiencies": {
+      "armor": ["Todas as Armaduras", "Escudos"],
+      "weapons": ["Armas Simples", "Armas Marciais"],
+      "tools": []
+    },
+    "skills_count": 2,
+    "skills_list": ["Acrobacia", "Atletismo", "História", "Intimidação", "Intuição", "Lidar com Animais", "Percepção", "Sobrevivência"],
+    "equipment": [
+      "(a) Cota de malha ou (b) Armadura de couro, arco longo e 20 flechas",
+      "(a) Uma arma marcial e um escudo ou (b) Duas armas marciais",
+      "(a) Uma besta leve e 20 virotes ou (b) Duas machadinhas",
+      "(a) Kit de aventureiro ou (b) Kit de explorador"
+    ],
+    "features": [
+      { "name": "Estilo de Luta", "description": "Especialização (Defesa, Duelo, Arquearia...)." },
+      { "name": "Retomar o Fôlego", "description": "Cura própria com ação bônus." },
+      { "name": "Surto de Ação", "description": "Ação extra no turno (Nível 2)." }
+    ],
+    "subclasses": [
+      {
+        "name": "Campeão",
+        "features": [{ "name": "Crítico Aprimorado", "description": "Crítico em 19-20." }]
+      },
+      {
+        "name": "Mestre de Batalha",
+        "features": [{ "name": "Superioridade em Combate", "description": "Manobras táticas usando dados de superioridade." }]
+      },
+      {
+        "name": "Cavaleiro Arcano",
+        "features": [
+          { "name": "Lançamento de Feitiços", "description": "Magias de Mago (Abjuração/Evocação)." },
+          { "name": "Ligação de Arma", "description": "Invoque sua arma instantaneamente." }
+        ]
+      },
+      {
+        "name": "Samurai",
+        "features": [{ "name": "Espírito de Luta", "description": "PV temp e vantagem em ataques no turno." }]
+      },
+      {
+        "name": "Arqueiro Arcano",
+        "features": [
+            { "name": "Tiro Arcano", "description": "Efeitos mágicos ao disparar flechas." },
+            { "name": "Conhecimento Arcano", "description": "Proficiência e truque extra." }
+        ]
+      },
+      {
+        "name": "Cavaleiro do Eco",
+        "features": [
+            { "name": "Eco Manifesto", "description": "Crie um clone de sombra para atacar e teleportar." },
+            { "name": "Liberte a Encarnação", "description": "Ataque extra a partir do Eco." }
+        ]
+      },
+      {
+        "name": "Guerreiro Psiônico",
+        "features": [{ "name": "Poder Psiônico", "description": "Dados para reduzir dano, mover objetos ou atacar." }]
+      },
+      {
+        "name": "Cavaleiro Rúnico",
+        "features": [
+          { "name": "Escultor de Runas", "description": "Efeitos passivos/ativos em equipamentos." },
+          { "name": "Poder do Gigante", "description": "Fique grande e cause mais dano." }
+        ]
+      },
+      {
+          "name": "Porta-Estandarte",
+          "features": [{ "name": "Grito de Guerra", "description": "Cure aliados ao usar Segundo Fôlego." }]
+      },
+      {
+          "name": "Cavaleiro",
+          "features": [
+              { "name": "Marca Inabalável", "description": "Marque inimigos e ataque-os se ferirem aliados." },
+              { "name": "Nascido para a Sela", "description": "Vantagens em montaria." }
+          ]
+      },
+      {
+          "name": "Brutamontes",
+          "features": [{ "name": "Força Bruta", "description": "Dado extra de dano em todos os ataques." }]
+      },
+      {
+          "name": "Atirador de Elite",
+          "features": [{ "name": "Mira Firme", "description": "Ação bônus para ignorar cobertura e causar dano extra." }]
+      }
+    ]
+  },
+  {
+    "name": "Ladino",
+    "image": "img/classes/ladino.png",
+    "hit_die": 8,
+    "primary_ability": "Destreza",
+    "subclass_level": 3,
+    "saving_throws": ["Destreza", "Inteligência"],
+    "proficiencies": {
+      "armor": ["Armaduras Leves"],
+      "weapons": ["Armas Simples", "Bestas de Mão", "Espadas Longas", "Rapieiras", "Espadas Curtas"],
+      "tools": ["Ferramentas de Ladrão"]
+    },
+    "skills_count": 4,
+    "skills_list": ["Acrobacia", "Atletismo", "Atuação", "Enganação", "Furtividade", "Intimidação", "Intuição", "Investigação", "Percepção", "Persuasão", "Prestidigitação"],
+    "equipment": [
+      "(a) Uma rapieira ou (b) Uma espada curta",
+      "(a) Um arco curto e 20 flechas ou (b) Uma espada curta",
+      "(a) Kit de assaltante, (b) Kit de explorador ou (c) Kit de aventureiro",
+      "Armadura de couro, duas adagas e ferramentas de ladrão"
+    ],
+    "features": [
+      { "name": "Ataque Furtivo", "description": "Dano extra em ataques com vantagem ou aliado próximo." },
+      { "name": "Especialização", "description": "Dobro de proficiência em 2 perícias." },
+      { "name": "Gíria de Ladrão", "description": "Linguagem secreta." },
+      { "name": "Ação Astuta", "description": "Disparada, Desengajar ou Esconder-se como bônus (Nível 2)." }
+    ],
+    "subclasses": [
+      {
+        "name": "Ladrão",
+        "features": [
+          { "name": "Mãos Rápidas", "description": "Use itens ou ferramentas como ação bônus." },
+          { "name": "Trabalho no Segundo Andar", "description": "Escalada rápida." }
+        ]
+      },
+      {
+        "name": "Assassino",
+        "features": [
+          { "name": "Assassinar", "description": "Vantagem contra quem não agiu. Crítico automático em surpresa." },
+          { "name": "Habilidades Adicionais", "description": "Proficiência com kit de disfarce e veneno." }
+        ]
+      },
+      {
+        "name": "Trapaceiro Arcano",
+        "features": [
+          { "name": "Lançamento de Feitiços", "description": "Magias de Mago (Ilusão/Encantamento)." },
+          { "name": "Mão Mágica Aprimorada", "description": "Invisível e faz furtos." }
+        ]
+      },
+      {
+        "name": "Espadachim",
+        "features": [
+          { "name": "Trabalho de Pés Sofisticado", "description": "Ataque impede oportunidade." },
+          { "name": "Audácia Devassa", "description": "Iniciativa +CAR. Furtivo 1x1." }
+        ]
+      },
+      {
+        "name": "Inquisitivo",
+        "features": [
+          { "name": "Combate Perspicaz", "description": "Use Intuição para garantir Ataque Furtivo." },
+          { "name": "Ouvido para Mentira", "description": "Detectar mentiras aprimorado." }
+        ]
+      },
+      {
+        "name": "Batedor",
+        "features": [
+          { "name": "Escaramuçador", "description": "Reação para se afastar quando inimigo aproxima." },
+          { "name": "Sobrevivencialista", "description": "Perícias de natureza/sobrevivência dobradas." }
+        ]
+      },
+      {
+        "name": "Fantasma",
+        "features": [
+          { "name": "Sussurros dos Mortos", "description": "Troque proficiência após descanso." },
+          { "name": "Lamentos do Túmulo", "description": "Dano necrótico extra no ataque furtivo." }
+        ]
+      },
+      {
+        "name": "Lâmina da Alma",
+        "features": [
+          { "name": "Lâminas Psíquicas", "description": "Crie adagas mentais para atacar." },
+          { "name": "Poder Psiônico", "description": "Dados para melhorar testes." }
+        ]
+      },
+      {
+          "name": "Mestre do Crime",
+          "features": [
+              { "name": "Mestre da Intriga", "description": "Proficiência kits disfarce/falsificação/jogos e imitar falas." },
+              { "name": "Mestre de Táticas", "description": "Ação Ajudar como bônus com alcance maior." }
+          ]
+      },
+      {
+          "name": "Revivido",
+          "features": [
+              { "name": "Natureza Revivida", "description": "Não precisa comer/dormir, resistência a veneno." },
+              { "name": "Parafusos da Tumba", "description": "Ataque à distância necrótico." }
+          ]
+      }
+    ]
+  },
+  {
+    "name": "Mago",
+    "image": "img/classes/mago.png",
+    "hit_die": 6,
+    "primary_ability": "Inteligência",
+    "subclass_level": 2,
+    "saving_throws": ["Inteligência", "Sabedoria"],
+    "proficiencies": {
+      "armor": [],
+      "weapons": ["Adagas", "Dardos", "Fundas", "Bastões", "Bestas Leves"],
+      "tools": []
+    },
+    "skills_count": 2,
+    "skills_list": ["Arcanismo", "História", "Intuição", "Investigação", "Medicina", "Religião"],
+    "equipment": [
+      "(a) Um cajado ou (b) Uma adaga",
+      "(a) Uma bolsa de componentes ou (b) Um foco arcano",
+      "(a) Kit de erudito ou (b) Kit de explorador",
+      "Um grimório (livro de magias)"
+    ],
+    "features": [
+      { "name": "Conjuração", "description": "O maior arsenal de magias, baseado em grimório." },
+      { "name": "Recuperação Arcana", "description": "Recupere alguns slots em descanso curto." }
+    ],
+    "subclasses": [
+      {
+        "name": "Escola de Evocação",
+        "features": [
+            { "name": "Sábio da Evocação", "description": "Custo reduzido para copiar magias de Evocação." },
+            { "name": "Esculpir Feitiços", "description": "Proteja aliados de suas áreas de efeito." }
+        ]
+      },
+      {
+        "name": "Escola de Abjuração",
+        "features": [
+            { "name": "Sábio da Abjuração", "description": "Custo reduzido para copiar magias de Abjuração." },
+            { "name": "Proteção Arcana", "description": "Gera um escudo de PV extras ao conjurar abjuração." }
+        ]
+      },
+      {
+        "name": "Escola de Conjuração",
+        "features": [
+            { "name": "Mestre da Conjuração", "description": "Custo reduzido para copiar magias de Conjuração." },
+            { "name": "Conjuração Menor", "description": "Crie objetos visíveis do nada." }
+        ]
+      },
+      {
+        "name": "Escola de Adivinhação",
+        "features": [
+            { "name": "Sábio da Adivinhação", "description": "Custo reduzido para copiar magias de Adivinhação." },
+            { "name": "Presságio", "description": "Role 2d20 no início do dia e substitua jogadas." }
+        ]
+      },
+      {
+        "name": "Escola de Encantamento",
+        "features": [
+            { "name": "Sábio em Encantamento", "description": "Custo reduzido para copiar magias de Encantamento." },
+            { "name": "Olhar Hipnótico", "description": "Incapacite uma criatura com o olhar." }
+        ]
+      },
+      {
+        "name": "Escola de Ilusão",
+        "features": [
+            { "name": "Sábio das Ilusões", "description": "Custo reduzido para copiar magias de Ilusão." },
+            { "name": "Ilusão Menor Aprimorada", "description": "Cria som e imagem juntos." }
+        ]
+      },
+      {
+        "name": "Escola de Necromancia",
+        "features": [
+            { "name": "Sábio da Necromancia", "description": "Custo reduzido para copiar magias de Necromancia." },
+            { "name": "Colheita Sombria", "description": "Recupere PV ao matar com magia." }
+        ]
+      },
+      {
+        "name": "Escola de Transmutação",
+        "features": [
+            { "name": "Sábio da Transmutação", "description": "Custo reduzido para copiar magias de Transmutação." },
+            { "name": "Alquimia Menor", "description": "Mude propriedades de materiais temporariamente." }
+        ]
+      },
+      {
+        "name": "Mago de Guerra",
+        "features": [
+            { "name": "Deflexão Arcana", "description": "Reação para +2 CA ou +4 Salvaguarda." },
+            { "name": "Inteligência Tática", "description": "Some INT à iniciativa." }
+        ]
+      },
+      {
+        "name": "Cantor da Lâmina",
+        "features": [
+            { "name": "Treinamento", "description": "Proficiência armadura leve, arma e performance." },
+            { "name": "Canção das Lâminas", "description": "Modo de combate (CA, Vel, Conc) para magos." }
+        ]
+      },
+      {
+        "name": "Ordem dos Escribas",
+        "features": [
+            { "name": "Pena de Mago", "description": "Cria pena mágica." },
+            { "name": "Livro de Feitiços Desperto", "description": "Grimório é foco e permite mudar tipo de dano." }
+        ]
+      },
+      {
+        "name": "Cronurgia",
+        "features": [
+            { "name": "Mudança Cronológica", "description": "Force rerrolagem de dados." },
+            { "name": "Consciência Temporal", "description": "Some INT à iniciativa." }
+        ]
+      },
+      {
+        "name": "Graviturgia",
+        "features": [{ "name": "Ajustar Densidade", "description": "Altere peso e velocidade de criaturas." }]
+      },
+      {
+          "name": "Criador de Runas",
+          "features": [
+              { "name": "Runas da Compreensão", "description": "Compreender Idiomas sempre preparado." },
+              { "name": "Empoderamento Rúnico", "description": "Gaste slot para ativar efeitos de runa." }
+          ]
+      },
+      {
+          "name": "Tecnomancia",
+          "features": [{ "name": "Gênio da Tecnologia", "description": "Dispositivo como grimório. Copia magia mais barato." }]
+      },
+      {
+          "name": "Teurgia",
+          "features": [{ "name": "Inspiração Divina", "description": "Escolha domínio de Clérigo e ganhe suas magias." }]
+      }
+    ]
+  },
+  {
+    "name": "Monge",
+    "image": "img/classes/monge.png",
+    "hit_die": 8,
+    "primary_ability": "Destreza e Sabedoria",
+    "subclass_level": 3,
+    "saving_throws": ["Força", "Destreza"],
+    "proficiencies": {
+      "armor": [],
+      "weapons": ["Armas Simples", "Espadas Curtas"],
+      "tools": ["Um tipo de ferramenta de artesão ou instrumento musical"]
+    },
+    "skills_count": 2,
+    "skills_list": ["Acrobacia", "Atletismo", "Furtividade", "História", "Intuição", "Religião"],
+    "equipment": [
+      "(a) Uma espada curta ou (b) Qualquer arma simples",
+      "(a) Kit de aventureiro ou (b) Kit de explorador",
+      "10 dardos"
+    ],
+    "features": [
+      { "name": "Defesa sem Armadura", "description": "CA = 10 + DES + SAB." },
+      { "name": "Artes Marciais", "description": "Use DES em armas de monge, ataque bônus desarmado." },
+      { "name": "Ki", "description": "Pontos para habilidades especiais (Nível 2)." },
+      { "name": "Movimento sem Armadura", "description": "Aumenta velocidade (Nível 2)." }
+    ],
+    "subclasses": [
+      {
+        "name": "Caminho da Mão Aberta",
+        "features": [{ "name": "Técnica da Mão Aberta", "description": "Derrube ou empurre inimigos com Rajada de Golpes." }]
+      },
+      {
+        "name": "Caminho das Sombras",
+        "features": [{ "name": "Artes das Sombras", "description": "Conjure escuridão, silêncio e passos sem pegadas com Ki." }]
+      },
+      {
+        "name": "Caminho dos Quatro Elementos",
+        "features": [{ "name": "Discípulo dos Elementos", "description": "Conjure magias elementais usando Ki." }]
+      },
+      {
+        "name": "Caminho do Kensei",
+        "features": [{ "name": "Caminho do Kensei", "description": "Especialize-se em armas, ganhando defesa e dano." }]
+      },
+      {
+        "name": "Caminho do Mestre Bêbado",
+        "features": [{ "name": "Técnica do Bêbado", "description": "Movimento imprevisível e desengajar gratuito." }]
+      },
+      {
+        "name": "Caminho da Alma Solar",
+        "features": [{ "name": "Raio Solar Radiante", "description": "Dispare raios de luz com seus ataques." }]
+      },
+      {
+        "name": "Caminho da Misericórdia",
+        "features": [
+            { "name": "Instrumentos de Misericórdia", "description": "Proficiência medicina/intuição e máscara." },
+            { "name": "Mãos de Cura e Dor", "description": "Cure aliados ou cause dano necrótico com Ki." }
+        ]
+      },
+      {
+        "name": "Caminho do Eu Astral",
+        "features": [{ "name": "Braços do Eu Astral", "description": "Invoque braços espectrais para atacar com Sabedoria." }]
+      },
+      {
+        "name": "Caminho do Dragão Ascendente",
+        "features": [{ "name": "Sopro Dracônico", "description": "Exale energia elemental." }]
+      },
+      {
+          "name": "Caminho da Longa Morte",
+          "features": [{ "name": "Toque da Morte", "description": "Ganhe PV temporários ao matar." }]
+      },
+      {
+          "name": "Caminho da Tranquilidade",
+          "features": [{ "name": "Caminho da Tranquilidade", "description": "Santuário em si mesmo e cura por toque." }]
+      }
+    ]
+  },
+  {
+    "name": "Paladino",
+    "image": "img/classes/paladino.png",
+    "hit_die": 10,
+    "primary_ability": "Força e Carisma",
+    "subclass_level": 3,
+    "saving_throws": ["Sabedoria", "Carisma"],
+    "proficiencies": {
+      "armor": ["Todas as Armaduras", "Escudos"],
+      "weapons": ["Armas Simples", "Armas Marciais"],
+      "tools": []
+    },
+    "skills_count": 2,
+    "skills_list": ["Atletismo", "Intimidação", "Intuição", "Medicina", "Persuasão", "Religião"],
+    "equipment": [
+      "(a) Uma arma marcial e um escudo ou (b) Duas armas marciais",
+      "(a) Cinco azagaias ou (b) Qualquer arma simples corpo a corpo",
+      "(a) Kit de sacerdote ou (b) Kit de aventureiro",
+      "Cota de malha e um símbolo sagrado"
+    ],
+    "features": [
+      { "name": "Sentido Divino", "description": "Detecte celestiais, demônios e mortos-vivos." },
+      { "name": "Cura pelas Mãos", "description": "Reserva de cura por toque." },
+      { "name": "Estilo de Luta", "description": "Especialização em combate (Nível 2)." },
+      { "name": "Destruição Divina", "description": "Gaste slots para dano radiante extra (Nível 2)." }
+    ],
+    "subclasses": [
+      {
+        "name": "Juramento de Devoção",
+        "features": [
+          { "name": "Arma Sagrada", "description": "Adicione Carisma aos ataques." },
+          { "name": "Expulsar o Profano", "description": "Afugente demônios e mortos-vivos." }
+        ]
+      },
+      {
+        "name": "Juramento dos Anciões",
+        "features": [
+          { "name": "Ira da Natureza", "description": "Prenda inimigos com vinhas." },
+          { "name": "Expulsar os Infiéis", "description": "Expulse fadas e demônios." }
+        ]
+      },
+      {
+        "name": "Juramento de Vingança",
+        "features": [
+          { "name": "Voto de Inimizade", "description": "Vantagem contra um inimigo específico." },
+          { "name": "Renunciar ao Inimigo", "description": "Amedronte e prenda um alvo." }
+        ]
+      },
+      {
+        "name": "Juramento da Coroa",
+        "features": [
+          { "name": "Desafio do Campeão", "description": "Impeça inimigos de fugirem." },
+          { "name": "Virar o Jogo", "description": "Cura em área para feridos." }
+        ]
+      },
+      {
+        "name": "Juramento da Conquista",
+        "features": [
+          { "name": "Presença Dominadora", "description": "Amedronte inimigos em área." },
+          { "name": "Golpe Guiado", "description": "+10 no acerto." }
+        ]
+      },
+      {
+        "name": "Juramento de Redenção",
+        "features": [
+          { "name": "Emissário da Paz", "description": "Bônus em Persuasão." },
+          { "name": "Repreenda os Violentos", "description": "Reflita dano causado a outros." }
+        ]
+      },
+      {
+        "name": "Juramento de Glória",
+        "features": [
+          { "name": "Atleta Inigualável", "description": "Vantagem e pulo maior." },
+          { "name": "Golpe Inspirador", "description": "PV temp após Smite." }
+        ]
+      },
+      {
+        "name": "Juramento dos Observadores",
+        "features": [
+          { "name": "Vontade do Observador", "description": "Vantagem em salvaguardas mentais." },
+          { "name": "Rejeite o Extraplanar", "description": "Expulse seres de outros planos." }
+        ]
+      },
+      {
+        "name": "Quebrador de Juramento",
+        "features": [
+          { "name": "Controlar Mortos-Vivos", "description": "Domine um morto-vivo." },
+          { "name": "Aspecto Aterrorizante", "description": "Amedronte inimigos ao redor." }
+        ]
+      },
+      {
+          "name": "Juramento da Traição",
+          "features": [
+              { "name": "Conjurar Duplicata", "description": "Ilusão para vantagem em combate." },
+              { "name": "Golpe Venenoso", "description": "Dano venenoso extra." }
+          ]
+      },
+      {
+          "name": "Juramento de Heroísmo",
+          "features": [
+              { "name": "Golpe Lendário", "description": "Critico em 19-20." },
+              { "name": "Atleta Inigualável", "description": "Vantagem em atletismo/acrobacia." }
+          ]
+      }
+    ]
+  },
+  {
+    "name": "Patrulheiro",
+    "image": "img/classes/patrulheiro.png",
+    "hit_die": 10,
+    "primary_ability": "Destreza e Sabedoria",
+    "subclass_level": 3,
+    "saving_throws": ["Força", "Destreza"],
+    "proficiencies": {
+      "armor": ["Armaduras Leves", "Armaduras Médias", "Escudos"],
+      "weapons": ["Armas Simples", "Armas Marciais"],
+      "tools": []
+    },
+    "skills_count": 3,
+    "skills_list": ["Atletismo", "Furtividade", "Intuição", "Investigação", "Lidar com Animais", "Natureza", "Percepção", "Sobrevivência"],
+    "equipment": [
+      "(a) Lórica de escamas ou (b) Armadura de couro",
+      "(a) Duas espadas curtas ou (b) Duas armas simples corpo a corpo",
+      "(a) Kit de aventureiro ou (b) Kit de explorador",
+      "Um arco longo e uma aljava com 20 flechas"
+    ],
+    "features": [
+      { "name": "Inimigo Predileto", "description": "Bônus contra tipo específico de criatura." },
+      { "name": "Explorador Natural", "description": "Vantagens em terreno específico." },
+      { "name": "Estilo de Luta", "description": "Especialização (Nível 2)." },
+      { "name": "Conjuração", "description": "Magias de ranger (Nível 2)." }
+    ],
+    "subclasses": [
+      {
+        "name": "Caçador",
+        "features": [
+          { "name": "Presa do Caçador", "description": "Escolha: Colosso (dano extra), Gigante (reação) ou Horda (ataque extra)." }
+        ]
+      },
+      {
+        "name": "Mestre das Feras",
+        "features": [
+          { "name": "Companheiro do Patrulheiro", "description": "Um animal luta ao seu lado." },
+          { "name": "Companheiro Primordial", "description": "Opção alternativa de besta invocada." }
+        ]
+      },
+      {
+        "name": "Perseguidor Sombrio",
+        "features": [
+          { "name": "Emboscador Temível", "description": "Bônus no primeiro turno de combate." },
+          { "name": "Visão Umbral", "description": "Invisível para visão no escuro." }
+        ]
+      },
+      {
+        "name": "Andarilho do Horizonte",
+        "features": [
+          { "name": "Guerreiro Planar", "description": "Converta dano em Força e cause extra." },
+          { "name": "Detectar Portal", "description": "Sinta portais planares." }
+        ]
+      },
+      {
+        "name": "Matador de Monstros",
+        "features": [
+          { "name": "Sentido de Caçador", "description": "Descubra imunidades/vulnerabilidades." },
+          { "name": "Presa do Assassino", "description": "Dano extra no primeiro acerto." }
+        ]
+      },
+      {
+        "name": "Peregrino Feérico",
+        "features": [
+          { "name": "Ataques Terríveis", "description": "Dano psíquico extra." },
+          { "name": "Glamour de Outro Mundo", "description": "Bônus em Carisma." }
+        ]
+      },
+      {
+        "name": "Guardião do Enxame",
+        "features": [
+          { "name": "Enxame Reunido", "description": "Espíritos ajudam a causar dano ou mover inimigos." }
+        ]
+      },
+      {
+        "name": "Guardião Dracônico",
+        "features": [
+          { "name": "Dádiva e Draco", "description": "Invoque um pequeno dragão." }
+        ]
+      },
+      {
+          "name": "Guardião Primordial",
+          "features": [
+              { "name": "Alma Guardiã", "description": "Transformação em árvore/guardião grande." }
+          ]
+      }
+    ]
+  },
+  {
+    "name": "Blood Hunter",
+    "image": "img/classes/bloodhunter.png",
+    "hit_die": 10,
+    "primary_ability": "Força/Destreza e Inteligência",
+    "subclass_level": 3,
+    "saving_throws": ["Destreza", "Inteligência"],
+    "proficiencies": {
+      "armor": ["Armaduras Leves", "Armaduras Médias", "Escudos"],
+      "weapons": ["Armas Simples", "Armas Marciais"],
+      "tools": ["Suprimentos de Alquimista"]
+    },
+    "skills_count": 3,
+    "skills_list": ["Atletismo", "Acrobacia", "Arcanismo", "História", "Intuição", "Investigação", "Religião", "Sobrevivência"],
+    "equipment": [
+      "(a) Uma arma marcial ou (b) Duas armas simples",
+      "(a) Uma besta leve e 20 virotes ou (b) Um arco longo e 20 flechas",
+      "(a) Armadura de couro batido ou (b) Lórica de escamas",
+      "Kit de explorador e suprimentos de alquimista"
+    ],
+    "features": [
+      { "name": "Flagelo do Caçador", "description": "Vantagem para rastrear fadas, demônios e mortos-vivos." },
+      { "name": "Maldição de Sangue", "description": "Invoque magia de sangue (causa dano a si para amplificar)." },
+      { "name": "Rito Carmesim", "description": "Ative dano elemental na arma custando PV (Nível 2)." }
+    ],
+    "subclasses": [
+      {
+        "name": "Matador de Fantasmas",
+        "features": [
+          { "name": "Rito da Aurora", "description": "Dano radiante extra contra mortos-vivos." },
+          { "name": "Especialista em Maldições", "description": "Afeta criaturas sem sangue." }
+        ]
+      },
+      {
+        "name": "Ordem do Licantropo",
+        "features": [
+          { "name": "Transformação Híbrida", "description": "Vire lobisomem: garras, resistência e força." },
+          { "name": "Sentidos Aguçados", "description": "Vantagem em Percepção (Audição/Olfato)." }
+        ]
+      },
+      {
+        "name": "Ordem do Mutante",
+        "features": [
+          { "name": "Mutagencraft", "description": "Crie mutagênicos para buffar stats (com efeito colateral)." }
+        ]
+      },
+      {
+        "name": "Alma Profana",
+        "features": [
+          { "name": "Magia do Pacto", "description": "Ganhe magia de Bruxo limitada." },
+          { "name": "Rito Foco", "description": "Arma ganha efeito baseado no patrono." }
+        ]
+      }
+    ]
   }
 ]
