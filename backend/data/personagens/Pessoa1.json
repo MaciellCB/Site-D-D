@@ -10,83 +10,249 @@
   "dtMagias": "Selecione",
   "inventory": [
     {
-      "id": 1768240511286,
-      "name": "Machado de Batalha",
-      "description": "<p>Um machado de lâmina única ou dupla, equilibrado para golpes poderosos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>",
-      "expanded": false,
-      "equip": false,
-      "type": "Arma",
-      "isEquipable": true,
-      "proficiency": "Armas Marciais",
-      "tipoArma": "Corpo a Corpo",
-      "empunhadura": "Versátil",
-      "crit": "20",
-      "multiplicador": "2",
-      "alcance": "1.5m",
-      "attunement": "Não",
-      "damage": "1d8",
-      "damage2Hands": "1d10",
-      "useTwoHands": false,
-      "damageTypes": [
-        "Cortante"
-      ],
-      "moreDmgList": [],
-      "caracteristicas": []
-    },
-    {
-      "id": 1768241530125,
-      "name": "Cajado",
-      "category": "Armas",
-      "subcategory": "Corpo-a-corpo",
-      "type": "Arma",
-      "damage": "1d6",
-      "damage2Hands": "1d8",
-      "useTwoHands": false,
-      "damageType": "Contundente",
-      "proficiency": "Armas Simples",
-      "tipoArma": "Corpo a Corpo",
-      "empunhadura": "Versátil",
-      "caracteristicas": [],
-      "description": "<p>Bastão de madeira simples, mas eficaz.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>",
-      "originalId": "i_cajado",
-      "quantidade": 1,
-      "equip": false,
+      "id": 1768333135233,
+      "name": "Qualquer arma simples",
+      "type": "Equipamento",
+      "quantity": 1,
+      "weight": 0,
+      "description": "Item de Classe",
       "expanded": false
     },
     {
-      "id": 1768241472901,
-      "name": "Armadilha de Caça",
+      "id": 1768333136980,
+      "name": "Bolsa de Componentes",
       "category": "Utensílios",
       "subcategory": "Utensílios gerais",
       "type": "Geral",
-      "description": "<p>Dano 1d4 e imobiliza (CD 13).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 11 kg</li></ul>",
-      "originalId": "i_armadilha_caca",
+      "description": "<p>Contém componentes materiais para magias (sem custo).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
+      "originalId": "i_bolsa_componentes",
+      "quantidade": 1,
+      "equip": false,
+      "expanded": true
+    },
+    {
+      "id": 1768333133558,
+      "name": "Kit de erudito",
+      "type": "Equipamento",
+      "quantity": 1,
+      "weight": 0,
+      "description": "Item de Classe",
+      "expanded": true
+    },
+    {
+      "id": 1768333173974,
+      "name": "Adaga",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d4",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Uma mao",
+      "caracteristicas": [
+        "Ágil",
+        "Leve",
+        "Arremesso (6/18)"
+      ],
+      "description": "<p>Lâmina curta multiuso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "originalId": "i_adaga",
       "quantidade": 1,
       "equip": false,
       "expanded": false
-    },
-    {
-      "id": 1768241538005,
-      "name": "Um troféu de caça",
-      "type": "Geral",
-      "description": "Item de Antecedente",
-      "expanded": false,
-      "equip": false,
-      "weight": 0,
-      "quantity": 1
-    },
-    {
-      "id": 1768241450092,
-      "name": "Roupas de viajante",
-      "type": "Geral",
-      "description": "Item de Antecedente",
-      "expanded": false,
-      "equip": false,
-      "weight": 0,
-      "quantity": 1
     }
   ],
   "abilities": [
+    {
+      "id": 1768332325191,
+      "title": "[Nível 1] Druídico",
+      "description": "<p>Você conhece o idioma secreto dos druidas. Pode usá-lo para deixar mensagens ocultas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Druidas:</strong> Percebem automaticamente.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Outros:</strong> Precisam de teste de Percepção (CD 15) para notar, mas não decifram sem magia.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Druida",
+      "subclass": ""
+    },
+    {
+      "id": 1768329982361,
+      "title": "[Nível 1] Inspiração Bárdica",
+      "description": "<p><strong>(Ação Bônus)</strong> Concede um dado de inspiração a uma criatura (exceto você) a até 18m que possa ouvi-lo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Efeito:</strong> Nos próximos 10 min, a criatura pode adicionar o dado a uma jogada de ataque, teste de habilidade ou resistência.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dado:</strong> d6 (1º nível), d8 (5º nível), d10 (10º nível), d12 (15º nível).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Usos:</strong> Igual ao Mod. Carisma (mínimo 1). Recupera em Descanso Longo.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bardo",
+      "subclass": ""
+    },
+    {
+      "id": 1768329964501,
+      "title": "[Nível 1] Lançamento de Feitiços",
+      "description": "<p>Você aprende a manipular a Trama através da música e oratória.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Atributo:</strong> Carisma.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ CD de Resistência:</strong> 8 + Proficiência + Mod. Carisma.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque Mágico:</strong> Proficiência + Mod. Carisma.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Foco:</strong> Instrumento musical.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Rituais:</strong> Pode conjurar qualquer magia de bardo conhecida como ritual (se tiver o rótulo).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Troca:</strong> Ao subir de nível, pode substituir uma magia conhecida.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bardo",
+      "subclass": ""
+    },
+    {
+      "id": 1768329876186,
+      "title": "[Nível 1] Forma de Pavor",
+      "description": "<p><strong>(Ação Bônus)</strong> Transforme-se por 1 minuto. Usos = Bônus Prof.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ PV Temp:</strong> 1d10 + Nível de Bruxo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Imunidade:</strong> À condição Amedrontado.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Medo:</strong> 1x por turno ao acertar, force Salvaguarda de Sabedoria ou alvo fica Amedrontado.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Subclasse",
+      "class": "Bruxo",
+      "subclass": "O Morto-Vivo"
+    },
+    {
+      "id": 1768329819211,
+      "title": "[Nível 1] Feitiços de O Morto-Vivo",
+      "description": "<p>Magias expandidas do patrono:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 1º:</strong> Bane, Vida Falsa</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 2º:</strong> Cegueira/Surdez, Força Fantasmagórica</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 3º:</strong> Cavalo Fantasma, Falar com Mortos</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 4º:</strong> Guarda da Morte, Invisibilidade Maior</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 5º:</strong> Casca Antivida, Nuvem Assassina</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Subclasse",
+      "class": "Bruxo",
+      "subclass": "O Morto-Vivo"
+    },
+    {
+      "id": 1768329819056,
+      "title": "[Nível 2] Invocações Eldritch",
+      "description": "<p>Você aprende fragmentos de conhecimento proibido que concedem habilidades mágicas permanentes.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Quantidade:</strong> Começa com 2 invocações e ganha mais conforme sobe de nível.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Troca:</strong> Pode trocar uma invocação ao subir de nível de Bruxo.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bruxo",
+      "subclass": ""
+    },
+    {
+      "id": 1768329794483,
+      "title": "[Nível 14] Vida Indestrutível",
+      "description": "(Ação Bônus) Cure-se e reconecte membros.",
+      "expanded": false,
+      "active": true,
+      "category": "Subclasse",
+      "class": "Bruxo",
+      "subclass": "O Imortal"
+    },
+    {
+      "id": 1768329802864,
+      "title": "[Nível 10] Natureza Imortal",
+      "description": "Não precisa respirar, comer ou dormir. Envelhecimento lento.",
+      "expanded": false,
+      "active": true,
+      "category": "Subclasse",
+      "class": "Bruxo",
+      "subclass": "O Imortal"
+    },
+    {
+      "id": 1768329892021,
+      "title": "[Nível 6] Desafie a Morte",
+      "description": "Cure-se ao estabilizar alguém ou passar em salvaguarda de morte.",
+      "expanded": false,
+      "active": true,
+      "category": "Subclasse",
+      "class": "Bruxo",
+      "subclass": "O Imortal"
+    },
+    {
+      "id": 1768329846967,
+      "title": "[Nível 1] Entre os Mortos",
+      "description": "Aprende Salvar os Moribundos. Mortos-vivos têm dificuldade em atacá-lo.",
+      "expanded": false,
+      "active": true,
+      "category": "Subclasse",
+      "class": "Bruxo",
+      "subclass": "O Imortal"
+    },
+    {
+      "id": 1768329834792,
+      "title": "[Nível 1] Feitiços de O Imortal",
+      "description": "Magias expandidas do patrono: Vida Falsa, Raio da Doença, Cegueira/Surdez, Silêncio, Fingir Morte, Falar com Mortos, Aura da Vida, Ala da Morte, Contágio, Lenda e Tradição.",
+      "expanded": false,
+      "active": true,
+      "category": "Subclasse",
+      "class": "Bruxo",
+      "subclass": "O Imortal"
+    },
+    {
+      "id": 1768329819197,
+      "title": "[Nível 1] Patrono Transcendente (Subclasse)",
+      "description": "<p>No 1º nível, você firma um pacto com um ser misterioso de grande poder. Sua escolha concede características no 1º nível e novamente no 6º, 10º e 14º nível.</p>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bruxo",
+      "subclass": ""
+    },
+    {
+      "id": 1768329873845,
+      "title": "[Nível 1] Magia do Pacto",
+      "description": "<p>Você extrai magia de um pacto com uma entidade extraplanar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Atributo:</strong> Carisma.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ CD de Resistência:</strong> 8 + Proficiência + Mod. Carisma.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque Mágico:</strong> Proficiência + Mod. Carisma.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Recuperação:</strong> Seus espaços de magia são recuperados em <strong>Descanso Curto</strong> e Longo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Conhecimento:</strong> Você conhece um número fixo de magias e pode trocar uma ao subir de nível.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bruxo",
+      "subclass": ""
+    },
+    {
+      "id": 1768329836407,
+      "title": "[Nível 1] Defesa sem Armadura",
+      "description": "<p>Enquanto você não estiver usando nenhuma armadura, sua Classe de Armadura (CA) é:</p><p style='text-align:center; font-weight:bold; color:#fff; background:#222; padding:8px; border-radius:4px;'>10 + Mod. Destreza + Mod. Constituição</p><p>Você pode usar um escudo e ainda obter esse benefício.</p>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bárbaro",
+      "subclass": ""
+    },
+    {
+      "id": 1768329864762,
+      "title": "[Nível 1] Fúria",
+      "description": "<p><strong>Ferocidade Primal</strong></p><p>(Ação Bônus) Você entra em um estado de fúria por 1 minuto. Termina se você cair inconsciente ou se passar um turno sem atacar um inimigo ou sofrer dano.</p><strong style='display:block; margin-bottom:8px; color:#fff;'>Benefícios:</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Vantagem:</strong> Em testes e salvaguardas de Força.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano Extra:</strong> +Bônus de Fúria no dano de ataques corpo a corpo com Força.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Resistência:</strong> A dano contundente, perfurante e cortante.</li></ul><p style='color:#bbb; font-size:13px; margin-top:8px;'>Nota: Não pode conjurar ou concentrar em magias.</p>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bárbaro",
+      "subclass": ""
+    },
+    {
+      "id": 1768329566377,
+      "title": "[Nível 2] Rito Carmesim",
+      "description": "<p><strong>(Ação Bônus)</strong> Ative um rito elemental em uma arma empunhada.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Custo:</strong> Sofra dano necrótico igual ao seu dado de Hemomancia (não redutível).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Efeito:</strong> Até o próximo descanso, a arma é mágica e causa dano extra igual ao seu dado de Hemomancia.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Tipos Iniciais:</strong> Chama (Fogo), Congelado (Frio), Tempestade (Elétrico).</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Blood Hunter",
+      "subclass": ""
+    },
+    {
+      "id": 1768329563984,
+      "title": "[Nível 2] Estilo de Luta",
+      "description": "<p>Escolha uma especialidade de combate:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Arquearia:</strong> +2 nas jogadas de ataque à distância.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Duelo:</strong> +2 no dano com uma arma em uma mão (e nenhuma outra).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Combate com Arma Grande:</strong> Pode rerolar 1 e 2 no dano com armas de duas mãos/versáteis.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Combate com Duas Armas:</strong> Adiciona modificador de habilidade ao dano do segundo ataque.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Blood Hunter",
+      "subclass": ""
+    },
+    {
+      "id": 1768329637488,
+      "title": "[Nível 1] Maldição de Sangue",
+      "description": "<p>Você conhece Maldições de Sangue (invocações de hemomancia).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Amplificar:</strong> Ao usar, você pode sofrer dano necrótico igual a uma rolagem do seu dado de Hemomancia (não redutível) para obter um efeito aprimorado.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Imunidade:</strong> Criaturas sem sangue são imunes a maldições não amplificadas.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Usos:</strong> 1 (1º nível), 2 (6º nível), 3 (13º nível) e 4 (17º nível). Recupera em Descanso Curto/Longo.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Blood Hunter",
+      "subclass": ""
+    },
+    {
+      "id": 1768329579428,
+      "title": "[Nível 1] Flagelo do Caçador",
+      "description": "<p>Você sobreviveu ao ritual da Maldição, ganhando sentidos sobrenaturais.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Rastreamento:</strong> Vantagem em testes de Sobrevivência para rastrear Fadas, Demônios e Mortos-Vivos.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Conhecimento:</strong> Vantagem em testes de Inteligência para recordar informações sobre eles.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Hemomancia:</strong> Sua CD de resistência é 8 + Bônus de Proficiência + Modificador de Hemomancia (INT ou SAB).</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Blood Hunter",
+      "subclass": ""
+    },
     {
       "id": 1768241446556,
       "title": "Andarilho",
@@ -229,12 +395,12 @@
     },
     "Acrobacia": {
       "atributo": "DEX",
-      "treinado": false,
-      "outros": 46
+      "treinado": true,
+      "outros": 0
     },
     "Furtividade": {
       "atributo": "DEX",
-      "treinado": true,
+      "treinado": false,
       "outros": 0
     },
     "Prestidigitação": {
@@ -250,12 +416,12 @@
     "História": {
       "atributo": "INT",
       "treinado": false,
-      "outros": 5
+      "outros": 0
     },
     "Investigação": {
       "atributo": "INT",
       "treinado": false,
-      "outros": 3
+      "outros": 0
     },
     "Natureza": {
       "atributo": "INT",
@@ -274,8 +440,8 @@
     },
     "Lidar com animais": {
       "atributo": "SAB",
-      "treinado": true,
-      "outros": 3
+      "treinado": false,
+      "outros": 0
     },
     "Medicina": {
       "atributo": "SAB",
@@ -284,12 +450,12 @@
     },
     "Percepção": {
       "atributo": "SAB",
-      "treinado": true,
+      "treinado": false,
       "outros": 0
     },
     "Sobrevivência": {
       "atributo": "SAB",
-      "treinado": true,
+      "treinado": false,
       "outros": 0
     },
     "Atuação": {
@@ -304,12 +470,12 @@
     },
     "Intimidação": {
       "atributo": "CAR",
-      "treinado": true,
+      "treinado": false,
       "outros": 0
     },
     "Persuasão": {
       "atributo": "CAR",
-      "treinado": true,
+      "treinado": false,
       "outros": 0
     },
     "Salvaguarda (Força)": {
@@ -335,7 +501,7 @@
     "Salvaguarda (Sabedoria)": {
       "atributo": "SAB",
       "treinado": false,
-      "outros": 343
+      "outros": 0
     },
     "Salvaguarda (Carisma)": {
       "atributo": "CAR",
@@ -354,10 +520,10 @@
   "niveisClasses": {
     "artifice": 0,
     "barbaro": 0,
-    "bardo": 0,
+    "bardo": 1,
     "blood hunter": 0,
     "bruxo": 0,
-    "clerigo": 1,
+    "clerigo": 0,
     "monge": 0,
     "druida": 0,
     "feiticeiro": 0,
@@ -383,31 +549,20 @@
   "proficiencias": "q3r",
   "minimizedPreparedSpells": false,
   "minimizedPreparedAbilities": false,
-  "fraquezasList": [
-    "Cortante",
-    "Contundente"
-  ],
-  "resistenciasList": [
-    "Psíquico"
-  ],
-  "imunidadesList": [
-    "Contundente",
-    "Psíquico"
-  ],
+  "fraquezasList": [],
+  "resistenciasList": [],
+  "imunidadesList": [],
   "proficienciasList": [
-    "Viola",
-    "Lira"
+    "Armaduras Leves",
+    "Armas Simples",
+    "Bestas de Mão",
+    "Espadas Longas",
+    "Rapieiras",
+    "Espadas Curtas",
+    "Três instrumentos musicais à sua escolha"
   ],
   "idiomasList": [
-    "Élfico",
-    "Comum",
-    "Druídico",
-    "Gith",
-    "Gigante",
-    "Anão",
-    "Goblin",
-    "Orc",
-    "Halfling"
+    "Goblin"
   ],
   "spellSlots": {
     "1": {
@@ -507,7 +662,7 @@
     "class-Blood Hunter": false,
     "origem": false,
     "inv-armas": false,
-    "inv-armaduras": true,
+    "inv-armaduras": false,
     "cmb-ataques": false,
     "class-Bárbaro": true,
     "class-Druida": true,
@@ -530,5 +685,8 @@
     "pl": 0,
     "pd": 4
   },
-  "hitDie": "d8"
+  "hitDie": "d8",
+  "subclasses": {
+    "bruxo": "O Morto-Vivo"
+  }
 }
