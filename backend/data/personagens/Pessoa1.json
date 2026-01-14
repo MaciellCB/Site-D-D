@@ -1,7 +1,7 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Inventário",
+  "activeTab": "Combate",
   "spellDCConfig": {
     "selectedAttr": "none",
     "extraMod": 0,
@@ -10,29 +10,31 @@
   "dtMagias": "Selecione",
   "inventory": [
     {
-      "id": 1768333135233,
-      "name": "Qualquer arma simples",
-      "type": "Equipamento",
-      "quantity": 1,
-      "weight": 0,
-      "description": "Item de Classe",
+      "id": 1768367932624,
+      "name": "Besta Leve",
+      "category": "Armas",
+      "subcategory": "A distancia",
+      "type": "Arma",
+      "damage": "1d8",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "A Distancia",
+      "empunhadura": "Duas Maos",
+      "caracteristicas": [
+        "Munição",
+        "Recarga",
+        "Duas Mãos"
+      ],
+      "alcance": "24m/96m",
+      "description": "<p>Besta simples, fácil de usar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 7 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg</li></ul>",
+      "originalId": "i_besta_leve",
+      "quantidade": 1,
+      "equip": false,
       "expanded": false
     },
     {
-      "id": 1768333136980,
-      "name": "Bolsa de Componentes",
-      "category": "Utensílios",
-      "subcategory": "Utensílios gerais",
-      "type": "Geral",
-      "description": "<p>Contém componentes materiais para magias (sem custo).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
-      "originalId": "i_bolsa_componentes",
-      "quantidade": 1,
-      "equip": false,
-      "expanded": true
-    },
-    {
-      "id": 1768333133558,
-      "name": "Kit de erudito",
+      "id": 1768367938804,
+      "name": "Kit de artista",
       "type": "Equipamento",
       "quantity": 1,
       "weight": 0,
@@ -40,7 +42,19 @@
       "expanded": true
     },
     {
-      "id": 1768333173974,
+      "id": 1768367935691,
+      "name": "Alaúde",
+      "category": "Conjuntos",
+      "subcategory": "Ferramentas",
+      "type": "Geral",
+      "description": "<p>Instrumento de cordas popular.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 35 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
+      "originalId": "i_instrumento_alaude",
+      "quantidade": 1,
+      "equip": false,
+      "expanded": false
+    },
+    {
+      "id": 1768367871381,
       "name": "Adaga",
       "category": "Armas",
       "subcategory": "Corpo-a-corpo",
@@ -60,9 +74,176 @@
       "quantidade": 1,
       "equip": false,
       "expanded": false
+    },
+   
+    {
+      "id": 1768367933374,
+      "name": "arma marcial",
+      "type": "Equipamento",
+      "quantity": 1,
+      "weight": 0,
+      "description": "Item de Classe"
+    },
+    {
+      "id": 1768367982246,
+      "name": "Escudo",
+      "category": "Armaduras",
+      "subcategory": "Escudos",
+      "type": "Proteção",
+      "defense": "+2",
+      "proficiency": "Escudo",
+      "tipoItem": "Escudo",
+      "description": "<p>Pode ser de madeira ou metal.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>",
+      "originalId": "i_escudo",
+      "quantidade": 1,
+      "equip": false,
+      "expanded": false
+    },
+    {
+      "id": 1768367991192,
+      "name": "Besta Leve",
+      "category": "Armas",
+      "subcategory": "A distancia",
+      "type": "Arma",
+      "damage": "1d8",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "A Distancia",
+      "empunhadura": "Duas Maos",
+      "caracteristicas": [
+        "Munição",
+        "Recarga",
+        "Duas Mãos"
+      ],
+      "alcance": "24m/96m",
+      "description": "<p>Besta simples, fácil de usar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 7 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg</li></ul>",
+      "originalId": "i_besta_leve",
+      "quantidade": 1,
+      "equip": false,
+      "expanded": false
+    },
+    {
+      "id": 1768367972237,
+      "name": "Porta Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>Comporta 20 virotes.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "originalId": "i_porta_virotes",
+      "quantidade": 20,
+      "equip": false,
+      "expanded": false
+    },
+    {
+      "id": 1768367934360,
+      "name": "Kit de aventureiro",
+      "type": "Equipamento",
+      "quantity": 1,
+      "weight": 0,
+      "description": "Item de Classe"
     }
   ],
   "abilities": [
+    {
+      "id": 1768367756423,
+      "title": "1",
+      "description": "2",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "cu"
+    },
+    {
+      "id": 1768367756492,
+      "title": "5",
+      "description": "2",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "cu"
+    },
+    {
+      "id": 1768367736594,
+      "title": "Identidade Falsa",
+      "description": "Você criou uma segunda identidade completa, com documentos, conhecidos e disfarces estabelecidos. Você pode forjar documentos oficiais se tiver amostras da caligrafia.",
+      "expanded": false,
+      "active": true,
+      "category": "Antecedente",
+      "class": "",
+      "subclass": "Charlatão"
+    },
+    {
+      "id": 1768365441115,
+      "title": "[Nível 1] Conjuração",
+      "description": "<p>Você canaliza magias através de suas ferramentas. Você deve ter ferramentas de ladrão ou de artesão em mãos para usar como foco de conjuração.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Atributo:</strong> Inteligência.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ CD de Resistência:</strong> 8 + Proficiência + Mod. INT.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Ataque Mágico:</strong> Proficiência + Mod. INT.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Preparação:</strong> Você pode preparar magias diariamente ao final de um descanso longo.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Rituais:</strong> Pode conjurar rituais, desde que a magia esteja preparada.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Artífice",
+      "subclass": ""
+    },
+    {
+      "id": 1768365446423,
+      "title": "[Nível 1] Funilaria Mágica",
+      "description": "<p><strong>Magia em Objetos Mundanos</strong></p><p>(Ação) Você imbuí um objeto minúsculo não mágico com uma propriedade mágica. O efeito dura indefinidamente até você encerrá-lo ou exceder seu limite de objetos ativos (igual ao seu Modificador de Inteligência).</p><strong style='display:block; margin-bottom:8px; color:#fff;'>Efeitos Possíveis:</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Luz:</strong> O objeto emite luz plena em 1,5m e penumbra em mais 1,5m.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Áudio:</strong> Uma mensagem gravada de até 6 segundos.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Sensorial:</strong> O objeto emite continuamente um odor ou som não verbal.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Visual:</strong> Um efeito visual estático (texto ou imagem) em uma das superfícies.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Artífice",
+      "subclass": ""
+    },
+    {
+      "id": 1768365448635,
+      "title": "[Nível 2] Inspiração Mágica (Opcional)",
+      "description": "<p>Se uma criatura possuir um dado de Inspiração Bárdica seu e conjurar uma magia que restaura pontos de vida ou causa dano, ela pode rolar o dado e adicionar o número rolado a uma rolagem de dano ou cura da magia contra um alvo. O dado de Inspiração é então gasto.</p>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bardo",
+      "subclass": ""
+    },
+    {
+      "id": 1768365504655,
+      "title": "[Nível 2] Cântico de Descanso",
+      "description": "<p>Você usa música suave para revitalizar aliados feridos durante um descanso curto. Se você ou aliados gastarem Dados de Vida para recuperar PV, ganham um bônus extra.</p><strong style='display:block; margin-bottom:8px; color:#fff;'>Cura Extra:</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 2º Nível:</strong> 1d6</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 9º Nível:</strong> 1d8</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 13º Nível:</strong> 1d10</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 17º Nível:</strong> 1d12</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bardo",
+      "subclass": ""
+    },
+    {
+      "id": 1768365474280,
+      "title": "[Nível 2] Pau para Toda Obra",
+      "description": "<p>Você pode adicionar metade do seu bônus de proficiência (arredondado para baixo) a qualquer teste de habilidade que você fizer e que ainda não inclua seu bônus de proficiência.</p>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bardo",
+      "subclass": ""
+    },
+    {
+      "id": 1768364667710,
+      "title": "[Nível 1] Segundo Fôlego",
+      "description": "<p><strong>(Ação Bônus)</strong> Recupere pontos de vida.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Cura:</strong> 1d10 + Nível de Guerreiro.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Recuperação:</strong> Descanso Curto ou Longo.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Guerreiro",
+      "subclass": ""
+    },
+    {
+      "id": 1768364660354,
+      "title": "[Nível 1] Estilo de Luta",
+      "description": "<p>Você adota um estilo de combate especializado. Escolha um:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Arquearia:</strong> +2 ataque à distância.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Defesa:</strong> +1 CA com armadura.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Duelo:</strong> +2 dano com 1 arma (e nenhuma outra).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Arma Grande:</strong> Rerolar 1 e 2 no dano com armas de duas mãos/versáteis.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Proteção:</strong> Reação p/ impor desvantagem em ataque a aliado (requer escudo).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Combate Duas Armas:</strong> Soma atributo no dano da 2ª arma.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Interceptação:</strong> Reduz dano em aliado a 1,5m em 1d10+Prof (Reação).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Técnica Superior:</strong> Aprende 1 manobra e ganha 1 dado de superioridade (d6).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Cego:</strong> Visão cega 3m.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Arremesso:</strong> +2 dano e saque livre de arma de arremesso.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Desarmado:</strong> Dano vira 1d6 (ou 1d8 se duas mãos livres) + 1d4 em alvo agarrado.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Guerreiro",
+      "subclass": ""
+    },
     {
       "id": 1768332325191,
       "title": "[Nível 1] Druídico",
@@ -254,46 +435,6 @@
       "subclass": ""
     },
     {
-      "id": 1768241446556,
-      "title": "Andarilho",
-      "description": "Você tem memória excelente para mapas e geografia. Além disso, pode encontrar comida e água fresca para você e até 5 outras pessoas diariamente, se a terra oferecer.",
-      "expanded": false,
-      "active": true,
-      "category": "Antecedente",
-      "class": "",
-      "subclass": "Forasteiro"
-    },
-    {
-      "id": 1768240029834,
-      "title": "Resistência Psíquica",
-      "description": "Você tem resistência a dano psíquico.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Githzerai"
-    },
-    {
-      "id": 1768240022508,
-      "title": "Disciplina Mental",
-      "description": "Você tem <b>vantagem</b> em salvaguardas para não ser enfeitiçado ou amedrontado.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Githzerai"
-    },
-    {
-      "id": 1768240056796,
-      "title": "Psionismo Githzerai",
-      "description": "Truque <i>mãos mágicas</i> (invisível). Nv 3: <i>égide</i> (1/longo). Nv 5: <i>detectar pensamentos</i> (1/longo). Sem componentes. (Int, Sab ou Car).",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Githzerai"
-    },
-    {
       "id": 1768158519683,
       "title": "(Alquimista, 3º nível) Proficiência com Ferramentas",
       "description": "<p>Você ganha proficiência com suprimentos de alquimista. Se já tiver, ganha proficiência com outra ferramenta de artesão à sua escolha.</p>",
@@ -395,7 +536,7 @@
     },
     "Acrobacia": {
       "atributo": "DEX",
-      "treinado": true,
+      "treinado": false,
       "outros": 0
     },
     "Furtividade": {
@@ -415,7 +556,7 @@
     },
     "História": {
       "atributo": "INT",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Investigação": {
@@ -435,7 +576,7 @@
     },
     "Intuição": {
       "atributo": "SAB",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Lidar com animais": {
@@ -465,7 +606,7 @@
     },
     "Enganação": {
       "atributo": "CAR",
-      "treinado": true,
+      "treinado": false,
       "outros": 0
     },
     "Intimidação": {
@@ -507,41 +648,49 @@
       "atributo": "CAR",
       "treinado": false,
       "outros": 0
+    },
+    "Adestrar Animais": {
+      "treinado": false,
+      "bonus": 0
+    },
+    "Lidar com Animais": {
+      "treinado": false,
+      "bonus": 0
     }
   },
   "atributos": {
-    "n1": 32,
+    "n1": 10,
     "n2": 10,
     "n3": 10,
     "n4": 10,
     "n5": 10,
-    "n6": 20
+    "n6": 10
   },
   "niveisClasses": {
     "artifice": 0,
     "barbaro": 0,
-    "bardo": 1,
+    "bardo": 0,
     "blood hunter": 0,
     "bruxo": 0,
     "clerigo": 0,
     "monge": 0,
     "druida": 0,
     "feiticeiro": 0,
-    "guerreiro": 0,
+    "guerreiro": 1,
     "ladino": 0,
     "mago": 0,
     "paladino": 0,
     "patrulheiro": 0
   },
   "xp": "0",
-  "inspiracao": 4,
+  "inspiracao": 5,
   "vidaDadosSalvos": {},
   "marco": 0,
   "vidaAtual": 0,
   "vidaTempAtual": 71,
   "danoNecroAtual": 60,
   "metros": 9,
-  "iniciativaBonus": 87,
+  "iniciativaBonus": 0,
   "acOutros": 0,
   "resistencias": "23",
   "imunidades": "234",
@@ -553,23 +702,32 @@
   "resistenciasList": [],
   "imunidadesList": [],
   "proficienciasList": [
-    "Armaduras Leves",
-    "Armas Simples",
+    "Escudos",
+    "Armaduras leves",
+    "Armas simples",
     "Bestas de Mão",
     "Espadas Longas",
     "Rapieiras",
     "Espadas Curtas",
-    "Três instrumentos musicais à sua escolha"
+    "Três instrumentos musicais à sua escolha",
+    "Kit de disfarce",
+    "Alaúde",
+    "Armaduras médias",
+    "Armas de fogo",
+    "Ferramentas de Ladrão",
+    "Ferramentas de Funileiro",
+    "Um tipo de ferramenta de artesão à escolha",
+    "Armas marciais",
+    "Kit de falsificação",
+    "Armaduras pesadas"
   ],
-  "idiomasList": [
-    "Goblin"
-  ],
+  "idiomasList": [],
   "spellSlots": {
     "1": {
       "used": 0,
       "status": [
-        true,
-        true,
+        false,
+        false,
         true,
         true
       ]
@@ -669,23 +827,23 @@
     "talentos": true,
     "inv-gerais": false
   },
-  "antecedente": "Forasteiro",
+  "antecedente": "Charlatão",
   "personagem": "123w",
   "jogador": "321w",
-  "raca": "Githzerai",
+  "raca": "cu",
   "customResources": [],
   "deslocamentoVoo": 0,
   "subRaca": "",
   "racaTipo": "Humanoide",
-  "racaTamanho": "Médio",
+  "racaTamanho": "Imenso",
   "money": {
     "pc": 0,
     "pp": 0,
-    "po": 0,
+    "po": 30,
     "pl": 0,
     "pd": 4
   },
-  "hitDie": "d8",
+  "hitDie": "d10",
   "subclasses": {
     "bruxo": "O Morto-Vivo"
   }

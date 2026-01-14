@@ -7,8 +7,8 @@
     "subclass_level": 3,
     "saving_throws": ["Constituição", "Inteligência"],
     "proficiencies": {
-      "armor": ["Armaduras Leves", "Armaduras Médias", "Escudos"],
-      "weapons": ["Armas Simples", "Armas de Fogo (se permitido)"],
+      "armor": ["Armaduras leves", "Armaduras médias", "Escudos"],
+      "weapons": ["Armas simples", "Armas de fogo"],
       "tools": ["Ferramentas de Ladrão", "Ferramentas de Funileiro", "Um tipo de ferramenta de artesão à escolha"]
     },
     "skills_count": 2,
@@ -301,8 +301,8 @@
     "subclass_level": 3,
     "saving_throws": ["Força", "Constituição"],
     "proficiencies": {
-      "armor": ["Armaduras Leves", "Armaduras Médias", "Escudos"],
-      "weapons": ["Armas Simples", "Armas Marciais"],
+      "armor": ["Armaduras leves", "Armaduras médias", "Escudos"],
+      "weapons": ["Armas simples", "Armas marciais"],
       "tools": []
     },
     "skills_count": 2,
@@ -691,8 +691,8 @@
     "subclass_level": 3,
     "saving_throws": ["Destreza", "Carisma"],
     "proficiencies": {
-      "armor": ["Armaduras Leves"],
-      "weapons": ["Armas Simples", "Bestas de Mão", "Espadas Longas", "Rapieiras", "Espadas Curtas"],
+      "armor": ["Armaduras leves"],
+      "weapons": ["Armas simples", "Bestas de Mão", "Espadas Longas", "Rapieiras", "Espadas Curtas"],
       "tools": ["Três instrumentos musicais à sua escolha"]
     },
     "skills_count": 3,
@@ -1134,8 +1134,8 @@
     "subclass_level": 1,
     "saving_throws": ["Sabedoria", "Carisma"],
     "proficiencies": {
-      "armor": ["Armaduras Leves"],
-      "weapons": ["Armas Simples"],
+      "armor": ["Armaduras leves"],
+      "weapons": ["Armas simples"],
       "tools": []
     },
     "skills_count": 2,
@@ -1550,8 +1550,8 @@
     "subclass_level": 1,
     "saving_throws": ["Sabedoria", "Carisma"],
     "proficiencies": {
-      "armor": ["Armaduras Leves", "Armaduras Médias", "Escudos"],
-      "weapons": ["Armas Simples"],
+      "armor": ["Armaduras leves", "Armaduras médias", "Escudos"],
+      "weapons": ["Armas simples"],
       "tools": []
     },
     "skills_count": 2,
@@ -2476,8 +2476,8 @@
     "subclass_level": 3,
     "saving_throws": ["Destreza", "Inteligência"],
     "proficiencies": {
-      "armor": ["Armaduras Leves", "Armaduras Médias", "Escudos"],
-      "weapons": ["Armas Simples", "Armas Marciais"],
+      "armor": ["Armaduras leves", "Armaduras médias", "Escudos"],
+      "weapons": ["Armas simples", "Armas marciais"],
       "tools": ["Suprimentos de Alquimista"]
     },
     "skills_count": 3,
@@ -2754,7 +2754,7 @@
     "subclass_level": 2,
     "saving_throws": ["Inteligência", "Sabedoria"],
     "proficiencies": {
-      "armor": ["Armaduras Leves", "Armaduras Médias", "Escudos (apenas não-metálicos)"],
+      "armor": ["Armaduras leves", "Armaduras médias", "Escudos (apenas não-metálicos)"],
       "weapons": ["Adagas", "Azagaias", "Bastões", "Cimitarras", "Clavas", "Dardos", "Foices curtas", "Fundas", "Lanças"],
       "tools": ["Kit de Herbalismo"]
     },
@@ -3163,7 +3163,7 @@
     "saving_throws": ["Constituição", "Carisma"],
     "proficiencies": {
       "armor": [],
-      "weapons": ["Adagas", "Dardos", "Fundas", "Bastões", "Bestas Leves"],
+      "weapons": ["Adagas", "Dardos", "Fundas", "Bastões", "Bestas leves"],
       "tools": []
     },
     "skills_count": 2,
@@ -3732,8 +3732,8 @@
     "subclass_level": 3,
     "saving_throws": ["Força", "Constituição"],
     "proficiencies": {
-      "armor": ["Todas as Armaduras", "Escudos"],
-      "weapons": ["Armas Simples", "Armas Marciais"],
+      "armor": ["Armaduras leves", "Armaduras médias","Armaduras pesadas", "Escudos"],
+      "weapons": ["Armas simples", "Armas marciais"],
       "tools": []
     },
     "skills_count": 2,
@@ -4245,8 +4245,8 @@
     "subclass_level": 3,
     "saving_throws": ["Destreza", "Inteligência"],
     "proficiencies": {
-      "armor": ["Armaduras Leves"],
-      "weapons": ["Armas Simples", "Bestas de Mão", "Espadas Longas", "Rapieiras", "Espadas Curtas"],
+      "armor": ["Armaduras leves"],
+      "weapons": ["Armas simples", "Bestas de Mão", "Espadas Longas", "Rapieiras", "Espadas Curtas"],
       "tools": ["Ferramentas de Ladrão"]
     },
     "skills_count": 4,
@@ -4701,7 +4701,7 @@
     "saving_throws": ["Inteligência", "Sabedoria"],
     "proficiencies": {
       "armor": [],
-      "weapons": ["Adagas", "Dardos", "Fundas", "Bastões", "Bestas Leves"],
+      "weapons": ["Adagas", "Dardos", "Fundas", "Bastões", "Bestas leves"],
       "tools": []
     },
     "skills_count": 2,
@@ -5228,7 +5228,7 @@
     "saving_throws": ["Força", "Destreza"],
     "proficiencies": {
       "armor": [],
-      "weapons": ["Simples", "Espadas Curtas"],
+      "weapons": ["simples", "Espadas Curtas"],
       "tools": ["1 Artesão ou Instrumento"]
     },
     "skills_count": 2,
@@ -5244,9 +5244,9 @@
         "description": "<p>Enquanto não usar armadura nem escudo, sua Classe de Armadura (CA) é:</p><p style='text-align:center; font-weight:bold; color:#fff; background:#222; padding:8px; border-radius:4px;'>10 + Mod. Destreza + Mod. Sabedoria</p>"
       },
       {
-        "name": "[Nível 1] Artes Marciais",
+        "name": "[Nível 1] Artes marciais",
         "level": 1,
-        "description": "<p>Ao usar armas de monge (espadas curtas e armas simples não pesadas/duas mãos) ou ataques desarmados:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Atributo:</strong> Pode usar Destreza em vez de Força para ataque e dano.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> Rola o Dado de Artes Marciais (d4, escala com nível) no lugar do dano normal.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque Extra:</strong> Se usar a ação Atacar com essas armas, pode fazer um ataque desarmado como <strong>Ação Bônus</strong>.</li></ul>"
+        "description": "<p>Ao usar armas de monge (espadas curtas e armas simples não pesadas/duas mãos) ou ataques desarmados:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Atributo:</strong> Pode usar Destreza em vez de Força para ataque e dano.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> Rola o Dado de Artes marciais (d4, escala com nível) no lugar do dano normal.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque Extra:</strong> Se usar a ação Atacar com essas armas, pode fazer um ataque desarmado como <strong>Ação Bônus</strong>.</li></ul>"
       },
       {
         "name": "[Nível 2] Ki",
@@ -5669,8 +5669,8 @@
     "subclass_level": 3,
     "saving_throws": ["Sabedoria", "Carisma"],
     "proficiencies": {
-      "armor": ["Todas as Armaduras", "Escudos"],
-      "weapons": ["Armas Simples", "Armas Marciais"],
+      "armor": ["Armaduras leves", "Armaduras médias","Armaduras pesadas", "Escudos"],
+      "weapons": ["Armas simples", "Armas marciais"],
       "tools": []
     },
     "skills_count": 2,
@@ -6064,8 +6064,8 @@
     "subclass_level": 3,
     "saving_throws": ["Força", "Destreza"],
     "proficiencies": {
-      "armor": ["Armaduras Leves", "Armaduras Médias", "Escudos"],
-      "weapons": ["Armas Simples", "Armas Marciais"],
+      "armor": ["Armaduras leves", "Armaduras médias", "Escudos"],
+      "weapons": ["Armas simples", "Armas marciais"],
       "tools": []
     },
     "skills_count": 3,

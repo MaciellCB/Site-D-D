@@ -181,124 +181,14 @@ function openGenericSelector(title, count, options, onConfirmCallback) {
     };
 }
 
-// --- Seletor de Perícias (Específico para tratar o objeto state.pericias) ---
-function openSkillSelector(count, sourceName, limitToList = null) {
-    const overlay = document.createElement('div');
-    overlay.className = 'spell-modal-overlay race-modal-overlay';
-    overlay.style.zIndex = '14000';
 
-    const options = limitToList || ALL_SKILLS_LIST;
-    const uniqueOptions = [...new Set(options)].sort();
-    if (!state.pericias) state.pericias = {};
 
-    const checkboxesHtml = uniqueOptions.map(skill => {
-        const jaTem = state.pericias[skill] && state.pericias[skill].treinado;
-        
-        const styleLabel = jaTem ? "background:#222; border:1px solid #444; opacity:0.6;" : "background:#1a1a1a; border:1px solid #555; cursor:pointer;";
-        
-        return `
-            <label style="display:flex; align-items:center; gap:10px; padding:10px; border-radius:4px; ${styleLabel}">
-                <input type="checkbox" value="${skill}" ${jaTem ? 'checked disabled' : 'class="skill-check"'} style="accent-color:#9c27b0; transform:scale(1.2);">
-                <span style="color:${jaTem ? '#888' : '#fff'}; flex:1;">${skill}</span>
-                ${jaTem ? '<span style="color:#e0aaff; font-size:10px;">(Treinado)</span>' : ''}
-            </label>
-        `;
-    }).join('');
 
-    overlay.innerHTML = `
-        <div class="spell-modal" style="width: 550px; height: 80vh; display:flex; flex-direction:column;">
-            <div class="modal-header"><h3>Bônus: ${sourceName}</h3></div>
-            <div class="modal-body" style="padding: 15px; overflow-y: auto; flex:1;">
-                <div style="font-size:14px; color:#e0aaff; margin-bottom:15px; text-align:center; background:#222; padding:10px; border-radius:4px;">
-                    Selecione <strong>${count}</strong> perícia(s) adicional(is).<br>
-                    <span id="skill-count-display" style="font-size:12px; color:#aaa;">0/${count}</span>
-                </div>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">${checkboxesHtml}</div>
-            </div>
-            <div class="modal-actions">
-                <button id="btn-confirm-skills" class="btn-add btn-save-modal" disabled style="background:#444;">Confirmar</button>
-            </div>
-        </div>
-    `;
-
-    document.body.appendChild(overlay);
-
-    const btnConfirm = overlay.querySelector('#btn-confirm-skills');
-    const displayCount = overlay.querySelector('#skill-count-display');
-    const checks = overlay.querySelectorAll('.skill-check');
-
-    checks.forEach(chk => {
-        chk.addEventListener('change', () => {
-            const selected = overlay.querySelectorAll('.skill-check:checked').length;
-            displayCount.textContent = `${selected}/${count}`;
-
-            if (selected >= count) {
-                checks.forEach(c => { if (!c.checked) c.disabled = true; });
-                btnConfirm.removeAttribute('disabled');
-                btnConfirm.style.background = '#9c27b0';
-            } else {
-                checks.forEach(c => c.disabled = false);
-                btnConfirm.setAttribute('disabled', true);
-                btnConfirm.style.background = '#444';
-            }
-        });
-    });
-
-    btnConfirm.onclick = () => {
-        const selectedSkills = Array.from(overlay.querySelectorAll('.skill-check:checked')).map(c => c.value);
-        selectedSkills.forEach(skill => {
-            if (!state.pericias[skill]) state.pericias[skill] = { treinado: true, bonus: 0 };
-            else state.pericias[skill].treinado = true;
-        });
-        saveStateToServer();
-        window.dispatchEvent(new CustomEvent('sheet-updated'));
-        overlay.remove();
-        if(typeof checkScrollLock === 'function') checkScrollLock();
-    };
-}
-
-// --- Seletor de Equipamento (Lado a Lado) ---
-function openEquipmentChoiceModal(title, optionA, optionB, callback) {
-    const overlay = document.createElement('div');
-    overlay.className = 'spell-modal-overlay race-modal-overlay';
-    overlay.style.zIndex = '15000';
-
-    overlay.innerHTML = `
-        <div class="spell-modal" style="width: 650px; height: auto;">
-            <div class="modal-header"><h3>Equipamento Inicial</h3></div>
-            <div class="modal-body" style="padding: 25px;">
-                <p style="color:#e0aaff; margin-bottom:20px; text-align:center; font-size:16px;">${title}</p>
-                <div style="display:flex; gap:20px; justify-content:center;">
-                    <button class="equip-btn btn-add" style="flex:1; background:#1a1a1a; border:1px solid #444; padding:20px; text-align:left; display:flex; flex-direction:column; gap:5px; transition:0.2s;">
-                        <strong style="color:#9c27b0; text-transform:uppercase; font-size:12px;">Opção A</strong>
-                        <span style="color:#fff; font-size:14px; line-height:1.4;">${optionA}</span>
-                    </button>
-                    <div style="display:flex; align-items:center; color:#666; font-weight:bold;">OU</div>
-                    <button class="equip-btn btn-add" style="flex:1; background:#1a1a1a; border:1px solid #444; padding:20px; text-align:left; display:flex; flex-direction:column; gap:5px; transition:0.2s;">
-                        <strong style="color:#9c27b0; text-transform:uppercase; font-size:12px;">Opção B</strong>
-                        <span style="color:#fff; font-size:14px; line-height:1.4;">${optionB}</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(overlay);
-
-    const btns = overlay.querySelectorAll('.equip-btn');
-    
-    btns.forEach(btn => {
-        btn.onmouseenter = () => btn.style.borderColor = '#9c27b0';
-        btn.onmouseleave = () => btn.style.borderColor = '#444';
-    });
-
-    btns[0].onclick = () => { callback(optionA); overlay.remove(); };
-    btns[1].onclick = () => { callback(optionB); overlay.remove(); };
-}
 
 /* =============================================================
-   SELETOR DE PERÍCIAS (COM BLOQUEIO DE DUPLICATAS)
+   SELETOR DE PERÍCIAS (CORRIGIDO PARA ACEITAR CALLBACK DE EQUIPAMENTO)
    ============================================================= */
-function openSkillSelector(count, sourceName, limitToList = null) {
+function openSkillSelector(count, sourceName, limitToList = null, onComplete = null) {
     // Remove modais anteriores para evitar sobreposição
     const existing = document.querySelectorAll('.race-modal-overlay');
     existing.forEach(e => e.remove());
@@ -318,10 +208,9 @@ function openSkillSelector(count, sourceName, limitToList = null) {
 
     // Mapeia o HTML das opções
     const checkboxesHtml = uniqueOptions.map(skill => {
-        // Verifica se a perícia JÁ está treinada (por Raça ou Antecedente)
+        // Verifica se a perícia JÁ está treinada
         const jaTem = state.pericias[skill] && state.pericias[skill].treinado;
 
-        // Se já tem, aparece visualmente diferente e desabilitado (checked)
         const styleLabel = jaTem 
             ? "background:#222; border:1px solid #444; opacity:0.6; cursor:default;" 
             : "background:#1a1a1a; border:1px solid #555; cursor:pointer;";
@@ -374,8 +263,6 @@ function openSkillSelector(count, sourceName, limitToList = null) {
 
     const btnConfirm = overlay.querySelector('#btn-confirm-skills');
     const counterText = overlay.querySelector('#skill-counter-text');
-    
-    // Seleciona apenas os checkboxes que NÃO estão desabilitados (os que o usuário pode clicar)
     const activeChecks = overlay.querySelectorAll('.skill-check');
 
     // Função para atualizar o estado dos checkboxes e botão
@@ -385,7 +272,6 @@ function openSkillSelector(count, sourceName, limitToList = null) {
         counterText.textContent = `${selectedCount} de ${count} selecionadas`;
 
         if (selectedCount >= count) {
-            // Atingiu o limite: Habilita botão, desabilita os não marcados
             btnConfirm.removeAttribute('disabled');
             btnConfirm.style.background = '#9c27b0';
             btnConfirm.style.color = '#fff';
@@ -397,7 +283,6 @@ function openSkillSelector(count, sourceName, limitToList = null) {
                 }
             });
         } else {
-            // Abaixo do limite: Desabilita botão, habilita todos
             btnConfirm.setAttribute('disabled', true);
             btnConfirm.style.background = '#333';
             btnConfirm.style.color = '#777';
@@ -409,7 +294,6 @@ function openSkillSelector(count, sourceName, limitToList = null) {
         }
     };
 
-    // Adiciona evento a cada checkbox disponível
     activeChecks.forEach(chk => {
         chk.addEventListener('change', updateState);
     });
@@ -427,10 +311,18 @@ function openSkillSelector(count, sourceName, limitToList = null) {
         });
 
         if (typeof saveStateToServer === 'function') saveStateToServer();
-        window.dispatchEvent(new CustomEvent('sheet-updated'));
         
+        // Remove o modal atual
         overlay.remove();
-        if(typeof checkScrollLock === 'function') checkScrollLock();
+        
+        // CORREÇÃO AQUI: Verifica se existe um "Próximo Passo" (Equipamentos)
+        if (onComplete && typeof onComplete === 'function') {
+            onComplete(); // Chama a próxima tarefa da fila (Equipamentos)
+        } else {
+            // Se não tiver mais nada, atualiza a ficha e destrava scroll
+            window.dispatchEvent(new CustomEvent('sheet-updated'));
+            if(typeof checkScrollLock === 'function') checkScrollLock();
+        }
     };
 }
 
@@ -551,7 +443,11 @@ function atualizarTextoClassesHeader() {
     if (el.value !== novoTexto) { el.value = novoTexto; autoResize(el); }
 }
 
-window.addEventListener('sheet-updated', atualizarHeader);
+
+window.addEventListener('sheet-updated', () => {
+    atualizarHeader();
+    checkScrollLock(); // Garante que o scroll volta se não tiver modais
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     const elRaca = document.getElementById('input-raca');
@@ -580,43 +476,7 @@ const elClasses = document.getElementById('input-classesHeader');
 
 
 
-/* =============================================================
-   SISTEMA DE ESCOLHA DE EQUIPAMENTO (MODAL)
-   ============================================================= */
-function openEquipmentSelector(title, optionA, optionB, callback) {
-    const overlay = document.createElement('div');
-    overlay.className = 'spell-modal-overlay race-modal-overlay';
-    overlay.style.zIndex = '15000'; // Por cima de tudo
 
-    overlay.innerHTML = `
-        <div class="spell-modal" style="width: 400px; height: auto;">
-            <div class="modal-header">
-                <h3>Escolha de Equipamento</h3>
-            </div>
-            <div class="modal-body" style="padding: 20px; text-align:center;">
-                <p style="color:#ccc; margin-bottom:15px;">${title}</p>
-                <div style="display:flex; gap:10px; justify-content:center;">
-                    <button class="btn-equip-opt btn-add" style="background:#333; border:1px solid #555; flex:1;">${optionA}</button>
-                    <button class="btn-equip-opt btn-add" style="background:#333; border:1px solid #555; flex:1;">${optionB}</button>
-                </div>
-            </div>
-        </div>
-    `;
-
-    document.body.appendChild(overlay);
-
-    const buttons = overlay.querySelectorAll('.btn-equip-opt');
-    
-    buttons[0].onclick = () => {
-        callback(optionA);
-        overlay.remove();
-    };
-
-    buttons[1].onclick = () => {
-        callback(optionB);
-        overlay.remove();
-    };
-}
 
 // Função para processar a lista de strings de equipamento
 function processarEquipamentoInicial(equipList) {
@@ -1678,17 +1538,21 @@ function openEquipmentSelector(title, optionA, optionB, callback) {
     `;
 
     document.body.appendChild(overlay);
+    if(typeof checkScrollLock === 'function') checkScrollLock(); // Trava ao abrir
 
     const buttons = overlay.querySelectorAll('.btn-equip-opt');
     
+    // CORREÇÃO AQUI: Adicionado checkScrollLock() ao clicar
     buttons[0].onclick = () => {
         callback(optionA);
         overlay.remove();
+        if(typeof checkScrollLock === 'function') checkScrollLock();
     };
 
     buttons[1].onclick = () => {
         callback(optionB);
         overlay.remove();
+        if(typeof checkScrollLock === 'function') checkScrollLock();
     };
 }
 
@@ -1752,7 +1616,6 @@ function adicionarItemAoInventario(nomeItem) {
    SISTEMA DE EQUIPAMENTOS INTELIGENTE
    ============================================================= */
 
-// 1. Modal A ou B (Lado a Lado)
 function openEquipmentChoiceModal(title, optionA, optionB, callback) {
     const overlay = document.createElement('div');
     overlay.className = 'spell-modal-overlay race-modal-overlay';
@@ -1786,17 +1649,26 @@ function openEquipmentChoiceModal(title, optionA, optionB, callback) {
     `;
 
     document.body.appendChild(overlay);
+    if(typeof checkScrollLock === 'function') checkScrollLock(); // Trava ao abrir
 
     const buttons = overlay.querySelectorAll('.btn-equip-opt');
     
-    // Hover effect manual
     buttons.forEach(btn => {
         btn.onmouseenter = () => btn.style.borderColor = '#9c27b0';
         btn.onmouseleave = () => btn.style.borderColor = '#444';
     });
 
-    buttons[0].onclick = () => { callback(optionA); overlay.remove(); };
-    buttons[1].onclick = () => { callback(optionB); overlay.remove(); };
+    // CORREÇÃO AQUI: Adicionado checkScrollLock() ao clicar
+    buttons[0].onclick = () => { 
+        callback(optionA); 
+        overlay.remove(); 
+        if(typeof checkScrollLock === 'function') checkScrollLock(); 
+    };
+    buttons[1].onclick = () => { 
+        callback(optionB); 
+        overlay.remove(); 
+        if(typeof checkScrollLock === 'function') checkScrollLock(); 
+    };
 }
 
 // 2. Processador da Lista de Equipamentos (Recursivo)
@@ -2681,6 +2553,22 @@ function aplicarRacaNaFicha(raceData, variationData, lineageData, ancestryData =
 
 /* ---------------- FUNÇÕES DE SUPORTE ---------------- */
 
+/* =============================================================
+   FUNÇÃO DE CONTROLE DE SCROLL (Adicione isto ao seu código)
+============================================================= */
+function checkScrollLock() {
+    // Procura por qualquer modal ativo na tela
+    const activeModals = document.querySelectorAll('.spell-modal-overlay, .race-modal-overlay, .lightbox-overlay');
+
+    if (activeModals.length > 0) {
+        // Se houver pelo menos um modal, trava o scroll
+        document.body.style.overflow = 'hidden';
+    } else {
+        // Se não houver modais, libera o scroll
+        document.body.style.overflow = ''; // ou 'auto'
+    }
+}
+
 function openCustomRaceCreator() {
     const overlay = document.createElement('div');
     overlay.className = 'spell-modal-overlay race-modal-overlay';
@@ -2790,3 +2678,4 @@ window.openImageLightbox = function(imgSrc) {
     overlay.onclick = function(e) { if (e.target.classList.contains('lightbox-overlay') || e.target.classList.contains('lightbox-close')) overlay.remove(); };
     document.body.appendChild(overlay);
 };
+

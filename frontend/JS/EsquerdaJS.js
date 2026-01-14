@@ -47,7 +47,7 @@ const TIPOS_DANO_LISTA = [
 
 const PROFICIENCIAS_LISTA_ESQUERDA = [
     'Armaduras leves', 'Armaduras médias', 'Armaduras pesadas', 'Escudos',
-    'Armas simples', 'Armas marciais',
+    'Armas simples', 'Armas marciais', 'Armas de fogo',
     'Ferramentas de Alquimista', 'Ferramentas de Calígrafo', 'Ferramentas de Carpinteiro',
     'Ferramentas de Cartógrafo', 'Ferramentas de Coureiro', 'Ferramentas de Ferreiro',
     'Ferramentas de Joalheiro', 'Ferramentas de Oleiro', 'Ferramentas de Pedreiro',
