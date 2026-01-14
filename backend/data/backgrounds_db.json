@@ -127,7 +127,7 @@
     "name": "Herói Popular",
     "description": "Você vem de origem humilde, mas o destino o escolheu. Seja por ter enfrentado um tirano, matado uma besta ou liderado uma revolta, o povo comum o vê como um deles, um campeão que entende suas dores.",
     "image": "img/backgrounds/Heroi.png",
-    "skills": ["Adestrar Animais", "Sobrevivência"],
+    "skills": ["Lidar com animais", "Sobrevivência"],
     "tools": ["Ferramentas de artesão", "Veículos terrestres"],
     "languages": 0,
     "equipment": ["Ferramentas de artesão", "Pá", "Panela de ferro", "Roupas comuns", "10 PO"],

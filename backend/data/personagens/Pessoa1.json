@@ -1,7 +1,7 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Combate",
+  "activeTab": "Inventário",
   "spellDCConfig": {
     "selectedAttr": "none",
     "extraMod": 0,
@@ -10,39 +10,40 @@
   "dtMagias": "Selecione",
   "inventory": [
     {
-      "id": 1768367932624,
-      "name": "Besta Leve",
+      "id": 1768417062636,
+      "name": "Clava Grande",
       "category": "Armas",
-      "subcategory": "A distancia",
+      "subcategory": "Corpo-a-corpo",
       "type": "Arma",
       "damage": "1d8",
-      "damageType": "Perfurante",
+      "damageType": "Contundente",
       "proficiency": "Armas Simples",
-      "tipoArma": "A Distancia",
+      "tipoArma": "Corpo a Corpo",
       "empunhadura": "Duas Maos",
       "caracteristicas": [
-        "Munição",
-        "Recarga",
+        "Pesada",
         "Duas Mãos"
       ],
-      "alcance": "24m/96m",
-      "description": "<p>Besta simples, fácil de usar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 7 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg</li></ul>",
-      "originalId": "i_besta_leve",
+      "description": "<p>Um bastão grosso e pesado.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 3 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>",
+      "originalId": "i_clava_grande",
       "quantidade": 1,
       "equip": false,
       "expanded": false
     },
     {
-      "id": 1768367938804,
-      "name": "Kit de artista",
-      "type": "Equipamento",
-      "quantity": 1,
-      "weight": 0,
-      "description": "Item de Classe",
-      "expanded": true
+      "id": 1768416988196,
+      "name": "Kit de Diplomata",
+      "category": "Conjuntos",
+      "subcategory": "Kits",
+      "type": "Geral",
+      "description": "<p>Inclui um baú, dois estojos para mapas ou pergaminhos, um conjunto de roupas finas, um frasco de tinta, uma caneta de escrever, uma lâmpada, dois frascos de óleo, cinco folhas de papel, um frasco de perfume, cera de selar e um sinete.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 39 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 9 kg</li></ul>",
+      "originalId": "i_kit_diplomata",
+      "quantidade": 1,
+      "equip": false,
+      "expanded": false
     },
     {
-      "id": 1768367935691,
+      "id": 1768417033304,
       "name": "Alaúde",
       "category": "Conjuntos",
       "subcategory": "Ferramentas",
@@ -54,7 +55,7 @@
       "expanded": false
     },
     {
-      "id": 1768367871381,
+      "id": 1768417024393,
       "name": "Adaga",
       "category": "Armas",
       "subcategory": "Corpo-a-corpo",
@@ -75,72 +76,73 @@
       "equip": false,
       "expanded": false
     },
-   
     {
-      "id": 1768367933374,
-      "name": "arma marcial",
-      "type": "Equipamento",
-      "quantity": 1,
-      "weight": 0,
-      "description": "Item de Classe"
-    },
-    {
-      "id": 1768367982246,
-      "name": "Escudo",
-      "category": "Armaduras",
-      "subcategory": "Escudos",
-      "type": "Proteção",
-      "defense": "+2",
-      "proficiency": "Escudo",
-      "tipoItem": "Escudo",
-      "description": "<p>Pode ser de madeira ou metal.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>",
-      "originalId": "i_escudo",
-      "quantidade": 1,
-      "equip": false,
-      "expanded": false
-    },
-    {
-      "id": 1768367991192,
-      "name": "Besta Leve",
+      "id": 1768420247653,
+      "name": "Dardo",
       "category": "Armas",
       "subcategory": "A distancia",
       "type": "Arma",
-      "damage": "1d8",
+      "damage": "1d4",
       "damageType": "Perfurante",
       "proficiency": "Armas Simples",
       "tipoArma": "A Distancia",
-      "empunhadura": "Duas Maos",
+      "empunhadura": "Uma mao",
       "caracteristicas": [
-        "Munição",
-        "Recarga",
-        "Duas Mãos"
+        "Ágil",
+        "Arremesso"
       ],
-      "alcance": "24m/96m",
-      "description": "<p>Besta simples, fácil de usar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 7 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg</li></ul>",
-      "originalId": "i_besta_leve",
+      "alcance": "6m/18m",
+      "description": "<p>Pequeno projétil de arremesso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pc</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,1 kg</li></ul>",
+      "originalId": "i_dardo",
       "quantidade": 1,
       "equip": false,
       "expanded": false
     },
     {
-      "id": 1768367972237,
-      "name": "Porta Virotes",
-      "category": "Utensílios",
-      "subcategory": "Utensílios gerais",
+      "id": 1768420311729,
+      "name": "Kit de Diplomata",
+      "category": "Conjuntos",
+      "subcategory": "Kits",
       "type": "Geral",
-      "description": "<p>Comporta 20 virotes.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
-      "originalId": "i_porta_virotes",
-      "quantidade": 20,
+      "description": "<p>Inclui um baú, dois estojos para mapas ou pergaminhos, um conjunto de roupas finas, um frasco de tinta, uma caneta de escrever, uma lâmpada, dois frascos de óleo, cinco folhas de papel, um frasco de perfume, cera de selar e um sinete.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 39 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 9 kg</li></ul>",
+      "originalId": "i_kit_diplomata",
+      "quantidade": 1,
       "equip": false,
       "expanded": false
     },
     {
-      "id": 1768367934360,
-      "name": "Kit de aventureiro",
-      "type": "Equipamento",
-      "quantity": 1,
-      "weight": 0,
-      "description": "Item de Classe"
+      "id": 1768420312037,
+      "name": "Alaúde",
+      "category": "Conjuntos",
+      "subcategory": "Ferramentas",
+      "type": "Geral",
+      "description": "<p>Instrumento de cordas popular.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 35 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
+      "originalId": "i_instrumento_alaude",
+      "quantidade": 1,
+      "equip": false,
+      "expanded": false
+    },
+    {
+      "id": 1768420230805,
+      "name": "Adaga",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d4",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Uma mao",
+      "caracteristicas": [
+        "Ágil",
+        "Leve",
+        "Arremesso (6/18)"
+      ],
+      "description": "<p>Lâmina curta multiuso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "originalId": "i_adaga",
+      "quantidade": 1,
+      "equip": false,
+      "expanded": false
     }
   ],
   "abilities": [
@@ -536,22 +538,22 @@
     },
     "Acrobacia": {
       "atributo": "DEX",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Furtividade": {
       "atributo": "DEX",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Prestidigitação": {
       "atributo": "DEX",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Arcanismo": {
       "atributo": "INT",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "História": {
@@ -561,17 +563,17 @@
     },
     "Investigação": {
       "atributo": "INT",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Natureza": {
       "atributo": "INT",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Religião": {
       "atributo": "INT",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Intuição": {
@@ -581,81 +583,73 @@
     },
     "Lidar com animais": {
       "atributo": "SAB",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Medicina": {
       "atributo": "SAB",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Percepção": {
       "atributo": "SAB",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Sobrevivência": {
       "atributo": "SAB",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Atuação": {
       "atributo": "CAR",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Enganação": {
       "atributo": "CAR",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Intimidação": {
       "atributo": "CAR",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Persuasão": {
       "atributo": "CAR",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Salvaguarda (Força)": {
       "atributo": "FOR",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Salvaguarda (Destreza)": {
       "atributo": "DEX",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Salvaguarda (Constituição)": {
       "atributo": "CON",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Salvaguarda (Inteligência)": {
       "atributo": "INT",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Salvaguarda (Sabedoria)": {
       "atributo": "SAB",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Salvaguarda (Carisma)": {
       "atributo": "CAR",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
-    },
-    "Adestrar Animais": {
-      "treinado": false,
-      "bonus": 0
-    },
-    "Lidar com Animais": {
-      "treinado": false,
-      "bonus": 0
     }
   },
   "atributos": {
@@ -669,14 +663,14 @@
   "niveisClasses": {
     "artifice": 0,
     "barbaro": 0,
-    "bardo": 0,
+    "bardo": 1,
     "blood hunter": 0,
     "bruxo": 0,
     "clerigo": 0,
     "monge": 0,
     "druida": 0,
     "feiticeiro": 0,
-    "guerreiro": 1,
+    "guerreiro": 0,
     "ladino": 0,
     "mago": 0,
     "paladino": 0,
@@ -687,8 +681,8 @@
   "vidaDadosSalvos": {},
   "marco": 0,
   "vidaAtual": 0,
-  "vidaTempAtual": 71,
-  "danoNecroAtual": 60,
+  "vidaTempAtual": 35,
+  "danoNecroAtual": 30,
   "metros": 9,
   "iniciativaBonus": 0,
   "acOutros": 0,
@@ -702,24 +696,13 @@
   "resistenciasList": [],
   "imunidadesList": [],
   "proficienciasList": [
-    "Escudos",
     "Armaduras leves",
     "Armas simples",
     "Bestas de Mão",
     "Espadas Longas",
     "Rapieiras",
     "Espadas Curtas",
-    "Três instrumentos musicais à sua escolha",
-    "Kit de disfarce",
-    "Alaúde",
-    "Armaduras médias",
-    "Armas de fogo",
-    "Ferramentas de Ladrão",
-    "Ferramentas de Funileiro",
-    "Um tipo de ferramenta de artesão à escolha",
-    "Armas marciais",
-    "Kit de falsificação",
-    "Armaduras pesadas"
+    "Três instrumentos musicais à sua escolha"
   ],
   "idiomasList": [],
   "spellSlots": {
@@ -843,7 +826,7 @@
     "pl": 0,
     "pd": 4
   },
-  "hitDie": "d10",
+  "hitDie": "d8",
   "subclasses": {
     "bruxo": "O Morto-Vivo"
   }

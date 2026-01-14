@@ -2545,7 +2545,7 @@
       "class": "Clérigo",
       "subclass": "Domínio da Força",
       "name": "(Força, 1º nível) Acólito da Força",
-      "description": "<p>Você ganha proficiência com armaduras pesadas e em uma perícia (Adestrar Animais, Atletismo, Natureza ou Sobrevivência). Aprende um truque de druida.</p>"
+      "description": "<p>Você ganha proficiência com armaduras pesadas e em uma perícia (Lidar com animais, Atletismo, Natureza ou Sobrevivência). Aprende um truque de druida.</p>"
     },
     {
       "id": "cle_for_2_proeza",
@@ -8808,7 +8808,7 @@
       "class": "Talentos",
       "subclass": "",
       "name": "Amigo dos Bichos (Gnomo)",
-      "description": "<p>Proficiência (ou expertise) Adestrar Animais. <em>Falar com Animais</em> à vontade, <em>Amizade Animal</em> 1x/dia.</p>"
+      "description": "<p>Proficiência (ou expertise) Lidar com animais. <em>Falar com Animais</em> à vontade, <em>Amizade Animal</em> 1x/dia.</p>"
     },
     {
       "id": "feat_ua_amigo",
@@ -9024,7 +9024,7 @@
       "class": "Talentos",
       "subclass": "",
       "name": "Tratador Animal",
-      "description": "<p>+1 SAB. Proficiência (ou expertise) Adestrar Animais. Comanda animal amistoso com ação bônus.</p>"
+      "description": "<p>+1 SAB. Proficiência (ou expertise) Lidar com animais. Comanda animal amistoso com ação bônus.</p>"
     }
 
   ]

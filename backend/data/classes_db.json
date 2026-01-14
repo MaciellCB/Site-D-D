@@ -699,7 +699,7 @@
     "skills_list": ["Qualquer perícia à sua escolha"],
     "equipment": [
       "(a) Uma rapieira, (b) Uma espada longa ou (c) Qualquer arma simples",
-      "(a) Kit de diplomata ou (b) Kit de artista",
+      "(a) Kit de Diplomata ou (b) Kit de Artista",
       "(a) Um alaúde ou (b) Qualquer outro instrumento musical",
       "Uma armadura de couro e uma adaga"
     ],
@@ -1659,7 +1659,7 @@
           {
             "name": "[Nível 1] Acólito da Força",
             "level": 1,
-            "description": "<p>Você ganha proficiência com armaduras pesadas e em uma perícia (Adestrar Animais, Atletismo, Natureza ou Sobrevivência). Aprende um truque de druida.</p>"
+            "description": "<p>Você ganha proficiência com armaduras pesadas e em uma perícia (Lidar com animais, Atletismo, Natureza ou Sobrevivência). Aprende um truque de druida.</p>"
           },
           {
             "name": "[Nível 2] Canalizar Divindade: Proeza de Força",

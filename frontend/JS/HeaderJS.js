@@ -14,7 +14,7 @@ const RACES_REQUIRED_SUBRACE = ['Eladrin','Anões','Elfos','Gnomos','Meio-Elfo',
 
 // Perícias
 const ALL_SKILLS_LIST = [
-    "Acrobacia", "Adestrar Animais", "Arcanismo", "Atletismo", "Atuação", 
+    "Acrobacia", "Lidar com animais", "Arcanismo", "Atletismo", "Atuação", 
     "Enganação", "Furtividade", "História", "Intimidação", "Intuição", 
     "Investigação", "Medicina", "Natureza", "Percepção", "Persuasão", 
     "Prestidigitação", "Religião", "Sobrevivência"
@@ -107,11 +107,6 @@ let CLASSES_DB = [];
 let items = [];
 
 
-/* =============================================================
-   2. SISTEMA DE MODAIS E SELETORES
-============================================================= */
-
-// --- Seletor Genérico (Idiomas, Ferramentas, Itens Genéricos) ---
 function openGenericSelector(title, count, options, onConfirmCallback) {
     const overlay = document.createElement('div');
     overlay.className = 'spell-modal-overlay race-modal-overlay';
@@ -125,9 +120,13 @@ function openGenericSelector(title, count, options, onConfirmCallback) {
     // Remove duplicatas e ordena
     const uniqueOptions = [...new Set(options)].sort();
 
+    // --- CORREÇÃO: Calcula quantos itens REAIS estão disponíveis para escolha ---
+    const availableOptionsCount = uniqueOptions.filter(opt => !alreadyKnown.includes(opt)).length;
+    // O limite efetivo é o menor valor entre o que foi pedido e o que sobra
+    const effectiveCount = Math.min(count, availableOptionsCount);
+
     const checkboxesHtml = uniqueOptions.map(opt => {
         const isKnown = alreadyKnown.includes(opt);
-        // Se já tem, desabilita e muda visual
         const styleLabel = isKnown ? "background:#222; border:1px solid #444; opacity:0.6;" : "background:#1a1a1a; border:1px solid #555; cursor:pointer;";
         return `
             <label style="display:flex; align-items:center; gap:10px; padding:8px; border-radius:4px; ${styleLabel}">
@@ -142,7 +141,8 @@ function openGenericSelector(title, count, options, onConfirmCallback) {
             <div class="modal-header"><h3>${title}</h3></div>
             <div class="modal-body" style="padding: 15px; overflow-y: auto; flex:1;">
                 <div style="font-size:14px; color:#e0aaff; margin-bottom:15px; text-align:center;">
-                    Escolha <strong>${count}</strong> opção(ões).
+                    Escolha <strong>${effectiveCount}</strong> opção(ões). 
+                    ${effectiveCount < count ? '<br><small style="color:#aaa">(Opções limitadas disponíveis)</small>' : ''}
                 </div>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">${checkboxesHtml}</div>
             </div>
@@ -157,11 +157,20 @@ function openGenericSelector(title, count, options, onConfirmCallback) {
     const btnConfirm = overlay.querySelector('#btn-confirm-gen');
     const checks = overlay.querySelectorAll('.gen-check');
 
-    // Lógica de limite
+    // Se não houver nada para escolher (effectiveCount 0), libera o botão imediatamente
+    if (effectiveCount === 0) {
+         btnConfirm.removeAttribute('disabled');
+         btnConfirm.style.background = '#9c27b0';
+         btnConfirm.textContent = "Continuar (Nada a escolher)";
+    }
+
+    // Lógica de limite corrigida
     checks.forEach(chk => {
         chk.addEventListener('change', () => {
             const selectedCount = overlay.querySelectorAll('.gen-check:checked').length;
-            if (selectedCount >= count) {
+            
+            // --- CORREÇÃO: Usa effectiveCount em vez de count ---
+            if (selectedCount >= effectiveCount) {
                 checks.forEach(c => { if (!c.checked) c.disabled = true; }); // Bloqueia outros
                 btnConfirm.removeAttribute('disabled');
                 btnConfirm.style.background = '#9c27b0';
@@ -185,11 +194,7 @@ function openGenericSelector(title, count, options, onConfirmCallback) {
 
 
 
-/* =============================================================
-   SELETOR DE PERÍCIAS (CORRIGIDO PARA ACEITAR CALLBACK DE EQUIPAMENTO)
-   ============================================================= */
 function openSkillSelector(count, sourceName, limitToList = null, onComplete = null) {
-    // Remove modais anteriores para evitar sobreposição
     const existing = document.querySelectorAll('.race-modal-overlay');
     existing.forEach(e => e.remove());
 
@@ -197,24 +202,27 @@ function openSkillSelector(count, sourceName, limitToList = null, onComplete = n
     overlay.className = 'spell-modal-overlay race-modal-overlay';
     overlay.style.zIndex = '14000';
 
-    // Se nenhuma lista for passada (fallback), usa todas.
     const options = limitToList || ALL_SKILLS_LIST;
-    
-    // Filtra duplicatas na lista de origem e ordena alfabeticamente
     const uniqueOptions = [...new Set(options)].sort();
 
-    // Garante que o objeto de perícias exista no estado
     if (!state.pericias) state.pericias = {};
 
-    // Mapeia o HTML das opções
-    const checkboxesHtml = uniqueOptions.map(skill => {
-        // Verifica se a perícia JÁ está treinada
-        const jaTem = state.pericias[skill] && state.pericias[skill].treinado;
+    // --- CORREÇÃO 1: Calcular quantas opções estão DISPONÍVEIS (não treinadas) ---
+    // Conta quantas perícias da lista fornecida o usuário JÁ TEM
+    const alreadyHaveCount = uniqueOptions.filter(skill => state.pericias[skill] && state.pericias[skill].treinado).length;
+    
+    // O número de opções disponíveis para pegar é o Total - O que já tem
+    const availableToPick = uniqueOptions.length - alreadyHaveCount;
 
+    // O limite real é o MÍNIMO entre o que foi pedido e o que sobra
+    // Ex: Pediu 3, mas só tem 2 sobrando -> effectiveCount = 2
+    const effectiveCount = Math.min(count, availableToPick);
+
+    const checkboxesHtml = uniqueOptions.map(skill => {
+        const jaTem = state.pericias[skill] && state.pericias[skill].treinado;
         const styleLabel = jaTem 
             ? "background:#222; border:1px solid #444; opacity:0.6; cursor:default;" 
             : "background:#1a1a1a; border:1px solid #555; cursor:pointer;";
-            
         const styleText = jaTem ? "color:#888;" : "color:#fff;";
         const tagJaTem = jaTem ? '<span style="font-size:10px; color:#e0aaff; float:right;">(Já possui)</span>' : '';
 
@@ -236,10 +244,9 @@ function openSkillSelector(count, sourceName, limitToList = null, onComplete = n
             </div>
             
             <div class="modal-body" style="padding: 0; overflow:hidden; flex:1; display:flex; flex-direction:column;">
-                
                 <div style="padding:15px; background:#111; border-bottom:1px solid #333; text-align:center;">
                     <p style="color:#ccc; margin:0; font-size:14px;">
-                        Você deve escolher <strong style="color:#e0aaff; font-size:16px;">${count}</strong> nova(s) perícia(s).
+                        Você deve escolher <strong style="color:#e0aaff; font-size:16px;">${effectiveCount}</strong> nova(s) perícia(s).
                     </p>
                     <div id="skill-counter-text" style="font-size:12px; color:#777; margin-top:5px;">
                         0 selecionadas
@@ -263,15 +270,25 @@ function openSkillSelector(count, sourceName, limitToList = null, onComplete = n
 
     const btnConfirm = overlay.querySelector('#btn-confirm-skills');
     const counterText = overlay.querySelector('#skill-counter-text');
-    const activeChecks = overlay.querySelectorAll('.skill-check');
+    const activeChecks = overlay.querySelectorAll('.skill-check'); // Pega apenas os checkboxes CLICÁVEIS (não os disabled)
 
-    // Função para atualizar o estado dos checkboxes e botão
+    // Se effectiveCount for 0 (usuário já tem tudo), libera o botão direto
+    if (effectiveCount === 0) {
+         btnConfirm.removeAttribute('disabled');
+         btnConfirm.style.background = '#9c27b0';
+         btnConfirm.style.color = '#fff';
+         btnConfirm.textContent = "Continuar (Já possui todas as opções)";
+         counterText.textContent = "Todas as perícias disponíveis já foram aprendidas.";
+    }
+
     const updateState = () => {
+        // Conta apenas os checkboxes ativos que o usuário marcou agora
         const selectedCount = overlay.querySelectorAll('.skill-check:checked').length;
         
-        counterText.textContent = `${selectedCount} de ${count} selecionadas`;
+        counterText.textContent = `${selectedCount} de ${effectiveCount} selecionadas`;
 
-        if (selectedCount >= count) {
+        // --- CORREÇÃO 2: Usa effectiveCount na verificação ---
+        if (selectedCount >= effectiveCount) {
             btnConfirm.removeAttribute('disabled');
             btnConfirm.style.background = '#9c27b0';
             btnConfirm.style.color = '#fff';
@@ -298,7 +315,6 @@ function openSkillSelector(count, sourceName, limitToList = null, onComplete = n
         chk.addEventListener('change', updateState);
     });
 
-    // Ação do Botão Confirmar
     btnConfirm.onclick = () => {
         const selectedSkills = Array.from(overlay.querySelectorAll('.skill-check:checked')).map(c => c.value);
         
@@ -311,15 +327,11 @@ function openSkillSelector(count, sourceName, limitToList = null, onComplete = n
         });
 
         if (typeof saveStateToServer === 'function') saveStateToServer();
-        
-        // Remove o modal atual
         overlay.remove();
         
-        // CORREÇÃO AQUI: Verifica se existe um "Próximo Passo" (Equipamentos)
         if (onComplete && typeof onComplete === 'function') {
-            onComplete(); // Chama a próxima tarefa da fila (Equipamentos)
+            onComplete(); 
         } else {
-            // Se não tiver mais nada, atualiza a ficha e destrava scroll
             window.dispatchEvent(new CustomEvent('sheet-updated'));
             if(typeof checkScrollLock === 'function') checkScrollLock();
         }

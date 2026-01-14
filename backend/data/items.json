@@ -1058,6 +1058,17 @@
     "type": "Geral",
     "description": "<p>10 usos. Estabiliza criatura (0 PV) sem teste.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
   },
+
+{
+  "id": "i_kit_artista",
+  "name": "Kit de Artista",
+  "category": "Conjuntos",
+  "subcategory": "Kits",
+  "type": "Geral",
+  "description": "<p>Inclui uma mochila, um saco de dormir, duas fantasias, cinco velas, cinco dias de rações, um cantil e um kit de disfarce.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 40 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>"
+},
+
+  
   {
     "id": "i_lanterna_coberta",
     "name": "Lanterna Coberta",
