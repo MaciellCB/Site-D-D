@@ -1816,8 +1816,9 @@ function adicionarItemAoInventario(nomeItem) {
 }
 
 /* =============================================================
-   ATUALIZAÇÃO: PROCESSADOR QUE DETECTA 3 OPÇÕES
+   CORREÇÃO: PROCESSADOR QUE DIVIDE ITENS MÚLTIPLOS (VIRGULAS/E)
    ============================================================= */
+
 function processarListaEquipamentos(lista, index, callbackFinal) {
     if (!lista || index >= lista.length) {
         callbackFinal();
@@ -1828,16 +1829,14 @@ function processarListaEquipamentos(lista, index, callbackFinal) {
     const nextStep = () => processarListaEquipamentos(lista, index + 1, callbackFinal);
 
     // 1. Tenta detectar padrão de 3 escolhas: (a) X, (b) Y ou (c) Z
-    // Ex: "(a) uma rapieira, (b) uma espada longa ou (c) qualquer arma simples"
-    const regex3Options = /\(a\)\s*(.+?)[,;]?\s+\(b\)\s*(.+?)[,;]?\s+(?:ou)?\s*\(c\)\s*(.+)/i;
+    const regex3Options = /\(a\)\s*(.+?)[,;]?\s+\(b\)\s*(.+?)[,;]?\s+(?:ou)\s*\(c\)\s*(.+)/i;
     const match3 = itemStr.match(regex3Options);
 
     if (match3) {
         const optA = match3[1].trim();
         const optB = match3[2].trim();
-        const optC = match3[3].trim(); // Aqui virá "qualquer arma simples"
+        const optC = match3[3].trim(); 
 
-        // Chama o modal passando a opção C (o null seria o callback, mas ajustamos a assinatura da função acima)
         openEquipmentChoiceModal("Escolha uma das opções:", optA, optB, optC, (choice) => {
             processarEscolhaComplexa(choice, nextStep);
         });
@@ -1852,22 +1851,28 @@ function processarListaEquipamentos(lista, index, callbackFinal) {
         const optA = match2[1].trim();
         const optB = match2[2].trim();
 
-        // Passa null no optionC
         openEquipmentChoiceModal("Escolha uma das opções:", optA, optB, null, (choice) => {
             processarEscolhaComplexa(choice, nextStep);
         });
         return;
     } 
     
-    // 3. Item direto
-    verificarItemGenerico(itemStr, nextStep);
+    // 3. Item direto (SEM ESCOLHA), mas pode ser composto (ex: "Armadura de couro, arco e flechas")
+    // Mandamos para o processarEscolhaComplexa que já sabe separar vírgulas
+    processarEscolhaComplexa(itemStr, nextStep);
 }
 
-// Função auxiliar para processar o resultado da escolha (separa virgulas e verifica genericos)
+// Função auxiliar para separar itens compostos por vírgula ou " e "
 function processarEscolhaComplexa(choice, callbackNext) {
-    // Separa itens compostos ("arco e flechas" ou "x, y e z")
-    const cleanChoice = choice.replace(" e ", ", ");
-    const subItems = cleanChoice.split(",").map(s => s.trim());
+    // Truque: Substitui " e " por "," para facilitar o split, mas cuidado com nomes que usam " e " (raro em itens)
+    // Removemos (a), (b) caso tenha sobrado sujeira
+    let cleanChoice = choice.replace(/\([abc]\)/g, "").trim();
+    
+    // Separa por vírgula OU pela palavra " e " (com espaços em volta)
+    // Ex: "Armadura de couro, arco longo e 20 flechas" -> ["Armadura de couro", "arco longo", "20 flechas"]
+    cleanChoice = cleanChoice.replace(/\s+e\s+/g, ","); 
+
+    const subItems = cleanChoice.split(",").map(s => s.trim()).filter(s => s !== "");
     
     // Processa subitens em fila (para lidar com múltiplos genéricos se houver)
     let subQueue = [...subItems];
@@ -1878,20 +1883,20 @@ function processarEscolhaComplexa(choice, callbackNext) {
             return; 
         }
         const si = subQueue.shift();
-        // A mágica acontece aqui: se si for "qualquer arma simples", 
-        // verificarItemGenerico vai abrir o seletor automaticamente.
+        
+        // Verifica se é um item genérico (ex: "Qualquer arma simples") ou item normal
         verificarItemGenerico(si, () => runSubQueue());
     }
     runSubQueue();
 }
 
-// Verifica palavras-chave para abrir seletor específico
+// Verifica palavras-chave para abrir seletor específico ou adiciona direto
 function verificarItemGenerico(nomeItem, callbackNext) {
     const nomeLower = nomeItem.toLowerCase();
     let listaOpcoes = null;
     let tituloModal = "";
 
-    // Detecção
+    // Detecção de palavras chaves para abrir popups
     if (nomeLower.includes("qualquer arma simples")) { listaOpcoes = LISTA_ARMAS_SIMPLES; tituloModal = "Escolha uma Arma Simples"; } 
     else if (nomeLower.includes("qualquer arma marcial")) { listaOpcoes = LISTA_ARMAS_MARCIAIS; tituloModal = "Escolha uma Arma Marcial"; }
     else if (nomeLower.includes("instrumento musical")) { listaOpcoes = LISTA_INSTRUMENTOS; tituloModal = "Escolha um Instrumento"; }
@@ -1903,6 +1908,7 @@ function verificarItemGenerico(nomeItem, callbackNext) {
             callbackNext();
         });
     } else {
+        // Se não for genérico, adiciona direto
         adicionarItemAoInventario(nomeItem);
         callbackNext();
     }
@@ -2053,6 +2059,9 @@ function renderClassDetails(cls, container, btnSelect) {
 /* =============================================================
    3. APLICAÇÃO DE CLASSE NA FICHA
 ============================================================= */
+/* =============================================================
+   3. APLICAÇÃO DE CLASSE NA FICHA (ATUALIZADA PARA BARDO)
+============================================================= */
 function aplicarClasseNaFicha(cls, subCls) {
     if (typeof state === 'undefined') return;
 
@@ -2091,6 +2100,8 @@ function aplicarClasseNaFicha(cls, subCls) {
             if (fLvl <= newLevelInClass) addFeatureToState(feat, 'Classe', cls.name, '');
         });
     }
+    
+    // Processamento de Subclasse (Mantido igual)
     if (subCls) {
         if (!state.subclasses) state.subclasses = {};
         state.subclasses[classKey] = subCls.name;
@@ -2110,16 +2121,14 @@ function aplicarClasseNaFicha(cls, subCls) {
         }
     }
 
-    // --- FILA DE ESCOLHAS ---
-    // Usamos Tasks para abrir um modal de cada vez
+    // --- FILA DE ESCOLHAS (TASKS) ---
     const tasks = [];
 
     if (isFirstLevelCharacter) {
         // NÍVEL 1: Tudo
         if (cls.saving_throws && !state.proficiencias) state.proficiencias = {}; 
-        // Adicione aqui lógica para marcar saves: state.proficiencias.saves = cls.saving_throws;
 
-        // Perícias (LÓGICA CORRIGIDA BARDO/QUALQUER)
+        // 1. Perícias (Skill Selector)
         if (cls.skills_list && cls.skills_count > 0) {
             let lista = cls.skills_list;
             let titulo = `Perícias de ${cls.name}`;
@@ -2127,30 +2136,101 @@ function aplicarClasseNaFicha(cls, subCls) {
             const temQualquer = lista.some(s => s.toLowerCase().includes("qualquer") || s.toLowerCase().includes("escolha"));
             
             if (cls.name === "Bardo" || temQualquer) {
-                lista = ALL_SKILLS_LIST; // Usa TODAS as perícias
+                lista = ALL_SKILLS_LIST; 
                 titulo = `Perícias de ${cls.name} (Escolha Livre)`;
             }
 
             tasks.push((next) => openSkillSelector(cls.skills_count, titulo, lista, next));
         }
 
-        // Equipamentos
+        // 2. Equipamentos (Equipment Selector)
         if (cls.equipment && cls.equipment.length > 0) {
             tasks.push((next) => processarListaEquipamentos(cls.equipment, 0, next));
         }
 
-        // Proficiências Fixas
+        // 3. Proficiências Fixas (Armor/Weapons/Tools fixas)
         addProficiencias(cls.proficiencies);
+
+        // 4. DETECÇÃO DE ESCOLHA DE FERRAMENTAS/INSTRUMENTOS (NOVO CÓDIGO AQUI)
+        if (cls.proficiencies && cls.proficiencies.tools) {
+            cls.proficiencies.tools.forEach(toolStr => {
+                const tLower = toolStr.toLowerCase();
+
+                // Lógica Específica para o Bardo (3 Instrumentos)
+                if (tLower.includes("três instrumentos musicais") || tLower.includes("tres instrumentos musicais")) {
+                    tasks.push((next) => {
+                        openGenericSelector(
+                            "Escolha 3 Instrumentos Musicais", 
+                            3, 
+                            LISTA_INSTRUMENTOS, 
+                            (selected) => {
+                                if (!state.proficienciasList) state.proficienciasList = [];
+                                selected.forEach(s => {
+                                    if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s);
+                                });
+                                next();
+                            }
+                        );
+                    });
+                }
+                // Lógica Genérica para Ferramentas de Artesão (Ex: Monge)
+                else if (tLower.includes("ferramenta de artesão") && (tLower.includes("uma") || tLower.includes("qualquer") || tLower.includes("escolha"))) {
+                     tasks.push((next) => {
+                        openGenericSelector(
+                            "Escolha 1 Ferramenta de Artesão", 
+                            1, 
+                            LISTA_FERRAMENTAS_ARTESAO, 
+                            (selected) => {
+                                if (!state.proficienciasList) state.proficienciasList = [];
+                                selected.forEach(s => {
+                                    if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s);
+                                });
+                                next();
+                            }
+                        );
+                    });
+                }
+                // Lógica Genérica para 1 Instrumento Musical (Ex: Alguns Backgrounds ou Multiclasse futura)
+                else if (tLower.includes("um instrumento musical") || (tLower.includes("instrumento musical") && tLower.includes("escolha") && !tLower.includes("três"))) {
+                     tasks.push((next) => {
+                        openGenericSelector(
+                            "Escolha 1 Instrumento Musical", 
+                            1, 
+                            LISTA_INSTRUMENTOS, 
+                            (selected) => {
+                                if (!state.proficienciasList) state.proficienciasList = [];
+                                selected.forEach(s => {
+                                    if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s);
+                                });
+                                next();
+                            }
+                        );
+                    });
+                }
+            });
+        }
 
     } else if (isMulticlassing) {
         // MULTICLASSE: Limitado
         let profsMC = { ...cls.proficiencies };
-        if (profsMC.armor) profsMC.armor = profsMC.armor.filter(a => !a.toLowerCase().includes('pesada')); // Sem pesada (regra geral)
+        if (profsMC.armor) profsMC.armor = profsMC.armor.filter(a => !a.toLowerCase().includes('pesada')); 
         addProficiencias(profsMC);
 
-        // Perícias Multiclasse (Apenas estes ganham 1)
+        // Bardo Multiclasse também ganha 1 instrumento musical (regra oficial PHB), 
+        // mas seu JSON de classe provavelmente não define isso separadamente para multiclasse.
+        // Se desejar, adicione a lógica aqui.
+        if (classKey === 'bardo') {
+             tasks.push((next) => {
+                openGenericSelector("Multiclasse Bardo: 1 Instrumento", 1, LISTA_INSTRUMENTOS, (selected) => {
+                    if (!state.proficienciasList) state.proficienciasList = [];
+                    selected.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
+                    next();
+                });
+            });
+        }
+
+        // Perícias Multiclasse
         if (['bardo', 'ladino', 'patrulheiro', 'ranger'].includes(classKey)) {
-            // Bardo ganha 1 de QUALQUER, outros da lista
             let listaMC = cls.skills_list;
             if(classKey === 'bardo') listaMC = ALL_SKILLS_LIST;
             
