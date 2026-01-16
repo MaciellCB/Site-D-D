@@ -1,7 +1,7 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Habilidades",
+  "activeTab": "Inventário",
   "spellDCConfig": {
     "selectedAttr": "none",
     "extraMod": 0,
@@ -10,54 +10,290 @@
   "dtMagias": "Selecione",
   "inventory": [
     {
-      "id": 1768592983554,
-      "name": "Acolchoada",
-      "description": "<p>Camadas de tecido acolchoado.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 4 kg</li></ul>",
-      "expanded": false,
-      "equip": false,
-      "type": "Proteção",
-      "isEquipable": true,
-      "proficiency": "Leve",
-      "defense": "11",
-      "tipoItem": "Armadura",
-      "minStrength": "",
-      "tipoArma": "Corpo a Corpo",
-      "empunhadura": "Uma mao",
-      "crit": "20",
-      "multiplicador": "2",
-      "alcance": "1.5m",
-      "attunement": "Não",
-      "damage": "1d4",
-      "damage2Hands": "",
-      "useTwoHands": false,
-      "damageTypes": [],
-      "moreDmgList": [],
-      "caracteristicas": []
+      "id": 1768599742923,
+      "name": "Lórica de escamas",
+      "type": "Equipamento",
+      "quantity": 1,
+      "weight": 0,
+      "description": "Item adicionado.",
+      "expanded": false
     },
     {
-      "id": 1768592859340,
-      "name": "Armadura de Couro",
-      "description": "<p>Peitoral e ombro de couro rígido.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>",
-      "expanded": true,
-      "equip": false,
-      "type": "Proteção",
-      "isEquipable": true,
-      "proficiency": "Leve",
-      "tipoArma": "Corpo a Corpo",
-      "empunhadura": "Uma mao",
-      "crit": "20",
-      "multiplicador": "2",
-      "alcance": "1.5m",
-      "attunement": "Não",
-      "damage": "1d4",
-      "damage2Hands": "",
+      "id": 1768599750027,
+      "name": "Cajado",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d6",
+      "damage2Hands": "1d8",
       "useTwoHands": false,
-      "damageTypes": [],
-      "moreDmgList": [],
-      "caracteristicas": []
+      "damageType": "Contundente",
+      "proficiency": "Armas Simples",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Versátil",
+      "caracteristicas": [],
+      "description": "<p>Bastão de madeira simples, mas eficaz.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768599727600,
+      "name": "Dardo",
+      "category": "Armas",
+      "subcategory": "A distancia",
+      "type": "Arma",
+      "damage": "1d4",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "A Distancia",
+      "empunhadura": "Uma mao",
+      "caracteristicas": [
+        "Ágil",
+        "Arremesso"
+      ],
+      "alcance": "6m/18m",
+      "description": "<p>Pequeno projétil de arremesso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pc</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,1 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768599706335,
+      "name": "Kit de Explorador",
+      "category": "Conjuntos",
+      "subcategory": "Kits",
+      "type": "Geral",
+      "description": "<p>Inclui uma mochila, um saco de dormir, uma caixa de isqueiro, dez tochas, dez dias de rações, um cantil e uma corda de cânhamo de 15 metros.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 8 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768599733723,
+      "name": "Arco Longo",
+      "category": "Armas",
+      "subcategory": "A distancia",
+      "type": "Arma",
+      "damage": "1d8",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Marciais",
+      "tipoArma": "A Distancia",
+      "empunhadura": "Duas Maos",
+      "caracteristicas": [
+        "Munição",
+        "Pesada",
+        "Duas Mãos"
+      ],
+      "alcance": "45m/180m",
+      "description": "<p>Arco grande para longas distâncias.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 8 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768599737551,
+      "name": "Aljava",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>Comporta 20 flechas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768599722202,
+      "name": "Flechas (x20)",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>\n\n> **Nota:** Adicionado em um lote de 20 unidades.",
+      "quantity": 20
     }
   ],
-  "abilities": [],
+  "abilities": [
+    {
+      "id": 1768600472792,
+      "title": "[Nível 1] Imposição de Mãos",
+      "description": "<p><strong>(Ação)</strong> Reserva de cura (5 x Nível de Paladino).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Cura:</strong> Toque para curar qualquer quantidade da reserva.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Purificação:</strong> Gaste 5 pontos para curar doença ou neutralizar veneno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Restrição:</strong> Não afeta mortos-vivos ou constructos.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Paladino",
+      "subclass": ""
+    },
+    {
+      "id": 1768600422179,
+      "title": "[Nível 1] Sentido Divino",
+      "description": "<p><strong>(Ação)</strong> Detecte a localização de celestiais, demônios ou mortos-vivos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Alcance:</strong> 18 metros (sem cobertura total).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Detecção:</strong> Tipo da criatura (mas não identidade) e locais/objetos consagrados ou profanados.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Usos:</strong> 1 + Mod. Carisma (recupera em descanso longo).</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Paladino",
+      "subclass": ""
+    },
+    {
+      "id": 1768597176622,
+      "title": "Treinamento com Armaduras",
+      "description": "Você adquire proficiência com armaduras <b>leves</b> e <b>médias</b>.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Anão da Montanha"
+    },
+    {
+      "id": 1768597197939,
+      "title": "Conhecimento de Pedras",
+      "description": "Sempre que realizar um teste de Inteligência (História) relacionado à origem de um trabalho em pedra, você é considerado proficiente e adiciona o <b>dobro do seu bônus de proficiência</b> ao teste.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Anões"
+    },
+    {
+      "id": 1768597188190,
+      "title": "Proficiência em Ferramentas",
+      "description": "Você tem proficiência em uma ferramenta de artesão à sua escolha: <b>ferramentas de ferreiro</b>, <b>suprimentos de cervejeiro</b> ou <b>ferramentas de pedreiro</b>.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Anões"
+    },
+    {
+      "id": 1768597242649,
+      "title": "Treinamento Anão em Combate",
+      "description": "Você tem proficiência com machados de batalha, machadinhas, martelos leves e martelos de guerra.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Anões"
+    },
+    {
+      "id": 1768597157961,
+      "title": "Resiliência Anã",
+      "description": "Você possui <b>vantagem</b> em salvaguardas contra veneno e <b>resistência</b> contra dano de veneno.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Anões"
+    },
+    {
+      "id": 1768597164265,
+      "title": "Visão no Escuro",
+      "description": "Acostumado à vida subterrânea, você enxerga na meia-luz a até <b>18 metros</b> como luz plena, e na escuridão como meia-luz.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Anões"
+    },
+    {
+      "id": 1768597190917,
+      "title": "Deslocamento Anão",
+      "description": "Seu deslocamento <u>não é reduzido</u> quando você está usando armadura pesada.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Anões"
+    },
+    {
+      "id": 1768596112537,
+      "title": "[Nível 1] Artes marciais",
+      "description": "<p>Ao usar armas de monge (espadas curtas e armas simples não pesadas/duas mãos) ou ataques desarmados:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Atributo:</strong> Pode usar Destreza em vez de Força para ataque e dano.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> Rola o Dado de Artes marciais (d4, escala com nível) no lugar do dano normal.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque Extra:</strong> Se usar a ação Atacar com essas armas, pode fazer um ataque desarmado como <strong>Ação Bônus</strong>.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Monge",
+      "subclass": ""
+    },
+    {
+      "id": 1768596124714,
+      "title": "[Nível 1] Defesa sem Armadura",
+      "description": "<p>Enquanto não usar armadura nem escudo, sua Classe de Armadura (CA) é:</p><p style='text-align:center; font-weight:bold; color:#fff; background:#222; padding:8px; border-radius:4px;'>10 + Mod. Destreza + Mod. Sabedoria</p>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Monge",
+      "subclass": ""
+    },
+    {
+      "id": 1768596119702,
+      "title": "[Nível 1] Explorador Habilidoso (Opcional)",
+      "description": "<p>Substitui <em>Explorador da Natureza</em>.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 1º Nível (Astuto):</strong> Perícia com dobro de proficiência e 2 idiomas.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 6º Nível (Itinerante):</strong> +1,5m velocidade, ganha escalada e natação.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 10º Nível (Incansável):</strong> Ação para ganhar 1d8+SAB PV temp (Usos=Proficiência) e reduz exaustão em descanso curto.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Patrulheiro",
+      "subclass": ""
+    },
+    {
+      "id": 1768596092062,
+      "title": "[Nível 1] Explorador da Natureza",
+      "description": "<p>Escolha um terreno predileto. Dobre proficiência em testes de INT/SAB relacionados.</p><strong style='display:block; margin-bottom:8px; color:#fff;'>Benefícios ao Viajar:</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Navegação:</strong> Não se perde (salvo magia).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Terreno:</strong> Terreno difícil não atrasa grupo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Furtividade:</strong> Ritmo normal (se sozinho).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Sobrevivência:</strong> Dobro de comida, rastreia com exatidão.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Patrulheiro",
+      "subclass": ""
+    },
+    {
+      "id": 1768596120223,
+      "title": "[Nível 1] Inimigo Favorito (Opcional)",
+      "description": "<p><strong>(Sem Ação)</strong> Ao acertar, marque criatura por 1 min (Concentração). 1º acerto no turno causa <strong>+1d4</strong> dano (1d6 no 6º, 1d8 no 14º). Usos = Proficiência.</p>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Patrulheiro",
+      "subclass": ""
+    },
+    {
+      "id": 1768596099895,
+      "title": "[Nível 1] Inimigo Predileto",
+      "description": "<p>Você tem experiência em caçar tipos específicos de inimigos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Vantagem:</strong> Sobrevivência (rastrear) e Inteligência (recordar).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Idioma:</strong> Aprende um idioma associado ao inimigo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Progressão:</strong> Ganha mais inimigos no 6º e 14º nível.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Patrulheiro",
+      "subclass": ""
+    },
+    {
+      "id": 1768595933662,
+      "title": "[Nível 1] Maldição de Sangue",
+      "description": "<p>Você conhece Maldições de Sangue (invocações de hemomancia).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Amplificar:</strong> Ao usar, você pode sofrer dano necrótico igual a uma rolagem do seu dado de Hemomancia (não redutível) para obter um efeito aprimorado.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Imunidade:</strong> Criaturas sem sangue são imunes a maldições não amplificadas.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Usos:</strong> 1 (1º nível), 2 (6º nível), 3 (13º nível) e 4 (17º nível). Recupera em Descanso Curto/Longo.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Blood Hunter",
+      "subclass": ""
+    },
+    {
+      "id": 1768595969608,
+      "title": "[Nível 1] Flagelo do Caçador",
+      "description": "<p>Você sobreviveu ao ritual da Maldição, ganhando sentidos sobrenaturais.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Rastreamento:</strong> Vantagem em testes de Sobrevivência para rastrear Fadas, Demônios e Mortos-Vivos.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Conhecimento:</strong> Vantagem em testes de Inteligência para recordar informações sobre eles.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Hemomancia:</strong> Sua CD de resistência é 8 + Bônus de Proficiência + Modificador de Hemomancia (INT ou SAB).</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Blood Hunter",
+      "subclass": ""
+    },
+    {
+      "id": 1768595532937,
+      "title": "[Nível 1] Segundo Fôlego",
+      "description": "<p><strong>(Ação Bônus)</strong> Recupere pontos de vida.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Cura:</strong> 1d10 + Nível de Guerreiro.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Recuperação:</strong> Descanso Curto ou Longo.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Guerreiro",
+      "subclass": ""
+    },
+    {
+      "id": 1768595495104,
+      "title": "[Nível 1] Estilo de Luta",
+      "description": "<p>Você adota um estilo de combate especializado. Escolha um:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Arquearia:</strong> +2 ataque à distância.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Defesa:</strong> +1 CA com armadura.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Duelo:</strong> +2 dano com 1 arma (e nenhuma outra).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Arma Grande:</strong> Rerolar 1 e 2 no dano com armas de duas mãos/versáteis.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Proteção:</strong> Reação p/ impor desvantagem em ataque a aliado (requer escudo).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Combate Duas Armas:</strong> Soma atributo no dano da 2ª arma.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Interceptação:</strong> Reduz dano em aliado a 1,5m em 1d10+Prof (Reação).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Técnica Superior:</strong> Aprende 1 manobra e ganha 1 dado de superioridade (d6).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Cego:</strong> Visão cega 3m.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Arremesso:</strong> +2 dano e saque livre de arma de arremesso.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Desarmado:</strong> Dano vira 1d6 (ou 1d8 se duas mãos livres) + 1d4 em alvo agarrado.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Guerreiro",
+      "subclass": ""
+    }
+  ],
   "description": {
     "anotacoes": "ee",
     "aparencia": "e",
@@ -273,7 +509,7 @@
     "guerreiro": 0,
     "ladino": 0,
     "mago": 0,
-    "paladino": 0,
+    "paladino": 1,
     "patrulheiro": 0
   },
   "xp": "0",
@@ -283,7 +519,7 @@
   "vidaAtual": 0,
   "vidaTempAtual": 35,
   "danoNecroAtual": 30,
-  "metros": 9,
+  "metros": 7.5,
   "iniciativaBonus": 0,
   "acOutros": 0,
   "resistencias": "23",
@@ -293,10 +529,28 @@
   "minimizedPreparedSpells": true,
   "minimizedPreparedAbilities": true,
   "fraquezasList": [],
-  "resistenciasList": [],
+  "resistenciasList": [
+    "Necrótico",
+    "Radiante",
+    "Veneno"
+  ],
   "imunidadesList": [],
-  "proficienciasList": [],
-  "idiomasList": [],
+  "proficienciasList": [
+    "Armaduras leves",
+    "Armaduras médias",
+    "Armaduras pesadas",
+    "Escudos",
+    "Armas simples",
+    "Armas marciais",
+    "simples",
+    "Espadas Curtas",
+    "1 Artesão ou Instrumento"
+  ],
+  "idiomasList": [
+    "Comum",
+    "Celestial",
+    "Anão"
+  ],
   "spellSlots": {
     "1": {
       "used": 0,
@@ -379,12 +633,12 @@
   "antecedente": "Artesão de Guilda",
   "personagem": "123w",
   "jogador": "321w",
-  "raca": "cu",
+  "raca": "Anões (Anão da Montanha)",
   "customResources": [],
   "deslocamentoVoo": 0,
-  "subRaca": "",
+  "subRaca": "Anão da Montanha",
   "racaTipo": "Humanoide",
-  "racaTamanho": "Imenso",
+  "racaTamanho": "Médio",
   "money": {
     "pc": 100,
     "pp": 99,

@@ -10,13 +10,13 @@
 // Tipos de Criatura e Tamanhos
 const CREATURE_TYPES = ['Humanoide', 'Construto', 'Fada', 'Dragão', 'Monstruosidade', 'Morto-vivo', 'Celestial', 'Corruptor', 'Elemental', 'Besta', 'Planta', 'Gigante', 'Limo', 'Aberração', 'Gosma'];
 const CREATURE_SIZES = ['Minúsculo', 'Pequeno', 'Médio', 'Grande', 'Enorme', 'Imenso'];
-const RACES_REQUIRED_SUBRACE = ['Eladrin','Anões','Elfos','Gnomos','Meio-Elfo','Pequeninos']; 
+const RACES_REQUIRED_SUBRACE = ['Eladrin', 'Anões', 'Elfos', 'Gnomos', 'Meio-Elfo', 'Pequeninos'];
 
 // Perícias
 const ALL_SKILLS_LIST = [
-    "Acrobacia", "Lidar com animais", "Arcanismo", "Atletismo", "Atuação", 
-    "Enganação", "Furtividade", "História", "Intimidação", "Intuição", 
-    "Investigação", "Medicina", "Natureza", "Percepção", "Persuasão", 
+    "Acrobacia", "Lidar com animais", "Arcanismo", "Atletismo", "Atuação",
+    "Enganação", "Furtividade", "História", "Intimidação", "Intuição",
+    "Investigação", "Medicina", "Natureza", "Percepção", "Persuasão",
     "Prestidigitação", "Religião", "Sobrevivência"
 ];
 
@@ -29,29 +29,29 @@ const ALL_LANGUAGES_LIST = [
 
 // Listas de Itens Genéricos (Para os Dropdowns de Escolha)
 const LISTA_ARMAS_SIMPLES = [
-    "Adaga", "Azagaia", "Besta Leve", "Cajado", "Clava", "Dardo", 
+    "Adaga", "Azagaia", "Besta Leve", "Cajado", "Clava", "Dardo",
     "Funda", "Foice Curta", "Lança", "Maça", "Machadinha", "Martelo Leve"
 ];
 
 const LISTA_ARMAS_MARCIAIS = [
-    "Alabarda", "Arco Longo", "Besta de Mão", "Besta Pesada", "Cimitarra", 
-    "Chicote", "Espada Curta", "Espada Longa", "Espada Grande", 
-    "Glaive", "Lança de Montaria", "Machado de Batalha", "Machado Grande", 
-    "Malho", "Mangual", "Maça Estrela", "Martelo de Guerra", "Picareta de Guerra", 
+    "Alabarda", "Arco Longo", "Besta de Mão", "Besta Pesada", "Cimitarra",
+    "Chicote", "Espada Curta", "Espada Longa", "Espada Grande",
+    "Glaive", "Lança de Montaria", "Machado de Batalha", "Machado Grande",
+    "Malho", "Mangual", "Maça Estrela", "Martelo de Guerra", "Picareta de Guerra",
     "Pique", "Rapieira", "Tridente", "Zarabatana"
 ];
 
 const LISTA_INSTRUMENTOS = [
-    "Alaúde", "Bateria", "Charamela", "Citara", "Flauta", "Flauta de Pã", 
+    "Alaúde", "Bateria", "Charamela", "Citara", "Flauta", "Flauta de Pã",
     "Gaita de Foles", "Lira", "Tambor", "Trombeta", "Trompa", "Viola", "Violino", "Xilofone"
 ];
 
 const LISTA_FERRAMENTAS_ARTESAO = [
-    "Ferramentas de Alquimista", "Ferramentas de Carpinteiro", "Ferramentas de Cartógrafo", 
-    "Ferramentas de Coureiro", "Ferramentas de Ferreiro", "Ferramentas de Joalheiro", 
-    "Ferramentas de Ladrão", "Ferramentas de Navegador", "Ferramentas de Oleiro", 
-    "Ferramentas de Pedreiro", "Ferramentas de Sapateiro", "Ferramentas de Tecelão", 
-    "Ferramentas de Vidreiro", "Suprimentos de Cervejeiro", "Suprimentos de Calígrafo", 
+    "Ferramentas de Alquimista", "Ferramentas de Carpinteiro", "Ferramentas de Cartógrafo",
+    "Ferramentas de Coureiro", "Ferramentas de Ferreiro", "Ferramentas de Joalheiro",
+    "Ferramentas de Ladrão", "Ferramentas de Navegador", "Ferramentas de Oleiro",
+    "Ferramentas de Pedreiro", "Ferramentas de Sapateiro", "Ferramentas de Tecelão",
+    "Ferramentas de Vidreiro", "Suprimentos de Cervejeiro", "Suprimentos de Calígrafo",
     "Suprimentos de Pintor", "Utensílios de Cozinheiro"
 ];
 
@@ -112,17 +112,12 @@ function openGenericSelector(title, count, options, onConfirmCallback) {
     overlay.className = 'spell-modal-overlay race-modal-overlay';
     overlay.style.zIndex = '14000';
 
-    // Identifica o que já possui para bloquear
     let alreadyKnown = [];
     if (title.includes("Idiomas")) alreadyKnown = state.idiomasList || [];
     else if (title.includes("Ferramentas") || title.includes("Instrumento")) alreadyKnown = state.proficienciasList || [];
-    
-    // Remove duplicatas e ordena
-    const uniqueOptions = [...new Set(options)].sort();
 
-    // --- CORREÇÃO: Calcula quantos itens REAIS estão disponíveis para escolha ---
+    const uniqueOptions = [...new Set(options)].sort();
     const availableOptionsCount = uniqueOptions.filter(opt => !alreadyKnown.includes(opt)).length;
-    // O limite efetivo é o menor valor entre o que foi pedido e o que sobra
     const effectiveCount = Math.min(count, availableOptionsCount);
 
     const checkboxesHtml = uniqueOptions.map(opt => {
@@ -157,25 +152,21 @@ function openGenericSelector(title, count, options, onConfirmCallback) {
     const btnConfirm = overlay.querySelector('#btn-confirm-gen');
     const checks = overlay.querySelectorAll('.gen-check');
 
-    // Se não houver nada para escolher (effectiveCount 0), libera o botão imediatamente
     if (effectiveCount === 0) {
-         btnConfirm.removeAttribute('disabled');
-         btnConfirm.style.background = '#9c27b0';
-         btnConfirm.textContent = "Continuar (Nada a escolher)";
+        btnConfirm.removeAttribute('disabled');
+        btnConfirm.style.background = '#9c27b0';
+        btnConfirm.textContent = "Continuar (Nada a escolher)";
     }
 
-    // Lógica de limite corrigida
     checks.forEach(chk => {
         chk.addEventListener('change', () => {
             const selectedCount = overlay.querySelectorAll('.gen-check:checked').length;
-            
-            // --- CORREÇÃO: Usa effectiveCount em vez de count ---
             if (selectedCount >= effectiveCount) {
-                checks.forEach(c => { if (!c.checked) c.disabled = true; }); // Bloqueia outros
+                checks.forEach(c => { if (!c.checked) c.disabled = true; });
                 btnConfirm.removeAttribute('disabled');
                 btnConfirm.style.background = '#9c27b0';
             } else {
-                checks.forEach(c => c.disabled = false); // Libera
+                checks.forEach(c => c.disabled = false);
                 btnConfirm.setAttribute('disabled', true);
                 btnConfirm.style.background = '#444';
             }
@@ -186,12 +177,9 @@ function openGenericSelector(title, count, options, onConfirmCallback) {
         const selectedValues = Array.from(overlay.querySelectorAll('.gen-check:checked')).map(c => c.value);
         onConfirmCallback(selectedValues);
         overlay.remove();
-        if(typeof checkScrollLock === 'function') checkScrollLock();
+        if (typeof checkScrollLock === 'function') checkScrollLock();
     };
 }
-
-
-
 
 
 function openSkillSelector(count, sourceName, limitToList = null, onComplete = null) {
@@ -207,21 +195,14 @@ function openSkillSelector(count, sourceName, limitToList = null, onComplete = n
 
     if (!state.pericias) state.pericias = {};
 
-    // --- CORREÇÃO 1: Calcular quantas opções estão DISPONÍVEIS (não treinadas) ---
-    // Conta quantas perícias da lista fornecida o usuário JÁ TEM
     const alreadyHaveCount = uniqueOptions.filter(skill => state.pericias[skill] && state.pericias[skill].treinado).length;
-    
-    // O número de opções disponíveis para pegar é o Total - O que já tem
     const availableToPick = uniqueOptions.length - alreadyHaveCount;
-
-    // O limite real é o MÍNIMO entre o que foi pedido e o que sobra
-    // Ex: Pediu 3, mas só tem 2 sobrando -> effectiveCount = 2
     const effectiveCount = Math.min(count, availableToPick);
 
     const checkboxesHtml = uniqueOptions.map(skill => {
         const jaTem = state.pericias[skill] && state.pericias[skill].treinado;
-        const styleLabel = jaTem 
-            ? "background:#222; border:1px solid #444; opacity:0.6; cursor:default;" 
+        const styleLabel = jaTem
+            ? "background:#222; border:1px solid #444; opacity:0.6; cursor:default;"
             : "background:#1a1a1a; border:1px solid #555; cursor:pointer;";
         const styleText = jaTem ? "color:#888;" : "color:#fff;";
         const tagJaTem = jaTem ? '<span style="font-size:10px; color:#e0aaff; float:right;">(Já possui)</span>' : '';
@@ -239,27 +220,18 @@ function openSkillSelector(count, sourceName, limitToList = null, onComplete = n
 
     overlay.innerHTML = `
         <div class="spell-modal" style="width: 600px; height: 85vh; display:flex; flex-direction:column;">
-            <div class="modal-header">
-                <h3>${sourceName}</h3>
-            </div>
-            
+            <div class="modal-header"><h3>${sourceName}</h3></div>
             <div class="modal-body" style="padding: 0; overflow:hidden; flex:1; display:flex; flex-direction:column;">
                 <div style="padding:15px; background:#111; border-bottom:1px solid #333; text-align:center;">
                     <p style="color:#ccc; margin:0; font-size:14px;">
                         Você deve escolher <strong style="color:#e0aaff; font-size:16px;">${effectiveCount}</strong> nova(s) perícia(s).
                     </p>
-                    <div id="skill-counter-text" style="font-size:12px; color:#777; margin-top:5px;">
-                        0 selecionadas
-                    </div>
+                    <div id="skill-counter-text" style="font-size:12px; color:#777; margin-top:5px;">0 selecionadas</div>
                 </div>
-
                 <div style="flex:1; overflow-y:auto; padding:15px;">
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                        ${checkboxesHtml}
-                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">${checkboxesHtml}</div>
                 </div>
             </div>
-
             <div class="modal-actions" style="padding:15px; border-top:1px solid #333; background:#000;">
                 <button id="btn-confirm-skills" class="btn-add btn-save-modal" disabled style="background:#444; width:100%; padding:12px; font-size:16px;">Confirmar Escolhas</button>
             </div>
@@ -270,29 +242,24 @@ function openSkillSelector(count, sourceName, limitToList = null, onComplete = n
 
     const btnConfirm = overlay.querySelector('#btn-confirm-skills');
     const counterText = overlay.querySelector('#skill-counter-text');
-    const activeChecks = overlay.querySelectorAll('.skill-check'); // Pega apenas os checkboxes CLICÁVEIS (não os disabled)
+    const activeChecks = overlay.querySelectorAll('.skill-check');
 
-    // Se effectiveCount for 0 (usuário já tem tudo), libera o botão direto
     if (effectiveCount === 0) {
-         btnConfirm.removeAttribute('disabled');
-         btnConfirm.style.background = '#9c27b0';
-         btnConfirm.style.color = '#fff';
-         btnConfirm.textContent = "Continuar (Já possui todas as opções)";
-         counterText.textContent = "Todas as perícias disponíveis já foram aprendidas.";
+        btnConfirm.removeAttribute('disabled');
+        btnConfirm.style.background = '#9c27b0';
+        btnConfirm.style.color = '#fff';
+        btnConfirm.textContent = "Continuar (Já possui todas as opções)";
+        counterText.textContent = "Todas as perícias disponíveis já foram aprendidas.";
     }
 
     const updateState = () => {
-        // Conta apenas os checkboxes ativos que o usuário marcou agora
         const selectedCount = overlay.querySelectorAll('.skill-check:checked').length;
-        
         counterText.textContent = `${selectedCount} de ${effectiveCount} selecionadas`;
 
-        // --- CORREÇÃO 2: Usa effectiveCount na verificação ---
         if (selectedCount >= effectiveCount) {
             btnConfirm.removeAttribute('disabled');
             btnConfirm.style.background = '#9c27b0';
             btnConfirm.style.color = '#fff';
-            
             activeChecks.forEach(c => {
                 if (!c.checked) {
                     c.disabled = true;
@@ -303,7 +270,6 @@ function openSkillSelector(count, sourceName, limitToList = null, onComplete = n
             btnConfirm.setAttribute('disabled', true);
             btnConfirm.style.background = '#333';
             btnConfirm.style.color = '#777';
-
             activeChecks.forEach(c => {
                 c.disabled = false;
                 c.parentElement.parentElement.style.opacity = '1';
@@ -311,13 +277,10 @@ function openSkillSelector(count, sourceName, limitToList = null, onComplete = n
         }
     };
 
-    activeChecks.forEach(chk => {
-        chk.addEventListener('change', updateState);
-    });
+    activeChecks.forEach(chk => { chk.addEventListener('change', updateState); });
 
     btnConfirm.onclick = () => {
         const selectedSkills = Array.from(overlay.querySelectorAll('.skill-check:checked')).map(c => c.value);
-        
         selectedSkills.forEach(skill => {
             if (!state.pericias[skill]) {
                 state.pericias[skill] = { treinado: true, bonus: 0 };
@@ -328,47 +291,38 @@ function openSkillSelector(count, sourceName, limitToList = null, onComplete = n
 
         if (typeof saveStateToServer === 'function') saveStateToServer();
         overlay.remove();
-        
+
         if (onComplete && typeof onComplete === 'function') {
-            onComplete(); 
+            onComplete();
         } else {
             window.dispatchEvent(new CustomEvent('sheet-updated'));
-            if(typeof checkScrollLock === 'function') checkScrollLock();
+            if (typeof checkScrollLock === 'function') checkScrollLock();
         }
     };
 }
 
 
-// --- CONFIGURAÇÃO DA API ---
+// --- CONFIGURAÇÃO DA API E CARREGAMENTO ---
 var BASE_API_URL = (typeof API_URL !== 'undefined') ? API_URL : 'http://localhost:3000/api';
 
-
-
-
-// --- CARREGAMENTO DOS JSONs ---
 async function carregarDadosHeader() {
     try {
-        // Carrega Raças
-        const raceRes = await fetch(`${BASE_API_URL}/catalog/races_db`); 
+        const raceRes = await fetch(`${BASE_API_URL}/catalog/races_db`);
         if (raceRes.ok) RACES_DB = await raceRes.json();
 
-        // Carrega Antecedentes
         const bgRes = await fetch(`${BASE_API_URL}/catalog/backgrounds_db`);
         if (bgRes.ok) BACKGROUNDS_DB = await bgRes.json();
 
-        // --- NOVO: Carregar Classes ---
-        const classRes = await fetch(`${BASE_API_URL}/catalog/classes_db`); // <--- Certifique-se que essa rota existe ou aponte para o arquivo JSON local
+        const classRes = await fetch(`${BASE_API_URL}/catalog/classes_db`);
         if (classRes.ok) {
             CLASSES_DB = await classRes.json();
         } else {
-             // Fallback local se a API falhar
-             try {
+            try {
                 const classLocal = await fetch('backend/data/classes_db.json');
-                if(classLocal.ok) CLASSES_DB = await classLocal.json();
-             } catch(e) {}
+                if (classLocal.ok) CLASSES_DB = await classLocal.json();
+            } catch (e) { }
         }
 
-        // Carrega Itens
         const itemRes = await fetch(`${BASE_API_URL}/catalog/items`);
         if (itemRes.ok) items = await itemRes.json();
 
@@ -384,17 +338,12 @@ function autoResize(el) {
     el.style.height = el.scrollHeight + 'px';
 }
 
-/* -------------------------------------------------------------
-   1. ATUALIZAÇÃO DO HEADER
-   ------------------------------------------------------------- */
 function atualizarHeader() {
     if (typeof state === 'undefined') return;
 
-    // Antecedente
     const btnAntecedente = document.getElementById('btn-antecedente');
     if (btnAntecedente) btnAntecedente.textContent = state.antecedente || "Escolher...";
 
-    // Raça
     const inputRaca = document.getElementById('input-raca');
     if (inputRaca) {
         let displayRace = state.raca || "";
@@ -413,19 +362,19 @@ function atualizarHeader() {
 function atualizarTextoClassesHeader() {
     const el = document.getElementById('input-classesHeader');
     if (!el) return;
-    
+
     if (!state.niveisClasses || Object.keys(state.niveisClasses).length === 0) {
         el.value = "";
         autoResize(el);
         return;
     }
 
-    const mapNomes = { 
-        'artifice': 'Artífice', 'barbaro': 'Bárbaro', 'bardo': 'Bardo', 
-        'blood hunter': 'Blood Hunter', 'bruxo': 'Bruxo', 'clerigo': 'Clérigo', 
-        'druida': 'Druida', 'feiticeiro': 'Feiticeiro', 'guerreiro': 'Guerreiro', 
-        'ladino': 'Ladino', 'mago': 'Mago', 'monge': 'Monge', 
-        'paladino': 'Paladino', 'patrulheiro': 'Patrulheiro' 
+    const mapNomes = {
+        'artifice': 'Artífice', 'barbaro': 'Bárbaro', 'bardo': 'Bardo',
+        'blood hunter': 'Blood Hunter', 'bruxo': 'Bruxo', 'clerigo': 'Clérigo',
+        'druida': 'Druida', 'feiticeiro': 'Feiticeiro', 'guerreiro': 'Guerreiro',
+        'ladino': 'Ladino', 'mago': 'Mago', 'monge': 'Monge',
+        'paladino': 'Paladino', 'patrulheiro': 'Patrulheiro'
     };
 
     let partes = [];
@@ -433,20 +382,17 @@ function atualizarTextoClassesHeader() {
         const nivel = parseInt(state.niveisClasses[key]);
         if (!isNaN(nivel) && nivel > 0) {
             let nomeDisplay = mapNomes[key] || key.charAt(0).toUpperCase() + key.slice(1);
-            
-            // Verifica se tem subclasse salva no novo formato
+
             if (state.subclasses && state.subclasses[key]) {
-                 nomeDisplay += ` (${state.subclasses[key]})`;
-            } 
-            // Fallback para o sistema antigo de busca em abilities se não tiver no state.subclasses
+                nomeDisplay += ` (${state.subclasses[key]})`;
+            }
             else if (state.abilities && state.abilities.length > 0) {
                 const norm = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-                const habilidadeSubclasse = state.abilities.find(a => 
+                const habilidadeSubclasse = state.abilities.find(a =>
                     a.category === 'Subclasse' && norm(a.class) === norm(nomeDisplay)
                 );
                 if (habilidadeSubclasse) nomeDisplay += ` [${habilidadeSubclasse.subclass}]`;
             }
-            
             partes.push(`${nomeDisplay} ${nivel}`);
         }
     });
@@ -455,10 +401,9 @@ function atualizarTextoClassesHeader() {
     if (el.value !== novoTexto) { el.value = novoTexto; autoResize(el); }
 }
 
-
 window.addEventListener('sheet-updated', () => {
     atualizarHeader();
-    checkScrollLock(); // Garante que o scroll volta se não tiver modais
+    checkScrollLock();
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -468,94 +413,26 @@ document.addEventListener('DOMContentLoaded', () => {
         elRaca.style.cursor = 'pointer';
         elRaca.addEventListener('click', openRaceSelectionModal);
     }
-    
-    // Novo modal de antecedentes
+
     const btnAnt = document.getElementById('btn-antecedente');
-    if(btnAnt) btnAnt.addEventListener('click', openBackgroundSelectionModal);
-const elClasses = document.getElementById('input-classesHeader');
+    if (btnAnt) btnAnt.addEventListener('click', openBackgroundSelectionModal);
+    
+    const elClasses = document.getElementById('input-classesHeader');
     if (elClasses) {
-        // Remove readonly visualmente mudando o cursor
-        elClasses.style.cursor = 'pointer'; 
-        
-        // Remove event listeners antigos clonando o elemento (truque rápido)
-        // Ou garanta que o código antigo não rode.
-        // Adiciona o novo evento:
+        elClasses.style.cursor = 'pointer';
         elClasses.addEventListener('click', openClassSelectionModal);
     }
 });
 
 
-
-
-
-
-
-// Função para processar a lista de strings de equipamento
-function processarEquipamentoInicial(equipList) {
-    if (!equipList || equipList.length === 0) return;
-
-    // Fila de processamento para lidar com múltiplos popups sequenciais
-    let queue = [...equipList];
-
-    function processNext() {
-        if (queue.length === 0) {
-            window.dispatchEvent(new CustomEvent('sheet-updated'));
-            return;
-        }
-
-        const itemStr = queue.shift();
-
-        // Regex para detectar padrão "(a) Opção A ou (b) Opção B"
-        // Adapte conforme o texto exato do seu JSON
-        const choiceRegex = /\(a\)\s*(.*?)\s+ou\s+\(b\)\s*(.*)/i;
-        const match = itemStr.match(choiceRegex);
-
-        if (match) {
-            // É uma escolha
-            const optA = match[1].trim();
-            const optB = match[2].trim();
-            
-            openEquipmentSelector("Selecione uma opção:", optA, optB, (choice) => {
-                adicionarItemAoInventario(choice);
-                processNext();
-            });
-        } else {
-            // É um item direto
-            adicionarItemAoInventario(itemStr);
-            processNext();
-        }
-    }
-
-    processNext();
-}
-
-function adicionarItemAoInventario(nomeItem) {
-    if (!state.inventory) state.inventory = [];
-    
-    // Tenta buscar no banco de dados de itens (função que já criamos antes)
-    const itemDb = buscarItemNoBanco(nomeItem); 
-    
-    if (itemDb) {
-        state.inventory.push(itemDb);
-    } else {
-        // Item genérico se não achar no banco
-        state.inventory.push({
-            id: Date.now() + Math.floor(Math.random() * 1000),
-            name: nomeItem.replace(/^(um|uma|os|as)\s+/i, ''), // Remove artigos
-            type: "Geral",
-            quantity: 1,
-            weight: 0
-        });
-    }
-}
 /* =============================================================
-   SISTEMA DE ANTECEDENTES (ATUALIZADO COM VARIANTES E AUTOMAÇÃO)
+   SISTEMA DE ANTECEDENTES
    ============================================================= */
 function openBackgroundSelectionModal() {
     if (BACKGROUNDS_DB.length === 0) {
         carregarDadosHeader().then(() => {
-             if(BACKGROUNDS_DB.length > 0) openBackgroundSelectionModal();
-             else alert("Erro: Banco de antecedentes vazio.");
+            if (BACKGROUNDS_DB.length > 0) openBackgroundSelectionModal();
+            else alert("Erro: Banco de antecedentes vazio.");
         });
         return;
     }
@@ -563,7 +440,7 @@ function openBackgroundSelectionModal() {
     const existing = document.querySelector('.race-modal-overlay');
     if (existing) existing.remove();
 
-    const listHtml = BACKGROUNDS_DB.map(bg => 
+    const listHtml = BACKGROUNDS_DB.map(bg =>
         `<div class="race-list-item" data-name="${bg.name}">${bg.name}</div>`
     ).join('');
 
@@ -577,21 +454,14 @@ function openBackgroundSelectionModal() {
                 <h3>Escolher Antecedente</h3>
                 <button class="modal-close">✖</button>
             </div>
-            
             <div class="modal-body" style="padding: 0; overflow: hidden; display:flex; flex-direction:column; flex:1;">
                 <div class="race-catalog-container" style="flex:1; overflow:hidden;">
-                    <div class="race-list-col">
-                        ${listHtml}
-                    </div>
-
+                    <div class="race-list-col">${listHtml}</div>
                     <div class="race-details-col" id="bg-details-content">
-                        <div style="color: #666; text-align: center; margin-top: 50px;">
-                            Selecione um antecedente para ver os detalhes.
-                        </div>
+                        <div style="color: #666; text-align: center; margin-top: 50px;">Selecione um antecedente para ver os detalhes.</div>
                     </div>
                 </div>
             </div>
-
             <div class="modal-actions">
                 <button id="btn-select-bg" class="btn-add btn-save-modal" disabled>Selecionar</button>
             </div>
@@ -599,7 +469,7 @@ function openBackgroundSelectionModal() {
     `;
 
     document.body.appendChild(overlay);
-    if(typeof checkScrollLock === 'function') checkScrollLock();
+    if (typeof checkScrollLock === 'function') checkScrollLock();
 
     let selectedBgBase = null;
     let selectedBgVariant = null;
@@ -614,39 +484,35 @@ function openBackgroundSelectionModal() {
         item.onclick = () => {
             items.forEach(i => i.classList.remove('selected'));
             item.classList.add('selected');
-
             const bgName = item.getAttribute('data-name');
             selectedBgBase = BACKGROUNDS_DB.find(b => b.name === bgName);
-            selectedBgVariant = null; 
-
+            selectedBgVariant = null;
             renderBgDetails(selectedBgBase);
         };
     });
 
     btnSelect.onclick = () => {
-        if(selectedBgBase) {
+        if (selectedBgBase) {
             aplicarAntecedenteNaFicha(selectedBgBase, selectedBgVariant);
             overlay.remove();
             checkScrollLock();
         }
     };
 
-   function renderBgDetails(bg) {
+    function renderBgDetails(bg) {
         if (!bg) return;
-
         const hasVariants = bg.variants && bg.variants.length > 0;
-        let currentVariant = null; 
+        let currentVariant = null;
 
         btnSelect.removeAttribute('disabled');
-        btnSelect.textContent = `Selecionar ${bg.name}`; 
+        btnSelect.textContent = `Selecionar ${bg.name}`;
         btnSelect.style.background = '#9c27b0';
 
         const imagePath = bg.image || 'img/dado.png';
-
         const skillsHtml = bg.skills ? bg.skills.join(', ') : '-';
         const toolsHtml = bg.tools && bg.tools.length ? bg.tools.join(', ') : '-';
         const equipsHtml = bg.equipment ? bg.equipment.join(', ') : '-';
-        
+
         let langs = '-';
         if (bg.languages) {
             if (Number.isInteger(bg.languages)) langs = `${bg.languages} a sua escolha`;
@@ -656,12 +522,8 @@ function openBackgroundSelectionModal() {
         let variantsHtml = '';
         if (hasVariants) {
             variantsHtml = `
-                <div class="race-traits-title" style="margin-top:25px; color:#ffeb3b; border-top:1px solid #333; padding-top:15px;">
-                    Variantes (Opcional)
-                </div>
-                <div style="font-size:12px; color:#888; margin-bottom:10px;">
-                    Você pode selecionar uma variante abaixo para modificar seu antecedente, ou manter o padrão.
-                </div>
+                <div class="race-traits-title" style="margin-top:25px; color:#ffeb3b; border-top:1px solid #333; padding-top:15px;">Variantes (Opcional)</div>
+                <div style="font-size:12px; color:#888; margin-bottom:10px;">Você pode selecionar uma variante abaixo para modificar seu antecedente.</div>
                 <div class="variations-list">
                     ${bg.variants.map((v, idx) => `
                         <div class="variation-card-wrapper">
@@ -672,18 +534,10 @@ function openBackgroundSelectionModal() {
                                 </div>
                                 <span class="variation-arrow">▼</span>
                             </div>
-                            
                             <div class="variation-body">
                                 ${v.description ? `<div class="variation-desc-text">${v.description}</div>` : ''}
-                                ${v.feature ? `
-                                    <div class="variation-feature-box">
-                                        <div class="variation-feature-title">★ ${v.feature.name}</div>
-                                        <div class="variation-feature-content">${v.feature.desc}</div>
-                                    </div>` : ''}
-                                ${v.equipment ? `
-                                    <div style="margin-top:10px; font-size:12px; color:#aaa; border-top:1px dashed #333; padding-top:5px;">
-                                        <strong style="color:#e0aaff;">Equipamento Alternativo:</strong> ${v.equipment.join(', ')}
-                                    </div>` : ''}
+                                ${v.feature ? `<div class="variation-feature-box"><div class="variation-feature-title">★ ${v.feature.name}</div><div class="variation-feature-content">${v.feature.desc}</div></div>` : ''}
+                                ${v.equipment ? `<div style="margin-top:10px; font-size:12px; color:#aaa; border-top:1px dashed #333; padding-top:5px;"><strong style="color:#e0aaff;">Equipamento Alternativo:</strong> ${v.equipment.join(', ')}</div>` : ''}
                             </div>
                         </div>
                     `).join('')}
@@ -693,7 +547,7 @@ function openBackgroundSelectionModal() {
 
         detailsContainer.innerHTML = `
             <div class="race-detail-header">
-                <div class="race-img-container" onclick="window.openImageLightbox('${imagePath}')" title="Clique para ampliar">
+                <div class="race-img-container" onclick="window.openImageLightbox('${imagePath}')">
                     <img src="${imagePath}" class="race-img-display" onerror="this.src='img/dado.png'">
                 </div>
                 <div class="race-title-box">
@@ -701,53 +555,35 @@ function openBackgroundSelectionModal() {
                     <div class="race-desc" style="margin-top:5px;">${bg.description}</div>
                 </div>
             </div>
-            
             <div class="race-traits-title" style="margin-top:15px;">Proficiências & Equipamento Base</div>
             <div style="font-size:13px; color:#ccc; line-height:1.6; background:#111; padding:10px; border-radius:6px; border:1px solid #333;">
                 <div><strong style="color:#e0aaff;">Perícias:</strong> ${skillsHtml}</div>
                 <div><strong style="color:#e0aaff;">Ferramentas:</strong> ${toolsHtml}</div>
                 <div><strong style="color:#e0aaff;">Idiomas:</strong> ${langs}</div>
-                <div style="margin-top:6px; padding-top:6px; border-top:1px solid #333;">
-                    <strong style="color:#e0aaff;">Equipamento:</strong> ${equipsHtml}
-                </div>
+                <div style="margin-top:6px; padding-top:6px; border-top:1px solid #333;"><strong style="color:#e0aaff;">Equipamento:</strong> ${equipsHtml}</div>
             </div>
-
             <div class="race-traits-title" style="margin-top:20px;">Habilidade Principal: ${bg.feature.name}</div>
-            <div class="race-trait-item">
-                <div class="race-trait-desc" style="font-size:13px; color:#ddd;">${bg.feature.desc}</div>
-            </div>
-
+            <div class="race-trait-item"><div class="race-trait-desc" style="font-size:13px; color:#ddd;">${bg.feature.desc}</div></div>
             ${variantsHtml}
         `;
 
-        btnSelect.onclick = () => {
-            aplicarAntecedenteNaFicha(bg, currentVariant);
-            const overlay = document.querySelector('.race-modal-overlay');
-            if(overlay) overlay.remove();
-            if(typeof checkScrollLock === 'function') checkScrollLock();
-        };
-
         if (hasVariants) {
             const allRadios = detailsContainer.querySelectorAll('input[name="bg_variant"]');
-
             detailsContainer.querySelectorAll('.variation-header').forEach(header => {
                 header.addEventListener('click', (e) => {
                     if (e.target.type === 'radio') return;
                     header.closest('.variation-card-wrapper').classList.toggle('open');
                 });
             });
-
             allRadios.forEach(radio => {
                 radio.addEventListener('click', (e) => {
                     const idx = parseInt(radio.value);
                     const isAlreadyChecked = radio.getAttribute('data-checked') === 'true';
-
                     allRadios.forEach(r => r.setAttribute('data-checked', 'false'));
-
                     if (isAlreadyChecked) {
                         radio.checked = false;
                         radio.setAttribute('data-checked', 'false');
-                        currentVariant = null; 
+                        currentVariant = null;
                         btnSelect.textContent = `Selecionar ${bg.name}`;
                     } else {
                         radio.checked = true;
@@ -763,9 +599,6 @@ function openBackgroundSelectionModal() {
     }
 }
 
-/* -------------------------------------------------------------
-   APLICAR ANTECEDENTE NA FICHA (COM DINHEIRO, MECÂNICAS E ITENS DO BD)
-   ------------------------------------------------------------- */
 function aplicarAntecedenteNaFicha(bgBase, bgVariant) {
     if (typeof state === 'undefined') return;
 
@@ -775,7 +608,6 @@ function aplicarAntecedenteNaFicha(bgBase, bgVariant) {
     const featureData = (bgVariant && bgVariant.feature) ? bgVariant.feature : bgBase.feature;
     const equipData = (bgVariant && bgVariant.equipment) ? bgVariant.equipment : bgBase.equipment;
 
-    // 1. Adicionar Habilidade
     if (!state.abilities) state.abilities = [];
     state.abilities = state.abilities.filter(a => a.category !== 'Antecedente');
 
@@ -790,32 +622,23 @@ function aplicarAntecedenteNaFicha(bgBase, bgVariant) {
         subclass: nomeFinal
     });
 
-    // 2. Adicionar Itens e Dinheiro
     if (equipData) {
         if (!state.inventory) state.inventory = [];
-        if (!state.money) state.money = { pc:0, pp:0, pd:0, po:0, pl:0 };
+        if (!state.money) state.money = { pc: 0, pp: 0, pd: 0, po: 0, pl: 0 };
 
         equipData.forEach(itemStr => {
-            // A. Tenta detectar dinheiro
             const moneyRegex = /^(\d+)\s*(PO|PP|PC|PL|PD|po|pp|pc|pl|pd)/i;
             const match = itemStr.match(moneyRegex);
 
             if (match) {
                 const qtd = parseInt(match[1]);
                 const tipo = match[2].toLowerCase();
-                if (state.money[tipo] !== undefined) {
-                    state.money[tipo] += qtd;
-                }
+                if (state.money[tipo] !== undefined) state.money[tipo] += qtd;
             } else {
-                // B. Tenta buscar o item no banco de dados (ITEMS_DB)
                 const itemDoBanco = buscarItemNoBanco(itemStr);
-
                 if (itemDoBanco) {
-                    // Achou! Adiciona o objeto completo do banco
                     state.inventory.push(itemDoBanco);
                 } else {
-                    // Não achou (ex: "Um troféu de caça", "Item de admirador")
-                    // Adiciona como item genérico
                     state.inventory.push({
                         id: Date.now() + Math.floor(Math.random() * 100000),
                         name: itemStr,
@@ -831,73 +654,43 @@ function aplicarAntecedenteNaFicha(bgBase, bgVariant) {
         });
     }
 
-    // --- 3. PROCESSAMENTO DE MECÂNICAS (AUTOMÁTICO + POPUPS) ---
     let mecanicas = { name: nomeFinal };
 
-    if (Number.isInteger(bgBase.languages) && bgBase.languages > 0) {
-        mecanicas.chooseLanguages = bgBase.languages;
-    } else if (Array.isArray(bgBase.languages)) {
-        mecanicas.languages = bgBase.languages;
-    }
+    if (Number.isInteger(bgBase.languages) && bgBase.languages > 0) mecanicas.chooseLanguages = bgBase.languages;
+    else if (Array.isArray(bgBase.languages)) mecanicas.languages = bgBase.languages;
 
-    if (bgBase.skills) {
-        mecanicas.skills = bgBase.skills;
-    }
+    if (bgBase.skills) mecanicas.skills = bgBase.skills;
 
     if (bgBase.tools) {
         let toolsFixed = [];
-        let toolChoices = []; 
+        let toolChoices = [];
 
         bgBase.tools.forEach(t => {
             const tLower = t.toLowerCase();
-
-            if (tLower.includes("instrumento musical")) {
-                toolChoices.push({ count: 1, list: LISTA_INSTRUMENTOS, title: "Instrumento Musical" });
-            } 
-            else if (tLower.includes("jogo") || tLower.includes("jogos")) {
-                toolChoices.push({ count: 1, list: LISTA_JOGOS, title: "Conjunto de Jogo" });
-            } 
-            else if (tLower.includes("artesão") || tLower.includes("artesao")) {
-                toolChoices.push({ count: 1, list: LISTA_ARTESAO, title: "Ferramentas de Artesão" });
-            } 
-            else {
-                // Tenta achar a ferramenta específica no banco de itens também?
-                // Opcional, mas geralmente ferramentas em 'tools' são proficiências, não itens físicos.
-                // Aqui tratamos como proficiência.
-                toolsFixed.push(t);
-            }
+            if (tLower.includes("instrumento musical")) toolChoices.push({ count: 1, list: LISTA_INSTRUMENTOS, title: "Instrumento Musical" });
+            else if (tLower.includes("jogo") || tLower.includes("jogos")) toolChoices.push({ count: 1, list: LISTA_JOGOS, title: "Conjunto de Jogo" });
+            else if (tLower.includes("artesão") || tLower.includes("artesao")) toolChoices.push({ count: 1, list: LISTA_FERRAMENTAS_ARTESAO, title: "Ferramentas de Artesão" });
+            else toolsFixed.push(t);
         });
 
         mecanicas.proficiencies = toolsFixed;
-        if (toolChoices.length > 0) {
-             mecanicas.chooseToolFromList = toolChoices;
-        }
+        if (toolChoices.length > 0) mecanicas.chooseToolFromList = toolChoices;
     }
 
     processarMecanicas(mecanicas);
-
     atualizarHeader();
     if (typeof saveStateToServer === 'function') saveStateToServer();
     window.dispatchEvent(new CustomEvent('sheet-updated'));
 }
+
 /* =============================================================
-   PROCESSADOR DE MECÂNICAS GENÉRICO (RAÇA E ANTECEDENTE)
+   PROCESSADOR DE MECÂNICAS
    ============================================================= */
 function processarMecanicas(...sources) {
-    // Arrays acumuladores
-    let resToAdd = [];
-    let imuToAdd = [];
-    let profToAdd = [];
-    let langToAdd = [];
-    let skillsToTrain = [];
+    let resToAdd = [], imuToAdd = [], profToAdd = [], langToAdd = [], skillsToTrain = [], pendingChoices = [];
 
-    // Filas de Escolha (Popups)
-    let pendingChoices = [];
-
-    // Função interna para ler cada fonte de dados
     const lerDados = (obj) => {
         if (!obj) return;
-        
         if (Array.isArray(obj.resistances)) resToAdd.push(...obj.resistances);
         if (Array.isArray(obj.immunities)) imuToAdd.push(...obj.immunities);
         if (Array.isArray(obj.proficiencies)) profToAdd.push(...obj.proficiencies);
@@ -906,51 +699,33 @@ function processarMecanicas(...sources) {
 
         const sourceTitle = obj.name || "";
 
-        // Verifica Pedidos de Escolha
         if (obj.chooseSkills) pendingChoices.push({ type: 'skill', count: obj.chooseSkills, list: ALL_SKILLS_LIST, source: sourceTitle });
         if (obj.chooseSkillFrom && obj.countSkills) pendingChoices.push({ type: 'skill', count: obj.countSkills, list: obj.chooseSkillFrom, source: sourceTitle });
-        
         if (obj.chooseLanguages) pendingChoices.push({ type: 'language', count: obj.chooseLanguages, list: ALL_LANGUAGES_LIST, source: sourceTitle });
-        
-        // Ferramentas Específicas (Raças)
         if (obj.chooseTools) pendingChoices.push({ type: 'tool', count: 1, list: obj.chooseTools, source: sourceTitle, customTitle: "Escolha uma Ferramenta" });
         if (obj.chooseToolAny) pendingChoices.push({ type: 'tool', count: obj.chooseToolAny, list: ALL_TOOLS_LIST, source: sourceTitle, customTitle: "Escolha Ferramentas" });
         if (obj.chooseToolFrom) pendingChoices.push({ type: 'tool', count: 1, list: obj.chooseToolFrom, source: sourceTitle, customTitle: "Escolha uma Ferramenta" });
 
-        // Ferramentas por Categoria (Antecedentes) - Novo sistema
         if (obj.chooseToolFromList) {
-            // Pode ser um objeto único ou array de objetos (caso precise escolher instrumento E jogo)
             const listArr = Array.isArray(obj.chooseToolFromList) ? obj.chooseToolFromList : [obj.chooseToolFromList];
-            
             listArr.forEach(req => {
-                pendingChoices.push({ 
-                    type: 'tool', 
-                    count: req.count, 
-                    list: req.list, 
-                    source: sourceTitle,
-                    customTitle: `Escolha: ${req.title}`
-                });
+                pendingChoices.push({ type: 'tool', count: req.count, list: req.list, source: sourceTitle, customTitle: `Escolha: ${req.title}` });
             });
         }
     };
 
-    // Itera sobre todos os argumentos passados
     sources.forEach(source => {
-        // Se for um objeto de herança dracônica
         if (source && source.damage && source.type) {
-             const damageClean = source.damage.split('(')[0].trim();
-             resToAdd.push(damageClean);
+            const damageClean = source.damage.split('(')[0].trim();
+            resToAdd.push(damageClean);
         } else {
-             lerDados(source);
+            lerDados(source);
         }
     });
 
-    // --- APLICAÇÃO NO ESTADO ---
     const addUnique = (targetList, items) => {
         if (!state[targetList]) state[targetList] = [];
-        items.forEach(i => {
-            if (!state[targetList].includes(i)) state[targetList].push(i);
-        });
+        items.forEach(i => { if (!state[targetList].includes(i)) state[targetList].push(i); });
     };
 
     addUnique('resistenciasList', resToAdd);
@@ -959,7 +734,7 @@ function processarMecanicas(...sources) {
     addUnique('idiomasList', langToAdd);
 
     if (skillsToTrain.length > 0) {
-        if (!state.pericias) state.pericias = {}; 
+        if (!state.pericias) state.pericias = {};
         skillsToTrain.forEach(skill => {
             if (state.pericias[skill]) state.pericias[skill].treinado = true;
         });
@@ -967,27 +742,22 @@ function processarMecanicas(...sources) {
 
     saveStateToServer();
 
-    // --- EXECUÇÃO DE POPUPS ---
     const runNextChoice = () => {
         if (pendingChoices.length === 0) {
-            window.dispatchEvent(new CustomEvent('sheet-updated')); 
+            window.dispatchEvent(new CustomEvent('sheet-updated'));
             return;
         }
+        const choice = pendingChoices.shift();
+        const modalTitle = choice.customTitle ? `${choice.customTitle} (${choice.source})` : `Escolha ${choice.type} (${choice.source})`;
 
-        const choice = pendingChoices.shift(); 
-        // Se tiver customTitle usa ele, senão monta padrão
-        const modalTitle = choice.customTitle 
-            ? `${choice.customTitle} (${choice.source})`
-            : `Escolha ${choice.type === 'language' ? 'Idiomas' : (choice.type === 'skill' ? 'Perícias' : 'Ferramentas')} (${choice.source})`;
-        
         if (choice.type === 'skill') {
             openGenericSelector(modalTitle, choice.count, choice.list, (selected) => {
                 if (!state.pericias) state.pericias = {};
-                selected.forEach(s => { if(state.pericias[s]) state.pericias[s].treinado = true; });
+                selected.forEach(s => { if (state.pericias[s]) state.pericias[s].treinado = true; });
                 saveStateToServer();
                 runNextChoice();
             });
-        } 
+        }
         else if (choice.type === 'language') {
             openGenericSelector(modalTitle, choice.count, choice.list, (selected) => {
                 addUnique('idiomasList', selected);
@@ -996,26 +766,25 @@ function processarMecanicas(...sources) {
             });
         }
         else if (choice.type === 'tool') {
-             openGenericSelector(modalTitle, choice.count, choice.list, (selected) => {
+            openGenericSelector(modalTitle, choice.count, choice.list, (selected) => {
                 addUnique('proficienciasList', selected);
                 saveStateToServer();
                 runNextChoice();
             });
         }
     };
-
     setTimeout(runNextChoice, 300);
 }
 
 /* =============================================================
-   SISTEMA DE RAÇAS (ANTIGO MANTIDO)
+   SISTEMA DE RAÇAS
    ============================================================= */
 
 function openRaceSelectionModal() {
     if (RACES_DB.length === 0) {
         carregarDadosHeader().then(() => {
-             if(RACES_DB.length > 0) openRaceSelectionModal();
-             else alert("Erro: Banco de raças vazio.");
+            if (RACES_DB.length > 0) openRaceSelectionModal();
+            else alert("Erro: Banco de raças vazio.");
         });
         return;
     }
@@ -1026,9 +795,7 @@ function openRaceSelectionModal() {
     const racasComuns = RACES_DB.filter(r => !r.isLineage);
     const linhagens = RACES_DB.filter(r => r.isLineage);
 
-    const gerarListaHTML = (lista) => lista.map(r => 
-        `<div class="race-list-item" data-name="${r.name}">${r.name}</div>`
-    ).join('');
+    const gerarListaHTML = (lista) => lista.map(r => `<div class="race-list-item" data-name="${r.name}">${r.name}</div>`).join('');
 
     const overlay = document.createElement('div');
     overlay.className = 'spell-modal-overlay race-modal-overlay';
@@ -1043,22 +810,18 @@ function openRaceSelectionModal() {
                     <button class="modal-close">✖</button>
                 </div>
             </div>
-            
             <div class="modal-body" style="padding: 0; overflow: hidden; display:flex; flex-direction:column; flex:1;">
                 <div class="race-catalog-container" style="flex:1; overflow:hidden;">
-                    
                     <div class="race-list-col">
                         <div class="race-list-header" style="padding:10px; color:#9c27b0; font-weight:bold; font-size:12px; border-bottom:1px solid #333;">RAÇAS</div>
                         ${gerarListaHTML(racasComuns)}
                         ${linhagens.length > 0 ? `<div class="race-list-header" style="padding:10px; color:#e0aaff; font-weight:bold; font-size:12px; border-bottom:1px solid #333; margin-top:10px; border-top:1px solid #333;">LINHAGENS</div>${gerarListaHTML(linhagens)}` : ''}
                     </div>
-
                     <div class="race-details-col" id="race-details-content">
                         <div style="color: #666; text-align: center; margin-top: 50px;">Selecione uma opção ao lado.</div>
                     </div>
                 </div>
             </div>
-
             <div class="modal-actions">
                 <button id="btn-select-race" class="btn-add btn-save-modal" disabled>Selecionar</button>
             </div>
@@ -1066,10 +829,10 @@ function openRaceSelectionModal() {
     `;
 
     document.body.appendChild(overlay);
-    if(typeof checkScrollLock === 'function') checkScrollLock();
+    if (typeof checkScrollLock === 'function') checkScrollLock();
 
     let selectedRaceBase = null;
-    let selectedVariation = null; 
+    let selectedVariation = null;
 
     const btnSelect = overlay.querySelector('#btn-select-race');
     const detailsContainer = overlay.querySelector('#race-details-content');
@@ -1078,17 +841,14 @@ function openRaceSelectionModal() {
     overlay.querySelector('#btn-custom-race').onclick = () => { overlay.remove(); openCustomRaceCreator(); };
 
     btnSelect.onclick = () => {
-        if(selectedRaceBase) {
+        if (selectedRaceBase) {
             if (selectedRaceBase.isLineage) {
                 overlay.remove();
-                openAncestralRaceSelector(selectedRaceBase); 
+                openAncestralRaceSelector(selectedRaceBase);
             } else {
-                // VERIFICA SE É DRACONATO (Standard, Cromático, Metálico ou Gema)
                 if (DRACONIC_ANCESTRIES[selectedRaceBase.name]) {
-                    // Abre o seletor de cor, passando a sub-raça escolhida (se houver)
                     openDraconicSelector(selectedRaceBase, selectedVariation, null);
                 } else {
-                    // Raça normal
                     aplicarRacaNaFicha(selectedRaceBase, selectedVariation, null);
                     overlay.remove();
                     checkScrollLock();
@@ -1111,11 +871,9 @@ function openRaceSelectionModal() {
 
     function renderRaceDetails(race) {
         if (!race) return;
-        
         const hasVariations = race.variations && race.variations.length > 0;
         const isSubraceMandatory = RACES_REQUIRED_SUBRACE.includes(race.name);
-        
-        let currentSubrace = null; 
+        let currentSubrace = null;
 
         if (isSubraceMandatory && hasVariations) {
             btnSelect.setAttribute('disabled', true);
@@ -1129,28 +887,14 @@ function openRaceSelectionModal() {
 
         const flyInfo = race.flySpeed ? `<span style="color:#4fc3f7; margin-left:8px;">🦅 Voo: ${race.flySpeed}m</span>` : '';
         const imagePath = race.image || 'img/dado.png';
-        
-        const traitsHtml = race.traits.map(t => `
-            <div class="race-trait-item">
-                <div class="race-trait-name">${t.name}</div>
-                <div class="race-trait-desc">${t.desc}</div>
-            </div>
-        `).join('');
+
+        const traitsHtml = race.traits.map(t => `<div class="race-trait-item"><div class="race-trait-name">${t.name}</div><div class="race-trait-desc">${t.desc}</div></div>`).join('');
 
         let variationsHtml = '';
         if (hasVariations) {
             const labelOpcional = isSubraceMandatory ? "(Obrigatório)" : "(Opcional)";
-            const descOpcional = isSubraceMandatory 
-                ? "Você DEVE escolher uma linhagem abaixo para prosseguir." 
-                : "Você pode escolher uma sub-raça para modificar seus traços base, ou manter o padrão.";
-
             variationsHtml = `
-                <div class="race-traits-title" style="margin-top:25px; color:#ffeb3b; border-top:1px solid #333; padding-top:15px;">
-                    Sub-raças ${labelOpcional}
-                </div>
-                <div style="font-size:12px; color:#888; margin-bottom:10px;">
-                    ${descOpcional}
-                </div>
+                <div class="race-traits-title" style="margin-top:25px; color:#ffeb3b; border-top:1px solid #333; padding-top:15px;">Sub-raças ${labelOpcional}</div>
                 <div class="variations-list">
                     ${race.variations.map((v, idx) => `
                         <div class="variation-card-wrapper">
@@ -1161,19 +905,11 @@ function openRaceSelectionModal() {
                                 </div>
                                 <span class="variation-arrow">▼</span>
                             </div>
-                            
                             <div class="variation-body">
                                 ${v.description ? `<div class="variation-desc-text">${v.description}</div>` : ''}
-                                
                                 ${v.speed ? `<div style="font-size:12px; color:#bbb; margin-bottom:10px;">🏃 Novo Deslocamento: ${v.speed}m</div>` : ''}
                                 ${v.flySpeed ? `<div style="font-size:12px; color:#4fc3f7; margin-bottom:10px;">🦅 Voo: ${v.flySpeed}m</div>` : ''}
-                                
-                                ${v.traits ? v.traits.map(vt => `
-                                    <div class="variation-feature-box">
-                                        <div class="variation-feature-title">★ ${vt.name}</div>
-                                        <div class="variation-feature-content">${vt.desc}</div>
-                                    </div>
-                                `).join('') : ''}
+                                ${v.traits ? v.traits.map(vt => `<div class="variation-feature-box"><div class="variation-feature-title">★ ${vt.name}</div><div class="variation-feature-content">${vt.desc}</div></div>`).join('') : ''}
                             </div>
                         </div>
                     `).join('')}
@@ -1183,9 +919,7 @@ function openRaceSelectionModal() {
 
         detailsContainer.innerHTML = `
             <div class="race-detail-header">
-                <div class="race-img-container" onclick="window.openImageLightbox('${imagePath}')" title="Clique para ampliar">
-                    <img src="${imagePath}" class="race-img-display" onerror="this.src='img/dado.png'">
-                </div>
+                <div class="race-img-container" onclick="window.openImageLightbox('${imagePath}')"><img src="${imagePath}" class="race-img-display" onerror="this.src='img/dado.png'"></div>
                 <div class="race-title-box">
                     <h2>${race.name}</h2>
                     <div class="race-info-line">
@@ -1196,26 +930,22 @@ function openRaceSelectionModal() {
                 </div>
             </div>
             <div class="race-desc">${race.description}</div>
-            
             <div class="race-traits-title" style="margin-top:15px;">Características Base</div>
             <div>${traitsHtml}</div>
-            
             ${variationsHtml}
         `;
 
-        // Evento de Click Atualizado
         btnSelect.onclick = () => {
             if (race.isLineage) {
                 const overlay = document.querySelector('.race-modal-overlay');
-                if(overlay) overlay.remove();
-                openAncestralRaceSelector(race); 
+                if (overlay) overlay.remove();
+                openAncestralRaceSelector(race);
             } else {
-                if (DRACONIC_ANCESTRIES[race.name]) {
-                    openDraconicSelector(race, currentSubrace, null);
-                } else {
+                if (DRACONIC_ANCESTRIES[race.name]) openDraconicSelector(race, currentSubrace, null);
+                else {
                     aplicarRacaNaFicha(race, currentSubrace, null);
                     const overlay = document.querySelector('.race-modal-overlay');
-                    if(overlay) overlay.remove();
+                    if (overlay) overlay.remove();
                     checkScrollLock();
                 }
             }
@@ -1223,37 +953,29 @@ function openRaceSelectionModal() {
 
         if (hasVariations) {
             const allRadios = detailsContainer.querySelectorAll('input[name="race_variation"]');
-
             detailsContainer.querySelectorAll('.variation-header').forEach(header => {
                 header.addEventListener('click', (e) => {
                     if (e.target.type === 'radio') return;
                     header.closest('.variation-card-wrapper').classList.toggle('open');
                 });
             });
-
             allRadios.forEach(radio => {
                 radio.addEventListener('click', (e) => {
                     const idx = parseInt(radio.value);
                     const isAlreadyChecked = radio.getAttribute('data-checked') === 'true';
-
                     allRadios.forEach(r => r.setAttribute('data-checked', 'false'));
-
                     if (isAlreadyChecked && !isSubraceMandatory) {
                         radio.checked = false;
                         radio.setAttribute('data-checked', 'false');
-                        currentSubrace = null; 
-                        
+                        currentSubrace = null;
                         btnSelect.removeAttribute('disabled');
                         btnSelect.textContent = `Selecionar ${race.name}`;
-                        btnSelect.style.background = '#9c27b0';
                     } else {
                         radio.checked = true;
                         radio.setAttribute('data-checked', 'true');
                         currentSubrace = race.variations[idx];
-
                         btnSelect.removeAttribute('disabled');
                         btnSelect.textContent = `Selecionar ${currentSubrace.name}`;
-                        btnSelect.style.background = '#9c27b0';
                     }
                 });
             });
@@ -1262,17 +984,15 @@ function openRaceSelectionModal() {
 }
 
 /* =============================================================
-   SISTEMA DE SELEÇÃO DE CLASSES (DESIGN IDÊNTICO + TRAVA DE NÍVEL)
+   SISTEMA DE CLASSES
    ============================================================= */
-
-// Variável para armazenar o nível atual da classe sendo visualizada no modal
 let currentClassLevelPreview = 0;
 
 function openClassSelectionModal() {
     if (CLASSES_DB.length === 0) {
         carregarDadosHeader().then(() => {
-             if(CLASSES_DB.length > 0) openClassSelectionModal();
-             else alert("Erro: Banco de classes vazio.");
+            if (CLASSES_DB.length > 0) openClassSelectionModal();
+            else alert("Erro: Banco de classes vazio.");
         });
         return;
     }
@@ -1280,47 +1000,31 @@ function openClassSelectionModal() {
     const existing = document.querySelector('.race-modal-overlay');
     if (existing) existing.remove();
 
-    const listHtml = CLASSES_DB.map(c => 
-        `<div class="race-list-item" data-name="${c.name}">${c.name}</div>`
-    ).join('');
-
+    const listHtml = CLASSES_DB.map(c => `<div class="race-list-item" data-name="${c.name}">${c.name}</div>`).join('');
     const overlay = document.createElement('div');
     overlay.className = 'spell-modal-overlay race-modal-overlay';
     overlay.style.zIndex = '12000';
 
     overlay.innerHTML = `
         <div class="spell-modal" style="width: 900px; height: 700px; max-height: 95vh;">
-            <div class="modal-header">
-                <h3>Escolher Classe</h3>
-                <button class="modal-close">✖</button>
-            </div>
-            
+            <div class="modal-header"><h3>Escolher Classe</h3><button class="modal-close">✖</button></div>
             <div class="modal-body" style="padding: 0; overflow: hidden; display:flex; flex-direction:column; flex:1;">
                 <div class="race-catalog-container" style="flex:1; overflow:hidden;">
-                    <div class="race-list-col">
-                        ${listHtml}
-                    </div>
-
+                    <div class="race-list-col">${listHtml}</div>
                     <div class="race-details-col" id="class-details-content">
-                        <div style="color: #666; text-align: center; margin-top: 50px;">
-                            Selecione uma classe para ver os detalhes.
-                        </div>
+                        <div style="color: #666; text-align: center; margin-top: 50px;">Selecione uma classe para ver os detalhes.</div>
                     </div>
                 </div>
             </div>
-
-            <div class="modal-actions">
-                <button id="btn-select-class" class="btn-add btn-save-modal" disabled>Selecionar</button>
-            </div>
+            <div class="modal-actions"><button id="btn-select-class" class="btn-add btn-save-modal" disabled>Selecionar</button></div>
         </div>
     `;
 
     document.body.appendChild(overlay);
-    if(typeof checkScrollLock === 'function') checkScrollLock();
+    if (typeof checkScrollLock === 'function') checkScrollLock();
 
     let selectedClass = null;
     let selectedSubclass = null;
-
     const btnSelect = overlay.querySelector('#btn-select-class');
     const detailsContainer = overlay.querySelector('#class-details-content');
 
@@ -1331,22 +1035,18 @@ function openClassSelectionModal() {
         item.onclick = () => {
             items.forEach(i => i.classList.remove('selected'));
             item.classList.add('selected');
-            
             const className = item.getAttribute('data-name');
             selectedClass = CLASSES_DB.find(c => c.name === className);
-            selectedSubclass = null; // Reseta subclasse ao trocar de classe
-            
-            // Determina o nível que o personagem TERÁ após selecionar esta classe
+            selectedSubclass = null;
             const classKey = selectedClass.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
             const currentLevel = state.niveisClasses && state.niveisClasses[classKey] ? parseInt(state.niveisClasses[classKey]) : 0;
             currentClassLevelPreview = currentLevel + 1;
-
             renderClassDetails(selectedClass, currentClassLevelPreview);
         };
     });
 
     btnSelect.onclick = () => {
-        if(selectedClass) {
+        if (selectedClass) {
             aplicarClasseNaFicha(selectedClass, selectedSubclass);
             overlay.remove();
             checkScrollLock();
@@ -1355,47 +1055,31 @@ function openClassSelectionModal() {
 
     function renderClassDetails(cls, simulatedLevel) {
         if (!cls) return;
-
-        // Resetar botão
         btnSelect.removeAttribute('disabled');
         btnSelect.textContent = `Selecionar ${cls.name} (Nível ${simulatedLevel})`;
         btnSelect.style.background = '#9c27b0';
 
         const imagePath = cls.image || 'img/dado.png';
-        const subclassReqLevel = cls.subclass_level || 3; 
+        const subclassReqLevel = cls.subclass_level || 3;
         const canPickSubclass = simulatedLevel >= subclassReqLevel;
 
-        // HTML de Proficiências
         let profHtml = '';
-        if(cls.proficiencies) {
-            if(cls.proficiencies.armor && cls.proficiencies.armor.length) profHtml += `<div><strong style="color:#e0aaff;">Armaduras:</strong> ${cls.proficiencies.armor.join(', ')}</div>`;
-            if(cls.proficiencies.weapons && cls.proficiencies.weapons.length) profHtml += `<div><strong style="color:#e0aaff;">Armas:</strong> ${cls.proficiencies.weapons.join(', ')}</div>`;
-            if(cls.proficiencies.tools && cls.proficiencies.tools.length) profHtml += `<div><strong style="color:#e0aaff;">Ferramentas:</strong> ${cls.proficiencies.tools.join(', ')}</div>`;
+        if (cls.proficiencies) {
+            if (cls.proficiencies.armor && cls.proficiencies.armor.length) profHtml += `<div><strong style="color:#e0aaff;">Armaduras:</strong> ${cls.proficiencies.armor.join(', ')}</div>`;
+            if (cls.proficiencies.weapons && cls.proficiencies.weapons.length) profHtml += `<div><strong style="color:#e0aaff;">Armas:</strong> ${cls.proficiencies.weapons.join(', ')}</div>`;
+            if (cls.proficiencies.tools && cls.proficiencies.tools.length) profHtml += `<div><strong style="color:#e0aaff;">Ferramentas:</strong> ${cls.proficiencies.tools.join(', ')}</div>`;
         }
 
-        // HTML das Características Base (Filtrar por nível se desejar, aqui mostramos todas para info)
-        const traitsHtml = cls.features ? cls.features.map(t => `
-            <div class="race-trait-item">
-                <div class="race-trait-name">${t.name}</div>
-                <div class="race-trait-desc">${t.description}</div>
-            </div>
-        `).join('') : '';
+        const traitsHtml = cls.features ? cls.features.map(t => `<div class="race-trait-item"><div class="race-trait-name">${t.name}</div><div class="race-trait-desc">${t.description}</div></div>`).join('') : '';
 
-        // HTML das Subclasses
         let subclassesHtml = '';
         if (cls.subclasses && cls.subclasses.length > 0) {
-            
             let lockMessage = '';
-            if (!canPickSubclass) {
-                lockMessage = `<div style="background:#330000; border:1px solid #d32f2f; color:#ff9999; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">🔒 Subclasses disponíveis apenas no nível ${subclassReqLevel}. (Você estará no nível ${simulatedLevel})</div>`;
-            } else if (!selectedSubclass && canPickSubclass) {
-                 lockMessage = `<div style="background:#332a00; border:1px solid #ffeb3b; color:#ffeb3b; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">⚠ Você atingiu o nível ${subclassReqLevel}! Selecione uma subclasse abaixo.</div>`;
-            }
+            if (!canPickSubclass) lockMessage = `<div style="background:#330000; border:1px solid #d32f2f; color:#ff9999; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">🔒 Subclasses disponíveis apenas no nível ${subclassReqLevel}.</div>`;
+            else if (!selectedSubclass && canPickSubclass) lockMessage = `<div style="background:#332a00; border:1px solid #ffeb3b; color:#ffeb3b; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">⚠ Você atingiu o nível ${subclassReqLevel}! Selecione uma subclasse abaixo.</div>`;
 
             subclassesHtml = `
-                <div class="race-traits-title" style="margin-top:25px; color:#ffeb3b; border-top:1px solid #333; padding-top:15px;">
-                    Subclasses (Arquétipos/Juramentos)
-                </div>
+                <div class="race-traits-title" style="margin-top:25px; color:#ffeb3b; border-top:1px solid #333; padding-top:15px;">Subclasses (Arquétipos/Juramentos)</div>
                 ${lockMessage}
                 <div class="variations-list" style="${!canPickSubclass ? 'opacity:0.5; pointer-events:none;' : ''}">
                     ${cls.subclasses.map((sub, idx) => `
@@ -1407,15 +1091,9 @@ function openClassSelectionModal() {
                                 </div>
                                 <span class="variation-arrow">▼</span>
                             </div>
-                            
                             <div class="variation-body">
                                 <div class="variation-desc-text">${sub.description || ''}</div>
-                                ${sub.features ? sub.features.map(feat => `
-                                    <div class="variation-feature-box">
-                                        <div class="variation-feature-title">★ ${feat.name}</div>
-                                        <div class="variation-feature-content">${feat.description}</div>
-                                    </div>
-                                `).join('') : ''}
+                                ${sub.features ? sub.features.map(feat => `<div class="variation-feature-box"><div class="variation-feature-title">★ ${feat.name}</div><div class="variation-feature-content">${feat.description}</div></div>`).join('') : ''}
                             </div>
                         </div>
                     `).join('')}
@@ -1425,9 +1103,7 @@ function openClassSelectionModal() {
 
         detailsContainer.innerHTML = `
             <div class="race-detail-header">
-                <div class="race-img-container" onclick="window.openImageLightbox('${imagePath}')">
-                    <img src="${imagePath}" class="race-img-display" onerror="this.src='img/dado.png'">
-                </div>
+                <div class="race-img-container" onclick="window.openImageLightbox('${imagePath}')"><img src="${imagePath}" class="race-img-display" onerror="this.src='img/dado.png'"></div>
                 <div class="race-title-box">
                     <h2>${cls.name}</h2>
                     <div class="race-info-line">
@@ -1436,40 +1112,29 @@ function openClassSelectionModal() {
                     </div>
                 </div>
             </div>
-            
             <div class="race-traits-title" style="margin-top:15px;">Proficiências Iniciais & Equipamento</div>
             <div style="font-size:13px; color:#ccc; line-height:1.6; background:#111; padding:10px; border-radius:6px; border:1px solid #333;">
                 ${profHtml}
-                <div style="margin-top:6px; padding-top:6px; border-top:1px solid #333;">
-                    <strong style="color:#e0aaff;">Equipamento Sugerido (Apenas Nível 1):</strong><br> ${cls.equipment ? cls.equipment.join('<br>') : '-'}
-                </div>
+                <div style="margin-top:6px; padding-top:6px; border-top:1px solid #333;"><strong style="color:#e0aaff;">Equipamento Sugerido (Apenas Nível 1):</strong><br> ${cls.equipment ? cls.equipment.join('<br>') : '-'}</div>
             </div>
-
             <div class="race-traits-title" style="margin-top:20px;">Características de Classe</div>
             <div>${traitsHtml}</div>
-            
             ${subclassesHtml}
         `;
 
-        // Lógica dos Radio Buttons (Acordeão) para Subclasses
         if (cls.subclasses && cls.subclasses.length > 0 && canPickSubclass) {
             const allRadios = detailsContainer.querySelectorAll('input[name="class_subclass"]');
-
             detailsContainer.querySelectorAll('.variation-header').forEach(header => {
                 header.addEventListener('click', (e) => {
                     if (e.target.type === 'radio') return;
-                    if (!canPickSubclass) return;
                     header.closest('.variation-card-wrapper').classList.toggle('open');
                 });
             });
-
             allRadios.forEach(radio => {
                 radio.addEventListener('click', (e) => {
                     const idx = parseInt(radio.value);
                     const isAlreadyChecked = radio.getAttribute('data-checked') === 'true';
-
                     allRadios.forEach(r => r.setAttribute('data-checked', 'false'));
-
                     if (isAlreadyChecked) {
                         radio.checked = false;
                         radio.setAttribute('data-checked', 'false');
@@ -1480,7 +1145,6 @@ function openClassSelectionModal() {
                         radio.setAttribute('data-checked', 'true');
                         selectedSubclass = cls.subclasses[idx];
                         btnSelect.textContent = `Selecionar ${cls.name} (${selectedSubclass.name})`;
-                        
                         detailsContainer.querySelectorAll('.variation-card-wrapper').forEach(c => c.classList.remove('open'));
                         radio.closest('.variation-card-wrapper').classList.add('open');
                     }
@@ -1490,651 +1154,6 @@ function openClassSelectionModal() {
     }
 }
 
-// Função Principal de Aplicação com todas as regras solicitadas
-
-
-// Helper para adicionar habilidade sem duplicar
-function addAbilityIfNew(title, desc, cat, clsName, subName) {
-    const exists = state.abilities && state.abilities.find(a => a.title === title);
-    if (!exists) {
-        if (!state.abilities) state.abilities = [];
-        state.abilities.unshift({
-            id: Date.now() + Math.floor(Math.random() * 100000),
-            title: title,
-            description: desc,
-            expanded: false,
-            active: true,
-            category: cat,
-            class: clsName,
-            subclass: subName
-        });
-    }
-}
-
-// Helper para adicionar proficiências ao estado
-function addProficienciasDoBanco(profObj) {
-    if (!profObj) return;
-    if (!state.proficienciasList) state.proficienciasList = [];
-
-    const add = (arr) => {
-        if (!arr) return;
-        arr.forEach(p => {
-            if (!state.proficienciasList.includes(p)) state.proficienciasList.push(p);
-        });
-    };
-
-    add(profObj.armor);
-    add(profObj.weapons);
-    add(profObj.tools);
-}
-
-// --- SISTEMA DE ESCOLHA DE EQUIPAMENTO ---
-function openEquipmentSelector(title, optionA, optionB, callback) {
-    const overlay = document.createElement('div');
-    overlay.className = 'spell-modal-overlay race-modal-overlay';
-    overlay.style.zIndex = '15000';
-
-    overlay.innerHTML = `
-        <div class="spell-modal" style="width: 500px; height: auto;">
-            <div class="modal-header">
-                <h3>Escolha de Equipamento</h3>
-            </div>
-            <div class="modal-body" style="padding: 20px; text-align:center;">
-                <p style="color:#ccc; margin-bottom:20px; font-size:16px;">${title}</p>
-                <div style="display:flex; gap:15px; justify-content:center;">
-                    <button class="btn-equip-opt btn-add" style="background:#222; border:1px solid #444; flex:1; padding:15px;">${optionA}</button>
-                    <button class="btn-equip-opt btn-add" style="background:#222; border:1px solid #444; flex:1; padding:15px;">${optionB}</button>
-                </div>
-            </div>
-        </div>
-    `;
-
-    document.body.appendChild(overlay);
-    if(typeof checkScrollLock === 'function') checkScrollLock(); // Trava ao abrir
-
-    const buttons = overlay.querySelectorAll('.btn-equip-opt');
-    
-    // CORREÇÃO AQUI: Adicionado checkScrollLock() ao clicar
-    buttons[0].onclick = () => {
-        callback(optionA);
-        overlay.remove();
-        if(typeof checkScrollLock === 'function') checkScrollLock();
-    };
-
-    buttons[1].onclick = () => {
-        callback(optionB);
-        overlay.remove();
-        if(typeof checkScrollLock === 'function') checkScrollLock();
-    };
-}
-
-function processarEquipamentoInicial(equipList) {
-    if (!equipList || equipList.length === 0) return;
-    let queue = [...equipList];
-
-    function processNext() {
-        if (queue.length === 0) {
-            window.dispatchEvent(new CustomEvent('sheet-updated'));
-            return;
-        }
-
-        const itemStr = queue.shift();
-        // Regex aprimorada para capturar "(a) ... ou (b) ..."
-        const choiceRegex = /\(a\)\s*(.*?)\s+ou\s+\(b\)\s*(.*)/i;
-        const match = itemStr.match(choiceRegex);
-
-        if (match) {
-            const optA = match[1].trim();
-            const optB = match[2].trim();
-            openEquipmentSelector("Selecione uma opção de equipamento:", optA, optB, (choice) => {
-                // Se a escolha tiver sub-opções (c) etc, ou vírgulas, simplificamos adicionando tudo
-                const subItems = choice.split(/,\s*(?![^(]*\))/); // Separa por vírgula se não estiver entre parenteses
-                subItems.forEach(si => adicionarItemAoInventario(si.trim()));
-                processNext();
-            });
-        } else {
-            adicionarItemAoInventario(itemStr);
-            processNext();
-        }
-    }
-    processNext();
-}
-
-function adicionarItemAoInventario(nomeItem) {
-    if (!state.inventory) state.inventory = [];
-    
-    // Limpeza básica do nome (remove "um", "uma", "kit de")
-    const cleanName = nomeItem.replace(/^(um|uma|uns|umas)\s+/i, '').trim();
-
-    const itemDb = buscarItemNoBanco(cleanName); 
-    
-    if (itemDb) {
-        state.inventory.push(itemDb);
-    } else {
-        state.inventory.push({
-            id: Date.now() + Math.floor(Math.random() * 1000),
-            name: cleanName,
-            type: "Geral",
-            quantity: 1,
-            weight: 0,
-            description: "Item Inicial de Classe"
-        });
-    }
-}
-
-
-
-/* =============================================================
-   ATUALIZAÇÃO: MODAL QUE ACEITA 3 OPÇÕES (A, B, C)
-   ============================================================= */
-function openEquipmentChoiceModal(title, optionA, optionB, optionC, callback) {
-    const overlay = document.createElement('div');
-    overlay.className = 'spell-modal-overlay race-modal-overlay';
-    overlay.style.zIndex = '15000';
-
-    // Se existir optionC, ajusta o layout para acomodar 3 botões
-    let htmlButtons = `
-        <button class="btn-equip-opt btn-add" data-choice="${optionA}" style="flex:1; background:#1a1a1a; border:1px solid #444; padding:15px; text-align:left; display:flex; flex-direction:column; gap:5px; transition:0.2s;">
-            <strong style="color:#9c27b0; font-size:14px; text-transform:uppercase;">Opção A</strong>
-            <span style="color:#fff; font-size:13px; line-height:1.4;">${optionA}</span>
-        </button>
-
-        <div style="display:flex; align-items:center; font-weight:bold; color:#666;">OU</div>
-
-        <button class="btn-equip-opt btn-add" data-choice="${optionB}" style="flex:1; background:#1a1a1a; border:1px solid #444; padding:15px; text-align:left; display:flex; flex-direction:column; gap:5px; transition:0.2s;">
-            <strong style="color:#9c27b0; font-size:14px; text-transform:uppercase;">Opção B</strong>
-            <span style="color:#fff; font-size:13px; line-height:1.4;">${optionB}</span>
-        </button>
-    `;
-
-    // Se houver opção C, adiciona o botão C
-    if (optionC) {
-        htmlButtons += `
-            <div style="display:flex; align-items:center; font-weight:bold; color:#666;">OU</div>
-            <button class="btn-equip-opt btn-add" data-choice="${optionC}" style="flex:1; background:#1a1a1a; border:1px solid #444; padding:15px; text-align:left; display:flex; flex-direction:column; gap:5px; transition:0.2s;">
-                <strong style="color:#9c27b0; font-size:14px; text-transform:uppercase;">Opção C</strong>
-                <span style="color:#fff; font-size:13px; line-height:1.4;">${optionC}</span>
-            </button>
-        `;
-    }
-
-    overlay.innerHTML = `
-        <div class="spell-modal" style="width: ${optionC ? '800px' : '600px'}; height: auto;">
-            <div class="modal-header">
-                <h3>Escolha de Equipamento</h3>
-            </div>
-            <div class="modal-body" style="padding: 20px;">
-                <p style="color:#e0aaff; margin-bottom:20px; text-align:center; font-size:16px;">${title}</p>
-                <div style="display:flex; gap:10px; justify-content:center; align-items:stretch;">
-                    ${htmlButtons}
-                </div>
-            </div>
-        </div>
-    `;
-
-    document.body.appendChild(overlay);
-    if(typeof checkScrollLock === 'function') checkScrollLock();
-
-    const buttons = overlay.querySelectorAll('.btn-equip-opt');
-    
-    buttons.forEach(btn => {
-        btn.onmouseenter = () => btn.style.borderColor = '#9c27b0';
-        btn.onmouseleave = () => btn.style.borderColor = '#444';
-        
-        btn.onclick = () => {
-            const choice = btn.getAttribute('data-choice');
-            callback(choice);
-            overlay.remove();
-            if(typeof checkScrollLock === 'function') checkScrollLock();
-        };
-    });
-}
-
-// 2. Processador da Lista de Equipamentos (Recursivo)
-function processarEquipamentoInicial(equipList) {
-    if (!equipList || equipList.length === 0) {
-        window.dispatchEvent(new CustomEvent('sheet-updated'));
-        return;
-    }
-
-    // Clona a lista para não alterar a original
-    let queue = [...equipList];
-
-    function processNext() {
-        if (queue.length === 0) {
-            window.dispatchEvent(new CustomEvent('sheet-updated'));
-            return;
-        }
-
-        const itemStr = queue.shift();
-
-        // Verifica escolha "(a) ... ou (b) ..."
-        // Regex ajustado para pegar textos complexos
-        const choiceRegex = /\(a\)\s*(.*?)\s+(?:ou)\s+\(b\)\s*(.*)/i;
-        const match = itemStr.match(choiceRegex);
-
-        if (match) {
-            const optA = match[1].trim();
-            const optB = match[2].trim();
-            
-            openEquipmentChoiceModal("Escolha seu equipamento inicial:", optA, optB, (choice) => {
-                // Se a escolha conter vírgulas ou ' e ', separe os itens (ex: "Armadura de couro, arco longo e 20 flechas")
-                // Truque: Substitui " e " por "," para facilitar o split
-                const cleanChoice = choice.replace(" e ", ", "); 
-                const subItems = cleanChoice.split(",").map(s => s.trim());
-                
-                // Adiciona sub-itens ao início da fila para serem processados (caso sejam genéricos também)
-                queue.unshift(...subItems);
-                processNext();
-            });
-        } else {
-            // Se for item direto, verifica se é genérico
-            verificarItemGenerico(itemStr, processNext);
-        }
-    }
-
-    processNext();
-}
-
-// 3. Verifica se é "Qualquer arma..." e abre seletor, senão adiciona direto
-function verificarItemGenerico(nomeItem, callbackNext) {
-    const nomeLower = nomeItem.toLowerCase();
-    
-    let listaOpcoes = null;
-    let tituloModal = "";
-
-    // Lógica de Detecção de Palavras-Chave
-    if (nomeLower.includes("qualquer arma simples")) {
-        listaOpcoes = LISTA_ARMAS_SIMPLES;
-        tituloModal = "Escolha uma Arma Simples";
-    } 
-    else if (nomeLower.includes("qualquer arma marcial")) {
-        listaOpcoes = LISTA_ARMAS_MARCIAIS;
-        tituloModal = "Escolha uma Arma Marcial";
-    }
-    else if (nomeLower.includes("instrumento musical")) {
-        listaOpcoes = LISTA_INSTRUMENTOS_MUSICAIS;
-        tituloModal = "Escolha um Instrumento Musical";
-    }
-    else if (nomeLower.includes("ferramenta de artesão") || nomeLower.includes("ferramenta de artesao")) {
-        listaOpcoes = LISTA_FERRAMENTAS_ARTESAO;
-        tituloModal = "Escolha uma Ferramenta de Artesão";
-    }
-
-    if (listaOpcoes) {
-        // Abre o seletor genérico (reutilizando a função existente ou criando uma simples)
-        openGenericSelector(tituloModal, 1, listaOpcoes, (selected) => {
-            if (selected && selected.length > 0) {
-                adicionarItemAoInventario(selected[0]);
-            }
-            callbackNext();
-        });
-    } else {
-        // Não é genérico, adiciona direto
-        adicionarItemAoInventario(nomeItem);
-        callbackNext();
-    }
-}
-
-// 4. Adiciona ao Inventário
-function adicionarItemAoInventario(nomeItem) {
-    if (!state.inventory) state.inventory = [];
-    
-    // Limpeza de nome (remove artigos iniciais e quantidades numéricas no inicio da string para busca)
-    // Ex: "uma adaga" -> "adaga", "20 virotes" -> "virotes"
-    let cleanName = nomeItem.replace(/^(um|uma|uns|umas)\s+/i, '');
-    
-    // Tenta extrair quantidade (ex: "20 flechas")
-    let qtd = 1;
-    const qtdMatch = cleanName.match(/^(\d+)\s+(.*)/);
-    if(qtdMatch) {
-        qtd = parseInt(qtdMatch[1]);
-        cleanName = qtdMatch[2]; // Nome sem o número
-    }
-
-    cleanName = cleanName.trim();
-
-    const itemDb = buscarItemNoBanco(cleanName); 
-    
-    if (itemDb) {
-        // Clone para evitar referência
-        const newItem = JSON.parse(JSON.stringify(itemDb));
-        newItem.id = Date.now() + Math.floor(Math.random() * 1000);
-        newItem.quantity = qtd; 
-        state.inventory.push(newItem);
-    } else {
-        // Item Genérico
-        state.inventory.push({
-            id: Date.now() + Math.floor(Math.random() * 1000),
-            name: cleanName.charAt(0).toUpperCase() + cleanName.slice(1), // Capitalize
-            type: "Equipamento",
-            quantity: qtd,
-            weight: 0,
-            description: "Item de Classe"
-        });
-    }
-}
-
-/* =============================================================
-   CORREÇÃO: PROCESSADOR QUE DIVIDE ITENS MÚLTIPLOS (VIRGULAS/E)
-   ============================================================= */
-
-function processarListaEquipamentos(lista, index, callbackFinal) {
-    if (!lista || index >= lista.length) {
-        callbackFinal();
-        return;
-    }
-
-    const itemStr = lista[index];
-    const nextStep = () => processarListaEquipamentos(lista, index + 1, callbackFinal);
-
-    // 1. Tenta detectar padrão de 3 escolhas: (a) X, (b) Y ou (c) Z
-    const regex3Options = /\(a\)\s*(.+?)[,;]?\s+\(b\)\s*(.+?)[,;]?\s+(?:ou)\s*\(c\)\s*(.+)/i;
-    const match3 = itemStr.match(regex3Options);
-
-    if (match3) {
-        const optA = match3[1].trim();
-        const optB = match3[2].trim();
-        const optC = match3[3].trim(); 
-
-        openEquipmentChoiceModal("Escolha uma das opções:", optA, optB, optC, (choice) => {
-            processarEscolhaComplexa(choice, nextStep);
-        });
-        return;
-    }
-
-    // 2. Tenta detectar padrão de 2 escolhas: (a) X ou (b) Y
-    const regex2Options = /^\(a\)\s*(.+?)\s+(?:ou)\s+\(b\)\s*(.+)$/i; 
-    const match2 = itemStr.match(regex2Options);
-
-    if (match2) {
-        const optA = match2[1].trim();
-        const optB = match2[2].trim();
-
-        openEquipmentChoiceModal("Escolha uma das opções:", optA, optB, null, (choice) => {
-            processarEscolhaComplexa(choice, nextStep);
-        });
-        return;
-    } 
-    
-    // 3. Item direto (SEM ESCOLHA), mas pode ser composto (ex: "Armadura de couro, arco e flechas")
-    // Mandamos para o processarEscolhaComplexa que já sabe separar vírgulas
-    processarEscolhaComplexa(itemStr, nextStep);
-}
-
-// Função auxiliar para separar itens compostos por vírgula ou " e "
-/* =============================================================
-   CORREÇÃO: PROCESSAMENTO DE EQUIPAMENTOS (SUBSTITUA AS FUNÇÕES ANTIGAS POR ESTAS)
-   ============================================================= */
-
-// Função para separar itens compostos por vírgula ou " e "
-function processarEscolhaComplexa(choice, callbackNext) {
-    // Limpa marcadores (a), (b)
-    let cleanChoice = choice.replace(/\([abc]\)/g, "").trim();
-    
-    // Substitui " e " por "," para facilitar o split (CUIDADO: não usar em nomes de itens que tenham " e " nativo)
-    cleanChoice = cleanChoice.replace(/\s+e\s+/g, ","); 
-
-    const subItems = cleanChoice.split(",").map(s => s.trim()).filter(s => s !== "");
-    
-    // Processa subitens em fila
-    let subQueue = [...subItems];
-    
-    function runSubQueue() {
-        if(subQueue.length === 0) { 
-            callbackNext(); 
-            return; 
-        }
-        const si = subQueue.shift();
-        
-        // Chama a verificação para cada pedaço
-        verificarItemGenerico(si, () => runSubQueue());
-    }
-    runSubQueue();
-}
-
-// Verifica palavras-chave para abrir seletor específico ou adiciona direto
-function verificarItemGenerico(nomeItem, callbackNext) {
-    const nomeLower = nomeItem.toLowerCase();
-    
-    // --- Lógica de Detecção e Configuração do Modal ---
-    let listaOpcoes = null;
-    let tituloModal = "";
-    let quantidade = 1;
-
-    // 1. Detecta "Duas armas marciais" ou "2 armas marciais"
-    if (/(?:duas|2)\s+armas?\s+marciais?/i.test(nomeLower)) {
-        listaOpcoes = LISTA_ARMAS_MARCIAIS;
-        tituloModal = "Escolha 2 Armas Marciais";
-        quantidade = 2;
-    }
-    // 2. Detecta singular "Uma arma marcial" ou "Qualquer arma marcial"
-    else if (nomeLower.includes("arma marcial")) { 
-        listaOpcoes = LISTA_ARMAS_MARCIAIS; 
-        tituloModal = "Escolha uma Arma Marcial";
-        quantidade = 1;
-    }
-    // 3. Detecta "Arma simples" (singular ou plural simples)
-    else if (nomeLower.includes("arma simples")) { 
-        listaOpcoes = LISTA_ARMAS_SIMPLES; 
-        tituloModal = "Escolha uma Arma Simples"; 
-        // Se quiser detectar "duas armas simples", adicione um if similar ao das marciais acima
-    }
-    // 4. Instrumentos e Ferramentas
-    else if (nomeLower.includes("instrumento musical")) { 
-        listaOpcoes = LISTA_INSTRUMENTOS; // Certifique-se que essa constante existe (no seu código estava LISTA_INSTRUMENTOS)
-        tituloModal = "Escolha um Instrumento"; 
-    }
-    else if (nomeLower.includes("ferramenta de artesão") || nomeLower.includes("ferramenta de artesao")) { 
-        listaOpcoes = LISTA_FERRAMENTAS_ARTESAO; 
-        tituloModal = "Escolha uma Ferramenta"; 
-    }
-
-    // --- Execução ---
-    if (listaOpcoes) {
-        // Abre o seletor com a quantidade detectada
-        openGenericSelector(tituloModal, quantidade, listaOpcoes, (selected) => {
-            if (selected && selected.length > 0) {
-                selected.forEach(s => adicionarItemAoInventario(s));
-            }
-            callbackNext();
-        });
-    } else {
-        // Se não for genérico (ex: "Escudo"), adiciona direto
-        adicionarItemAoInventario(nomeItem);
-        callbackNext();
-    }
-}
-
-function adicionarItemAoInventario(nomeItem) {
-    if (!state.inventory) state.inventory = [];
-    
-    // Remove "um", "uma"
-    let cleanName = nomeItem.replace(/^(um|uma|uns|umas|a|o)\s+/i, '').replace(/[.;]$/, '').trim();
-    
-    // Extrai quantidade (ex: "20 flechas")
-    let qtd = 1;
-    const qtdMatch = cleanName.match(/^(\d+)\s+(.*)/);
-    if(qtdMatch) { qtd = parseInt(qtdMatch[1]); cleanName = qtdMatch[2]; }
-
-    // Busca no DB
-    const itemDb = buscarItemNoBanco(cleanName);
-    
-    if (itemDb) {
-        const newItem = JSON.parse(JSON.stringify(itemDb));
-        newItem.id = Date.now() + Math.floor(Math.random() * 1000);
-        newItem.quantity = qtd;
-        state.inventory.push(newItem);
-    } else {
-        state.inventory.push({
-            id: Date.now() + Math.floor(Math.random() * 1000),
-            name: cleanName.charAt(0).toUpperCase() + cleanName.slice(1),
-            type: "Equipamento",
-            quantity: qtd,
-            weight: 0,
-            description: "Item de Classe"
-        });
-    }
-}
-
-// --- Helpers de Estado ---
-function addProficiencias(profObj) {
-    if (!profObj) return;
-    if (!state.proficienciasList) state.proficienciasList = [];
-    const add = (arr) => { if (arr) arr.forEach(p => { if (!state.proficienciasList.includes(p)) state.proficienciasList.push(p); }); };
-    add(profObj.armor);
-    add(profObj.weapons);
-    // Tools são tratadas via seletor se forem "escolha", mas se forem fixas:
-    if (profObj.tools) profObj.tools.forEach(t => {
-        if(!t.toLowerCase().includes("escolha") && !t.toLowerCase().includes("qualquer")) {
-             if (!state.proficienciasList.includes(t)) state.proficienciasList.push(t);
-        }
-    });
-}
-
-function addFeatureToState(feat, category, clsName, subName) {
-    if (!state.abilities) state.abilities = [];
-    const exists = state.abilities.find(a => a.title === feat.name);
-    if (!exists) {
-        state.abilities.unshift({
-            id: Date.now() + Math.floor(Math.random() * 100000),
-            title: feat.name,
-            description: feat.description,
-            expanded: false,
-            active: true,
-            category: category,
-            class: clsName,
-            subclass: subName
-        });
-    }
-}
-
-// =============================================================
-// FUNÇÃO UNIFICADA: Mantém item padrão mas anota a quantidade
-// =============================================================
-function adicionarItemAoInventario(nomeItemBruto) {
-    if (!state.inventory) state.inventory = [];
-    
-    // 1. Limpeza inicial
-    let cleanName = nomeItemBruto.replace(/^(um|uma|uns|umas|a|o|os|as)\s+/i, '').trim();
-
-    // 2. Separa a Quantidade do Nome
-    // Exemplo de entrada: "5 Dardos" -> qtd: 5, cleanName: "Dardos"
-    let qtd = 1;
-    // Regex ajustada: pega numero no inicio, ignora 'x' opcional e espacos
-    const qtdMatch = cleanName.match(/^(\d+)\s*(?:x\s*|\s+)(.+)/i);
-
-    if (qtdMatch) {
-        qtd = parseInt(qtdMatch[1]); 
-        cleanName = qtdMatch[2].trim(); 
-    }
-
-    // Remove pontuação final
-    cleanName = cleanName.replace(/[.;]$/, '');
-
-    // 3. Busca o item padrão no Banco de Dados
-    const itemDb = buscarItemNoBanco(cleanName); 
-
-    if (itemDb) {
-        // --- CENÁRIO A: Item existe no banco (ex: "Dardo") ---
-        
-        // Cria uma cópia independente do item padrão
-        const newItem = JSON.parse(JSON.stringify(itemDb));
-        
-        newItem.id = Date.now() + Math.floor(Math.random() * 100000);
-        
-        // Define a quantidade mecânica (para calculo de peso, etc)
-        newItem.quantity = qtd; 
-
-        // --- AQUI ESTÁ A MUDANÇA QUE VOCÊ PEDIU ---
-        if (qtd > 1) {
-            // Opção 1: Adicionar ao Nome (ex: "Dardo (x5)")
-            newItem.name = `${newItem.name} (x${qtd})`;
-
-            const descOriginal = newItem.description || "";
-            //newItem.description = `${descOriginal}\n\n> Nota: Adicionado em um lote de ${qtd} unidades.`;
-        }
-        
-        state.inventory.push(newItem);
-
-    } else {
-        // --- CENÁRIO B: Item não existe no banco ---
-        // Usa o nome bruto original para manter o contexto (ex: "Chave do portão quebrado")
-        // Se havia quantidade (ex: "5 Pedras estranhas"), remontamos o nome.
-        
-        const nomeFinal = qtd > 1 ? `${cleanName} (x${qtd})` : cleanName;
-
-        state.inventory.push({
-            id: Date.now() + Math.floor(Math.random() * 100000),
-            name: nomeFinal.charAt(0).toUpperCase() + nomeFinal.slice(1),
-            type: "Equipamento",
-            quantity: qtd,
-            weight: 0,
-            description: qtd > 1 ? `Item genérico adicionado em lote de ${qtd}.` : "Item adicionado."
-        });
-    }
-}
-
-// Função auxiliar para renderizar os detalhes (Direita do Modal)
-function renderClassDetails(cls, container, btnSelect) {
-    if (!cls) return;
-
-    btnSelect.removeAttribute('disabled');
-    btnSelect.textContent = `Selecionar ${cls.name}`;
-    btnSelect.style.background = '#9c27b0';
-
-    const imagePath = cls.image || 'img/dado.png'; // Garanta que tenha uma imagem ou fallback
-
-    // Formata Salvaguardas (Ex: "Força, Constituição")
-    const saves = cls.saving_throws ? cls.saving_throws.join(', ') : '-';
-    
-    // Formata Dado de Vida
-    const hitDie = cls.hit_die ? `d${cls.hit_die}` : '?';
-
-    // Monta HTML de Proficiências (Armaduras e Armas)
-    let profHtml = '';
-    if(cls.proficiencies) {
-        if(cls.proficiencies.armor) profHtml += `<div><strong style="color:#e0aaff;">Armaduras:</strong> ${cls.proficiencies.armor.join(', ')}</div>`;
-        if(cls.proficiencies.weapons) profHtml += `<div><strong style="color:#e0aaff;">Armas:</strong> ${cls.proficiencies.weapons.join(', ')}</div>`;
-    }
-
-    container.innerHTML = `
-        <div class="race-detail-header">
-            <div class="race-img-container" onclick="window.openImageLightbox('${imagePath}')">
-                <img src="${imagePath}" class="race-img-display" onerror="this.src='img/dado.png'">
-            </div>
-            <div class="race-title-box">
-                <h2>${cls.name}</h2>
-                <div class="race-info-line">
-                    <strong style="color:#9c27b0;">Dado de Vida:</strong> ${hitDie}<br>
-                    <strong style="color:#9c27b0;">Salvaguardas:</strong> ${saves}
-                </div>
-            </div>
-        </div>
-        
-        <div class="race-traits-title" style="margin-top:15px;">Proficiências Iniciais</div>
-        <div style="font-size:13px; color:#ccc; line-height:1.6; background:#111; padding:10px; border-radius:6px; border:1px solid #333;">
-            ${profHtml || "Nenhuma especificada."}
-        </div>
-
-        <div class="race-traits-title" style="margin-top:20px;">Características de Classe</div>
-        <div class="class-features-preview">
-            ${(cls.table || []).slice(0, 3).map(level => `
-                <div style="margin-bottom:5px; border-bottom:1px solid #333; padding-bottom:5px;">
-                    <strong style="color:#fff;">Nível ${level.level}:</strong> <span style="color:#aaa;">${level.features ? level.features.join(', ') : '-'}</span>
-                </div>
-            `).join('')}
-            <div style="font-size:11px; color:#666; margin-top:5px;">...veja mais na ficha após selecionar.</div>
-        </div>
-    `;
-}
-
-/* =============================================================
-   3. APLICAÇÃO DE CLASSE NA FICHA
-============================================================= */
-/* =============================================================
-   3. APLICAÇÃO DE CLASSE NA FICHA (ATUALIZADA PARA BARDO)
-============================================================= */
 function aplicarClasseNaFicha(cls, subCls) {
     if (typeof state === 'undefined') return;
 
@@ -2143,15 +1162,12 @@ function aplicarClasseNaFicha(cls, subCls) {
 
     const currentLevelInClass = state.niveisClasses[classKey] ? parseInt(state.niveisClasses[classKey]) : 0;
     const newLevelInClass = currentLevelInClass + 1;
-
     let totalCharacterLevel = 0;
     Object.values(state.niveisClasses).forEach(lvl => totalCharacterLevel += parseInt(lvl));
     const isFirstLevelCharacter = (totalCharacterLevel === 0);
     const isMulticlassing = (totalCharacterLevel > 0 && currentLevelInClass === 0);
-
     const requiredLevel = cls.subclass_level || 3;
 
-    // --- REGRAS DE TRAVAMENTO DE SUBCLASSE ---
     if (subCls && newLevelInClass < requiredLevel) {
         alert(`Nível insuficiente (${newLevelInClass}) para subclasse ${subCls.name}. Requer nível ${requiredLevel}.`);
         return;
@@ -2159,22 +1175,19 @@ function aplicarClasseNaFicha(cls, subCls) {
     const hasSavedSubclass = state.subclasses && state.subclasses[classKey];
     if (newLevelInClass >= requiredLevel && !subCls && !hasSavedSubclass) {
         alert(`ATENÇÃO: Você atingiu o nível ${requiredLevel}! Você DEVE selecionar uma Subclasse para prosseguir.`);
-        return; 
+        return;
     }
 
-    // --- APLICAÇÃO ---
     state.niveisClasses[classKey] = newLevelInClass;
     if (isFirstLevelCharacter) state.hitDie = `d${cls.hit_die}`;
 
-    // Habilidades
     if (cls.features) {
         cls.features.forEach(feat => {
             const fLvl = feat.level || 1;
             if (fLvl <= newLevelInClass) addFeatureToState(feat, 'Classe', cls.name, '');
         });
     }
-    
-    // Processamento de Subclasse (Mantido igual)
+
     if (subCls) {
         if (!state.subclasses) state.subclasses = {};
         state.subclasses[classKey] = subCls.name;
@@ -2194,106 +1207,68 @@ function aplicarClasseNaFicha(cls, subCls) {
         }
     }
 
-    // --- FILA DE ESCOLHAS (TASKS) ---
     const tasks = [];
 
     if (isFirstLevelCharacter) {
-        // NÍVEL 1: Tudo
-        if (cls.saving_throws && !state.proficiencias) state.proficiencias = {}; 
+        if (cls.saving_throws && !state.proficiencias) state.proficiencias = {};
 
-        // 1. Perícias (Skill Selector)
         if (cls.skills_list && cls.skills_count > 0) {
             let lista = cls.skills_list;
             let titulo = `Perícias de ${cls.name}`;
-            
             const temQualquer = lista.some(s => s.toLowerCase().includes("qualquer") || s.toLowerCase().includes("escolha"));
-            
             if (cls.name === "Bardo" || temQualquer) {
-                lista = ALL_SKILLS_LIST; 
+                lista = ALL_SKILLS_LIST;
                 titulo = `Perícias de ${cls.name} (Escolha Livre)`;
             }
-
             tasks.push((next) => openSkillSelector(cls.skills_count, titulo, lista, next));
         }
 
-        // 2. Equipamentos (Equipment Selector)
         if (cls.equipment && cls.equipment.length > 0) {
-            tasks.push((next) => processarListaEquipamentos(cls.equipment, 0, next));
+            tasks.push((next) => processarEquipamentoInicial(cls.equipment, next));
         }
 
-        // 3. Proficiências Fixas (Armor/Weapons/Tools fixas)
         addProficiencias(cls.proficiencies);
 
-        // 4. DETECÇÃO DE ESCOLHA DE FERRAMENTAS/INSTRUMENTOS (NOVO CÓDIGO AQUI)
         if (cls.proficiencies && cls.proficiencies.tools) {
             cls.proficiencies.tools.forEach(toolStr => {
                 const tLower = toolStr.toLowerCase();
-
-                // Lógica Específica para o Bardo (3 Instrumentos)
                 if (tLower.includes("três instrumentos musicais") || tLower.includes("tres instrumentos musicais")) {
                     tasks.push((next) => {
-                        openGenericSelector(
-                            "Escolha 3 Instrumentos Musicais", 
-                            3, 
-                            LISTA_INSTRUMENTOS, 
-                            (selected) => {
-                                if (!state.proficienciasList) state.proficienciasList = [];
-                                selected.forEach(s => {
-                                    if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s);
-                                });
-                                next();
-                            }
-                        );
+                        openGenericSelector("Escolha 3 Instrumentos Musicais", 3, LISTA_INSTRUMENTOS, (selected) => {
+                            if (!state.proficienciasList) state.proficienciasList = [];
+                            selected.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
+                            next();
+                        });
                     });
                 }
-                // Lógica Genérica para Ferramentas de Artesão (Ex: Monge)
                 else if (tLower.includes("ferramenta de artesão") && (tLower.includes("uma") || tLower.includes("qualquer") || tLower.includes("escolha"))) {
-                     tasks.push((next) => {
-                        openGenericSelector(
-                            "Escolha 1 Ferramenta de Artesão", 
-                            1, 
-                            LISTA_FERRAMENTAS_ARTESAO, 
-                            (selected) => {
-                                if (!state.proficienciasList) state.proficienciasList = [];
-                                selected.forEach(s => {
-                                    if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s);
-                                });
-                                next();
-                            }
-                        );
+                    tasks.push((next) => {
+                        openGenericSelector("Escolha 1 Ferramenta de Artesão", 1, LISTA_FERRAMENTAS_ARTESAO, (selected) => {
+                            if (!state.proficienciasList) state.proficienciasList = [];
+                            selected.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
+                            next();
+                        });
                     });
                 }
-                // Lógica Genérica para 1 Instrumento Musical (Ex: Alguns Backgrounds ou Multiclasse futura)
                 else if (tLower.includes("um instrumento musical") || (tLower.includes("instrumento musical") && tLower.includes("escolha") && !tLower.includes("três"))) {
-                     tasks.push((next) => {
-                        openGenericSelector(
-                            "Escolha 1 Instrumento Musical", 
-                            1, 
-                            LISTA_INSTRUMENTOS, 
-                            (selected) => {
-                                if (!state.proficienciasList) state.proficienciasList = [];
-                                selected.forEach(s => {
-                                    if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s);
-                                });
-                                next();
-                            }
-                        );
+                    tasks.push((next) => {
+                        openGenericSelector("Escolha 1 Instrumento Musical", 1, LISTA_INSTRUMENTOS, (selected) => {
+                            if (!state.proficienciasList) state.proficienciasList = [];
+                            selected.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
+                            next();
+                        });
                     });
                 }
             });
         }
 
     } else if (isMulticlassing) {
-        // MULTICLASSE: Limitado
         let profsMC = { ...cls.proficiencies };
-        if (profsMC.armor) profsMC.armor = profsMC.armor.filter(a => !a.toLowerCase().includes('pesada')); 
+        if (profsMC.armor) profsMC.armor = profsMC.armor.filter(a => !a.toLowerCase().includes('pesada'));
         addProficiencias(profsMC);
 
-        // Bardo Multiclasse também ganha 1 instrumento musical (regra oficial PHB), 
-        // mas seu JSON de classe provavelmente não define isso separadamente para multiclasse.
-        // Se desejar, adicione a lógica aqui.
         if (classKey === 'bardo') {
-             tasks.push((next) => {
+            tasks.push((next) => {
                 openGenericSelector("Multiclasse Bardo: 1 Instrumento", 1, LISTA_INSTRUMENTOS, (selected) => {
                     if (!state.proficienciasList) state.proficienciasList = [];
                     selected.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
@@ -2302,53 +1277,40 @@ function aplicarClasseNaFicha(cls, subCls) {
             });
         }
 
-        // Perícias Multiclasse
         if (['bardo', 'ladino', 'patrulheiro', 'ranger'].includes(classKey)) {
             let listaMC = cls.skills_list;
-            if(classKey === 'bardo') listaMC = ALL_SKILLS_LIST;
-            
+            if (classKey === 'bardo') listaMC = ALL_SKILLS_LIST;
             tasks.push((next) => openSkillSelector(1, `Multiclasse ${cls.name}`, listaMC, next));
         }
     }
 
-    // Executa a fila de modais
     executarFila(tasks);
-
     atualizarTextoClassesHeader();
     if (typeof saveStateToServer === 'function') saveStateToServer();
     window.dispatchEvent(new CustomEvent('sheet-updated'));
 }
 
-// Executor de Fila Simples
 function executarFila(tasks) {
     if (tasks.length === 0) {
         window.dispatchEvent(new CustomEvent('sheet-updated'));
         return;
     }
     const currentTask = tasks.shift();
-    // A tarefa atual recebe uma função para chamar a próxima
-    // Os modais (openSkillSelector) precisam chamar esse 'next' no botão confirmar
-    // Adaptei o openSkillSelector acima para aceitar um callback onComplete, que será esse next.
-    // O openGenericSelector também precisa de adaptação se for usado na fila.
-    // O processarListaEquipamentos já tem callbackFinal.
-    currentTask(() => executarFila(tasks)); 
+    // Se for processarEquipamentoInicial, ele aceita um segundo argumento como next
+    // Se for openSkillSelector, ele aceita o next como callback
+    if (currentTask.length === 1) { // Funções que recebem apenas 'next' (wrappers)
+        currentTask(() => executarFila(tasks));
+    } else {
+        // Fallback genérico
+        currentTask(() => executarFila(tasks));
+    }
 }
 
-// --- FUNÇÕES AUXILIARES ---
-
+// --- UTILS ---
 function addProficiencias(profObj) {
     if (!profObj) return;
     if (!state.proficienciasList) state.proficienciasList = [];
-
-    const pushUnique = (arr) => {
-        if (!arr) return;
-        arr.forEach(item => {
-            if (!state.proficienciasList.includes(item)) {
-                state.proficienciasList.push(item);
-            }
-        });
-    };
-
+    const pushUnique = (arr) => { if (arr) arr.forEach(item => { if (!state.proficienciasList.includes(item)) state.proficienciasList.push(item); }); };
     pushUnique(profObj.armor);
     pushUnique(profObj.weapons);
     pushUnique(profObj.tools);
@@ -2356,8 +1318,6 @@ function addProficiencias(profObj) {
 
 function addFeatureToState(feat, category, clsName, subName) {
     if (!state.abilities) state.abilities = [];
-    
-    // Verifica duplicata pelo nome
     const exists = state.abilities.find(a => a.title === feat.name);
     if (!exists) {
         state.abilities.unshift({
@@ -2373,65 +1333,244 @@ function addFeatureToState(feat, category, clsName, subName) {
     }
 }
 
-// Função auxiliar para adicionar proficiências ao estado sem duplicar
-function addProficienciasDoBanco(profObj) {
-    if (!profObj) return;
-    if (!state.proficienciasList) state.proficienciasList = [];
 
-    const add = (arr) => {
-        if (!arr) return;
-        arr.forEach(p => {
-            if (!state.proficienciasList.includes(p)) state.proficienciasList.push(p);
-        });
-    };
-
-    add(profObj.armor);
-    add(profObj.weapons);
-    add(profObj.tools);
-}
 /* =============================================================
-   BUSCA INTELIGENTE DE ITENS
+   SISTEMA UNIFICADO DE PROCESSAMENTO DE EQUIPAMENTOS
    ============================================================= */
+
+// 1. Entrada de Equipamentos (Wrapper)
+function processarEquipamentoInicial(equipList, callbackFinal) {
+    if (!equipList || equipList.length === 0) {
+        if(callbackFinal) callbackFinal();
+        else window.dispatchEvent(new CustomEvent('sheet-updated'));
+        return;
+    }
+    processarListaEquipamentos(equipList, 0, callbackFinal);
+}
+
+// 2. Processador Recursivo
+function processarListaEquipamentos(lista, index, callbackFinal) {
+    if (!lista || index >= lista.length) {
+        if (callbackFinal) callbackFinal();
+        return;
+    }
+
+    const itemStr = lista[index];
+    const nextStep = () => processarListaEquipamentos(lista, index + 1, callbackFinal);
+
+    // 3 opções
+    const regex3Options = /\(a\)\s*(.+?)[,;]?\s+\(b\)\s*(.+?)[,;]?\s+(?:ou)\s*\(c\)\s*(.+)/i;
+    const match3 = itemStr.match(regex3Options);
+
+    if (match3) {
+        openEquipmentChoiceModal("Escolha uma das opções:", match3[1].trim(), match3[2].trim(), match3[3].trim(), (choice) => {
+            processarEscolhaComplexa(choice, nextStep);
+        });
+        return;
+    }
+
+    // 2 opções
+    const regex2Options = /\(a\)\s*(.+?)\s+(?:ou)\s+\(b\)\s*(.+)/i;
+    const match2 = itemStr.match(regex2Options);
+
+    if (match2) {
+        openEquipmentChoiceModal("Escolha uma das opções:", match2[1].trim(), match2[2].trim(), null, (choice) => {
+            processarEscolhaComplexa(choice, nextStep);
+        });
+        return;
+    }
+
+    processarEscolhaComplexa(itemStr, nextStep);
+}
+
+// 3. Parser de String Complexa
+function processarEscolhaComplexa(choice, callbackNext) {
+    let cleanChoice = choice.replace(/\([abc]\)/g, "").trim();
+    cleanChoice = cleanChoice.replace(/\s+e\s+/g, ","); 
+    const subItems = cleanChoice.split(",").map(s => s.trim()).filter(s => s !== "");
+    let subQueue = [...subItems];
+    function runSubQueue() {
+        if (subQueue.length === 0) { callbackNext(); return; }
+        const si = subQueue.shift();
+        verificarItemGenerico(si, () => runSubQueue());
+    }
+    runSubQueue();
+}
+
+// 4. Verificador de Genéricos (ATUALIZADO)
+function verificarItemGenerico(nomeItem, callbackNext) {
+    const nomeLower = nomeItem.toLowerCase();
+    
+    let listaOpcoes = null;
+    let tituloModal = "";
+    let quantidade = 1;
+
+    // --- PRIORIDADE 1: VERIFICA QUANTIDADES ESPECÍFICAS (2 ou mais) ---
+
+    // 1. Detecta "Duas armas marciais" ou "2 armas marciais"
+    if (/(?:duas|2)\s+armas?\s+marciais?/i.test(nomeLower)) {
+        listaOpcoes = LISTA_ARMAS_MARCIAIS;
+        tituloModal = "Escolha 2 Armas Marciais";
+        quantidade = 2;
+    }
+    // 2. Detecta "Duas armas simples" ou "2 armas simples"
+    else if (/(?:duas|2)\s+armas?\s+simples?/i.test(nomeLower)) {
+        listaOpcoes = LISTA_ARMAS_SIMPLES;
+        tituloModal = "Escolha 2 Armas Simples";
+        quantidade = 2;
+    }
+
+    // --- PRIORIDADE 2: VERIFICA UNIDADES (Genérico ou Singular) ---
+    // Agora aceita apenas "Arma marcial" ou "Arma simples" sem exigir "uma" ou "qualquer"
+
+    // 3. Arma Marcial (Qualquer menção que sobrou)
+    else if (nomeLower.includes("arma marcial") || nomeLower.includes("armas marciais")) { 
+        listaOpcoes = LISTA_ARMAS_MARCIAIS; 
+        tituloModal = "Escolha uma Arma Marcial";
+        quantidade = 1;
+    }
+    // 4. Arma Simples (Qualquer menção que sobrou)
+    else if (nomeLower.includes("arma simples") || nomeLower.includes("armas simples")) { 
+        listaOpcoes = LISTA_ARMAS_SIMPLES; 
+        tituloModal = "Escolha uma Arma Simples"; 
+        quantidade = 1;
+    }
+    // 5. Instrumentos
+    else if (nomeLower.includes("instrumento musical")) { 
+        listaOpcoes = LISTA_INSTRUMENTOS; 
+        tituloModal = "Escolha um Instrumento"; 
+        quantidade = 1;
+    }
+    // 6. Ferramentas
+    else if (nomeLower.includes("ferramenta de artesão") || nomeLower.includes("ferramenta de artesao")) { 
+        listaOpcoes = LISTA_FERRAMENTAS_ARTESAO; 
+        tituloModal = "Escolha uma Ferramenta"; 
+        quantidade = 1;
+    }
+
+    // --- EXECUÇÃO ---
+    if (listaOpcoes) {
+        openGenericSelector(tituloModal, quantidade, listaOpcoes, (selected) => {
+            if (selected && selected.length > 0) {
+                selected.forEach(s => adicionarItemAoInventario(s));
+            }
+            callbackNext();
+        });
+    } else {
+        // Se não for genérico, adiciona direto
+        adicionarItemAoInventario(nomeItem);
+        callbackNext();
+    }
+}
+
+// 5. Adicionar ao Inventário (Versão Final e Corrigida)
+function adicionarItemAoInventario(nomeItemBruto) {
+    if (!state.inventory) state.inventory = [];
+    
+    // Limpeza
+    let cleanName = nomeItemBruto.replace(/^(um|uma|uns|umas|a|o|os|as)\s+/i, '').trim();
+    cleanName = cleanName.replace(/[.;]$/, '');
+
+    // Detecção Quantidade
+    let qtd = 1;
+    const qtdMatch = cleanName.match(/^(\d+)\s*(?:x\s*|\s+)(.+)/i);
+    if (qtdMatch) {
+        qtd = parseInt(qtdMatch[1]); 
+        cleanName = qtdMatch[2].trim(); 
+    }
+
+    // Busca
+    const itemDb = buscarItemNoBanco(cleanName);
+
+    if (itemDb) {
+        const newItem = JSON.parse(JSON.stringify(itemDb));
+        newItem.id = Date.now() + Math.floor(Math.random() * 100000);
+        newItem.quantity = qtd;
+
+        if (qtd > 1) {
+            newItem.name = `${newItem.name} (x${qtd})`;
+            const descOriginal = newItem.description || "";
+            newItem.description = `${descOriginal}\n\n> **Nota:** Adicionado em um lote de ${qtd} unidades.`;
+        }
+        state.inventory.push(newItem);
+    } else {
+        const nomeFinal = qtd > 1 ? `${cleanName} (x${qtd})` : cleanName;
+        state.inventory.push({
+            id: Date.now() + Math.floor(Math.random() * 100000),
+            name: nomeFinal.charAt(0).toUpperCase() + nomeFinal.slice(1),
+            type: "Equipamento",
+            quantity: qtd,
+            weight: 0,
+            description: qtd > 1 ? `Item genérico adicionado em lote de ${qtd}.` : "Item adicionado."
+        });
+    }
+}
+
+// 6. Busca Item no Banco
 function buscarItemNoBanco(nomeItem) {
     if (!items || items.length === 0) return null;
-
-    // Normaliza para busca (remove acentos, minúsculas)
     const norm = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
     
-    // Detecta quantidade (ex: "5 Tochas" -> qtd: 5, nome: "Tochas")
-    let qtd = 1;
-    let nomeLimpo = nomeItem;
-    
-    // Regex para "10x Item" ou "10 Item"
-    const qtdMatch = nomeItem.match(/^(\d+)[x\s]+(.+)/i);
-    if (qtdMatch) {
-        qtd = parseInt(qtdMatch[1]);
-        nomeLimpo = qtdMatch[2];
-    }
+    let cleanName = nomeItem;
+    cleanName = cleanName.replace(/^\d+\s*[x\s]+\s*/i, '');
+    const alvo = norm(cleanName);
 
-    const alvo = norm(nomeLimpo);
-
-    // 1. Tenta Match Exato
     let itemEncontrado = items.find(i => norm(i.name) === alvo);
-
-    // 2. Tenta Match Parcial (ex: "Corda de seda (15m)" no DB vs "Corda de seda" no input)
     if (!itemEncontrado) {
-        itemEncontrado = items  .find(i => norm(i.name).includes(alvo) || alvo.includes(norm(i.name)));
+        itemEncontrado = items.find(i => norm(i.name).includes(alvo) || alvo.includes(norm(i.name)));
+    }
+    return itemEncontrado;
+}
+
+// 7. Modal de Opções de Equipamento
+function openEquipmentChoiceModal(title, optionA, optionB, optionC, callback) {
+    const overlay = document.createElement('div');
+    overlay.className = 'spell-modal-overlay race-modal-overlay';
+    overlay.style.zIndex = '15000';
+
+    let htmlButtons = `
+        <button class="btn-equip-opt btn-add" data-choice="${optionA}" style="flex:1; background:#1a1a1a; border:1px solid #444; padding:15px; text-align:left; display:flex; flex-direction:column; gap:5px; transition:0.2s;">
+            <strong style="color:#9c27b0; font-size:14px; text-transform:uppercase;">Opção A</strong><span style="color:#fff; font-size:13px; line-height:1.4;">${optionA}</span>
+        </button>
+        <div style="display:flex; align-items:center; font-weight:bold; color:#666;">OU</div>
+        <button class="btn-equip-opt btn-add" data-choice="${optionB}" style="flex:1; background:#1a1a1a; border:1px solid #444; padding:15px; text-align:left; display:flex; flex-direction:column; gap:5px; transition:0.2s;">
+            <strong style="color:#9c27b0; font-size:14px; text-transform:uppercase;">Opção B</strong><span style="color:#fff; font-size:13px; line-height:1.4;">${optionB}</span>
+        </button>
+    `;
+
+    if (optionC) {
+        htmlButtons += `
+            <div style="display:flex; align-items:center; font-weight:bold; color:#666;">OU</div>
+            <button class="btn-equip-opt btn-add" data-choice="${optionC}" style="flex:1; background:#1a1a1a; border:1px solid #444; padding:15px; text-align:left; display:flex; flex-direction:column; gap:5px; transition:0.2s;">
+                <strong style="color:#9c27b0; font-size:14px; text-transform:uppercase;">Opção C</strong><span style="color:#fff; font-size:13px; line-height:1.4;">${optionC}</span>
+            </button>
+        `;
     }
 
-    if (itemEncontrado) {
-        // Retorna uma CÓPIA do item com a quantidade ajustada (se for empilhável) e ID único
-        return {
-            ...itemEncontrado,
-            id: Date.now() + Math.floor(Math.random() * 100000), // Novo ID único para a ficha
-            originalId: itemEncontrado.id, // Mantém referência
-            quantidade: qtd, // Adicione lógica de quantidade se sua ficha suportar
-            equip: false,
-            expanded: false
+    overlay.innerHTML = `
+        <div class="spell-modal" style="width: ${optionC ? '800px' : '600px'}; height: auto;">
+            <div class="modal-header"><h3>Escolha de Equipamento</h3></div>
+            <div class="modal-body" style="padding: 20px;">
+                <p style="color:#e0aaff; margin-bottom:20px; text-align:center; font-size:16px;">${title}</p>
+                <div style="display:flex; gap:10px; justify-content:center; align-items:stretch;">${htmlButtons}</div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+    if (typeof checkScrollLock === 'function') checkScrollLock();
+
+    const buttons = overlay.querySelectorAll('.btn-equip-opt');
+    buttons.forEach(btn => {
+        btn.onmouseenter = () => btn.style.borderColor = '#9c27b0';
+        btn.onmouseleave = () => btn.style.borderColor = '#444';
+        btn.onclick = () => {
+            const choice = btn.getAttribute('data-choice');
+            callback(choice);
+            overlay.remove();
+            if (typeof checkScrollLock === 'function') checkScrollLock();
         };
-    }
-
-    return null;
+    });
 }
 
 function openDraconicSelector(raceData, variationData, lineageData) {
@@ -2440,10 +1579,9 @@ function openDraconicSelector(raceData, variationData, lineageData) {
         aplicarRacaNaFicha(raceData, variationData, lineageData);
         return;
     }
-
     const overlay = document.createElement('div');
     overlay.className = 'spell-modal-overlay race-modal-overlay';
-    overlay.style.zIndex = '13000'; 
+    overlay.style.zIndex = '13000';
 
     const optionsHtml = ancestries.map((opt, idx) => `
         <label class="variation-header" style="margin-bottom: 8px; border-radius: 4px; border: 1px solid #333;">
@@ -2459,26 +1597,16 @@ function openDraconicSelector(raceData, variationData, lineageData) {
 
     overlay.innerHTML = `
         <div class="spell-modal" style="width: 400px; height: auto; max-height: 80vh; display:flex; flex-direction:column;">
-            <div class="modal-header">
-                <h3>Escolha sua Herança</h3>
-                <button class="modal-close">✖</button>
-            </div>
+            <div class="modal-header"><h3>Escolha sua Herança</h3><button class="modal-close">✖</button></div>
             <div class="modal-body" style="padding: 15px; overflow-y: auto;">
-                <div style="font-size:13px; color:#ccc; margin-bottom:15px;">
-                    Selecione o tipo de dragão para definir seu sopro e resistência.
-                </div>
-                <div style="display:flex; flex-direction:column;">
-                    ${optionsHtml}
-                </div>
+                <div style="font-size:13px; color:#ccc; margin-bottom:15px;">Selecione o tipo de dragão.</div>
+                <div style="display:flex; flex-direction:column;">${optionsHtml}</div>
             </div>
-            <div class="modal-actions">
-                <button id="btn-confirm-draconic" class="btn-add btn-save-modal" disabled style="background:#444;">Confirmar</button>
-            </div>
+            <div class="modal-actions"><button id="btn-confirm-draconic" class="btn-add btn-save-modal" disabled style="background:#444;">Confirmar</button></div>
         </div>
     `;
 
     document.body.appendChild(overlay);
-
     const btnConfirm = overlay.querySelector('#btn-confirm-draconic');
     const radios = overlay.querySelectorAll('input[name="draconic_choice"]');
     let selectedAncestry = null;
@@ -2493,21 +1621,17 @@ function openDraconicSelector(raceData, variationData, lineageData) {
     });
 
     overlay.querySelector('.modal-close').onclick = () => overlay.remove();
-
     btnConfirm.onclick = () => {
         if (selectedAncestry) {
             aplicarRacaNaFicha(raceData, variationData, lineageData, selectedAncestry);
             overlay.remove();
-            const raceModal = document.querySelector('.race-modal-overlay'); 
+            const raceModal = document.querySelector('.race-modal-overlay');
             if (raceModal) raceModal.remove();
-            if(typeof checkScrollLock === 'function') checkScrollLock();
+            if (typeof checkScrollLock === 'function') checkScrollLock();
         }
     };
 }
 
-/* -------------------------------------------------------------
-   4. SELETOR DE RAÇA ANCESTRAL
-   ------------------------------------------------------------- */
 function openAncestralRaceSelector(lineageData) {
     const overlay = document.createElement('div');
     overlay.className = 'spell-modal-overlay race-modal-overlay';
@@ -2526,17 +1650,13 @@ function openAncestralRaceSelector(lineageData) {
             </div>
             <div class="modal-body" style="padding: 0; overflow: hidden; display:flex; flex-direction:column; flex:1;">
                 <div class="race-catalog-container" style="flex:1; overflow:hidden;">
-                    <div class="race-list-col">
-                        ${listHtml}
-                    </div>
+                    <div class="race-list-col">${listHtml}</div>
                     <div class="race-details-col" id="ancestral-details-content">
                         <div style="color: #666; text-align: center; margin-top: 50px;">Selecione a raça ancestral.</div>
                     </div>
                 </div>
             </div>
-            <div class="modal-actions">
-                <button id="btn-confirm-ancestral" class="btn-add btn-save-modal" disabled>Confirmar</button>
-            </div>
+            <div class="modal-actions"><button id="btn-confirm-ancestral" class="btn-add btn-save-modal" disabled>Confirmar</button></div>
         </div>
     `;
 
@@ -2573,7 +1693,6 @@ function openAncestralRaceSelector(lineageData) {
     function renderAncestralDetails(race) {
         if (!race) return;
         const hasVariations = race.variations && race.variations.length > 0;
-
         if (hasVariations) {
             btnConfirm.setAttribute('disabled', true);
             btnConfirm.textContent = "Selecione a Sub-raça";
@@ -2586,7 +1705,6 @@ function openAncestralRaceSelector(lineageData) {
 
         const flyInfo = race.flySpeed ? `<span style="color:#4fc3f7; margin-left:8px;">🦅 Voo: ${race.flySpeed}m</span>` : '';
         const traitsHtml = race.traits.map(t => `<div class="race-trait-item"><div class="race-trait-name">${t.name}</div><div class="race-trait-desc">${t.desc}</div></div>`).join('');
-
         let variationsHtml = '';
         if (hasVariations) {
             variationsHtml = `
@@ -2652,58 +1770,46 @@ function openAncestralRaceSelector(lineageData) {
     }
 }
 
-/* -------------------------------------------------------------
-   5. APLICAR RAÇA NA FICHA (ATUALIZADO)
-   ------------------------------------------------------------- */
 function aplicarRacaNaFicha(raceData, variationData, lineageData, ancestryData = null) {
     if (typeof state === 'undefined') return;
 
     let nomeFinal = raceData.name;
-    
-    // Constrói o nome
     let extras = [];
     if (lineageData) extras.push(lineageData.name);
     if (variationData) extras.push(variationData.name);
     if (ancestryData) extras.push(ancestryData.label);
 
-    if (extras.length > 0) {
-        nomeFinal += ` (${extras.join(' - ')})`;
-    }
+    if (extras.length > 0) nomeFinal += ` (${extras.join(' - ')})`;
 
     state.raca = nomeFinal;
     state.subRaca = variationData ? variationData.name : (lineageData ? lineageData.name : "");
 
-    // Dados base
     const sourceData = lineageData || variationData || raceData;
     state.racaTipo = lineageData ? lineageData.type : (sourceData.type || raceData.type);
     state.racaTamanho = lineageData ? lineageData.size : (sourceData.size || raceData.size);
-    
-    state.metros = (lineageData && lineageData.speed) 
-        ? lineageData.speed 
+
+    state.metros = (lineageData && lineageData.speed)
+        ? lineageData.speed
         : ((variationData && variationData.speed) ? variationData.speed : raceData.speed);
-        
-    state.deslocamentoVoo = (lineageData && lineageData.flySpeed) 
-        ? lineageData.flySpeed 
+
+    state.deslocamentoVoo = (lineageData && lineageData.flySpeed)
+        ? lineageData.flySpeed
         : ((variationData && variationData.flySpeed) ? variationData.flySpeed : (raceData.flySpeed || 0));
 
-    // Limpar habilidades antigas
     if (!state.abilities) state.abilities = [];
     state.abilities = state.abilities.filter(a => a.category !== 'Raça');
 
-    // Substituições
     let traitsToRemove = [];
     if (variationData && variationData.replaces) traitsToRemove = traitsToRemove.concat(variationData.replaces);
     if (lineageData && lineageData.replaces) traitsToRemove = traitsToRemove.concat(lineageData.replaces);
 
     let traitsToAdd = [];
 
-    // 1. Traits da Base
     if (raceData.traits) {
         let baseTraits = raceData.traits
             .filter(t => !traitsToRemove.includes(t.name))
-            .map(t => ({...t, origin: raceData.name}));
-        
-        // Injeção Herança Dracônica
+            .map(t => ({ ...t, origin: raceData.name }));
+
         if (ancestryData) {
             baseTraits = baseTraits.map(t => {
                 let newDesc = t.desc;
@@ -2721,16 +1827,9 @@ function aplicarRacaNaFicha(raceData, variationData, lineageData, ancestryData =
         }
         traitsToAdd = traitsToAdd.concat(baseTraits);
     }
-    
-    // 2. Traits da Variação
-    if (variationData && variationData.traits) {
-        traitsToAdd = traitsToAdd.concat(variationData.traits.map(t => ({...t, origin: variationData.name})));
-    }
-    
-    // 3. Traits da Linhagem
-    if (lineageData && lineageData.traits) {
-        traitsToAdd = traitsToAdd.concat(lineageData.traits.map(t => ({...t, origin: lineageData.name})));
-    }
+
+    if (variationData && variationData.traits) traitsToAdd = traitsToAdd.concat(variationData.traits.map(t => ({ ...t, origin: variationData.name })));
+    if (lineageData && lineageData.traits) traitsToAdd = traitsToAdd.concat(lineageData.traits.map(t => ({ ...t, origin: lineageData.name })));
 
     const novasHabilidades = traitsToAdd
         .filter(t => t.name && t.name.trim() !== "")
@@ -2746,38 +1845,23 @@ function aplicarRacaNaFicha(raceData, variationData, lineageData, ancestryData =
         }));
 
     state.abilities.unshift(...novasHabilidades.reverse());
-
-    // --- PROCESSAMENTO AUTOMÁTICO (RAÇAS) ---
-    processarMecanicasRaciais(raceData, variationData, lineageData, ancestryData);
+    processarMecanicas(raceData, variationData, lineageData, ancestryData);
 
     atualizarHeader();
     if (typeof saveStateToServer === 'function') saveStateToServer();
     window.dispatchEvent(new CustomEvent('sheet-updated'));
 }
 
-/* ---------------- FUNÇÕES DE SUPORTE ---------------- */
-
-/* =============================================================
-   FUNÇÃO DE CONTROLE DE SCROLL (Adicione isto ao seu código)
-============================================================= */
 function checkScrollLock() {
-    // Procura por qualquer modal ativo na tela
     const activeModals = document.querySelectorAll('.spell-modal-overlay, .race-modal-overlay, .lightbox-overlay');
-
-    if (activeModals.length > 0) {
-        // Se houver pelo menos um modal, trava o scroll
-        document.body.style.overflow = 'hidden';
-    } else {
-        // Se não houver modais, libera o scroll
-        document.body.style.overflow = ''; // ou 'auto'
-    }
+    document.body.style.overflow = activeModals.length > 0 ? 'hidden' : '';
 }
 
 function openCustomRaceCreator() {
     const overlay = document.createElement('div');
     overlay.className = 'spell-modal-overlay race-modal-overlay';
     overlay.style.zIndex = '12100';
-    if(typeof checkScrollLock === 'function') checkScrollLock();
+    if (typeof checkScrollLock === 'function') checkScrollLock();
 
     let currentStep = 1;
     let customRaceData = { name: "", type: "Humanoide", size: "Médio", speed: 9, flySpeed: 0, hasFly: false, description: "", traits: [] };
@@ -2787,30 +1871,28 @@ function openCustomRaceCreator() {
         const dots = overlay.querySelectorAll('.step-dot');
         const btnNext = overlay.querySelector('#btn-wizard-next');
         const btnPrev = overlay.querySelector('#btn-wizard-prev');
-        
+
         dots.forEach((dot, idx) => { if (idx + 1 === currentStep) dot.classList.add('active'); else dot.classList.remove('active'); });
-        
+
         if (currentStep === 1) btnPrev.disabled = true; else btnPrev.disabled = false;
         if (currentStep === 4) btnNext.textContent = "Concluir"; else btnNext.textContent = "Próximo";
 
         if (currentStep === 1) {
             contentDiv.innerHTML = `<div style="text-align:center; padding: 20px;"><h3 style="color:#fff;">Passo 1: Nome</h3><input id="custom-race-name" type="text" value="${customRaceData.name}" class="wizard-input-main"></div>`;
         } else if (currentStep === 2) {
-             const typesOptions = CREATURE_TYPES.map(t => `<option value="${t}" ${customRaceData.type === t ? 'selected' : ''}>${t}</option>`).join('');
-             const sizesOptions = CREATURE_SIZES.map(s => `<option value="${s}" ${customRaceData.size === s ? 'selected' : ''}>${s}</option>`).join('');
+            const typesOptions = CREATURE_TYPES.map(t => `<option value="${t}" ${customRaceData.type === t ? 'selected' : ''}>${t}</option>`).join('');
+            const sizesOptions = CREATURE_SIZES.map(s => `<option value="${s}" ${customRaceData.size === s ? 'selected' : ''}>${s}</option>`).join('');
             contentDiv.innerHTML = `<div><h3 style="color:#fff;text-align:center;">Passo 2: Estatísticas</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:20px;"><div><label class="wizard-label">Tipo</label><select id="race-type-select" class="wizard-select">${typesOptions}</select></div><div><label class="wizard-label">Tamanho</label><select id="race-size-select" class="wizard-select">${sizesOptions}</select></div></div><div style="margin-top:20px; border-top:1px solid #333; padding-top:15px;"><label class="wizard-label" style="display:block;margin-bottom:10px;">Deslocamento</label><div style="display:flex;gap:20px;align-items:flex-end;"><div style="flex:1;"><label style="font-size:11px;color:#888;display:block;margin-bottom:4px;">Caminhada (m)</label><input type="number" id="race-speed-input" value="${customRaceData.speed}" class="wizard-input-small" style="width:100%;"></div><div style="flex:1;"><label class="wizard-check-label" style="margin-bottom:4px;"><input type="checkbox" id="race-fly-check" ${customRaceData.hasFly ? 'checked' : ''}>Voo?</label><input type="number" id="race-fly-input" value="${customRaceData.flySpeed}" class="wizard-input-small" style="width:100%;" ${customRaceData.hasFly ? '' : 'disabled'}></div></div></div></div>`;
-            setTimeout(() => { 
-                const chk = overlay.querySelector('#race-fly-check'); 
-                const inp = overlay.querySelector('#race-fly-input'); 
-                
+            setTimeout(() => {
+                const chk = overlay.querySelector('#race-fly-check');
+                const inp = overlay.querySelector('#race-fly-input');
                 overlay.querySelector('#race-type-select').onchange = (e) => customRaceData.type = e.target.value;
                 overlay.querySelector('#race-size-select').onchange = (e) => customRaceData.size = e.target.value;
-                
-                chk.onchange = () => { 
-                    inp.disabled = !chk.checked; 
+                chk.onchange = () => {
+                    inp.disabled = !chk.checked;
                     customRaceData.hasFly = chk.checked;
-                    if(chk.checked && !inp.value) inp.value = 9; 
-                }; 
+                    if (chk.checked && !inp.value) inp.value = 9;
+                };
             }, 50);
         } else if (currentStep === 3) {
             contentDiv.innerHTML = `<div><h3 style="color:#fff;text-align:center;">Passo 3: Descrição</h3><textarea id="custom-race-desc" class="wizard-textarea">${customRaceData.description}</textarea></div>`;
@@ -2822,64 +1904,51 @@ function openCustomRaceCreator() {
                 const div = document.createElement('div');
                 div.className = 'wizard-trait-box';
                 div.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;"><label style="color:#9c27b0;font-size:12px;font-weight:bold;">Habilidade ${idx + 1}</label>${idx > 0 ? `<button class="remove-trait-btn" style="background:none;border:none;color:#d32f2f;cursor:pointer;font-size:16px;padding:0;">×</button>` : ''}</div><input type="text" class="trait-name-input" value="${name}" style="width:100%;margin-bottom:5px;background:#000;border:1px solid #444;color:#fff;padding:6px;"><textarea class="trait-desc-input" style="width:100%;height:60px;background:#000;border:1px solid #444;color:#ccc;padding:6px;resize:none;">${desc}</textarea>`;
-                if(div.querySelector('.remove-trait-btn')) div.querySelector('.remove-trait-btn').onclick = () => div.remove();
+                if (div.querySelector('.remove-trait-btn')) div.querySelector('.remove-trait-btn').onclick = () => div.remove();
                 container.appendChild(div);
             };
-            if(customRaceData.traits.length) customRaceData.traits.forEach(t=>addTraitInput(t.name,t.desc)); else { addTraitInput(); addTraitInput(); }
+            if (customRaceData.traits.length) customRaceData.traits.forEach(t => addTraitInput(t.name, t.desc)); else { addTraitInput(); addTraitInput(); }
             contentDiv.querySelector('#btn-add-more-trait').onclick = () => addTraitInput();
         }
     }
 
     overlay.innerHTML = `<div class="spell-modal" style="width:500px;height:600px;max-height:90vh;"><div class="modal-header"><h3>Criar Raça Customizada</h3><button class="modal-close">✖</button></div><div class="wizard-container"><div class="wizard-step-indicator"><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div></div><div id="wizard-content-area" class="wizard-content"></div><div class="wizard-btn-row"><button id="btn-wizard-prev" class="btn-add" style="background:transparent;border:1px solid #444;color:#aaa;">Voltar</button><button id="btn-wizard-next" class="btn-add">Próximo</button></div></div></div>`;
     document.body.appendChild(overlay);
-    
     renderWizardContent();
 
-    overlay.querySelector('.modal-close').onclick = () => { 
-        overlay.remove(); 
-        if(typeof checkScrollLock === 'function') checkScrollLock(); 
-    };
+    overlay.querySelector('.modal-close').onclick = () => { overlay.remove(); if (typeof checkScrollLock === 'function') checkScrollLock(); };
 
     overlay.querySelector('#btn-wizard-next').onclick = () => {
-        if(currentStep===1) { 
-            customRaceData.name = overlay.querySelector('#custom-race-name').value; 
-            currentStep++; 
-        }
-        else if(currentStep===2) { 
-            customRaceData.speed = overlay.querySelector('#race-speed-input').value; 
+        if (currentStep === 1) { customRaceData.name = overlay.querySelector('#custom-race-name').value; currentStep++; }
+        else if (currentStep === 2) {
+            customRaceData.speed = overlay.querySelector('#race-speed-input').value;
             const flyInput = overlay.querySelector('#race-fly-input');
-            if(flyInput) customRaceData.flySpeed = flyInput.value;
-            currentStep++; 
+            if (flyInput) customRaceData.flySpeed = flyInput.value;
+            currentStep++;
         }
-        else if(currentStep===3) { 
-            customRaceData.description = overlay.querySelector('#custom-race-desc').value; 
-            currentStep++; 
-        }
-        else { 
+        else if (currentStep === 3) { customRaceData.description = overlay.querySelector('#custom-race-desc').value; currentStep++; }
+        else {
             customRaceData.traits = [];
             overlay.querySelectorAll('.wizard-trait-box').forEach(box => {
                 const n = box.querySelector('.trait-name-input').value.trim();
                 const d = box.querySelector('.trait-desc-input').value.trim();
-                if(n) customRaceData.traits.push({name:n, desc:d});
+                if (n) customRaceData.traits.push({ name: n, desc: d });
             });
-            aplicarRacaNaFicha(customRaceData, null, null); 
-            
-            overlay.remove(); 
-            if(typeof checkScrollLock === 'function') checkScrollLock();
+            aplicarRacaNaFicha(customRaceData, null, null);
+            overlay.remove();
+            if (typeof checkScrollLock === 'function') checkScrollLock();
         }
         renderWizardContent();
     };
-    overlay.querySelector('#btn-wizard-prev').onclick = () => { if(currentStep>1){currentStep--; renderWizardContent();} };
+    overlay.querySelector('#btn-wizard-prev').onclick = () => { if (currentStep > 1) { currentStep--; renderWizardContent(); } };
 }
 
-/* --- FUNÇÃO LIGHTBOX GLOBAL --- */
-window.openImageLightbox = function(imgSrc) {
+window.openImageLightbox = function (imgSrc) {
     const existing = document.querySelector('.lightbox-overlay');
     if (existing) existing.remove();
     const overlay = document.createElement('div');
     overlay.className = 'lightbox-overlay';
     overlay.innerHTML = `<div class="lightbox-content"><span class="lightbox-close">✖</span><img src="${imgSrc}" class="lightbox-image-full" alt="Zoom"></div>`;
-    overlay.onclick = function(e) { if (e.target.classList.contains('lightbox-overlay') || e.target.classList.contains('lightbox-close')) overlay.remove(); };
+    overlay.onclick = function (e) { if (e.target.classList.contains('lightbox-overlay') || e.target.classList.contains('lightbox-close')) overlay.remove(); };
     document.body.appendChild(overlay);
 };
-
