@@ -1863,18 +1863,21 @@ function processarListaEquipamentos(lista, index, callbackFinal) {
 }
 
 // Função auxiliar para separar itens compostos por vírgula ou " e "
+/* =============================================================
+   CORREÇÃO: PROCESSAMENTO DE EQUIPAMENTOS (SUBSTITUA AS FUNÇÕES ANTIGAS POR ESTAS)
+   ============================================================= */
+
+// Função para separar itens compostos por vírgula ou " e "
 function processarEscolhaComplexa(choice, callbackNext) {
-    // Truque: Substitui " e " por "," para facilitar o split, mas cuidado com nomes que usam " e " (raro em itens)
-    // Removemos (a), (b) caso tenha sobrado sujeira
+    // Limpa marcadores (a), (b)
     let cleanChoice = choice.replace(/\([abc]\)/g, "").trim();
     
-    // Separa por vírgula OU pela palavra " e " (com espaços em volta)
-    // Ex: "Armadura de couro, arco longo e 20 flechas" -> ["Armadura de couro", "arco longo", "20 flechas"]
+    // Substitui " e " por "," para facilitar o split (CUIDADO: não usar em nomes de itens que tenham " e " nativo)
     cleanChoice = cleanChoice.replace(/\s+e\s+/g, ","); 
 
     const subItems = cleanChoice.split(",").map(s => s.trim()).filter(s => s !== "");
     
-    // Processa subitens em fila (para lidar com múltiplos genéricos se houver)
+    // Processa subitens em fila
     let subQueue = [...subItems];
     
     function runSubQueue() {
@@ -1884,7 +1887,7 @@ function processarEscolhaComplexa(choice, callbackNext) {
         }
         const si = subQueue.shift();
         
-        // Verifica se é um item genérico (ex: "Qualquer arma simples") ou item normal
+        // Chama a verificação para cada pedaço
         verificarItemGenerico(si, () => runSubQueue());
     }
     runSubQueue();
@@ -1893,22 +1896,51 @@ function processarEscolhaComplexa(choice, callbackNext) {
 // Verifica palavras-chave para abrir seletor específico ou adiciona direto
 function verificarItemGenerico(nomeItem, callbackNext) {
     const nomeLower = nomeItem.toLowerCase();
+    
+    // --- Lógica de Detecção e Configuração do Modal ---
     let listaOpcoes = null;
     let tituloModal = "";
+    let quantidade = 1;
 
-    // Detecção de palavras chaves para abrir popups
-    if (nomeLower.includes("qualquer arma simples")) { listaOpcoes = LISTA_ARMAS_SIMPLES; tituloModal = "Escolha uma Arma Simples"; } 
-    else if (nomeLower.includes("qualquer arma marcial")) { listaOpcoes = LISTA_ARMAS_MARCIAIS; tituloModal = "Escolha uma Arma Marcial"; }
-    else if (nomeLower.includes("instrumento musical")) { listaOpcoes = LISTA_INSTRUMENTOS; tituloModal = "Escolha um Instrumento"; }
-    else if (nomeLower.includes("ferramenta de artesão") || nomeLower.includes("ferramenta de artesao")) { listaOpcoes = LISTA_FERRAMENTAS_ARTESAO; tituloModal = "Escolha uma Ferramenta"; }
+    // 1. Detecta "Duas armas marciais" ou "2 armas marciais"
+    if (/(?:duas|2)\s+armas?\s+marciais?/i.test(nomeLower)) {
+        listaOpcoes = LISTA_ARMAS_MARCIAIS;
+        tituloModal = "Escolha 2 Armas Marciais";
+        quantidade = 2;
+    }
+    // 2. Detecta singular "Uma arma marcial" ou "Qualquer arma marcial"
+    else if (nomeLower.includes("arma marcial")) { 
+        listaOpcoes = LISTA_ARMAS_MARCIAIS; 
+        tituloModal = "Escolha uma Arma Marcial";
+        quantidade = 1;
+    }
+    // 3. Detecta "Arma simples" (singular ou plural simples)
+    else if (nomeLower.includes("arma simples")) { 
+        listaOpcoes = LISTA_ARMAS_SIMPLES; 
+        tituloModal = "Escolha uma Arma Simples"; 
+        // Se quiser detectar "duas armas simples", adicione um if similar ao das marciais acima
+    }
+    // 4. Instrumentos e Ferramentas
+    else if (nomeLower.includes("instrumento musical")) { 
+        listaOpcoes = LISTA_INSTRUMENTOS; // Certifique-se que essa constante existe (no seu código estava LISTA_INSTRUMENTOS)
+        tituloModal = "Escolha um Instrumento"; 
+    }
+    else if (nomeLower.includes("ferramenta de artesão") || nomeLower.includes("ferramenta de artesao")) { 
+        listaOpcoes = LISTA_FERRAMENTAS_ARTESAO; 
+        tituloModal = "Escolha uma Ferramenta"; 
+    }
 
+    // --- Execução ---
     if (listaOpcoes) {
-        openGenericSelector(tituloModal, 1, listaOpcoes, (selected) => {
-            if (selected && selected.length > 0) adicionarItemAoInventario(selected[0]);
+        // Abre o seletor com a quantidade detectada
+        openGenericSelector(tituloModal, quantidade, listaOpcoes, (selected) => {
+            if (selected && selected.length > 0) {
+                selected.forEach(s => adicionarItemAoInventario(s));
+            }
             callbackNext();
         });
     } else {
-        // Se não for genérico, adiciona direto
+        // Se não for genérico (ex: "Escudo"), adiciona direto
         adicionarItemAoInventario(nomeItem);
         callbackNext();
     }
@@ -1977,27 +2009,68 @@ function addFeatureToState(feat, category, clsName, subName) {
     }
 }
 
-// Adiciona o item ao state.inventory (buscando no DB de itens se existir)
+// =============================================================
+// FUNÇÃO UNIFICADA: Mantém item padrão mas anota a quantidade
+// =============================================================
 function adicionarItemAoInventario(nomeItemBruto) {
     if (!state.inventory) state.inventory = [];
     
-    // Limpa string (remove "um", "uma", pontuação final)
-    let nomeLimpo = nomeItemBruto.replace(/^(um|uma|uns|umas)\s+/i, '').replace(/[.;]$/, '').trim();
-    
-    // Tenta achar no banco de dados global 'items'
-    const itemDb = buscarItemNoBanco(nomeLimpo); // Usa a função que já criamos antes
+    // 1. Limpeza inicial
+    let cleanName = nomeItemBruto.replace(/^(um|uma|uns|umas|a|o|os|as)\s+/i, '').trim();
+
+    // 2. Separa a Quantidade do Nome
+    // Exemplo de entrada: "5 Dardos" -> qtd: 5, cleanName: "Dardos"
+    let qtd = 1;
+    // Regex ajustada: pega numero no inicio, ignora 'x' opcional e espacos
+    const qtdMatch = cleanName.match(/^(\d+)\s*(?:x\s*|\s+)(.+)/i);
+
+    if (qtdMatch) {
+        qtd = parseInt(qtdMatch[1]); 
+        cleanName = qtdMatch[2].trim(); 
+    }
+
+    // Remove pontuação final
+    cleanName = cleanName.replace(/[.;]$/, '');
+
+    // 3. Busca o item padrão no Banco de Dados
+    const itemDb = buscarItemNoBanco(cleanName); 
 
     if (itemDb) {
-        state.inventory.push(itemDb);
+        // --- CENÁRIO A: Item existe no banco (ex: "Dardo") ---
+        
+        // Cria uma cópia independente do item padrão
+        const newItem = JSON.parse(JSON.stringify(itemDb));
+        
+        newItem.id = Date.now() + Math.floor(Math.random() * 100000);
+        
+        // Define a quantidade mecânica (para calculo de peso, etc)
+        newItem.quantity = qtd; 
+
+        // --- AQUI ESTÁ A MUDANÇA QUE VOCÊ PEDIU ---
+        if (qtd > 1) {
+            // Opção 1: Adicionar ao Nome (ex: "Dardo (x5)")
+            newItem.name = `${newItem.name} (x${qtd})`;
+
+            const descOriginal = newItem.description || "";
+            //newItem.description = `${descOriginal}\n\n> Nota: Adicionado em um lote de ${qtd} unidades.`;
+        }
+        
+        state.inventory.push(newItem);
+
     } else {
-        // Se não achar, cria item genérico
+        // --- CENÁRIO B: Item não existe no banco ---
+        // Usa o nome bruto original para manter o contexto (ex: "Chave do portão quebrado")
+        // Se havia quantidade (ex: "5 Pedras estranhas"), remontamos o nome.
+        
+        const nomeFinal = qtd > 1 ? `${cleanName} (x${qtd})` : cleanName;
+
         state.inventory.push({
             id: Date.now() + Math.floor(Math.random() * 100000),
-            name: nomeLimpo,
+            name: nomeFinal.charAt(0).toUpperCase() + nomeFinal.slice(1),
             type: "Equipamento",
-            quantity: 1,
+            quantity: qtd,
             weight: 0,
-            description: "Item de Classe"
+            description: qtd > 1 ? `Item genérico adicionado em lote de ${qtd}.` : "Item adicionado."
         });
     }
 }

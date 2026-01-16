@@ -1050,6 +1050,16 @@
     "type": "Geral",
     "description": "<p>Pítons, botas, luvas. Protege contra quedas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 6 kg</li></ul>"
   },
+
+  {
+  "id": "i_kit_aventureiro",
+  "name": "Kit de Aventureiro",
+  "category": "Conjuntos",
+  "subcategory": "Kits",
+  "type": "Geral",
+  "description": "<p>Inclui uma mochila, um pé de cabra, um martelo, dez pitões, dez tochas, uma caixa de isqueiro, dez dias de rações, um cantil e uma corda de cânhamo de 15 metros.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 12 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 10 kg</li></ul>"
+},
+
   {
     "id": "i_kit_primeiros_socorros",
     "name": "Kit de Primeiros Socorros",
@@ -1759,6 +1769,14 @@
     "subcategory": "Utensílios gerais",
     "type": "Geral",
     "description": "<p>Comporta 20 virotes.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+   {
+    "id": "i_virotes",
+    "name": "Virotes",
+    "category": "Utensílios",
+    "subcategory": "Utensílios gerais",
+    "type": "Geral",
+    "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
   },
   {
     "id": "i_pregos",
