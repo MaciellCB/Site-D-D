@@ -401,10 +401,23 @@ function formatInventoryItem(item) {
   defenseGroup += createSimpleStat('Defesa Bônus', item.defenseBonus);
   defenseGroup += createSimpleStat('Tipo Defesa', item.defenseType);
 
-  // Grupo Perícias
+  // =====================================================================
+  // 3. GRUPO PERÍCIAS (CORREÇÃO APLICADA AQUI)
+  // =====================================================================
   let skillGroup = '';
-  skillGroup += createBadgeRow('Desvantagem', item.disadvantageSkill);
-  skillGroup += createBadgeRow('Vantagem', item.advantageSkill);
+  
+  // Normaliza para array (se for string vira array, se for undefined vira array vazio)
+  const disList = Array.isArray(item.disadvantageSkill) 
+      ? item.disadvantageSkill 
+      : (item.disadvantageSkill ? [item.disadvantageSkill] : []);
+
+  const advList = Array.isArray(item.advantageSkill) 
+      ? item.advantageSkill 
+      : (item.advantageSkill ? [item.advantageSkill] : []);
+
+  skillGroup += createBadgeRow('Desvantagem', disList);
+  skillGroup += createBadgeRow('Vantagem', advList);
+  // =====================================================================
 
   // Montagem Condicional dos Bônus
   if (offenseGroup || defenseGroup || skillGroup) {
@@ -524,24 +537,29 @@ function renderInventory() {
 
 
 /* =============================================================
-   CORREÇÃO DEFINITIVA SCROLL: JS/DireitaJS.js
-============================================================= */
-
-/* =============================================================
-   CORREÇÃO DEFINITIVA SCROLL + EDIÇÃO: JS/DireitaJS.js
+   CORREÇÃO DEFINITIVA DE EVENTOS DO INVENTÁRIO (ID HÍBRIDO)
+   Substitua a função bindInventoryCardEvents antiga por esta.
 ============================================================= */
 
 function bindInventoryCardEvents() {
-  // --- 1. EXPANDIR/RECOLHER (DOM DIRETO - SEM PULO) ---
+  
+  // Função auxiliar para buscar item ignorando se é Texto ou Número
+  // Isso garante que IDs antigos (números) e novos (strings) funcionem juntos.
+  const findItemById = (rawId) => {
+      return state.inventory.find(x => String(x.id) === String(rawId));
+  };
+
+  // --- 1. EXPANDIR/RECOLHER ---
   document.querySelectorAll('.item-card').forEach(card => {
-    const id = Number(card.getAttribute('data-id'));
+    // Pega o ID cru (como string) direto do HTML
+    const rawId = card.getAttribute('data-id');
     const header = card.querySelector('.card-header');
 
     header.onclick = (ev) => {
       // Impede o clique se for no checkbox ou nos botões de editar/remover
       if (ev.target.closest('.header-equip') || ev.target.closest('.item-actions-footer')) return;
 
-      const it = state.inventory.find(x => x.id === id);
+      const it = findItemById(rawId); // Busca usando a função segura
       if (!it) return;
 
       it.expanded = !it.expanded;
@@ -550,17 +568,24 @@ function bindInventoryCardEvents() {
       // Atualiza apenas este card no DOM
       const body = card.querySelector('.card-body');
       const caret = card.querySelector('.caret');
-      body.style.display = it.expanded ? 'block' : 'none';
-      caret.textContent = it.expanded ? '▾' : '▸';
-      card.classList.toggle('expanded', it.expanded);
+      
+      if (it.expanded) {
+          body.style.display = 'block';
+          caret.textContent = '▾';
+          card.classList.add('expanded');
+      } else {
+          body.style.display = 'none';
+          caret.textContent = '▸';
+          card.classList.remove('expanded');
+      }
     };
   });
 
-  // --- 2. CHECKBOX EQUIPAR (DOM DIRETO - SEM RE-RENDER) ---
+  // --- 2. CHECKBOX EQUIPAR ---
   document.querySelectorAll('.item-equip-checkbox').forEach(ch => {
     ch.onchange = (ev) => {
-      const id = Number(ev.target.getAttribute('data-id'));
-      const item = state.inventory.find(x => x.id === id);
+      const rawId = ev.target.getAttribute('data-id');
+      const item = findItemById(rawId);
       const isChecked = ev.target.checked;
 
       if (item && isChecked) {
@@ -569,11 +594,12 @@ function bindInventoryCardEvents() {
           const isEscudo = item.tipoItem?.toLowerCase() === 'escudo' || item.proficiency?.toLowerCase() === 'escudo';
 
           state.inventory.forEach(other => {
-            if (other.id !== id && (other.type === 'Proteção' || other.type === 'protecao')) {
+            // Compara IDs como string para evitar erro
+            if (String(other.id) !== String(rawId) && (other.type === 'Proteção' || other.type === 'protecao')) {
               const otherIsEscudo = other.tipoItem?.toLowerCase() === 'escudo' || other.proficiency?.toLowerCase() === 'escudo';
               if (isEscudo === otherIsEscudo) {
                 other.equip = false;
-                // Desmarca o outro checkbox visualmente sem recarregar a lista
+                // Desmarca visualmente o outro
                 const otherChk = document.querySelector(`.item-equip-checkbox[data-id="${other.id}"]`);
                 if (otherChk) otherChk.checked = false;
               }
@@ -585,14 +611,14 @@ function bindInventoryCardEvents() {
       if (item) item.equip = isChecked;
       saveStateToServer();
 
-      // Se estiver na aba Combate, precisamos remover/adicionar o item, então salvamos o scroll
+      // Se estiver na aba Combate, atualiza para remover/adicionar
       if (state.activeTab === 'Combate') {
         const scrollY = window.scrollY;
         renderActiveTab();
         window.scrollTo(0, scrollY);
       }
 
-      // Avisa a esquerda (CA) para atualizar sem destruir a direita
+      // Atualiza CA na esquerda
       if (typeof atualizarAC === 'function') atualizarAC();
     };
   });
@@ -601,10 +627,12 @@ function bindInventoryCardEvents() {
   document.querySelectorAll('.remover-item').forEach(el => {
     el.onclick = (ev) => {
       ev.preventDefault();
-      const id = Number(el.getAttribute('data-id'));
+      const rawId = el.getAttribute('data-id');
+      
       if(confirm('Tem certeza que deseja remover este item?')) {
           const scrollY = window.scrollY;
-          state.inventory = state.inventory.filter(i => i.id !== id);
+          // Filtra convertendo tudo para string na comparação
+          state.inventory = state.inventory.filter(i => String(i.id) !== String(rawId));
           renderActiveTab();
           window.scrollTo(0, scrollY);
           saveStateToServer();
@@ -613,17 +641,16 @@ function bindInventoryCardEvents() {
     };
   });
 
-  // --- 4. EDITAR (ESTAVA FALTANDO) ---
+  // --- 4. EDITAR ---
   document.querySelectorAll('.editar-item').forEach(el => {
     el.onclick = (ev) => {
       ev.preventDefault();
-      const id = Number(el.getAttribute('data-id'));
-      const item = state.inventory.find(i => i.id === id);
+      const rawId = el.getAttribute('data-id');
+      const item = findItemById(rawId);
       if (item) openItemModal(item);
     };
   });
 }
-
 
 function bindInventorySectionEvents() {
   document.querySelectorAll('.toggle-inv-header').forEach(header => {

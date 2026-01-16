@@ -2134,7 +2134,7 @@
       "id": "csa_mat_3_aurora",
       "category": "Classe",
       "class": "Blood Hunter",
-      "subclass": "Ordem do Matador de Fantasmas",
+      "subclass": "Ordem do Caça-Fantasmas",
       "name": "(Matador, 3º nível) Rito da Aurora",
       "description": "<p>Você aprende o rito esotérico <em>Rito da Aurora</em> (dano Radiante).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Luz:</strong> Sua arma emite luz brilhante (6m).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Resistência:</strong> Você ganha resistência a dano necrótico.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Flagelo:</strong> Rola 1 dado de Hemomancia adicional de dano ao atacar mortos-vivos.</li></ul>"
     },
@@ -2142,7 +2142,7 @@
       "id": "csa_mat_3_espec",
       "category": "Classe",
       "class": "Blood Hunter",
-      "subclass": "Ordem do Matador de Fantasmas",
+      "subclass": "OOrdem do Caça-Fantasmas",
       "name": "(Matador, 3º nível) Especialista em Maldições",
       "description": "<p>Você ganha 1 uso adicional de Maldição de Sangue. Além disso, suas maldições de sangue podem afetar qualquer criatura, mesmo aquelas que não possuem sangue.</p>"
     },
@@ -2150,7 +2150,7 @@
       "id": "csa_mat_7_ete",
       "category": "Classe",
       "class": "Blood Hunter",
-      "subclass": "Ordem do Matador de Fantasmas",
+      "subclass": "Ordem do Caça-Fantasmas",
       "name": "(Matador, 7º nível) Caminhada Etérea",
       "description": "<p><strong>(Sem Ação)</strong> No início do turno, entre no plano etéreo por rodadas iguais ao Mod. Hemomancia.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Fantasma:</strong> Pode atravessar criaturas e objetos (como terreno difícil).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque:</strong> Pode afetar criaturas no Plano Etéreo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Risco:</strong> Sofre 1d10 de força se terminar o turno dentro de um objeto.</li></ul>"
     },
@@ -2158,7 +2158,7 @@
       "id": "csa_mat_11_ruptura",
       "category": "Classe",
       "class": "Blood Hunter",
-      "subclass": "Ordem do Matador de Fantasmas",
+      "subclass": "Ordem do Caça-Fantasmas",
       "name": "(Matador, 11º nível) Marca de Ruptura",
       "description": "<p>Sua Marca de Castigo expõe o inimigo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> Ao atacar alvo marcado com Rito ativo, causa 1 dado de Hemomancia adicional.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Bloqueio:</strong> O alvo marcado não pode usar características de Movimento Incorpóreo para atravessar objetos.</li></ul>"
     },
@@ -2166,7 +2166,7 @@
       "id": "csa_mat_18_renasc",
       "category": "Classe",
       "class": "Blood Hunter",
-      "subclass": "Ordem do Matador de Fantasmas",
+      "subclass": "Ordem do Caça-Fantasmas",
       "name": "(Matador, 18º nível) Rito de Renascimento",
       "description": "<p>Quando você for reduzido a 0 pontos de vida (mas não morto) e tiver Ritos ativos, você pode optar por encerrar todos os ritos para evitar a inconsciência e permanecer com 1 ponto de vida.</p>"
     },

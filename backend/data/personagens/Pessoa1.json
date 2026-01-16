@@ -1,107 +1,14 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Inventário",
+  "activeTab": "Habilidades",
   "spellDCConfig": {
     "selectedAttr": "none",
     "extraMod": 0,
     "lastKnownLevel": 0
   },
   "dtMagias": "Selecione",
-  "inventory": [
-    {
-      "id": 1768599742923,
-      "name": "Lórica de escamas",
-      "type": "Equipamento",
-      "quantity": 1,
-      "weight": 0,
-      "description": "Item adicionado.",
-      "expanded": false
-    },
-    {
-      "id": 1768599750027,
-      "name": "Cajado",
-      "category": "Armas",
-      "subcategory": "Corpo-a-corpo",
-      "type": "Arma",
-      "damage": "1d6",
-      "damage2Hands": "1d8",
-      "useTwoHands": false,
-      "damageType": "Contundente",
-      "proficiency": "Armas Simples",
-      "tipoArma": "Corpo a Corpo",
-      "empunhadura": "Versátil",
-      "caracteristicas": [],
-      "description": "<p>Bastão de madeira simples, mas eficaz.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>",
-      "quantity": 1
-    },
-    {
-      "id": 1768599727600,
-      "name": "Dardo",
-      "category": "Armas",
-      "subcategory": "A distancia",
-      "type": "Arma",
-      "damage": "1d4",
-      "damageType": "Perfurante",
-      "proficiency": "Armas Simples",
-      "tipoArma": "A Distancia",
-      "empunhadura": "Uma mao",
-      "caracteristicas": [
-        "Ágil",
-        "Arremesso"
-      ],
-      "alcance": "6m/18m",
-      "description": "<p>Pequeno projétil de arremesso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pc</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,1 kg</li></ul>",
-      "quantity": 1
-    },
-    {
-      "id": 1768599706335,
-      "name": "Kit de Explorador",
-      "category": "Conjuntos",
-      "subcategory": "Kits",
-      "type": "Geral",
-      "description": "<p>Inclui uma mochila, um saco de dormir, uma caixa de isqueiro, dez tochas, dez dias de rações, um cantil e uma corda de cânhamo de 15 metros.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 8 kg</li></ul>",
-      "quantity": 1
-    },
-    {
-      "id": 1768599733723,
-      "name": "Arco Longo",
-      "category": "Armas",
-      "subcategory": "A distancia",
-      "type": "Arma",
-      "damage": "1d8",
-      "damageType": "Perfurante",
-      "proficiency": "Armas Marciais",
-      "tipoArma": "A Distancia",
-      "empunhadura": "Duas Maos",
-      "caracteristicas": [
-        "Munição",
-        "Pesada",
-        "Duas Mãos"
-      ],
-      "alcance": "45m/180m",
-      "description": "<p>Arco grande para longas distâncias.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 8 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
-      "quantity": 1
-    },
-    {
-      "id": 1768599737551,
-      "name": "Aljava",
-      "category": "Utensílios",
-      "subcategory": "Utensílios gerais",
-      "type": "Geral",
-      "description": "<p>Comporta 20 flechas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
-      "quantity": 1
-    },
-    {
-      "id": 1768599722202,
-      "name": "Flechas (x20)",
-      "category": "Armas",
-      "subcategory": "Munição",
-      "type": "Item",
-      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>\n\n> **Nota:** Adicionado em um lote de 20 unidades.",
-      "quantity": 20
-    }
-  ],
+  "inventory": [],
   "abilities": [
     {
       "id": 1768600472792,
@@ -497,7 +404,7 @@
     "n6": 10
   },
   "niveisClasses": {
-    "artifice": 0,
+    "artifice": 1,
     "barbaro": 0,
     "bardo": 0,
     "blood hunter": 0,
@@ -506,10 +413,10 @@
     "monge": 0,
     "druida": 0,
     "feiticeiro": 0,
-    "guerreiro": 0,
+    "guerreiro": 1,
     "ladino": 0,
     "mago": 0,
-    "paladino": 1,
+    "paladino": 0,
     "patrulheiro": 0
   },
   "xp": "0",
