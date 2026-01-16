@@ -10,74 +10,7 @@
   "dtMagias": "Selecione",
   "inventory": [
     {
-      "id": 1768417062636,
-      "name": "Clava Grande",
-      "category": "Armas",
-      "subcategory": "Corpo-a-corpo",
-      "type": "Arma",
-      "damage": "1d8",
-      "damageType": "Contundente",
-      "proficiency": "Armas Simples",
-      "tipoArma": "Corpo a Corpo",
-      "empunhadura": "Duas Maos",
-      "caracteristicas": [
-        "Pesada",
-        "Duas Mãos"
-      ],
-      "description": "<p>Um bastão grosso e pesado.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 3 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>",
-      "originalId": "i_clava_grande",
-      "quantidade": 1,
-      "equip": false,
-      "expanded": false
-    },
-    {
-      "id": 1768416988196,
-      "name": "Kit de Diplomata",
-      "category": "Conjuntos",
-      "subcategory": "Kits",
-      "type": "Geral",
-      "description": "<p>Inclui um baú, dois estojos para mapas ou pergaminhos, um conjunto de roupas finas, um frasco de tinta, uma caneta de escrever, uma lâmpada, dois frascos de óleo, cinco folhas de papel, um frasco de perfume, cera de selar e um sinete.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 39 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 9 kg</li></ul>",
-      "originalId": "i_kit_diplomata",
-      "quantidade": 1,
-      "equip": false,
-      "expanded": false
-    },
-    {
-      "id": 1768417033304,
-      "name": "Alaúde",
-      "category": "Conjuntos",
-      "subcategory": "Ferramentas",
-      "type": "Geral",
-      "description": "<p>Instrumento de cordas popular.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 35 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
-      "originalId": "i_instrumento_alaude",
-      "quantidade": 1,
-      "equip": false,
-      "expanded": false
-    },
-    {
-      "id": 1768417024393,
-      "name": "Adaga",
-      "category": "Armas",
-      "subcategory": "Corpo-a-corpo",
-      "type": "Arma",
-      "damage": "1d4",
-      "damageType": "Perfurante",
-      "proficiency": "Armas Simples",
-      "tipoArma": "Corpo a Corpo",
-      "empunhadura": "Uma mao",
-      "caracteristicas": [
-        "Ágil",
-        "Leve",
-        "Arremesso (6/18)"
-      ],
-      "description": "<p>Lâmina curta multiuso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
-      "originalId": "i_adaga",
-      "quantidade": 1,
-      "equip": false,
-      "expanded": false
-    },
-    {
-      "id": 1768420247653,
+      "id": 1768522776295,
       "name": "Dardo",
       "category": "Armas",
       "subcategory": "A distancia",
@@ -99,31 +32,31 @@
       "expanded": false
     },
     {
-      "id": 1768420311729,
-      "name": "Kit de Diplomata",
+      "id": 1768522712612,
+      "name": "Kit de Artista",
       "category": "Conjuntos",
       "subcategory": "Kits",
       "type": "Geral",
-      "description": "<p>Inclui um baú, dois estojos para mapas ou pergaminhos, um conjunto de roupas finas, um frasco de tinta, uma caneta de escrever, uma lâmpada, dois frascos de óleo, cinco folhas de papel, um frasco de perfume, cera de selar e um sinete.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 39 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 9 kg</li></ul>",
-      "originalId": "i_kit_diplomata",
+      "description": "<p>Inclui uma mochila, um saco de dormir, duas fantasias, cinco velas, cinco dias de rações, um cantil e um kit de disfarce.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 40 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>",
+      "originalId": "i_kit_artista",
       "quantidade": 1,
       "equip": false,
       "expanded": false
     },
     {
-      "id": 1768420312037,
-      "name": "Alaúde",
+      "id": 1768522765157,
+      "name": "Kit de Lira",
       "category": "Conjuntos",
-      "subcategory": "Ferramentas",
+      "subcategory": "Kits",
       "type": "Geral",
-      "description": "<p>Instrumento de cordas popular.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 35 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
-      "originalId": "i_instrumento_alaude",
+      "description": "<p>Inclui uma lira, cordas extras e um suporte.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>",
+      "originalId": "i_kit_lira",
       "quantidade": 1,
       "equip": false,
       "expanded": false
     },
     {
-      "id": 1768420230805,
+      "id": 1768522737648,
       "name": "Adaga",
       "category": "Armas",
       "subcategory": "Corpo-a-corpo",
@@ -147,6 +80,16 @@
   ],
   "abilities": [
     {
+      "id": 1768519518086,
+      "title": "Abrigo dos Fiéis",
+      "description": "Você impõe respeito àqueles que compartilham sua fé. Você e seus companheiros podem receber cura e caridade (hospedagem e comida modesta) em templos de sua divindade.",
+      "expanded": false,
+      "active": true,
+      "category": "Antecedente",
+      "class": "",
+      "subclass": "Acólito"
+    },
+    {
       "id": 1768367756423,
       "title": "1",
       "description": "2",
@@ -165,16 +108,6 @@
       "category": "Raça",
       "class": "Raça",
       "subclass": "cu"
-    },
-    {
-      "id": 1768367736594,
-      "title": "Identidade Falsa",
-      "description": "Você criou uma segunda identidade completa, com documentos, conhecidos e disfarces estabelecidos. Você pode forjar documentos oficiais se tiver amostras da caligrafia.",
-      "expanded": false,
-      "active": true,
-      "category": "Antecedente",
-      "class": "",
-      "subclass": "Charlatão"
     },
     {
       "id": 1768365441115,
@@ -810,7 +743,7 @@
     "talentos": true,
     "inv-gerais": false
   },
-  "antecedente": "Charlatão",
+  "antecedente": "Acólito",
   "personagem": "123w",
   "jogador": "321w",
   "raca": "cu",
@@ -822,7 +755,7 @@
   "money": {
     "pc": 0,
     "pp": 0,
-    "po": 30,
+    "po": 45,
     "pl": 0,
     "pd": 4
   },

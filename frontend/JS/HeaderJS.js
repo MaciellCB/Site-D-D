@@ -1625,62 +1625,69 @@ function adicionarItemAoInventario(nomeItem) {
 
 
 /* =============================================================
-   SISTEMA DE EQUIPAMENTOS INTELIGENTE
+   ATUALIZAÇÃO: MODAL QUE ACEITA 3 OPÇÕES (A, B, C)
    ============================================================= */
-
-function openEquipmentChoiceModal(title, optionA, optionB, callback) {
+function openEquipmentChoiceModal(title, optionA, optionB, optionC, callback) {
     const overlay = document.createElement('div');
     overlay.className = 'spell-modal-overlay race-modal-overlay';
     overlay.style.zIndex = '15000';
 
+    // Se existir optionC, ajusta o layout para acomodar 3 botões
+    let htmlButtons = `
+        <button class="btn-equip-opt btn-add" data-choice="${optionA}" style="flex:1; background:#1a1a1a; border:1px solid #444; padding:15px; text-align:left; display:flex; flex-direction:column; gap:5px; transition:0.2s;">
+            <strong style="color:#9c27b0; font-size:14px; text-transform:uppercase;">Opção A</strong>
+            <span style="color:#fff; font-size:13px; line-height:1.4;">${optionA}</span>
+        </button>
+
+        <div style="display:flex; align-items:center; font-weight:bold; color:#666;">OU</div>
+
+        <button class="btn-equip-opt btn-add" data-choice="${optionB}" style="flex:1; background:#1a1a1a; border:1px solid #444; padding:15px; text-align:left; display:flex; flex-direction:column; gap:5px; transition:0.2s;">
+            <strong style="color:#9c27b0; font-size:14px; text-transform:uppercase;">Opção B</strong>
+            <span style="color:#fff; font-size:13px; line-height:1.4;">${optionB}</span>
+        </button>
+    `;
+
+    // Se houver opção C, adiciona o botão C
+    if (optionC) {
+        htmlButtons += `
+            <div style="display:flex; align-items:center; font-weight:bold; color:#666;">OU</div>
+            <button class="btn-equip-opt btn-add" data-choice="${optionC}" style="flex:1; background:#1a1a1a; border:1px solid #444; padding:15px; text-align:left; display:flex; flex-direction:column; gap:5px; transition:0.2s;">
+                <strong style="color:#9c27b0; font-size:14px; text-transform:uppercase;">Opção C</strong>
+                <span style="color:#fff; font-size:13px; line-height:1.4;">${optionC}</span>
+            </button>
+        `;
+    }
+
     overlay.innerHTML = `
-        <div class="spell-modal" style="width: 600px; height: auto;">
+        <div class="spell-modal" style="width: ${optionC ? '800px' : '600px'}; height: auto;">
             <div class="modal-header">
                 <h3>Escolha de Equipamento</h3>
             </div>
             <div class="modal-body" style="padding: 20px;">
                 <p style="color:#e0aaff; margin-bottom:20px; text-align:center; font-size:16px;">${title}</p>
-                
-                <div style="display:flex; gap:15px; justify-content:center; align-items:stretch;">
-                    
-                    <button class="btn-equip-opt btn-add" style="flex:1; background:#1a1a1a; border:1px solid #444; padding:15px; text-align:left; display:flex; flex-direction:column; gap:5px; transition:0.2s;">
-                        <strong style="color:#9c27b0; font-size:14px; text-transform:uppercase;">Opção A</strong>
-                        <span style="color:#fff; font-size:13px; line-height:1.4;">${optionA}</span>
-                    </button>
-
-                    <div style="display:flex; align-items:center; font-weight:bold; color:#666;">OU</div>
-
-                    <button class="btn-equip-opt btn-add" style="flex:1; background:#1a1a1a; border:1px solid #444; padding:15px; text-align:left; display:flex; flex-direction:column; gap:5px; transition:0.2s;">
-                        <strong style="color:#9c27b0; font-size:14px; text-transform:uppercase;">Opção B</strong>
-                        <span style="color:#fff; font-size:13px; line-height:1.4;">${optionB}</span>
-                    </button>
-
+                <div style="display:flex; gap:10px; justify-content:center; align-items:stretch;">
+                    ${htmlButtons}
                 </div>
             </div>
         </div>
     `;
 
     document.body.appendChild(overlay);
-    if(typeof checkScrollLock === 'function') checkScrollLock(); // Trava ao abrir
+    if(typeof checkScrollLock === 'function') checkScrollLock();
 
     const buttons = overlay.querySelectorAll('.btn-equip-opt');
     
     buttons.forEach(btn => {
         btn.onmouseenter = () => btn.style.borderColor = '#9c27b0';
         btn.onmouseleave = () => btn.style.borderColor = '#444';
+        
+        btn.onclick = () => {
+            const choice = btn.getAttribute('data-choice');
+            callback(choice);
+            overlay.remove();
+            if(typeof checkScrollLock === 'function') checkScrollLock();
+        };
     });
-
-    // CORREÇÃO AQUI: Adicionado checkScrollLock() ao clicar
-    buttons[0].onclick = () => { 
-        callback(optionA); 
-        overlay.remove(); 
-        if(typeof checkScrollLock === 'function') checkScrollLock(); 
-    };
-    buttons[1].onclick = () => { 
-        callback(optionB); 
-        overlay.remove(); 
-        if(typeof checkScrollLock === 'function') checkScrollLock(); 
-    };
 }
 
 // 2. Processador da Lista de Equipamentos (Recursivo)
@@ -1809,9 +1816,8 @@ function adicionarItemAoInventario(nomeItem) {
 }
 
 /* =============================================================
-   4. PROCESSAMENTO DE ITENS E GENÉRICOS
-============================================================= */
-
+   ATUALIZAÇÃO: PROCESSADOR QUE DETECTA 3 OPÇÕES
+   ============================================================= */
 function processarListaEquipamentos(lista, index, callbackFinal) {
     if (!lista || index >= lista.length) {
         callbackFinal();
@@ -1819,31 +1825,64 @@ function processarListaEquipamentos(lista, index, callbackFinal) {
     }
 
     const itemStr = lista[index];
-    const choiceRegex = /^\(a\)\s*(.+?)\s+(?:ou)\s+\(b\)\s*(.+)$/i; 
-    const match = itemStr.match(choiceRegex);
-
     const nextStep = () => processarListaEquipamentos(lista, index + 1, callbackFinal);
 
-    if (match) {
-        const optA = match[1].trim();
-        const optB = match[2].trim();
-        openEquipmentChoiceModal("Escolha uma das opções:", optA, optB, (choice) => {
-            // Separa itens compostos ("arco e flechas")
-            const cleanChoice = choice.replace(" e ", ", ");
-            const subItems = cleanChoice.split(",").map(s => s.trim());
-            
-            // Processa subitens (pode ter genérico dentro)
-            let subQueue = [...subItems];
-            function runSubQueue() {
-                if(subQueue.length === 0) { nextStep(); return; }
-                const si = subQueue.shift();
-                verificarItemGenerico(si, () => runSubQueue());
-            }
-            runSubQueue();
+    // 1. Tenta detectar padrão de 3 escolhas: (a) X, (b) Y ou (c) Z
+    // Ex: "(a) uma rapieira, (b) uma espada longa ou (c) qualquer arma simples"
+    const regex3Options = /\(a\)\s*(.+?)[,;]?\s+\(b\)\s*(.+?)[,;]?\s+(?:ou)?\s*\(c\)\s*(.+)/i;
+    const match3 = itemStr.match(regex3Options);
+
+    if (match3) {
+        const optA = match3[1].trim();
+        const optB = match3[2].trim();
+        const optC = match3[3].trim(); // Aqui virá "qualquer arma simples"
+
+        // Chama o modal passando a opção C (o null seria o callback, mas ajustamos a assinatura da função acima)
+        openEquipmentChoiceModal("Escolha uma das opções:", optA, optB, optC, (choice) => {
+            processarEscolhaComplexa(choice, nextStep);
         });
-    } else {
-        verificarItemGenerico(itemStr, nextStep);
+        return;
     }
+
+    // 2. Tenta detectar padrão de 2 escolhas: (a) X ou (b) Y
+    const regex2Options = /^\(a\)\s*(.+?)\s+(?:ou)\s+\(b\)\s*(.+)$/i; 
+    const match2 = itemStr.match(regex2Options);
+
+    if (match2) {
+        const optA = match2[1].trim();
+        const optB = match2[2].trim();
+
+        // Passa null no optionC
+        openEquipmentChoiceModal("Escolha uma das opções:", optA, optB, null, (choice) => {
+            processarEscolhaComplexa(choice, nextStep);
+        });
+        return;
+    } 
+    
+    // 3. Item direto
+    verificarItemGenerico(itemStr, nextStep);
+}
+
+// Função auxiliar para processar o resultado da escolha (separa virgulas e verifica genericos)
+function processarEscolhaComplexa(choice, callbackNext) {
+    // Separa itens compostos ("arco e flechas" ou "x, y e z")
+    const cleanChoice = choice.replace(" e ", ", ");
+    const subItems = cleanChoice.split(",").map(s => s.trim());
+    
+    // Processa subitens em fila (para lidar com múltiplos genéricos se houver)
+    let subQueue = [...subItems];
+    
+    function runSubQueue() {
+        if(subQueue.length === 0) { 
+            callbackNext(); 
+            return; 
+        }
+        const si = subQueue.shift();
+        // A mágica acontece aqui: se si for "qualquer arma simples", 
+        // verificarItemGenerico vai abrir o seletor automaticamente.
+        verificarItemGenerico(si, () => runSubQueue());
+    }
+    runSubQueue();
 }
 
 // Verifica palavras-chave para abrir seletor específico
