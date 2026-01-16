@@ -504,7 +504,7 @@ function renderInventory() {
 
   conteudoEl.innerHTML = html;
 
-  document.getElementById('botAddItem').addEventListener('click', () => openItemModal(null));
+  document.getElementById('botAddItem').addEventListener('click', () => openItemCatalogOverlay());
 
   bindInventoryCardEvents();
   bindInventorySectionEvents();
@@ -512,15 +512,14 @@ function renderInventory() {
 
   // --- FOCO AUTOMÁTICO NA PESQUISA ---
   const inputFiltro = document.getElementById('filterItens');
-  if (inputFiltro) {
-    // Só foca se não estivermos no meio de uma edição que tirou o foco
-    if (document.activeElement !== inputFiltro) {
-        inputFiltro.focus();
-        const len = inputFiltro.value.length;
-        inputFiltro.setSelectionRange(len, len);
-    }
-    inputFiltro.oninput = renderInventory;
-  }
+  if (inputFiltro) {
+    if (document.activeElement !== inputFiltro) {
+        inputFiltro.focus();
+        const len = inputFiltro.value.length;
+        inputFiltro.setSelectionRange(len, len);
+    }
+    inputFiltro.oninput = renderInventory;
+  }
 }
 
 
@@ -2848,6 +2847,7 @@ const ITEM_SUBCATEGORIES = {
   'Provisão': ['Comida', 'Transporte/Animais', 'Hospedagem']
 };
 
+/* ---------------- CATALOGO DE ITENS (DESIGN RESTAURADO + BOTÃO MANUAL) ---------------- */
 window.openItemCatalogOverlay = () => {
   const existing = document.querySelector('.catalog-overlay-large-items');
   if (existing) existing.remove();
@@ -2866,12 +2866,19 @@ window.openItemCatalogOverlay = () => {
       <div class="catalog-large" role="dialog" aria-modal="true" style="width:980px; max-width:calc(100% - 40px);">
         <div class="catalog-large-header">
           <h3>Lista Padrão de Itens</h3>
-          <div class="catalog-large-close" title="Fechar" style="cursor:pointer;">✖</div>
+          
+          <div style="display:flex; gap:10px; align-items:center;">
+              <button id="btnCriarManual" style="background:#222; border:1px solid #444; color:#ccc; padding:6px 12px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:12px; transition:0.2s;">
+                Criar Manualmente
+              </button>
+              <div class="catalog-large-close" title="Fechar" style="cursor:pointer;">✖</div>
+          </div>
+
         </div>
         <div class="catalog-large-classes" id="item-cats-row">${catsHtml}</div>
         <div id="item-subs-row" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; padding-bottom:6px;"></div>
         <div class="catalog-large-search" style="margin-top:6px;">
-          <input id="catalogItemSearch" placeholder="Ex: pode pesquisar coisas separadas, separa por vírgula ma pesquisa(coisa1,coisa2,palavra-chave3)..." />
+          <input id="catalogItemSearch" placeholder="Ex: espada, dano cortante, escudo..." />
         </div>
         <div class="catalog-large-list item-list-large" style="margin-top:10px; overflow:auto; flex:1;"></div>
       </div>
@@ -2879,6 +2886,17 @@ window.openItemCatalogOverlay = () => {
 
   document.body.appendChild(overlay);
   checkScrollLock();
+
+  // --- EVENTO DO BOTÃO CRIAR MANUAL ---
+  const btnManual = overlay.querySelector('#btnCriarManual');
+  btnManual.onmouseover = () => { btnManual.style.borderColor = '#9c27b0'; btnManual.style.color = '#fff'; };
+  btnManual.onmouseout = () => { btnManual.style.borderColor = '#444'; btnManual.style.color = '#ccc'; };
+  
+  btnManual.onclick = () => {
+      overlay.remove(); // Fecha o catálogo
+      openItemModal(null); // Abre o modal manual (função existente)
+  };
+  // ------------------------------------
 
   overlay.querySelector('.catalog-large-close').onclick = () => { overlay.remove(); checkScrollLock(); };
 
@@ -2898,8 +2916,6 @@ window.openItemCatalogOverlay = () => {
   function renderList() {
     const container = overlay.querySelector('.item-list-large');
     const searchInput = overlay.querySelector('#catalogItemSearch').value.toLowerCase();
-
-    // Divide os termos por vírgula e remove espaços extras
     const searchTerms = searchInput.split(',').map(t => t.trim()).filter(t => t);
 
     let items = itemCatalog.filter(i => i.category === activeCat);
@@ -2908,24 +2924,15 @@ window.openItemCatalogOverlay = () => {
       items = items.filter(i => i.subcategory === activeSub);
     }
 
-    // LÓGICA DE FILTRO AVANÇADA
     if (searchTerms.length > 0) {
       items = items.filter(item => {
-        // Monta uma string gigante com todas as infos do item para buscar
         const searchableText = [
-          item.name,
-          item.description,
-          item.type,
-          item.tipoArma,
-          item.proficiency,
-          item.damageType,
+          item.name, item.description, item.type, item.tipoArma,
+          item.proficiency, item.damageType,
           Array.isArray(item.damageTypes) ? item.damageTypes.join(' ') : '',
           item.caracteristicas ? item.caracteristicas.join(' ') : '',
-          item.empunhadura,
-          item.defense ? `CA ${item.defense}` : ''
+          item.empunhadura, item.defense ? `CA ${item.defense}` : ''
         ].filter(Boolean).join(' ').toLowerCase();
-
-        // Verifica se TODOS os termos digitados existem no item (Lógica AND)
         return searchTerms.every(term => searchableText.includes(term));
       });
     }
@@ -2981,7 +2988,6 @@ window.openItemCatalogOverlay = () => {
             </div>`;
     }).join('');
 
-    // Listener de Expandir
     container.querySelectorAll('.catalog-card-header').forEach(header => {
       header.addEventListener('click', (ev) => {
         if (ev.target.closest('.catalog-add-btn')) return;
@@ -2994,7 +3000,6 @@ window.openItemCatalogOverlay = () => {
       });
     });
 
-    // Listener de Adicionar
     container.querySelectorAll('.catalog-add-btn').forEach(btn => {
       btn.onclick = (ev) => {
         ev.stopPropagation();
@@ -3019,7 +3024,6 @@ window.openItemCatalogOverlay = () => {
   renderSubs();
   renderList();
 };
-
 
 
 // Conectar ao botão "Lista Padrão" dentro do Modal de Itens
@@ -3055,6 +3059,13 @@ window.adicionarItemDoCatalogo = (id) => {
     type: i.type || 'Arma',
     isEquipable: true,
     proficiency: i.proficiency || 'Armas Simples',
+    
+    // --- CORREÇÃO AQUI ---
+    defense: i.defense || '',         // Copia o valor da CA (ex: "11")
+    tipoItem: i.tipoItem || '',       // Importante para saber se é "Armadura" ou "Escudo"
+    minStrength: i.minStrength || '', // Requisito de Força (para armaduras pesadas)
+    // ---------------------
+
     tipoArma: i.tipoArma || 'Corpo a Corpo',
     empunhadura: i.empunhadura || 'Uma mao',
     crit: i.crit || '20',
@@ -3062,7 +3073,7 @@ window.adicionarItemDoCatalogo = (id) => {
     alcance: i.alcance || '1.5m',
     attunement: i.attunement || 'Não',
     damage: i.damage || '1d4',
-    damage2Hands: i.damage2Hands || '', // IMPORTANTE: Puxa o dano de 2 mãos do back
+    damage2Hands: i.damage2Hands || '', 
     useTwoHands: false,
     damageTypes: Array.isArray(i.damageTypes) ? [...i.damageTypes] : (i.damageType ? [i.damageType] : []),
     moreDmgList: i.moreDmgList || [],
@@ -3072,6 +3083,10 @@ window.adicionarItemDoCatalogo = (id) => {
   state.inventory.unshift(novoItem);
   renderInventory();
   saveStateToServer();
+  
+  // Força atualização da CA visualmente
+  if(typeof atualizarAC === 'function') atualizarAC();
+  window.dispatchEvent(new CustomEvent('sheet-updated'));
 };
 
 // Conectar ao botão "Lista Padrão" dentro do Modal de Itens
