@@ -1549,9 +1549,8 @@ function processarEscolhaComplexa(choice, callbackNext) {
     }
     runSubQueue();
 }
-
 /* =============================================================
-   CORREÇÃO FINAL: ADICIONAR ITENS E ATUALIZAR TELA IMEDIATAMENTE
+   CORREÇÃO: AGRUPAR DARDO E AZAGAIA (MESMO SENDO ARMAS)
    Substitua a função adicionarItemAoInventario (Seção UTILS)
 ============================================================= */
 
@@ -1561,7 +1560,7 @@ function adicionarItemAoInventario(nomeItemBruto) {
     let nome = nomeItemBruto.trim().replace(/[.;]$/, ''); 
     let repeticoes = 1;
 
-    // 1. Detecta quantidade por extenso ("Duas", "Três") ou digito ("2")
+    // 1. Detecta quantidade por extenso ou dígito
     const numerosTexto = { 
         'um': 1, 'uma': 1, 'dois': 2, 'duas': 2, 'tres': 3, 'três': 3, 
         'quatro': 4, 'cinco': 5, 'seis': 6, 'dez': 10, 'vinte': 20 
@@ -1590,34 +1589,58 @@ function adicionarItemAoInventario(nomeItemBruto) {
         itemDb = buscarItemNoBanco(nomeBusca.slice(0, -1));
     }
 
-    // 3. O LOOP: Adiciona o item X vezes separadamente
-    for (let i = 0; i < repeticoes; i++) {
-        if (itemDb) {
+    // --- LÓGICA DE SEPARAÇÃO ---
+    
+    // Verifica se é uma exceção que DEVE agrupar (Dardos, Azagaias, etc)
+    const nomeLower = itemDb ? itemDb.name.toLowerCase() : nomeBusca.toLowerCase();
+    const deveAgrupar = nomeLower.includes('dardo') || nomeLower.includes('azagaia');
+
+    // Verifica se é Equipamento (Arma/Armadura)
+    const isEquipmentType = itemDb && (itemDb.type === 'Arma' || itemDb.type === 'Proteção' || itemDb.type === 'protecao');
+
+    // Só faz o loop (separar itens) se for equipamento E NÃO for uma das exceções
+    if (isEquipmentType && !deveAgrupar) {
+        
+        // LÓGICA PARA ARMAS/ARMADURAS PADRÃO: Loop para criar itens individuais
+        for (let i = 0; i < repeticoes; i++) {
             const novoItem = JSON.parse(JSON.stringify(itemDb));
-            // Cria ID único para não dar conflito na listagem
             novoItem.id = Date.now() + Math.floor(Math.random() * 100000) + i;
             novoItem.quantity = 1; 
             state.inventory.push(novoItem);
+        }
+
+    } else {
+        // LÓGICA PARA GERAIS + EXCEÇÕES (Dardos/Azagaias): Agrupa em um só (xQtd)
+        if (itemDb) {
+            const novoItem = JSON.parse(JSON.stringify(itemDb));
+            novoItem.id = Date.now() + Math.floor(Math.random() * 100000);
+            
+            if (repeticoes > 1) {
+                novoItem.name = `${novoItem.name} (x${repeticoes})`;
+                novoItem.quantity = repeticoes; 
+            } else {
+                novoItem.quantity = 1;
+            }
+            state.inventory.push(novoItem);
         } else {
-            // Item genérico se não achou
+            // Item genérico não encontrado no banco
+            const nomeFinal = repeticoes > 1 ? `${nome.charAt(0).toUpperCase() + nome.slice(1)} (x${repeticoes})` : nome.charAt(0).toUpperCase() + nome.slice(1);
+            
             state.inventory.push({
-                id: Date.now() + Math.floor(Math.random() * 100000) + i,
-                name: nome.charAt(0).toUpperCase() + nome.slice(1),
+                id: Date.now() + Math.floor(Math.random() * 100000),
+                name: nomeFinal,
                 type: "Equipamento",
-                quantity: 1,
+                quantity: repeticoes,
                 weight: 0,
                 description: "Item adicionado."
             });
         }
     }
 
-    // 4. ATUALIZAÇÃO IMEDIATA (O que faltava)
+    // 4. ATUALIZAÇÃO IMEDIATA
     if (typeof saveStateToServer === 'function') saveStateToServer();
     
-    // Avisa a ficha inteira para redesenhar agora mesmo
     window.dispatchEvent(new CustomEvent('sheet-updated'));
-    
-    // Segurança extra: dispara novamente após 50ms para garantir que a aba pegue a mudança se houver animação de modal
     setTimeout(() => {
         window.dispatchEvent(new CustomEvent('sheet-updated'));
     }, 50);

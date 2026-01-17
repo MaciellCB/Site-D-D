@@ -1974,8 +1974,8 @@
     "skills_count": 2,
     "skills_list": ["História", "Intuição", "Medicina", "Persuasão", "Religião"],
     "equipment": [
-      "(a) Uma maça ou (b) Um martelo de guerra (se proficiente)",
-      "(a) Loriga de escamas, (b) Armadura de couro ou (c) Cota de malha (se proficiente)",
+      "(a) Uma maça ou (b) Um martelo de guerra",
+      "(a) Lórica de escamas, (b) Armadura de couro ou (c) Cota de malha",
       "(a) Uma besta leve e 20 virotes ou (b) Qualquer arma simples",
       "(a) Kit de sacerdote ou (b) Kit de explorador",
       "Um escudo e um símbolo sagrado"
@@ -4364,7 +4364,7 @@
       "(a) Lórica de escamas ou (b) Armadura de couro",
       "(a) Duas espadas curtas ou (b) Duas armas simples corpo a corpo",
       "(a) Kit de aventureiro ou (b) Kit de explorador",
-      "Um arco longo e uma aljava e 20 flechas"
+      "Um arco longo, uma aljava e 20 flechas"
     ],
 
   "features": [
@@ -5290,7 +5290,7 @@
       "(a) Um cajado ou (b) Uma adaga",
       "(a) Uma bolsa de componentes ou (b) Um foco arcano",
       "(a) Kit de erudito ou (b) Kit de explorador",
-      "Um grimório (livro de magias)"
+      "Um grimório"
     ],
 
   "features": [

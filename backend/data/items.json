@@ -814,6 +814,21 @@
     "disadvantageSkill": "Furtividade",
     "description": "<p>Placas de metal moldadas cobrindo a maior parte do corpo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 750 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 20 kg</li></ul>"
   },
+
+{
+  "id": "i_arm_lorica_escamas",
+  "name": "Lórica de Escamas",
+  "category": "Armaduras",
+  "subcategory": "Armaduras",
+  "type": "Proteção",
+  "defense": "14",
+  "proficiency": "Media",
+  "tipoItem": "Armadura",
+  "disadvantageSkill": "Furtividade",
+  "description": "<p>Uma armadura composta por pequenas placas sobrepostas de metal ou couro endurecido, oferecendo boa proteção sem sacrificar totalmente a mobilidade.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 22 kg</li></ul>"
+},
+
+
   {
     "id": "i_arm_cota_aneis",
     "name": "Cota de Anéis",
@@ -875,6 +890,18 @@
     "proficiency": "Escudo",
     "tipoItem": "Escudo",
     "description": "<p>Pode ser de madeira ou metal.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
+  },
+
+  {
+    "id": "i_escudo_madeira",
+    "name": "Escudo de madeira",
+    "category": "Armaduras",
+    "subcategory": "Escudos",
+    "type": "Proteção",
+    "defense": "+2",
+    "proficiency": "Escudo",
+    "tipoItem": "Escudo",
+    "description": "<p>escudo de madeira comum</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
   },
   {
     "id": "i_abaco",
@@ -1060,14 +1087,7 @@
     "type": "Geral",
     "description": "<p>Para magos, feiticeiros e bruxos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
   },
-  {
-    "id": "i_foco_druidico",
-    "name": "Foco Druídico (Ramo de Visco)",
-    "category": "Utensílios",
-    "subcategory": "Utensílios gerais",
-    "type": "Geral",
-    "description": "<p>Para druidas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> -</li></ul>"
-  },
+
   {
     "id": "i_grimorio",
     "name": "Grimório",
@@ -1076,6 +1096,39 @@
     "type": "Geral",
     "description": "<p>Livro de magias.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>"
   },
+  {
+  "id": "i_foco_arcano",
+  "name": "Foco Arcano",
+  "category": "Utensílios",
+  "subcategory": "Focos Mágicos",
+  "type": "Geral",
+  "description": "<p>Um objeto imbuído de energia arcana usado para canalizar magias arcanas sem a necessidade de componentes materiais comuns. É essencial para magos, feiticeiros, bruxos e bardos.</p><p><em>Exemplos:</em> varinha, cajado, cristal, orbe.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 20 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+},
+{
+  "id": "i_simbolo_sagrado",
+  "name": "Símbolo Sagrado",
+  "category": "Utensílios",
+  "subcategory": "Focos Mágicos",
+  "type": "Geral",
+  "description": "<p>Um símbolo que representa uma divindade ou força sagrada, usado para canalizar magias divinas. Pode ser usado visivelmente ou usado como amuleto, escudo ou objeto empunhado.</p><p><em>Exemplos:</em> amuleto, emblema em armadura ou escudo, relicário.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+},
+{
+  "id": "i_foco_druidico",
+  "name": "Foco Druídico",
+  "category": "Utensílios",
+  "subcategory": "Focos Mágicos",
+  "type": "Geral",
+  "description": "<p>Um objeto natural usado para canalizar magias druídicas, conectado às forças da natureza e aos espíritos do mundo selvagem.</p><p><em>Exemplos:</em> ramo de visco, totem de madeira, cajado natural, pedra entalhada.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+},
+{
+  "id": "i_kit_componentes",
+  "name": "Kit de Componentes",
+  "category": "Utensílios",
+  "subcategory": "Focos Mágicos",
+  "type": "Geral",
+  "description": "<p>Uma bolsa cheia de componentes materiais comuns usados para conjurar magias, servindo como alternativa a qualquer tipo de foco mágico.</p><p><em>Exemplos:</em> penas, pó de cristal, ervas secas, pequenos ossos, cinzas, velas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+},
+
   {
     "id": "i_kit_escalada",
     "name": "Kit de Escalada",
@@ -1093,6 +1146,16 @@
   "type": "Geral",
   "description": "<p>Inclui uma mochila, um pé de cabra, um martelo, dez pitões, dez tochas, uma caixa de isqueiro, dez dias de rações, um cantil e uma corda de cânhamo de 15 metros.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 12 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 10 kg</li></ul>"
 },
+
+{
+  "id": "i_kit_sacerdote",
+  "name": "Kit de Sacerdote",
+  "category": "Conjuntos",
+  "subcategory": "Kits",
+  "type": "Geral",
+  "description": "<p>Inclui uma mochila, um cobertor, dez velas, uma caixa de isqueiro, uma caixa de esmolas, dois blocos de incenso, um turíbulo e vestes cerimoniais.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 19 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 6 kg</li></ul>"
+},
+
 
 {
   "id": "i_kit_explorador",
@@ -2607,30 +2670,9 @@
 
 
   
-  {
-    "id": "i_foco_druidico_cajado",
-    "name": "Foco Druídico - Cajado de Madeira",
-    "category": "Utensílios",
-    "subcategory": "Utensílios gerais",
-    "type": "Geral",
-    "description": "<p>Foco natural para conjuração druídica.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
-  },
-  {
-    "id": "i_foco_druidico_totem",
-    "name": "Foco Druídico - Totem",
-    "category": "Utensílios",
-    "subcategory": "Utensílios gerais",
-    "type": "Geral",
-    "description": "<p>Símbolo druídico usado em rituais.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
-  },
-  {
-    "id": "i_foco_druidico_varinha",
-    "name": "Foco Druídico - Varinha",
-    "category": "Utensílios",
-    "subcategory": "Utensílios gerais",
-    "type": "Geral",
-    "description": "<p>Varinha de teixo ou madeira sagrada.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
-  },
+ 
+ 
+ 
   {
     "id": "i_inst_flauta_d",
     "name": "Instrumento - Flauta D",
