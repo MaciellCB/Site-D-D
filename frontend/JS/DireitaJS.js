@@ -203,8 +203,8 @@ const CLASSES_WITH_SUBCLASSES = {
   'Mago': ['Abjuração', 'Conjuração', 'Adivinhação', 'Encantamento', 'Evocação', 'Ilusão', 'Cronurgia', 'Necromancia', 'Criador de Runas', 'Tecnomancia', 'Teurgia', 'Transmutação', 'Graviturgia', 'Mago de Guerra', 'Cantor da Lâmina', 'Ordem dos Escribas'],
   'Monge': ['Caminho da Mão Aberta', 'Caminho das Sombras', , 'Caminho da Tranquilidade', 'Caminho dos Quatro Elementos', 'Longa Morte', 'Kensei', 'Mestre Bêbado', 'Alma Solar', 'Misericórdia', 'Forma Astral', 'Dragão Ascendente'],
   'Paladino': ['Juramento dos Anciões', 'Juramento da Conquista', 'Juramento da Coroa', 'Juramento de Devoção', 'Juramento de Glória', 'Juramento de Redenção', 'Juramento de Vingança', 'Juramento dos Observadores', 'Quebrador de Juramento', 'Juramento da Traição', 'Juramento de Heroísmo', ''],
-  'Patrulheiro': ['Caçador', 'Mestre das Feras', 'Guardião Primordial', 'Guardião Dracônico', 'Perseguidor Sombrio', 'Andarilho do Horizonte', 'Matador de Monstros', 'Peregrino Feérico', 'Guardião do Enxame', 'Guardião Dracônico'],
- 
+  'Patrulheiro': ['Conclave da Fera', 'Conclave do Caçador',  'Espreitador das Profundezas','Conclave do Guardião Primordial','Conclave do Horizonte','Conclave do Matador','Conclave Feérico','Conclave do Enxame','Guardião do Draco' ],
+  
   'Talentos': []
 };
 

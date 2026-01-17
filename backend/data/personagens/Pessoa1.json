@@ -11,6 +11,46 @@
   "inventory": [],
   "abilities": [
     {
+      "id": 1768609105052,
+      "title": "[Nível 3] Tiro Arcano",
+      "description": "<p>Aprende 2 opções de Tiro Arcano. 1x por turno ao disparar flecha, aplique um efeito.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Usos:</strong> 2 por descanso curto/longo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ CD:</strong> 8 + Prof + INT.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Opções:</strong> Banimento, Explosivo, Perfurante, etc. Ganha mais nos níveis 7, 10, 15, 18.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Subclasse",
+      "class": "Guerreiro",
+      "subclass": "Arqueiro Arcano"
+    },
+    {
+      "id": 1768609055267,
+      "title": "[Nível 3] Conhecimento Arcano",
+      "description": "<p>Proficiência em Arcanismo ou Natureza. Aprende <em>Prestidigitação</em> ou <em>Druidismo</em>.</p>",
+      "expanded": false,
+      "active": true,
+      "category": "Subclasse",
+      "class": "Guerreiro",
+      "subclass": "Arqueiro Arcano"
+    },
+    {
+      "id": 1768609090442,
+      "title": "[Nível 3] Arquétipo Marcial (Subclasse)",
+      "description": "<p>No 3º nível, você escolhe um arquétipo que define seu estilo de combate. Sua escolha concede características no 3º nível e novamente no 7º, 10º, 15º e 18º nível.</p>",
+      "expanded": true,
+      "active": true,
+      "category": "Classe",
+      "class": "Guerreiro",
+      "subclass": ""
+    },
+    {
+      "id": 1768609054730,
+      "title": "[Nível 2] Surto de Ação",
+      "description": "<p>Você pode forçar seu limite para agir novamente.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Efeito:</strong> Realize uma ação adicional no seu turno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Usos:</strong> 1 vez (2º nível), 2 vezes (17º nível). Recupera em descanso curto ou longo.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Guerreiro",
+      "subclass": ""
+    },
+    {
       "id": 1768600472792,
       "title": "[Nível 1] Imposição de Mãos",
       "description": "<p><strong>(Ação)</strong> Reserva de cura (5 x Nível de Paladino).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Cura:</strong> Toque para curar qualquer quantidade da reserva.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Purificação:</strong> Gaste 5 pontos para curar doença ou neutralizar veneno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Restrição:</strong> Não afeta mortos-vivos ou constructos.</li></ul>",
@@ -413,7 +453,7 @@
     "monge": 0,
     "druida": 0,
     "feiticeiro": 0,
-    "guerreiro": 1,
+    "guerreiro": 3,
     "ladino": 0,
     "mago": 0,
     "paladino": 0,
@@ -450,8 +490,7 @@
     "Armas simples",
     "Armas marciais",
     "simples",
-    "Espadas Curtas",
-    "1 Artesão ou Instrumento"
+    "Espadas Curtas"
   ],
   "idiomasList": [
     "Comum",
@@ -527,15 +566,17 @@
   },
   "isSlotsCollapsed": false,
   "collapsedSections": {
-    "class-Blood Hunter": false,
-    "origem": false,
+    "class-Blood Hunter": true,
+    "origem": true,
     "inv-armas": false,
     "inv-armaduras": false,
     "cmb-ataques": false,
     "class-Bárbaro": true,
     "class-Druida": true,
     "talentos": true,
-    "inv-gerais": false
+    "inv-gerais": false,
+    "class-Patrulheiro": true,
+    "class-Guerreiro": false
   },
   "antecedente": "Artesão de Guilda",
   "personagem": "123w",
@@ -556,6 +597,7 @@
   "hitDie": "d10",
   "subclasses": {
     "bruxo": "O Morto-Vivo",
-    "clerigo": "Domínio do Zelo"
+    "clerigo": "Domínio do Zelo",
+    "guerreiro": "Arqueiro Arcano"
   }
 }

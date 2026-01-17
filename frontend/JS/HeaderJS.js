@@ -1053,38 +1053,40 @@ function openClassSelectionModal() {
         }
     };
 
-    function renderClassDetails(cls, simulatedLevel) {
-        if (!cls) return;
-        btnSelect.removeAttribute('disabled');
-        btnSelect.textContent = `Selecionar ${cls.name} (Nível ${simulatedLevel})`;
-        btnSelect.style.background = '#9c27b0';
+   function renderClassDetails(cls, simulatedLevel) {
+    if (!cls) return;
+    btnSelect.removeAttribute('disabled');
+    btnSelect.textContent = `Selecionar ${cls.name} (Nível ${simulatedLevel})`;
+    btnSelect.style.background = '#9c27b0';
 
-        const imagePath = cls.image || 'img/dado.png';
-        const subclassReqLevel = cls.subclass_level || 3;
-        const canPickSubclass = simulatedLevel >= subclassReqLevel;
+    const imagePath = cls.image || 'img/dado.png';
+    const subclassReqLevel = cls.subclass_level || 3;
+    const canPickSubclass = simulatedLevel >= subclassReqLevel;
 
-        let profHtml = '';
-        if (cls.proficiencies) {
-            if (cls.proficiencies.armor && cls.proficiencies.armor.length) profHtml += `<div><strong style="color:#e0aaff;">Armaduras:</strong> ${cls.proficiencies.armor.join(', ')}</div>`;
-            if (cls.proficiencies.weapons && cls.proficiencies.weapons.length) profHtml += `<div><strong style="color:#e0aaff;">Armas:</strong> ${cls.proficiencies.weapons.join(', ')}</div>`;
-            if (cls.proficiencies.tools && cls.proficiencies.tools.length) profHtml += `<div><strong style="color:#e0aaff;">Ferramentas:</strong> ${cls.proficiencies.tools.join(', ')}</div>`;
-        }
+    let profHtml = '';
+    if (cls.proficiencies) {
+        if (cls.proficiencies.armor && cls.proficiencies.armor.length) profHtml += `<div><strong style="color:#e0aaff;">Armaduras:</strong> ${cls.proficiencies.armor.join(', ')}</div>`;
+        if (cls.proficiencies.weapons && cls.proficiencies.weapons.length) profHtml += `<div><strong style="color:#e0aaff;">Armas:</strong> ${cls.proficiencies.weapons.join(', ')}</div>`;
+        if (cls.proficiencies.tools && cls.proficiencies.tools.length) profHtml += `<div><strong style="color:#e0aaff;">Ferramentas:</strong> ${cls.proficiencies.tools.join(', ')}</div>`;
+    }
 
-        const traitsHtml = cls.features ? cls.features.map(t => `<div class="race-trait-item"><div class="race-trait-name">${t.name}</div><div class="race-trait-desc">${t.description}</div></div>`).join('') : '';
+    const traitsHtml = cls.features ? cls.features.map(t => `<div class="race-trait-item"><div class="race-trait-name">${t.name}</div><div class="race-trait-desc">${t.description}</div></div>`).join('') : '';
 
-        let subclassesHtml = '';
-        if (cls.subclasses && cls.subclasses.length > 0) {
-            let lockMessage = '';
-            if (!canPickSubclass) lockMessage = `<div style="background:#330000; border:1px solid #d32f2f; color:#ff9999; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">🔒 Subclasses disponíveis apenas no nível ${subclassReqLevel}.</div>`;
-            else if (!selectedSubclass && canPickSubclass) lockMessage = `<div style="background:#332a00; border:1px solid #ffeb3b; color:#ffeb3b; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">⚠ Você atingiu o nível ${subclassReqLevel}! Selecione uma subclasse abaixo.</div>`;
+    let subclassesHtml = '';
+    if (cls.subclasses && cls.subclasses.length > 0) {
+        let lockMessage = '';
+        // Mantive a mensagem de aviso visual, mas removi o bloqueio físico
+        if (!canPickSubclass) lockMessage = `<div style="background:#330000; border:1px solid #d32f2f; color:#ff9999; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">🔒 Subclasses disponíveis para escolha no nível ${subclassReqLevel} (Visualização Liberada).</div>`;
+        else if (!selectedSubclass && canPickSubclass) lockMessage = `<div style="background:#332a00; border:1px solid #ffeb3b; color:#ffeb3b; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">⚠ Você atingiu o nível ${subclassReqLevel}! Selecione uma subclasse abaixo.</div>`;
 
-            subclassesHtml = `
+        // ALTERAÇÃO 1: Removido 'pointer-events:none' para permitir o clique
+        subclassesHtml = `
                 <div class="race-traits-title" style="margin-top:25px; color:#ffeb3b; border-top:1px solid #333; padding-top:15px;">Subclasses (Arquétipos/Juramentos)</div>
                 ${lockMessage}
-                <div class="variations-list" style="${!canPickSubclass ? 'opacity:0.5; pointer-events:none;' : ''}">
+                <div class="variations-list" style="${!canPickSubclass ? 'opacity:0.8;' : ''}"> 
                     ${cls.subclasses.map((sub, idx) => `
                         <div class="variation-card-wrapper">
-                            <div class="variation-header" data-idx="${idx}">
+                            <div class="variation-header" data-idx="${idx}" style="cursor:pointer;">
                                 <div style="display:flex; align-items:center; gap:10px; flex:1;">
                                     <input type="radio" name="class_subclass" value="${idx}" id="sub_${idx}" data-checked="false" ${!canPickSubclass ? 'disabled' : ''}>
                                     <span class="variation-name">${sub.name}</span>
@@ -1099,9 +1101,9 @@ function openClassSelectionModal() {
                     `).join('')}
                 </div>
             `;
-        }
+    }
 
-        detailsContainer.innerHTML = `
+    detailsContainer.innerHTML = `
             <div class="race-detail-header">
                 <div class="race-img-container" onclick="window.openImageLightbox('${imagePath}')"><img src="${imagePath}" class="race-img-display" onerror="this.src='img/dado.png'"></div>
                 <div class="race-title-box">
@@ -1122,36 +1124,43 @@ function openClassSelectionModal() {
             ${subclassesHtml}
         `;
 
-        if (cls.subclasses && cls.subclasses.length > 0 && canPickSubclass) {
-            const allRadios = detailsContainer.querySelectorAll('input[name="class_subclass"]');
-            detailsContainer.querySelectorAll('.variation-header').forEach(header => {
-                header.addEventListener('click', (e) => {
-                    if (e.target.type === 'radio') return;
-                    header.closest('.variation-card-wrapper').classList.toggle('open');
-                });
+    // ALTERAÇÃO 2: Removida a verificação "&& canPickSubclass" para ativar os listeners de clique em qualquer nível
+    if (cls.subclasses && cls.subclasses.length > 0) {
+        const allRadios = detailsContainer.querySelectorAll('input[name="class_subclass"]');
+        
+        detailsContainer.querySelectorAll('.variation-header').forEach(header => {
+            header.addEventListener('click', (e) => {
+                // Se clicar direto no radio (e ele estiver habilitado), não faz o toggle do accordion pelo header
+                if (e.target.type === 'radio') return;
+                
+                // Abre/Fecha o accordion para ler a descrição
+                header.closest('.variation-card-wrapper').classList.toggle('open');
             });
-            allRadios.forEach(radio => {
-                radio.addEventListener('click', (e) => {
-                    const idx = parseInt(radio.value);
-                    const isAlreadyChecked = radio.getAttribute('data-checked') === 'true';
-                    allRadios.forEach(r => r.setAttribute('data-checked', 'false'));
-                    if (isAlreadyChecked) {
-                        radio.checked = false;
-                        radio.setAttribute('data-checked', 'false');
-                        selectedSubclass = null;
-                        btnSelect.textContent = `Selecionar ${cls.name} (Nível ${simulatedLevel})`;
-                    } else {
-                        radio.checked = true;
-                        radio.setAttribute('data-checked', 'true');
-                        selectedSubclass = cls.subclasses[idx];
-                        btnSelect.textContent = `Selecionar ${cls.name} (${selectedSubclass.name})`;
-                        detailsContainer.querySelectorAll('.variation-card-wrapper').forEach(c => c.classList.remove('open'));
-                        radio.closest('.variation-card-wrapper').classList.add('open');
-                    }
-                });
+        });
+
+        // Lógica de seleção (só funciona se o radio não estiver disabled)
+        allRadios.forEach(radio => {
+            radio.addEventListener('click', (e) => {
+                const idx = parseInt(radio.value);
+                const isAlreadyChecked = radio.getAttribute('data-checked') === 'true';
+                allRadios.forEach(r => r.setAttribute('data-checked', 'false'));
+                if (isAlreadyChecked) {
+                    radio.checked = false;
+                    radio.setAttribute('data-checked', 'false');
+                    selectedSubclass = null;
+                    btnSelect.textContent = `Selecionar ${cls.name} (Nível ${simulatedLevel})`;
+                } else {
+                    radio.checked = true;
+                    radio.setAttribute('data-checked', 'true');
+                    selectedSubclass = cls.subclasses[idx];
+                    btnSelect.textContent = `Selecionar ${cls.name} (${selectedSubclass.name})`;
+                    detailsContainer.querySelectorAll('.variation-card-wrapper').forEach(c => c.classList.remove('open'));
+                    radio.closest('.variation-card-wrapper').classList.add('open');
+                }
             });
-        }
+        });
     }
+}
 }
 
 function aplicarClasseNaFicha(cls, subCls) {
