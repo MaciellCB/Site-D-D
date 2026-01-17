@@ -27,7 +27,7 @@
       "alcance": "6m/18m",
       "description": "<p>Pequeno projétil de arremesso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pc</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,1 kg</li></ul>",
       "quantity": 1,
-      "expanded": false
+      "expanded": true
     },
     {
       "id": 1768636566297,
@@ -142,9 +142,242 @@
       ],
       "description": "<p>Lança leve para arremesso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 4 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
       "quantity": 4
+    },
+    {
+      "id": 1768637466800,
+      "name": "Maça",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d6",
+      "damageType": "Contundente",
+      "proficiency": "Armas Simples",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Uma mao",
+      "caracteristicas": [
+        "Pesada",
+        "Leve"
+      ],
+      "description": "<p>Arma contundente simples.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768637481734,
+      "name": "Armadura de Couro",
+      "category": "Armaduras",
+      "subcategory": "Armaduras",
+      "type": "Proteção",
+      "defense": "11",
+      "proficiency": "Leve",
+      "tipoItem": "Armadura",
+      "description": "<p>Peitoral e ombro de couro rígido.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>",
+      "quantity": 1,
+      "equip": false
+    },
+    {
+      "id": 1768637403663,
+      "name": "Besta Leve",
+      "category": "Armas",
+      "subcategory": "A distancia",
+      "type": "Arma",
+      "damage": "1d8",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "A Distancia",
+      "empunhadura": "Duas Maos",
+      "caracteristicas": [
+        "Munição",
+        "Recarga",
+        "Duas Mãos"
+      ],
+      "alcance": "24m/96m",
+      "description": "<p>Besta simples, fácil de usar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 7 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768637436037,
+      "name": "Virotes (x20)",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 20
+    },
+    {
+      "id": 1768637447965,
+      "name": "Kit de Sacerdote",
+      "category": "Conjuntos",
+      "subcategory": "Kits",
+      "type": "Geral",
+      "description": "<p>Inclui uma mochila, um cobertor, dez velas, uma caixa de isqueiro, uma caixa de esmolas, dois blocos de incenso, um turíbulo e vestes cerimoniais.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 19 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 6 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768637418786,
+      "name": "Escudo",
+      "category": "Armaduras",
+      "subcategory": "Escudos",
+      "type": "Proteção",
+      "defense": "+2",
+      "proficiency": "Escudo",
+      "tipoItem": "Escudo",
+      "description": "<p>Pode ser de madeira ou metal.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>",
+      "quantity": 1,
+      "equip": false
+    },
+    {
+      "id": 1768637448906,
+      "name": "Símbolo Sagrado",
+      "category": "Utensílios",
+      "subcategory": "Focos Mágicos",
+      "type": "Geral",
+      "description": "<p>Um símbolo que representa uma divindade ou força sagrada, usado para canalizar magias divinas. Pode ser usado visivelmente ou usado como amuleto, escudo ou objeto empunhado.</p><p><em>Exemplos:</em> amuleto, emblema em armadura ou escudo, relicário.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768637502335,
+      "name": "Martelo de Guerra",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d8",
+      "damage2Hands": "1d10",
+      "useTwoHands": false,
+      "damageType": "Contundente",
+      "proficiency": "Armas Marciais",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Versátil",
+      "caracteristicas": [],
+      "description": "<p>Martelo versátil de combate.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768637433572,
+      "name": "Cota de Malha",
+      "category": "Armaduras",
+      "subcategory": "Armaduras",
+      "type": "Proteção",
+      "defense": "16",
+      "proficiency": "Pesada",
+      "tipoItem": "Armadura",
+      "minStrength": "13",
+      "disadvantageSkill": "Furtividade",
+      "description": "<p>Anéis de metal entrelaçados.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 75 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 25 kg</li></ul>",
+      "quantity": 1,
+      "equip": true
+    },
+    {
+      "id": 1768637514860,
+      "name": "Besta Leve",
+      "category": "Armas",
+      "subcategory": "A distancia",
+      "type": "Arma",
+      "damage": "1d8",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "A Distancia",
+      "empunhadura": "Duas Maos",
+      "caracteristicas": [
+        "Munição",
+        "Recarga",
+        "Duas Mãos"
+      ],
+      "alcance": "24m/96m",
+      "description": "<p>Besta simples, fácil de usar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 7 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768637502036,
+      "name": "Virotes (x20)",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 20
+    },
+    {
+      "id": 1768637478712,
+      "name": "Kit de Sacerdote",
+      "category": "Conjuntos",
+      "subcategory": "Kits",
+      "type": "Geral",
+      "description": "<p>Inclui uma mochila, um cobertor, dez velas, uma caixa de isqueiro, uma caixa de esmolas, dois blocos de incenso, um turíbulo e vestes cerimoniais.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 19 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 6 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768637426607,
+      "name": "Escudo",
+      "category": "Armaduras",
+      "subcategory": "Escudos",
+      "type": "Proteção",
+      "defense": "+2",
+      "proficiency": "Escudo",
+      "tipoItem": "Escudo",
+      "description": "<p>Pode ser de madeira ou metal.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>",
+      "quantity": 1,
+      "equip": false
+    },
+    {
+      "id": 1768637462403,
+      "name": "Símbolo Sagrado",
+      "category": "Utensílios",
+      "subcategory": "Focos Mágicos",
+      "type": "Geral",
+      "description": "<p>Um símbolo que representa uma divindade ou força sagrada, usado para canalizar magias divinas. Pode ser usado visivelmente ou usado como amuleto, escudo ou objeto empunhado.</p><p><em>Exemplos:</em> amuleto, emblema em armadura ou escudo, relicário.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
     }
   ],
   "abilities": [
+    {
+      "id": 1768637457378,
+      "title": "[Nível 1] Ação de Solidariedade",
+      "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Você ganha proficiência com armaduras pesadas.</p><p>Sempre que você usar a ação <strong>Ajudar</strong> para auxiliar a jogada de ataque de um aliado, você pode realizar um ataque com arma como uma <strong>Ação Bônus</strong>.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Usos:</strong> Igual ao seu Modificador de Sabedoria (mínimo 1). Recupera em Descanso Longo.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Subclasse",
+      "class": "Clérigo",
+      "subclass": "Domínio da Solidariedade"
+    },
+    {
+      "id": 1768637432814,
+      "title": "[Nível 1] Feitiços de Solidariedade",
+      "description": "<p>Magias de Domínio (sempre preparadas):</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 1º:</strong> Abençoar, Raio Guia</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 3º:</strong> Auxílio, Vínculo de Proteção</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 5º:</strong> Farol da Esperança, Manto do Cruzado</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 7º:</strong> Aura da Vida, Guardiã da Fé</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 9º:</strong> Círculo de Poder, Cura em Massa</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Subclasse",
+      "class": "Clérigo",
+      "subclass": "Domínio da Solidariedade"
+    },
+    {
+      "id": 1768636937929,
+      "title": "[Nível 1] Sacerdote do Zelo",
+      "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Você ganha proficiência com armas marciais e armaduras pesadas.</p><p>Quando você usa a ação Atacar, você pode fazer um ataque com arma como uma <strong>Ação Bônus</strong>.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Usos:</strong> Igual ao seu Modificador de Sabedoria (mínimo 1). Recupera em Descanso Longo.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Subclasse",
+      "class": "Clérigo",
+      "subclass": "Domínio do Zelo"
+    },
+    {
+      "id": 1768636894743,
+      "title": "[Nível 1] Feitiços de Zelo",
+      "description": "<p>Magias de Domínio (sempre preparadas):</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 1º:</strong> Golpe Incandescente, Golpe Trovejante</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 3º:</strong> Arma Mágica, Estilhaçar</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 5º:</strong> Acelerar (Haste), Bola de Fogo</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 7º:</strong> Escudo de Fogo, Liberdade de Movimento</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 9º:</strong> Onda Destrutiva, Golpe de Chamas</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Subclasse",
+      "class": "Clérigo",
+      "subclass": "Domínio do Zelo"
+    },
+    {
+      "id": 1768636956380,
+      "title": "[Nível 1] Domínio Divino (Subclasse)",
+      "description": "<p>Você escolhe um domínio relacionado à sua divindade. Sua escolha concede feitiços de domínio e outras características no 1º nível, e novamente no 2º, 6º, 8º e 17º nível.</p>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Clérigo",
+      "subclass": ""
+    },
     {
       "id": 1768636632393,
       "title": "Chamador do Vento",
@@ -515,11 +748,11 @@
   },
   "niveisClasses": {
     "artifice": 0,
-    "barbaro": 1,
+    "barbaro": 0,
     "bardo": 0,
     "blood hunter": 0,
     "bruxo": 0,
-    "clerigo": 0,
+    "clerigo": 1,
     "monge": 0,
     "druida": 0,
     "feiticeiro": 0,
@@ -686,10 +919,10 @@
     "pl": 0,
     "pd": 4
   },
-  "hitDie": "d12",
+  "hitDie": "d8",
   "subclasses": {
     "bruxo": "O Morto-Vivo",
-    "clerigo": "Domínio do Zelo",
+    "clerigo": "Domínio da Solidariedade",
     "guerreiro": "Arqueiro Arcano"
   },
   "salvaguardas": {

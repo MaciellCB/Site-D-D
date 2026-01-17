@@ -988,6 +988,11 @@ function openRaceSelectionModal() {
    ============================================================= */
 let currentClassLevelPreview = 0;
 
+/* =============================================================
+   CORREÇÃO: FORÇAR SELEÇÃO EXPLÍCITA NO NÍVEL DA SUBCLASSE
+   (Evita auto-seleção de subclasses "fantasmas" antigas)
+============================================================= */
+
 function openClassSelectionModal() {
     if (CLASSES_DB.length === 0) {
         carregarDadosHeader().then(() => {
@@ -1024,7 +1029,7 @@ function openClassSelectionModal() {
     if (typeof checkScrollLock === 'function') checkScrollLock();
 
     let selectedClass = null;
-    let selectedSubclass = null;
+    let selectedSubclass = null; // Reinicia sempre que abre o modal
     const btnSelect = overlay.querySelector('#btn-select-class');
     const detailsContainer = overlay.querySelector('#class-details-content');
 
@@ -1033,11 +1038,14 @@ function openClassSelectionModal() {
     const items = overlay.querySelectorAll('.race-list-item');
     items.forEach(item => {
         item.onclick = () => {
+            // --- CORREÇÃO IMPORTANTE: LIMPA A SELEÇÃO ANTERIOR AO TROCAR DE CLASSE ---
+            selectedSubclass = null; 
+            
             items.forEach(i => i.classList.remove('selected'));
             item.classList.add('selected');
             const className = item.getAttribute('data-name');
             selectedClass = CLASSES_DB.find(c => c.name === className);
-            selectedSubclass = null;
+            
             const classKey = selectedClass.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
             const currentLevel = state.niveisClasses && state.niveisClasses[classKey] ? parseInt(state.niveisClasses[classKey]) : 0;
             currentClassLevelPreview = currentLevel + 1;
@@ -1047,14 +1055,19 @@ function openClassSelectionModal() {
 
     btnSelect.onclick = () => {
         if (selectedClass) {
-            aplicarClasseNaFicha(selectedClass, selectedSubclass);
-            overlay.remove();
-            checkScrollLock();
+            // Passa a subclasse explicitamente selecionada (ou null)
+            const sucesso = aplicarClasseNaFicha(selectedClass, selectedSubclass);
+            if (sucesso) {
+                overlay.remove();
+                checkScrollLock();
+            }
         }
     };
 
    function renderClassDetails(cls, simulatedLevel) {
     if (!cls) return;
+    
+    // Reseta botão para estado inicial
     btnSelect.removeAttribute('disabled');
     btnSelect.textContent = `Selecionar ${cls.name} (Nível ${simulatedLevel})`;
     btnSelect.style.background = '#9c27b0';
@@ -1075,11 +1088,24 @@ function openClassSelectionModal() {
     let subclassesHtml = '';
     if (cls.subclasses && cls.subclasses.length > 0) {
         let lockMessage = '';
-        // Mantive a mensagem de aviso visual, mas removi o bloqueio físico
-        if (!canPickSubclass) lockMessage = `<div style="background:#330000; border:1px solid #d32f2f; color:#ff9999; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">🔒 Subclasses disponíveis para escolha no nível ${subclassReqLevel} (Visualização Liberada).</div>`;
-        else if (!selectedSubclass && canPickSubclass) lockMessage = `<div style="background:#332a00; border:1px solid #ffeb3b; color:#ffeb3b; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">⚠ Você atingiu o nível ${subclassReqLevel}! Selecione uma subclasse abaixo.</div>`;
+        
+        // Verifica se JÁ POSSUI subclasse salva para não pedir de novo SE O NÍVEL FOR SUPERIOR
+        const classKey = cls.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const hasSaved = state.subclasses && state.subclasses[classKey];
+        const isExactSelectionLevel = simulatedLevel === subclassReqLevel;
 
-        // ALTERAÇÃO 1: Removido 'pointer-events:none' para permitir o clique
+        if (!canPickSubclass) {
+            lockMessage = `<div style="background:#330000; border:1px solid #d32f2f; color:#ff9999; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">🔒 Subclasses disponíveis para escolha no nível ${subclassReqLevel}.</div>`;
+        } 
+        else if (isExactSelectionLevel) {
+             // Se for o nível exato, mostra mensagem amarela pedindo seleção
+             lockMessage = `<div style="background:#332a00; border:1px solid #ffeb3b; color:#ffeb3b; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">⚠ Nível ${subclassReqLevel}: Selecione sua Subclasse AGORA.</div>`;
+        }
+        else if (hasSaved) {
+             // Se for nível maior e já tem, mostra o que tem
+             lockMessage = `<div style="background:#1a3300; border:1px solid #4caf50; color:#a5d6a7; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">✔ Subclasse Atual: <strong>${hasSaved}</strong></div>`;
+        }
+
         subclassesHtml = `
                 <div class="race-traits-title" style="margin-top:25px; color:#ffeb3b; border-top:1px solid #333; padding-top:15px;">Subclasses (Arquétipos/Juramentos)</div>
                 ${lockMessage}
@@ -1124,21 +1150,18 @@ function openClassSelectionModal() {
             ${subclassesHtml}
         `;
 
-    // ALTERAÇÃO 2: Removida a verificação "&& canPickSubclass" para ativar os listeners de clique em qualquer nível
     if (cls.subclasses && cls.subclasses.length > 0) {
         const allRadios = detailsContainer.querySelectorAll('input[name="class_subclass"]');
         
+        // Accordion
         detailsContainer.querySelectorAll('.variation-header').forEach(header => {
             header.addEventListener('click', (e) => {
-                // Se clicar direto no radio (e ele estiver habilitado), não faz o toggle do accordion pelo header
                 if (e.target.type === 'radio') return;
-                
-                // Abre/Fecha o accordion para ler a descrição
                 header.closest('.variation-card-wrapper').classList.toggle('open');
             });
         });
 
-        // Lógica de seleção (só funciona se o radio não estiver disabled)
+        // Seleção
         allRadios.forEach(radio => {
             radio.addEventListener('click', (e) => {
                 const idx = parseInt(radio.value);
@@ -1147,12 +1170,12 @@ function openClassSelectionModal() {
                 if (isAlreadyChecked) {
                     radio.checked = false;
                     radio.setAttribute('data-checked', 'false');
-                    selectedSubclass = null;
+                    selectedSubclass = null; // LIMPA SE DESMARCAR
                     btnSelect.textContent = `Selecionar ${cls.name} (Nível ${simulatedLevel})`;
                 } else {
                     radio.checked = true;
                     radio.setAttribute('data-checked', 'true');
-                    selectedSubclass = cls.subclasses[idx];
+                    selectedSubclass = cls.subclasses[idx]; // SETA A NOVA
                     btnSelect.textContent = `Selecionar ${cls.name} (${selectedSubclass.name})`;
                     detailsContainer.querySelectorAll('.variation-card-wrapper').forEach(c => c.classList.remove('open'));
                     radio.closest('.variation-card-wrapper').classList.add('open');
@@ -1163,13 +1186,106 @@ function openClassSelectionModal() {
 }
 }
 
+
 /* =============================================================
-   CORREÇÃO FINAL: SALVAGUARDAS DENTRO DE PERÍCIAS
+   SISTEMA DE NOTIFICAÇÃO PERSONALIZADA (TOAST)
+   Adicione isso em qualquer lugar do seu arquivo (sugiro na seção UTILS)
+============================================================= */
+
+function exibirAvisoTemporario(mensagem) {
+    // 1. Remove aviso anterior se houver (para não empilhar)
+    const existente = document.querySelector('.custom-toast-warning');
+    if (existente) existente.remove();
+
+    // 2. Cria o CSS dinamicamente (se ainda não existir)
+    if (!document.getElementById('toast-style')) {
+        const style = document.createElement('style');
+        style.id = 'toast-style';
+        style.innerHTML = `
+            .custom-toast-warning {
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: #1a1a1a;
+                color: #fff;
+                border: 1px solid #444;
+                border-radius: 6px;
+                padding: 15px 20px;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+                z-index: 20000;
+                min-width: 300px;
+                max-width: 90%;
+                text-align: center;
+                font-family: sans-serif;
+                font-size: 14px;
+                overflow: hidden;
+                animation: slideDown 0.3s ease-out;
+            }
+            .toast-progress {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 4px;
+                background-color: #9c27b0; /* Roxo */
+                width: 100%;
+                transition: width 5s linear; /* 5 segundos */
+            }
+            .toast-content {
+                margin-top: 5px;
+                line-height: 1.4;
+            }
+            @keyframes slideDown {
+                from { top: -100px; opacity: 0; }
+                to { top: 20px; opacity: 1; }
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // 3. Cria o Elemento HTML
+    const toast = document.createElement('div');
+    toast.className = 'custom-toast-warning';
+    toast.innerHTML = `
+        <div class="toast-progress"></div>
+        <div class="toast-content">
+            <strong style="color:#e0aaff; display:block; margin-bottom:4px;">ATENÇÃO</strong>
+            ${mensagem.replace(/\n/g, '<br>')}
+        </div>
+    `;
+
+    document.body.appendChild(toast);
+
+    // 4. Inicia a animação da barra
+    // Pequeno delay para garantir que o CSS renderizou a largura 100% antes de ir a 0
+    setTimeout(() => {
+        const barra = toast.querySelector('.toast-progress');
+        if(barra) barra.style.width = '0%';
+    }, 50);
+
+    // 5. Remove após 5 segundos
+    setTimeout(() => {
+        if (toast.parentElement) {
+            toast.style.animation = 'fadeOut 0.5s ease-out';
+            setTimeout(() => {
+                if (toast.parentElement) toast.remove();
+            }, 450);
+        }
+    }, 5000);
+}
+
+
+/* =============================================================
+   CORREÇÃO FINAL: VALIDAR CLASSE COM AVISO BONITO
    Substitua a função aplicarClasseNaFicha
 ============================================================= */
 
 function aplicarClasseNaFicha(cls, subCls) {
-    if (typeof state === 'undefined') return;
+    if (typeof state === 'undefined') return false;
 
     const classKey = cls.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     if (!state.niveisClasses) state.niveisClasses = {};
@@ -1184,21 +1300,38 @@ function aplicarClasseNaFicha(cls, subCls) {
     const isMulticlassing = (totalCharacterLevel > 0 && currentLevelInClass === 0);
     const requiredLevel = cls.subclass_level || 3;
 
+    // --- VALIDAÇÕES COM O NOVO AVISO ---
+    
+    // 1. Tenta pegar subclasse antes da hora
     if (subCls && newLevelInClass < requiredLevel) {
-        alert(`Nível insuficiente (${newLevelInClass}) para subclasse ${subCls.name}. Requer nível ${requiredLevel}.`);
-        return;
-    }
-    const hasSavedSubclass = state.subclasses && state.subclasses[classKey];
-    if (newLevelInClass >= requiredLevel && !subCls && !hasSavedSubclass) {
-        alert(`ATENÇÃO: Você atingiu o nível ${requiredLevel}! Você DEVE selecionar uma Subclasse para prosseguir.`);
-        return;
+        exibirAvisoTemporario(`Nível insuficiente (${newLevelInClass}) para subclasse ${subCls.name}.<br>Requer nível ${requiredLevel}.`);
+        return false; 
     }
 
-    // Atualiza Nível e Dado de Vida (se for lvl 1)
+    // 2. OBRIGATORIEDADE NO NÍVEL EXATO
+    // Se você está indo para o nível exato (ex: Nível 1 de Bruxo), 
+    // IGNORAMOS se tem algo salvo (hasSavedSubclass) e EXIGIMOS uma seleção explicita (subCls).
+    if (newLevelInClass === requiredLevel) {
+        if (!subCls) {
+            exibirAvisoTemporario(`Você atingiu o nível ${requiredLevel} de ${cls.name}!<br>Você deve selecionar uma Subclasse na lista para continuar.`);
+            return false; // BLOQUEIA E NÃO FECHA O MODAL
+        }
+    }
+    // Para níveis posteriores, se não selecionou nada novo, verifica se tem algo salvo
+    else if (newLevelInClass > requiredLevel && !subCls) {
+        const hasSaved = state.subclasses && state.subclasses[classKey];
+        if (!hasSaved) {
+             exibirAvisoTemporario(`Você está no nível ${newLevelInClass}, mas não tem nenhuma subclasse salva.<br>Selecione uma para prosseguir.`);
+             return false;
+        }
+    }
+
+    // --- APLICAÇÃO (Se passou dos avisos) ---
+
     state.niveisClasses[classKey] = newLevelInClass;
     if (isFirstLevelCharacter) state.hitDie = `d${cls.hit_die}`;
 
-    // Adiciona Features da Classe
+    // Features Classe Base
     if (cls.features) {
         cls.features.forEach(feat => {
             const fLvl = feat.level || 1;
@@ -1206,10 +1339,11 @@ function aplicarClasseNaFicha(cls, subCls) {
         });
     }
 
-    // Adiciona Features da Subclasse
+    // Features Subclasse
     if (subCls) {
         if (!state.subclasses) state.subclasses = {};
         state.subclasses[classKey] = subCls.name;
+        
         if (subCls.features) {
             subCls.features.forEach(feat => {
                 const fLvl = feat.level || requiredLevel;
@@ -1230,30 +1364,17 @@ function aplicarClasseNaFicha(cls, subCls) {
 
     // --- LÓGICA DO NÍVEL 1 ---
     if (isFirstLevelCharacter) {
-        
-        // 1. CONFIGURA AS SALVAGUARDAS (CORREÇÃO AQUI)
-        // Agora trata como uma perícia normal dentro de state.pericias
+        // Salvaguardas
         if (cls.saving_throws) {
             if (!state.pericias) state.pericias = {};
-            
             cls.saving_throws.forEach(attrName => {
-                // Monta a chave exata: "Salvaguarda (Constituição)"
                 const key = `Salvaguarda (${attrName})`;
-                
-                if (state.pericias[key]) {
-                    state.pericias[key].treinado = true;
-                } else {
-                    // Caso a chave ainda não exista por algum motivo, cria
-                    state.pericias[key] = { 
-                        atributo: attrName.substring(0,3).toUpperCase(), // Tenta inferir (ex: FOR, DEX) ou ajusta depois
-                        treinado: true, 
-                        outros: 0 
-                    };
-                }
+                if (state.pericias[key]) state.pericias[key].treinado = true;
+                else state.pericias[key] = { atributo: attrName.substring(0,3).toUpperCase(), treinado: true, outros: 0 };
             });
         }
 
-        // 2. Perícias Normais
+        // Perícias
         if (cls.skills_list && cls.skills_count > 0) {
             let lista = cls.skills_list;
             let titulo = `Perícias de ${cls.name}`;
@@ -1265,49 +1386,41 @@ function aplicarClasseNaFicha(cls, subCls) {
             tasks.push((next) => openSkillSelector(cls.skills_count, titulo, lista, next));
         }
 
-        // 3. Equipamento Inicial
+        // Equipamento
         if (cls.equipment && cls.equipment.length > 0) {
             tasks.push((next) => processarEquipamentoInicial(cls.equipment, next));
         }
 
-        // 4. Proficiências (Armas, Armaduras, Ferramentas)
+        // Proficiências
         addProficiencias(cls.proficiencies);
 
-        // 5. Escolhas Específicas de Ferramentas
+        // Escolhas de Ferramentas
         if (cls.proficiencies && cls.proficiencies.tools) {
             cls.proficiencies.tools.forEach(toolStr => {
                 const tLower = toolStr.toLowerCase();
-                
                 if (tLower.includes("três instrumentos musicais") || tLower.includes("tres instrumentos musicais")) {
-                    tasks.push((next) => {
-                        openGenericSelector("Escolha 3 Instrumentos Musicais", 3, LISTA_INSTRUMENTOS, (selected) => {
-                            if (!state.proficienciasList) state.proficienciasList = [];
-                            selected.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
-                            next();
-                        });
-                    });
+                    tasks.push((next) => openGenericSelector("Escolha 3 Instrumentos Musicais", 3, LISTA_INSTRUMENTOS, (selected) => {
+                        if (!state.proficienciasList) state.proficienciasList = [];
+                        selected.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
+                        next();
+                    }));
                 }
                 else if (tLower.includes("ferramenta de artesão") && (tLower.includes("uma") || tLower.includes("qualquer") || tLower.includes("escolha") || tLower.includes("tipo de"))) {
-                    tasks.push((next) => {
-                        openGenericSelector("Escolha 1 Ferramenta de Artesão", 1, LISTA_FERRAMENTAS_ARTESAO, (selected) => {
-                            if (!state.proficienciasList) state.proficienciasList = [];
-                            selected.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
-                            next();
-                        });
-                    });
+                    tasks.push((next) => openGenericSelector("Escolha 1 Ferramenta de Artesão", 1, LISTA_FERRAMENTAS_ARTESAO, (selected) => {
+                        if (!state.proficienciasList) state.proficienciasList = [];
+                        selected.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
+                        next();
+                    }));
                 }
                 else if (tLower.includes("um instrumento musical") || (tLower.includes("instrumento musical") && tLower.includes("escolha") && !tLower.includes("três"))) {
-                    tasks.push((next) => {
-                        openGenericSelector("Escolha 1 Instrumento Musical", 1, LISTA_INSTRUMENTOS, (selected) => {
-                            if (!state.proficienciasList) state.proficienciasList = [];
-                            selected.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
-                            next();
-                        });
-                    });
+                    tasks.push((next) => openGenericSelector("Escolha 1 Instrumento Musical", 1, LISTA_INSTRUMENTOS, (selected) => {
+                        if (!state.proficienciasList) state.proficienciasList = [];
+                        selected.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
+                        next();
+                    }));
                 }
             });
         }
-
     } 
     // --- LÓGICA DE MULTICLASSE ---
     else if (isMulticlassing) {
@@ -1316,13 +1429,11 @@ function aplicarClasseNaFicha(cls, subCls) {
         addProficiencias(profsMC);
 
         if (classKey === 'bardo') {
-            tasks.push((next) => {
-                openGenericSelector("Multiclasse Bardo: 1 Instrumento", 1, LISTA_INSTRUMENTOS, (selected) => {
-                    if (!state.proficienciasList) state.proficienciasList = [];
-                    selected.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
-                    next();
-                });
-            });
+            tasks.push((next) => openGenericSelector("Multiclasse Bardo: 1 Instrumento", 1, LISTA_INSTRUMENTOS, (selected) => {
+                if (!state.proficienciasList) state.proficienciasList = [];
+                selected.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
+                next();
+            }));
         }
 
         if (['bardo', 'ladino', 'patrulheiro', 'ranger'].includes(classKey)) {
@@ -1336,7 +1447,20 @@ function aplicarClasseNaFicha(cls, subCls) {
     atualizarTextoClassesHeader();
     if (typeof saveStateToServer === 'function') saveStateToServer();
     window.dispatchEvent(new CustomEvent('sheet-updated'));
+
+    return true; // SUCESSO!
 }
+
+
+
+
+
+/* =============================================================
+   CORREÇÃO FINAL: SALVAGUARDAS DENTRO DE PERÍCIAS
+   Substitua a função aplicarClasseNaFicha
+============================================================= */
+
+
 
 function executarFila(tasks) {
     if (tasks.length === 0) {
