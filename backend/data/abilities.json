@@ -2563,7 +2563,7 @@
     "class": "Clérigo",
     "subclass": "Domínio da Força",
     "name": "(Força, 1º nível) Acólito da Força",
-    "description": "<p>Você ganha proficiência com armaduras pesadas. Além disso, você escolhe uma das seguintes perícias para ganhar proficiência: Lidar com Animais, Atletismo, Natureza ou Sobrevivência. Você também aprende um truque de druida à sua escolha.</p>"
+    "description": "<p>Você ganha proficiência com armaduras pesadas. Além disso, você escolhe uma das seguintes perícias para ganhar proficiência: Lidar com animais, Atletismo, Natureza ou Sobrevivência. Você também aprende um truque de druida à sua escolha.</p>"
   },
   {
     "id": "cle_for_2_proeza",
@@ -3307,7 +3307,7 @@
     "class": "Clérigo",
     "subclass": "Domínio da Natureza",
     "name": "(Natureza, 1º nível) Acólito da Natureza",
-    "description": "<p>Você ganha proficiência com armaduras pesadas. Você ganha uma perícia (Lidar com Animais, Natureza ou Sobrevivência) e aprende um truque de druida.</p>"
+    "description": "<p>Você ganha proficiência com armaduras pesadas. Você ganha uma perícia (Lidar com animais, Natureza ou Sobrevivência) e aprende um truque de druida.</p>"
   },
   {
     "id": "cle_nat_2_encantar",
@@ -8891,7 +8891,7 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Amigo dos Bichos (Gnomo)",
-    "description": "<p>Você ganha proficiência em Lidar com Animais (se já tiver, dobre o bônus). Você pode conjurar <em>Falar com Animais</em> à vontade e <em>Amizade Animal</em> uma vez por descanso longo.</p>"
+    "description": "<p>Você ganha proficiência em Lidar com animais (se já tiver, dobre o bônus). Você pode conjurar <em>Falar com Animais</em> à vontade e <em>Amizade Animal</em> uma vez por descanso longo.</p>"
   },
   {
     "id": "feat_ua_amigo",
@@ -9107,6 +9107,6 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Tratador Animal",
-    "description": "<p>+1 em Sabedoria. Você ganha proficiência em Lidar com Animais (se já tiver, dobre o bônus). Você pode usar uma ação bônus para comandar uma besta amigável a realizar uma ação específica.</p>"
+    "description": "<p>+1 em Sabedoria. Você ganha proficiência em Lidar com animais (se já tiver, dobre o bônus). Você pode usar uma ação bônus para comandar uma besta amigável a realizar uma ação específica.</p>"
   }
 ]

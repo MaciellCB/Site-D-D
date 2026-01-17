@@ -52,7 +52,7 @@ const LISTA_FERRAMENTAS_ARTESAO = [
     "Ferramentas de Ladrão", "Ferramentas de Navegador", "Ferramentas de Oleiro",
     "Ferramentas de Pedreiro", "Ferramentas de Sapateiro", "Ferramentas de Tecelão",
     "Ferramentas de Vidreiro", "Suprimentos de Cervejeiro", "Suprimentos de Calígrafo",
-    "Suprimentos de Pintor", "Utensílios de Cozinheiro"
+    "Suprimentos de Pintor", "Utensílios de Cozinheiro", "Ferramentas de Funileiro","Ferramentas de Navegador", "Ferramentas de Funileiro"
 ];
 
 const LISTA_JOGOS = ['Baralho', 'Dados', 'Xadrez do Dragão'];
@@ -1163,6 +1163,11 @@ function openClassSelectionModal() {
 }
 }
 
+/* =============================================================
+   CORREÇÃO FINAL: SALVAGUARDAS DENTRO DE PERÍCIAS
+   Substitua a função aplicarClasseNaFicha
+============================================================= */
+
 function aplicarClasseNaFicha(cls, subCls) {
     if (typeof state === 'undefined') return;
 
@@ -1173,6 +1178,8 @@ function aplicarClasseNaFicha(cls, subCls) {
     const newLevelInClass = currentLevelInClass + 1;
     let totalCharacterLevel = 0;
     Object.values(state.niveisClasses).forEach(lvl => totalCharacterLevel += parseInt(lvl));
+    
+    // Verifica se é o nível 1 global do personagem
     const isFirstLevelCharacter = (totalCharacterLevel === 0);
     const isMulticlassing = (totalCharacterLevel > 0 && currentLevelInClass === 0);
     const requiredLevel = cls.subclass_level || 3;
@@ -1187,9 +1194,11 @@ function aplicarClasseNaFicha(cls, subCls) {
         return;
     }
 
+    // Atualiza Nível e Dado de Vida (se for lvl 1)
     state.niveisClasses[classKey] = newLevelInClass;
     if (isFirstLevelCharacter) state.hitDie = `d${cls.hit_die}`;
 
+    // Adiciona Features da Classe
     if (cls.features) {
         cls.features.forEach(feat => {
             const fLvl = feat.level || 1;
@@ -1197,6 +1206,7 @@ function aplicarClasseNaFicha(cls, subCls) {
         });
     }
 
+    // Adiciona Features da Subclasse
     if (subCls) {
         if (!state.subclasses) state.subclasses = {};
         state.subclasses[classKey] = subCls.name;
@@ -1218,9 +1228,32 @@ function aplicarClasseNaFicha(cls, subCls) {
 
     const tasks = [];
 
+    // --- LÓGICA DO NÍVEL 1 ---
     if (isFirstLevelCharacter) {
-        if (cls.saving_throws && !state.proficiencias) state.proficiencias = {};
+        
+        // 1. CONFIGURA AS SALVAGUARDAS (CORREÇÃO AQUI)
+        // Agora trata como uma perícia normal dentro de state.pericias
+        if (cls.saving_throws) {
+            if (!state.pericias) state.pericias = {};
+            
+            cls.saving_throws.forEach(attrName => {
+                // Monta a chave exata: "Salvaguarda (Constituição)"
+                const key = `Salvaguarda (${attrName})`;
+                
+                if (state.pericias[key]) {
+                    state.pericias[key].treinado = true;
+                } else {
+                    // Caso a chave ainda não exista por algum motivo, cria
+                    state.pericias[key] = { 
+                        atributo: attrName.substring(0,3).toUpperCase(), // Tenta inferir (ex: FOR, DEX) ou ajusta depois
+                        treinado: true, 
+                        outros: 0 
+                    };
+                }
+            });
+        }
 
+        // 2. Perícias Normais
         if (cls.skills_list && cls.skills_count > 0) {
             let lista = cls.skills_list;
             let titulo = `Perícias de ${cls.name}`;
@@ -1232,15 +1265,19 @@ function aplicarClasseNaFicha(cls, subCls) {
             tasks.push((next) => openSkillSelector(cls.skills_count, titulo, lista, next));
         }
 
+        // 3. Equipamento Inicial
         if (cls.equipment && cls.equipment.length > 0) {
             tasks.push((next) => processarEquipamentoInicial(cls.equipment, next));
         }
 
+        // 4. Proficiências (Armas, Armaduras, Ferramentas)
         addProficiencias(cls.proficiencies);
 
+        // 5. Escolhas Específicas de Ferramentas
         if (cls.proficiencies && cls.proficiencies.tools) {
             cls.proficiencies.tools.forEach(toolStr => {
                 const tLower = toolStr.toLowerCase();
+                
                 if (tLower.includes("três instrumentos musicais") || tLower.includes("tres instrumentos musicais")) {
                     tasks.push((next) => {
                         openGenericSelector("Escolha 3 Instrumentos Musicais", 3, LISTA_INSTRUMENTOS, (selected) => {
@@ -1250,7 +1287,7 @@ function aplicarClasseNaFicha(cls, subCls) {
                         });
                     });
                 }
-                else if (tLower.includes("ferramenta de artesão") && (tLower.includes("uma") || tLower.includes("qualquer") || tLower.includes("escolha"))) {
+                else if (tLower.includes("ferramenta de artesão") && (tLower.includes("uma") || tLower.includes("qualquer") || tLower.includes("escolha") || tLower.includes("tipo de"))) {
                     tasks.push((next) => {
                         openGenericSelector("Escolha 1 Ferramenta de Artesão", 1, LISTA_FERRAMENTAS_ARTESAO, (selected) => {
                             if (!state.proficienciasList) state.proficienciasList = [];
@@ -1271,7 +1308,9 @@ function aplicarClasseNaFicha(cls, subCls) {
             });
         }
 
-    } else if (isMulticlassing) {
+    } 
+    // --- LÓGICA DE MULTICLASSE ---
+    else if (isMulticlassing) {
         let profsMC = { ...cls.proficiencies };
         if (profsMC.armor) profsMC.armor = profsMC.armor.filter(a => !a.toLowerCase().includes('pesada'));
         addProficiencias(profsMC);
@@ -1316,15 +1355,40 @@ function executarFila(tasks) {
 }
 
 // --- UTILS ---
+/* =============================================================
+   CORREÇÃO: FILTRO DE PROFICIÊNCIAS GENÉRICAS
+   Substitua a função addProficiencias (perto do final do código)
+============================================================= */
+
 function addProficiencias(profObj) {
     if (!profObj) return;
     if (!state.proficienciasList) state.proficienciasList = [];
-    const pushUnique = (arr) => { if (arr) arr.forEach(item => { if (!state.proficienciasList.includes(item)) state.proficienciasList.push(item); }); };
+
+    const pushUnique = (arr, isToolList = false) => { 
+        if (arr) arr.forEach(item => { 
+            
+            // LÓGICA DE FILTRO:
+            // Se for lista de ferramentas, verificamos se é um texto de "escolha"
+            // para não adicionar o texto explicativo na ficha como se fosse uma pericia.
+            if (isToolList) {
+                const tLower = item.toLowerCase();
+                // Palavras-chave que indicam que isso não é uma ferramenta real, mas uma instrução
+                if (tLower.includes("escolha") || tLower.includes("qualquer") || tLower.includes("tipo de") || tLower.includes("um instrumento")) {
+                    return; // Pula este item, não adiciona na ficha
+                }
+            }
+
+            if (!state.proficienciasList.includes(item)) {
+                state.proficienciasList.push(item); 
+            }
+        }); 
+    };
+
     pushUnique(profObj.armor);
     pushUnique(profObj.weapons);
-    pushUnique(profObj.tools);
+    // Passamos 'true' para indicar que esta é a lista de ferramentas e deve ser filtrada
+    pushUnique(profObj.tools, true); 
 }
-
 function addFeatureToState(feat, category, clsName, subName) {
     if (!state.abilities) state.abilities = [];
     const exists = state.abilities.find(a => a.title === feat.name);
@@ -1392,19 +1456,6 @@ function processarListaEquipamentos(lista, index, callbackFinal) {
     processarEscolhaComplexa(itemStr, nextStep);
 }
 
-// 3. Parser de String Complexa
-function processarEscolhaComplexa(choice, callbackNext) {
-    let cleanChoice = choice.replace(/\([abc]\)/g, "").trim();
-    cleanChoice = cleanChoice.replace(/\s+e\s+/g, ","); 
-    const subItems = cleanChoice.split(",").map(s => s.trim()).filter(s => s !== "");
-    let subQueue = [...subItems];
-    function runSubQueue() {
-        if (subQueue.length === 0) { callbackNext(); return; }
-        const si = subQueue.shift();
-        verificarItemGenerico(si, () => runSubQueue());
-    }
-    runSubQueue();
-}
 
 // 4. Verificador de Genéricos (ATUALIZADO)
 function verificarItemGenerico(nomeItem, callbackNext) {
@@ -1472,64 +1523,150 @@ function verificarItemGenerico(nomeItem, callbackNext) {
     }
 }
 
-// 5. Adicionar ao Inventário (Versão Final e Corrigida)
+
+/* =============================================================
+   CORREÇÃO AVANÇADA: PARSER DE LISTAS E QUANTIDADES POR EXTENSO
+   Substitua processarEscolhaComplexa, adicionarItemAoInventario e buscarItemNoBanco
+============================================================= */
+
+// 3. Parser de String Complexa (Agora entende "Item A e Item B")
+function processarEscolhaComplexa(choice, callbackNext) {
+    // Remove marcadores (a), (b), (c)
+    let cleanChoice = choice.replace(/\([abc]\)/gi, "").trim();
+    
+    // TRUQUE: Transforma " e " em vírgula para separar itens compostos
+    // Ex: "Um kit de aventureiro e quatro azagaias" vira "Um kit de aventureiro, quatro azagaias"
+    cleanChoice = cleanChoice.replace(/\s+e\s+/gi, ","); 
+    
+    // Quebra nas vírgulas
+    const subItems = cleanChoice.split(",").map(s => s.trim()).filter(s => s !== "");
+    
+    let subQueue = [...subItems];
+    function runSubQueue() {
+        if (subQueue.length === 0) { callbackNext(); return; }
+        const si = subQueue.shift();
+        verificarItemGenerico(si, () => runSubQueue());
+    }
+    runSubQueue();
+}
+
+/* =============================================================
+   CORREÇÃO FINAL: ADICIONAR ITENS E ATUALIZAR TELA IMEDIATAMENTE
+   Substitua a função adicionarItemAoInventario (Seção UTILS)
+============================================================= */
+
 function adicionarItemAoInventario(nomeItemBruto) {
     if (!state.inventory) state.inventory = [];
     
-    // Limpeza
-    let cleanName = nomeItemBruto.replace(/^(um|uma|uns|umas|a|o|os|as)\s+/i, '').trim();
-    cleanName = cleanName.replace(/[.;]$/, '');
+    let nome = nomeItemBruto.trim().replace(/[.;]$/, ''); 
+    let repeticoes = 1;
 
-    // Detecção Quantidade
-    let qtd = 1;
-    const qtdMatch = cleanName.match(/^(\d+)\s*(?:x\s*|\s+)(.+)/i);
-    if (qtdMatch) {
-        qtd = parseInt(qtdMatch[1]); 
-        cleanName = qtdMatch[2].trim(); 
-    }
+    // 1. Detecta quantidade por extenso ("Duas", "Três") ou digito ("2")
+    const numerosTexto = { 
+        'um': 1, 'uma': 1, 'dois': 2, 'duas': 2, 'tres': 3, 'três': 3, 
+        'quatro': 4, 'cinco': 5, 'seis': 6, 'dez': 10, 'vinte': 20 
+    };
+    
+    const primeiraPalavra = nome.split(' ')[0].toLowerCase();
 
-    // Busca
-    const itemDb = buscarItemNoBanco(cleanName);
-
-    if (itemDb) {
-        const newItem = JSON.parse(JSON.stringify(itemDb));
-        newItem.id = Date.now() + Math.floor(Math.random() * 100000);
-        newItem.quantity = qtd;
-
-        if (qtd > 1) {
-            newItem.name = `${newItem.name} (x${qtd})`;
-            const descOriginal = newItem.description || "";
-            newItem.description = `${descOriginal}\n\n> **Nota:** Adicionado em um lote de ${qtd} unidades.`;
-        }
-        state.inventory.push(newItem);
+    if (numerosTexto[primeiraPalavra]) {
+        repeticoes = numerosTexto[primeiraPalavra];
+        nome = nome.substring(primeiraPalavra.length).trim(); 
     } else {
-        const nomeFinal = qtd > 1 ? `${cleanName} (x${qtd})` : cleanName;
-        state.inventory.push({
-            id: Date.now() + Math.floor(Math.random() * 100000),
-            name: nomeFinal.charAt(0).toUpperCase() + nomeFinal.slice(1),
-            type: "Equipamento",
-            quantity: qtd,
-            weight: 0,
-            description: qtd > 1 ? `Item genérico adicionado em lote de ${qtd}.` : "Item adicionado."
-        });
+        const matchNumero = nome.match(/^(\d+)\s*(?:x\s*|\s+)?/);
+        if (matchNumero) {
+            repeticoes = parseInt(matchNumero[1]);
+            nome = nome.replace(matchNumero[0], '').trim(); 
+        }
     }
+
+    // 2. Limpeza do nome
+    nome = nome.replace(/^(de|do|da|os|as|uns|umas)\s+/i, '');
+    let nomeBusca = nome;
+    
+    // Tenta achar o item no banco
+    let itemDb = buscarItemNoBanco(nomeBusca);
+    if (!itemDb && nomeBusca.endsWith('s')) {
+        itemDb = buscarItemNoBanco(nomeBusca.slice(0, -1));
+    }
+
+    // 3. O LOOP: Adiciona o item X vezes separadamente
+    for (let i = 0; i < repeticoes; i++) {
+        if (itemDb) {
+            const novoItem = JSON.parse(JSON.stringify(itemDb));
+            // Cria ID único para não dar conflito na listagem
+            novoItem.id = Date.now() + Math.floor(Math.random() * 100000) + i;
+            novoItem.quantity = 1; 
+            state.inventory.push(novoItem);
+        } else {
+            // Item genérico se não achou
+            state.inventory.push({
+                id: Date.now() + Math.floor(Math.random() * 100000) + i,
+                name: nome.charAt(0).toUpperCase() + nome.slice(1),
+                type: "Equipamento",
+                quantity: 1,
+                weight: 0,
+                description: "Item adicionado."
+            });
+        }
+    }
+
+    // 4. ATUALIZAÇÃO IMEDIATA (O que faltava)
+    if (typeof saveStateToServer === 'function') saveStateToServer();
+    
+    // Avisa a ficha inteira para redesenhar agora mesmo
+    window.dispatchEvent(new CustomEvent('sheet-updated'));
+    
+    // Segurança extra: dispara novamente após 50ms para garantir que a aba pegue a mudança se houver animação de modal
+    setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('sheet-updated'));
+    }, 50);
 }
 
-// 6. Busca Item no Banco
+// 6. Busca Item no Banco (Lida com Plurais: Azagaias -> Azagaia)
 function buscarItemNoBanco(nomeItem) {
     if (!items || items.length === 0) return null;
+    
     const norm = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
     
-    let cleanName = nomeItem;
-    cleanName = cleanName.replace(/^\d+\s*[x\s]+\s*/i, '');
-    const alvo = norm(cleanName);
+    // Limpa multiplicadores que possam ter sobrado na string
+    let cleanName = nomeItem.replace(/^\d+\s*[x\s]+\s*/i, '');
+    let alvo = norm(cleanName);
 
+    // 1. Busca Exata
     let itemEncontrado = items.find(i => norm(i.name) === alvo);
+
+    // 2. Busca Singular (Remove 's' ou 'es')
     if (!itemEncontrado) {
-        itemEncontrado = items.find(i => norm(i.name).includes(alvo) || alvo.includes(norm(i.name)));
+        if (alvo.endsWith('s')) {
+            // Tenta remover apenas 's' (Machadinhas -> Machadinha)
+            let alvoSingular = alvo.slice(0, -1);
+            itemEncontrado = items.find(i => norm(i.name) === alvoSingular);
+
+            // Tenta remover 'es' (Simples -> Simpl, não funciona, mas Aneis -> Anel sim se fosse Aneis)
+            // Lógica simples para palavras como "Virotes" -> "Virote"
+            if (!itemEncontrado && alvo.endsWith('es')) {
+                 alvoSingular = alvo.slice(0, -2);
+                 itemEncontrado = items.find(i => norm(i.name) === alvoSingular);
+            }
+        }
     }
+
+    // 3. Busca por "Contém" (Fallback)
+    if (!itemEncontrado) {
+        // Procura se o nome do item no banco está dentro do que foi pedido
+        // Ex: Pediu "Pacote de Aventureiro", banco tem "Pacote de Aventureiro (Dungeons)"
+        itemEncontrado = items.find(i => norm(i.name).includes(alvo));
+        
+        // Ou o inverso: Pediu "Espada Longa Versátil", banco tem "Espada Longa"
+        if (!itemEncontrado) {
+            itemEncontrado = items.find(i => alvo.includes(norm(i.name)) && norm(i.name).length > 3);
+        }
+    }
+
     return itemEncontrado;
 }
+
 
 // 7. Modal de Opções de Equipamento
 function openEquipmentChoiceModal(title, optionA, optionB, optionC, callback) {

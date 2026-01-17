@@ -392,7 +392,7 @@
       "tools": []
     },
     "skills_count": 2,
-    "skills_list": ["Atletismo", "Intimidação", "Lidar com Animais", "Natureza", "Percepção", "Sobrevivência"],
+    "skills_list": ["Atletismo", "Intimidação", "Lidar com animais", "Natureza", "Percepção", "Sobrevivência"],
     "equipment": [
       "(a) Um machado grande ou (b) Qualquer arma marcial corpo a corpo",
       "(a) Duas machadinhas ou (b) Qualquer arma simples",
@@ -2077,7 +2077,7 @@
         {
           "name": "[Nível 1] Acólito da Força",
           "level": 1,
-          "description": "<p>Você ganha proficiência com armaduras pesadas. Além disso, você escolhe uma das seguintes perícias para ganhar proficiência: Lidar com Animais, Atletismo, Natureza ou Sobrevivência. Você também aprende um truque de druida à sua escolha.</p>"
+          "description": "<p>Você ganha proficiência com armaduras pesadas. Além disso, você escolhe uma das seguintes perícias para ganhar proficiência: Lidar com animais, Atletismo, Natureza ou Sobrevivência. Você também aprende um truque de druida à sua escolha.</p>"
         },
         {
           "name": "[Nível 2] Canalizar Divindade: Proeza de Força",
@@ -2632,7 +2632,7 @@
         {
           "name": "[Nível 1] Acólito da Natureza",
           "level": 1,
-          "description": "<p>Você ganha proficiência com armaduras pesadas. Você ganha uma perícia (Lidar com Animais, Natureza ou Sobrevivência) e aprende um truque de druida.</p>"
+          "description": "<p>Você ganha proficiência com armaduras pesadas. Você ganha uma perícia (Lidar com animais, Natureza ou Sobrevivência) e aprende um truque de druida.</p>"
         },
         {
           "name": "[Nível 2] Canalizar Divindade: Encantar Animais e Plantas",
@@ -2909,7 +2909,7 @@
       "tools": ["Kit de Herbalismo"]
     },
     "skills_count": 2,
-    "skills_list": ["Arcanismo", "Intuição", "Lidar com Animais", "Medicina", "Natureza", "Percepção", "Religião", "Sobrevivência"],
+    "skills_list": ["Arcanismo", "Intuição", "Lidar com animais", "Medicina", "Natureza", "Percepção", "Religião", "Sobrevivência"],
     "equipment": [
       "(a) Um escudo de madeira ou (b) Qualquer arma simples",
       "(a) Uma cimitarra ou (b) Qualquer arma simples corpo a corpo",
@@ -3889,7 +3889,7 @@
       "tools": []
     },
     "skills_count": 2,
-    "skills_list": ["Acrobacia", "Atletismo", "História", "Intimidação", "Intuição", "Lidar com Animais", "Percepção", "Sobrevivência"],
+    "skills_list": ["Acrobacia", "Atletismo", "História", "Intimidação", "Intuição", "Lidar com animais", "Percepção", "Sobrevivência"],
     "equipment": [
       "(a) Cota de malha ou (b) Armadura de couro, arco longo e 20 flechas",
       "(a) Uma arma marcial e um escudo ou (b) Duas armas marciais",
@@ -4359,7 +4359,7 @@
       "tools": []
     },
     "skills_count": 3,
-    "skills_list": ["Atletismo", "Furtividade", "Intuição", "Investigação", "Lidar com Animais", "Natureza", "Percepção", "Sobrevivência"],
+    "skills_list": ["Atletismo", "Furtividade", "Intuição", "Investigação", "Lidar com animais", "Natureza", "Percepção", "Sobrevivência"],
     "equipment": [
       "(a) Lórica de escamas ou (b) Armadura de couro",
       "(a) Duas espadas curtas ou (b) Duas armas simples corpo a corpo",

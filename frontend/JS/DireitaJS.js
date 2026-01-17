@@ -222,43 +222,6 @@ function checkScrollLock() {
   }
 }
 
-/* =============================================================
-   LISTENER GLOBAL: ATUALIZA A TELA QUANDO DADOS MUDAM
-============================================================= */
-window.addEventListener('sheet-updated', () => {
-  // 1. Atualiza DT Magias
-  state.dtMagias = calculateSpellDC();
-  const inputDT = document.getElementById('dtMagiasInput');
-  if (inputDT) inputDT.value = state.dtMagias;
-
-  // 2. Atualiza Classe de Armadura
-  const armorClass = calculateArmorClass();
-  const inputCA = document.getElementById('caTotal') || document.querySelector('.hexagrama-ca .valor');
-  if (inputCA) {
-    if (inputCA.tagName === 'INPUT') inputCA.value = armorClass;
-    else inputCA.textContent = armorClass;
-  }
-
-  // 3. ATUALIZAÇÃO AUTOMÁTICA DA DIREITA
-  if (['Magias', 'Mag. Preparadas', 'Habilidades', 'Combate'].includes(state.activeTab)) {
-    // Salva estado de scroll e foco
-    const scrollContainer = document.querySelector('.lado-direito .conteudo') || document.querySelector('.lado-direito');
-    const savedScroll = scrollContainer ? scrollContainer.scrollTop : 0;
-
-    const activeElement = document.activeElement;
-    const activeId = activeElement ? activeElement.id : null;
-
-    // FORÇA O REDESENHO DA ABA ATIVA
-    renderActiveTab();
-
-    // Restaura Scroll e Foco
-    if (scrollContainer) scrollContainer.scrollTop = savedScroll;
-    if (activeId) {
-      const el = document.getElementById(activeId);
-      if (el) el.focus();
-    }
-  }
-});
 
 function setActiveTab(tabName) {
   state.activeTab = tabName;
@@ -1629,24 +1592,11 @@ function renderSpells() {
 }
 // Inicializa estrutura de slots usada para controle de "gastos" (used)
 /* =============================================================
-   RENDERIZAÇÃO DE SLOTS (CORRIGIDA: WRAP & SEM MODO NUMÉRICO)
+   CORREÇÃO: INCLUIR 'Inventário' NA LISTA DE ATUALIZAÇÃO
+   Substitua o listener "window.addEventListener('sheet-updated'..." 
+   por este bloco completo:
 ============================================================= */
 
-/* =============================================================
-   RENDERIZAÇÃO DE SLOTS (ATUALIZADA: ARTÍFICE, BH E INFOS)
-============================================================= */
-
-/* =============================================================
-   RENDERIZAÇÃO DE SLOTS (ATUALIZADA: SOMA DE RECURSOS)
-============================================================= */
-
-/* =============================================================
-   RENDERIZAÇÃO DE SLOTS (ATUALIZADA: SOMA DE RECURSOS)
-============================================================= */
-
-/* =============================================================
-   LISTENER GLOBAL: ATUALIZA A TELA QUANDO DADOS MUDAM
-============================================================= */
 window.addEventListener('sheet-updated', () => {
   // 1. Atualiza DT Magias
   state.dtMagias = calculateSpellDC();
@@ -1662,7 +1612,9 @@ window.addEventListener('sheet-updated', () => {
   }
 
   // 3. ATUALIZAÇÃO AUTOMÁTICA DA DIREITA
-  if (['Magias', 'Mag. Preparadas', 'Habilidades', 'Combate'].includes(state.activeTab)) {
+  // --- CORREÇÃO AQUI: Adicionei 'Inventário' e 'Descrição' na lista ---
+  if (['Magias', 'Mag. Preparadas', 'Habilidades', 'Combate', 'Inventário', 'Descrição'].includes(state.activeTab)) {
+    
     // Salva estado de scroll e foco
     const scrollContainer = document.querySelector('.lado-direito .conteudo') || document.querySelector('.lado-direito');
     const savedScroll = scrollContainer ? scrollContainer.scrollTop : 0;

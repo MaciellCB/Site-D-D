@@ -1,209 +1,997 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Habilidades",
+  "activeTab": "Inventário",
   "spellDCConfig": {
     "selectedAttr": "none",
     "extraMod": 0,
     "lastKnownLevel": 0
   },
   "dtMagias": "Selecione",
-  "inventory": [],
+  "inventory": [
+    {
+      "id": 1768635314011,
+      "name": "Rapieira",
+      "description": "<p>Uma espada fina e elegante, ideal para estocadas precisas e combate ágil.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
+      "expanded": false,
+      "equip": false,
+      "type": "Arma",
+      "isEquipable": true,
+      "proficiency": "Armas Marciais",
+      "defense": "",
+      "tipoItem": "",
+      "minStrength": "",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Uma Mão",
+      "crit": "20",
+      "multiplicador": "2",
+      "alcance": "1.5m",
+      "attunement": "Não",
+      "damage": "1d8",
+      "damage2Hands": "",
+      "useTwoHands": false,
+      "damageTypes": [
+        "Perfurante"
+      ],
+      "moreDmgList": [],
+      "caracteristicas": [
+        "Acuidade"
+      ]
+    },
+    {
+      "id": 1768632766706,
+      "name": "Kit de Artista",
+      "category": "Conjuntos",
+      "subcategory": "Kits",
+      "type": "Geral",
+      "description": "<p>Inclui uma mochila, um saco de dormir, duas fantasias, cinco velas, cinco dias de rações, um cantil e um kit de disfarce.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 40 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768632694734,
+      "name": "Flauta",
+      "category": "Conjuntos",
+      "subcategory": "Ferramentas",
+      "type": "Geral",
+      "description": "<p>Instrumento de sopro simples.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768632753395,
+      "name": "Armadura de Couro",
+      "category": "Armaduras",
+      "subcategory": "Armaduras",
+      "type": "Proteção",
+      "defense": "11",
+      "proficiency": "Leve",
+      "tipoItem": "Armadura",
+      "description": "<p>Peitoral e ombro de couro rígido.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768632730878,
+      "name": "Adaga",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d4",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Uma mao",
+      "caracteristicas": [
+        "Ágil",
+        "Leve",
+        "Arremesso (6/18)"
+      ],
+      "description": "<p>Lâmina curta multiuso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768632751495,
+      "name": "Dardo",
+      "category": "Armas",
+      "subcategory": "A distancia",
+      "type": "Arma",
+      "damage": "1d4",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "A Distancia",
+      "empunhadura": "Uma mao",
+      "caracteristicas": [
+        "Ágil",
+        "Arremesso"
+      ],
+      "alcance": "6m/18m",
+      "description": "<p>Pequeno projétil de arremesso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pc</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,1 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768632776705,
+      "name": "Kit de Diplomata",
+      "category": "Conjuntos",
+      "subcategory": "Kits",
+      "type": "Geral",
+      "description": "<p>Inclui um baú, dois estojos para mapas ou pergaminhos, um conjunto de roupas finas, um frasco de tinta, uma caneta de escrever, uma lâmpada, dois frascos de óleo, cinco folhas de papel, um frasco de perfume, cera de selar e um sinete.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 39 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 9 kg</li></ul>",
+      "quantity": 1,
+      "expanded": true
+    },
+    {
+      "id": 1768635074026,
+      "name": "Rapieira",
+      "type": "Equipamento",
+      "quantity": 1,
+      "weight": 0,
+      "description": "Item adicionado.",
+      "expanded": false
+    },
+    {
+      "id": 1768635140198,
+      "name": "Kit de Artista",
+      "category": "Conjuntos",
+      "subcategory": "Kits",
+      "type": "Geral",
+      "description": "<p>Inclui uma mochila, um saco de dormir, duas fantasias, cinco velas, cinco dias de rações, um cantil e um kit de disfarce.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 40 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>",
+      "quantity": 1,
+      "expanded": true
+    },
+    {
+      "id": 1768635167094,
+      "name": "Citara",
+      "type": "Equipamento",
+      "quantity": 1,
+      "weight": 0,
+      "description": "Item adicionado.",
+      "expanded": true
+    },
+    {
+      "id": 1768635165418,
+      "name": "Armadura de Couro",
+      "category": "Armaduras",
+      "subcategory": "Armaduras",
+      "type": "Proteção",
+      "defense": "11",
+      "proficiency": "Leve",
+      "tipoItem": "Armadura",
+      "description": "<p>Peitoral e ombro de couro rígido.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635092660,
+      "name": "Adaga",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d4",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Uma mao",
+      "caracteristicas": [
+        "Ágil",
+        "Leve",
+        "Arremesso (6/18)"
+      ],
+      "description": "<p>Lâmina curta multiuso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635169623,
+      "name": "Cajado",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d6",
+      "damage2Hands": "1d8",
+      "useTwoHands": false,
+      "damageType": "Contundente",
+      "proficiency": "Armas Simples",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Versátil",
+      "caracteristicas": [],
+      "description": "<p>Bastão de madeira simples, mas eficaz.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635135592,
+      "name": "Bolsa de Componentes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>Contém componentes materiais para magias (sem custo).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
+      "quantity": 1,
+      "expanded": true
+    },
+    {
+      "id": 1768635156495,
+      "name": "Kit de Erudito",
+      "category": "Conjuntos",
+      "subcategory": "Kits",
+      "type": "Geral",
+      "description": "<p>Inclui uma mochila, um livro de estudos, um frasco de tinta, uma caneta de escrever, dez folhas de pergaminho, um pequeno saco de areia e uma pequena faca.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 40 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>",
+      "quantity": 1,
+      "expanded": true
+    },
+    {
+      "id": 1768635144159,
+      "name": "Armadura de Couro",
+      "category": "Armaduras",
+      "subcategory": "Armaduras",
+      "type": "Proteção",
+      "defense": "11",
+      "proficiency": "Leve",
+      "tipoItem": "Armadura",
+      "description": "<p>Peitoral e ombro de couro rígido.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>",
+      "quantity": 1,
+      "expanded": true
+    },
+    {
+      "id": 1768635147898,
+      "name": "Foice Curta",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d4",
+      "damageType": "Cortante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Uma mao",
+      "caracteristicas": [
+        "Leve"
+      ],
+      "description": "<p>Ferramenta agrícola usada como arma.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635165216,
+      "name": "Adaga",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d4",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Uma mao",
+      "caracteristicas": [
+        "Ágil",
+        "Leve",
+        "Arremesso (6/18)"
+      ],
+      "description": "<p>Lâmina curta multiuso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635159175,
+      "name": "Adaga",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d4",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Uma mao",
+      "caracteristicas": [
+        "Ágil",
+        "Leve",
+        "Arremesso (6/18)"
+      ],
+      "description": "<p>Lâmina curta multiuso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635286532,
+      "name": "Rapieira",
+      "type": "Equipamento",
+      "quantity": 1,
+      "weight": 0,
+      "description": "Item adicionado.",
+      "expanded": true
+    },
+    {
+      "id": 1768635327203,
+      "name": "Kit de Diplomata",
+      "category": "Conjuntos",
+      "subcategory": "Kits",
+      "type": "Geral",
+      "description": "<p>Inclui um baú, dois estojos para mapas ou pergaminhos, um conjunto de roupas finas, um frasco de tinta, uma caneta de escrever, uma lâmpada, dois frascos de óleo, cinco folhas de papel, um frasco de perfume, cera de selar e um sinete.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 39 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 9 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635279285,
+      "name": "Flauta",
+      "category": "Conjuntos",
+      "subcategory": "Ferramentas",
+      "type": "Geral",
+      "description": "<p>Instrumento de sopro simples.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635309745,
+      "name": "Armadura de Couro",
+      "category": "Armaduras",
+      "subcategory": "Armaduras",
+      "type": "Proteção",
+      "defense": "11",
+      "proficiency": "Leve",
+      "tipoItem": "Armadura",
+      "description": "<p>Peitoral e ombro de couro rígido.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635329406,
+      "name": "Adaga",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d4",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Uma mao",
+      "caracteristicas": [
+        "Ágil",
+        "Leve",
+        "Arremesso (6/18)"
+      ],
+      "description": "<p>Lâmina curta multiuso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635341189,
+      "name": "Cajado",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d6",
+      "damage2Hands": "1d8",
+      "useTwoHands": false,
+      "damageType": "Contundente",
+      "proficiency": "Armas Simples",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Versátil",
+      "caracteristicas": [],
+      "description": "<p>Bastão de madeira simples, mas eficaz.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635413884,
+      "name": "Kit de Artista",
+      "category": "Conjuntos",
+      "subcategory": "Kits",
+      "type": "Geral",
+      "description": "<p>Inclui uma mochila, um saco de dormir, duas fantasias, cinco velas, cinco dias de rações, um cantil e um kit de disfarce.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 40 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635370805,
+      "name": "Kit de Trombeta",
+      "category": "Conjuntos",
+      "subcategory": "Kits",
+      "type": "Geral",
+      "description": "<p>Inclui uma trombeta, um estojo e um guia de músicas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635364863,
+      "name": "Armadura de Couro",
+      "category": "Armaduras",
+      "subcategory": "Armaduras",
+      "type": "Proteção",
+      "defense": "11",
+      "proficiency": "Leve",
+      "tipoItem": "Armadura",
+      "description": "<p>Peitoral e ombro de couro rígido.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635344514,
+      "name": "Adaga",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d4",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Uma mao",
+      "caracteristicas": [
+        "Ágil",
+        "Leve",
+        "Arremesso (6/18)"
+      ],
+      "description": "<p>Lâmina curta multiuso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635423104,
+      "name": "Rapieira",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d8",
+      "useTwoHands": false,
+      "damageType": "Perfurante",
+      "proficiency": "Armas Marciais",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Uma Mão",
+      "caracteristicas": [
+        "Acuidade"
+      ],
+      "description": "<p>Uma espada fina e elegante, ideal para estocadas precisas e combate ágil.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
+      "quantity": 1,
+      "expanded": false
+    },
+    {
+      "id": 1768635437974,
+      "name": "Kit de Diplomata",
+      "category": "Conjuntos",
+      "subcategory": "Kits",
+      "type": "Geral",
+      "description": "<p>Inclui um baú, dois estojos para mapas ou pergaminhos, um conjunto de roupas finas, um frasco de tinta, uma caneta de escrever, uma lâmpada, dois frascos de óleo, cinco folhas de papel, um frasco de perfume, cera de selar e um sinete.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 39 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 9 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635440656,
+      "name": "Alaúde",
+      "category": "Conjuntos",
+      "subcategory": "Ferramentas",
+      "type": "Geral",
+      "description": "<p>Instrumento de cordas popular.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 35 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635395941,
+      "name": "Armadura de Couro",
+      "category": "Armaduras",
+      "subcategory": "Armaduras",
+      "type": "Proteção",
+      "defense": "11",
+      "proficiency": "Leve",
+      "tipoItem": "Armadura",
+      "description": "<p>Peitoral e ombro de couro rígido.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635428476,
+      "name": "Adaga",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d4",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Uma mao",
+      "caracteristicas": [
+        "Ágil",
+        "Leve",
+        "Arremesso (6/18)"
+      ],
+      "description": "<p>Lâmina curta multiuso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635464675,
+      "name": "Arco Longo",
+      "category": "Armas",
+      "subcategory": "A distancia",
+      "type": "Arma",
+      "damage": "1d8",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Marciais",
+      "tipoArma": "A Distancia",
+      "empunhadura": "Duas Maos",
+      "caracteristicas": [
+        "Munição",
+        "Pesada",
+        "Duas Mãos"
+      ],
+      "alcance": "45m/180m",
+      "description": "<p>Arco grande para longas distâncias.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 8 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635412381,
+      "name": "Arco Longo",
+      "category": "Armas",
+      "subcategory": "A distancia",
+      "type": "Arma",
+      "damage": "1d8",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Marciais",
+      "tipoArma": "A Distancia",
+      "empunhadura": "Duas Maos",
+      "caracteristicas": [
+        "Munição",
+        "Pesada",
+        "Duas Mãos"
+      ],
+      "alcance": "45m/180m",
+      "description": "<p>Arco grande para longas distâncias.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 8 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635498716,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635476065,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635420544,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635409249,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635438910,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635404033,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635441097,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635408934,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635410349,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635476051,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635414580,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635488310,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635426057,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635434184,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635410872,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635434336,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635447857,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635418568,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635442392,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635431580,
+      "name": "Flechas",
+      "category": "Armas",
+      "subcategory": "Munição",
+      "type": "Item",
+      "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1,
+      "expanded": false
+    },
+    {
+      "id": 1768635402251,
+      "name": "Armadura de Couro Batido",
+      "category": "Armaduras",
+      "subcategory": "Armaduras",
+      "type": "Proteção",
+      "defense": "12",
+      "proficiency": "Leve",
+      "tipoItem": "Armadura",
+      "description": "<p>Couro reforçado com rebites de metal.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 45 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 6,5 kg</li></ul>",
+      "quantity": 1,
+      "expanded": true
+    },
+    {
+      "id": 1768635485575,
+      "name": "Kit de Explorador",
+      "category": "Conjuntos",
+      "subcategory": "Kits",
+      "type": "Geral",
+      "description": "<p>Inclui uma mochila, um saco de dormir, uma caixa de isqueiro, dez tochas, dez dias de rações, um cantil e uma corda de cânhamo de 15 metros.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 8 kg</li></ul>",
+      "quantity": 1,
+      "expanded": true
+    },
+    {
+      "id": 1768635482970,
+      "name": "Suprimentos de Alquimista",
+      "category": "Conjuntos",
+      "subcategory": "Ferramentas",
+      "type": "Geral",
+      "description": "<p>Vidrarias e ingredientes básicos para poções.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 4 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635430422,
+      "name": "Azagaia",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d6",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Uma mao",
+      "caracteristicas": [
+        "Arremesso (9/36)",
+        "Ágil"
+      ],
+      "description": "<p>Lança leve para arremesso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 4 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635430867,
+      "name": "Cajado",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d6",
+      "damage2Hands": "1d8",
+      "useTwoHands": false,
+      "damageType": "Contundente",
+      "proficiency": "Armas Simples",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Versátil",
+      "caracteristicas": [],
+      "description": "<p>Bastão de madeira simples, mas eficaz.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635504393,
+      "name": "Besta Leve",
+      "category": "Armas",
+      "subcategory": "A distancia",
+      "type": "Arma",
+      "damage": "1d8",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "A Distancia",
+      "empunhadura": "Duas Maos",
+      "caracteristicas": [
+        "Munição",
+        "Recarga",
+        "Duas Mãos"
+      ],
+      "alcance": "24m/96m",
+      "description": "<p>Besta simples, fácil de usar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 7 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635471705,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635459120,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635477408,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635449723,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635442621,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635516392,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635432575,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635501479,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635479710,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635490965,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635432164,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635508525,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635506708,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635494348,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635494495,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635488559,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635480127,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635514885,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635457109,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635464214,
+      "name": "Virotes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>munição padrão de bestas e crossbows</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635519482,
+      "name": "Lórica de escamas",
+      "type": "Equipamento",
+      "quantity": 1,
+      "weight": 0,
+      "description": "Item adicionado."
+    },
+    {
+      "id": 1768635428932,
+      "name": "Kit de Explorador",
+      "category": "Conjuntos",
+      "subcategory": "Kits",
+      "type": "Geral",
+      "description": "<p>Inclui uma mochila, um saco de dormir, uma caixa de isqueiro, dez tochas, dez dias de rações, um cantil e uma corda de cânhamo de 15 metros.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 8 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768635506259,
+      "name": "Suprimentos de Alquimista",
+      "category": "Conjuntos",
+      "subcategory": "Ferramentas",
+      "type": "Geral",
+      "description": "<p>Vidrarias e ingredientes básicos para poções.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 4 kg</li></ul>",
+      "quantity": 1
+    }
+  ],
   "abilities": [
     {
-      "id": 1768609105052,
-      "title": "[Nível 3] Tiro Arcano",
-      "description": "<p>Aprende 2 opções de Tiro Arcano. 1x por turno ao disparar flecha, aplique um efeito.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Usos:</strong> 2 por descanso curto/longo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ CD:</strong> 8 + Prof + INT.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Opções:</strong> Banimento, Explosivo, Perfurante, etc. Ganha mais nos níveis 7, 10, 15, 18.</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Subclasse",
-      "class": "Guerreiro",
-      "subclass": "Arqueiro Arcano"
-    },
-    {
-      "id": 1768609055267,
-      "title": "[Nível 3] Conhecimento Arcano",
-      "description": "<p>Proficiência em Arcanismo ou Natureza. Aprende <em>Prestidigitação</em> ou <em>Druidismo</em>.</p>",
-      "expanded": false,
-      "active": true,
-      "category": "Subclasse",
-      "class": "Guerreiro",
-      "subclass": "Arqueiro Arcano"
-    },
-    {
-      "id": 1768609090442,
-      "title": "[Nível 3] Arquétipo Marcial (Subclasse)",
-      "description": "<p>No 3º nível, você escolhe um arquétipo que define seu estilo de combate. Sua escolha concede características no 3º nível e novamente no 7º, 10º, 15º e 18º nível.</p>",
-      "expanded": true,
-      "active": true,
-      "category": "Classe",
-      "class": "Guerreiro",
-      "subclass": ""
-    },
-    {
-      "id": 1768609054730,
-      "title": "[Nível 2] Surto de Ação",
-      "description": "<p>Você pode forçar seu limite para agir novamente.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Efeito:</strong> Realize uma ação adicional no seu turno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Usos:</strong> 1 vez (2º nível), 2 vezes (17º nível). Recupera em descanso curto ou longo.</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Classe",
-      "class": "Guerreiro",
-      "subclass": ""
-    },
-    {
-      "id": 1768600472792,
-      "title": "[Nível 1] Imposição de Mãos",
-      "description": "<p><strong>(Ação)</strong> Reserva de cura (5 x Nível de Paladino).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Cura:</strong> Toque para curar qualquer quantidade da reserva.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Purificação:</strong> Gaste 5 pontos para curar doença ou neutralizar veneno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Restrição:</strong> Não afeta mortos-vivos ou constructos.</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Classe",
-      "class": "Paladino",
-      "subclass": ""
-    },
-    {
-      "id": 1768600422179,
-      "title": "[Nível 1] Sentido Divino",
-      "description": "<p><strong>(Ação)</strong> Detecte a localização de celestiais, demônios ou mortos-vivos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Alcance:</strong> 18 metros (sem cobertura total).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Detecção:</strong> Tipo da criatura (mas não identidade) e locais/objetos consagrados ou profanados.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Usos:</strong> 1 + Mod. Carisma (recupera em descanso longo).</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Classe",
-      "class": "Paladino",
-      "subclass": ""
-    },
-    {
-      "id": 1768597176622,
-      "title": "Treinamento com Armaduras",
-      "description": "Você adquire proficiência com armaduras <b>leves</b> e <b>médias</b>.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Anão da Montanha"
-    },
-    {
-      "id": 1768597197939,
-      "title": "Conhecimento de Pedras",
-      "description": "Sempre que realizar um teste de Inteligência (História) relacionado à origem de um trabalho em pedra, você é considerado proficiente e adiciona o <b>dobro do seu bônus de proficiência</b> ao teste.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Anões"
-    },
-    {
-      "id": 1768597188190,
-      "title": "Proficiência em Ferramentas",
-      "description": "Você tem proficiência em uma ferramenta de artesão à sua escolha: <b>ferramentas de ferreiro</b>, <b>suprimentos de cervejeiro</b> ou <b>ferramentas de pedreiro</b>.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Anões"
-    },
-    {
-      "id": 1768597242649,
-      "title": "Treinamento Anão em Combate",
-      "description": "Você tem proficiência com machados de batalha, machadinhas, martelos leves e martelos de guerra.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Anões"
-    },
-    {
-      "id": 1768597157961,
-      "title": "Resiliência Anã",
-      "description": "Você possui <b>vantagem</b> em salvaguardas contra veneno e <b>resistência</b> contra dano de veneno.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Anões"
-    },
-    {
-      "id": 1768597164265,
-      "title": "Visão no Escuro",
-      "description": "Acostumado à vida subterrânea, você enxerga na meia-luz a até <b>18 metros</b> como luz plena, e na escuridão como meia-luz.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Anões"
-    },
-    {
-      "id": 1768597190917,
-      "title": "Deslocamento Anão",
-      "description": "Seu deslocamento <u>não é reduzido</u> quando você está usando armadura pesada.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Anões"
-    },
-    {
-      "id": 1768596112537,
-      "title": "[Nível 1] Artes marciais",
-      "description": "<p>Ao usar armas de monge (espadas curtas e armas simples não pesadas/duas mãos) ou ataques desarmados:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Atributo:</strong> Pode usar Destreza em vez de Força para ataque e dano.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> Rola o Dado de Artes marciais (d4, escala com nível) no lugar do dano normal.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque Extra:</strong> Se usar a ação Atacar com essas armas, pode fazer um ataque desarmado como <strong>Ação Bônus</strong>.</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Classe",
-      "class": "Monge",
-      "subclass": ""
-    },
-    {
-      "id": 1768596124714,
-      "title": "[Nível 1] Defesa sem Armadura",
-      "description": "<p>Enquanto não usar armadura nem escudo, sua Classe de Armadura (CA) é:</p><p style='text-align:center; font-weight:bold; color:#fff; background:#222; padding:8px; border-radius:4px;'>10 + Mod. Destreza + Mod. Sabedoria</p>",
-      "expanded": false,
-      "active": true,
-      "category": "Classe",
-      "class": "Monge",
-      "subclass": ""
-    },
-    {
-      "id": 1768596119702,
-      "title": "[Nível 1] Explorador Habilidoso (Opcional)",
-      "description": "<p>Substitui <em>Explorador da Natureza</em>.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 1º Nível (Astuto):</strong> Perícia com dobro de proficiência e 2 idiomas.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 6º Nível (Itinerante):</strong> +1,5m velocidade, ganha escalada e natação.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 10º Nível (Incansável):</strong> Ação para ganhar 1d8+SAB PV temp (Usos=Proficiência) e reduz exaustão em descanso curto.</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Classe",
-      "class": "Patrulheiro",
-      "subclass": ""
-    },
-    {
-      "id": 1768596092062,
-      "title": "[Nível 1] Explorador da Natureza",
-      "description": "<p>Escolha um terreno predileto. Dobre proficiência em testes de INT/SAB relacionados.</p><strong style='display:block; margin-bottom:8px; color:#fff;'>Benefícios ao Viajar:</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Navegação:</strong> Não se perde (salvo magia).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Terreno:</strong> Terreno difícil não atrasa grupo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Furtividade:</strong> Ritmo normal (se sozinho).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Sobrevivência:</strong> Dobro de comida, rastreia com exatidão.</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Classe",
-      "class": "Patrulheiro",
-      "subclass": ""
-    },
-    {
-      "id": 1768596120223,
-      "title": "[Nível 1] Inimigo Favorito (Opcional)",
-      "description": "<p><strong>(Sem Ação)</strong> Ao acertar, marque criatura por 1 min (Concentração). 1º acerto no turno causa <strong>+1d4</strong> dano (1d6 no 6º, 1d8 no 14º). Usos = Proficiência.</p>",
-      "expanded": false,
-      "active": true,
-      "category": "Classe",
-      "class": "Patrulheiro",
-      "subclass": ""
-    },
-    {
-      "id": 1768596099895,
-      "title": "[Nível 1] Inimigo Predileto",
-      "description": "<p>Você tem experiência em caçar tipos específicos de inimigos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Vantagem:</strong> Sobrevivência (rastrear) e Inteligência (recordar).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Idioma:</strong> Aprende um idioma associado ao inimigo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Progressão:</strong> Ganha mais inimigos no 6º e 14º nível.</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Classe",
-      "class": "Patrulheiro",
-      "subclass": ""
-    },
-    {
-      "id": 1768595933662,
+      "id": 1768635442043,
       "title": "[Nível 1] Maldição de Sangue",
-      "description": "<p>Você conhece Maldições de Sangue (invocações de hemomancia).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Amplificar:</strong> Ao usar, você pode sofrer dano necrótico igual a uma rolagem do seu dado de Hemomancia (não redutível) para obter um efeito aprimorado.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Imunidade:</strong> Criaturas sem sangue são imunes a maldições não amplificadas.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Usos:</strong> 1 (1º nível), 2 (6º nível), 3 (13º nível) e 4 (17º nível). Recupera em Descanso Curto/Longo.</li></ul>",
+      "description": "<p>Você conhece a arte proibida das maldições de sangue.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Uso:</strong> Você conhece um número de maldições baseado no seu nível. Você pode usá-las um número de vezes igual a: 1 (nível 1), 2 (nível 6), 3 (nível 13) e 4 (nível 17). Recupera em Descanso Curto ou Longo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Amplificar:</strong> Ao usar uma maldição, você pode escolher sofrer dano necrótico igual a uma rolagem do seu <strong>Dado de Hemomancia</strong>. Esse dano não pode ser reduzido. Se fizer isso, a maldição ganha um efeito adicional.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Restrição:</strong> Criaturas sem sangue são imunes a maldições que não foram amplificadas.</li></ul>",
       "expanded": false,
       "active": true,
       "category": "Classe",
@@ -211,9 +999,9 @@
       "subclass": ""
     },
     {
-      "id": 1768595969608,
+      "id": 1768635455362,
       "title": "[Nível 1] Flagelo do Caçador",
-      "description": "<p>Você sobreviveu ao ritual da Maldição, ganhando sentidos sobrenaturais.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Rastreamento:</strong> Vantagem em testes de Sobrevivência para rastrear Fadas, Demônios e Mortos-Vivos.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Conhecimento:</strong> Vantagem em testes de Inteligência para recordar informações sobre eles.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Hemomancia:</strong> Sua CD de resistência é 8 + Bônus de Proficiência + Modificador de Hemomancia (INT ou SAB).</li></ul>",
+      "description": "<p>Você sobreviveu ao ritual da Maldição do Caçador, alterando sua biologia.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Rastreamento:</strong> Você tem <strong>Vantagem</strong> em testes de Sabedoria (Sobrevivência) para rastrear Fadas, Demônios e Mortos-Vivos.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Conhecimento:</strong> Você tem <strong>Vantagem</strong> em testes de Inteligência para recordar informações sobre essas criaturas.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Hemomancia:</strong> Sua CD de resistência para maldições e ritos é: 8 + Bônus de Proficiência + Modificador de Hemomancia (Inteligência ou Sabedoria, escolhido no nível 1).</li></ul>",
       "expanded": false,
       "active": true,
       "category": "Classe",
@@ -221,23 +1009,83 @@
       "subclass": ""
     },
     {
-      "id": 1768595532937,
-      "title": "[Nível 1] Segundo Fôlego",
-      "description": "<p><strong>(Ação Bônus)</strong> Recupere pontos de vida.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Cura:</strong> 1d10 + Nível de Guerreiro.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Recuperação:</strong> Descanso Curto ou Longo.</li></ul>",
+      "id": 1768635178433,
+      "title": "[Nível 1] Forma de Pavor",
+      "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Duração:</strong> 1 minuto</p><p>Você manifesta um aspecto do seu patrono. Usos iguais ao Bônus de Proficiência.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Vitalidade:</strong> Ganha 1d10 + Nível de Bruxo em PV Temporários.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Imunidade:</strong> Imune à condição <strong>Amedrontado</strong>.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Terror:</strong> Uma vez por turno, ao acertar um ataque, force o alvo a um Salvaguarda de Sabedoria. Se falhar, fica <strong>Amedrontado</strong> até o final do próximo turno dele.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Subclasse",
+      "class": "Bruxo",
+      "subclass": "O Morto-Vivo"
+    },
+    {
+      "id": 1768635117141,
+      "title": "[Nível 1] Feitiços de O Morto-Vivo",
+      "description": "<p>Magias expandidas do patrono:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 1º:</strong> Bane, Vida Falsa</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 2º:</strong> Cegueira/Surdez, Força Fantasmagórica</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 3º:</strong> Cavalo Fantasma, Falar com Mortos</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 4º:</strong> Guarda da Morte, Invisibilidade Maior</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 5º:</strong> Casca Antivida, Nuvem Assassina</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Subclasse",
+      "class": "Bruxo",
+      "subclass": "O Morto-Vivo"
+    },
+    {
+      "id": 1768635189114,
+      "title": "[Nível 1] Patrono Transcendental (Subclasse)",
+      "description": "<p>No 1º nível, você firma um pacto com um ser transcendental. Sua escolha concede características no 1º nível e novamente no 6º, 10º e 14º nível.</p>",
       "expanded": false,
       "active": true,
       "category": "Classe",
-      "class": "Guerreiro",
+      "class": "Bruxo",
       "subclass": ""
     },
     {
-      "id": 1768595495104,
-      "title": "[Nível 1] Estilo de Luta",
-      "description": "<p>Você adota um estilo de combate especializado. Escolha um:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Arquearia:</strong> +2 ataque à distância.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Defesa:</strong> +1 CA com armadura.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Duelo:</strong> +2 dano com 1 arma (e nenhuma outra).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Arma Grande:</strong> Rerolar 1 e 2 no dano com armas de duas mãos/versáteis.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Proteção:</strong> Reação p/ impor desvantagem em ataque a aliado (requer escudo).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Combate Duas Armas:</strong> Soma atributo no dano da 2ª arma.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Interceptação:</strong> Reduz dano em aliado a 1,5m em 1d10+Prof (Reação).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Técnica Superior:</strong> Aprende 1 manobra e ganha 1 dado de superioridade (d6).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Cego:</strong> Visão cega 3m.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Arremesso:</strong> +2 dano e saque livre de arma de arremesso.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Desarmado:</strong> Dano vira 1d6 (ou 1d8 se duas mãos livres) + 1d4 em alvo agarrado.</li></ul>",
+      "id": 1768635100676,
+      "title": "[Nível 1] Magia do Pacto",
+      "description": "<p>Você extrai magia de um pacto com uma entidade extraplanar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Espaços de Magia:</strong> Diferente de outras classes, todos os seus espaços de magia são do <strong>mesmo nível</strong> (o nível mais alto disponível na tabela de Bruxo, até o 5º círculo).</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Recuperação:</strong> Você recupera <strong>todos</strong> os seus espaços de magia gastos ao terminar um <strong>Descanso Curto</strong> ou Longo.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Atributo de Conjuração:</strong> Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ CD de Resistência:</strong> 8 + Bônus de Proficiência + Modificador de Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Ataque Mágico:</strong> Bônus de Proficiência + Modificador de Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Foco:</strong> Foco Arcano.</li></ul>",
       "expanded": false,
       "active": true,
       "category": "Classe",
-      "class": "Guerreiro",
+      "class": "Bruxo",
+      "subclass": ""
+    },
+    {
+      "id": 1768632727861,
+      "title": "[Nível 1] Inspiração Bárdica",
+      "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Alcance:</strong> 18 metros (60 pés)<br><strong>Duração:</strong> 10 minutos</p><p>Você pode inspirar os outros através de palavras ou música. Escolha uma criatura (exceto você mesmo) que possa ouvi-lo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ O Dado:</strong> A criatura ganha um dado de Inspiração Bárdica (d6). O dado escala para d8 (5º nível), d10 (10º nível) e d12 (15º nível).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Uso:</strong> Uma vez dentro dos 10 minutos, a criatura pode rolar o dado e adicionar o número obtido a uma <strong>jogada de ataque</strong>, <strong>teste de habilidade</strong> ou <strong>teste de resistência</strong> que ela fizer. Ela pode esperar a rolagem do d20 antes de decidir usar o dado, mas deve decidir antes de saber o resultado.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Limite:</strong> Uma criatura só pode ter um dado de inspiração por vez. Você tem usos iguais ao seu Mod. Carisma (recupera em Descanso Longo).</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bardo",
+      "subclass": ""
+    },
+    {
+      "id": 1768632737165,
+      "title": "[Nível 1] Lançamento de Feitiços",
+      "description": "<p>Você aprende a manipular a Trama através da música e da oratória.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Atributo de Conjuração:</strong> Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ CD de Resistência:</strong> 8 + Bônus de Proficiência + Modificador de Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Ataque Mágico:</strong> Bônus de Proficiência + Modificador de Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Foco de Conjuração:</strong> Você pode usar um instrumento musical como foco para suas magias de bardo.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Rituais:</strong> Você pode conjurar qualquer magia de bardo conhecida como um ritual, se a magia tiver o descritor ritual.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Repertório:</strong> Suas magias são conhecidas (não preparadas). Ao subir de nível, você pode substituir uma magia conhecida por outra da lista de bardo.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bardo",
+      "subclass": ""
+    },
+    {
+      "id": 1768629974160,
+      "title": "[Nível 1] Defesa sem Armadura",
+      "description": "<p><strong>Duração:</strong> Permanente</p><p>Enquanto você não estiver usando nenhuma armadura, sua Classe de Armadura (CA) é calculada da seguinte forma:</p><p style='text-align:center; font-weight:bold; color:#fff; background:#222; padding:8px; border-radius:4px;'>10 + Mod. Destreza + Mod. Constituição</p><p>Você pode usar um escudo e ainda obter esse benefício.</p>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bárbaro",
+      "subclass": ""
+    },
+    {
+      "id": 1768629947647,
+      "title": "[Nível 1] Fúria",
+      "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Duração:</strong> 1 minuto</p><p>Você entra em um estado de fúria primal.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Vantagem:</strong> Você tem Vantagem em testes de Força e testes de resistência de Força.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Dano de Fúria:</strong> Ao realizar um ataque corpo a corpo usando Força, você ganha um bônus no dano. (Nível 1-8: +2 | Nível 9-15: +3 | Nível 16+: +4).</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Resistência:</strong> Você possui resistência a dano contundente, perfurante e cortante.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Restrições:</strong> Você não pode conjurar magias ou manter concentração. A fúria termina prematuramente se você cair inconsciente ou se terminar um turno sem ter atacado uma criatura hostil ou sem ter sofrido dano.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bárbaro",
       "subclass": ""
     }
   ],
@@ -361,9 +1209,8 @@
       "outros": 0
     },
     "Lidar com animais": {
-      "atributo": "SAB",
       "treinado": true,
-      "outros": 0
+      "bonus": 0
     },
     "Medicina": {
       "atributo": "SAB",
@@ -402,37 +1249,33 @@
     },
     "Salvaguarda (Força)": {
       "atributo": "FOR",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Salvaguarda (Destreza)": {
       "atributo": "DEX",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Salvaguarda (Constituição)": {
       "atributo": "CON",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Salvaguarda (Inteligência)": {
       "atributo": "INT",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Salvaguarda (Sabedoria)": {
       "atributo": "SAB",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Salvaguarda (Carisma)": {
       "atributo": "CAR",
-      "treinado": false,
-      "outros": 0
-    },
-    "Lidar com Animais": {
       "treinado": true,
-      "bonus": 0
+      "outros": 0
     }
   },
   "atributos": {
@@ -444,16 +1287,16 @@
     "n6": 10
   },
   "niveisClasses": {
-    "artifice": 1,
+    "artifice": 0,
     "barbaro": 0,
     "bardo": 0,
-    "blood hunter": 0,
+    "blood hunter": 1,
     "bruxo": 0,
     "clerigo": 0,
     "monge": 0,
     "druida": 0,
     "feiticeiro": 0,
-    "guerreiro": 3,
+    "guerreiro": 0,
     "ladino": 0,
     "mago": 0,
     "paladino": 0,
@@ -484,13 +1327,27 @@
   "imunidadesList": [],
   "proficienciasList": [
     "Armaduras leves",
-    "Armaduras médias",
-    "Armaduras pesadas",
-    "Escudos",
     "Armas simples",
+    "Bestas de Mão",
+    "Espadas Longas",
+    "Rapieiras",
+    "Espadas Curtas",
+    "Bateria",
+    "Citara",
+    "Flauta de Pã",
+    "Alaúde",
+    "Charamela",
+    "Flauta",
+    "Gaita de Foles",
+    "Lira",
+    "Tambor",
+    "Trombeta",
+    "Viola",
+    "Xilofone",
+    "Armaduras médias",
+    "Escudos",
     "Armas marciais",
-    "simples",
-    "Espadas Curtas"
+    "Suprimentos de Alquimista"
   ],
   "idiomasList": [
     "Comum",
@@ -547,7 +1404,10 @@
     },
     "furia": {
       "used": 0,
-      "status": []
+      "status": [
+        false,
+        false
+      ]
     },
     "sorcery": {
       "used": 0,
@@ -588,16 +1448,24 @@
   "racaTipo": "Humanoide",
   "racaTamanho": "Médio",
   "money": {
-    "pc": 100,
-    "pp": 99,
-    "po": 159,
-    "pl": 99,
-    "pd": 3
+    "pc": 0,
+    "pp": 0,
+    "po": 60,
+    "pl": 0,
+    "pd": 4
   },
   "hitDie": "d10",
   "subclasses": {
     "bruxo": "O Morto-Vivo",
     "clerigo": "Domínio do Zelo",
     "guerreiro": "Arqueiro Arcano"
+  },
+  "salvaguardas": {
+    "Força": {
+      "treinado": true
+    },
+    "Constituição": {
+      "treinado": true
+    }
   }
 }

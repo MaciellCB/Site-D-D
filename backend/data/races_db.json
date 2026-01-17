@@ -224,7 +224,7 @@
     "description": "Galopando pelas vastas planícies e florestas antigas, os Centauros unem a força e velocidade de um cavalo com a adaptabilidade humana. Nativos de Faéria, eles têm uma conexão mística com a natureza e são guerreiros e druidas formidáveis.",
     "image": "img/races/Centauro.png",
     "languages": ["Comum", "Silvestre"],
-    "chooseSkillFrom": ["Lidar com Animais", "Medicina", "Natureza", "Sobrevivência"],
+    "chooseSkillFrom": ["Lidar com animais", "Medicina", "Natureza", "Sobrevivência"],
     "countSkills": 1,
     "traits": [
       {
@@ -241,7 +241,7 @@
       },
       {
         "name": "Afinidade com a Natureza",
-        "desc": "Você ganha proficiência em uma das seguintes perícias: <b>Lidar com Animais</b>, <b>Medicina</b>, <b>Natureza</b> ou <b>Sobrevivência</b>."
+        "desc": "Você ganha proficiência em uma das seguintes perícias: <b>Lidar com animais</b>, <b>Medicina</b>, <b>Natureza</b> ou <b>Sobrevivência</b>."
       }
     ],
     "variations": []
@@ -1786,7 +1786,7 @@
     "description": "Povo-lagarto das selvas e pântanos. Pragmáticos e sobrevivencialistas, eles veem o mundo através de lentes de predador e presa, e suas escamas oferecem proteção natural.",
     "image": "img/races/Reptante.png",
     "languages": ["Comum", "Dracônico"],
-    "chooseSkillFrom": ["Lidar com Animais", "Natureza", "Percepção", "Furtividade", "Sobrevivência"],
+    "chooseSkillFrom": ["Lidar com animais", "Natureza", "Percepção", "Furtividade", "Sobrevivência"],
     "countSkills": 2,
     "traits": [
       {
