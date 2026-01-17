@@ -45,16 +45,30 @@ const TIPOS_DANO_LISTA = [
     'Elétrico', 'Trovão', 'Veneno', 'Radiante', 'Necrótico', 'Psíquico', 'Energético'
 ];
 
+// --- LISTAS DE SELEÇÃO (Atualizada com Instrumentos) ---
 const PROFICIENCIAS_LISTA_ESQUERDA = [
+    // Armaduras e Armas
     'Armaduras leves', 'Armaduras médias', 'Armaduras pesadas', 'Escudos',
     'Armas simples', 'Armas marciais', 'Armas de fogo',
+    
+    // Ferramentas de Artesão
     'Ferramentas de Alquimista', 'Ferramentas de Calígrafo', 'Ferramentas de Carpinteiro',
     'Ferramentas de Cartógrafo', 'Ferramentas de Coureiro', 'Ferramentas de Ferreiro',
     'Ferramentas de Joalheiro', 'Ferramentas de Oleiro', 'Ferramentas de Pedreiro',
     'Ferramentas de Sapateiro', 'Ferramentas de Tecelão', 'Ferramentas de Vidreiro',
     'Ferramentas de Pintor', 'Ferramentas de Ladrão',
+    
+    // Kits
     'Kit de Disfarce', 'Kit de Falsificação', 'Kit de Herborismo', 'Kit de Venenos',
-    'Instrumento Musical', 'Veículos (terrestres)', 'Veículos (aquáticos)'
+    
+    // Instrumentos Musicais
+    'Instrumento Musical (Genérico)',
+    'Alaúde', 'Bateria', 'Charamela', 'Citara', 'Flauta', 'Flauta de Pã', 
+    'Gaita de Foles', 'Lira', 'Tambor', 'Trombeta', 'Trompa', 'Viola', 
+    'Violino', 'Xilofone',
+
+    // Veículos
+    'Veículos (terrestres)', 'Veículos (aquáticos)'
 ];
 
 const IDIOMAS_LISTA = [

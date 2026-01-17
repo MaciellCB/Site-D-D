@@ -72,6 +72,23 @@
     "caracteristicas": ["Pesada", "Duas Mãos"],
     "description": "<p>A famosa Montante ou Greatsword. Requer treinamento e força.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 7 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
   },
+
+  {
+  "id": "i_rapieira",
+  "name": "Rapieira",
+  "category": "Armas",
+  "subcategory": "Corpo-a-corpo",
+  "type": "Arma",
+  "damage": "1d8",
+  "useTwoHands": false,
+  "damageType": "Perfurante",
+  "proficiency": "Armas Marciais",
+  "tipoArma": "Corpo a Corpo",
+  "empunhadura": "Uma Mão",
+  "caracteristicas": ["Acuidade"],
+  "description": "<p>Uma espada fina e elegante, ideal para estocadas precisas e combate ágil.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+},
+
   {
     "id": "i_alabarda",
     "name": "Alabarda",
@@ -2381,6 +2398,16 @@
     "type": "Geral",
     "description": "<p>Instrumento de cordas popular.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 35 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
   },
+
+  {
+  "id": "i_citara",
+  "name": "Cítara",
+  "category": "Conjuntos",
+  "subcategory": "Ferramentas",
+  "type": "Geral",
+  "description": "<p>Um instrumento de cordas antigo, semelhante a uma lira ou harpa pequena, usado em performances musicais e cerimônias.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 30 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+},
+
   {
     "id": "i_instrumento_flauta",
     "name": "Flauta",
