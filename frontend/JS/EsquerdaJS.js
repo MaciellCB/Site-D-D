@@ -806,175 +806,114 @@ function atualizarIniciativaTotal() {
 }
 
 /* =============================================================
-   CORREÇÃO DEFINITIVA CA: JS/EsquerdaJS.js
-   Substitua a função "atualizarAC" por esta:
-============================================================= */
-
+   CORREÇÃO DA LÓGICA DE CA - EsquerdaJS.js
+   ============================================================= */
 function atualizarAC() {
-    // 1. Pega modificadores
+    // 1. Pega os modificadores dos atributos
     const getMod = (n) => Math.floor((parseInt(state.atributos?.[n] || 10) - 10) / 2);
     const modDex = getMod('n2');
     const modCon = getMod('n1');
     const modSab = getMod('n3');
 
-    // 2. Identifica itens equipados
-    const armadura = state.inventory.find(i =>
+    // 2. Localiza itens de proteção equipados
+    const armadura = state.inventory.find(i => 
         i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'armadura'
     );
-    const escudo = state.inventory.find(i =>
+    const escudo = state.inventory.find(i => 
         i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'escudo'
     );
 
-    // 3. Habilidades Especiais
-    const barbDef = state.abilities.some(a => a.active && a.title.includes("Defesa sem Armadura") && a.title.includes("Bárbaro"));
-    const monkDef = state.abilities.some(a => a.active && a.title.includes("Defesa sem Armadura") && a.title.includes("Monge"));
+    // 3. Verifica habilidades de Defesa sem Armadura
+    const barbDef = state.abilities.some(a => a.active && a.title.includes("Bárbaro"));
+    const monkDef = state.abilities.some(a => a.active && a.title.includes("Monge"));
 
-    // Variáveis Visuais
-    let visualDex = 0;
+    let acTotal = 10;
+    let visualEquip = 0; // Valor que vai para o slot "Equip"
+    let visualDex = modDex;
     let visualDexText = "DEX";
-    let visualEquip = 0; // O valor que vai aparecer na bolinha "Equip"
     let tipoTag = "SEM ARMADURA";
-    let isHeavy = false;
-    let acTotal = 0;
+    let usaBase10 = true; // Controla se o "10" da fórmula aparece
 
-    // Bônus Extras
     let bonusEscudo = escudo ? (parseInt(escudo.defense) || 2) : 0;
     let bonusOutros = parseInt(state.acOutros) || 0;
 
-    if (state.inventory) {
-        state.inventory.filter(i => i.equip && i.type === 'Geral' && i.defenseBonus).forEach(item => {
-            bonusOutros += (parseInt(item.defenseBonus) || 0);
-        });
-    }
-
-    // --- LÓGICA DE CÁLCULO ---
+    // Soma bônus de itens gerais (anéis, etc)
+    state.inventory.filter(i => i.equip && i.type === 'Geral' && i.defenseBonus).forEach(item => {
+        bonusOutros += (parseInt(item.defenseBonus) || 0);
+    });
 
     if (armadura) {
-        let valInput = parseInt(armadura.defense);
-        if (isNaN(valInput)) valInput = 11; // Valor padrão se vazio
-
-        // --- CORREÇÃO DO VALOR NEGATIVO E DO LIMITE ---
-        // Se o valor for <= 10 (ex: 2, 8, 10), assumimos que é BÔNUS e somamos 10.
-        // Se for >= 11 (ex: 12, 18), usamos como valor TOTAL.
-        let valArmaduraTotal = valInput <= 10 ? 10 + valInput : valInput;
+        // --- CASO COM ARMADURA ---
+        usaBase10 = false; // Armadura substitui o 10 base
+        let valBase = parseInt(armadura.defense) || 10;
+        if (valBase <= 10) valBase += 10; // Caso o usuário digite apenas o bônus (ex: 2 ao invés de 12)
 
         const prof = (armadura.proficiency || '').toLowerCase();
-        tipoTag = armadura.proficiency?.toUpperCase() || "LEVE";
-
-        // CÁLCULO DIRETO DO "EQUIP" VISUAL
-        // É simplesmente: (Quanto a armadura dá além de 10) + (Escudo)
-        // Isso impede valores negativos.
-        visualEquip = (valArmaduraTotal - 10) + bonusEscudo;
+        
+        // O "Equip" agora é o valor da Armadura + Escudo
+        visualEquip = valBase + bonusEscudo;
+        tipoTag = armadura.proficiency?.toUpperCase() || "ARMADURA";
 
         if (prof.includes('pesada')) {
-            // PESADA: Ignora Dex
             visualDex = 0;
             visualDexText = "-";
-            isHeavy = true;
-            tipoTag = "PESADA";
-
-            // AC = Valor Total da Armadura + Escudo + Outros
-            acTotal = valArmaduraTotal + bonusEscudo + bonusOutros;
-
+            acTotal = visualEquip + bonusOutros;
         } else if (prof.includes('media') || prof.includes('média')) {
-            // MÉDIA: Dex máx 2
             visualDex = Math.min(modDex, 2);
             visualDexText = "DEX (Máx 2)";
-            tipoTag = "MÉDIA";
-
-            // AC = Valor Total da Armadura + Dex Limitada + Escudo + Outros
-            acTotal = valArmaduraTotal + visualDex + bonusEscudo + bonusOutros;
-
+            acTotal = visualEquip + visualDex + bonusOutros;
         } else {
-            // LEVE: Dex Total
             visualDex = modDex;
-            visualDexText = "DEX";
-            tipoTag = "LEVE";
-
-            // AC = Valor Total da Armadura + Dex + Escudo + Outros
-            acTotal = valArmaduraTotal + visualDex + bonusEscudo + bonusOutros;
+            acTotal = visualEquip + visualDex + bonusOutros;
         }
-
     } else {
-        // SEM ARMADURA
-        visualEquip = bonusEscudo; // Se tiver só escudo
+        // --- CASO SEM ARMADURA ---
+        visualEquip = bonusEscudo;
 
         if (barbDef) {
-            // Bárbaro: 10 + Dex + Con + Escudo
-            acTotal = 10 + modDex + modCon + bonusEscudo + bonusOutros;
             tipoTag = "DEF. BÁRBARO";
+            visualDex = modDex + modCon;
             visualDexText = "DEX + CON";
-            visualDex = modDex + modCon; // Hack visual para a soma bater
+            acTotal = 10 + visualDex + bonusEscudo + bonusOutros;
         } else if (monkDef && !escudo) {
-            // Monge: 10 + Dex + Sab (Sem escudo)
-            acTotal = 10 + modDex + modSab + bonusOutros;
             tipoTag = "DEF. MONGE";
+            visualDex = modDex + modSab;
             visualDexText = "DEX + SAB";
-            visualDex = modDex + modSab; // Hack visual
+            acTotal = 10 + visualDex + bonusOutros;
         } else {
-            // Pelado: 10 + Dex + Escudo
             acTotal = 10 + modDex + bonusEscudo + bonusOutros;
-            tipoTag = "SEM ARMADURA";
-            visualDexText = "DEX";
-            visualDex = modDex;
         }
     }
 
-    // --- ATUALIZAÇÃO DO DOM ---
-
-    // 1. Valor Total Grande
+    // --- ATUALIZAÇÃO VISUAL ---
+    
+    // 1. Valor total da CA
     const elValor = document.getElementById('armaduraValor');
     if (elValor) elValor.textContent = acTotal;
 
-    // 2. Tag da Armadura
-    const elTag = document.querySelector('.armadura-tag');
-    if (elTag) {
-        elTag.textContent = tipoTag;
-        elTag.className = 'armadura-tag';
-        elTag.classList.add(isHeavy ? 'pesado' : 'leve');
-        const bg = isHeavy ? '#131313' : 'transparent';
-        elTag.style.cssText = `display: flex; align-items: center; justify-content: center; border: 2px solid #fff; padding: 8px 15px; border-radius: 8px; background: ${bg}; color: #fff; font-weight: 900; font-size: 15px; margin-top: 12px; min-width: 130px; text-transform: uppercase; white-space: nowrap;`;
+    // 2. Slots da fórmula (Equip e Outros)
+    const zeroNums = document.querySelectorAll('.zero-pair .zero-num');
+    if (zeroNums[0]) zeroNums[0].textContent = visualEquip;
+    if (zeroNums[1]) zeroNums[1].textContent = bonusOutros;
+
+    // 3. Texto do Atributo (DEX, DEX+CON, etc)
+    const elFormulaAttr = document.querySelector('.formula-attr');
+    if (elFormulaAttr) {
+        elFormulaAttr.textContent = visualDexText;
+        elFormulaAttr.style.visibility = (visualDexText === "-") ? "hidden" : "visible";
     }
 
-    // 3. Texto da DEX e Efeito do 10
-    const elFormulaDex = document.querySelector('.formula-attr');
-    const elFormulaPlus = document.querySelector('.inline-formula .formula-plus');
-
-    if (elFormulaDex) {
-        elFormulaDex.textContent = visualDexText;
-        const visibility = (visualDexText === "-") ? "hidden" : "visible";
-        elFormulaDex.style.visibility = visibility;
-        if (elFormulaPlus) elFormulaPlus.style.visibility = visibility;
-
-        if (visualDexText.length > 5) {
-            elFormulaDex.style.transform = "translateY(-26px)";
-            elFormulaDex.style.fontSize = "10px";
-        } else {
-            elFormulaDex.style.transform = "translateY(-30px)";
-            elFormulaDex.style.fontSize = "12px";
-        }
-    }
-
-    // Aumenta o "10" se for pesada
+    // 4. Lógica para esconder/mostrar o "10" na fórmula visual
     const baseTen = document.querySelector('.formula-text');
     if (baseTen) {
-        if (isHeavy) baseTen.classList.add('heavy-armor-mode');
+        // Se estiver usando armadura, adicionamos uma classe para "apagar" o 10 visualmente
+        if (!usaBase10) baseTen.classList.add('heavy-armor-mode'); 
         else baseTen.classList.remove('heavy-armor-mode');
     }
 
-    // 4. Preenche os Zeros (Equip e Outros)
-    const zeroNums = document.querySelectorAll('.zero-pair .zero-num');
-    if (zeroNums.length >= 1) {
-        // Agora visualEquip é calculado diretamente, sem chance de negativo
-        zeroNums[0].textContent = visualEquip;
-    }
-    if (zeroNums.length >= 2) {
-        if (document.activeElement !== zeroNums[1]) {
-            zeroNums[1].textContent = bonusOutros;
-        }
-    }
+    const elTag = document.querySelector('.armadura-tag');
+    if (elTag) elTag.textContent = tipoTag;
 }
-
 
 
 
