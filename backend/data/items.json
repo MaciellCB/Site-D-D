@@ -903,6 +903,199 @@
     "tipoItem": "Escudo",
     "description": "<p>escudo de madeira comum</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
   },
+
+  {
+    "id": "i_broquel",
+    "name": "Broquel (Buckler)",
+    "category": "Armaduras",
+    "subcategory": "Escudos",
+    "type": "Proteção",
+    "defense": "+1",
+    "proficiency": "Escudo",
+    "tipoItem": "Escudo",
+    "description": "<p>Um escudo pequeno de metal preso ao antebraço. Permite que o usuário use a mão do escudo para segurar itens pequenos ou realizar gestos mágicos, mas não para empunhar armas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+  },
+  {
+    "id": "i_escudo_cravos",
+    "name": "Escudo de Cravos",
+    "category": "Armaduras",
+    "subcategory": "Escudos",
+    "type": "Proteção",
+    "defense": "+2",
+    "proficiency": "Escudo",
+    "tipoItem": "Escudo",
+    "description": "<p>Um escudo reforçado com espinhos. Ao realizar a ação de Empurrar com o escudo, o alvo sofre 1d4 de dano perfurante.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 4 kg</li></ul>"
+  },
+  {
+    "id": "i_escudo_pavise",
+    "name": "Escudo Pavise",
+    "category": "Armaduras",
+    "subcategory": "Escudos",
+    "type": "Proteção",
+    "defense": "+2",
+    "proficiency": "Escudo",
+    "tipoItem": "Escudo",
+    "description": "<p>Escudo retangular pesado com um suporte. Com uma ação, você pode fincá-lo no chão para criar cobertura meia para uma criatura atrás de você, mas você perde o bônus de CA enquanto ele estiver fincado.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 20 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 7 kg</li></ul>"
+  },
+  {
+    "id": "i_escudo_polido",
+    "name": "Escudo de Aço Polido",
+    "category": "Armaduras",
+    "subcategory": "Escudos",
+    "type": "Proteção",
+    "defense": "+2",
+    "proficiency": "Escudo",
+    "tipoItem": "Escudo",
+    "description": "<p>A superfície é um espelho perfeito. Concede vantagem em testes de resistência contra ataques de olhar (como de Medusas) e pode refletir luz em ambientes escuros.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 30 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
+  },
+  {
+    "id": "i_escudo_lanterna",
+    "name": "Escudo Lanterna",
+    "category": "Armaduras",
+    "subcategory": "Escudos",
+    "type": "Proteção",
+    "defense": "+2",
+    "proficiency": "Escudo",
+    "tipoItem": "Escudo",
+    "description": "<p>Possui um encaixe central para uma lanterna furta-fogo. Permite iluminar o caminho enquanto mantém a defesa alta, sem ocupar a mão livre.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 40 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 4,5 kg</li></ul>"
+  },
+  {
+    "id": "i_escudo_torre",
+    "name": "Escudo de Torre (Grand Shield)",
+    "category": "Armaduras",
+    "subcategory": "Escudos",
+    "type": "Proteção",
+    "defense": "+3",
+    "proficiency": "Escudo",
+    "tipoItem": "Escudo",
+    "minStrength": "15",
+    "description": "<p>Escudo maciço que cobre quase o corpo todo. Reduz seu deslocamento em 1,5m. Com uma reação, você pode se esconder atrás dele para ganhar Cobertura Total contra ataques à distância.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 15 kg</li></ul>"
+  },
+
+  {
+    "id": "i_escudo_espartano",
+    "name": "Escudo Espartano",
+    "category": "Armaduras",
+    "subcategory": "Escudos",
+    "type": "Proteção",
+    "defense": "+2",
+    "proficiency": "Escudo",
+    "tipoItem": "Escudo",
+    "description": "<p>Um escudo circular de bronze projetado para formações de falange. Concede vantagem em testes de resistência para não ser derrubado (caído).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 6 kg</li></ul>"
+  },
+  
+  {
+    "id": "i_escudo_aco_ref",
+    "name": "Escudo de Aço Reforçado",
+    "category": "Armaduras",
+    "subcategory": "Escudos",
+    "type": "Proteção",
+    "defense": "+2",
+    "proficiency": "Escudo",
+    "tipoItem": "Escudo",
+    "description": "<p>Tratado para suportar impactos diretos. O usuário reduz qualquer dano perfurante ou cortante recebido em 1 ponto.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 15 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 6 kg</li></ul>"
+  },
+  {
+    "id": "i_escudo_ossos",
+    "name": "Escudo de Ossos",
+    "category": "Armaduras",
+    "subcategory": "Escudos",
+    "type": "Proteção",
+    "defense": "+1",
+    "proficiency": "Escudo",
+    "tipoItem": "Escudo",
+    "description": "<p>Feito de restos mortais. Concede vantagem em testes de Intimidação contra criaturas pequenas, mas impõe desvantagem em testes de Furtividade devido ao barulho dos ossos batendo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 4 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 4 kg</li></ul>"
+  },
+  {
+    "id": "i_escudo_grande_protetor",
+    "name": "Escudo Grande",
+    "category": "Armaduras",
+    "subcategory": "Escudos",
+    "type": "Proteção",
+    "defense": "+3",
+    "proficiency": "Escudo",
+    "tipoItem": "Escudo",
+    "description": "<p>Um escudo massivo que protege o usuário e quem está ao lado. Impõe desvantagem em Furtividade. Aliados adjacentes recebem cobertura contra projéteis não mágicos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 20 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 8 kg</li></ul>"
+  },
+  {
+    "id": "i_escudo_peitoral_arma",
+    "name": "Escudo refarado",
+    "category": "Armaduras",
+    "subcategory": "Escudos",
+    "type": "Proteção",
+    "defense": "+2",
+    "proficiency": "Escudo",
+    "tipoItem": "Escudo",
+    "description": "<p>Um escudo com empunhadura agressiva. Pode ser usado como uma arma improvisada, causando 1d6 de dano contundente.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 12 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 6 kg</li></ul>"
+  },
+  {
+    "id": "i_escudo_energia",
+    "name": "Escudo de Energia",
+    "category": "Armaduras",
+    "subcategory": "Escudos",
+    "type": "Proteção",
+    "defense": "+3",
+    "proficiency": "Escudo",
+    "tipoItem": "Escudo",
+    "description": "<p>Item tecnológico ou mágico. Pode ser ativado como uma reação para durar 1 minuto. Após o uso, requer um descanso curto para recarregar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
+  },
+  {
+    "id": "i_escudo_reflexivo",
+    "name": "Escudo Reflexivo",
+    "category": "Armaduras",
+    "subcategory": "Escudos",
+    "type": "Proteção",
+    "defense": "+2",
+    "proficiency": "Escudo",
+    "tipoItem": "Escudo",
+    "description": "<p>Superfície espelhada mágica. Permite refletir 1 ataque de projétil de volta para o atacante por descanso longo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 30 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>"
+  },
+  {
+    "id": "i_escudo_magico_res",
+    "name": "Escudo Mágico",
+    "category": "Armaduras",
+    "subcategory": "Escudos",
+    "type": "Proteção",
+    "defense": "+3",
+    "proficiency": "Escudo",
+    "tipoItem": "Escudo",
+    "description": "<p>Imbuído com proteção arcana. Concede resistência a magias (redução de dano ou bônus em testes de salvaguarda).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 100 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 4 kg</li></ul>"
+  },
+  {
+    "id": "i_escudo_vidro_ilusoes",
+    "name": "Escudo de Vidro Encantado",
+    "category": "Armaduras",
+    "subcategory": "Escudos",
+    "type": "Proteção",
+    "defense": "+2",
+    "proficiency": "Escudo",
+    "tipoItem": "Escudo",
+    "description": "<p>Feito de vidro alquímico inquebrável. Concede vantagem em testes de resistência contra magias de ilusão.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 75 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
+  },
+  {
+    "id": "i_escudo_dragao",
+    "name": "Escudo de Escamas de Dragão",
+    "category": "Armaduras",
+    "subcategory": "Escudos",
+    "type": "Proteção",
+    "defense": "+3",
+    "proficiency": "Escudo",
+    "tipoItem": "Escudo",
+    "description": "<p>Criado a partir de restos de um dragão. Concede resistência ao tipo de dano elemental do dragão correspondente.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 200 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 6 kg</li></ul>"
+  },
+  {
+    "id": "i_escudo_retratil",
+    "name": "Escudo Retrátil",
+    "category": "Armaduras",
+    "subcategory": "Escudos",
+    "type": "Proteção",
+    "defense": "+2",
+    "proficiency": "Escudo",
+    "tipoItem": "Escudo",
+    "description": "<p>Mecanismo complexo de molas. Pode ser armado ou guardado usando uma ação bônus ou uma reação.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 35 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
+  },
+
+
   {
     "id": "i_abaco",
     "name": "Ábaco",
@@ -1335,7 +1528,7 @@
     "category": "Provisão",
     "subcategory": "Comida",
     "type": "Geral",
-    "description": "<p>Comida seca.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+    "description": "<p>Comida seca.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
   },
 
 
@@ -2310,42 +2503,7 @@
     "type": "Item",
     "description": "<p>Munição padrão para arcos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
   },
-  {
-    "id": "i_flecha_osso",
-    "name": "Flecha de Osso",
-    "category": "Armas",
-    "subcategory": "Munição",
-    "type": "Item",
-    "damage": "+1",
-    "description": "<p>Flecha com ponta de osso afiada.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 3 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,45 kg</li></ul>"
-  },
-  {
-    "id": "i_flecha_aco",
-    "name": "Flecha de Aço",
-    "category": "Armas",
-    "subcategory": "Munição",
-    "type": "Item",
-    "damage": "+2",
-    "description": "<p>Flecha de qualidade superior.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,80 kg</li></ul>"
-  },
-  {
-    "id": "i_flecha_obsidiana",
-    "name": "Flecha de Obsidiana",
-    "category": "Armas",
-    "subcategory": "Munição",
-    "type": "Item",
-    "damage": "+3",
-    "description": "<p>Extremamente afiada, mas frágil.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 10 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,80 kg</li></ul>"
-  },
-  {
-    "id": "i_flecha_encantada",
-    "name": "Flecha Encantada",
-    "category": "Armas",
-    "subcategory": "Munição",
-    "type": "Item",
-    "damage": "+5",
-    "description": "<p>Munição mágica.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 25 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,45 kg</li></ul>"
-  },
+  
   {
     "id": "i_granada_desintegracao",
     "name": "Granada de Desintegração",
