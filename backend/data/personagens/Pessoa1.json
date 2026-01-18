@@ -1,19 +1,19 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Inventário",
+  "activeTab": "Magias",
   "spellDCConfig": {
-    "selectedAttr": "none",
+    "selectedAttr": "car",
     "extraMod": 0,
     "lastKnownLevel": 0
   },
-  "dtMagias": "Selecione",
+  "dtMagias": 10,
   "inventory": [
     {
       "id": 1768716390964,
       "name": "Machado de Batalha",
       "description": "<p>Uma cabeça de aço pesado em um cabo de carvalho envernizado. A lâmina em forma de meia-lua possui um fio capaz de partir escudos de madeira com facilidade.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>",
-      "expanded": true,
+      "expanded": false,
       "equip": false,
       "type": "Arma",
       "isEquipable": true,
@@ -29,7 +29,7 @@
       "attunement": "Não",
       "damage": "1d8",
       "damage2Hands": "1d10",
-      "useTwoHands": false,
+      "useTwoHands": true,
       "damageTypes": [
         "Cortante"
       ],
@@ -296,16 +296,16 @@
         "resistencia": "-"
       },
       "description": "<p>Protege uma área contra intrusos. Um alarme (mental ou audível) soa quando uma criatura Miúda ou maior toca ou entra na área.</p>",
-      "expanded": true,
+      "expanded": false,
       "active": false
     },
     {
       "id": 1766798008908,
       "name": "Sono",
       "levelNumber": 1,
-      "school": "Encantamento",
-      "spellClass": "Mago",
-      "damage": "-",
+      "damage": "5d8",
+      "expanded": true,
+      "active": true,
       "components": {
         "V": true,
         "S": true,
@@ -320,9 +320,9 @@
         "duracao": "1 min",
         "resistencia": "-"
       },
-      "description": "<p>Role <strong>5d8</strong>. Adormece criaturas na área em ordem ascendente de seus PV atuais.</p><p><strong>Níveis Superiores:</strong> +2d8 por nível de slot.</p>",
-      "expanded": true,
-      "active": true
+      "school": "Encantamento",
+      "spellClass": "Mago",
+      "description": "<p>Role <strong>5d8</strong>. Adormece criaturas na área em ordem ascendente de seus PV atuais.</p><p><strong>Níveis Superiores:</strong> +2d8 por nível de slot.</p>"
     }
   ],
   "abilityCatalog": [],

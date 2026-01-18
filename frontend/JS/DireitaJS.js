@@ -502,35 +502,31 @@ function renderInventory() {
 
 
 /* =============================================================
-   CORREÇÃO DEFINITIVA DE EVENTOS DO INVENTÁRIO (ID HÍBRIDO)
-   Substitua a função bindInventoryCardEvents antiga por esta.
+   CORREÇÃO: bindInventoryCardEvents COM LÓGICA DE 2 MÃOS
 ============================================================= */
 
 function bindInventoryCardEvents() {
   
   // Função auxiliar para buscar item ignorando se é Texto ou Número
-  // Isso garante que IDs antigos (números) e novos (strings) funcionem juntos.
   const findItemById = (rawId) => {
       return state.inventory.find(x => String(x.id) === String(rawId));
   };
 
   // --- 1. EXPANDIR/RECOLHER ---
   document.querySelectorAll('.item-card').forEach(card => {
-    // Pega o ID cru (como string) direto do HTML
     const rawId = card.getAttribute('data-id');
     const header = card.querySelector('.card-header');
 
     header.onclick = (ev) => {
-      // Impede o clique se for no checkbox ou nos botões de editar/remover
+      // Impede o clique se for no checkbox de equipar ou nos botões de editar/remover
       if (ev.target.closest('.header-equip') || ev.target.closest('.item-actions-footer')) return;
 
-      const it = findItemById(rawId); // Busca usando a função segura
+      const it = findItemById(rawId);
       if (!it) return;
 
       it.expanded = !it.expanded;
       saveStateToServer();
 
-      // Atualiza apenas este card no DOM
       const body = card.querySelector('.card-body');
       const caret = card.querySelector('.caret');
       
@@ -559,7 +555,6 @@ function bindInventoryCardEvents() {
           const isEscudo = item.tipoItem?.toLowerCase() === 'escudo' || item.proficiency?.toLowerCase() === 'escudo';
 
           state.inventory.forEach(other => {
-            // Compara IDs como string para evitar erro
             if (String(other.id) !== String(rawId) && (other.type === 'Proteção' || other.type === 'protecao')) {
               const otherIsEscudo = other.tipoItem?.toLowerCase() === 'escudo' || other.proficiency?.toLowerCase() === 'escudo';
               if (isEscudo === otherIsEscudo) {
@@ -576,7 +571,7 @@ function bindInventoryCardEvents() {
       if (item) item.equip = isChecked;
       saveStateToServer();
 
-      // Se estiver na aba Combate, atualiza para remover/adicionar
+      // Se estiver na aba Combate, atualiza para remover/adicionar da lista filtrada
       if (state.activeTab === 'Combate') {
         const scrollY = window.scrollY;
         renderActiveTab();
@@ -588,7 +583,28 @@ function bindInventoryCardEvents() {
     };
   });
 
-  // --- 3. REMOVER ---
+  // --- 3. ALTERNAR 2 MÃOS (VERSÁTIL) - [AQUI ESTAVA FALTANDO] ---
+  document.querySelectorAll('.toggle-versatile').forEach(ch => {
+      ch.onchange = (ev) => {
+          const rawId = ev.target.getAttribute('data-id');
+          const item = findItemById(rawId);
+          
+          if (item) {
+              item.useTwoHands = ev.target.checked;
+              
+              // Salva
+              saveStateToServer();
+              
+              // Re-renderiza a aba atual (para atualizar o número de dano visualmente)
+              // Mantendo o scroll onde estava
+              const scrollY = window.scrollY; // ou conteudoEl.scrollTop
+              renderActiveTab();
+              window.scrollTo(0, scrollY);
+          }
+      };
+  });
+
+  // --- 4. REMOVER ---
   document.querySelectorAll('.remover-item').forEach(el => {
     el.onclick = (ev) => {
       ev.preventDefault();
@@ -596,7 +612,6 @@ function bindInventoryCardEvents() {
       
       if(confirm('Tem certeza que deseja remover este item?')) {
           const scrollY = window.scrollY;
-          // Filtra convertendo tudo para string na comparação
           state.inventory = state.inventory.filter(i => String(i.id) !== String(rawId));
           renderActiveTab();
           window.scrollTo(0, scrollY);
@@ -606,7 +621,7 @@ function bindInventoryCardEvents() {
     };
   });
 
-  // --- 4. EDITAR ---
+  // --- 5. EDITAR ---
   document.querySelectorAll('.editar-item').forEach(el => {
     el.onclick = (ev) => {
       ev.preventDefault();

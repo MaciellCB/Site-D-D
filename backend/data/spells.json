@@ -1623,7 +1623,7 @@
     "levelNumber": 1,
     "school": "Encantamento",
     "spellClass": "Bardo, Feiticeiro, Mago",
-    "damage": "-",
+    "damage": "5d8",
     "components": { "V": true, "S": true, "M": true },
     "material": "Areia, pétalas ou grilo",
     "attrs": {
