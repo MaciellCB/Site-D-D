@@ -681,22 +681,7 @@
     "damageType": "Fogo",
     "description": "<p>Uma esfera de ferro fundido com um pavio curto. Arremesso (18m). Todos a 1,5m do impacto devem fazer resistência de Destreza (CD 12) ou sofrem o dano.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
   },
-  {
-    "id": "i_simbolo_amuleto",
-    "name": "Símbolo Sagrado - Amuleto",
-    "category": "Utensílios",
-    "subcategory": "Utensílios gerais",
-    "type": "Geral",
-    "description": "<p>Um pingente de prata ou madeira nobre representando uma divindade. Essencial para canalizar o poder dos deuses.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
-  },
-  {
-    "id": "i_simbolo_emblema",
-    "name": "Símbolo Sagrado - Emblema",
-    "category": "Utensílios",
-    "subcategory": "Utensílios gerais",
-    "type": "Geral",
-    "description": "<p>Um emblema sagrado gravado diretamente em um escudo ou peitoral, permitindo conjurar sem ocupar uma mão.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,25 kg</li></ul>"
-  },
+  
   {
     "id": "i_chifre_polvora",
     "name": "Chifre de Pólvora",
@@ -1257,14 +1242,7 @@
     "type": "Geral",
     "description": "<p>Um frasco de vidro contendo um líquido volátil que entra em combustão ao contato com o ar. Causa 1d4 de dano de fogo persistente.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 8 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
   },
-  {
-    "id": "i_foco_arcano_cristal",
-    "name": "Foco Arcano (Cristal)",
-    "category": "Utensílios",
-    "subcategory": "Utensílios gerais",
-    "type": "Geral",
-    "description": "<p>Um prisma de quartzo ou vidro vulcânico, pulsando levemente quando segurado por um conjurador.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 4 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
-  },
+ 
   {
     "id": "i_grimorio",
     "name": "Grimório",
@@ -1287,7 +1265,7 @@
     "category": "Utensílios",
     "subcategory": "Focos Mágicos",
     "type": "Geral",
-    "description": "<p>Um ícone abençoado de uma divindade. Brilha com luz tênue quando poder divino é canalizado através dele.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+    "description": "<p>Um ícone abençoado de uma divindade. Brilha com luz tênue quando poder divino é canalizado através dele, seja uma marca, ou Utensílio.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
   },
   {
     "id": "i_foco_druidico",
@@ -1873,14 +1851,7 @@
     "type": "Geral",
     "description": "<p>Cilindro curto de metal ou madeira nobre, frequentemente usado por bruxos para canalizar pactos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 3 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
   },
-  {
-    "id": "i_implemento_cajado",
-    "name": "Implemento Arcano - Cajado",
-    "category": "Utensílios",
-    "subcategory": "Utensílios gerais",
-    "type": "Geral",
-    "description": "<p>Longo e adornado com runas. Serve tanto como foco mágico quanto como arma (bordão).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>"
-  },
+
   {
     "id": "i_implemento_orbe",
     "name": "Implemento Arcano - Orbe",
@@ -2550,7 +2521,7 @@
   },
   {
     "id": "i_relicario",
-    "name": "Símbolo Sagrado (Relicário)",
+    "name": "Relicário",
     "category": "Utensílios",
     "subcategory": "Utensílios gerais",
     "type": "Geral",
