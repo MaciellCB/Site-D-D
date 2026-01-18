@@ -1008,11 +1008,33 @@ function openClassSelectionModal() {
     const listHtml = CLASSES_DB.map(c => `<div class="race-list-item" data-name="${c.name}">${c.name}</div>`).join('');
     const overlay = document.createElement('div');
     overlay.className = 'spell-modal-overlay race-modal-overlay';
-    overlay.style.zIndex = '12000';
+    overlay.style.zIndex = '12000'; // O modal normal fica em 12000
 
+    // --- ALTERAÇÃO AQUI: Adicionamos o botão "Config Interna" no HTML do Header ---
     overlay.innerHTML = `
         <div class="spell-modal" style="width: 900px; height: 700px; max-height: 95vh;">
-            <div class="modal-header"><h3>Escolher Classe</h3><button class="modal-close">✖</button></div>
+            <div class="modal-header" style="display:flex; align-items:center; justify-content:space-between;">
+                <div style="display:flex; align-items:center; gap: 15px;">
+                    <h3 style="margin:0;">Escolher Classe</h3>
+                    <button id="btn-config-interna-modal" style="
+                        background: #222; 
+                        border: 1px solid #555; 
+                        color: #bbb; 
+                        border-radius: 4px; 
+                        padding: 4px 10px; 
+                        cursor: pointer; 
+                        font-size: 11px; 
+                        display:flex; 
+                        align-items:center; 
+                        gap:5px;
+                        font-weight:bold;
+                        text-transform:uppercase;
+                        transition:0.2s;">
+                        <span>⚙</span> Config Interna
+                    </button>
+                </div>
+                <button class="modal-close">✖</button>
+            </div>
             <div class="modal-body" style="padding: 0; overflow: hidden; display:flex; flex-direction:column; flex:1;">
                 <div class="race-catalog-container" style="flex:1; overflow:hidden;">
                     <div class="race-list-col">${listHtml}</div>
@@ -1028,8 +1050,23 @@ function openClassSelectionModal() {
     document.body.appendChild(overlay);
     if (typeof checkScrollLock === 'function') checkScrollLock();
 
+    // --- ALTERAÇÃO AQUI: Lógica do botão Config Interna ---
+    const btnConfig = overlay.querySelector('#btn-config-interna-modal');
+    btnConfig.onmouseenter = () => { btnConfig.style.background = '#333'; btnConfig.style.color = '#fff'; btnConfig.style.borderColor = '#9c27b0'; };
+    btnConfig.onmouseleave = () => { btnConfig.style.background = '#222'; btnConfig.style.color = '#bbb'; btnConfig.style.borderColor = '#555'; };
+    
+    btnConfig.onclick = (e) => {
+        // Verifica se a função global da esquerda existe
+        if (typeof window.abrirPainelClasses === 'function') {
+            window.abrirPainelClasses(btnConfig); // Passa o botão como referência para posição
+        } else {
+            alert("Painel lateral não carregado.");
+        }
+    };
+
+    // ... Resto da lógica original do modal (Seleção, Detalhes, etc) ...
     let selectedClass = null;
-    let selectedSubclass = null; // Reinicia sempre que abre o modal
+    let selectedSubclass = null;
     const btnSelect = overlay.querySelector('#btn-select-class');
     const detailsContainer = overlay.querySelector('#class-details-content');
 
@@ -1038,9 +1075,7 @@ function openClassSelectionModal() {
     const items = overlay.querySelectorAll('.race-list-item');
     items.forEach(item => {
         item.onclick = () => {
-            // --- CORREÇÃO IMPORTANTE: LIMPA A SELEÇÃO ANTERIOR AO TROCAR DE CLASSE ---
             selectedSubclass = null; 
-            
             items.forEach(i => i.classList.remove('selected'));
             item.classList.add('selected');
             const className = item.getAttribute('data-name');
@@ -1055,7 +1090,6 @@ function openClassSelectionModal() {
 
     btnSelect.onclick = () => {
         if (selectedClass) {
-            // Passa a subclasse explicitamente selecionada (ou null)
             const sucesso = aplicarClasseNaFicha(selectedClass, selectedSubclass);
             if (sucesso) {
                 overlay.remove();
@@ -1064,126 +1098,117 @@ function openClassSelectionModal() {
         }
     };
 
-   function renderClassDetails(cls, simulatedLevel) {
-    if (!cls) return;
-    
-    // Reseta botão para estado inicial
-    btnSelect.removeAttribute('disabled');
-    btnSelect.textContent = `Selecionar ${cls.name} (Nível ${simulatedLevel})`;
-    btnSelect.style.background = '#9c27b0';
-
-    const imagePath = cls.image || 'img/dado.png';
-    const subclassReqLevel = cls.subclass_level || 3;
-    const canPickSubclass = simulatedLevel >= subclassReqLevel;
-
-    let profHtml = '';
-    if (cls.proficiencies) {
-        if (cls.proficiencies.armor && cls.proficiencies.armor.length) profHtml += `<div><strong style="color:#e0aaff;">Armaduras:</strong> ${cls.proficiencies.armor.join(', ')}</div>`;
-        if (cls.proficiencies.weapons && cls.proficiencies.weapons.length) profHtml += `<div><strong style="color:#e0aaff;">Armas:</strong> ${cls.proficiencies.weapons.join(', ')}</div>`;
-        if (cls.proficiencies.tools && cls.proficiencies.tools.length) profHtml += `<div><strong style="color:#e0aaff;">Ferramentas:</strong> ${cls.proficiencies.tools.join(', ')}</div>`;
-    }
-
-    const traitsHtml = cls.features ? cls.features.map(t => `<div class="race-trait-item"><div class="race-trait-name">${t.name}</div><div class="race-trait-desc">${t.description}</div></div>`).join('') : '';
-
-    let subclassesHtml = '';
-    if (cls.subclasses && cls.subclasses.length > 0) {
-        let lockMessage = '';
+    function renderClassDetails(cls, simulatedLevel) {
+        // (Copie a função renderClassDetails original que já estava aqui, sem alterações nela)
+        // Se precisar eu reenvio, mas ela não muda.
+        if (!cls) return;
+        btnSelect.removeAttribute('disabled');
+        btnSelect.textContent = `Selecionar ${cls.name} (Nível ${simulatedLevel})`;
+        btnSelect.style.background = '#9c27b0';
         
-        // Verifica se JÁ POSSUI subclasse salva para não pedir de novo SE O NÍVEL FOR SUPERIOR
-        const classKey = cls.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        const hasSaved = state.subclasses && state.subclasses[classKey];
-        const isExactSelectionLevel = simulatedLevel === subclassReqLevel;
+        // ... (resto da renderização igual ao anterior) ...
+        const imagePath = cls.image || 'img/dado.png';
+        const subclassReqLevel = cls.subclass_level || 3;
+        const canPickSubclass = simulatedLevel >= subclassReqLevel;
 
-        if (!canPickSubclass) {
-            lockMessage = `<div style="background:#330000; border:1px solid #d32f2f; color:#ff9999; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">🔒 Subclasses disponíveis para escolha no nível ${subclassReqLevel}.</div>`;
-        } 
-        else if (isExactSelectionLevel) {
-             // Se for o nível exato, mostra mensagem amarela pedindo seleção
-             lockMessage = `<div style="background:#332a00; border:1px solid #ffeb3b; color:#ffeb3b; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">⚠ Nível ${subclassReqLevel}: Selecione sua Subclasse AGORA.</div>`;
-        }
-        else if (hasSaved) {
-             // Se for nível maior e já tem, mostra o que tem
-             lockMessage = `<div style="background:#1a3300; border:1px solid #4caf50; color:#a5d6a7; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">✔ Subclasse Atual: <strong>${hasSaved}</strong></div>`;
+        let profHtml = '';
+        if (cls.proficiencies) {
+            if (cls.proficiencies.armor && cls.proficiencies.armor.length) profHtml += `<div><strong style="color:#e0aaff;">Armaduras:</strong> ${cls.proficiencies.armor.join(', ')}</div>`;
+            if (cls.proficiencies.weapons && cls.proficiencies.weapons.length) profHtml += `<div><strong style="color:#e0aaff;">Armas:</strong> ${cls.proficiencies.weapons.join(', ')}</div>`;
+            if (cls.proficiencies.tools && cls.proficiencies.tools.length) profHtml += `<div><strong style="color:#e0aaff;">Ferramentas:</strong> ${cls.proficiencies.tools.join(', ')}</div>`;
         }
 
-        subclassesHtml = `
-                <div class="race-traits-title" style="margin-top:25px; color:#ffeb3b; border-top:1px solid #333; padding-top:15px;">Subclasses (Arquétipos/Juramentos)</div>
-                ${lockMessage}
-                <div class="variations-list" style="${!canPickSubclass ? 'opacity:0.8;' : ''}"> 
-                    ${cls.subclasses.map((sub, idx) => `
-                        <div class="variation-card-wrapper">
-                            <div class="variation-header" data-idx="${idx}" style="cursor:pointer;">
-                                <div style="display:flex; align-items:center; gap:10px; flex:1;">
-                                    <input type="radio" name="class_subclass" value="${idx}" id="sub_${idx}" data-checked="false" ${!canPickSubclass ? 'disabled' : ''}>
-                                    <span class="variation-name">${sub.name}</span>
+        const traitsHtml = cls.features ? cls.features.map(t => `<div class="race-trait-item"><div class="race-trait-name">${t.name}</div><div class="race-trait-desc">${t.description}</div></div>`).join('') : '';
+
+        let subclassesHtml = '';
+        if (cls.subclasses && cls.subclasses.length > 0) {
+            let lockMessage = '';
+            const classKey = cls.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const hasSaved = state.subclasses && state.subclasses[classKey];
+            const isExactSelectionLevel = simulatedLevel === subclassReqLevel;
+
+            if (!canPickSubclass) {
+                lockMessage = `<div style="background:#330000; border:1px solid #d32f2f; color:#ff9999; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">🔒 Subclasses disponíveis para escolha no nível ${subclassReqLevel}.</div>`;
+            } else if (isExactSelectionLevel) {
+                lockMessage = `<div style="background:#332a00; border:1px solid #ffeb3b; color:#ffeb3b; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">⚠ Nível ${subclassReqLevel}: Selecione sua Subclasse AGORA.</div>`;
+            } else if (hasSaved) {
+                lockMessage = `<div style="background:#1a3300; border:1px solid #4caf50; color:#a5d6a7; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">✔ Subclasse Atual: <strong>${hasSaved}</strong></div>`;
+            }
+
+            subclassesHtml = `
+                    <div class="race-traits-title" style="margin-top:25px; color:#ffeb3b; border-top:1px solid #333; padding-top:15px;">Subclasses (Arquétipos/Juramentos)</div>
+                    ${lockMessage}
+                    <div class="variations-list" style="${!canPickSubclass ? 'opacity:0.8;' : ''}"> 
+                        ${cls.subclasses.map((sub, idx) => `
+                            <div class="variation-card-wrapper">
+                                <div class="variation-header" data-idx="${idx}" style="cursor:pointer;">
+                                    <div style="display:flex; align-items:center; gap:10px; flex:1;">
+                                        <input type="radio" name="class_subclass" value="${idx}" id="sub_${idx}" data-checked="false" ${!canPickSubclass ? 'disabled' : ''}>
+                                        <span class="variation-name">${sub.name}</span>
+                                    </div>
+                                    <span class="variation-arrow">▼</span>
                                 </div>
-                                <span class="variation-arrow">▼</span>
+                                <div class="variation-body">
+                                    <div class="variation-desc-text">${sub.description || ''}</div>
+                                    ${sub.features ? sub.features.map(feat => `<div class="variation-feature-box"><div class="variation-feature-title">★ ${feat.name}</div><div class="variation-feature-content">${feat.description}</div></div>`).join('') : ''}
+                                </div>
                             </div>
-                            <div class="variation-body">
-                                <div class="variation-desc-text">${sub.description || ''}</div>
-                                ${sub.features ? sub.features.map(feat => `<div class="variation-feature-box"><div class="variation-feature-title">★ ${feat.name}</div><div class="variation-feature-content">${feat.description}</div></div>`).join('') : ''}
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-    }
+                        `).join('')}
+                    </div>
+                `;
+        }
 
-    detailsContainer.innerHTML = `
-            <div class="race-detail-header">
-                <div class="race-img-container" onclick="window.openImageLightbox('${imagePath}')"><img src="${imagePath}" class="race-img-display" onerror="this.src='img/dado.png'"></div>
-                <div class="race-title-box">
-                    <h2>${cls.name}</h2>
-                    <div class="race-info-line">
-                        <strong style="color:#9c27b0;">Dado de Vida:</strong> d${cls.hit_die}<br>
-                        <strong style="color:#9c27b0;">Salvaguardas:</strong> ${cls.saving_throws.join(', ')}
+        detailsContainer.innerHTML = `
+                <div class="race-detail-header">
+                    <div class="race-img-container" onclick="window.openImageLightbox('${imagePath}')"><img src="${imagePath}" class="race-img-display" onerror="this.src='img/dado.png'"></div>
+                    <div class="race-title-box">
+                        <h2>${cls.name}</h2>
+                        <div class="race-info-line">
+                            <strong style="color:#9c27b0;">Dado de Vida:</strong> d${cls.hit_die}<br>
+                            <strong style="color:#9c27b0;">Salvaguardas:</strong> ${cls.saving_throws.join(', ')}
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="race-traits-title" style="margin-top:15px;">Proficiências Iniciais & Equipamento</div>
-            <div style="font-size:13px; color:#ccc; line-height:1.6; background:#111; padding:10px; border-radius:6px; border:1px solid #333;">
-                ${profHtml}
-                <div style="margin-top:6px; padding-top:6px; border-top:1px solid #333;"><strong style="color:#e0aaff;">Equipamento Sugerido (Apenas Nível 1):</strong><br> ${cls.equipment ? cls.equipment.join('<br>') : '-'}</div>
-            </div>
-            <div class="race-traits-title" style="margin-top:20px;">Características de Classe</div>
-            <div>${traitsHtml}</div>
-            ${subclassesHtml}
-        `;
+                <div class="race-traits-title" style="margin-top:15px;">Proficiências Iniciais & Equipamento</div>
+                <div style="font-size:13px; color:#ccc; line-height:1.6; background:#111; padding:10px; border-radius:6px; border:1px solid #333;">
+                    ${profHtml}
+                    <div style="margin-top:6px; padding-top:6px; border-top:1px solid #333;"><strong style="color:#e0aaff;">Equipamento Sugerido (Apenas Nível 1):</strong><br> ${cls.equipment ? cls.equipment.join('<br>') : '-'}</div>
+                </div>
+                <div class="race-traits-title" style="margin-top:20px;">Características de Classe</div>
+                <div>${traitsHtml}</div>
+                ${subclassesHtml}
+            `;
 
-    if (cls.subclasses && cls.subclasses.length > 0) {
-        const allRadios = detailsContainer.querySelectorAll('input[name="class_subclass"]');
-        
-        // Accordion
-        detailsContainer.querySelectorAll('.variation-header').forEach(header => {
-            header.addEventListener('click', (e) => {
-                if (e.target.type === 'radio') return;
-                header.closest('.variation-card-wrapper').classList.toggle('open');
+        if (cls.subclasses && cls.subclasses.length > 0) {
+            const allRadios = detailsContainer.querySelectorAll('input[name="class_subclass"]');
+            detailsContainer.querySelectorAll('.variation-header').forEach(header => {
+                header.addEventListener('click', (e) => {
+                    if (e.target.type === 'radio') return;
+                    header.closest('.variation-card-wrapper').classList.toggle('open');
+                });
             });
-        });
-
-        // Seleção
-        allRadios.forEach(radio => {
-            radio.addEventListener('click', (e) => {
-                const idx = parseInt(radio.value);
-                const isAlreadyChecked = radio.getAttribute('data-checked') === 'true';
-                allRadios.forEach(r => r.setAttribute('data-checked', 'false'));
-                if (isAlreadyChecked) {
-                    radio.checked = false;
-                    radio.setAttribute('data-checked', 'false');
-                    selectedSubclass = null; // LIMPA SE DESMARCAR
-                    btnSelect.textContent = `Selecionar ${cls.name} (Nível ${simulatedLevel})`;
-                } else {
-                    radio.checked = true;
-                    radio.setAttribute('data-checked', 'true');
-                    selectedSubclass = cls.subclasses[idx]; // SETA A NOVA
-                    btnSelect.textContent = `Selecionar ${cls.name} (${selectedSubclass.name})`;
-                    detailsContainer.querySelectorAll('.variation-card-wrapper').forEach(c => c.classList.remove('open'));
-                    radio.closest('.variation-card-wrapper').classList.add('open');
-                }
+            allRadios.forEach(radio => {
+                radio.addEventListener('click', (e) => {
+                    const idx = parseInt(radio.value);
+                    const isAlreadyChecked = radio.getAttribute('data-checked') === 'true';
+                    allRadios.forEach(r => r.setAttribute('data-checked', 'false'));
+                    if (isAlreadyChecked) {
+                        radio.checked = false;
+                        radio.setAttribute('data-checked', 'false');
+                        selectedSubclass = null; 
+                        btnSelect.textContent = `Selecionar ${cls.name} (Nível ${simulatedLevel})`;
+                    } else {
+                        radio.checked = true;
+                        radio.setAttribute('data-checked', 'true');
+                        selectedSubclass = cls.subclasses[idx]; 
+                        btnSelect.textContent = `Selecionar ${cls.name} (${selectedSubclass.name})`;
+                        detailsContainer.querySelectorAll('.variation-card-wrapper').forEach(c => c.classList.remove('open'));
+                        radio.closest('.variation-card-wrapper').classList.add('open');
+                    }
+                });
             });
-        });
+        }
     }
-}
 }
 
 

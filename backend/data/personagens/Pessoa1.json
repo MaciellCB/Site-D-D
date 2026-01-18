@@ -1,7 +1,7 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Inventário",
+  "activeTab": "Habilidades",
   "spellDCConfig": {
     "selectedAttr": "none",
     "extraMod": 0,
@@ -434,7 +434,7 @@
     "bardo": 0,
     "blood hunter": 0,
     "bruxo": 0,
-    "clerigo": 1,
+    "clerigo": 0,
     "monge": 0,
     "druida": 0,
     "feiticeiro": 0,
@@ -445,7 +445,7 @@
     "patrulheiro": 0
   },
   "xp": "0",
-  "inspiracao": 5,
+  "inspiracao": 0,
   "vidaDadosSalvos": {},
   "marco": 0,
   "vidaAtual": 0,

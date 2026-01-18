@@ -547,35 +547,61 @@ function toggleEditMode() {
 const elClasseFocus = document.getElementById('classeFocus');
 const painelClasses = document.getElementById('painelClasses'); // Referência global
 
+/* =============================================================
+   NOVA FUNÇÃO GLOBAL: ABRIR PAINEL DE CLASSES
+   (Permite que o Header também chame este painel)
+============================================================= */
+window.abrirPainelClasses = function(elementoAlvo) {
+    const painelClasses = document.getElementById('painelClasses');
+    const lista = document.getElementById('listaClasses');
+    
+    if (!painelClasses || !lista) return;
+
+    // 1. Limpa e Popula a lista (Mesma lógica original)
+    lista.innerHTML = '';
+    classesPadrao.forEach(c => {
+        const nivel = state.niveisClasses[c.key] || 0;
+        const div = document.createElement('div');
+        div.className = 'item-classe';
+        div.innerHTML = `
+            <span>${c.nome}</span>
+            <input type="number" min="0" value="${nivel}" oninput="salvarNivelClasse('${c.key}', this.value)">
+        `;
+        lista.appendChild(div);
+    });
+
+    // 2. Exibe o Painel
+    painelClasses.style.display = 'block';
+
+    // 3. Posicionamento (Perto do elemento que foi clicado)
+    if (elementoAlvo) {
+        const rect = elementoAlvo.getBoundingClientRect();
+        // Ajusta para não sair da tela na direita
+        let leftPos = rect.left;
+        if (leftPos + 300 > window.innerWidth) { // 300 é a largura do painel
+            leftPos = window.innerWidth - 310;
+        }
+        
+        painelClasses.style.left = `${leftPos}px`;
+        painelClasses.style.top = `${rect.bottom + 5}px`;
+        
+        // Reset do transform caso tenha sido arrastado antes
+        painelClasses.style.transform = 'none';
+    } else {
+        // Fallback centralizado
+        painelClasses.style.left = '50%';
+        painelClasses.style.top = '50%';
+        painelClasses.style.transform = 'translate(-50%, -50%)';
+    }
+};
+
+// Listener original da Esquerda (Mantém o funcionamento antigo chamando a nova função)
 if (elClasseFocus && painelClasses) {
     elClasseFocus.onclick = (e) => {
-        const lista = document.getElementById('listaClasses');
-        lista.innerHTML = '';
-
-        classesPadrao.forEach(c => {
-            const nivel = state.niveisClasses[c.key] || 0;
-            const div = document.createElement('div');
-            div.className = 'item-classe';
-            div.innerHTML = `
-                <span>${c.nome}</span>
-                <input type="number" min="0" value="${nivel}" oninput="salvarNivelClasse('${c.key}', this.value)">
-            `;
-            lista.appendChild(div);
-        });
-
-        painelClasses.style.display = 'block';
-        
-        // Posiciona apenas se o painel ainda não foi movido manualmente (opcional, ou reseta sempre)
-        // Aqui mantemos o comportamento de abrir perto do botão:
-        const rect = e.currentTarget.getBoundingClientRect();
-        painelClasses.style.left = `${rect.left}px`;
-        painelClasses.style.top = `${rect.bottom + 5}px`;
+        window.abrirPainelClasses(e.currentTarget);
     };
 
     // --- FUNÇÃO PARA ARRASTAR O PAINEL ---
-    tornarPainelArrastavel(painelClasses);
-}
-
 function tornarPainelArrastavel(elemento) {
     const header = elemento.querySelector('.painel-header');
     let isDragging = false;
@@ -615,6 +641,10 @@ function tornarPainelArrastavel(elemento) {
         }
     });
 }
+}
+
+
+
 
 
 

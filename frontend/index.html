@@ -112,165 +112,162 @@
         </div>
 
         <div class="ficha-compacta">
-          <div class="controls-inline">
-            <div class="control-group">
-              <div class="inspiracao-box" title="Inspiração">
-                <button id="inspiraLeft">◀</button>
-                <span id="inspiraValor">0</span>
-                <button id="inspiraRight">▶</button>
-              </div>
-              <div class="control-label">Inspiração</div>
-            </div>
-            <div class="control-group">
-              <div class="proficiencia-box" title="Proficiência">
-                <span>Prof.</span>
-                <span id="proficienciaValor">0</span>
-              </div>
-              <div class="control-label">Proficiência</div>
-            </div>
-          </div>
+  
+ <div class="linha linha-top">
+  
+  <div class="nivel-destaque">
+    <div class="nivel-titulo">NÍVEL</div>
+    <div id="nivelFoco" class="nivel-valor">0</div>
+  </div>
 
-          <div class="linha linha-top">
-            <div class="nivel-destaque">
-              <div class="nivel-titulo">NÍVEL</div>
-              <div id="nivelFoco" class="nivel-valor">0</div>
-            </div>
-            <div class="classe-focus" id="classeFocus">
-              <div>
-                <div class="classe-nome" id="classeFocusNome">—</div>
-                <div class="classe-nivel" id="classeFocusNivel">0</div>
-              </div>
-              <button class="classe-btn">Classes</button>
-            </div>
-          </div>
+  <div class="status-row">
+    
+    <div class="status-item">
+      <span class="status-label-top">INSPIRAÇÃO</span>
+      <div class="caixa-valor-controle">
+        <button id="inspiraLeft" class="btn-mini">◀</button>
+        <span id="inspiraValor" class="valor-grande">0</span>
+        <button id="inspiraRight" class="btn-mini">▶</button>
+      </div>
+    </div>
 
-          <div class="linha linha-xp">
-            <div class="xp-box">
-              <div class="xp-top">
-                <div style="display:flex;gap:8px;align-items:center;">
-                  <span class="xp-label">XP</span>
-                  <input id="xpAtual" type="number" min="0" value="0" class="xp-atual-input" />
-                  <span id="xpTotalText" class="xp-total-text">/ 0</span>
-                </div>
-              </div>
-              <div class="xp-bar-outer">
-                <div class="xp-bar-inner" id="xpBar"></div>
-              </div>
-            </div>
-            <div class="marco-box">
-              <label>Marco</label>
-              <div style="display:flex;gap:6px;align-items:center;">
-                <input id="marcoAtual" type="number" min="0" value="0" class="marco-input" />
-                <input id="marcoMax" type="number" readonly class="marco-input marco-max" />
-              </div>
-              <div class="marco-bar-outer">
-                <div id="marcoBar" class="marco-bar-inner"></div>
-              </div>
-            </div>
-          </div>
+    <div class="status-item">
+      <span class="status-label-top">PROFICIÊNCIA</span>
+      <div class="caixa-valor-fixo">
+        <span id="proficienciaValor" class="valor-grande">+2</span>
+      </div>
+    </div>
 
-          <div class="linha linha-metros">
-            <div class="metros-box">
-              <label>Metros (m)</label>
-              <input type="number" id="metros" min="0" value="0" />
-            </div>
-            <div class="quadrados-box">
-              <label>Quadrados (q)</label>
-              <input type="number" id="quadrados" min="0" step="1" />
-            </div>
-          </div>
+  </div>
+</div>
 
-          <div class="vida-container">
-            <h3 id="btnVida">VIDA</h3>
-            <div class="vida-bar">
-              <div class="vida-fill" id="vida-fill"></div>
-              <div class="vida-text">
-                <button class="vida-btn menos5">«</button>
-                <button class="vida-btn menos1"><</button>
-                <span id="vida-atual">0</span>/<span id="vida-total">0</span>
-                <button class="vida-btn mais1">></button>
-                <button class="vida-btn mais5">»</button>
-              </div>
-            </div>
-            <div class="classes-lista-container" style="display:none; margin-top:8px;">
-              <ul id="classesLista" style="list-style:none; padding:0; margin:0;"></ul>
-            </div>
-          </div>
+  <div class="linha linha-xp">
+    <div class="xp-box">
+      <div class="xp-top">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="xp-label">XP</span>
+          <input id="xpAtual" type="number" min="0" value="0" class="xp-atual-input" />
+          <span id="xpTotalText" class="xp-total-text">/ 0</span>
+        </div>
+      </div>
+      <div class="xp-bar-outer">
+        <div class="xp-bar-inner" id="xpBar"></div>
+      </div>
+    </div>
+    <div class="marco-box">
+      <label>Marco</label>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <input id="marcoAtual" type="number" min="0" value="0" class="marco-input" />
+        <input id="marcoMax" type="number" readonly class="marco-input marco-max" />
+      </div>
+      <div class="marco-bar-outer">
+        <div id="marcoBar" class="marco-bar-inner"></div>
+      </div>
+    </div>
+  </div>
 
-          <div class="barras-secundarias">
-            <div class="barra-secundaria">
-              <h3>VIDA TEMPORÁRIA</h3>
-              <div class="vida-bar">
-                <div class="vida-fill" id="vida-temp-fill"></div>
-                <div class="vida-text">
-                  <button class="vida-btn menos5">«</button>
-                  <button class="vida-btn menos1"><</button>
-                  <span id="vida-temp-atual" contenteditable="true">0</span>
-                  <button class="vida-btn mais1">></button>
-                  <button class="vida-btn mais5">»</button>
-                </div>
-              </div>
-            </div>
-            <div class="barra-secundaria">
-              <h3>DANO NECRÓTICO</h3>
-              <div class="vida-bar">
-                <div class="vida-fill" id="dano-necro-fill" style="background-color: purple;"></div>
-                <div class="vida-text">
-                  <button class="vida-btn menos5">«</button>
-                  <button class="vida-btn menos1"><</button>
-                  <span id="dano-necro-atual" contenteditable="true">0</span>
-                  <button class="vida-btn mais1">></button>
-                  <button class="vida-btn mais5">»</button>
-                </div>
-              </div>
-            </div>
-          </div>
+  <div class="linha linha-metros">
+    <div class="metros-box">
+      <label>Metros (m)</label>
+      <input type="number" id="metros" min="0" value="0" />
+    </div>
+    <div class="quadrados-box">
+      <label>Quadrados (q)</label>
+      <input type="number" id="quadrados" min="0" step="1" />
+    </div>
+  </div>
 
-          <div class="armadura-area">
-            <div class="armadura-card">
-              <div class="armadura-grid">
-                <div class="escudo-col">
-                  <div class="escudo-wrap">
-                    <img src="img/escudoArmad.png" alt="escudo" class="escudo-img" />
-                    <div class="armadura-valor" id="armaduraValor">12</div>
-                  </div>
-                  <div class="iniciativa-block">
-                    <div class="iniciativa-label">INICIATIVA</div>
-                    <div class="iniciativa-valor" id="iniciativaValor">0</div>
-                  </div>
-                  <div class="bonus-iniciativa-block">
-                    <span class="bonus-label">BÔNUS</span>
-                    <input type="number" id="iniciativaBonus" class="bonus-valor" value="0" />
-                  </div>
-                </div>
-                <div class="formula-col">
-                  <div class="armadura-titulo">CLASSE DE ARMADURA</div>
-                  <div class="inline-formula">
-                    <span class="formula-eq">=</span>
-                    <span class="formula-text">10</span>
-                    <span class="formula-plus">+</span>
-                    <span class="formula-attr">Dex</span>
-                    <span class="formula-plus">+</span>
-                    <div class="zero-pair"><span class="zero-num">0</span><span class="zero-label">Equip.</span></div>
-                    <span class="formula-plus">+</span>
-                    <div class="zero-pair"><span class="zero-num" id="ac-outros" contenteditable="true">0</span><span class="zero-label">Outros.</span></div>
-                  </div>
-                </div>
-                <div class="tipo-col">
-                  <div class="tipo-titulo">Tipo de armadura</div>
-                  <div class="armadura-tag pesado">Pesado</div>
-                </div>
-              </div>
-              <div class="armadura-details">
-                <div class="linha-detail"><div class="label-detail">FRAQUEZA</div><div id="sel-fraquezas" class="input-detail"></div></div>
-                <div class="linha-detail"><div class="label-detail">RESISTÊNCIAS</div><div id="sel-resistencias" class="input-detail"></div></div>
-                <div class="linha-detail"><div class="label-detail">IMUNIDADE</div><div id="sel-imunidades" class="input-detail"></div></div>
-                <div class="linha-detail"><div class="label-detail">PROFICIÊNCIAS</div><div id="sel-proficiencias" class="input-detail"></div></div>
-                <div class="linha-detail"><div class="label-detail">IDIOMAS</div><div id="sel-idiomas" class="input-detail"></div></div>
-              </div>
-            </div>
+  <div class="vida-container">
+    <h3 id="btnVida">VIDA</h3>
+    <div class="vida-bar">
+      <div class="vida-fill" id="vida-fill"></div>
+      <div class="vida-text">
+        <button class="vida-btn menos5">«</button>
+        <button class="vida-btn menos1"><</button>
+        <span id="vida-atual">0</span>/<span id="vida-total">0</span>
+        <button class="vida-btn mais1">></button>
+        <button class="vida-btn mais5">»</button>
+      </div>
+    </div>
+    <div class="classes-lista-container" style="display:none; margin-top:8px;">
+      <ul id="classesLista" style="list-style:none; padding:0; margin:0;"></ul>
+    </div>
+  </div>
+
+  <div class="barras-secundarias">
+    <div class="barra-secundaria">
+      <h3>VIDA TEMPORÁRIA</h3>
+      <div class="vida-bar">
+        <div class="vida-fill" id="vida-temp-fill"></div>
+        <div class="vida-text">
+          <button class="vida-btn menos5">«</button>
+          <button class="vida-btn menos1"><</button>
+          <span id="vida-temp-atual" contenteditable="true">0</span>
+          <button class="vida-btn mais1">></button>
+          <button class="vida-btn mais5">»</button>
+        </div>
+      </div>
+    </div>
+    <div class="barra-secundaria">
+      <h3>DANO NECRÓTICO</h3>
+      <div class="vida-bar">
+        <div class="vida-fill" id="dano-necro-fill" style="background-color: purple;"></div>
+        <div class="vida-text">
+          <button class="vida-btn menos5">«</button>
+          <button class="vida-btn menos1"><</button>
+          <span id="dano-necro-atual" contenteditable="true">0</span>
+          <button class="vida-btn mais1">></button>
+          <button class="vida-btn mais5">»</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="armadura-area">
+    <div class="armadura-card">
+      <div class="armadura-grid">
+        <div class="escudo-col">
+          <div class="escudo-wrap">
+            <img src="img/escudoArmad.png" alt="escudo" class="escudo-img" />
+            <div class="armadura-valor" id="armaduraValor">12</div>
+          </div>
+          <div class="iniciativa-block">
+            <div class="iniciativa-label">INICIATIVA</div>
+            <div class="iniciativa-valor" id="iniciativaValor">0</div>
+          </div>
+          <div class="bonus-iniciativa-block">
+            <span class="bonus-label">BÔNUS</span>
+            <input type="number" id="iniciativaBonus" class="bonus-valor" value="0" />
           </div>
         </div>
+        <div class="formula-col">
+          <div class="armadura-titulo">CLASSE DE ARMADURA</div>
+          <div class="inline-formula">
+            <span class="formula-eq">=</span>
+            <span class="formula-text">10</span>
+            <span class="formula-plus">+</span>
+            <span class="formula-attr">Dex</span>
+            <span class="formula-plus">+</span>
+            <div class="zero-pair"><span class="zero-num">0</span><span class="zero-label">Equip.</span></div>
+            <span class="formula-plus">+</span>
+            <div class="zero-pair"><span class="zero-num" id="ac-outros" contenteditable="true">0</span><span class="zero-label">Outros.</span></div>
+          </div>
+        </div>
+        <div class="tipo-col">
+          <div class="tipo-titulo">Tipo de armadura</div>
+          <div class="armadura-tag pesado">Pesado</div>
+        </div>
+      </div>
+      <div class="armadura-details">
+        <div class="linha-detail"><div class="label-detail">FRAQUEZA</div><div id="sel-fraquezas" class="input-detail"></div></div>
+        <div class="linha-detail"><div class="label-detail">RESISTÊNCIAS</div><div id="sel-resistencias" class="input-detail"></div></div>
+        <div class="linha-detail"><div class="label-detail">IMUNIDADE</div><div id="sel-imunidades" class="input-detail"></div></div>
+        <div class="linha-detail"><div class="label-detail">PROFICIÊNCIAS</div><div id="sel-proficiencias" class="input-detail"></div></div>
+        <div class="linha-detail"><div class="label-detail">IDIOMAS</div><div id="sel-idiomas" class="input-detail"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
       </div>
     </section>
 

@@ -885,4 +885,19 @@
   color: #bbb;
   font-size: 13px;
   line-height: 1.4;
+}/* No arquivo EsquerdaCS.css */
+
+.painel-classes {
+    position: fixed;
+    width: 300px;
+    max-height: 65vh;
+    background: #0c0c0c;
+    border: 1px solid #272727;
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+    display: none;
+    overflow: hidden;
+
+    /* AQUI ESTÁ A MUDANÇA IMPORTANTE */
+    z-index: 20000 !important; /* Maior que 12000 do modal de classes */
 }
