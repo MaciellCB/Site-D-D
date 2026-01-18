@@ -438,37 +438,37 @@ function formatInventoryItem(item) {
 }
 
 
-/* ---------------- INVENTÁRIO (COMEÇA FECHADO + FOCO NA PESQUISA) ---------------- */
+/* ---------------- INVENTÁRIO (CORRIGIDO: NÃO FOCA SE ESTIVER VAZIO) ---------------- */
 function renderInventory() {
-  const termo = (document.getElementById('filterItens')?.value || '').toLowerCase();
+    const inputAntigo = document.getElementById('filterItens');
+    // Pega o valor antes de destruir o HTML
+    const termo = (inputAntigo?.value || '').toLowerCase();
 
-  // 1. Filtra itens
-  const itensFiltrados = state.inventory.filter(i => {
-    const text = (i.name + (i.description || "") + (i.type || "")).toLowerCase();
-    return text.includes(termo);
-  });
+    // 1. Filtra itens
+    const itensFiltrados = state.inventory.filter(i => {
+        const text = (i.name + (i.description || "") + (i.type || "")).toLowerCase();
+        return text.includes(termo);
+    });
 
-  // 2. Separa em Grupos
-  const armas = itensFiltrados.filter(i => i.type === 'Arma');
-  const armaduras = itensFiltrados.filter(i => i.type === 'Proteção' || i.type === 'protecao');
-  const gerais = itensFiltrados.filter(i => i.type !== 'Arma' && i.type !== 'Proteção' && i.type !== 'protecao');
+    // 2. Separa em Grupos
+    const armas = itensFiltrados.filter(i => i.type === 'Arma');
+    const armaduras = itensFiltrados.filter(i => i.type === 'Proteção' || i.type === 'protecao');
+    const gerais = itensFiltrados.filter(i => i.type !== 'Arma' && i.type !== 'Proteção' && i.type !== 'protecao');
 
-  // --- LÓGICA DE COLAPSO INICIAL ---
-  // Se o usuário está digitando algo na busca, queremos ver os resultados (expandido).
-  // Se não tem busca (termo vazio), queremos tudo fechado (collapsed).
-  const forceExpand = termo.length > 0;
+    // Se tem texto, expande. Se não, recolhe.
+    const forceExpand = termo.length > 0;
 
-  // 3. Monta o HTML
-  let listaHTML = '';
-  if (armas.length > 0) listaHTML += renderItemGroup('Armas', armas, 'inv-armas', forceExpand);
-  if (armaduras.length > 0) listaHTML += renderItemGroup('Armaduras & Proteção', armaduras, 'inv-armaduras', forceExpand);
-  if (gerais.length > 0) listaHTML += renderItemGroup('Itens Gerais', gerais, 'inv-gerais', forceExpand);
+    // 3. Monta o HTML
+    let listaHTML = '';
+    if (armas.length > 0) listaHTML += renderItemGroup('Armas', armas, 'inv-armas', forceExpand);
+    if (armaduras.length > 0) listaHTML += renderItemGroup('Armaduras & Proteção', armaduras, 'inv-armaduras', forceExpand);
+    if (gerais.length > 0) listaHTML += renderItemGroup('Itens Gerais', gerais, 'inv-gerais', forceExpand);
 
-  if (!listaHTML) listaHTML = `<div class="empty-tip">Nenhum item encontrado.</div>`;
+    if (!listaHTML) listaHTML = `<div class="empty-tip">Nenhum item encontrado.</div>`;
 
-  const html = `
+    const html = `
         <div class="inventory-controls controls-row">
-            <input id="filterItens" placeholder="Filtrar itens..." value="${document.getElementById('filterItens')?.value || ''}" />
+            <input id="filterItens" placeholder="Filtrar itens..." value="${escapeHtml(termo)}" />
             <div class="right-controls">
                 <button id="botAddItem" class="btn-add">Adicionar</button>
             </div>
@@ -478,24 +478,26 @@ function renderInventory() {
         </div>
     `;
 
-  conteudoEl.innerHTML = html;
+    conteudoEl.innerHTML = html;
 
-  document.getElementById('botAddItem').addEventListener('click', () => openItemCatalogOverlay());
+    document.getElementById('botAddItem').addEventListener('click', () => openItemCatalogOverlay());
 
-  bindInventoryCardEvents();
-  bindInventorySectionEvents();
-  aplicarEnterNosInputs(conteudoEl);
+    bindInventoryCardEvents();
+    bindInventorySectionEvents();
+    aplicarEnterNosInputs(conteudoEl);
 
-  // --- FOCO AUTOMÁTICO NA PESQUISA ---
-  const inputFiltro = document.getElementById('filterItens');
-  if (inputFiltro) {
-    if (document.activeElement !== inputFiltro) {
-        inputFiltro.focus();
-        const len = inputFiltro.value.length;
-        inputFiltro.setSelectionRange(len, len);
-    }
-    inputFiltro.oninput = renderInventory;
-  }
+    // --- CORREÇÃO DO FOCO AUTOMÁTICO ---
+    const inputFiltro = document.getElementById('filterItens');
+    if (inputFiltro) {
+        // Só foca se houver texto digitado (usuário pesquisando)
+        // Se estiver vazio (mudança de aba), não foca.
+        if (inputFiltro.value.length > 0) {
+            inputFiltro.focus();
+            const len = inputFiltro.value.length;
+            inputFiltro.setSelectionRange(len, len);
+        }
+        inputFiltro.oninput = renderInventory;
+    }
 }
 
 
@@ -641,55 +643,58 @@ function bindInventorySectionEvents() {
   });
 }
 
-/* ---------------- COMBATE (COMEÇA FECHADO + FOCO) ---------------- */
+/* ---------------- COMBATE (CORRIGIDO: NÃO FOCA SE ESTIVER VAZIO) ---------------- */
 function renderCombat() {
-  const termo = (document.getElementById('filterCombat')?.value || '').toLowerCase();
+    const inputAntigo = document.getElementById('filterCombat');
+    const termo = (inputAntigo?.value || '').toLowerCase();
 
-  // 1. Filtra apenas equipados e pelo texto
-  const equipados = state.inventory.filter(i => i.equip && (i.name + (i.description || "")).toLowerCase().includes(termo));
+    // 1. Filtra apenas equipados e pelo texto
+    const equipados = state.inventory.filter(i => i.equip && (i.name + (i.description || "")).toLowerCase().includes(termo));
 
-  // 2. Agrupa
-  const armas = equipados.filter(i => i.type === 'Arma');
-  const defesas = equipados.filter(i => i.type === 'Proteção' || i.type === 'protecao');
-  const outros = equipados.filter(i => i.type !== 'Arma' && i.type !== 'Proteção' && i.type !== 'protecao');
+    // 2. Agrupa
+    const armas = equipados.filter(i => i.type === 'Arma');
+    const defesas = equipados.filter(i => i.type === 'Proteção' || i.type === 'protecao');
+    const outros = equipados.filter(i => i.type !== 'Arma' && i.type !== 'Proteção' && i.type !== 'protecao');
 
-  // 3. Monta HTML
-  let listaHTML = '';
+    // 3. Monta HTML
+    let listaHTML = '';
 
-  // Expande se estiver buscando
-  const forceExpand = termo.length > 0;
+    // Expande se estiver buscando
+    const forceExpand = termo.length > 0;
 
-  if (armas.length > 0) listaHTML += renderItemGroup('Ataques Disponíveis', armas, 'cmb-ataques', forceExpand);
-  if (defesas.length > 0) listaHTML += renderItemGroup('Equipamento Defensivo', defesas, 'cmb-defesa', forceExpand);
-  if (outros.length > 0) listaHTML += renderItemGroup('Acessórios & Outros', outros, 'cmb-outros', forceExpand);
+    if (armas.length > 0) listaHTML += renderItemGroup('Ataques Disponíveis', armas, 'cmb-ataques', forceExpand);
+    if (defesas.length > 0) listaHTML += renderItemGroup('Equipamento Defensivo', defesas, 'cmb-defesa', forceExpand);
+    if (outros.length > 0) listaHTML += renderItemGroup('Acessórios & Outros', outros, 'cmb-outros', forceExpand);
 
-  if (!listaHTML) {
-    listaHTML = `<p class="empty-tip">Nada equipado para combate.</p>`;
-  }
+    if (!listaHTML) {
+        listaHTML = `<p class="empty-tip">Nada equipado para combate.</p>`;
+    }
 
-  const html = `
+    const html = `
         <div class="controls-row">
-            <input id="filterCombat" placeholder="Filtrar combate..." value="${document.getElementById('filterCombat')?.value || ''}" />
+            <input id="filterCombat" placeholder="Filtrar combate..." value="${escapeHtml(termo)}" />
         </div>
         <div class="inventory-list-wrapper">
             ${listaHTML}
         </div>
     `;
 
-  conteudoEl.innerHTML = html;
+    conteudoEl.innerHTML = html;
 
-  bindInventoryCardEvents();
-  bindInventorySectionEvents();
+    bindInventoryCardEvents();
+    bindInventorySectionEvents();
 
-  const inputFiltro = document.getElementById('filterCombat');
-  if (inputFiltro) {
-    if (document.activeElement !== inputFiltro) {
-        inputFiltro.focus();
-        const len = inputFiltro.value.length;
-        inputFiltro.setSelectionRange(len, len);
+    // --- CORREÇÃO DO FOCO AUTOMÁTICO ---
+    const inputFiltro = document.getElementById('filterCombat');
+    if (inputFiltro) {
+        // Só foca se o usuário já estiver digitando algo
+        if (inputFiltro.value.length > 0) {
+            inputFiltro.focus();
+            const len = inputFiltro.value.length;
+            inputFiltro.setSelectionRange(len, len);
+        }
+        inputFiltro.oninput = renderCombat;
     }
-    inputFiltro.oninput = renderCombat;
-  }
 }
 
 /* ---------------- MODAL UNIFICADO (Item, Arma, Armadura) ---------------- */
@@ -1121,46 +1126,47 @@ const LISTA_CLASSES_RPG = [
   'Paladino', 'Patrulheiro'
 ];
 
-/* ---------------- HABILIDADES (CORRIGIDO: COM CLICK NAS SEÇÕES) ---------------- */
+/* ---------------- HABILIDADES (CORRIGIDO: NÃO FOCA SE ESTIVER VAZIO) ---------------- */
 function renderAbilities() {
-  const termoBusca = (document.getElementById('filterHabs')?.value || '').toLowerCase();
+    const inputAntigo = document.getElementById('filterHabs');
+    const termoBusca = (inputAntigo?.value || '').toLowerCase();
 
-  // 1. Filtra
-  let habilidadesFiltradas = state.abilities.filter(a => {
-    const text = (a.title + (a.description || "")).toLowerCase();
-    return text.includes(termoBusca);
-  });
+    // 1. Filtra
+    let habilidadesFiltradas = state.abilities.filter(a => {
+        const text = (a.title + (a.description || "")).toLowerCase();
+        return text.includes(termoBusca);
+    });
 
-  // 2. Agrupamento
-  const grupos = { classes: {}, talentos: [], origem: [], outros: [] };
+    // 2. Agrupamento
+    const grupos = { classes: {}, talentos: [], origem: [], outros: [] };
 
-  habilidadesFiltradas.forEach(hab => {
-    const cat = (hab.category || "").toLowerCase().trim();
-    const classeOriginal = (hab.class || "").trim();
-    const classeLower = classeOriginal.toLowerCase();
+    habilidadesFiltradas.forEach(hab => {
+        const cat = (hab.category || "").toLowerCase().trim();
+        const classeOriginal = (hab.class || "").trim();
+        const classeLower = classeOriginal.toLowerCase();
 
-    if (cat === 'classe' || LISTA_CLASSES_RPG.includes(classeOriginal)) {
-      const nomeGrupo = classeOriginal || "Classe Indefinida";
-      if (!grupos.classes[nomeGrupo]) grupos.classes[nomeGrupo] = [];
-      grupos.classes[nomeGrupo].push(hab);
-    } else if (cat.includes('talento') || classeLower === 'talentos') {
-      grupos.talentos.push(hab);
-    } else if (cat.includes('antecedente') || cat.includes('raça')) {
-      grupos.origem.push(hab);
-    } else {
-      grupos.outros.push(hab);
-    }
-  });
+        if (cat === 'classe' || LISTA_CLASSES_RPG.includes(classeOriginal)) {
+            const nomeGrupo = classeOriginal || "Classe Indefinida";
+            if (!grupos.classes[nomeGrupo]) grupos.classes[nomeGrupo] = [];
+            grupos.classes[nomeGrupo].push(hab);
+        } else if (cat.includes('talento') || classeLower === 'talentos') {
+            grupos.talentos.push(hab);
+        } else if (cat.includes('antecedente') || cat.includes('raça')) {
+            grupos.origem.push(hab);
+        } else {
+            grupos.outros.push(hab);
+        }
+    });
 
-  const sortActiveFirst = (a, b) => {
-    if (a.active && !b.active) return -1;
-    if (!a.active && b.active) return 1;
-    return a.title.localeCompare(b.title);
-  };
+    const sortActiveFirst = (a, b) => {
+        if (a.active && !b.active) return -1;
+        if (!a.active && b.active) return 1;
+        return a.title.localeCompare(b.title);
+    };
 
-  let htmlFinal = `
+    let htmlFinal = `
         <div class="abilities-controls controls-row">
-            <input id="filterHabs" placeholder="Filtrar habilidades..." value="${document.getElementById('filterHabs')?.value || ''}" />
+            <input id="filterHabs" placeholder="Filtrar habilidades..." value="${escapeHtml(termoBusca)}" />
             <div class="right-controls">
                 <button id="botOpenCatalogHab" class="btn-add">Adicionar</button>
             </div>
@@ -1168,44 +1174,43 @@ function renderAbilities() {
         <div class="abilities-list">
     `;
 
-  // Se tem busca, força expandir. Se não, força fechar.
-  const forceExpand = termoBusca.length > 0;
+    // Se tem busca, força expandir. Se não, força fechar.
+    const forceExpand = termoBusca.length > 0;
 
-  let temConteudo = false;
-  Object.keys(grupos.classes).sort().forEach(nomeClasse => {
-    const lista = grupos.classes[nomeClasse].sort(sortActiveFirst);
-    if (lista.length > 0) {
-      htmlFinal += renderAbilitySection(`Habilidades de ${nomeClasse}`, lista, `class-${nomeClasse}`, forceExpand);
-      temConteudo = true;
+    let temConteudo = false;
+    Object.keys(grupos.classes).sort().forEach(nomeClasse => {
+        const lista = grupos.classes[nomeClasse].sort(sortActiveFirst);
+        if (lista.length > 0) {
+            htmlFinal += renderAbilitySection(`Habilidades de ${nomeClasse}`, lista, `class-${nomeClasse}`, forceExpand);
+            temConteudo = true;
+        }
+    });
+
+    if (grupos.talentos.length > 0) { grupos.talentos.sort(sortActiveFirst); htmlFinal += renderAbilitySection("Talentos", grupos.talentos, "talentos", forceExpand); temConteudo = true; }
+    if (grupos.origem.length > 0) { grupos.origem.sort(sortActiveFirst); htmlFinal += renderAbilitySection("Raça & Antecedente", grupos.origem, "origem", forceExpand); temConteudo = true; }
+    if (grupos.outros.length > 0) { grupos.outros.sort(sortActiveFirst); htmlFinal += renderAbilitySection("Outras Habilidades", grupos.outros, "outros", forceExpand); temConteudo = true; }
+
+    if (!temConteudo) htmlFinal += `<div class="empty-tip">Nenhuma habilidade encontrada.</div>`;
+    htmlFinal += `</div>`;
+
+    conteudoEl.innerHTML = htmlFinal;
+
+    document.getElementById('botOpenCatalogHab').addEventListener('click', () => openAbilityCatalogOverlay());
+
+    bindAbilityEvents();
+    bindAbilitySectionEvents(); 
+
+    // --- CORREÇÃO DO FOCO AUTOMÁTICO ---
+    const novoInput = document.getElementById('filterHabs');
+    if (novoInput) {
+        // Só foca se o usuário já estiver digitando algo
+        if (novoInput.value.length > 0) {
+            novoInput.focus();
+            const len = novoInput.value.length;
+            novoInput.setSelectionRange(len, len);
+        }
+        novoInput.oninput = renderAbilities;
     }
-  });
-
-  if (grupos.talentos.length > 0) { grupos.talentos.sort(sortActiveFirst); htmlFinal += renderAbilitySection("Talentos", grupos.talentos, "talentos", forceExpand); temConteudo = true; }
-  if (grupos.origem.length > 0) { grupos.origem.sort(sortActiveFirst); htmlFinal += renderAbilitySection("Raça & Antecedente", grupos.origem, "origem", forceExpand); temConteudo = true; }
-  if (grupos.outros.length > 0) { grupos.outros.sort(sortActiveFirst); htmlFinal += renderAbilitySection("Outras Habilidades", grupos.outros, "outros", forceExpand); temConteudo = true; }
-
-  if (!temConteudo) htmlFinal += `<div class="empty-tip">Nenhuma habilidade encontrada.</div>`;
-  htmlFinal += `</div>`;
-  
-  conteudoEl.innerHTML = htmlFinal;
-
-  document.getElementById('botOpenCatalogHab').addEventListener('click', () => openAbilityCatalogOverlay());
-
-  bindAbilityEvents();
-  
-  // --- ADICIONADO: LIGA O EVENTO DE CLICK NAS SEÇÕES ---
-  bindAbilitySectionEvents(); 
-
-  // --- FOCO AUTOMÁTICO ---
-  const novoInput = document.getElementById('filterHabs');
-  if (novoInput) {
-    if (document.activeElement !== novoInput) {
-        novoInput.focus();
-        const len = novoInput.value.length;
-        novoInput.setSelectionRange(len, len);
-    }
-    novoInput.oninput = renderAbilities;
-  }
 }
 
 // --- FUNÇÃO NOVA: EVENTOS DAS SEÇÕES DE HABILIDADE ---

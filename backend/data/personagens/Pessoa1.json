@@ -1,14 +1,42 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Habilidades",
+  "activeTab": "Inventário",
   "spellDCConfig": {
     "selectedAttr": "none",
     "extraMod": 0,
     "lastKnownLevel": 0
   },
   "dtMagias": "Selecione",
-  "inventory": [],
+  "inventory": [
+    {
+      "id": 1768716390964,
+      "name": "Machado de Batalha",
+      "description": "<p>Uma cabeça de aço pesado em um cabo de carvalho envernizado. A lâmina em forma de meia-lua possui um fio capaz de partir escudos de madeira com facilidade.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>",
+      "expanded": true,
+      "equip": false,
+      "type": "Arma",
+      "isEquipable": true,
+      "proficiency": "Armas Marciais",
+      "defense": "",
+      "tipoItem": "",
+      "minStrength": "",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Versátil",
+      "crit": "20",
+      "multiplicador": "2",
+      "alcance": "1.5m",
+      "attunement": "Não",
+      "damage": "1d8",
+      "damage2Hands": "1d10",
+      "useTwoHands": false,
+      "damageTypes": [
+        "Cortante"
+      ],
+      "moreDmgList": [],
+      "caracteristicas": []
+    }
+  ],
   "abilities": [
     {
       "id": 1768637457378,
@@ -204,7 +232,7 @@
       "id": 1768632737165,
       "title": "[Nível 1] Lançamento de Feitiços",
       "description": "<p>Você aprende a manipular a Trama através da música e da oratória.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Atributo de Conjuração:</strong> Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ CD de Resistência:</strong> 8 + Bônus de Proficiência + Modificador de Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Ataque Mágico:</strong> Bônus de Proficiência + Modificador de Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Foco de Conjuração:</strong> Você pode usar um instrumento musical como foco para suas magias de bardo.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Rituais:</strong> Você pode conjurar qualquer magia de bardo conhecida como um ritual, se a magia tiver o descritor ritual.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Repertório:</strong> Suas magias são conhecidas (não preparadas). Ao subir de nível, você pode substituir uma magia conhecida por outra da lista de bardo.</li></ul>",
-      "expanded": false,
+      "expanded": true,
       "active": true,
       "category": "Classe",
       "class": "Bardo",
