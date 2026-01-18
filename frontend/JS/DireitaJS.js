@@ -502,7 +502,8 @@ function renderInventory() {
 
 
 /* =============================================================
-   CORREÇÃO: bindInventoryCardEvents COM LÓGICA DE 2 MÃOS
+   CORREÇÃO: bindInventoryCardEvents
+   (Impede que clicar no dado feche o item)
 ============================================================= */
 
 function bindInventoryCardEvents() {
@@ -518,8 +519,15 @@ function bindInventoryCardEvents() {
     const header = card.querySelector('.card-header');
 
     header.onclick = (ev) => {
-      // Impede o clique se for no checkbox de equipar ou nos botões de editar/remover
-      if (ev.target.closest('.header-equip') || ev.target.closest('.item-actions-footer')) return;
+      // --- CORREÇÃO AQUI ---
+      // Se clicar no Checkbox, Botões de Ação, DADO ou TEXTO DE DANO, não faz nada (não fecha o card)
+      if (ev.target.closest('.header-equip') || 
+          ev.target.closest('.item-actions-footer') ||
+          ev.target.closest('.dice-img') ||        // <--- Bloqueia o clique no dado
+          ev.target.closest('.spell-damage')) {    // <--- Bloqueia o clique no texto do dano
+          return;
+      }
+      // ---------------------
 
       const it = findItemById(rawId);
       if (!it) return;
@@ -583,7 +591,7 @@ function bindInventoryCardEvents() {
     };
   });
 
-  // --- 3. ALTERNAR 2 MÃOS (VERSÁTIL) - [AQUI ESTAVA FALTANDO] ---
+  // --- 3. ALTERNAR 2 MÃOS (VERSÁTIL) ---
   document.querySelectorAll('.toggle-versatile').forEach(ch => {
       ch.onchange = (ev) => {
           const rawId = ev.target.getAttribute('data-id');
@@ -596,8 +604,7 @@ function bindInventoryCardEvents() {
               saveStateToServer();
               
               // Re-renderiza a aba atual (para atualizar o número de dano visualmente)
-              // Mantendo o scroll onde estava
-              const scrollY = window.scrollY; // ou conteudoEl.scrollTop
+              const scrollY = window.scrollY; 
               renderActiveTab();
               window.scrollTo(0, scrollY);
           }
@@ -1574,15 +1581,13 @@ function formatMySpellCard(s) {
 /* ---------------- PARTE 1: RENDERIZAR LISTA DE MAGIAS ---------------- */
 
 
+/* --- SUBSTITUA A FUNÇÃO renderSpells INTEIRA POR ESTA --- */
 function renderSpells() {
   state.dtMagias = calculateSpellDC();
-
-  // Gera HTML dos Slots (agora automático)
   const slotsHTML = renderSpellSlotsHTML();
 
   const html = `
     <div class="spells-wrapper" style="position:relative;">
-      
       ${slotsHTML}
       ${slotsHTML ? '<hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 15px 0;">' : ''}
 
@@ -1599,7 +1604,14 @@ function renderSpells() {
         </div>
       </div>
 
-      <h4 style="margin:12px 0 6px 4px;color:#ddd;">Minhas Magias</h4>
+      <div style="display:flex; align-items:center; margin:15px 0 10px 4px;">
+          <h4 style="margin:0; color:#ddd; font-size:16px;">Minhas Magias</h4>
+          
+          <div id="btnRollSpellAttack_Header" title="Rolar Ataque Mágico (1d20 + Prof + Mod)" style="cursor:pointer; margin-left:10px; transition: transform 0.2s;">
+              <img src="img/dado.png" alt="Rolar Ataque" style="width:26px; height:26px; display:block; opacity:0.9; filter: drop-shadow(0 0 2px rgba(156, 39, 176, 0.5));" />
+          </div>
+      </div>
+
       <div class="spells-list">
         ${state.spells.map(formatMySpellCard).join('')}
       </div>
@@ -1609,7 +1621,10 @@ function renderSpells() {
   conteudoEl.innerHTML = html;
   bindSpellEvents();
   bindSlotEvents();
+  bindSpellAttackEvents(); // <--- Liga o evento
 }
+
+
 // Inicializa estrutura de slots usada para controle de "gastos" (used)
 /* =============================================================
    CORREÇÃO: INCLUIR 'Inventário' NA LISTA DE ATUALIZAÇÃO
@@ -2598,16 +2613,15 @@ function formatCatalogSpellCard(c) {
     `;
 }
 
-/* ---------------- PREPARADAS (DIREITA) - COM SLOTS, DT E SINCRONIZADA ---------------- */
+/* --- SUBSTITUA A FUNÇÃO renderPreparedSpells INTEIRA POR ESTA --- */
 function renderPreparedSpells() {
-  // 1. Calcula DT Atualizada e Gera Slots
   state.dtMagias = calculateSpellDC();
   const slotsHTML = renderSpellSlotsHTML();
 
   const habilidadesPreparadas = state.abilities.filter(h => h.active);
   const magiasPreparadas = state.spells.filter(s => s.active);
 
-  // Estados iniciais de minimização
+  // Estados iniciais
   const isMagiasMin = !!state.minimizedPreparedSpells;
   const isHabsMin = !!state.minimizedPreparedAbilities;
 
@@ -2616,13 +2630,19 @@ function renderPreparedSpells() {
   const styleMagias = isMagiasMin ? 'display:none;' : '';
   const styleHabs = isHabsMin ? 'display:none;' : '';
 
-  // HTML Magias
+  // HTML Magias (Com o dado MAIOR no título)
   let magiasHTML = '';
   if (magiasPreparadas.length > 0) {
     magiasHTML = `
-            <h4 id="toggle-magias" class="toggle-section-header" style="margin: 10px 0 6px 4px; color: #ddd; text-transform: uppercase; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px; cursor:pointer;">
-                <span style="font-size:14px; color:#9c27b0; width:12px;">${arrowMagias}</span> Magias Preparadas
-            </h4>
+            <div id="toggle-magias" class="toggle-section-header" style="margin: 10px 0 6px 4px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; cursor:pointer; display:flex; align-items:center;">
+                <span style="font-size:16px; color:#9c27b0; width:15px;">${arrowMagias}</span> 
+                <span style="color: #ddd; text-transform: uppercase; font-size: 14px; font-weight:700;">Magias Preparadas</span>
+                
+                <div id="btnRollSpellAttack_PrepHeader" title="Rolar Ataque Mágico (d20 + Prof + Mod)" style="cursor:pointer; margin-left:auto; padding-left:10px; transition: transform 0.2s;">
+                    <img src="img/dado.png" alt="dado" style="width:26px; height:26px; opacity:0.9; display:block; filter: drop-shadow(0 0 2px rgba(156, 39, 176, 0.5));" />
+                </div>
+            </div>
+
             <div id="content-magias" class="section-content" style="${styleMagias}">
                 ${magiasPreparadas.map(formatMySpellCard).join('')}
             </div>
@@ -2653,10 +2673,6 @@ function renderPreparedSpells() {
                         </div>
                         <div class="card-body" style="${a.expanded ? '' : 'display:none;'}">
                             <div>${a.description || 'Sem descrição.'}</div>
-                            <div style="margin-top:8px;">
-                              <a href="#" class="remover-hab" data-id="${a.id}">Remover</a>
-                              <a href="#" class="editar-hab" data-id="${a.id}" style="float:right;color:#2e7d32">Editar</a>
-                            </div>
                         </div>
                     </div>
                 `).join('')}
@@ -2664,21 +2680,18 @@ function renderPreparedSpells() {
         `;
   }
 
-  // Se estiver tudo vazio (mas mostra slots e DT)
   let listaContent = `${magiasHTML}${habilidadesHTML}`;
   if (!habilidadesPreparadas.length && !magiasPreparadas.length) {
-      listaContent = `<div class="empty-tip">Nenhuma habilidade ou magia preparada/ativa no momento.</div>`;
+      listaContent = `<div class="empty-tip">Nenhuma habilidade ou magia preparada/ativa.</div>`;
   }
 
-  // --- MONTAGEM DO HTML PRINCIPAL ---
   conteudoEl.innerHTML = `
         <div class="spells-wrapper">
             ${slotsHTML}
             ${slotsHTML ? '<hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 15px 0;">' : ''}
 
             <div class="controls-row">
-                <input id="filterPrepared" placeholder="Filtrar magias..." />
-                
+                <input id="filterPrepared" placeholder="Filtrar..." />
                 <div class="right-controls">
                     <div class="dt-magias" id="btnOpenDTConfig_Prep" style="cursor:pointer;" title="Clique para configurar">
                         <label style="cursor:pointer; color:#9c27b0;">DT DE MAGIAS ⚙️</label>
@@ -2694,142 +2707,47 @@ function renderPreparedSpells() {
         </div>
     `;
 
-  // --- EVENTOS ---
-
-  // 1. Botão da DT (Preparadas)
+  // EVENTOS
   const btnDTPrep = document.getElementById('btnOpenDTConfig_Prep');
   if (btnDTPrep) btnDTPrep.addEventListener('click', openDTConfigModal);
 
-  // 2. Slots
   bindSlotEvents();
-
-  // 3. Minimizar Seções
+  bindSpellAttackEvents(); // <--- Liga a função de cálculo e rolagem
+  
+  // Toggle sections
   const btnToggleMagias = document.getElementById('toggle-magias');
   if (btnToggleMagias) {
-    btnToggleMagias.addEventListener('click', () => {
+    btnToggleMagias.addEventListener('click', (e) => {
+      // Impede que clicar no dado feche a aba
+      if(e.target.closest('#btnRollSpellAttack_PrepHeader')) return;
+      
       state.minimizedPreparedSpells = !state.minimizedPreparedSpells;
-      saveStateToServer();
-      renderActiveTab();
+      saveStateToServer(); renderActiveTab();
     });
   }
-
   const btnToggleHabs = document.getElementById('toggle-habs');
   if (btnToggleHabs) {
     btnToggleHabs.addEventListener('click', () => {
       state.minimizedPreparedAbilities = !state.minimizedPreparedAbilities;
-      saveStateToServer();
-      renderActiveTab();
+      saveStateToServer(); renderActiveTab();
     });
   }
 
-  // 4. Filtro
-  const filtro = document.getElementById('filterPrepared');
-  if (filtro) {
-    filtro.addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase();
-      conteudoEl.querySelectorAll('.hab-card, .spell-card').forEach(card => {
-        const title = card.querySelector('.card-title').textContent.toLowerCase();
-        card.style.display = title.includes(q) ? '' : 'none';
-      });
-    });
-  }
-
-  // 5. Listeners dos Cards (Expandir, Checkbox, Editar, Remover)
-  const toggleCardExpansion = (card, itemId, isSpell) => {
-    const item = isSpell ? state.spells.find(x => x.id === itemId) : state.abilities.find(x => x.id === itemId);
-    if (item) {
-      item.expanded = !item.expanded;
-      saveStateToServer();
-      const body = card.querySelector('.card-body');
-      const caret = card.querySelector('.caret');
-      if (body.style.display === 'none') {
-        body.style.display = 'block';
-        card.classList.add('expanded');
-        caret.textContent = '▾';
-      } else {
-        body.style.display = 'none';
-        card.classList.remove('expanded');
-        caret.textContent = '▸';
-      }
-    }
-  };
-
-  // Cards de Habilidade
-  conteudoEl.querySelectorAll('.hab-card').forEach(card => {
-    const id = Number(card.getAttribute('data-id'));
-    card.querySelector('.card-header .left').addEventListener('click', () => toggleCardExpansion(card, id, false));
-    card.querySelector('.hab-activate').addEventListener('change', (ev) => {
-      const hab = state.abilities.find(h => h.id === id);
-      if (hab) {
-        hab.active = ev.target.checked;
-        saveStateToServer();
-        window.dispatchEvent(new CustomEvent('sheet-updated'));
-        renderActiveTab();
-      }
-    });
+  // Eventos de cards
+  conteudoEl.querySelectorAll('.spell-card .card-header').forEach(h => {
+     h.addEventListener('click', (ev) => {
+         if(ev.target.closest('.check-ativar')) return;
+         const id = Number(h.closest('.card').dataset.id);
+         const s = state.spells.find(x => x.id === id);
+         if(s) { s.expanded = !s.expanded; saveStateToServer(); renderActiveTab(); }
+     });
   });
-
-  // Cards de Magia
-  conteudoEl.querySelectorAll('.spell-card').forEach(card => {
-    const id = Number(card.getAttribute('data-id'));
-    card.querySelector('.card-header').addEventListener('click', (ev) => {
-      if (ev.target.closest('.spell-right') || ev.target.closest('.check-ativar')) return;
-      toggleCardExpansion(card, id, true);
-    });
-    const ch = card.querySelector('.spell-activate');
-    if (ch) {
-      ch.addEventListener('change', (ev) => {
+  conteudoEl.querySelectorAll('.spell-activate').forEach(ch => {
+     ch.addEventListener('change', (ev) => {
+        const id = Number(ev.target.dataset.id);
         const s = state.spells.find(x => x.id === id);
-        if (s) {
-          s.active = ev.target.checked;
-          saveStateToServer();
-          window.dispatchEvent(new CustomEvent('sheet-updated'));
-          renderActiveTab();
-        }
-      });
-    }
-  });
-
-  // Botões de Ação (Editar/Remover)
-  conteudoEl.querySelectorAll('.editar-spell').forEach(btn => {
-    btn.addEventListener('click', (ev) => {
-      ev.preventDefault();
-      const id = Number(btn.getAttribute('data-id'));
-      const s = state.spells.find(x => x.id === id);
-      if (s) openSpellModal(s);
-    });
-  });
-  conteudoEl.querySelectorAll('.remover-spell').forEach(btn => {
-    btn.addEventListener('click', (ev) => {
-      ev.preventDefault();
-      const id = Number(btn.getAttribute('data-id'));
-      if (confirm('Remover esta magia?')) {
-        state.spells = state.spells.filter(x => x.id !== id);
-        saveStateToServer();
-        window.dispatchEvent(new CustomEvent('sheet-updated'));
-        renderActiveTab();
-      }
-    });
-  });
-  conteudoEl.querySelectorAll('.editar-hab').forEach(btn => {
-    btn.addEventListener('click', (ev) => {
-      ev.preventDefault();
-      const id = Number(btn.getAttribute('data-id'));
-      const hab = state.abilities.find(x => x.id === id);
-      if (hab) openNewAbilityModal(hab);
-    });
-  });
-  conteudoEl.querySelectorAll('.remover-hab').forEach(btn => {
-    btn.addEventListener('click', (ev) => {
-      ev.preventDefault();
-      const id = Number(btn.getAttribute('data-id'));
-      if (confirm('Remover esta habilidade?')) {
-        state.abilities = state.abilities.filter(x => x.id !== id);
-        saveStateToServer();
-        window.dispatchEvent(new CustomEvent('sheet-updated'));
-        renderActiveTab();
-      }
-    });
+        if(s) { s.active = ev.target.checked; saveStateToServer(); renderActiveTab(); }
+     });
   });
 }
 
@@ -4009,3 +3927,198 @@ function initRichEditorEvents(idContainer) {
     });
   });
 }
+
+/* ==========================================================================
+   SISTEMA DE DADOS COMPLETO (CSS + LÓGICA + EVENTOS GLOBAIS)
+   Cole isto no final do arquivo JS/DireitaJS.js
+   ========================================================================== */
+
+/* 1. ESTILO DA JANELA (Visual Simples/Dark) */
+const diceStyles = document.createElement('style');
+diceStyles.textContent = `
+    #dice-results-container {
+        position: fixed;
+        bottom: 20px;
+        right: -300px;
+        width: 260px;
+        background: #111; /* Fundo escuro sólido */
+        border: 1px solid #9c27b0; /* Borda fina roxa */
+        border-radius: 6px;
+        padding: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
+        color: #fff;
+        z-index: 15000;
+        transition: right 0.3s ease;
+        font-family: sans-serif;
+    }
+    #dice-results-container.active { right: 20px; }
+    .dice-header {
+        font-size: 13px; color: #ce93d8; margin-bottom: 6px;
+        font-weight: 700; text-transform: uppercase;
+        border-bottom: 1px solid #333; padding-bottom: 4px;
+    }
+    .dice-details {
+        font-size: 16px; font-family: monospace; color: #ccc;
+        line-height: 1.4; margin-bottom: 10px; word-break: break-all;
+    }
+    .dice-roll-max { color: #4caf50; font-weight:bold; }
+    .dice-roll-min { color: #f44336; font-weight:bold; }
+    .dice-total-box {
+        background: #1a1a1a; padding: 8px; border-radius: 4px;
+        text-align: center; border: 1px solid #333;
+        display: flex; justify-content: space-between; align-items: center;
+    }
+    .dice-total-value { font-size: 24px; font-weight: 800; color: #fff; }
+`;
+document.head.appendChild(diceStyles);
+
+/* 2. FUNÇÕES DE CÁLCULO E EXIBIÇÃO */
+
+// Rola uma expressão como "1d20+5" ou "4d6"
+function rollDiceExpression(expression) {
+    const cleanExpr = expression.toLowerCase().trim();
+    // Regex: captura XdY e opcionalmente +/- Z
+    const regex = /^(\d*)d(\d+)\s*([+-]?\s*\d+)?$/i;
+    const match = cleanExpr.match(regex);
+
+    let total = 0;
+    let htmlParts = [];
+    let modifier = 0;
+
+    if (match) {
+        const count = match[1] === "" ? 1 : parseInt(match[1]) || 1;
+        const sides = parseInt(match[2]);
+        const modStr = match[3];
+
+        for (let i = 0; i < count; i++) {
+            const roll = Math.floor(Math.random() * sides) + 1;
+            total += roll;
+            let cls = '';
+            if (roll === sides && sides > 1) cls = 'dice-roll-max';
+            else if (roll === 1 && sides > 1) cls = 'dice-roll-min';
+            htmlParts.push(`<span class="${cls}">${roll}</span>`);
+        }
+
+        if (modStr) {
+            modifier = parseInt(modStr.replace(/\s/g, ''));
+            total += modifier;
+        }
+    } else {
+        // Fallback para número fixo
+        const num = parseInt(cleanExpr);
+        if (!isNaN(num)) { total = num; htmlParts.push(num); }
+        else return { html: "Erro", total: 0, error: true };
+    }
+
+    let finalHtml = htmlParts.join(' + ');
+    if (modifier !== 0) finalHtml += ` ${modifier >= 0 ? '+' : '-'} ${Math.abs(modifier)}`;
+    
+    return { html: finalHtml, total: total, error: false };
+}
+
+// Mostra o Popup
+let diceTimer = null;
+function showDiceResults(title, resultData) {
+    let container = document.getElementById('dice-results-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'dice-results-container';
+        document.body.appendChild(container);
+    }
+
+    container.innerHTML = `
+        <div class="dice-header">${title}</div>
+        <div class="dice-details">${resultData.html}</div>
+        <div class="dice-total-box">
+            <span style="font-size:11px;color:#888;">TOTAL</span>
+            <span class="dice-total-value">${resultData.total}</span>
+        </div>
+    `;
+
+    setTimeout(() => container.classList.add('active'), 10);
+    clearTimeout(diceTimer);
+    diceTimer = setTimeout(() => container.classList.remove('active'), 5000);
+}
+
+// Calcula Bônus de Ataque Mágico (Prof + Mod + Extra)
+function getSpellAttackBonus() {
+    let prof = 2;
+    const profEl = document.getElementById('proficienciaValor');
+    if (profEl) {
+        const val = parseInt(profEl.textContent);
+        if (!isNaN(val)) prof = val;
+    }
+
+    const attrKey = state.spellDCConfig.selectedAttr;
+    if (!attrKey || attrKey === 'none') return null;
+
+    let mod = 0;
+    const selector = DOM_SELECTORS[attrKey]; 
+    const hexEl = document.querySelector(selector);
+    if (hexEl) {
+        let raw = hexEl.dataset.attrValue || hexEl.textContent;
+        const score = parseInt(raw);
+        if (!isNaN(score)) mod = Math.floor((score - 10) / 2);
+    }
+
+    const extra = Number(state.spellDCConfig.extraMod) || 0;
+    return prof + mod + extra;
+}
+
+/* 3. ESCUTADOR GLOBAL DE CLIQUES (Para funcionar sempre) */
+document.addEventListener('click', function(e) {
+    
+    // --- A. BOTÃO DE ATAQUE MÁGICO (CABEÇALHOS) ---
+    const btnHeader = e.target.closest('#btnRollSpellAttack_Header');
+    const btnPrep   = e.target.closest('#btnRollSpellAttack_PrepHeader');
+
+    if (btnHeader || btnPrep) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const bonus = getSpellAttackBonus();
+        if (bonus === null) {
+            alert("⚠️ Configure a DT de Magia primeiro (ícone ⚙️)!");
+            return;
+        }
+
+        const expr = `1d20 ${bonus >= 0 ? '+' : ''}${bonus}`;
+        const res = rollDiceExpression(expr);
+        showDiceResults("Ataque Mágico", res);
+        return;
+    }
+
+    // --- B. ÍCONES DE DADO (ITENS, MAGIAS E PERÍCIAS) ---
+    if (e.target.classList.contains('dice-img') || (e.target.classList.contains('col-icon') && e.target.tagName === 'IMG')) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // 1. Tenta pegar de Perícias
+        const periciaItem = e.target.closest('.pericia-item');
+        if (periciaItem) {
+            const nome = periciaItem.querySelector('.col-nome').textContent;
+            const bonusTxt = periciaItem.querySelector('.bonus-span').textContent.replace(/[()]/g, '');
+            const bonus = parseInt(bonusTxt) || 0;
+            const res = rollDiceExpression(`1d20 ${bonus >= 0 ? '+' : ''}${bonus}`);
+            showDiceResults(nome, res);
+            return;
+        }
+
+        // 2. Tenta pegar de Dano (Itens/Magias)
+        let txt = '';
+        const parentMeta = e.target.closest('.spell-damage'); // Card Item/Magia
+        if (parentMeta) {
+            // Tenta pegar texto do nó anterior ou do pai
+            if (e.target.previousElementSibling) txt = e.target.previousElementSibling.textContent;
+            else txt = parentMeta.textContent;
+        }
+
+        // Limpa o texto (remove o texto "dano" se tiver) e rola
+        txt = txt.replace('Dano', '').trim();
+        if (txt && txt !== '-' && txt !== '0') {
+            const res = rollDiceExpression(txt);
+            showDiceResults("Rolagem de Dano", res);
+        }
+    }
+});
+

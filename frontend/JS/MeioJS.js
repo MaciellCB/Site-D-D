@@ -2,6 +2,10 @@
    LÓGICA DO CENTRO (PERÍCIAS, DINHEIRO E SANIDADE)
 ============================================================= */
 
+/* =============================================================
+   LÓGICA DO CENTRO (PERÍCIAS, DINHEIRO E SANIDADE)
+============================================================= */
+
 document.addEventListener("DOMContentLoaded", () => {
     const listaPericias = document.querySelector(".pericias");
     const containerCentro = document.querySelector('.lado-centro');
@@ -32,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================
-       2. LÓGICA DE PERÍCIAS
+       2. LÓGICA DE PERÍCIAS (COM ROLAGEM DE DADOS)
     ========================= */
     const atributoParaChave = {
         "FOR": "n6", "DEX": "n2", "CON": "n1", "INT": "n5", "SAB": "n3", "CAR": "n4"
@@ -60,12 +64,16 @@ document.addEventListener("DOMContentLoaded", () => {
         Object.entries(state.pericias).forEach(([nome, dados]) => {
             const chaveAttr = atributoParaChave[dados.atributo] || "n2"; 
             const mod = getModificadorDoState(chaveAttr);
+            
+            // CÁLCULO DO BÔNUS TOTAL
             const bonusTotal = mod + (dados.treinado ? prof : 0) + (parseInt(dados.outros) || 0);
 
             const li = document.createElement("li");
             li.className = "pericia-item";
+            
+            // Adicionado style cursor:pointer na imagem
             li.innerHTML = `
-                <img src="img/dado.png" class="col-icon">
+                <img src="img/dado.png" class="col-icon" style="cursor:pointer; transition: transform 0.2s;" title="Rolar ${nome}">
                 <div class="col-nome" title="${nome}">${nome}</div>
                 <div class="col-dados">
                     <select class="atributo-select">
@@ -80,6 +88,28 @@ document.addEventListener("DOMContentLoaded", () => {
                     <input type="number" class="outros" value="${dados.outros || 0}">
                 </div>
             `;
+
+            // --- NOVO: EVENTO DE ROLAGEM DE PERÍCIA ---
+            const btnDado = li.querySelector('.col-icon');
+            btnDado.addEventListener('click', () => {
+                // Efeito visual de clique
+                btnDado.style.transform = "scale(0.9)";
+                setTimeout(() => btnDado.style.transform = "scale(1)", 100);
+
+                // Monta a expressão: 1d20 + bonusTotal
+                const sinal = bonusTotal >= 0 ? '+' : '';
+                const expressao = `1d20 ${sinal} ${bonusTotal}`;
+
+                // Chama as funções globais definidas no DireitaJS.js
+                if (typeof rollDiceExpression === 'function' && typeof showDiceResults === 'function') {
+                    const resultado = rollDiceExpression(expressao);
+                    showDiceResults(`Perícia: ${nome}`, resultado);
+                } else {
+                    console.error("Funções de dado não encontradas. Verifique se o arquivo da Direita está carregado.");
+                    alert(`Resultado: ${Math.floor(Math.random() * 20) + 1 + bonusTotal}`);
+                }
+            });
+            // ------------------------------------------
 
             li.querySelector('.atributo-select').addEventListener('change', (e) => {
                 state.pericias[nome].atributo = e.target.value;
@@ -258,17 +288,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             input.addEventListener('blur', () => saveStateToServer());
             input.addEventListener('keydown', (e) => { if(e.key === 'Enter') input.blur(); });
-        });
-    }
-
-    function atualizarDinheiroInterface() {
-        if (!state.money) state.money = { pc:0, pp:0, pd:0, po:0, pl:0 };
-
-        ['pc', 'pp', 'pd', 'po', 'pl'].forEach(key => {
-            const el = document.getElementById(`input-money-${key}`);
-            if (el && document.activeElement !== el) {
-                el.value = state.money[key] || 0;
-            }
         });
     }
 
