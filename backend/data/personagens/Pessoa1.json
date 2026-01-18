@@ -146,9 +146,165 @@
       "alcance": "6m/18m",
       "description": "<p>Semelhante a uma flecha curta com pesos, projetada para ser arremessada com a mão. Simples e barato.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,1 kg</li></ul>",
       "quantity": 10
+    },
+    {
+      "id": "i_simbolo_sagrado",
+      "name": "Símbolo Sagrado",
+      "category": "Utensílios",
+      "subcategory": "Focos Mágicos",
+      "type": "Geral",
+      "description": "<p>Um ícone abençoado de uma divindade. Brilha com luz tênue quando poder divino é canalizado através dele, seja uma marca, ou Utensílio.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+    },
+    {
+      "id": "i_livro",
+      "name": "Livro",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>Páginas de papel encadernadas em couro. O conteúdo pode ser história, religião ou páginas em branco.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
+    },
+    {
+      "id": 1768764072747,
+      "name": "5 palitos de incenso",
+      "type": "Geral",
+      "description": "Item de Antecedente",
+      "expanded": false,
+      "equip": false,
+      "weight": 0,
+      "quantity": 1
+    },
+    {
+      "id": 1768764061239,
+      "name": "Vestimentas",
+      "type": "Geral",
+      "description": "Item de Antecedente",
+      "expanded": false,
+      "equip": false,
+      "weight": 0,
+      "quantity": 1
+    },
+    {
+      "id": 1768764009720,
+      "name": "Roupas comuns",
+      "type": "Geral",
+      "description": "Item de Antecedente",
+      "expanded": false,
+      "equip": false,
+      "weight": 0,
+      "quantity": 1
     }
   ],
   "abilities": [
+    {
+      "id": 1768764085560,
+      "title": "[Nível 1] Conjuração",
+      "description": "<p>Você estudou o funcionamento da magia e como canalizá-la através de objetos. Para conjurar, você <u>deve</u> ter uma ferramenta de ladrão ou de artesão em mãos (Foco de Conjuração).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Preparação de Magias:</strong> Ao final de um descanso longo, você prepara uma lista de magias igual a: <strong>Modificador de Inteligência + Metade do nível de Artífice</strong> (arredondado para baixo).</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Habilidade de Conjuração:</strong> Inteligência.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ CD de Resistência:</strong> 8 + Bônus de Proficiência + Modificador de Inteligência.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Ataque Mágico:</strong> Bônus de Proficiência + Modificador de Inteligência.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Rituais:</strong> Você pode conjurar magias de artífice como ritual se elas tiverem o descritor ritual e você as tiver preparadas.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Artífice",
+      "subclass": ""
+    },
+    {
+      "id": 1768764107792,
+      "title": "[Nível 1] Funilaria Mágica",
+      "description": "<p><strong>Ação:</strong> Ação Padrão<br><strong>Alcance:</strong> Toque<br><strong>Duração:</strong> Indefinida</p><p>Você investe uma centelha de magia em um objeto mundano. Você deve ter ferramentas de ladrão ou de artesão em mãos. Ao tocar um objeto Minúsculo não-mágico, você confere a ele uma propriedade mágica.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Limite:</strong> Você pode afetar um número de objetos igual ao seu Modificador de Inteligência. Se exceder, a propriedade mais antiga desaparece.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Efeitos (Escolha 1):</strong><br>1. O objeto emite luz plena em 1,5m e penumbra em mais 1,5m.<br>2. O objeto repete uma mensagem gravada de até 6 segundos quando tocado ou quando uma condição for atendida.<br>3. O objeto emite continuamente um odor ou som não verbal (como vento, chuva ou estática).<br>4. Um efeito visual estático (texto, imagem, formas) aparece em uma das superfícies do objeto.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Artífice",
+      "subclass": ""
+    },
+    {
+      "id": 1768764032677,
+      "title": "[Nível 1] Inspiração Bárdica",
+      "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Alcance:</strong> 18 metros (60 pés)<br><strong>Duração:</strong> 10 minutos</p><p>Você pode inspirar os outros através de palavras ou música. Escolha uma criatura (exceto você mesmo) que possa ouvi-lo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ O Dado:</strong> A criatura ganha um dado de Inspiração Bárdica (d6). O dado escala para d8 (5º nível), d10 (10º nível) e d12 (15º nível).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Uso:</strong> Uma vez dentro dos 10 minutos, a criatura pode rolar o dado e adicionar o número obtido a uma <strong>jogada de ataque</strong>, <strong>teste de habilidade</strong> ou <strong>teste de resistência</strong> que ela fizer. Ela pode esperar a rolagem do d20 antes de decidir usar o dado, mas deve decidir antes de saber o resultado.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Limite:</strong> Uma criatura só pode ter um dado de inspiração por vez. Você tem usos iguais ao seu Mod. Carisma (recupera em Descanso Longo).</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bardo",
+      "subclass": ""
+    },
+    {
+      "id": 1768764022987,
+      "title": "[Nível 1] Lançamento de Feitiços",
+      "description": "<p>Você aprende a manipular a Trama através da música e da oratória.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Atributo de Conjuração:</strong> Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ CD de Resistência:</strong> 8 + Bônus de Proficiência + Modificador de Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Ataque Mágico:</strong> Bônus de Proficiência + Modificador de Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Foco de Conjuração:</strong> Você pode usar um instrumento musical como foco para suas magias de bardo.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Rituais:</strong> Você pode conjurar qualquer magia de bardo conhecida como um ritual, se a magia tiver o descritor ritual.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Repertório:</strong> Suas magias são conhecidas (não preparadas). Ao subir de nível, você pode substituir uma magia conhecida por outra da lista de bardo.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bardo",
+      "subclass": ""
+    },
+    {
+      "id": 1768764006037,
+      "title": "Abrigo dos Fiéis",
+      "description": "Você impõe respeito àqueles que compartilham sua fé. Você e seus companheiros podem receber cura e caridade (hospedagem e comida modesta) em templos de sua divindade.",
+      "expanded": false,
+      "active": true,
+      "category": "Antecedente",
+      "class": "",
+      "subclass": "Acólito"
+    },
+    {
+      "id": 1768764088920,
+      "title": "Design Especializado",
+      "description": "Você ganha proficiência com duas ferramentas de artesão à sua escolha.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Autogonomo"
+    },
+    {
+      "id": 1768764042048,
+      "title": "Descanso do Sentinela",
+      "description": "Você não precisa dormir. Você termina um descanso longo em <b>6 horas</b> se permanecer inativo e consciente.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Autogonomo"
+    },
+    {
+      "id": 1768764037084,
+      "title": "Natureza Mecânica",
+      "description": "Você tem resistência a dano de <b>veneno</b> e imunidade a doenças. Você tem vantagem em salvaguardas contra ser paralisado ou envenenado. Você não precisa comer, beber ou respirar.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Autogonomo"
+    },
+    {
+      "id": 1768764011235,
+      "title": "Máquina de Cura",
+      "description": "Se o truque <i>reparar</i> for usado em você, você pode gastar um Dado de Vida para se curar. Você também se beneficia de magias de cura normais (como <i>curar ferimentos</i>).",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Autogonomo"
+    },
+    {
+      "id": 1768764005133,
+      "title": "Feito para o Sucesso",
+      "description": "Você pode adicionar <b>1d4</b> a uma jogada de ataque, teste de atributo ou salvaguarda após ver o resultado do d20, mas antes do efeito ocorrer. Você pode usar isso um número de vezes igual ao seu <b>Bônus de Proficiência</b> por descanso longo.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Autogonomo"
+    },
+    {
+      "id": 1768764042173,
+      "title": "Invólucro Blindado",
+      "description": "Seu corpo é reforçado. Quando não estiver usando armadura, sua CA é <b>13 + seu modificador de Destreza</b>.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Autogonomo"
+    },
     {
       "id": 1768763890799,
       "title": "[Nível 1] Artes Marciais",
@@ -190,27 +346,27 @@
   "pericias": {
     "Atletismo": {
       "atributo": "FOR",
-      "treinado": true,
+      "treinado": false,
       "outros": 0
     },
     "Acrobacia": {
       "atributo": "DEX",
-      "treinado": true,
+      "treinado": false,
       "outros": 0
     },
     "Furtividade": {
       "atributo": "DEX",
-      "treinado": true,
-      "outros": 0
+      "treinado": false,
+      "outros": 23
     },
     "Prestidigitação": {
       "atributo": "DEX",
-      "treinado": true,
+      "treinado": false,
       "outros": 0
     },
     "Arcanismo": {
       "atributo": "INT",
-      "treinado": true,
+      "treinado": false,
       "outros": 0
     },
     "História": {
@@ -317,9 +473,9 @@
     "n6": 10
   },
   "niveisClasses": {
-    "artifice": 0,
+    "artifice": 1,
     "barbaro": 0,
-    "bardo": 0,
+    "bardo": 1,
     "blood hunter": 0,
     "bruxo": 0,
     "clerigo": 0,
@@ -335,7 +491,8 @@
   "xp": "0",
   "inspiracao": 1,
   "vidaDadosSalvos": {
-    "v1": 8
+    "v1": 8,
+    "v2": 3
   },
   "marco": 0,
   "vidaAtual": 0,
@@ -356,21 +513,37 @@
     "Radiante",
     "Veneno"
   ],
-  "imunidadesList": [],
+  "imunidadesList": [
+    "Doenças"
+  ],
   "proficienciasList": [
     "Armas simples",
     "Espadas Curtas",
     "Ferramentas de Pedreiro",
     "Ferramentas de Alquimista",
     "Ferramentas de Coureiro",
-    "Charamela"
+    "Charamela",
+    "Alaúde",
+    "Baralho",
+    "Armaduras leves",
+    "Bestas de Mão",
+    "Espadas Longas",
+    "Rapieiras",
+    "Citara",
+    "Armaduras médias",
+    "Escudos",
+    "Armas de fogo",
+    "Ferramentas de Ladrão",
+    "Ferramentas de Funileiro"
   ],
   "idiomasList": [
     "Comum",
     "Celestial",
     "Anão",
     "Aarakocra",
-    "Auran"
+    "Auran",
+    "Gnômico",
+    "Dracônico"
   ],
   "spellSlots": {
     "1": {
@@ -460,19 +633,19 @@
     "class-Ladino": false,
     "class-Monge": false
   },
-  "antecedente": "Artesão de Guilda",
+  "antecedente": "Acólito",
   "personagem": "123w",
   "jogador": "321w",
-  "raca": "Aarakocra",
+  "raca": "Autogonomo",
   "customResources": [],
-  "deslocamentoVoo": 12,
+  "deslocamentoVoo": 0,
   "subRaca": "",
-  "racaTipo": "Humanoide",
-  "racaTamanho": "Médio",
+  "racaTipo": "Constructo",
+  "racaTamanho": "Pequeno",
   "money": {
     "pc": 0,
     "pp": 0,
-    "po": 60,
+    "po": 75,
     "pl": 0,
     "pd": 4
   },
