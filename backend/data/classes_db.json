@@ -406,7 +406,7 @@
       "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Duração:</strong> 1 minuto</p><p>Você entra em um estado de fúria primal.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Vantagem:</strong> Você tem Vantagem em testes de Força e testes de resistência de Força.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Dano de Fúria:</strong> Ao realizar um ataque corpo a corpo usando Força, você ganha um bônus no dano. (Nível 1-8: +2 | Nível 9-15: +3 | Nível 16+: +4).</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Resistência:</strong> Você possui resistência a dano contundente, perfurante e cortante.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Restrições:</strong> Você não pode conjurar magias ou manter concentração. A fúria termina prematuramente se você cair inconsciente ou se terminar um turno sem ter atacado uma criatura hostil ou sem ter sofrido dano.</li></ul>"
     },
     {
-      "name": "[Nível 1] Defesa sem Armadura",
+      "name": "[Nível 1] Defesa sem Armadura(Bárbaro)",
       "level": 1,
       "description": "<p><strong>Duração:</strong> Permanente</p><p>Enquanto você não estiver usando nenhuma armadura, sua Classe de Armadura (CA) é calculada da seguinte forma:</p><p style='text-align:center; font-weight:bold; color:#fff; background:#222; padding:8px; border-radius:4px;'>10 + Mod. Destreza + Mod. Constituição</p><p>Você pode usar um escudo e ainda obter esse benefício.</p>"
     },
@@ -5864,7 +5864,7 @@
     "saving_throws": ["Força", "Destreza"],
     "proficiencies": {
       "armor": [],
-      "weapons": ["simples", "Espadas Curtas"],
+      "weapons": ["Armas simples", "Espadas Curtas"],
       "tools": ["1 Artesão ou Instrumento"]
     },
     "skills_count": 2,
@@ -5876,7 +5876,7 @@
 
   "features": [
     {
-      "name": "[Nível 1] Defesa sem Armadura",
+      "name": "[Nível 1] Defesa sem Armadura(Monge)",
       "level": 1,
       "description": "<p><strong>Duração:</strong> Permanente</p><p>Enquanto você não estiver usando nenhuma armadura e não estiver empunhando um escudo, sua Classe de Armadura é igual a <strong>10 + seu modificador de Destreza + seu modificador de Sabedoria</strong>.</p>"
     },

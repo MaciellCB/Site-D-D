@@ -3244,8 +3244,8 @@ function calculateArmorClass() {
   );
 
   // 3. Verifica Habilidades Ativas (Busca por texto exato ou parcial)
-  const barbDefense = state.abilities.find(a => a.active && a.title.includes("Defesa sem Armadura(Bárbaro)"));
-  const monkDefense = state.abilities.find(a => a.active && a.title.includes("Defesa sem Armadura(Monge)"));
+  const barbDefense = state.abilities.find(a => a.active && a.title.includes("[Nível 1] Defesa sem Armadura(Bárbaro)"));
+  const monkDefense = state.abilities.find(a => a.active && a.title.includes("[Nível 1] Defesa sem Armadura(Monge)"));
 
   let ac = 10; // Base padrão (sem nada)
 

@@ -110,7 +110,7 @@ let items = [];
 function openGenericSelector(title, count, options, onConfirmCallback) {
     const overlay = document.createElement('div');
     overlay.className = 'spell-modal-overlay race-modal-overlay';
-    overlay.style.zIndex = '14000';
+    overlay.style.zIndex = '50000';
 
     let alreadyKnown = [];
     if (title.includes("Idiomas")) alreadyKnown = state.idiomasList || [];
@@ -188,7 +188,7 @@ function openSkillSelector(count, sourceName, limitToList = null, onComplete = n
 
     const overlay = document.createElement('div');
     overlay.className = 'spell-modal-overlay race-modal-overlay';
-    overlay.style.zIndex = '14000';
+    overlay.style.zIndex = '50000';
 
     const options = limitToList || ALL_SKILLS_LIST;
     const uniqueOptions = [...new Set(options)].sort();
@@ -1305,58 +1305,83 @@ function exibirAvisoTemporario(mensagem) {
 
 
 /* =============================================================
-   CORREÇÃO FINAL: VALIDAR CLASSE COM AVISO BONITO
-   Substitua a função aplicarClasseNaFicha
+   CORREÇÃO: APLICAR CLASSE NA FICHA (BLINDADA)
 ============================================================= */
-
 function aplicarClasseNaFicha(cls, subCls) {
-    if (typeof state === 'undefined') return false;
+    // 1. Garantia de State Global
+    if (typeof state === 'undefined') {
+        if (typeof window.state !== 'undefined') {
+            state = window.state;
+        } else {
+            console.error("ERRO CRÍTICO: 'state' não definido ao aplicar classe.");
+            alert("Erro: Ficha não inicializada. Recarregue a página.");
+            return false;
+        }
+    }
+
+    // 2. Inicialização de Objetos Segura
+    if (!state.niveisClasses) state.niveisClasses = {};
+    if (!state.atributos) state.atributos = { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 }; // Previne erro em calculos
+    if (!state.pericias) state.pericias = {};
+    if (!state.proficienciasList) state.proficienciasList = [];
+    if (!state.inventory) state.inventory = [];
 
     const classKey = cls.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    if (!state.niveisClasses) state.niveisClasses = {};
-
+    
+    // 3. Cálculos de Nível
     const currentLevelInClass = state.niveisClasses[classKey] ? parseInt(state.niveisClasses[classKey]) : 0;
     const newLevelInClass = currentLevelInClass + 1;
-    let totalCharacterLevel = 0;
-    Object.values(state.niveisClasses).forEach(lvl => totalCharacterLevel += parseInt(lvl));
     
-    // Verifica se é o nível 1 global do personagem
+    let totalCharacterLevel = 0;
+    if (state.niveisClasses) {
+        Object.values(state.niveisClasses).forEach(lvl => totalCharacterLevel += (parseInt(lvl) || 0));
+    }
+    
     const isFirstLevelCharacter = (totalCharacterLevel === 0);
     const isMulticlassing = (totalCharacterLevel > 0 && currentLevelInClass === 0);
     const requiredLevel = cls.subclass_level || 3;
 
-    // --- VALIDAÇÕES COM O NOVO AVISO ---
-    
-    // 1. Tenta pegar subclasse antes da hora
+    // --- VALIDAÇÕES ---
+    // Impede pegar subclasse antes da hora
     if (subCls && newLevelInClass < requiredLevel) {
-        exibirAvisoTemporario(`Nível insuficiente (${newLevelInClass}) para subclasse ${subCls.name}.<br>Requer nível ${requiredLevel}.`);
+        if(typeof exibirAvisoTemporario === 'function') 
+            exibirAvisoTemporario(`Nível insuficiente (${newLevelInClass}) para subclasse ${subCls.name}.<br>Requer nível ${requiredLevel}.`);
+        else alert(`Nível insuficiente. Requer ${requiredLevel}.`);
         return false; 
     }
 
-    // 2. OBRIGATORIEDADE NO NÍVEL EXATO
-    // Se você está indo para o nível exato (ex: Nível 1 de Bruxo), 
-    // IGNORAMOS se tem algo salvo (hasSavedSubclass) e EXIGIMOS uma seleção explicita (subCls).
+    // Exige subclasse no nível exato
     if (newLevelInClass === requiredLevel) {
         if (!subCls) {
-            exibirAvisoTemporario(`Você atingiu o nível ${requiredLevel} de ${cls.name}!<br>Você deve selecionar uma Subclasse na lista para continuar.`);
-            return false; // BLOQUEIA E NÃO FECHA O MODAL
+            if(typeof exibirAvisoTemporario === 'function')
+                exibirAvisoTemporario(`Você atingiu o nível ${requiredLevel} de ${cls.name}!<br>Selecione uma Subclasse.`);
+            else alert("Selecione uma Subclasse!");
+            return false;
         }
     }
-    // Para níveis posteriores, se não selecionou nada novo, verifica se tem algo salvo
+    // Verifica se já tem subclasse salva para níveis posteriores
     else if (newLevelInClass > requiredLevel && !subCls) {
         const hasSaved = state.subclasses && state.subclasses[classKey];
         if (!hasSaved) {
-             exibirAvisoTemporario(`Você está no nível ${newLevelInClass}, mas não tem nenhuma subclasse salva.<br>Selecione uma para prosseguir.`);
+             if(typeof exibirAvisoTemporario === 'function')
+                exibirAvisoTemporario(`Nível ${newLevelInClass}: Selecione sua Subclasse salva.`);
+             else alert("Selecione sua Subclasse.");
              return false;
         }
     }
 
-    // --- APLICAÇÃO (Se passou dos avisos) ---
-
+    // --- APLICAÇÃO ---
     state.niveisClasses[classKey] = newLevelInClass;
-    if (isFirstLevelCharacter) state.hitDie = `d${cls.hit_die}`;
+    
+    if (isFirstLevelCharacter) {
+        state.hitDie = `d${cls.hit_die}`;
+        // Define vida inicial cheia se for nível 1 total
+        if(!state.vidaDadosSalvos) state.vidaDadosSalvos = {};
+        // Se ainda não tem vida salva pra esse nível, seta o máximo
+        if(!state.vidaDadosSalvos['v1']) state.vidaDadosSalvos['v1'] = cls.hit_die; 
+    }
 
-    // Features Classe Base
+    // Adiciona Features da Classe Base
     if (cls.features) {
         cls.features.forEach(feat => {
             const fLvl = feat.level || 1;
@@ -1364,34 +1389,29 @@ function aplicarClasseNaFicha(cls, subCls) {
         });
     }
 
-    // Features Subclasse
-    if (subCls) {
+    // Adiciona Features da Subclasse
+    const savedSubName = (state.subclasses && state.subclasses[classKey]) ? state.subclasses[classKey] : null;
+    const subToApply = subCls || (savedSubName ? cls.subclasses.find(s => s.name === savedSubName) : null);
+
+    if (subToApply) {
         if (!state.subclasses) state.subclasses = {};
-        state.subclasses[classKey] = subCls.name;
+        state.subclasses[classKey] = subToApply.name;
         
-        if (subCls.features) {
-            subCls.features.forEach(feat => {
+        if (subToApply.features) {
+            subToApply.features.forEach(feat => {
                 const fLvl = feat.level || requiredLevel;
-                if (fLvl <= newLevelInClass) addFeatureToState(feat, 'Subclasse', cls.name, subCls.name);
-            });
-        }
-    } else if (hasSavedSubclass && cls.subclasses) {
-        const savedData = cls.subclasses.find(s => s.name === hasSavedSubclass);
-        if (savedData && savedData.features) {
-            savedData.features.forEach(feat => {
-                const fLvl = feat.level || requiredLevel;
-                if (fLvl <= newLevelInClass) addFeatureToState(feat, 'Subclasse', cls.name, hasSavedSubclass);
+                if (fLvl <= newLevelInClass) addFeatureToState(feat, 'Subclasse', cls.name, subToApply.name);
             });
         }
     }
 
+    // --- MONTAGEM DA FILA DE ESCOLHAS (TASKS) ---
     const tasks = [];
 
-    // --- LÓGICA DO NÍVEL 1 ---
+    // CASO 1: PERSONAGEM NÍVEL 1 (CRIAÇÃO)
     if (isFirstLevelCharacter) {
         // Salvaguardas
         if (cls.saving_throws) {
-            if (!state.pericias) state.pericias = {};
             cls.saving_throws.forEach(attrName => {
                 const key = `Salvaguarda (${attrName})`;
                 if (state.pericias[key]) state.pericias[key].treinado = true;
@@ -1408,6 +1428,7 @@ function aplicarClasseNaFicha(cls, subCls) {
                 lista = ALL_SKILLS_LIST;
                 titulo = `Perícias de ${cls.name} (Escolha Livre)`;
             }
+            // Z-INDEX ALTO: Passamos style inline ou classe para garantir que abra por cima
             tasks.push((next) => openSkillSelector(cls.skills_count, titulo, lista, next));
         }
 
@@ -1416,47 +1437,57 @@ function aplicarClasseNaFicha(cls, subCls) {
             tasks.push((next) => processarEquipamentoInicial(cls.equipment, next));
         }
 
-        // Proficiências
+        // Proficiências Fixas
         addProficiencias(cls.proficiencies);
 
-        // Escolhas de Ferramentas
+        // Escolhas de Ferramentas (Instrumentos, Artesão, etc)
+        // Escolhas de Ferramentas (Instrumentos, Artesão, etc)
         if (cls.proficiencies && cls.proficiencies.tools) {
             cls.proficiencies.tools.forEach(toolStr => {
                 const tLower = toolStr.toLowerCase();
-                if (tLower.includes("três instrumentos musicais") || tLower.includes("tres instrumentos musicais")) {
-                    tasks.push((next) => openGenericSelector("Escolha 3 Instrumentos Musicais", 3, LISTA_INSTRUMENTOS, (selected) => {
-                        if (!state.proficienciasList) state.proficienciasList = [];
-                        selected.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
+
+                // 1. Bardo: 3 Instrumentos
+                if (tLower.includes("três instrumentos") || tLower.includes("tres instrumentos")) {
+                    tasks.push((next) => openGenericSelector("Escolha 3 Instrumentos", 3, LISTA_INSTRUMENTOS, (sel) => {
+                        sel.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
                         next();
                     }));
                 }
-                else if (tLower.includes("ferramenta de artesão") && (tLower.includes("uma") || tLower.includes("qualquer") || tLower.includes("escolha") || tLower.includes("tipo de"))) {
-                    tasks.push((next) => openGenericSelector("Escolha 1 Ferramenta de Artesão", 1, LISTA_FERRAMENTAS_ARTESAO, (selected) => {
-                        if (!state.proficienciasList) state.proficienciasList = [];
-                        selected.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
+                // 2. Monge: 1 Artesão OU 1 Instrumento (CORREÇÃO AQUI)
+                else if ((tLower.includes("artesão") || tLower.includes("artesao")) && tLower.includes("instrumento")) {
+                    // Cria uma lista combinada
+                    const listaMista = [...LISTA_FERRAMENTAS_ARTESAO, ...LISTA_INSTRUMENTOS].sort();
+                    tasks.push((next) => openGenericSelector("Escolha: Ferramenta ou Instrumento", 1, listaMista, (sel) => {
+                        sel.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
                         next();
                     }));
                 }
-                else if (tLower.includes("um instrumento musical") || (tLower.includes("instrumento musical") && tLower.includes("escolha") && !tLower.includes("três"))) {
-                    tasks.push((next) => openGenericSelector("Escolha 1 Instrumento Musical", 1, LISTA_INSTRUMENTOS, (selected) => {
-                        if (!state.proficienciasList) state.proficienciasList = [];
-                        selected.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
+                // 3. Ferramenta de Artesão Genérica
+                else if (tLower.includes("ferramenta de artesão") && (tLower.includes("uma") || tLower.includes("escolha") || tLower.includes("qualquer"))) {
+                    tasks.push((next) => openGenericSelector("Escolha 1 Ferramenta", 1, LISTA_FERRAMENTAS_ARTESAO, (sel) => {
+                        sel.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
+                        next();
+                    }));
+                }
+                // 4. Instrumento Musical Genérico
+                else if (tLower.includes("instrumento musical") && (tLower.includes("um") || tLower.includes("escolha"))) {
+                    tasks.push((next) => openGenericSelector("Escolha 1 Instrumento", 1, LISTA_INSTRUMENTOS, (sel) => {
+                        sel.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
                         next();
                     }));
                 }
             });
         }
     } 
-    // --- LÓGICA DE MULTICLASSE ---
+    // CASO 2: MULTICLASSE (GANHA ALGUMAS COISAS)
     else if (isMulticlassing) {
         let profsMC = { ...cls.proficiencies };
-        if (profsMC.armor) profsMC.armor = profsMC.armor.filter(a => !a.toLowerCase().includes('pesada'));
+        if (profsMC.armor) profsMC.armor = profsMC.armor.filter(a => !a.toLowerCase().includes('pesada')); // Regra geral MC
         addProficiencias(profsMC);
 
         if (classKey === 'bardo') {
-            tasks.push((next) => openGenericSelector("Multiclasse Bardo: 1 Instrumento", 1, LISTA_INSTRUMENTOS, (selected) => {
-                if (!state.proficienciasList) state.proficienciasList = [];
-                selected.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
+            tasks.push((next) => openGenericSelector("Multiclasse Bardo: 1 Instrumento", 1, LISTA_INSTRUMENTOS, (sel) => {
+                sel.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
                 next();
             }));
         }
@@ -1464,18 +1495,27 @@ function aplicarClasseNaFicha(cls, subCls) {
         if (['bardo', 'ladino', 'patrulheiro', 'ranger'].includes(classKey)) {
             let listaMC = cls.skills_list;
             if (classKey === 'bardo') listaMC = ALL_SKILLS_LIST;
-            tasks.push((next) => openSkillSelector(1, `Multiclasse ${cls.name}`, listaMC, next));
+            const qtd = (classKey === 'ladino' || classKey === 'ranger' || classKey === 'patrulheiro') ? 1 : 1;
+            tasks.push((next) => openSkillSelector(qtd, `Multiclasse ${cls.name}`, listaMC, next));
         }
     }
 
-    executarFila(tasks);
-    atualizarTextoClassesHeader();
+    // Salva o estado antes de iniciar as tarefas visuais
     if (typeof saveStateToServer === 'function') saveStateToServer();
+    
+    // Atualiza interface do header
+    atualizarTextoClassesHeader();
     window.dispatchEvent(new CustomEvent('sheet-updated'));
 
-    return true; // SUCESSO!
-}
+    // Executa a fila de prompts (Se houver)
+    if (tasks.length > 0) {
+        setTimeout(() => {
+            executarFila(tasks);
+        }, 100); // Pequeno delay para garantir que o modal anterior fechou ou o DOM atualizou
+    }
 
+    return true; // Indica sucesso para fechar o modal principal
+}
 
 
 
@@ -1509,6 +1549,9 @@ function executarFila(tasks) {
    Substitua a função addProficiencias (perto do final do código)
 ============================================================= */
 
+/* =============================================================
+   CORREÇÃO: FILTRO DE PROFICIÊNCIAS (HeaderJS.js)
+============================================================= */
 function addProficiencias(profObj) {
     if (!profObj) return;
     if (!state.proficienciasList) state.proficienciasList = [];
@@ -1517,12 +1560,16 @@ function addProficiencias(profObj) {
         if (arr) arr.forEach(item => { 
             
             // LÓGICA DE FILTRO:
-            // Se for lista de ferramentas, verificamos se é um texto de "escolha"
-            // para não adicionar o texto explicativo na ficha como se fosse uma pericia.
             if (isToolList) {
                 const tLower = item.toLowerCase();
-                // Palavras-chave que indicam que isso não é uma ferramenta real, mas uma instrução
-                if (tLower.includes("escolha") || tLower.includes("qualquer") || tLower.includes("tipo de") || tLower.includes("um instrumento")) {
+                // Palavras-chave para ignorar textos de instrução
+                if (tLower.includes("escolha") || 
+                    tLower.includes("qualquer") || 
+                    tLower.includes("tipo de") || 
+                    tLower.includes("um instrumento") || 
+                    // CORREÇÃO MONGE: Filtra "1 Artesão ou Instrumento"
+                    (tLower.includes("artesão") && tLower.includes("instrumento")) ||
+                    tLower.includes("ou instrumento")) {
                     return; // Pula este item, não adiciona na ficha
                 }
             }
@@ -1535,9 +1582,9 @@ function addProficiencias(profObj) {
 
     pushUnique(profObj.armor);
     pushUnique(profObj.weapons);
-    // Passamos 'true' para indicar que esta é a lista de ferramentas e deve ser filtrada
     pushUnique(profObj.tools, true); 
 }
+
 function addFeatureToState(feat, category, clsName, subName) {
     if (!state.abilities) state.abilities = [];
     const exists = state.abilities.find(a => a.title === feat.name);
@@ -1844,7 +1891,7 @@ function buscarItemNoBanco(nomeItem) {
 function openEquipmentChoiceModal(title, optionA, optionB, optionC, callback) {
     const overlay = document.createElement('div');
     overlay.className = 'spell-modal-overlay race-modal-overlay';
-    overlay.style.zIndex = '15000';
+    overlay.style.zIndex = '51000';
 
     let htmlButtons = `
         <button class="btn-equip-opt btn-add" data-choice="${optionA}" style="flex:1; background:#1a1a1a; border:1px solid #444; padding:15px; text-align:left; display:flex; flex-direction:column; gap:5px; transition:0.2s;">

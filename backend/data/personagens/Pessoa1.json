@@ -1,7 +1,7 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Inventário",
+  "activeTab": "Habilidades",
   "spellDCConfig": {
     "selectedAttr": "sab",
     "extraMod": 0,
@@ -10,281 +10,147 @@
   "dtMagias": 10,
   "inventory": [
     {
-      "id": 1768759891713,
-      "name": "Bomba de Plasma",
-      "description": "<p>Esfera tecnológica que detona em um flash azul, derretendo metal e carne em um raio de 4,5m.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 pl</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
-      "expanded": false,
-      "equip": false,
-      "type": "Item",
-      "isEquipable": true,
-      "proficiency": "Armas Simples",
-      "defense": "",
-      "tipoItem": "",
-      "minStrength": "",
-      "tipoArma": "Corpo a Corpo",
-      "empunhadura": "Uma mao",
-      "crit": "20",
-      "multiplicador": "2",
-      "alcance": "1.5m",
-      "attunement": "Não",
-      "damage": "5d6",
-      "damage2Hands": "",
-      "useTwoHands": false,
-      "damageTypes": [
-        "Energético"
-      ],
-      "moreDmgList": [],
-      "caracteristicas": []
-    },
-    {
-      "id": 1768759801649,
-      "name": "Bomba",
-      "description": "<p>Uma esfera de ferro fundido com um pavio curto. Arremesso (18m). Todos a 1,5m do impacto devem fazer resistência de Destreza (CD 12) ou sofrem o dano.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
-      "expanded": true,
-      "equip": true,
+      "id": 1768763873026,
+      "name": "Espada Curta",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
       "type": "Arma",
-      "isEquipable": true,
-      "proficiency": "Armas Simples",
-      "defense": "",
-      "tipoItem": "",
-      "minStrength": "",
-      "tipoArma": "A Distancia",
-      "empunhadura": "Uma mao",
-      "crit": "20",
-      "multiplicador": "2",
-      "alcance": "1.5m",
-      "attunement": "Não",
-      "damage": "3d6",
-      "damage2Hands": "",
-      "useTwoHands": false,
-      "damageTypes": [
-        "Fogo"
-      ],
-      "moreDmgList": [],
-      "caracteristicas": []
-    },
-    {
-      "id": 1768759733208,
-      "name": "Bomba",
-      "description": "<p>Uma esfera de ferro fundido com um pavio curto. Arremesso (18m). Todos a 1,5m do impacto devem fazer resistência de Destreza (CD 12) ou sofrem o dano.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
-      "expanded": false,
-      "equip": false,
-      "type": "Item",
-      "isEquipable": true,
-      "proficiency": "Armas Simples",
-      "defense": "",
-      "tipoItem": "",
-      "minStrength": "",
-      "tipoArma": "A Distancia",
-      "empunhadura": "Uma mao",
-      "crit": "20",
-      "multiplicador": "2",
-      "alcance": "1.5m",
-      "attunement": "Não",
-      "damage": "3d6",
-      "damage2Hands": "",
-      "useTwoHands": false,
-      "damageTypes": [
-        "Fogo"
-      ],
-      "moreDmgList": [],
-      "caracteristicas": []
-    },
-    {
-      "id": 1768759688568,
-      "name": "Bomba",
-      "description": "<p>Uma esfera de ferro fundido com um pavio curto. Arremesso (18m). Todos a 1,5m do impacto devem fazer resistência de Destreza (CD 12) ou sofrem o dano.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
-      "expanded": true,
-      "equip": false,
-      "type": "Item",
-      "isEquipable": true,
-      "proficiency": "Armas Simples",
-      "defense": "",
-      "tipoItem": "",
-      "minStrength": "",
-      "tipoArma": "A Distancia",
-      "empunhadura": "Uma mao",
-      "crit": "20",
-      "multiplicador": "2",
-      "alcance": "1.5m",
-      "attunement": "Não",
-      "damage": "3d6",
-      "damage2Hands": "",
-      "useTwoHands": false,
-      "damageTypes": [
-        "Fogo"
-      ],
-      "moreDmgList": [],
-      "caracteristicas": []
-    },
-    {
-      "id": 1768759578578,
-      "name": "Bomba",
-      "description": "<p>Uma esfera de ferro fundido com um pavio curto. Arremesso (18m). Todos a 1,5m do impacto devem fazer resistência de Destreza (CD 12) ou sofrem o dano.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
-      "expanded": true,
-      "equip": false,
-      "type": "Item",
-      "isEquipable": true,
-      "proficiency": "Armas Simples",
-      "defense": "",
-      "tipoItem": "",
-      "minStrength": "",
-      "tipoArma": "Corpo a Corpo",
-      "empunhadura": "Uma mao",
-      "crit": "20",
-      "multiplicador": "2",
-      "alcance": "1.5m",
-      "attunement": "Não",
-      "damage": "3d6",
-      "damage2Hands": "",
-      "useTwoHands": false,
-      "damageTypes": [
-        "Fogo"
-      ],
-      "moreDmgList": [],
-      "caracteristicas": []
-    },
-    {
-      "id": 1768759576921,
-      "name": "Zarabatana",
-      "description": "<p>Um tubo longo e oco, feito de cana rígida ou madeira perfurada. Arma silenciosa, favorita de assassinos para entregar venenos à distância.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>",
-      "expanded": false,
-      "equip": false,
-      "type": "Arma",
-      "isEquipable": true,
+      "damage": "1d6",
+      "damageType": "Perfurante",
       "proficiency": "Armas Marciais",
-      "defense": "",
-      "tipoItem": "",
-      "minStrength": "",
-      "tipoArma": "A Distancia",
+      "tipoArma": "Corpo a Corpo",
       "empunhadura": "Uma mao",
-      "crit": "20",
-      "multiplicador": "2",
-      "alcance": "7,5m/30m",
-      "attunement": "Não",
-      "damage": "2",
-      "damage2Hands": "",
-      "useTwoHands": false,
-      "damageTypes": [
-        "Perfurante"
-      ],
-      "moreDmgList": [],
       "caracteristicas": [
-        "Munição",
+        "Ágil",
         "Leve"
-      ]
+      ],
+      "description": "<p>Uma lâmina reta de tamanho médio, versátil o suficiente para estocadas ou cortes rápidos. Comum como arma secundária.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 4 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
+      "quantity": 1
     },
     {
-      "id": 1768759574173,
-      "name": "Machado de Batalha",
-      "description": "<p>Uma cabeça de aço pesado em um cabo de carvalho envernizado. A lâmina em forma de meia-lua possui um fio capaz de partir escudos de madeira com facilidade.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>",
-      "expanded": false,
-      "equip": false,
+      "id": 1768763809374,
+      "name": "Kit de Explorador",
+      "category": "Conjuntos",
+      "subcategory": "Kits",
+      "type": "Geral",
+      "description": "<p>Para longas jornadas na natureza: Mochila, saco de dormir, kit de refeição, caixa de fogo, tochas, 10 dias de ração e cantil.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po 50 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 8 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768763792972,
+      "name": "Dardo (x10)",
+      "category": "Armas",
+      "subcategory": "A distancia",
       "type": "Arma",
-      "isEquipable": true,
-      "proficiency": "Armas Marciais",
-      "defense": "",
-      "tipoItem": "",
-      "minStrength": "",
-      "tipoArma": "Corpo a Corpo",
-      "empunhadura": "Versátil",
-      "crit": "20",
-      "multiplicador": "2",
-      "alcance": "1.5m",
-      "attunement": "Não",
-      "damage": "1d8",
-      "damage2Hands": "1d10",
-      "useTwoHands": false,
-      "damageTypes": [
-        "Cortante"
+      "damage": "1d4",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "A Distancia",
+      "empunhadura": "Uma mao",
+      "caracteristicas": [
+        "Ágil",
+        "Arremesso"
       ],
-      "moreDmgList": [],
-      "caracteristicas": []
+      "alcance": "6m/18m",
+      "description": "<p>Semelhante a uma flecha curta com pesos, projetada para ser arremessada com a mão. Simples e barato.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,1 kg</li></ul>",
+      "quantity": 10
+    },
+    {
+      "id": 1768763938381,
+      "name": "Funda",
+      "category": "Armas",
+      "subcategory": "A distancia",
+      "type": "Arma",
+      "damage": "1d4",
+      "damageType": "Contundente",
+      "proficiency": "Armas Simples",
+      "tipoArma": "A Distancia",
+      "empunhadura": "Uma mao",
+      "caracteristicas": [
+        "Munição"
+      ],
+      "alcance": "9m/36m",
+      "description": "<p>Uma tira de couro simples. Usa pedras do chão (dano 1) ou balas de chumbo (dano 1d4).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> -</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768763863963,
+      "name": "Kit de Explorador",
+      "category": "Conjuntos",
+      "subcategory": "Kits",
+      "type": "Geral",
+      "description": "<p>Para longas jornadas na natureza: Mochila, saco de dormir, kit de refeição, caixa de fogo, tochas, 10 dias de ração e cantil.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po 50 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 8 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768763922599,
+      "name": "Dardo (x10)",
+      "category": "Armas",
+      "subcategory": "A distancia",
+      "type": "Arma",
+      "damage": "1d4",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "A Distancia",
+      "empunhadura": "Uma mao",
+      "caracteristicas": [
+        "Ágil",
+        "Arremesso"
+      ],
+      "alcance": "6m/18m",
+      "description": "<p>Semelhante a uma flecha curta com pesos, projetada para ser arremessada com a mão. Simples e barato.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,1 kg</li></ul>",
+      "quantity": 10
+    },
+    {
+      "id": 1768763890793,
+      "name": "Espada Curta",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d6",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Marciais",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Uma mao",
+      "caracteristicas": [
+        "Ágil",
+        "Leve"
+      ],
+      "description": "<p>Uma lâmina reta de tamanho médio, versátil o suficiente para estocadas ou cortes rápidos. Comum como arma secundária.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 4 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768763909544,
+      "name": "Kit de Explorador",
+      "category": "Conjuntos",
+      "subcategory": "Kits",
+      "type": "Geral",
+      "description": "<p>Para longas jornadas na natureza: Mochila, saco de dormir, kit de refeição, caixa de fogo, tochas, 10 dias de ração e cantil.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 po 50 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 8 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768763911207,
+      "name": "Dardo (x10)",
+      "category": "Armas",
+      "subcategory": "A distancia",
+      "type": "Arma",
+      "damage": "1d4",
+      "damageType": "Perfurante",
+      "proficiency": "Armas Simples",
+      "tipoArma": "A Distancia",
+      "empunhadura": "Uma mao",
+      "caracteristicas": [
+        "Ágil",
+        "Arremesso"
+      ],
+      "alcance": "6m/18m",
+      "description": "<p>Semelhante a uma flecha curta com pesos, projetada para ser arremessada com a mão. Simples e barato.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,1 kg</li></ul>",
+      "quantity": 10
     }
   ],
   "abilities": [
     {
-      "id": 1768637457378,
-      "title": "[Nível 1] Ação de Solidariedade",
-      "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Você ganha proficiência com armaduras pesadas.</p><p>Sempre que você usar a ação <strong>Ajudar</strong> para auxiliar a jogada de ataque de um aliado, você pode realizar um ataque com arma como uma <strong>Ação Bônus</strong>.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Usos:</strong> Igual ao seu Modificador de Sabedoria (mínimo 1). Recupera em Descanso Longo.</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Subclasse",
-      "class": "Clérigo",
-      "subclass": "Domínio da Solidariedade"
-    },
-    {
-      "id": 1768637432814,
-      "title": "[Nível 1] Feitiços de Solidariedade",
-      "description": "<p>Magias de Domínio (sempre preparadas):</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 1º:</strong> Abençoar, Raio Guia</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 3º:</strong> Auxílio, Vínculo de Proteção</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 5º:</strong> Farol da Esperança, Manto do Cruzado</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 7º:</strong> Aura da Vida, Guardiã da Fé</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 9º:</strong> Círculo de Poder, Cura em Massa</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Subclasse",
-      "class": "Clérigo",
-      "subclass": "Domínio da Solidariedade"
-    },
-    {
-      "id": 1768636937929,
-      "title": "[Nível 1] Sacerdote do Zelo",
-      "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Você ganha proficiência com armas marciais e armaduras pesadas.</p><p>Quando você usa a ação Atacar, você pode fazer um ataque com arma como uma <strong>Ação Bônus</strong>.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Usos:</strong> Igual ao seu Modificador de Sabedoria (mínimo 1). Recupera em Descanso Longo.</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Subclasse",
-      "class": "Clérigo",
-      "subclass": "Domínio do Zelo"
-    },
-    {
-      "id": 1768636894743,
-      "title": "[Nível 1] Feitiços de Zelo",
-      "description": "<p>Magias de Domínio (sempre preparadas):</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 1º:</strong> Golpe Incandescente, Golpe Trovejante</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 3º:</strong> Arma Mágica, Estilhaçar</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 5º:</strong> Acelerar (Haste), Bola de Fogo</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 7º:</strong> Escudo de Fogo, Liberdade de Movimento</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 9º:</strong> Onda Destrutiva, Golpe de Chamas</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Subclasse",
-      "class": "Clérigo",
-      "subclass": "Domínio do Zelo"
-    },
-    {
-      "id": 1768636956380,
-      "title": "[Nível 1] Domínio Divino (Subclasse)",
-      "description": "<p>Você escolhe um domínio relacionado à sua divindade. Sua escolha concede feitiços de domínio e outras características no 1º nível, e novamente no 2º, 6º, 8º e 17º nível.</p>",
-      "expanded": false,
-      "active": true,
-      "category": "Classe",
-      "class": "Clérigo",
-      "subclass": ""
-    },
-    {
-      "id": 1768636632393,
-      "title": "Chamador do Vento",
-      "description": "A partir do <b>3º nível</b>, você pode conjurar a magia <i>lufada de vento</i> com este traço, sem necessitar de componentes materiais. Uma vez que o faça, você não pode fazê-lo novamente até terminar um <b>descanso longo</b>. Você também pode conjurar esta magia usando quaisquer espaços de magia que possua. Escolha Inteligência, Sabedoria ou Carisma como seu atributo de conjuração.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Aarakocra"
-    },
-    {
-      "id": 1768636716206,
-      "title": "Garras",
-      "description": "Suas garras são armas naturais. Seus ataques desarmados causam <b>1d6 + Força</b> de dano cortante.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Aarakocra"
-    },
-    {
-      "id": 1768636675265,
-      "title": "Voo",
-      "description": "Você possui um deslocamento de voo igual ao seu deslocamento de caminhada. <u>Você não pode usar esse deslocamento se estiver vestindo armadura média ou pesada.</u>",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Aarakocra"
-    },
-    {
-      "id": 1768636622482,
+      "id": 1768763890799,
       "title": "[Nível 1] Artes Marciais",
       "description": "<p>Sua prática de artes marciais lhe dá domínio sobre estilos de combate que usam ataques desarmados e armas de monge (espadas curtas e qualquer arma simples corpo a corpo que não tenha as propriedades duas mãos ou pesada).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Atributo:</strong> Você pode usar Destreza em vez de Força para as jogadas de ataque e dano dos seus ataques desarmados e armas de monge.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> Você pode rolar um d4 no lugar do dano normal do seu ataque desarmado ou arma de monge. Esse dado muda à medida que você ganha níveis de monge (d6 no 5º, d8 no 11º, d10 no 17º).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque Extra:</strong> Quando você usa a ação Atacar com um ataque desarmado ou uma arma de monge no seu turno, você pode realizar um ataque desarmado como uma <strong>Ação Bônus</strong>.</li></ul>",
       "expanded": false,
@@ -294,133 +160,13 @@
       "subclass": ""
     },
     {
-      "id": 1768636433364,
-      "title": "[Nível 1] Gíria de Ladrão",
-      "description": "<p>Durante seu treinamento, você aprendeu a Gíria de Ladrão, um misto de dialeto, jargão e códigos secretos que permite esconder mensagens em uma conversa aparentemente normal. Apenas outra criatura que conheça a gíria de ladrão entende tais mensagens. Leva quatro vezes mais tempo para transmitir tal mensagem do que para falar a mesma ideia claramente.</p><p>Além disso, você entende um conjunto de sinais secretos e símbolos usados para transmitir mensagens curtas e simples.</p>",
+      "id": 1768763908997,
+      "title": "[Nível 1] Defesa sem Armadura(Monge)",
+      "description": "<p><strong>Duração:</strong> Permanente</p><p>Enquanto você não estiver usando nenhuma armadura e não estiver empunhando um escudo, sua Classe de Armadura é igual a <strong>10 + seu modificador de Destreza + seu modificador de Sabedoria</strong>.</p>",
       "expanded": false,
       "active": true,
       "category": "Classe",
-      "class": "Ladino",
-      "subclass": ""
-    },
-    {
-      "id": 1768636369180,
-      "title": "[Nível 1] Ataque Furtivo",
-      "description": "<p><strong>Ação:</strong> Livre (1x por turno)</p><p>Uma vez por turno, você pode causar dano extra a uma criatura que você atingir com um ataque se tiver vantagem na jogada de ataque. O ataque deve usar uma arma de acuidade ou uma arma de ataque à distância.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Sem Vantagem:</strong> Você não precisa de vantagem na jogada de ataque se outro inimigo do alvo estiver a até 1,5 metro dele, esse inimigo não estiver incapacitado e você não tiver desvantagem na jogada de ataque.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> O dano extra é 1d6 no 1º nível e aumenta conforme você ganha níveis de ladino.</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Classe",
-      "class": "Ladino",
-      "subclass": ""
-    },
-    {
-      "id": 1768636407309,
-      "title": "[Nível 1] Especialização",
-      "description": "<p><strong>Duração:</strong> Permanente</p><p>Escolha duas de suas proficiências em perícias, ou uma perícia e sua proficiência com ferramentas de ladrão.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Efeito:</strong> Seu bônus de proficiência é dobrado para qualquer teste de habilidade que você fizer usando qualquer uma das proficiências escolhidas.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Progressão:</strong> No 6º nível, você pode escolher mais duas de suas proficiências (em perícias ou ferramentas de ladrão) para ganhar esse benefício.</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Classe",
-      "class": "Ladino",
-      "subclass": ""
-    },
-    {
-      "id": 1768635442043,
-      "title": "[Nível 1] Maldição de Sangue",
-      "description": "<p>Você conhece a arte proibida das maldições de sangue.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Uso:</strong> Você conhece um número de maldições baseado no seu nível. Você pode usá-las um número de vezes igual a: 1 (nível 1), 2 (nível 6), 3 (nível 13) e 4 (nível 17). Recupera em Descanso Curto ou Longo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Amplificar:</strong> Ao usar uma maldição, você pode escolher sofrer dano necrótico igual a uma rolagem do seu <strong>Dado de Hemomancia</strong>. Esse dano não pode ser reduzido. Se fizer isso, a maldição ganha um efeito adicional.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Restrição:</strong> Criaturas sem sangue são imunes a maldições que não foram amplificadas.</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Classe",
-      "class": "Blood Hunter",
-      "subclass": ""
-    },
-    {
-      "id": 1768635455362,
-      "title": "[Nível 1] Flagelo do Caçador",
-      "description": "<p>Você sobreviveu ao ritual da Maldição do Caçador, alterando sua biologia.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Rastreamento:</strong> Você tem <strong>Vantagem</strong> em testes de Sabedoria (Sobrevivência) para rastrear Fadas, Demônios e Mortos-Vivos.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Conhecimento:</strong> Você tem <strong>Vantagem</strong> em testes de Inteligência para recordar informações sobre essas criaturas.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Hemomancia:</strong> Sua CD de resistência para maldições e ritos é: 8 + Bônus de Proficiência + Modificador de Hemomancia (Inteligência ou Sabedoria, escolhido no nível 1).</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Classe",
-      "class": "Blood Hunter",
-      "subclass": ""
-    },
-    {
-      "id": 1768635178433,
-      "title": "[Nível 1] Forma de Pavor",
-      "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Duração:</strong> 1 minuto</p><p>Você manifesta um aspecto do seu patrono. Usos iguais ao Bônus de Proficiência.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Vitalidade:</strong> Ganha 1d10 + Nível de Bruxo em PV Temporários.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Imunidade:</strong> Imune à condição <strong>Amedrontado</strong>.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Terror:</strong> Uma vez por turno, ao acertar um ataque, force o alvo a um Salvaguarda de Sabedoria. Se falhar, fica <strong>Amedrontado</strong> até o final do próximo turno dele.</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Subclasse",
-      "class": "Bruxo",
-      "subclass": "O Morto-Vivo"
-    },
-    {
-      "id": 1768635117141,
-      "title": "[Nível 1] Feitiços de O Morto-Vivo",
-      "description": "<p>Magias expandidas do patrono:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 1º:</strong> Bane, Vida Falsa</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 2º:</strong> Cegueira/Surdez, Força Fantasmagórica</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 3º:</strong> Cavalo Fantasma, Falar com Mortos</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 4º:</strong> Guarda da Morte, Invisibilidade Maior</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 5º:</strong> Casca Antivida, Nuvem Assassina</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Subclasse",
-      "class": "Bruxo",
-      "subclass": "O Morto-Vivo"
-    },
-    {
-      "id": 1768635189114,
-      "title": "[Nível 1] Patrono Transcendental (Subclasse)",
-      "description": "<p>No 1º nível, você firma um pacto com um ser transcendental. Sua escolha concede características no 1º nível e novamente no 6º, 10º e 14º nível.</p>",
-      "expanded": false,
-      "active": true,
-      "category": "Classe",
-      "class": "Bruxo",
-      "subclass": ""
-    },
-    {
-      "id": 1768635100676,
-      "title": "[Nível 1] Magia do Pacto",
-      "description": "<p>Você extrai magia de um pacto com uma entidade extraplanar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Espaços de Magia:</strong> Diferente de outras classes, todos os seus espaços de magia são do <strong>mesmo nível</strong> (o nível mais alto disponível na tabela de Bruxo, até o 5º círculo).</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Recuperação:</strong> Você recupera <strong>todos</strong> os seus espaços de magia gastos ao terminar um <strong>Descanso Curto</strong> ou Longo.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Atributo de Conjuração:</strong> Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ CD de Resistência:</strong> 8 + Bônus de Proficiência + Modificador de Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Ataque Mágico:</strong> Bônus de Proficiência + Modificador de Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Foco:</strong> Foco Arcano.</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Classe",
-      "class": "Bruxo",
-      "subclass": ""
-    },
-    {
-      "id": 1768632727861,
-      "title": "[Nível 1] Inspiração Bárdica",
-      "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Alcance:</strong> 18 metros (60 pés)<br><strong>Duração:</strong> 10 minutos</p><p>Você pode inspirar os outros através de palavras ou música. Escolha uma criatura (exceto você mesmo) que possa ouvi-lo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ O Dado:</strong> A criatura ganha um dado de Inspiração Bárdica (d6). O dado escala para d8 (5º nível), d10 (10º nível) e d12 (15º nível).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Uso:</strong> Uma vez dentro dos 10 minutos, a criatura pode rolar o dado e adicionar o número obtido a uma <strong>jogada de ataque</strong>, <strong>teste de habilidade</strong> ou <strong>teste de resistência</strong> que ela fizer. Ela pode esperar a rolagem do d20 antes de decidir usar o dado, mas deve decidir antes de saber o resultado.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Limite:</strong> Uma criatura só pode ter um dado de inspiração por vez. Você tem usos iguais ao seu Mod. Carisma (recupera em Descanso Longo).</li></ul>",
-      "expanded": true,
-      "active": true,
-      "category": "Classe",
-      "class": "Bardo",
-      "subclass": ""
-    },
-    {
-      "id": 1768632737165,
-      "title": "[Nível 1] Lançamento de Feitiços",
-      "description": "<p>Você aprende a manipular a Trama através da música e da oratória.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Atributo de Conjuração:</strong> Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ CD de Resistência:</strong> 8 + Bônus de Proficiência + Modificador de Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Ataque Mágico:</strong> Bônus de Proficiência + Modificador de Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Foco de Conjuração:</strong> Você pode usar um instrumento musical como foco para suas magias de bardo.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Rituais:</strong> Você pode conjurar qualquer magia de bardo conhecida como um ritual, se a magia tiver o descritor ritual.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Repertório:</strong> Suas magias são conhecidas (não preparadas). Ao subir de nível, você pode substituir uma magia conhecida por outra da lista de bardo.</li></ul>",
-      "expanded": true,
-      "active": true,
-      "category": "Classe",
-      "class": "Bardo",
-      "subclass": ""
-    },
-    {
-      "id": 1768629974160,
-      "title": "[Nível 1] Defesa sem Armadura",
-      "description": "<p><strong>Duração:</strong> Permanente</p><p>Enquanto você não estiver usando nenhuma armadura, sua Classe de Armadura (CA) é calculada da seguinte forma:</p><p style='text-align:center; font-weight:bold; color:#fff; background:#222; padding:8px; border-radius:4px;'>10 + Mod. Destreza + Mod. Constituição</p><p>Você pode usar um escudo e ainda obter esse benefício.</p>",
-      "expanded": false,
-      "active": true,
-      "category": "Classe",
-      "class": "Bárbaro",
-      "subclass": ""
-    },
-    {
-      "id": 1768629947647,
-      "title": "[Nível 1] Fúria",
-      "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Duração:</strong> 1 minuto</p><p>Você entra em um estado de fúria primal.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Vantagem:</strong> Você tem Vantagem em testes de Força e testes de resistência de Força.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Dano de Fúria:</strong> Ao realizar um ataque corpo a corpo usando Força, você ganha um bônus no dano. (Nível 1-8: +2 | Nível 9-15: +3 | Nível 16+: +4).</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Resistência:</strong> Você possui resistência a dano contundente, perfurante e cortante.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Restrições:</strong> Você não pode conjurar magias ou manter concentração. A fúria termina prematuramente se você cair inconsciente ou se terminar um turno sem ter atacado uma criatura hostil ou sem ter sofrido dano.</li></ul>",
-      "expanded": false,
-      "active": true,
-      "category": "Classe",
-      "class": "Bárbaro",
+      "class": "Monge",
       "subclass": ""
     }
   ],
@@ -435,111 +181,10 @@
     "historia": ""
   },
   "sanidade": {
-    "estresse": 1,
-    "vazio": 12
+    "estresse": 0,
+    "vazio": 0
   },
-  "spells": [
-    {
-      "id": 1768717413145,
-      "name": "Bordão Místico",
-      "levelNumber": 0,
-      "school": "Transmutação",
-      "spellClass": "Druida",
-      "damage": "1d8",
-      "components": {
-        "V": true,
-        "S": true,
-        "M": true
-      },
-      "material": "Visco, uma folha de trevo e uma clava ou bordão",
-      "attrs": {
-        "execucao": "1 ação bônus",
-        "alcance": "Toque",
-        "area": "-",
-        "alvo": "Arma",
-        "duracao": "1 min",
-        "resistencia": "-"
-      },
-      "description": "<p>A madeira de uma clava ou bordão é imbuída com poder natural.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Atributo:</strong> Usa sua conjuração para ataque e dano.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> O dado da arma se torna <strong>1d8</strong>.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Mágico:</strong> A arma conta como mágica.</li></ul>",
-      "expanded": false,
-      "active": false
-    },
-    {
-      "id": 1768717409034,
-      "name": "Andar na Água",
-      "levelNumber": 3,
-      "school": "Transmutação",
-      "spellClass": "Clérigo",
-      "damage": "-",
-      "components": {
-        "V": true,
-        "S": true,
-        "M": true
-      },
-      "material": "Uma rolha",
-      "attrs": {
-        "execucao": "1 ação",
-        "alcance": "9m",
-        "area": "-",
-        "alvo": "10 criaturas",
-        "duracao": "1 hora",
-        "resistencia": "-"
-      },
-      "description": "<p>Até 10 criaturas ganham a habilidade de se mover através de qualquer superfície líquida (água, ácido, lama, lava) como se fosse chão sólido inofensivo.</p>",
-      "expanded": false,
-      "active": false
-    },
-    {
-      "id": 1768540085701,
-      "name": "Alarme",
-      "levelNumber": 1,
-      "school": "Abjuração",
-      "spellClass": "Mago",
-      "damage": "-",
-      "components": {
-        "V": true,
-        "S": true,
-        "M": true
-      },
-      "material": "Um pequeno sino e um pequeno fio de prata",
-      "attrs": {
-        "execucao": "1 min",
-        "alcance": "9m",
-        "area": "Cubo 6m",
-        "alvo": "Área ou Ponto",
-        "duracao": "8 horas",
-        "resistencia": "-"
-      },
-      "description": "<p>Protege uma área contra intrusos. Um alarme (mental ou audível) soa quando uma criatura Miúda ou maior toca ou entra na área.</p>",
-      "expanded": false,
-      "active": false
-    },
-    {
-      "id": 1766798008908,
-      "name": "Sono",
-      "levelNumber": 1,
-      "damage": "5d8",
-      "expanded": false,
-      "active": true,
-      "components": {
-        "V": true,
-        "S": true,
-        "M": true
-      },
-      "material": "Areia, pétalas ou grilo",
-      "attrs": {
-        "execucao": "1 ação",
-        "alcance": "36m",
-        "area": "Esfera 6m",
-        "alvo": "Vários",
-        "duracao": "1 min",
-        "resistencia": "-"
-      },
-      "school": "Encantamento",
-      "spellClass": "Mago",
-      "description": "<p>Role <strong>5d8</strong>. Adormece criaturas na área em ordem ascendente de seus PV atuais.</p><p><strong>Níveis Superiores:</strong> +2d8 por nível de slot.</p>"
-    }
-  ],
+  "spells": [],
   "abilityCatalog": [],
   "spellCatalog": [],
   "pericias": {
@@ -678,7 +323,7 @@
     "blood hunter": 0,
     "bruxo": 0,
     "clerigo": 0,
-    "monge": 0,
+    "monge": 1,
     "druida": 0,
     "feiticeiro": 0,
     "guerreiro": 0,
@@ -689,7 +334,9 @@
   },
   "xp": "0",
   "inspiracao": 1,
-  "vidaDadosSalvos": {},
+  "vidaDadosSalvos": {
+    "v1": 8
+  },
   "marco": 0,
   "vidaAtual": 0,
   "vidaTempAtual": 35,
@@ -711,31 +358,12 @@
   ],
   "imunidadesList": [],
   "proficienciasList": [
-    "Armaduras leves",
     "Armas simples",
-    "Bestas de Mão",
-    "Espadas Longas",
-    "Rapieiras",
     "Espadas Curtas",
-    "Bateria",
-    "Citara",
-    "Flauta de Pã",
-    "Alaúde",
-    "Charamela",
-    "Flauta",
-    "Gaita de Foles",
-    "Lira",
-    "Tambor",
-    "Trombeta",
-    "Viola",
-    "Xilofone",
-    "Armaduras médias",
-    "Escudos",
-    "Armas marciais",
-    "Suprimentos de Alquimista",
-    "Ferramentas de Ladrão",
-    "simples",
-    "1 Artesão ou Instrumento"
+    "Ferramentas de Pedreiro",
+    "Ferramentas de Alquimista",
+    "Ferramentas de Coureiro",
+    "Charamela"
   ],
   "idiomasList": [
     "Comum",
@@ -821,15 +449,16 @@
     "inv-armas": false,
     "inv-armaduras": false,
     "cmb-ataques": false,
-    "class-Bárbaro": true,
+    "class-Bárbaro": false,
     "class-Druida": true,
     "talentos": true,
     "inv-gerais": false,
     "class-Patrulheiro": true,
     "class-Guerreiro": false,
-    "class-Bardo": false,
-    "class-Bruxo": false,
-    "class-Ladino": false
+    "class-Bardo": true,
+    "class-Bruxo": true,
+    "class-Ladino": false,
+    "class-Monge": false
   },
   "antecedente": "Artesão de Guilda",
   "personagem": "123w",

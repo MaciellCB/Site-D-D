@@ -499,7 +499,7 @@
     "category": "Classe",
     "class": "Bárbaro",
     "subclass": "",
-    "name": "(1º nível) Defesa sem Armadura",
+    "name": "[Nível 1] Defesa sem Armadura(Bárbaro)",
     "description": "<p>Enquanto você não estiver usando nenhuma armadura, sua Classe de Armadura (CA) é calculada da seguinte forma:</p><p style='text-align:center; font-weight:bold; color:#fff; background:#222; padding:8px; border-radius:4px;'>10 + Mod. Destreza + Mod. Constituição</p><p>Você pode usar um escudo e ainda obter esse benefício.</p>"
   },
   {
@@ -7034,7 +7034,7 @@
     "category": "Classe",
     "class": "Monge",
     "subclass": "",
-    "name": "(1º nível) Defesa sem Armadura",
+    "name": "[Nível 1] Defesa sem Armadura(Monge)",
     "description": "<p>Enquanto você não estiver usando nenhuma armadura e não estiver empunhando um escudo, sua Classe de Armadura é igual a <strong>10 + seu modificador de Destreza + seu modificador de Sabedoria</strong>.</p>"
   },
   {
