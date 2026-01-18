@@ -676,7 +676,8 @@
     "name": "Bomba",
     "category": "Armas",
     "subcategory": "Munição",
-    "type": "Item",
+    "type": "Arma",
+    "tipoArma": "A Distancia",
     "damage": "3d6",
     "damageType": "Fogo",
     "description": "<p>Uma esfera de ferro fundido com um pavio curto. Arremesso (18m). Todos a 1,5m do impacto devem fazer resistência de Destreza (CD 12) ou sofrem o dano.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
@@ -687,7 +688,8 @@
     "name": "Chifre de Pólvora",
     "category": "Armas",
     "subcategory": "Munição",
-    "type": "Item",
+    "type": "Arma",
+    "tipoArma": "A Distancia",
     "damage": "2d4",
     "damageType": "Fogo",
     "description": "<p>Recipiente impermeável contendo pólvora negra de qualidade. Se incendiado, explode em raio de 1,5m. CD 12 Destreza para metade.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 3 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
@@ -697,7 +699,8 @@
     "name": "Dinamite",
     "category": "Armas",
     "subcategory": "Munição",
-    "type": "Item",
+    "type": "Arma",
+    "tipoArma": "A Distancia",
     "damage": "3d6",
     "damageType": "Contundente",
     "description": "<p>Bastão de explosivo estável usado em mineração. Explode em raio de 1,5m (CD 12). Pode ser amarrada em feixes (+1d6 e +1,5m raio por banana extra, máx 10d6).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
@@ -1566,7 +1569,8 @@
     "name": "Granada de Fumaça",
     "category": "Armas",
     "subcategory": "Munição",
-    "type": "Item",
+    "type": "Arma",
+    "tipoArma": "A Distancia",
     "description": "<p>Cilindro metálico que libera uma nuvem densa e instantânea em um raio de 6m, obscurecendo a visão.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
   },
   {
@@ -1589,7 +1593,8 @@
     "name": "Bomba de Plasma",
     "category": "Armas",
     "subcategory": "Fora de epoca",
-    "type": "Item",
+    "type": "Arma",
+    "tipoArma": "A Distancia",
     "damage": "5d6",
     "damageType": "Energético",
     "description": "<p>Esfera tecnológica que detona em um flash azul, derretendo metal e carne em um raio de 4,5m.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 pl</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>"
@@ -1599,7 +1604,8 @@
     "name": "Granada de Pulso",
     "category": "Armas",
     "subcategory": "Fora de epoca",
-    "type": "Item",
+    "type": "Arma",
+    "tipoArma": "A Distancia",
     "damage": "6d6",
     "damageType": "Energético",
     "description": "<p>Emite uma onda de choque eletromagnética. Devastadora contra construtos e tecnologias, paralisando-os momentaneamente.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 2 pl</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
@@ -2441,7 +2447,8 @@
     "name": "Granada de Desintegração",
     "category": "Armas",
     "subcategory": "Fora de epoca",
-    "type": "Item",
+    "type": "Arma",
+    "tipoArma": "A Distancia",
     "description": "<p>Dispositivo proibido que libera um campo de entropia pura. Reduz matéria a pó cinzento em segundos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pl</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 3 kg</li></ul>"
   },
   {

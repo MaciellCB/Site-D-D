@@ -738,10 +738,8 @@ const PERICIAS_LISTA = [
   'Adestrar Animais', 'Intuição', 'Medicina', 'Percepção', 'Sobrevivência'
 ];
 
-/* ---------------- MODAL UNIFICADO (Item, Arma, Armadura - COM VALIDAÇÃO) ---------------- */
 
-// ... (Mantenha as constantes PROFICIENCIAS_ARMA, etc. no topo do arquivo como estavam) ...
-
+/* ---------------- MODAL UNIFICADO (COM INTELIGÊNCIA DE ATRIBUTO) ---------------- */
 function openItemModal(existingItem = null) {
   const existingOverlay = document.querySelector('.spell-modal-overlay');
   if (existingOverlay) existingOverlay.remove();
@@ -760,6 +758,24 @@ function openItemModal(existingItem = null) {
   modal.style.zIndex = '11000';
 
   const pre = existingItem || {};
+
+  // --- LÓGICA DE ATRIBUTO PADRÃO INTELIGENTE ---
+  let defaultAttackAttr = pre.attackAttribute;
+  
+  if (!defaultAttackAttr) {
+      // Se não tem nada salvo, adivinha pelo tipo
+      const tipo = (pre.tipoArma || '').toLowerCase();
+      if (tipo.includes('distancia') || tipo.includes('distância')) {
+          defaultAttackAttr = 'Destreza';
+      } else {
+          defaultAttackAttr = 'Força';
+      }
+  }
+  // ---------------------------------------------
+  
+  const defaultAttackBonus = pre.attackBonus || '0';
+  const ATTR_OPTIONS = ['Força', 'Destreza', 'Constituição', 'Inteligência', 'Sabedoria', 'Carisma', 'Nenhum'];
+  const renderAttrOptions = (selected) => ATTR_OPTIONS.map(a => `<option value="${a}" ${a === selected ? 'selected' : ''}>${a}</option>`).join('');
 
   let headerContentHTML = '';
   if (isEditMode) {
@@ -783,9 +799,7 @@ function openItemModal(existingItem = null) {
           <button class="modal-close">✖</button>
         </div>
       </div>
-
       <div id="modal-content-body" class="modal-body" style="display:block; padding-top:12px;"></div>
-
       <div class="modal-actions" style="display:flex;gap:8px;justify-content:flex-end;padding:12px;">
         <button class="btn-add btn-save-item">${existingItem ? 'Salvar' : 'Adicionar'}</button>
         <button class="btn-add btn-cancel">Cancelar</button>
@@ -797,10 +811,7 @@ function openItemModal(existingItem = null) {
   const btnLista = modal.querySelector('#btnListaPadrao');
   if (btnLista) {
     btnLista.addEventListener('click', (ev) => {
-      ev.preventDefault();
-      modal.remove();
-      checkScrollLock();
-      openItemCatalogOverlay();
+      ev.preventDefault(); modal.remove(); checkScrollLock(); openItemCatalogOverlay();
     });
   }
   checkScrollLock();
@@ -823,29 +834,23 @@ function openItemModal(existingItem = null) {
 
   function renderBody(tab) {
     currentTab = tab;
-    if (btns.length > 0) {
-      btns.forEach(b => {
-        b.classList.toggle('active', b.getAttribute('data-tab') === tab);
-      });
-    }
+    if (btns.length > 0) btns.forEach(b => b.classList.toggle('active', b.getAttribute('data-tab') === tab));
 
     const descContent = pre.description || '';
     const editorHTML = createRichEditorHTML(descContent, 'item-editor-content');
-    let html = '';
-
-    // --- CORREÇÃO: INPUT VAZIO COM PLACEHOLDER OBRIGATÓRIO ---
     const nameInput = `<div style="grid-column: 1 / -1;"><label>Nome <span style="color:#ff5555">*</span></label><input id="item-name" type="text" value="${escapeHtml(pre.name || '')}" placeholder="Nome do item (Obrigatório)" /></div>`;
     const descLabel = `<div style="grid-column: 1 / -1;"><label>Descrição</label>${editorHTML}</div>`;
+    let html = '';
 
     if (tab === 'Item') {
       const disadv = Array.isArray(pre.disadvantageSkill) ? pre.disadvantageSkill : (pre.disadvantageSkill ? [pre.disadvantageSkill] : []);
       const adv = Array.isArray(pre.advantageSkill) ? pre.advantageSkill : (pre.advantageSkill ? [pre.advantageSkill] : []);
-
       html = `
          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; align-items:end;">
             ${nameInput}
-            <div><label>Acerto Bonus</label><input id="item-acerto" type="text" value="${escapeHtml(pre.acertoBonus || '')}" /></div>
-            <div><label>Dano Bonus</label><input id="item-danobonus" type="text" value="${escapeHtml(pre.damageBonus || '')}" /></div>
+            <div><label>Atributo de Acerto</label><select id="item-attack-attr" class="dark-select">${renderAttrOptions(defaultAttackAttr)}</select></div>
+            <div><label>Bônus de Acerto</label><input id="item-attack-bonus" type="number" value="${defaultAttackBonus}" placeholder="+1, +2..." /></div>
+            <div><label>Dano Bônus</label><input id="item-danobonus" type="text" value="${escapeHtml(pre.damageBonus || '')}" /></div>
             <div><label>Tipo de Dano</label><input id="item-dmgtype" type="text" value="${escapeHtml(pre.damageType || '')}" /></div>
             <div style="grid-column: 1 / span 1;"><label>Defesa(CA) Bonus</label><input id="item-defense" type="text" value="${escapeHtml(pre.defenseBonus || '')}" /></div>
             <div style="grid-column: 2 / span 2;"><label>Tipo de Defesa</label><input id="item-defensetype" type="text" value="${escapeHtml(pre.defenseType || 'Geral')}" /></div>
@@ -853,35 +858,40 @@ function openItemModal(existingItem = null) {
             <div style="grid-column: 2.5 / span 1.5;"><label>Vantagem</label>${renderPericiaMulti('adv-field-item', adv)}</div>
             ${descLabel}
          </div>`;
-    }
-    else if (tab === 'Arma') {
+    } else if (tab === 'Arma') {
       const profSelected = pre.proficiency || '';
       const tipoSelected = pre.tipoArma || '';
       const empSelected = pre.empunhadura || '';
       const carSelected = pre.caracteristicas || [];
       const dmgTypesSelected = pre.damageTypes || [];
-
-      // Input de nome modificado para Arma também
       const nameInputArma = `<div style="grid-column: 1 / span 4;"><label>Nome <span style="color:#ff5555">*</span></label><input id="item-name" type="text" value="${escapeHtml(pre.name || '')}" placeholder="Nome da Arma (Obrigatório)" /></div>`;
 
       html = `
         <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:12px; align-items:start;">
           ${nameInputArma}
-          
           <div><label>Proficiência</label><div class="pills-container" id="prof-pills">${PROFICIENCIAS_ARMA.map(p => `<button type="button" class="pill single-select ${p === profSelected ? 'active' : ''}" data-val="${escapeHtml(p)}">${escapeHtml(p)}</button>`).join('')}</div></div>
           <div><label>Tipo</label><div class="pills-container" id="tipo-pills">${TIPOS_ARMA.map(p => `<button type="button" class="pill single-select ${p === tipoSelected ? 'active' : ''}" data-val="${escapeHtml(p)}">${escapeHtml(p)}</button>`).join('')}</div></div>
           <div><label>Empunhadura</label><div class="pills-container" id="emp-pills">${EMPUNHADURAS.map(p => `<button type="button" class="pill single-select ${p === empSelected ? 'active' : ''}" data-val="${escapeHtml(p)}">${escapeHtml(p)}</button>`).join('')}</div></div>
-          
           <div>
-             <label>Caracteristica</label>
-             <div id="car-field" class="multi-select-field" style="margin-top:6px; position:relative;">
-               <div class="display"><span>${carSelected.length ? carSelected.join(', ') : 'Selecione...'}</span> <span style="color:#9c27b0;">▾</span></div>
-               <div id="car-panel" class="panel" style="display:none; position:absolute; z-index:12000; width:100%;">
-                 ${CARACTERISTICAS_ARMA.map(c => `<label style="display:block;padding:6px;"><input type="checkbox" value="${c}" ${carSelected.includes(c) ? 'checked' : ''} /> ${c}</label>`).join('')}
-               </div>
-             </div>
+              <label>Caracteristica</label>
+              <div id="car-field" class="multi-select-field" style="margin-top:6px; position:relative;">
+                <div class="display"><span>${carSelected.length ? carSelected.join(', ') : 'Selecione...'}</span> <span style="color:#9c27b0;">▾</span></div>
+                <div id="car-panel" class="panel" style="display:none; position:absolute; z-index:12000; width:100%;">
+                  ${CARACTERISTICAS_ARMA.map(c => `<label style="display:block;padding:6px;"><input type="checkbox" value="${c}" ${carSelected.includes(c) ? 'checked' : ''} /> ${c}</label>`).join('')}
+                </div>
+              </div>
           </div>
-
+          <div style="grid-column: 1 / span 2; display:flex; gap:12px;">
+             <div style="flex:1;"><label>Atributo de Acerto</label><select id="item-attack-attr" class="dark-select">${renderAttrOptions(defaultAttackAttr)}</select></div>
+             <div style="flex:1;"><label>Bônus de Acerto</label><input id="item-attack-bonus" type="number" value="${defaultAttackBonus}" placeholder="+0" /></div>
+          </div>
+          <div style="grid-column: 3 / span 2;">
+              <label>Sintonização</label>
+              <select id="item-attune-weapon" class="dark-select">
+                 <option value="Não" ${pre.attunement !== 'Sim' ? 'selected' : ''}>Não</option>
+                 <option value="Sim" ${pre.attunement === 'Sim' ? 'selected' : ''}>Sim</option>
+              </select>
+          </div>
           <div style="grid-column: 1 / span 4; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; align-items: end;">
             <div id="layout-standard" style="display: ${empSelected === 'Versátil' ? 'none' : 'contents'};">
                 <div style="grid-column: span 2;"><label>Dano</label><input id="item-damage" type="text" value="${escapeHtml(pre.damage || '')}" placeholder="Ex: 1d8" /></div>
@@ -893,55 +903,39 @@ function openItemModal(existingItem = null) {
                 <div id="dmg-type-container-ver" style="grid-column: 1 / span 4;"></div>
             </div>
           </div>
-
           <div id="dmg-field-wrapper" style="display:none;">
               <label>Tipo de Dano Principal</label>
               <div id="dmg-field" class="multi-select-field" style="margin-top:6px; position:relative;">
-                 <div class="display"><span>${dmgTypesSelected.length ? dmgTypesSelected.join(', ') : 'Selecione...'}</span> <span style="color:#9c27b0;">▾</span></div>
-                 <div id="dmg-panel" class="panel" style="display:none; position:absolute; z-index:12000; width:100%;">
-                   ${TIPOS_DANO.map(c => `<label style="display:block;padding:6px;"><input type="checkbox" value="${c}" ${dmgTypesSelected.includes(c) ? 'checked' : ''} /> ${c}</label>`).join('')}
-                 </div>
+                  <div class="display"><span>${dmgTypesSelected.length ? dmgTypesSelected.join(', ') : 'Selecione...'}</span> <span style="color:#9c27b0;">▾</span></div>
+                  <div id="dmg-panel" class="panel" style="display:none; position:absolute; z-index:12000; width:100%;">
+                    ${TIPOS_DANO.map(c => `<label style="display:block;padding:6px;"><input type="checkbox" value="${c}" ${dmgTypesSelected.includes(c) ? 'checked' : ''} /> ${c}</label>`).join('')}
+                  </div>
               </div>
           </div>
-
           <div style="grid-column: 1 / span 1;"><label>Critico</label><input id="item-crit" type="text" value="${escapeHtml(pre.crit || '20')}" /></div>
           <div style="grid-column: 2 / span 1;"><label>Multiplicador</label><input id="item-mult" type="text" value="${escapeHtml(pre.multiplicador || '2')}" /></div>
           <div style="grid-column: 3 / span 1;"><label>Alcance</label><input id="item-range" type="text" value="${escapeHtml(pre.alcance || '1.5m')}" /></div>
-          <div style="grid-column: 4 / span 1;">
-             <label>Sintonização</label>
-             <select id="item-attune-weapon" class="dark-select">
-                <option value="Não" ${pre.attunement !== 'Sim' ? 'selected' : ''}>Não</option>
-                <option value="Sim" ${pre.attunement === 'Sim' ? 'selected' : ''}>Sim</option>
-             </select>
-          </div>
-
           <div style="grid-column: 1 / span 4;">
-             <div id="extra-dmg-list" style="display:flex; flex-direction:column; gap:8px;"></div>
-             <button type="button" id="btn-add-dmg" style="margin-top:8px; background:#9c27b0; color:white; border:none; padding:6px 12px; border-radius:4px; font-weight:bold; cursor:pointer;">+ Adicionar Dano Extra</button>
+              <div id="extra-dmg-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+              <button type="button" id="btn-add-dmg" style="margin-top:8px; background:#9c27b0; color:white; border:none; padding:6px 12px; border-radius:4px; font-weight:bold; cursor:pointer;">+ Adicionar Dano Extra</button>
           </div>
-
           <div style="grid-column:1 / span 4;"><label>Descrição</label>${editorHTML}</div>
         </div>
       `;
-    }
-    else if (tab === 'Armadura') {
+    } else if (tab === 'Armadura') {
       const profSelected = pre.proficiency || '';
       const tipoSelected = pre.tipoItem || 'Armadura';
       const minReqAttrs = pre.minReqAttrs || ['Força'];
       const disadv = Array.isArray(pre.disadvantageSkill) ? pre.disadvantageSkill : (pre.disadvantageSkill ? [pre.disadvantageSkill] : []);
       const adv = Array.isArray(pre.advantageSkill) ? pre.advantageSkill : (pre.advantageSkill ? [pre.advantageSkill] : []);
-
-      // Input de nome modificado para Armadura
       const nameInputArmadura = `<div style="grid-column: 1 / span 3;"><label>Nome <span style="color:#ff5555">*</span></label><input id="item-name" type="text" value="${escapeHtml(pre.name || '')}" placeholder="Nome da Armadura (Obrigatório)" /></div>`;
 
       html = `
         <div style="display:grid; grid-template-columns: 1.2fr 0.8fr 1.2fr; gap:12px; align-items:start;">
            ${nameInputArmadura}
-           
            <div><label>Proficiência</label><div class="pills-container" id="arm-prof-pills">${PROFICIENCIAS_ARMADURA.map(p => `<button type="button" class="pill single-select ${p === profSelected ? 'active' : ''}" data-val="${escapeHtml(p)}">${escapeHtml(p)}</button>`).join('')}</div></div>
            <div style="text-align:center;"><label style="text-align:left;">Defesa (CA)</label><input id="item-defense" type="text" value="${escapeHtml(pre.defense || '')}" placeholder="+2 ou 14" /></div>
            <div><label>Tipo</label><div class="pills-container" id="arm-tipo-pills">${TIPOS_ARMADURA.map(p => `<button type="button" class="pill single-select ${p === tipoSelected ? 'active' : ''}" data-val="${escapeHtml(p)}">${escapeHtml(p)}</button>`).join('')}</div></div>
-           
            <div style="grid-column: 1 / span 3; display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:12px;">
                <div style="position:relative;">
                   <div id="min-req-container" class="multi-select-field">
@@ -951,9 +945,7 @@ function openItemModal(existingItem = null) {
                         <span class="purple-caret" style="margin-left:4px;">▾</span>
                      </div>
                      <div id="min-req-panel" class="panel" style="display:none; position:absolute; z-index:12000; width:100%; top:100%; left:0;">
-                        ${ATRIBUTOS_DND.map(attr => `
-                           <label style="display:block;padding:6px;cursor:pointer;"><input type="checkbox" value="${attr}" ${minReqAttrs.includes(attr) ? 'checked' : ''} /> ${attr}</label>
-                        `).join('')}
+                        ${ATRIBUTOS_DND.map(attr => `<label style="display:block;padding:6px;cursor:pointer;"><input type="checkbox" value="${attr}" ${minReqAttrs.includes(attr) ? 'checked' : ''} /> ${attr}</label>`).join('')}
                      </div>
                   </div>
                   <input id="item-minstr" type="number" value="${pre.minStrength || 0}" style="margin-top:4px; width:100%;" />
@@ -962,121 +954,76 @@ function openItemModal(existingItem = null) {
                <div><label>Desvantagem</label>${renderPericiaMulti('disadv-field', disadv)}</div>
                <div><label>Vantagem</label>${renderPericiaMulti('adv-field', adv)}</div>
            </div>
-           <div style="grid-column: 1 / span 3;">
-             <label>Descrição</label>
-             ${editorHTML}
-           </div>
-        </div>
-       `;
+           <div style="grid-column: 1 / span 3;"><label>Descrição</label>${editorHTML}</div>
+        </div>`;
     }
-
     contentBody.innerHTML = html;
     bindTabEvents(tab);
     initRichEditorEvents('item-editor-content');
-
-    // Foca no nome
     const iName = contentBody.querySelector('#item-name');
     if (iName) iName.focus();
   }
 
-  // (createDamageRow e bindTabEvents mantidos como estavam, mas são necessários para o funcionamento)
   function createDamageRow(danoVal = '', typesVal = []) {
-    // ... Código de createDamageRow (igual ao anterior) ...
-    const row = document.createElement('div');
-    row.className = 'extra-dmg-row';
-    row.style.display = 'grid';
-    row.style.gridTemplateColumns = '1fr 1fr 1fr 1fr';
-    row.style.gap = '12px';
-    row.style.alignItems = 'start';
-    const html = `<div style="grid-column:1/span 2;"><input type="text" class="extra-dmg-input" value="${escapeHtml(danoVal)}" placeholder="Ex: +1d6"/></div>
-      <div style="grid-column:3/span 2;position:relative;" class="extra-dmg-select-container"><div class="multi-select-field"><div class="display"><span>${typesVal.length ? typesVal.join(', ') : 'Tipo'}</span> <span style="color:#9c27b0;">▾</span></div><div class="panel" style="display:none;position:absolute;z-index:12000;width:100%;">${TIPOS_DANO.map(c => `<label style="display:block;padding:6px;"><input type="checkbox" value="${c}" ${typesVal.includes(c) ? 'checked' : ''} /> ${c}</label>`).join('')}</div></div><button type="button" class="remove-dmg-row" style="position:absolute;right:-25px;top:5px;background:none;border:none;color:#d88;font-weight:bold;cursor:pointer;">✖</button></div>`;
-    row.innerHTML = html;
-    const field = row.querySelector('.multi-select-field'); const display = field.querySelector('.display'); const panel = field.querySelector('.panel');
-    display.addEventListener('click', (e) => { e.stopPropagation(); const isOpen = panel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); panel.style.display = isOpen ? 'none' : 'block'; });
-    panel.querySelectorAll('input').forEach(chk => { chk.addEventListener('change', () => { const vals = Array.from(panel.querySelectorAll('input:checked')).map(x => x.value); display.querySelector('span').textContent = vals.length ? vals.join(', ') : 'Tipo'; }); });
-    row.querySelector('.remove-dmg-row').addEventListener('click', () => row.remove());
-    return row;
+      const row = document.createElement('div');
+      row.className = 'extra-dmg-row';
+      row.style.display = 'grid';
+      row.style.gridTemplateColumns = '1fr 1fr 1fr 1fr';
+      row.style.gap = '12px';
+      row.style.alignItems = 'start';
+      const html = `<div style="grid-column:1/span 2;"><input type="text" class="extra-dmg-input" value="${escapeHtml(danoVal)}" placeholder="Ex: +1d6"/></div><div style="grid-column:3/span 2;position:relative;" class="extra-dmg-select-container"><div class="multi-select-field"><div class="display"><span>${typesVal.length ? typesVal.join(', ') : 'Tipo'}</span> <span style="color:#9c27b0;">▾</span></div><div class="panel" style="display:none;position:absolute;z-index:12000;width:100%;">${TIPOS_DANO.map(c => `<label style="display:block;padding:6px;"><input type="checkbox" value="${c}" ${typesVal.includes(c) ? 'checked' : ''} /> ${c}</label>`).join('')}</div></div><button type="button" class="remove-dmg-row" style="position:absolute;right:-25px;top:5px;background:none;border:none;color:#d88;font-weight:bold;cursor:pointer;">✖</button></div>`;
+      row.innerHTML = html;
+      const field = row.querySelector('.multi-select-field'); const display = field.querySelector('.display'); const panel = field.querySelector('.panel');
+      display.addEventListener('click', (e) => { e.stopPropagation(); const isOpen = panel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); panel.style.display = isOpen ? 'none' : 'block'; });
+      panel.querySelectorAll('input').forEach(chk => { chk.addEventListener('change', () => { const vals = Array.from(panel.querySelectorAll('input:checked')).map(x => x.value); display.querySelector('span').textContent = vals.length ? vals.join(', ') : 'Tipo'; }); });
+      row.querySelector('.remove-dmg-row').addEventListener('click', () => row.remove());
+      return row;
   }
 
   function bindTabEvents(tab) {
-    // ... Código do bindTabEvents (igual ao anterior, resumido aqui) ...
-    modal.querySelectorAll('.pill.single-select').forEach(p => { p.addEventListener('click', () => { p.parentElement.querySelectorAll('.pill').forEach(x => x.classList.remove('active')); p.classList.add('active'); }); });
-    modal.querySelectorAll('.multi-select-field').forEach(field => { if (field.id === 'dmg-field' || field.closest('.extra-dmg-row')) return; let trigger = field.querySelector('.label-dropdown-trigger') || field.querySelector('.display'); const panel = field.querySelector('.panel'); trigger.onclick = (e) => { e.stopPropagation(); const isOpen = panel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); panel.style.display = isOpen ? 'none' : 'block'; }; panel.querySelectorAll('input[type="checkbox"]').forEach(chk => { chk.onchange = () => { const vals = Array.from(panel.querySelectorAll('input:checked')).map(x => x.value); const span = trigger.querySelector('span:first-child') || modal.querySelector('#min-req-label-text'); if (span) span.textContent = vals.length ? vals.join(', ') : (field.id === 'min-req-container' ? '' : 'Selecione...'); }; }); });
-    if (tab === 'Arma') {
-      const empPills = modal.querySelectorAll('#emp-pills .pill');
-      const inputDanoPrincipal = modal.querySelector('#item-damage');
-      const inputDano1Mao = modal.querySelector('#item-damage-1hand');
-      const dmgWrapper = modal.querySelector('#dmg-field-wrapper');
-      const layoutStd = modal.querySelector('#layout-standard');
-      const layoutVer = modal.querySelector('#layout-versatile');
-      const containerStd = modal.querySelector('#dmg-type-container-std');
-      const containerVer = modal.querySelector('#dmg-type-container-ver');
-
-      const organizarLayoutDano = (isVersatil) => {
-        dmgWrapper.style.display = 'block';
-        if (isVersatil) {
-          layoutStd.style.display = 'none'; layoutVer.style.display = 'contents';
-          if (containerVer) containerVer.appendChild(dmgWrapper);
-          if (inputDanoPrincipal.value) inputDano1Mao.value = inputDanoPrincipal.value;
-        } else {
-          layoutStd.style.display = 'contents'; layoutVer.style.display = 'none';
-          if (containerStd) containerStd.appendChild(dmgWrapper);
-          if (inputDano1Mao.value) inputDanoPrincipal.value = inputDano1Mao.value;
-        }
-      };
-      inputDano1Mao.oninput = () => { inputDanoPrincipal.value = inputDano1Mao.value; };
-      empPills.forEach(p => { p.addEventListener('click', () => { organizarLayoutDano(p.getAttribute('data-val') === 'Versátil'); }); });
-      const empInicial = modal.querySelector('#emp-pills .pill.active')?.getAttribute('data-val');
-      organizarLayoutDano(empInicial === 'Versátil');
-
-      const dmgField = dmgWrapper.querySelector('.multi-select-field'); const dmgDisplay = dmgField.querySelector('.display'); const dmgPanel = dmgField.querySelector('.panel');
-      dmgDisplay.onclick = (e) => { e.stopPropagation(); const isNowOpen = dmgPanel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); dmgPanel.style.display = isNowOpen ? 'none' : 'block'; };
-      dmgPanel.querySelectorAll('input').forEach(chk => { chk.onchange = () => { const vals = Array.from(dmgPanel.querySelectorAll('input:checked')).map(x => x.value); dmgDisplay.querySelector('span').textContent = vals.length ? vals.join(', ') : 'Selecione...'; }; });
-
-      const extraDmgContainer = modal.querySelector('#extra-dmg-list'); const btnAddExtra = modal.querySelector('#btn-add-dmg');
-      if (pre.moreDmgList?.length && extraDmgContainer.children.length === 0) { pre.moreDmgList.forEach(item => extraDmgContainer.appendChild(createDamageRow(item.dano, item.types))); }
-      btnAddExtra.onclick = (ev) => { ev.preventDefault(); extraDmgContainer.appendChild(createDamageRow()); };
-    }
+     modal.querySelectorAll('.pill.single-select').forEach(p => { p.addEventListener('click', () => { p.parentElement.querySelectorAll('.pill').forEach(x => x.classList.remove('active')); p.classList.add('active'); }); });
+     modal.querySelectorAll('.multi-select-field').forEach(field => { if (field.id === 'dmg-field' || field.closest('.extra-dmg-row')) return; let trigger = field.querySelector('.label-dropdown-trigger') || field.querySelector('.display'); const panel = field.querySelector('.panel'); trigger.onclick = (e) => { e.stopPropagation(); const isOpen = panel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); panel.style.display = isOpen ? 'none' : 'block'; }; panel.querySelectorAll('input[type="checkbox"]').forEach(chk => { chk.onchange = () => { const vals = Array.from(panel.querySelectorAll('input:checked')).map(x => x.value); const span = trigger.querySelector('span:first-child') || modal.querySelector('#min-req-label-text'); if (span) span.textContent = vals.length ? vals.join(', ') : (field.id === 'min-req-container' ? '' : 'Selecione...'); }; }); });
+     
+     if (tab === 'Arma') {
+         const empPills = modal.querySelectorAll('#emp-pills .pill');
+         const inputDanoPrincipal = modal.querySelector('#item-damage');
+         const inputDano1Mao = modal.querySelector('#item-damage-1hand');
+         const dmgWrapper = modal.querySelector('#dmg-field-wrapper');
+         const layoutStd = modal.querySelector('#layout-standard');
+         const layoutVer = modal.querySelector('#layout-versatile');
+         const containerStd = modal.querySelector('#dmg-type-container-std');
+         const containerVer = modal.querySelector('#dmg-type-container-ver');
+         const organizarLayoutDano = (isVersatil) => {
+             dmgWrapper.style.display = 'block';
+             if (isVersatil) { layoutStd.style.display = 'none'; layoutVer.style.display = 'contents'; if (containerVer) containerVer.appendChild(dmgWrapper); if (inputDanoPrincipal.value) inputDano1Mao.value = inputDanoPrincipal.value; } 
+             else { layoutStd.style.display = 'contents'; layoutVer.style.display = 'none'; if (containerStd) containerStd.appendChild(dmgWrapper); if (inputDano1Mao.value) inputDanoPrincipal.value = inputDano1Mao.value; }
+         };
+         inputDano1Mao.oninput = () => { inputDanoPrincipal.value = inputDano1Mao.value; };
+         empPills.forEach(p => { p.addEventListener('click', () => { organizarLayoutDano(p.getAttribute('data-val') === 'Versátil'); }); });
+         const empInicial = modal.querySelector('#emp-pills .pill.active')?.getAttribute('data-val');
+         organizarLayoutDano(empInicial === 'Versátil');
+         const dmgField = dmgWrapper.querySelector('.multi-select-field'); const dmgDisplay = dmgField.querySelector('.display'); const dmgPanel = dmgField.querySelector('.panel');
+         dmgDisplay.onclick = (e) => { e.stopPropagation(); const isNowOpen = dmgPanel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); dmgPanel.style.display = isNowOpen ? 'none' : 'block'; };
+         dmgPanel.querySelectorAll('input').forEach(chk => { chk.onchange = () => { const vals = Array.from(dmgPanel.querySelectorAll('input:checked')).map(x => x.value); dmgDisplay.querySelector('span').textContent = vals.length ? vals.join(', ') : 'Selecione...'; }; });
+         const extraDmgContainer = modal.querySelector('#extra-dmg-list'); const btnAddExtra = modal.querySelector('#btn-add-dmg');
+         if (pre.moreDmgList?.length && extraDmgContainer.children.length === 0) { pre.moreDmgList.forEach(item => extraDmgContainer.appendChild(createDamageRow(item.dano, item.types))); }
+         btnAddExtra.onclick = (ev) => { ev.preventDefault(); extraDmgContainer.appendChild(createDamageRow()); };
+     }
   }
 
   renderBody(currentTab);
+  if (btns.length > 0) btns.forEach(b => b.addEventListener('click', () => renderBody(b.getAttribute('data-tab'))));
+  document.addEventListener('click', (e) => { if (!e.target.closest('.multi-select-field')) document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); });
 
-  if (btns.length > 0) {
-    btns.forEach(b => {
-      b.addEventListener('click', () => {
-        renderBody(b.getAttribute('data-tab'));
-      });
-    });
-  }
-
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.multi-select-field')) {
-      document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
-    }
-  });
-
-  const closeMe = () => {
-    modal.remove();
-    checkScrollLock();
-  };
+  const closeMe = () => { modal.remove(); checkScrollLock(); };
   modal.querySelector('.modal-close').addEventListener('click', closeMe);
   modal.querySelector('.btn-cancel').addEventListener('click', (ev) => { ev.preventDefault(); closeMe(); });
 
-  // === SALVAR ===
   modal.querySelector('.btn-save-item').addEventListener('click', (ev) => {
     ev.preventDefault();
-
     const nameInput = modal.querySelector('#item-name');
     const name = nameInput.value.trim();
-
-    // --- VALIDAÇÃO OBRIGATÓRIA ---
-    if (!name) {
-      alert("O nome do item é obrigatório!");
-      nameInput.style.borderColor = "#ff5555";
-      nameInput.focus();
-      return;
-    }
-
+    if (!name) { alert("O nome do item é obrigatório!"); nameInput.style.borderColor = "#ff5555"; nameInput.focus(); return; }
     const desc = document.getElementById('item-editor-content').innerHTML;
 
     let newItem = {
@@ -1087,40 +1034,46 @@ function openItemModal(existingItem = null) {
       equip: existingItem ? !!existingItem.equip : false
     };
 
-    // ... (Mantendo a captura de dados dos inputs) ...
     if (currentTab === 'Item') {
-      newItem.type = 'Geral'; newItem.isEquipable = true;
-      newItem.acertoBonus = modal.querySelector('#item-acerto').value;
-      newItem.damageBonus = modal.querySelector('#item-danobonus').value;
-      newItem.damageType = modal.querySelector('#item-dmgtype').value;
-      newItem.defenseBonus = modal.querySelector('#item-defense').value;
-      newItem.defenseType = modal.querySelector('#item-defensetype').value;
-      const disPanel = modal.querySelector('#disadv-field-item .panel'); newItem.disadvantageSkill = disPanel ? Array.from(disPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
-      const advPanel = modal.querySelector('#adv-field-item .panel'); newItem.advantageSkill = advPanel ? Array.from(advPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
+       newItem.type = 'Geral'; newItem.isEquipable = true;
+       newItem.acertoBonus = modal.querySelector('#item-acerto').value;
+       newItem.damageBonus = modal.querySelector('#item-danobonus').value;
+       newItem.damageType = modal.querySelector('#item-dmgtype').value;
+       newItem.defenseBonus = modal.querySelector('#item-defense').value;
+       newItem.defenseType = modal.querySelector('#item-defensetype').value;
+       const disPanel = modal.querySelector('#disadv-field-item .panel'); newItem.disadvantageSkill = disPanel ? Array.from(disPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
+       const advPanel = modal.querySelector('#adv-field-item .panel'); newItem.advantageSkill = advPanel ? Array.from(advPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
+       newItem.attackAttribute = modal.querySelector('#item-attack-attr').value;
+       newItem.attackBonus = modal.querySelector('#item-attack-bonus').value;
     }
     else if (currentTab === 'Arma') {
-      newItem.type = 'Arma'; newItem.isEquipable = true;
-      const profEl = modal.querySelector('#prof-pills .active'); newItem.proficiency = profEl ? profEl.getAttribute('data-val') : '';
-      const tipoEl = modal.querySelector('#tipo-pills .active'); newItem.tipoArma = tipoEl ? tipoEl.getAttribute('data-val') : '';
-      const empEl = modal.querySelector('#emp-pills .active'); newItem.empunhadura = empEl ? empEl.getAttribute('data-val') : '';
-      newItem.crit = modal.querySelector('#item-crit').value; newItem.multiplicador = modal.querySelector('#item-mult').value; newItem.alcance = modal.querySelector('#item-range').value;
-      const attuneEl = modal.querySelector('#item-attune-weapon'); newItem.attunement = attuneEl ? attuneEl.value : 'Não';
-      newItem.damage = modal.querySelector('#item-damage').value;
-      newItem.damage2Hands = modal.querySelector('#item-damage-2hands') ? modal.querySelector('#item-damage-2hands').value : '';
-      newItem.useTwoHands = existingItem ? !!existingItem.useTwoHands : false;
-      const carPanel = modal.querySelector('#car-panel'); if (carPanel) newItem.caracteristicas = Array.from(carPanel.querySelectorAll('input:checked')).map(x => x.value);
-      const dmgPanel = modal.querySelector('#dmg-panel'); if (dmgPanel) newItem.damageTypes = Array.from(dmgPanel.querySelectorAll('input:checked')).map(x => x.value);
-      const extraRows = modal.querySelectorAll('.extra-dmg-row'); newItem.moreDmgList = []; extraRows.forEach(row => { const d = row.querySelector('.extra-dmg-input').value; const p = row.querySelector('.panel'); const t = Array.from(p.querySelectorAll('input:checked')).map(x => x.value); if (d || t.length) newItem.moreDmgList.push({ dano: d, types: t }); });
+       newItem.type = 'Arma'; newItem.isEquipable = true;
+       const profEl = modal.querySelector('#prof-pills .active'); newItem.proficiency = profEl ? profEl.getAttribute('data-val') : '';
+       const tipoEl = modal.querySelector('#tipo-pills .active'); newItem.tipoArma = tipoEl ? tipoEl.getAttribute('data-val') : '';
+       const empEl = modal.querySelector('#emp-pills .active'); newItem.empunhadura = empEl ? empEl.getAttribute('data-val') : '';
+       newItem.crit = modal.querySelector('#item-crit').value; 
+       newItem.multiplicador = modal.querySelector('#item-mult').value; 
+       newItem.alcance = modal.querySelector('#item-range').value;
+       const attuneEl = modal.querySelector('#item-attune-weapon'); newItem.attunement = attuneEl ? attuneEl.value : 'Não';
+       newItem.damage = modal.querySelector('#item-damage').value;
+       newItem.damage2Hands = modal.querySelector('#item-damage-2hands') ? modal.querySelector('#item-damage-2hands').value : '';
+       newItem.useTwoHands = existingItem ? !!existingItem.useTwoHands : false;
+       const carPanel = modal.querySelector('#car-panel'); if (carPanel) newItem.caracteristicas = Array.from(carPanel.querySelectorAll('input:checked')).map(x => x.value);
+       const dmgPanel = modal.querySelector('#dmg-panel'); if (dmgPanel) newItem.damageTypes = Array.from(dmgPanel.querySelectorAll('input:checked')).map(x => x.value);
+       const extraRows = modal.querySelectorAll('.extra-dmg-row'); newItem.moreDmgList = []; extraRows.forEach(row => { const d = row.querySelector('.extra-dmg-input').value; const p = row.querySelector('.panel'); const t = Array.from(p.querySelectorAll('input:checked')).map(x => x.value); if (d || t.length) newItem.moreDmgList.push({ dano: d, types: t }); });
+
+       newItem.attackAttribute = modal.querySelector('#item-attack-attr').value;
+       newItem.attackBonus = modal.querySelector('#item-attack-bonus').value;
     }
     else if (currentTab === 'Armadura') {
-      newItem.type = 'Proteção'; newItem.isEquipable = true;
-      const profEl = modal.querySelector('#arm-prof-pills .active'); newItem.proficiency = profEl ? profEl.getAttribute('data-val') : '';
-      const tipoEl = modal.querySelector('#arm-tipo-pills .active'); newItem.tipoItem = tipoEl ? tipoEl.getAttribute('data-val') : 'Armadura';
-      newItem.minStrength = modal.querySelector('#item-minstr').value; newItem.attunement = modal.querySelector('#item-attune').value;
-      const minReqPanel = modal.querySelector('#min-req-panel'); newItem.minReqAttrs = Array.from(minReqPanel.querySelectorAll('input:checked')).map(x => x.value);
-      const disPanel = modal.querySelector('#disadv-field .panel'); newItem.disadvantageSkill = disPanel ? Array.from(disPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
-      const advPanel = modal.querySelector('#adv-field .panel'); newItem.advantageSkill = advPanel ? Array.from(advPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
-      newItem.defense = modal.querySelector('#item-defense').value;
+       newItem.type = 'Proteção'; newItem.isEquipable = true;
+       const profEl = modal.querySelector('#arm-prof-pills .active'); newItem.proficiency = profEl ? profEl.getAttribute('data-val') : '';
+       const tipoEl = modal.querySelector('#arm-tipo-pills .active'); newItem.tipoItem = tipoEl ? tipoEl.getAttribute('data-val') : 'Armadura';
+       newItem.minStrength = modal.querySelector('#item-minstr').value; newItem.attunement = modal.querySelector('#item-attune').value;
+       const minReqPanel = modal.querySelector('#min-req-panel'); newItem.minReqAttrs = Array.from(minReqPanel.querySelectorAll('input:checked')).map(x => x.value);
+       const disPanel = modal.querySelector('#disadv-field .panel'); newItem.disadvantageSkill = disPanel ? Array.from(disPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
+       const advPanel = modal.querySelector('#adv-field .panel'); newItem.advantageSkill = advPanel ? Array.from(advPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
+       newItem.defense = modal.querySelector('#item-defense').value;
     }
 
     if (existingItem) {
@@ -3929,61 +3882,84 @@ function initRichEditorEvents(idContainer) {
 }
 
 /* ==========================================================================
-   SISTEMA DE DADOS COMPLETO (CSS + LÓGICA + EVENTOS GLOBAIS)
+   SISTEMA DE DADOS V5 (FINAL: TOOLTIPS COLORIDOS + CRÍTICO NO DANO)
    Cole isto no final do arquivo JS/DireitaJS.js
    ========================================================================== */
 
-/* 1. ESTILO DA JANELA (Visual Simples/Dark) */
+/* 1. CSS DA JANELA DE RESULTADOS (COM TOOLTIP HTML) */
 const diceStyles = document.createElement('style');
 diceStyles.textContent = `
     #dice-results-container {
-        position: fixed;
-        bottom: 20px;
-        right: -300px;
-        width: 260px;
-        background: #111; /* Fundo escuro sólido */
-        border: 1px solid #9c27b0; /* Borda fina roxa */
-        border-radius: 6px;
-        padding: 12px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
-        color: #fff;
-        z-index: 15000;
-        transition: right 0.3s ease;
-        font-family: sans-serif;
+        position: fixed; bottom: 20px; right: -300px; width: 270px;
+        background: #0f0f0f; border: 1px solid #9c27b0; border-radius: 8px;
+        padding: 15px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.9);
+        color: #fff; z-index: 15000; transition: right 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); 
+        font-family: 'Segoe UI', sans-serif;
     }
     #dice-results-container.active { right: 20px; }
+    
     .dice-header {
-        font-size: 13px; color: #ce93d8; margin-bottom: 6px;
-        font-weight: 700; text-transform: uppercase;
-        border-bottom: 1px solid #333; padding-bottom: 4px;
+        font-size: 12px; color: #e1bee7; margin-bottom: 10px;
+        font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+        border-bottom: 1px solid #333; padding-bottom: 5px;
     }
-    .dice-details {
-        font-size: 16px; font-family: monospace; color: #ccc;
-        line-height: 1.4; margin-bottom: 10px; word-break: break-all;
-    }
-    .dice-roll-max { color: #4caf50; font-weight:bold; }
-    .dice-roll-min { color: #f44336; font-weight:bold; }
-    .dice-total-box {
-        background: #1a1a1a; padding: 8px; border-radius: 4px;
-        text-align: center; border: 1px solid #333;
+    
+    .dice-row {
         display: flex; justify-content: space-between; align-items: center;
+        margin-bottom: 8px; padding: 4px 0;
+        position: relative; /* Para posicionar o tooltip */
     }
-    .dice-total-value { font-size: 24px; font-weight: 800; color: #fff; }
+    
+    .dice-label { font-size: 13px; color: #bbb; font-weight: 600; }
+    
+    .dice-value-wrapper {
+        position: relative;
+        text-align: right;
+    }
+    
+    .dice-value { 
+        font-size: 24px; font-weight: 800; color: #fff; 
+        cursor: help; 
+    }
+    
+    /* TOOLTIP HTML (Permite cores dentro) */
+    .dice-tooltip {
+        visibility: hidden; opacity: 0;
+        position: absolute; bottom: 100%; right: 0;
+        background: #2a1a35; border: 1px solid #9c27b0; 
+        padding: 8px 12px; border-radius: 6px;
+        font-size: 14px; font-weight: 500; white-space: nowrap; 
+        z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.8); color: #ddd;
+        margin-bottom: 5px; transition: opacity 0.2s;
+        pointer-events: none;
+    }
+    
+    /* Mostra o tooltip ao passar o mouse no valor */
+    .dice-value-wrapper:hover .dice-tooltip {
+        visibility: visible; opacity: 1;
+    }
+
+    /* ESTILO PARA DADOS INDIVIDUAIS NO TOOLTIP */
+    .dice-roll-max { color: #e040fb !important; font-weight: bold; text-shadow: 0 0 5px #e040fb; } 
+    .dice-roll-min { color: #f44336 !important; font-weight: bold; }
+    
+    /* TOTAL ROXO BRILHANTE SE FOR CRÍTICO (NO VALOR GRANDE) */
+    .crit-total { 
+        color: #e040fb !important; 
+        text-shadow: 0 0 10px rgba(224, 64, 251, 0.8), 0 0 20px rgba(224, 64, 251, 0.4);
+    }
 `;
 document.head.appendChild(diceStyles);
 
+
 /* 2. FUNÇÕES DE CÁLCULO E EXIBIÇÃO */
 
-// Rola uma expressão como "1d20+5" ou "4d6"
 function rollDiceExpression(expression) {
     const cleanExpr = expression.toLowerCase().trim();
-    // Regex: captura XdY e opcionalmente +/- Z
     const regex = /^(\d*)d(\d+)\s*([+-]?\s*\d+)?$/i;
     const match = cleanExpr.match(regex);
-
-    let total = 0;
-    let htmlParts = [];
-    let modifier = 0;
+    let total = 0, parts = [], modifier = 0;
+    let isMaxRoll = false;
 
     if (match) {
         const count = match[1] === "" ? 1 : parseInt(match[1]) || 1;
@@ -3993,132 +3969,252 @@ function rollDiceExpression(expression) {
         for (let i = 0; i < count; i++) {
             const roll = Math.floor(Math.random() * sides) + 1;
             total += roll;
-            let cls = '';
-            if (roll === sides && sides > 1) cls = 'dice-roll-max';
-            else if (roll === 1 && sides > 1) cls = 'dice-roll-min';
-            htmlParts.push(`<span class="${cls}">${roll}</span>`);
+            
+            // Lógica de destaque visual
+            if (roll === sides) { 
+                isMaxRoll = true; 
+                parts.push(`<span class="dice-roll-max">${roll}</span>`);
+            } else if (roll === 1 && sides > 1) {
+                parts.push(`<span class="dice-roll-min">${roll}</span>`);
+            } else {
+                parts.push(roll);
+            }
         }
 
         if (modStr) {
             modifier = parseInt(modStr.replace(/\s/g, ''));
             total += modifier;
+            if (modifier !== 0) parts.push(`${modifier >= 0 ? '+' : ''}${modifier}`);
         }
     } else {
-        // Fallback para número fixo
         const num = parseInt(cleanExpr);
-        if (!isNaN(num)) { total = num; htmlParts.push(num); }
-        else return { html: "Erro", total: 0, error: true };
+        if (!isNaN(num)) { total = num; parts.push(num); } 
+        else return { total: 0, text: "Erro", detail: "Erro" };
     }
 
-    let finalHtml = htmlParts.join(' + ');
-    if (modifier !== 0) finalHtml += ` ${modifier >= 0 ? '+' : '-'} ${Math.abs(modifier)}`;
-    
-    return { html: finalHtml, total: total, error: false };
+    // Monta texto HTML: "15 + 3 + 2"
+    let detailText = parts.join(' + ').replace(/\+ \+/g, '+ ').replace(/\+ -/g, '- ');
+
+    return { 
+        total: total, 
+        text: total.toString(), 
+        detail: detailText, // HTML com spans
+        isCrit: isMaxRoll 
+    };
 }
 
-// Mostra o Popup
 let diceTimer = null;
-function showDiceResults(title, resultData) {
+function showCombatResults(title, attackResult, damageResult) {
     let container = document.getElementById('dice-results-container');
     if (!container) {
-        container = document.createElement('div');
-        container.id = 'dice-results-container';
+        container = document.createElement('div'); container.id = 'dice-results-container';
         document.body.appendChild(container);
     }
+    
+    let html = `<div class="dice-header">${title}</div>`;
 
-    container.innerHTML = `
-        <div class="dice-header">${title}</div>
-        <div class="dice-details">${resultData.html}</div>
-        <div class="dice-total-box">
-            <span style="font-size:11px;color:#888;">TOTAL</span>
-            <span class="dice-total-value">${resultData.total}</span>
-        </div>
-    `;
+    // ACERTO
+    if (attackResult) {
+        const totalClass = attackResult.isCrit ? 'crit-total' : '';
+        html += `
+            <div class="dice-row">
+                <span class="dice-label">ACERTO</span>
+                <div class="dice-value-wrapper">
+                    <span class="dice-value ${totalClass}">
+                        ${attackResult.text}
+                    </span>
+                    <div class="dice-tooltip">${attackResult.detail}</div>
+                </div>
+            </div>`;
+    }
 
+    // DANO
+    if (damageResult) {
+        // Agora aplica o brilho se tiver crítico no dano também
+        const totalClass = damageResult.isCrit ? 'crit-total' : ''; 
+        html += `
+            <div class="dice-row">
+                <span class="dice-label">DANO</span>
+                 <div class="dice-value-wrapper">
+                    <span class="dice-value ${totalClass}">
+                        ${damageResult.text}
+                    </span>
+                    <div class="dice-tooltip">${damageResult.detail}</div>
+                </div>
+            </div>`;
+    }
+
+    container.innerHTML = html;
+    container.classList.remove('active');
     setTimeout(() => container.classList.add('active'), 10);
     clearTimeout(diceTimer);
-    diceTimer = setTimeout(() => container.classList.remove('active'), 5000);
+    diceTimer = setTimeout(() => container.classList.remove('active'), 8000); 
 }
 
-// Calcula Bônus de Ataque Mágico (Prof + Mod + Extra)
-function getSpellAttackBonus() {
-    let prof = 2;
-    const profEl = document.getElementById('proficienciaValor');
-    if (profEl) {
-        const val = parseInt(profEl.textContent);
-        if (!isNaN(val)) prof = val;
-    }
-
-    const attrKey = state.spellDCConfig.selectedAttr;
-    if (!attrKey || attrKey === 'none') return null;
-
-    let mod = 0;
-    const selector = DOM_SELECTORS[attrKey]; 
-    const hexEl = document.querySelector(selector);
-    if (hexEl) {
-        let raw = hexEl.dataset.attrValue || hexEl.textContent;
-        const score = parseInt(raw);
-        if (!isNaN(score)) mod = Math.floor((score - 10) / 2);
-    }
-
-    const extra = Number(state.spellDCConfig.extraMod) || 0;
-    return prof + mod + extra;
+/* 3. AUXILIARES DE CÁLCULO */
+function getAttributeMod(attrKey) {
+    const sel = DOM_SELECTORS[attrKey]; if(!sel) return 0;
+    const el = document.querySelector(sel); if(!el) return 0;
+    const val = parseInt(el.dataset.attrValue || el.textContent);
+    return isNaN(val) ? 0 : Math.floor((val - 10) / 2);
 }
 
-/* 3. ESCUTADOR GLOBAL DE CLIQUES (Para funcionar sempre) */
+function getItemAttackValues(item) {
+    let modAttr = 0;
+    let attrName = item.attackAttribute;
+    
+    if (!attrName || attrName === 'Nenhum' || attrName === '') {
+        const tipo = (item.tipoArma || '').toLowerCase();
+        attrName = (tipo.includes('distancia') || tipo.includes('distância')) ? 'Destreza' : 'Força';
+    }
+    
+    const attrMap = { 'Força': 'for', 'Destreza': 'dex', 'Constituição': 'con', 'Inteligência': 'int', 'Sabedoria': 'sab', 'Carisma': 'car' };
+    const key = attrMap[attrName];
+    
+    if (key) modAttr = getAttributeMod(key);
+
+    let profBonus = 0;
+    if (item.proficiency && item.proficiency !== 'Nenhuma') {
+        const profEl = document.getElementById('proficienciaValor');
+        if (profEl) profBonus = parseInt(profEl.textContent) || 2;
+    }
+
+    const itemBonus = parseInt(item.attackBonus) || 0;
+
+    return { modAttr, profBonus, itemBonus };
+}
+
+function getSpellAttackValues() {
+    let prof = 2; const pe = document.getElementById('proficienciaValor'); if(pe) prof = parseInt(pe.textContent)||2;
+    const key = state.spellDCConfig.selectedAttr; if(!key || key==='none') return null;
+    let mod = getAttributeMod(key);
+    const extra = parseInt(state.spellDCConfig.extraMod)||0;
+    return { prof, mod, extra };
+}
+
+/* 4. ESCUTADOR GLOBAL DE CLIQUES */
 document.addEventListener('click', function(e) {
     
-    // --- A. BOTÃO DE ATAQUE MÁGICO (CABEÇALHOS) ---
+    // --- CASO 1: ITEM DE INVENTÁRIO (ACERTO + DANO) ---
+    if (e.target.classList.contains('dice-img')) {
+        const itemCard = e.target.closest('.item-card');
+        
+        if (itemCard) {
+            e.preventDefault(); e.stopPropagation();
+
+            const itemId = itemCard.getAttribute('data-id');
+            const item = state.inventory.find(i => String(i.id) === String(itemId));
+
+            if (item) {
+                let attackRes = null;
+                // Rola Acerto se for Arma ou tiver atributo definido
+                if (item.type === 'Arma' || (item.attackAttribute && item.attackAttribute !== 'Nenhum')) {
+                    const { modAttr, profBonus, itemBonus } = getItemAttackValues(item);
+                    
+                    const d20 = Math.floor(Math.random() * 20) + 1;
+                    const totalAttack = d20 + modAttr + profBonus + itemBonus;
+                    const isCrit = (d20 === 20); 
+                    
+                    // HTML para o tooltip
+                    const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (d20 === 1 ? `<span class="dice-roll-min">1</span>` : d20);
+                    
+                    const detailParts = [d20Html];
+                    if (modAttr !== 0) detailParts.push(modAttr); 
+                    if (profBonus !== 0) detailParts.push(profBonus); 
+                    if (itemBonus !== 0) detailParts.push(itemBonus);
+                    
+                    attackRes = { 
+                        total: totalAttack, 
+                        text: totalAttack.toString(), 
+                        detail: detailParts.join(' + '),
+                        isCrit: isCrit
+                    };
+                }
+
+                let damageRes = null;
+                let damageText = '';
+                const spellDamageDiv = e.target.closest('.spell-damage');
+                if (spellDamageDiv) {
+                    damageText = Array.from(spellDamageDiv.childNodes)
+                        .filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent.trim()).join('');
+                }
+                if (!damageText || damageText === '-') damageText = item.damage || '0';
+
+                if (damageText && damageText !== '-' && damageText !== '0') {
+                    damageRes = rollDiceExpression(damageText);
+                }
+
+                if (attackRes || damageRes) showCombatResults(item.name, attackRes, damageRes);
+            }
+            return;
+        }
+
+        // Se for Dano de Magia (dentro do card de magia) - Apenas Dano
+        const spellCard = e.target.closest('.spell-card');
+        if (spellCard) {
+            e.preventDefault(); e.stopPropagation();
+            let damageText = '';
+            const parent = e.target.closest('.spell-damage');
+            if (parent) {
+                 damageText = Array.from(parent.childNodes).filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent.trim()).join('');
+            }
+            if (damageText && damageText !== '-') {
+                const res = rollDiceExpression(damageText);
+                const title = spellCard.querySelector('.spell-title')?.textContent || "Magia";
+                showCombatResults(title, null, res);
+            }
+            return;
+        }
+    }
+
+    // --- CASO 2: BOTÃO DE ATAQUE MÁGICO (CABEÇALHOS) ---
     const btnHeader = e.target.closest('#btnRollSpellAttack_Header');
     const btnPrep   = e.target.closest('#btnRollSpellAttack_PrepHeader');
 
     if (btnHeader || btnPrep) {
-        e.preventDefault();
-        e.stopPropagation();
+        e.preventDefault(); e.stopPropagation();
+        
+        const vals = getSpellAttackValues(); 
+        if (vals === null) { alert("⚠️ Configure a DT de Magia primeiro (ícone ⚙️)!"); return; }
+        
+        const d20 = Math.floor(Math.random() * 20) + 1;
+        const total = d20 + vals.prof + vals.mod + vals.extra;
+        const isCrit = (d20 === 20);
 
-        const bonus = getSpellAttackBonus();
-        if (bonus === null) {
-            alert("⚠️ Configure a DT de Magia primeiro (ícone ⚙️)!");
-            return;
-        }
+        const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (d20 === 1 ? `<span class="dice-roll-min">1</span>` : d20);
+        const parts = [d20Html];
+        if (vals.mod !== 0) parts.push(vals.mod);   
+        if (vals.prof !== 0) parts.push(vals.prof); 
+        if (vals.extra !== 0) parts.push(vals.extra); 
 
-        const expr = `1d20 ${bonus >= 0 ? '+' : ''}${bonus}`;
-        const res = rollDiceExpression(expr);
-        showDiceResults("Ataque Mágico", res);
-        return;
+        const res = { 
+            total: total, 
+            text: total.toString(), 
+            detail: parts.join(' + '),
+            isCrit: isCrit
+        };
+        
+        showCombatResults("Ataque Mágico", res, null);
     }
-
-    // --- B. ÍCONES DE DADO (ITENS, MAGIAS E PERÍCIAS) ---
-    if (e.target.classList.contains('dice-img') || (e.target.classList.contains('col-icon') && e.target.tagName === 'IMG')) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        // 1. Tenta pegar de Perícias
-        const periciaItem = e.target.closest('.pericia-item');
-        if (periciaItem) {
-            const nome = periciaItem.querySelector('.col-nome').textContent;
-            const bonusTxt = periciaItem.querySelector('.bonus-span').textContent.replace(/[()]/g, '');
-            const bonus = parseInt(bonusTxt) || 0;
-            const res = rollDiceExpression(`1d20 ${bonus >= 0 ? '+' : ''}${bonus}`);
-            showDiceResults(nome, res);
-            return;
-        }
-
-        // 2. Tenta pegar de Dano (Itens/Magias)
-        let txt = '';
-        const parentMeta = e.target.closest('.spell-damage'); // Card Item/Magia
-        if (parentMeta) {
-            // Tenta pegar texto do nó anterior ou do pai
-            if (e.target.previousElementSibling) txt = e.target.previousElementSibling.textContent;
-            else txt = parentMeta.textContent;
-        }
-
-        // Limpa o texto (remove o texto "dano" se tiver) e rola
-        txt = txt.replace('Dano', '').trim();
-        if (txt && txt !== '-' && txt !== '0') {
-            const res = rollDiceExpression(txt);
-            showDiceResults("Rolagem de Dano", res);
-        }
+    
+    // --- CASO 3: PERÍCIAS ---
+    if (e.target.classList.contains('col-icon') && e.target.closest('.pericia-item')) {
+        e.preventDefault(); e.stopPropagation();
+        const itemLi = e.target.closest('.pericia-item');
+        const nome = itemLi.querySelector('.col-nome').textContent.trim();
+        const bonus = parseInt(itemLi.querySelector('.bonus-span').textContent.replace(/[()]/g, '')) || 0;
+        
+        const d20 = Math.floor(Math.random() * 20) + 1;
+        const total = d20 + bonus;
+        const isCrit = (d20 === 20);
+        const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (d20 === 1 ? `<span class="dice-roll-min">1</span>` : d20);
+        
+        const res = { 
+            total: total, 
+            text: total.toString(), 
+            detail: `${d20Html} + ${bonus}`, 
+            isCrit: isCrit 
+        };
+        showCombatResults(nome, res, null);
     }
 });
-
