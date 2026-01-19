@@ -1201,55 +1201,6 @@ input[type=number] {
   padding: 2px 4px;
 }
 
-/* =============================================================
-   RESPONSIVIDADE
-============================================================= */
-@media (max-width: 900px) {
-  .armadura-grid {
-    /* Ajusta para layout mobile da armadura */
-    grid-template-columns: 90px 1fr;
-    grid-template-areas:
-      "escudo formula"
-      "escudo tipo";
-    gap: 8px;
-  }
-
-  .escudo-wrap {
-    width: 74px;
-    height: 74px;
-  }
-
-  .armadura-valor {
-    width: 56px;
-    height: 56px;
-    font-size: 22px;
-  }
-
-  .iniciativa-valor {
-    font-size: 26px;
-  }
-
-  .tipo-col {
-    margin-left: 0;
-    transform: none;
-  }
-
-  .inline-formula> :nth-child(-n+5) {
-    transform: translateY(-8px);
-    font-size: 13px;
-  }
-
-  .zero-num::after {
-    width: 30px;
-    height: 2px;
-  }
-
-  .armadura-tag.pesado {
-    font-size: 14px;
-    padding: 6px 10px;
-  }
-}
-
 
 
 .painel-header {
@@ -1428,3 +1379,5 @@ input[type=number] {
   color: #9c27b0;
   transform: scale(1.1);
 }
+
+

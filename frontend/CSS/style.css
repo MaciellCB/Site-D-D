@@ -119,31 +119,598 @@ header {
   margin: 0 !important;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* =============================================================
-   RESPONSIVIDADE (MEDIA QUERIES)
+   MODO MOBILE (HOTBAR & VISIBILIDADE)
+   Só ativa em telas menores que 768px
 ============================================================= */
 
-@media (max-width: 1100px) {
-
-  .lado-esquerdo,
-  .lado-centro,
-  .lado-direito {
-    flex: 1 1 45% !important;
-    max-width: 100%;
-  }
+/* Esconde a navbar mobile por padrão (Desktop) */
+#mobile-navbar {
+    display: none;
 }
 
 @media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-    align-items: center;
-  }
+    /* --- 1. Estilo da Hotbar --- */
+    #mobile-navbar {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background-color: #000;
+        border-top: 1px solid #333;
+        z-index: 99999; /* Acima de tudo */
+        justify-content: space-around;
+        align-items: center;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.8);
+    }
 
-  .lado-esquerdo,
-  .lado-centro,
-  .lado-direito {
-    width: 100% !important;
-    flex: 1 1 auto !important;
-    margin-bottom: 10px !important;
-  }
+    .mobile-nav-btn {
+        background: none;
+        border: none;
+        color: #666;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .mobile-nav-btn svg {
+        width: 24px;
+        height: 24px;
+        margin-bottom: 2px;
+    }
+
+    .mobile-nav-btn.active {
+        color: #9c27b0; /* Roxo do tema */
+        background-color: #111;
+        border-top: 2px solid #9c27b0;
+    }
+
+    /* --- 2. Ajustes Gerais do Layout Mobile --- */
+    body {
+        padding-bottom: 70px; /* Espaço para a barra não cobrir conteúdo */
+        overflow-y: auto; /* Garante scroll */
+    }
+
+    .container {
+        display: block !important; /* Desativa flexbox lateral */
+        height: auto !important;
+        min-height: auto !important;
+        padding: 5px !important;
+    }
+
+    /* --- 3. Lógica de Ocultar/Mostrar Seções --- */
+    
+    /* Por padrão, esconde TODAS as seções principais no mobile */
+    header, 
+    .info-personagem, 
+    .lado-esquerdo, 
+    .lado-centro, 
+    .lado-direito {
+        display: none !important;
+    }
+
+    /* VIEW: HEADER (Perfil) */
+    body[data-mobile-view="header"] header,
+    body[data-mobile-view="header"] .info-personagem {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+    
+    /* Ajuste específico para o header caber na tela */
+    body[data-mobile-view="header"] .info-personagem {
+        padding: 10px;
+        height: auto;
+    }
+    body[data-mobile-view="header"] .linha-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* VIEW: STATUS (Esquerda) */
+    body[data-mobile-view="status"] .lado-esquerdo {
+        display: flex !important;
+        width: 100% !important;
+        margin: 0 !important;
+        max-width: none !important;
+    }
+
+    /* VIEW: PERÍCIA (Centro) */
+    body[data-mobile-view="pericia"] .lado-centro {
+        display: block !important;
+        width: 100% !important;
+        flex: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+    }
+
+    /* VIEW: INVENTÁRIO (Direita) */
+    body[data-mobile-view="inventario"] .lado-direito {
+        display: flex !important;
+        width: 100% !important;
+        flex: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+        height: auto !important;
+        min-height: calc(100vh - 80px) !important;
+    }
+
+    /* Ajuste das abas no modo inventário para não quebrar */
+    .abas button {
+        font-size: 11px !important;
+        padding: 8px 2px !important;
+    }
+/* =============================================================
+   CORREÇÃO: APENAS REDUZIR TAMANHO DA FÓRMULA (Manter Layout)
+   Coloque DENTRO do @media (max-width: 768px)
+============================================================= */
+
+/* 1. Reduz o título que está sendo atropelado */
+.armadura-titulo {
+    font-size: 10px !important; /* Fonte bem menor */
+    margin-bottom: 5px !important; /* Menos espaço embaixo */
+    white-space: nowrap; /* Tenta manter em uma linha */
+    width: 100%;
+    text-align: center;
 }
+
+/* 2. Encolhe o container inteiro da fórmula proporcionalmente */
+.formula-col {
+    /* O PULO DO GATO: Reduz tudo para 75% do tamanho original */
+    transform: scale(0.75);
+    /* Define o ponto de origem do encolhimento para o centro-esquerda */
+    transform-origin: center left; 
+    /* Como encolhemos, precisamos aumentar a largura 'virtual' para ele não ficar muito espremido na esquerda */
+    width: 135% !important; 
+    margin-left: -15px; /* Ajuste fino para centralizar após o encolhimento */
+}
+
+/* 3. Garante que os elementos internos não tentem quebrar linha */
+.inline-formula {
+    flex-wrap: nowrap !important;
+    justify-content: space-around !important;
+}
+
+.formula-attr, .formula-text {
+    white-space: nowrap !important;
+}
+
+/* --- 4. Ajuste da Notificação de Dados no Mobile --- */
+    #dice-results-container {
+        /* Sobe a notificação para não bater na barra de 60px */
+        bottom: 80px !important; 
+        
+        /* Garante que fique na frente da barra (que tem z-index 99999) */
+        z-index: 200000 !important; 
+        
+        /* Ajuste opcional para garantir que caiba na tela do celular */
+        max-width: 90% !important; 
+    }
+    /* =========================================================
+       CORREÇÃO FINAL: ARMADURA MOBILE (SEM INVASÃO)
+       ========================================================= */
+
+    /* 1. Garante que o card estique verticalmente conforme o conteúdo */
+    .armadura-card {
+        height: auto !important;
+        min-height: 220px !important; /* Garante espaço vertical */
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        padding-bottom: 20px !important;
+    }
+
+    .armadura-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 20px !important; /* Mais espaço entre o Escudo e a Fórmula */
+        width: 100% !important;
+    }
+
+    /* 2. Ajuste do Título: Menor e com margem de segurança em baixo */
+    .armadura-titulo {
+        font-size: 10px !important;
+        margin-bottom: 35px !important; /* <--- AQUI ESTÁ A CORREÇÃO DA INVASÃO (Empurra a fórmula pra baixo) */
+        text-align: center !important;
+        width: 100% !important;
+        display: block !important;
+        position: relative !important;
+    }
+
+    /* 3. Container da Fórmula: Reduzido e Centralizado */
+    .formula-col {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        
+        /* Diminui o tamanho geral para caber na tela */
+        transform: scale(0.8) !important; 
+        transform-origin: top center !important; 
+        
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    /* 4. A Linha da Fórmula: Reseta posições e alinha */
+    .inline-formula {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: flex-end !important; /* Alinha tudo pela base */
+        justify-content: center !important;
+        gap: 8px !important;
+        width: 100% !important;
+        margin-top: 0 !important;
+    }
+
+    /* 5. RESET TOTAL nos elementos internos para parar de flutuar */
+    .inline-formula > span, 
+    .inline-formula > div,
+    .formula-text, 
+    .formula-attr,
+    .zero-num,
+    .formula-text.heavy-armor-mode {
+        transform: none !important; /* Remove o translateY(-30px) do desktop */
+        position: relative !important;
+        margin: 0 !important;
+        top: auto !important;
+        bottom: auto !important;
+        line-height: 1 !important;
+    }
+
+    /* Ajuste fino nos pares (Label + Numero) */
+    .zero-pair {
+        display: flex !important;
+        flex-direction: column-reverse !important; /* Número em cima, texto em baixo */
+        align-items: center !important;
+        gap: 2px !important;
+    }
+
+    .zero-num {
+        padding-bottom: 0 !important;
+    }
+    
+    /* Remove as linhas decorativas em baixo dos números no mobile para limpar o visual */
+    .zero-num::after, 
+    .iniciativa-valor::after {
+        display: none !important;
+    }
+    /* =========================================================
+       LAYOUT ARMADURA MOBILE (Iniciativa no Topo + Correção Invasão)
+       ========================================================= */
+
+    .armadura-card {
+        height: auto !important;
+        min-height: 300px !important; /* Espaço garantido */
+        padding-bottom: 20px !important;
+    }
+
+    /* Transforma a grid principal em coluna única */
+    .armadura-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
+
+    /* --- 1. REORGANIZAÇÃO: Iniciativa/Bônus (Topo) e Escudo (Baixo) --- */
+    .escudo-col {
+        display: flex !important;
+        flex-direction: row !important; /* Permite itens lado a lado */
+        flex-wrap: wrap !important;     /* Permite quebrar linha */
+        justify-content: center !important;
+        align-items: flex-start !important;
+        gap: 15px !important;
+        width: 100% !important;
+        margin-bottom: 10px !important;
+    }
+
+    /* Define a ordem visual dos elementos */
+    
+    /* 1º: Iniciativa */
+    .iniciativa-block {
+        order: 1 !important;
+        margin: 0 !important;
+    }
+
+    /* 2º: Bônus (Ao lado da Iniciativa) */
+    .bonus-iniciativa-block {
+        order: 2 !important;
+        margin: 0 !important;
+        /* Força a mesma altura da caixa de iniciativa para ficar bonito */
+        height: 94px !important; 
+        flex-direction: column !important;
+        justify-content: center !important;
+        gap: 5px !important;
+    }
+    
+    /* Ajuste visual do número do bônus para ficar legível */
+    .bonus-iniciativa-block .bonus-valor {
+        font-size: 24px !important;
+        width: 100% !important;
+        border-bottom: none !important;
+    }
+
+    /* 3º: Escudo (Vai para baixo sozinho) */
+    .escudo-wrap {
+        order: 3 !important;
+        width: 100% !important; /* Força ocupar a linha toda para ficar em baixo */
+        display: flex !important;
+        justify-content: center !important;
+        margin-top: 10px !important;
+    }
+
+    /* --- 2. CORREÇÃO DA INVASÃO (TEXTO SOBREPOSTO) --- */
+
+    /* Container da Fórmula */
+    .formula-col {
+        width: 100% !important;
+        margin-top: 10px !important;
+        padding: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        
+        /* Reduz um pouco o tamanho para não quebrar a linha */
+        transform: scale(0.9) !important; 
+        transform-origin: top center !important; 
+    }
+
+    /* Título: Aumenta muito a margem inferior para empurrar os números */
+    .armadura-titulo {
+        font-size: 11px !important;
+        margin-bottom: 45px !important; /* <--- AQUI ESTÁ A CORREÇÃO DA INVASÃO */
+        text-align: center !important;
+        width: 100% !important;
+        display: block !important;
+        position: relative !important;
+    }
+
+    /* Linha da Fórmula */
+    .inline-formula {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: flex-end !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    /* RESET TOTAL: Remove os efeitos flutuantes do desktop */
+    .inline-formula > span, 
+    .inline-formula > div,
+    .formula-text, 
+    .formula-attr,
+    .zero-num,
+    .formula-text.heavy-armor-mode {
+        transform: none !important; /* Tira o translate-y antigo */
+        position: relative !important;
+        margin: 0 !important;
+        top: auto !important;
+        bottom: auto !important;
+        line-height: 1 !important;
+    }
+
+    /* Ajuste dos pares (Label + Numero) */
+    .zero-pair {
+        display: flex !important;
+        flex-direction: column-reverse !important; /* Número em cima, texto em baixo */
+        align-items: center !important;
+        gap: 2px !important;
+    }
+
+    /* Limpeza visual */
+    .zero-num { padding-bottom: 0 !important; }
+    .zero-num::after { display: none !important; }
+    .tipo-col { margin-top: 15px !important; }
+
+    /* =========================================================
+       LAYOUT ARMADURA MOBILE: GRID (Correção Final de Alinhamento)
+       ========================================================= */
+
+    .armadura-card {
+        height: auto !important;
+        min-height: 300px !important;
+        padding-bottom: 20px !important;
+    }
+
+    .armadura-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
+
+    /* --- 1. GRADE DE POSICIONAMENTO (Grid resolve o alinhamento) --- */
+    .escudo-col {
+        display: grid !important;
+        width: 100% !important;
+        /* Cria duas colunas iguais */
+        grid-template-columns: 1fr 1fr !important;
+        /* Define as áreas: Iniciativa/Bonus em cima, Escudo ocupando tudo em baixo */
+        grid-template-areas: 
+            "ini bonus"
+            "shield shield" !important;
+        /* Centraliza tudo horizontalmente nas suas células */
+        justify-items: center !important;
+        align-items: end !important;
+        gap: 15px !important;
+        margin-bottom: 10px !important;
+    }
+
+    /* Posiciona cada item na grade */
+    .iniciativa-block {
+        grid-area: ini !important;
+        margin: 0 !important;
+        /* Empurra a iniciativa para a direita para ficar colada no centro */
+        justify-self: end !important; 
+    }
+
+    .bonus-iniciativa-block {
+        grid-area: bonus !important;
+        margin: 0 !important;
+        height: 94px !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        gap: 5px !important;
+        /* Empurra o bônus para a esquerda para ficar colado no centro */
+        justify-self: start !important;
+    }
+    
+    .bonus-iniciativa-block .bonus-valor {
+        font-size: 24px !important;
+        width: 100% !important;
+        border-bottom: none !important;
+    }
+
+    .escudo-wrap {
+        grid-area: shield !important;
+        /* IMPORTANTE: Mantém o tamanho original para não deformar ou alinhar à esquerda */
+        width: 92px !important; 
+        margin-top: 10px !important;
+    }
+
+    /* --- 2. FÓRMULA (Mantendo a correção da invasão) --- */
+    .formula-col {
+        width: 100% !important;
+        margin-top: 10px !important;
+        padding: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        transform: scale(0.9) !important; 
+        transform-origin: top center !important; 
+    }
+
+    .armadura-titulo {
+        font-size: 11px !important;
+        margin-bottom: 45px !important;
+        text-align: center !important;
+        width: 100% !important;
+        display: block !important;
+        position: relative !important;
+    }
+
+    .inline-formula {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: flex-end !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    .inline-formula > span, 
+    .inline-formula > div,
+    .formula-text, 
+    .formula-attr,
+    .zero-num,
+    .formula-text.heavy-armor-mode {
+        transform: none !important;
+        position: relative !important;
+        margin: 0 !important;
+        top: auto !important;
+        bottom: auto !important;
+        line-height: 1 !important;
+    }
+
+    .zero-pair {
+        display: flex !important;
+        flex-direction: column-reverse !important;
+        align-items: center !important;
+        gap: 2px !important;
+    }
+
+    .zero-num { padding-bottom: 0 !important; }
+    .zero-num::after { display: none !important; }
+    .tipo-col { margin-top: 15px !important; }
+
+    /* --- 2. Ajustes Gerais do Layout Mobile --- */
+    body {
+        /* AUMENTADO: De 70px para 180px. 
+           Isso cria um espaço vazio grande no final da página para você 
+           poder rolar e ver os menus abertos sem a barra atrapalhar. */
+        padding-bottom: 240px !important; 
+        overflow-y: auto; 
+    }
+
+    /* CORREÇÃO EXTRA: Menus suspensos na frente da Hotbar */
+    .multi-select-options, 
+    .panel,
+    .dice-tooltip {
+
+    }
+
+    .container {
+        display: block !important;
+        height: auto !important;
+        min-height: auto !important;
+        padding: 5px !important;
+    }
+  }

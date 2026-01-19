@@ -7,7 +7,7 @@
     "extraMod": 0,
     "lastKnownLevel": 0
   },
-  "dtMagias": 10,
+  "dtMagias": 11,
   "inventory": [
     {
       "id": 1768849242876,
@@ -81,7 +81,9 @@
       ],
       "alcance": "6m/18m",
       "description": "<p>Semelhante a uma flecha curta com pesos, projetada para ser arremessada com a mão. Simples e barato.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,1 kg</li></ul>",
-      "quantity": 10
+      "quantity": 10,
+      "expanded": false,
+      "equip": true
     },
     {
       "id": 1768763938381,
@@ -296,6 +298,36 @@
   ],
   "abilities": [
     {
+      "id": 1768856191828,
+      "title": "[Nível 2] Inspiração Mágica (Opcional)",
+      "description": "<p><strong>Ação:</strong> Livre (Gatilho)</p><p>Se uma criatura possuir um dado de Inspiração Bárdica seu, ela pode usá-lo ao conjurar uma magia que restaure pontos de vida ou cause dano.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Efeito:</strong> A criatura rola o dado de Inspiração e adiciona o resultado a uma rolagem de dano ou de cura da magia.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Consumo:</strong> O dado de Inspiração é gasto após o uso.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bardo",
+      "subclass": ""
+    },
+    {
+      "id": 1768856123680,
+      "title": "[Nível 2] Cântico de Descanso",
+      "description": "<p><strong>Duração:</strong> Durante o Descanso Curto</p><p>Você usa música suave para revitalizar seus aliados. Se você ou quaisquer criaturas amigáveis que possam ouvir sua performance recuperarem pontos de vida no final de um <strong>Descanso Curto</strong> gastando Dados de Vida, cada uma recupera pontos de vida extras.</p><strong style='display:block; margin-bottom:8px; color:#fff;'>Cura Extra (Escalonamento):</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 2º Nível:</strong> 1d6</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 9º Nível:</strong> 1d8</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 13º Nível:</strong> 1d10</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 17º Nível:</strong> 1d12</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bardo",
+      "subclass": ""
+    },
+    {
+      "id": 1768856211230,
+      "title": "[Nível 2] Pau para Toda Obra",
+      "description": "<p><strong>Duração:</strong> Permanente</p><p>Você pode adicionar <strong>metade do seu bônus de proficiência</strong> (arredondado para baixo) a qualquer teste de habilidade que você fizer e que ainda não inclua seu bônus de proficiência (ex: Iniciativa, testes de atributos puros, perícias não treinadas).</p>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bardo",
+      "subclass": ""
+    },
+    {
       "id": 1768851040546,
       "title": "Revelação Celestial",
       "description": "No <b>3º nível</b>, escolha uma transformação mística (Alma Radiante, Consumo Radiante ou Sudário Necrótico). Você pode ativá-la como uma <b>ação bônus</b> para ganhar benefícios (como voo ou dano extra) por 1 minuto. Uma vez usada, requer um <b>descanso longo</b> para recuperar.",
@@ -477,7 +509,7 @@
     "historia": ""
   },
   "sanidade": {
-    "estresse": 1,
+    "estresse": 0,
     "vazio": 0
   },
   "spells": [],
@@ -615,7 +647,7 @@
   "niveisClasses": {
     "artifice": 1,
     "barbaro": 0,
-    "bardo": 1,
+    "bardo": 2,
     "blood hunter": 0,
     "bruxo": 1,
     "clerigo": 0,
@@ -628,8 +660,8 @@
     "paladino": 0,
     "patrulheiro": 0
   },
-  "xp": "0",
-  "inspiracao": 3,
+  "xp": "12333",
+  "inspiracao": 5,
   "vidaDadosSalvos": {
     "v1": 6,
     "v2": 6,
@@ -639,7 +671,7 @@
   "vidaAtual": 14,
   "vidaTempAtual": 35,
   "danoNecroAtual": 30,
-  "metros": 9,
+  "metros": 123,
   "iniciativaBonus": 0,
   "acOutros": 0,
   "resistencias": "23",
@@ -700,12 +732,17 @@
       "status": [
         false,
         false,
+        false,
         false
       ]
     },
     "2": {
       "used": 0,
-      "status": []
+      "status": [
+        true,
+        true,
+        true
+      ]
     },
     "3": {
       "used": 0,
@@ -738,7 +775,7 @@
     "pact": {
       "used": 0,
       "status": [
-        false
+        true
       ]
     },
     "ki": {

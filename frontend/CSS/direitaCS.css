@@ -1832,43 +1832,7 @@ a.editar-spell {
 /* ==========================================================================
    RESPONSIVIDADE
    ========================================================================== */
-@media (max-width: 980px) {
-  .spell-modal {
-    width: calc(100% - 32px);
-    padding: 12px;
-  }
 
-  .spell-modal .damage-row {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .spell-modal .damage-row .dmg-type {
-    width: 100%;
-  }
-}
-
-@media (max-width: 780px) {
-  .catalog-large {
-    width: calc(100% - 24px);
-    padding: 12px;
-  }
-
-  .catalog-large-classes {
-    gap: 8px;
-  }
-
-  .ability-class-btn {
-    font-size: 14px;
-    padding: 6px 8px;
-  }
-
-  .ability-sub-btn {
-    padding: 6px 10px;
-    font-size: 13px;
-    border-radius: 18px;
-  }
-}
 
 /* No final do arquivo DireitaJS.js (dentro das tags <style> ou string CSS) */
 
@@ -1989,16 +1953,5 @@ a.editar-spell {
   line-height: 1.5;
   outline: none;
   min-height: 150px;
-}
-
-/* Ajuste para telas pequenas */
-@media (max-width: 600px) {
-  .spell-modal-overlay {
-    padding: 10px;
-    align-items: flex-start; /* Em mobile, sobe um pouco */
-  }
-  .spell-modal {
-    max-height: 95vh;
-  }
 }
 
