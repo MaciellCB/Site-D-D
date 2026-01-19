@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ficha de Personagem</title>
+  <title>Ficha de Personagem D&D</title>
   
   <link rel="stylesheet" href="CSS/style.css" />
   <link rel="stylesheet" href="CSS/esquerdaCS.css">
@@ -11,8 +11,10 @@
   <link rel="stylesheet" href="CSS/meioCS.css">
   <link rel="stylesheet" href="CSS/headerCS.css">
 
+  <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+
   <style>
-    /* CSS DO AVISO CUSTOMIZADO */
+    /* CSS DO AVISO CUSTOMIZADO (TOAST) */
     .custom-toast-warning {
         position: fixed;
         top: 20px;
@@ -24,7 +26,7 @@
         border-radius: 6px;
         padding: 15px 20px;
         box-shadow: 0 5px 20px rgba(0,0,0,0.8);
-        z-index: 200000; /* Acima de tudo, inclusive do login */
+        z-index: 200000;
         min-width: 300px;
         max-width: 90%;
         text-align: center;
@@ -42,6 +44,8 @@
         width: 100%;
         transition: width 5s linear;
     }
+    .toast-content { margin-top: 5px; line-height: 1.4; }
+    
     @keyframes toastSlideDown {
         from { top: -100px; opacity: 0; }
         to { top: 20px; opacity: 1; }
@@ -50,6 +54,16 @@
         from { opacity: 1; transform: translateX(-50%) scale(1); }
         to { opacity: 0; transform: translateX(-50%) scale(0.9); }
     }
+
+    /* Link específico para o Mestre voltar ao painel */
+    .nav-mestre-link {
+        display: none; /* Oculto por padrão */
+        color: #e0aaff !important;
+        border-bottom: 1px dashed #e0aaff;
+        cursor: pointer;
+        font-size: 14px;
+    }
+    .nav-mestre-link:hover { color: #fff !important; }
   </style>
 </head>
 <body>
@@ -57,6 +71,7 @@
     <nav class="navbar">
       <div class="nav-links">
         <a href="#" class="active">Personagem</a>
+        <a href="mestre.html" id="link-voltar-painel" class="nav-mestre-link">Voltar ao Painel (Mestre)</a>
       </div>
       <img src="img/perfil.png" alt="perfil" class="perfil-img" />
     </nav>
@@ -103,171 +118,168 @@
         <div class="hexagrama">
           <img src="img/atributos.png" alt="Atributos" class="hex-overlay" />
           <span class="editar-hex">✏️</span>
-          <div class="num n1">0</div>
-          <div class="num n2">0</div>
-          <div class="num n3">0</div>
-          <div class="num n4">0</div>
-          <div class="num n5">0</div>
-          <div class="num n6">0</div>
+          <div class="num n1">10</div>
+          <div class="num n2">10</div>
+          <div class="num n3">10</div>
+          <div class="num n4">10</div>
+          <div class="num n5">10</div>
+          <div class="num n6">10</div>
         </div>
 
         <div class="ficha-compacta">
   
- <div class="linha linha-top">
-  
-  <div class="nivel-destaque">
-    <div class="nivel-titulo">NÍVEL</div>
-    <div id="nivelFoco" class="nivel-valor">0</div>
-  </div>
-
-  <div class="status-row">
-    
-    <div class="status-item">
-      <span class="status-label-top">INSPIRAÇÃO</span>
-      <div class="caixa-valor-controle">
-        <button id="inspiraLeft" class="btn-mini">◀</button>
-        <span id="inspiraValor" class="valor-grande">0</span>
-        <button id="inspiraRight" class="btn-mini">▶</button>
-      </div>
-    </div>
-
-    <div class="status-item">
-      <span class="status-label-top">PROFICIÊNCIA</span>
-      <div class="caixa-valor-fixo">
-        <span id="proficienciaValor" class="valor-grande">+2</span>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-  <div class="linha linha-xp">
-    <div class="xp-box">
-      <div class="xp-top">
-        <div style="display:flex;gap:8px;align-items:center;">
-          <span class="xp-label">XP</span>
-          <input id="xpAtual" type="number" min="0" value="0" class="xp-atual-input" />
-          <span id="xpTotalText" class="xp-total-text">/ 0</span>
-        </div>
-      </div>
-      <div class="xp-bar-outer">
-        <div class="xp-bar-inner" id="xpBar"></div>
-      </div>
-    </div>
-    <div class="marco-box">
-      <label>Marco</label>
-      <div style="display:flex;gap:6px;align-items:center;">
-        <input id="marcoAtual" type="number" min="0" value="0" class="marco-input" />
-        <input id="marcoMax" type="number" readonly class="marco-input marco-max" />
-      </div>
-      <div class="marco-bar-outer">
-        <div id="marcoBar" class="marco-bar-inner"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="linha linha-metros">
-    <div class="metros-box">
-      <label>Metros (m)</label>
-      <input type="number" id="metros" min="0" value="0" />
-    </div>
-    <div class="quadrados-box">
-      <label>Quadrados (q)</label>
-      <input type="number" id="quadrados" min="0" step="1" />
-    </div>
-  </div>
-
-  <div class="vida-container">
-    <h3 id="btnVida">VIDA</h3>
-    <div class="vida-bar">
-      <div class="vida-fill" id="vida-fill"></div>
-      <div class="vida-text">
-        <button class="vida-btn menos5">«</button>
-        <button class="vida-btn menos1"><</button>
-        <span id="vida-atual">0</span>/<span id="vida-total">0</span>
-        <button class="vida-btn mais1">></button>
-        <button class="vida-btn mais5">»</button>
-      </div>
-    </div>
-    <div class="classes-lista-container" style="display:none; margin-top:8px;">
-      <ul id="classesLista" style="list-style:none; padding:0; margin:0;"></ul>
-    </div>
-  </div>
-
-  <div class="barras-secundarias">
-    <div class="barra-secundaria">
-      <h3>VIDA TEMPORÁRIA</h3>
-      <div class="vida-bar">
-        <div class="vida-fill" id="vida-temp-fill"></div>
-        <div class="vida-text">
-          <button class="vida-btn menos5">«</button>
-          <button class="vida-btn menos1"><</button>
-          <span id="vida-temp-atual" contenteditable="true">0</span>
-          <button class="vida-btn mais1">></button>
-          <button class="vida-btn mais5">»</button>
-        </div>
-      </div>
-    </div>
-    <div class="barra-secundaria">
-      <h3>DANO NECRÓTICO</h3>
-      <div class="vida-bar">
-        <div class="vida-fill" id="dano-necro-fill" style="background-color: purple;"></div>
-        <div class="vida-text">
-          <button class="vida-btn menos5">«</button>
-          <button class="vida-btn menos1"><</button>
-          <span id="dano-necro-atual" contenteditable="true">0</span>
-          <button class="vida-btn mais1">></button>
-          <button class="vida-btn mais5">»</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="armadura-area">
-    <div class="armadura-card">
-      <div class="armadura-grid">
-        <div class="escudo-col">
-          <div class="escudo-wrap">
-            <img src="img/escudoArmad.png" alt="escudo" class="escudo-img" />
-            <div class="armadura-valor" id="armaduraValor">12</div>
+         <div class="linha linha-top">
+          <div class="nivel-destaque">
+            <div class="nivel-titulo">NÍVEL</div>
+            <div id="nivelFoco" class="nivel-valor">0</div>
           </div>
-          <div class="iniciativa-block">
-            <div class="iniciativa-label">INICIATIVA</div>
-            <div class="iniciativa-valor" id="iniciativaValor">0</div>
-          </div>
-          <div class="bonus-iniciativa-block">
-            <span class="bonus-label">BÔNUS</span>
-            <input type="number" id="iniciativaBonus" class="bonus-valor" value="0" />
+
+          <div class="status-row">
+            <div class="status-item">
+              <span class="status-label-top">INSPIRAÇÃO</span>
+              <div class="caixa-valor-controle">
+                <button id="inspiraLeft" class="btn-mini">◀</button>
+                <span id="inspiraValor" class="valor-grande">0</span>
+                <button id="inspiraRight" class="btn-mini">▶</button>
+              </div>
+            </div>
+
+            <div class="status-item">
+              <span class="status-label-top">PROFICIÊNCIA</span>
+              <div class="caixa-valor-fixo">
+                <span id="proficienciaValor" class="valor-grande">+2</span>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="formula-col">
-          <div class="armadura-titulo">CLASSE DE ARMADURA</div>
-          <div class="inline-formula">
-            <span class="formula-eq">=</span>
-            <span class="formula-text">10</span>
-            <span class="formula-plus">+</span>
-            <span class="formula-attr">Dex</span>
-            <span class="formula-plus">+</span>
-            <div class="zero-pair"><span class="zero-num">0</span><span class="zero-label">Equip.</span></div>
-            <span class="formula-plus">+</span>
-            <div class="zero-pair"><span class="zero-num" id="ac-outros" contenteditable="true">0</span><span class="zero-label">Outros.</span></div>
+
+          <div class="linha linha-xp">
+            <div class="xp-box">
+              <div class="xp-top">
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <span class="xp-label">XP</span>
+                  <input id="xpAtual" type="number" min="0" value="0" class="xp-atual-input" />
+                  <span id="xpTotalText" class="xp-total-text">/ 0</span>
+                </div>
+              </div>
+              <div class="xp-bar-outer">
+                <div class="xp-bar-inner" id="xpBar"></div>
+              </div>
+            </div>
+            <div class="marco-box">
+              <label>Marco</label>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="marcoAtual" type="number" min="0" value="0" class="marco-input" />
+                <input id="marcoMax" type="number" readonly class="marco-input marco-max" />
+              </div>
+              <div class="marco-bar-outer">
+                <div id="marcoBar" class="marco-bar-inner"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="linha linha-metros">
+            <div class="metros-box">
+              <label>Metros (m)</label>
+              <input type="number" id="metros" min="0" value="0" />
+            </div>
+            <div class="quadrados-box">
+              <label>Quadrados (q)</label>
+              <input type="number" id="quadrados" min="0" step="1" />
+            </div>
+          </div>
+
+          <div class="vida-container">
+            <h3 id="btnVida">VIDA</h3>
+            <div class="vida-bar">
+              <div class="vida-fill" id="vida-fill"></div>
+              <div class="vida-text">
+                <button class="vida-btn menos5">«</button>
+                <button class="vida-btn menos1"><</button>
+                <span id="vida-atual">0</span>/<span id="vida-total">0</span>
+                <button class="vida-btn mais1">></button>
+                <button class="vida-btn mais5">»</button>
+              </div>
+            </div>
+            <div class="classes-lista-container" style="display:none; margin-top:8px;">
+              <ul id="classesLista" style="list-style:none; padding:0; margin:0;"></ul>
+            </div>
+          </div>
+
+          <div class="barras-secundarias">
+            <div class="barra-secundaria">
+              <h3>VIDA TEMPORÁRIA</h3>
+              <div class="vida-bar">
+                <div class="vida-fill" id="vida-temp-fill"></div>
+                <div class="vida-text">
+                  <button class="vida-btn menos5">«</button>
+                  <button class="vida-btn menos1"><</button>
+                  <span id="vida-temp-atual" contenteditable="true">0</span>
+                  <button class="vida-btn mais1">></button>
+                  <button class="vida-btn mais5">»</button>
+                </div>
+              </div>
+            </div>
+            <div class="barra-secundaria">
+              <h3>DANO NECRÓTICO</h3>
+              <div class="vida-bar">
+                <div class="vida-fill" id="dano-necro-fill" style="background-color: purple;"></div>
+                <div class="vida-text">
+                  <button class="vida-btn menos5">«</button>
+                  <button class="vida-btn menos1"><</button>
+                  <span id="dano-necro-atual" contenteditable="true">0</span>
+                  <button class="vida-btn mais1">></button>
+                  <button class="vida-btn mais5">»</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="armadura-area">
+            <div class="armadura-card">
+              <div class="armadura-grid">
+                <div class="escudo-col">
+                  <div class="escudo-wrap">
+                    <img src="img/escudoArmad.png" alt="escudo" class="escudo-img" />
+                    <div class="armadura-valor" id="armaduraValor">10</div>
+                  </div>
+                  <div class="iniciativa-block">
+                    <div class="iniciativa-label">INICIATIVA</div>
+                    <div class="iniciativa-valor" id="iniciativaValor">0</div>
+                  </div>
+                  <div class="bonus-iniciativa-block">
+                    <span class="bonus-label">BÔNUS</span>
+                    <input type="number" id="iniciativaBonus" class="bonus-valor" value="0" />
+                  </div>
+                </div>
+                <div class="formula-col">
+                  <div class="armadura-titulo">CLASSE DE ARMADURA</div>
+                  <div class="inline-formula">
+                    <span class="formula-eq">=</span>
+                    <span class="formula-text">10</span>
+                    <span class="formula-plus">+</span>
+                    <span class="formula-attr">Dex</span>
+                    <span class="formula-plus">+</span>
+                    <div class="zero-pair"><span class="zero-num">0</span><span class="zero-label">Equip.</span></div>
+                    <span class="formula-plus">+</span>
+                    <div class="zero-pair"><span class="zero-num" id="ac-outros" contenteditable="true">0</span><span class="zero-label">Outros.</span></div>
+                  </div>
+                </div>
+                <div class="tipo-col">
+                  <div class="tipo-titulo">Tipo de armadura</div>
+                  <div class="armadura-tag pesado">SEM ARMADURA</div>
+                </div>
+              </div>
+              <div class="armadura-details">
+                <div class="linha-detail"><div class="label-detail">FRAQUEZA</div><div id="sel-fraquezas" class="input-detail"></div></div>
+                <div class="linha-detail"><div class="label-detail">RESISTÊNCIAS</div><div id="sel-resistencias" class="input-detail"></div></div>
+                <div class="linha-detail"><div class="label-detail">IMUNIDADE</div><div id="sel-imunidades" class="input-detail"></div></div>
+                <div class="linha-detail"><div class="label-detail">PROFICIÊNCIAS</div><div id="sel-proficiencias" class="input-detail"></div></div>
+                <div class="linha-detail"><div class="label-detail">IDIOMAS</div><div id="sel-idiomas" class="input-detail"></div></div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="tipo-col">
-          <div class="tipo-titulo">Tipo de armadura</div>
-          <div class="armadura-tag pesado">Pesado</div>
-        </div>
-      </div>
-      <div class="armadura-details">
-        <div class="linha-detail"><div class="label-detail">FRAQUEZA</div><div id="sel-fraquezas" class="input-detail"></div></div>
-        <div class="linha-detail"><div class="label-detail">RESISTÊNCIAS</div><div id="sel-resistencias" class="input-detail"></div></div>
-        <div class="linha-detail"><div class="label-detail">IMUNIDADE</div><div id="sel-imunidades" class="input-detail"></div></div>
-        <div class="linha-detail"><div class="label-detail">PROFICIÊNCIAS</div><div id="sel-proficiencias" class="input-detail"></div></div>
-        <div class="linha-detail"><div class="label-detail">IDIOMAS</div><div id="sel-idiomas" class="input-detail"></div></div>
-      </div>
-    </div>
-  </div>
-</div>
       </div>
     </section>
 
@@ -285,7 +297,7 @@
         <button>Magias</button>
         <button>Descrição</button>
       </div>
-      <div class="conteudo"><p>Você ainda não possui ataques</p></div>
+      <div class="conteudo"><p>Carregando...</p></div>
     </section>
   </main>
 
@@ -313,56 +325,187 @@
   <script src="JS/MagicSystem.js"></script> 
 
   <script>
-    /* FUNÇÃO DE AVISO CUSTOMIZADO */
-    /* FUNÇÃO DE AVISO CUSTOMIZADO CORRIGIDA */
-function exibirAvisoTemporario(mensagem) {
-    const existente = document.querySelector('.custom-toast-warning');
-    if (existente) existente.remove();
-
-    const toast = document.createElement('div');
-    toast.className = 'custom-toast-warning';
+    /* =================================================================
+       LÓGICA DO SOCKET.IO (SINCRONIZAÇÃO EM TEMPO REAL)
+       ================================================================= */
     
-    // Criamos a barra de progresso
-    const progress = document.createElement('div');
-    progress.className = 'toast-progress';
-    
-    // Criamos o container do texto
-    const content = document.createElement('div');
-    content.className = 'toast-content';
-    
-    // Substituímos as quebras de linha de forma segura
-    const textoFormatado = mensagem.split('\n').join('<br>');
-    
-    content.innerHTML = '<strong style="color:#e0aaff; display:block; margin-bottom:4px; font-size:11px; letter-spacing:1px;">SISTEMA</strong>' + textoFormatado;
+    // Conecta ao servidor (assumindo que o server.js está na porta 3000)
+    const socket = io('http://localhost:3000'); 
 
-    toast.appendChild(progress);
-    toast.appendChild(content);
-    document.body.appendChild(toast);
+    socket.on('connect', () => {
+        console.log("Conectado ao servidor de atualizações! ID:", socket.id);
+    });
 
-    // Inicia a animação da barra
-    setTimeout(() => {
-        progress.style.width = '0%';
-    }, 50);
+    // Evento disparado pelo server.js quando ALGUÉM salva uma ficha
+    socket.on('ficha_atualizada', (novaFicha) => {
+        // Verifica se a ficha recebida é a mesma que estou visualizando
+        if (state && state.nome && novaFicha.nome && novaFicha.nome.toLowerCase() === state.nome.toLowerCase()) {
+            
+            console.log("Recebi atualização externa para: " + novaFicha.nome);
+            
+            // 1. Atualiza a memória (state) com os novos dados
+            Object.assign(state, novaFicha);
 
-    // Remove após 5 segundos
-    setTimeout(() => {
-        if (toast.parentElement) {
-            toast.style.animation = 'toastFadeOut 0.5s ease-out forwards';
-            setTimeout(() => toast.remove(), 450);
+            // 2. Chama as funções dos seus arquivos JS para redesenhar a tela
+            // Mestre: Preenche inputs básicos
+            if(typeof preencherFichaNaTela === 'function') preencherFichaNaTela(state); 
+            
+            // HeaderJS: Atualiza raça, classes, antecedentes
+            if(typeof atualizarHeader === 'function') atualizarHeader();
+            if(typeof atualizarTextoClassesHeader === 'function') atualizarTextoClassesHeader();
+
+            // EsquerdaJS: Atualiza Atributos, Vida, CA, Barras
+            if(typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+            if(typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
+            
+            // DireitaJS e MeioJS: Ouvem este evento para atualizar Perícias, Inventário, Magias
+            window.dispatchEvent(new CustomEvent('sheet-updated'));
+            
+            // SILENCIOSO: Aviso removido conforme solicitado
         }
-    }, 5000);
-}
+    });
 
-    /* SUBSTITUI O ALERT PADRÃO DO NAVEGADOR */
-    window.alert = function(msg) {
-        exibirAvisoTemporario(msg);
-    };
+    /* =================================================================
+       LÓGICA DO MESTRE & PREENCHIMENTO DE DADOS
+       ================================================================= */
+    
+    // Verifica se veio do Painel do Mestre (URL: index.html?masterView=Pessoa1)
+    window.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const masterChar = params.get('masterView');
+
+        if (masterChar) {
+            // Remove o overlay de login
+            document.getElementById('login-overlay').style.display = 'none';
+            // Mostra o botão de voltar
+            document.getElementById('link-voltar-painel').style.display = 'block';
+            
+            // Carrega os dados
+            carregarFichaMestre(masterChar);
+        }
+    });
+
+    async function carregarFichaMestre(nome) {
+        try {
+            // Usa a rota 'secreta' do Mestre que não pede senha
+            const res = await fetch('http://localhost:3000/api/load-ficha-mestre', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome: nome })
+            });
+
+            if(res.ok) {
+                const ficha = await res.json();
+                
+                // INICIALIZA O STATE GLOBALMENTE (Crucial para os outros scripts)
+                if(typeof state !== 'undefined') {
+                    Object.assign(state, ficha);
+                    
+                    // Renderiza a interface completa
+                    preencherFichaNaTela(ficha); // Inputs HTML puro
+                    if(typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+                    if(typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
+                    if(typeof atualizarHeader === 'function') atualizarHeader();
+                    
+                    // Dispara evento para carregar abas e perícias
+                    window.dispatchEvent(new CustomEvent('sheet-updated'));
+                    
+                    // Define aba ativa
+                    if(typeof setActiveTab === 'function') setActiveTab(state.activeTab || 'Combate');
+
+                    exibirAvisoTemporario("Mestre: Visualizando " + ficha.nome);
+                }
+            } else {
+                exibirAvisoTemporario("Erro: Personagem não encontrado.");
+            }
+        } catch(e) {
+            console.error(e);
+            exibirAvisoTemporario("Erro de conexão com o servidor.");
+        }
+    }
+
+    // Função auxiliar para preencher inputs que não são controlados pelos módulos JS complexos
+    function preencherFichaNaTela(data) {
+        setVal('input-personagem', data.nome);
+        setVal('input-jogador', data.jogador);
+        setVal('input-raca', data.raca);
+        setTxt('btn-antecedente', data.antecedente);
+
+        // Atualiza visualmente os atributos (Hexagrama)
+        if (data.atributos) {
+            setTxtQ('.num.n1', data.atributos.n1);
+            setTxtQ('.num.n2', data.atributos.n2);
+            setTxtQ('.num.n3', data.atributos.n3);
+            setTxtQ('.num.n4', data.atributos.n4);
+            setTxtQ('.num.n5', data.atributos.n5);
+            setTxtQ('.num.n6', data.atributos.n6);
+        }
+    }
+
+    // Helpers
+    function setVal(id, valor) { const el = document.getElementById(id); if(el) el.value = valor !== undefined ? valor : ''; }
+    function setTxt(id, valor) { const el = document.getElementById(id); if(el) el.innerText = valor !== undefined ? valor : ''; }
+    function setTxtQ(selector, valor) { const el = document.querySelector(selector); if(el) el.innerText = valor !== undefined ? valor : ''; }
+
+    /* =================================================================
+       SISTEMA DE LOGIN / TOASTS / ALERTAS
+       ================================================================= */
+    function exibirAvisoTemporario(mensagem) {
+        const existente = document.querySelector('.custom-toast-warning');
+        if (existente) existente.remove();
+
+        const toast = document.createElement('div');
+        toast.className = 'custom-toast-warning';
+        
+        const progress = document.createElement('div');
+        progress.className = 'toast-progress';
+        
+        const content = document.createElement('div');
+        content.className = 'toast-content';
+        
+        const textoFormatado = mensagem.split('\n').join('<br>');
+        content.innerHTML = '<strong style="color:#e0aaff; display:block; margin-bottom:4px; font-size:11px; letter-spacing:1px;">SISTEMA</strong>' + textoFormatado;
+
+        toast.appendChild(progress);
+        toast.appendChild(content);
+        document.body.appendChild(toast);
+
+        setTimeout(() => { progress.style.width = '0%'; }, 50);
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.style.animation = 'toastFadeOut 0.5s ease-out forwards';
+                setTimeout(() => toast.remove(), 450);
+            }
+        }, 5000);
+    }
+
+    // Substitui o alert padrão
+    window.alert = function(msg) { exibirAvisoTemporario(msg); };
 
     function tentarLogin() {
         const nome = document.getElementById('login-nome').value;
         const senha = document.getElementById('login-senha').value;
+
+        // --- CORREÇÃO: LÓGICA DO MESTRE ---
+        // Abre nova aba e RESETA o formulário atual sem esconder o modal
+        if(nome.toLowerCase() === 'mestre' && senha === 'admin') { 
+            window.open('mestre.html', '_blank');
+            
+            // Limpa os campos para segurança
+            document.getElementById('login-nome').value = '';
+            document.getElementById('login-senha').value = '';
+            
+            exibirAvisoTemporario("Painel do Mestre aberto em nova aba.");
+            return; // Retorna aqui para não logar na aba atual
+        }
+
+        // --- LOGIN DO JOGADOR ---
         if(nome && senha) {
-            carregarDadosIniciais(nome, senha);
+            if(typeof carregarDadosIniciais === 'function') {
+                carregarDadosIniciais(nome, senha);
+            } else {
+                alert("Erro: Scripts JS não carregados corretamente.");
+            }
         } else {
             exibirAvisoTemporario("Preencha todos os campos!");
         }

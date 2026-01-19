@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel do Mestre</title>
+  <link rel="stylesheet" href="CSS/style.css" />
+  <style>
+    /* Estilos específicos do Painel do Mestre */
+    body { background-color: #0a0a0a; color: white; font-family: Arial, sans-serif; }
+    
+    .grid-personagens {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+        padding: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .card-personagem {
+        background: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .card-personagem:hover {
+        transform: translateY(-5px);
+        border-color: #9c27b0;
+        box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3);
+    }
+
+    .card-img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin-bottom: 15px;
+        border: 2px solid #555;
+    }
+
+    .card-name {
+        font-weight: bold;
+        color: #e0aaff;
+        font-size: 1.1em;
+    }
+
+    /* Modal de Visualização Rápida (Opcional) */
+    #iframe-container {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.9);
+        z-index: 5000;
+        flex-direction: column;
+    }
+    #iframe-close {
+        background: #9c27b0; color: white; border: none;
+        padding: 10px; cursor: pointer; text-align: center; font-weight: bold;
+    }
+    iframe { width: 100%; height: 100%; border: none; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav class="navbar">
+      <div class="nav-links">
+        <a href="#" onclick="alert('Você já está no painel.')">Personagem</a>
+        <a href="#" class="active">Todos os Personagens</a>
+      </div>
+      <img src="img/perfil.png" alt="perfil" class="perfil-img" />
+    </nav>
+  </header>
+
+  <h2 style="text-align:center; margin-top:40px; color:#9c27b0;">FICHAS DISPONÍVEIS</h2>
+
+  <div id="lista-personagens" class="grid-personagens">
+    <p style="color:#666;">Carregando fichas...</p>
+  </div>
+
+  <script>
+    // URL da API
+    const API_URL = 'http://localhost:3000/api'; 
+
+    // Ao carregar a página
+    window.onload = async function() {
+        try {
+            const response = await fetch(`${API_URL}/lista-personagens`);
+            const nomes = await response.json();
+            
+            const container = document.getElementById('lista-personagens');
+            container.innerHTML = ''; // Limpa o loading
+
+            if(nomes.length === 0) {
+                container.innerHTML = '<p>Nenhum personagem encontrado.</p>';
+                return;
+            }
+
+            nomes.forEach(nome => {
+                const card = document.createElement('div');
+                card.className = 'card-personagem';
+                
+                // HTML do Card
+                card.innerHTML = `
+                    <img src="img/personagem.png" class="card-img" alt="Icon">
+                    <div class="card-name">${nome}</div>
+                `;
+
+                // Clique no card: Abre a ficha normal carregando esse personagem
+                // Nota: Isso requer que o index.html saiba ler parâmetros de URL ou use localStorage
+                card.onclick = () => abrirFichaDoJogador(nome);
+
+                container.appendChild(card);
+            });
+
+        } catch (error) {
+            console.error(error);
+            alert('Erro ao conectar com o backend. O server.js está rodando?');
+        }
+    };
+
+    function abrirFichaDoJogador(nome) {
+        // Armazena no LocalStorage para o index.html ler (truque rápido)
+        // Ou abre uma nova janela passando o nome
+        localStorage.setItem('mestreLoadTarget', nome);
+        
+        // Abre o index.html original em nova aba (ou na mesma)
+        // Como o index precisa de SENHA, vamos precisar de um "bypass" ou o mestre ver apenas modo leitura.
+        // Para simplificar, vou assumir que o mestre sabe a senha ou vamos burlar o login:
+        window.open(`index.html?masterView=${nome}`, '_blank');
+    }
+  </script>
+</body>
+</html>

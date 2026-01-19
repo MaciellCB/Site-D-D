@@ -1,7 +1,7 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Magias",
+  "activeTab": "Inventário",
   "spellDCConfig": {
     "selectedAttr": "sab",
     "extraMod": 0,
@@ -9,6 +9,33 @@
   },
   "dtMagias": 10,
   "inventory": [
+    {
+      "id": 1768849242876,
+      "name": "Machado de Batalha",
+      "description": "<p>Uma cabeça de aço pesado em um cabo de carvalho envernizado. A lâmina em forma de meia-lua possui um fio capaz de partir escudos de madeira com facilidade.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>",
+      "expanded": false,
+      "equip": false,
+      "type": "Arma",
+      "isEquipable": true,
+      "proficiency": "Armas Marciais",
+      "defense": "",
+      "tipoItem": "",
+      "minStrength": "",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Versátil",
+      "crit": "20",
+      "multiplicador": "2",
+      "alcance": "1.5m",
+      "attunement": "Não",
+      "damage": "1d8",
+      "damage2Hands": "1d10",
+      "useTwoHands": false,
+      "damageTypes": [
+        "Cortante"
+      ],
+      "moreDmgList": [],
+      "caracteristicas": []
+    },
     {
       "id": 1768763873026,
       "name": "Espada Curta",
@@ -237,9 +264,97 @@
       "type": "Geral",
       "description": "<p>Capa de couro grosso e 100 páginas de pergaminho de alta qualidade, prontas para receber a tinta mágica dos magos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 15 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>",
       "quantity": 1
+    },
+    {
+      "id": "i_ferramentas_artesao",
+      "name": "Ferramentas de Artesão",
+      "category": "Conjuntos",
+      "subcategory": "Ferramentas",
+      "type": "Geral",
+      "description": "<p>Ferramentas especializadas (Carpinteiro, Ferreiro, Alquimista, etc.). Sem elas, o trabalho é impossível.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> Varia (1-10 po)</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2-5 kg</li></ul>"
+    },
+    {
+      "id": 1768849163403,
+      "name": "Carta de apresentação da guilda",
+      "type": "Geral",
+      "description": "Item de Antecedente",
+      "expanded": false,
+      "equip": false,
+      "weight": 0,
+      "quantity": 1
+    },
+    {
+      "id": 1768849126184,
+      "name": "Roupas de viagem",
+      "type": "Geral",
+      "description": "Item de Antecedente",
+      "expanded": false,
+      "equip": false,
+      "weight": 0,
+      "quantity": 1
     }
   ],
   "abilities": [
+    {
+      "id": 1768851040546,
+      "title": "Revelação Celestial",
+      "description": "No <b>3º nível</b>, escolha uma transformação mística (Alma Radiante, Consumo Radiante ou Sudário Necrótico). Você pode ativá-la como uma <b>ação bônus</b> para ganhar benefícios (como voo ou dano extra) por 1 minuto. Uma vez usada, requer um <b>descanso longo</b> para recuperar.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Aasimar"
+    },
+    {
+      "id": 1768851089397,
+      "title": "Portador da Luz",
+      "description": "Você conhece o truque <i>luz</i>. O Carisma é seu atributo de conjuração para ele.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Aasimar"
+    },
+    {
+      "id": 1768851085332,
+      "title": "Mãos Curativas",
+      "description": "Como uma <b>ação</b>, você pode tocar uma criatura e curá-la em um número de d4s igual ao seu <b>Bônus de Proficiência</b>. Você recupera o uso desta habilidade após um <b>descanso longo</b>.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Aasimar"
+    },
+    {
+      "id": 1768851038121,
+      "title": "Visão no Escuro",
+      "description": "Você enxerga na meia-luz a até <b>18 metros</b> como se fosse luz plena, e na escuridão como se fosse meia-luz. Você discerne cores na escuridão apenas como tons de cinza.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Aasimar"
+    },
+    {
+      "id": 1768851099637,
+      "title": "Resistência Celestial",
+      "description": "Você possui resistência a dano <b>necrótico</b> e <b>radiante</b>.",
+      "expanded": false,
+      "active": false,
+      "category": "Raça",
+      "class": "Raça",
+      "subclass": "Aasimar"
+    },
+    {
+      "id": 1768849111906,
+      "title": "Membro de Guilda",
+      "description": "A guilda oferece proteção legal, acesso a políticos e suporte material, desde que você pague as mensalidades de 5 po. Crimes contra você são vistos como crimes contra a guilda.",
+      "expanded": false,
+      "active": true,
+      "category": "Antecedente",
+      "class": "",
+      "subclass": "Artesão de Guilda"
+    },
     {
       "id": 1768845706622,
       "title": "[Nível 1] Bênção do Senhor das Trevas",
@@ -331,76 +446,6 @@
       "subclass": ""
     },
     {
-      "id": 1768764006037,
-      "title": "Abrigo dos Fiéis",
-      "description": "Você impõe respeito àqueles que compartilham sua fé. Você e seus companheiros podem receber cura e caridade (hospedagem e comida modesta) em templos de sua divindade.",
-      "expanded": false,
-      "active": true,
-      "category": "Antecedente",
-      "class": "",
-      "subclass": "Acólito"
-    },
-    {
-      "id": 1768764088920,
-      "title": "Design Especializado",
-      "description": "Você ganha proficiência com duas ferramentas de artesão à sua escolha.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Autogonomo"
-    },
-    {
-      "id": 1768764042048,
-      "title": "Descanso do Sentinela",
-      "description": "Você não precisa dormir. Você termina um descanso longo em <b>6 horas</b> se permanecer inativo e consciente.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Autogonomo"
-    },
-    {
-      "id": 1768764037084,
-      "title": "Natureza Mecânica",
-      "description": "Você tem resistência a dano de <b>veneno</b> e imunidade a doenças. Você tem vantagem em salvaguardas contra ser paralisado ou envenenado. Você não precisa comer, beber ou respirar.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Autogonomo"
-    },
-    {
-      "id": 1768764011235,
-      "title": "Máquina de Cura",
-      "description": "Se o truque <i>reparar</i> for usado em você, você pode gastar um Dado de Vida para se curar. Você também se beneficia de magias de cura normais (como <i>curar ferimentos</i>).",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Autogonomo"
-    },
-    {
-      "id": 1768764005133,
-      "title": "Feito para o Sucesso",
-      "description": "Você pode adicionar <b>1d4</b> a uma jogada de ataque, teste de atributo ou salvaguarda após ver o resultado do d20, mas antes do efeito ocorrer. Você pode usar isso um número de vezes igual ao seu <b>Bônus de Proficiência</b> por descanso longo.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Autogonomo"
-    },
-    {
-      "id": 1768764042173,
-      "title": "Invólucro Blindado",
-      "description": "Seu corpo é reforçado. Quando não estiver usando armadura, sua CA é <b>13 + seu modificador de Destreza</b>.",
-      "expanded": false,
-      "active": false,
-      "category": "Raça",
-      "class": "Raça",
-      "subclass": "Autogonomo"
-    },
-    {
       "id": 1768763890799,
       "title": "[Nível 1] Artes Marciais",
       "description": "<p>Sua prática de artes marciais lhe dá domínio sobre estilos de combate que usam ataques desarmados e armas de monge (espadas curtas e qualquer arma simples corpo a corpo que não tenha as propriedades duas mãos ou pesada).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Atributo:</strong> Você pode usar Destreza em vez de Força para as jogadas de ataque e dano dos seus ataques desarmados e armas de monge.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> Você pode rolar um d4 no lugar do dano normal do seu ataque desarmado ou arma de monge. Esse dado muda à medida que você ganha níveis de monge (d6 no 5º, d8 no 11º, d10 no 17º).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque Extra:</strong> Quando você usa a ação Atacar com um ataque desarmado ou uma arma de monge no seu turno, você pode realizar um ataque desarmado como uma <strong>Ação Bônus</strong>.</li></ul>",
@@ -432,7 +477,7 @@
     "historia": ""
   },
   "sanidade": {
-    "estresse": 0,
+    "estresse": 1,
     "vazio": 0
   },
   "spells": [],
@@ -442,11 +487,11 @@
     "Atletismo": {
       "atributo": "FOR",
       "treinado": false,
-      "outros": 0
+      "outros": 2
     },
     "Acrobacia": {
       "atributo": "DEX",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "Furtividade": {
@@ -561,7 +606,7 @@
   },
   "atributos": {
     "n1": 10,
-    "n2": 20,
+    "n2": 23,
     "n3": 10,
     "n4": 10,
     "n5": 20,
@@ -570,7 +615,7 @@
   "niveisClasses": {
     "artifice": 1,
     "barbaro": 0,
-    "bardo": 0,
+    "bardo": 1,
     "blood hunter": 0,
     "bruxo": 1,
     "clerigo": 0,
@@ -584,14 +629,14 @@
     "patrulheiro": 0
   },
   "xp": "0",
-  "inspiracao": 1,
+  "inspiracao": 3,
   "vidaDadosSalvos": {
     "v1": 6,
     "v2": 6,
     "v3": 6
   },
   "marco": 0,
-  "vidaAtual": 0,
+  "vidaAtual": 14,
   "vidaTempAtual": 35,
   "danoNecroAtual": 30,
   "metros": 9,
@@ -635,7 +680,9 @@
     "Dardos",
     "Fundas",
     "Bastões",
-    "Bestas leves"
+    "Bestas leves",
+    "Ferramentas de Cartógrafo",
+    "Bateria"
   ],
   "idiomasList": [
     "Comum",
@@ -644,7 +691,8 @@
     "Aarakocra",
     "Auran",
     "Gnômico",
-    "Dracônico"
+    "Dracônico",
+    "Dialeto Subterrâneo"
   ],
   "spellSlots": {
     "1": {
@@ -737,19 +785,19 @@
     "class-Ladino": false,
     "class-Monge": false
   },
-  "antecedente": "Acólito",
-  "personagem": "123w",
-  "jogador": "321w",
-  "raca": "Autogonomo",
+  "antecedente": "Artesão de Guilda",
+  "personagem": "w",
+  "jogador": "eu mesmo",
+  "raca": "Aasimar",
   "customResources": [],
   "deslocamentoVoo": 0,
   "subRaca": "",
-  "racaTipo": "Constructo",
-  "racaTamanho": "Pequeno",
+  "racaTipo": "Humanoide",
+  "racaTamanho": "Médio ou Pequeno",
   "money": {
     "pc": 0,
     "pp": 0,
-    "po": 75,
+    "po": 90,
     "pl": 0,
     "pd": 4
   },
@@ -770,6 +818,7 @@
   "ordemClasses": [
     "mago",
     "artifice",
-    "bruxo"
+    "bruxo",
+    "bardo"
   ]
 }
