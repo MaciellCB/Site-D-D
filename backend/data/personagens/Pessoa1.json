@@ -192,9 +192,103 @@
       "equip": false,
       "weight": 0,
       "quantity": 1
+    },
+    {
+      "id": 1768845701256,
+      "name": "Cajado",
+      "category": "Armas",
+      "subcategory": "Corpo-a-corpo",
+      "type": "Arma",
+      "damage": "1d4",
+      "damage2Hands": "1d6",
+      "useTwoHands": false,
+      "damageType": "Contundente",
+      "proficiency": "Armas Simples",
+      "tipoArma": "Corpo a Corpo",
+      "empunhadura": "Versátil",
+      "caracteristicas": [],
+      "description": "<p>Um bastão de madeira polida, carvalho ou nogueira. Frequentemente usado como apoio para caminhada ou foco mágico, mas mortal nas mãos certas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768845738461,
+      "name": "Bolsa de Componentes",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>Uma bolsa de couro com múltiplos compartimentos estanques. Essencial para conjuradores organizarem seus materiais esotéricos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768845717175,
+      "name": "Kit de Erudito",
+      "category": "Conjuntos",
+      "subcategory": "Kits",
+      "type": "Geral",
+      "description": "<p>Ferramentas do conhecimento: livros de referência, pergaminhos, tinta, penas, areia para secagem e uma pequena faca para apontar penas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 15 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>",
+      "quantity": 1
+    },
+    {
+      "id": 1768845691176,
+      "name": "Grimório",
+      "category": "Utensílios",
+      "subcategory": "Utensílios gerais",
+      "type": "Geral",
+      "description": "<p>Capa de couro grosso e 100 páginas de pergaminho de alta qualidade, prontas para receber a tinta mágica dos magos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 15 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1,5 kg</li></ul>",
+      "quantity": 1
     }
   ],
   "abilities": [
+    {
+      "id": 1768845706622,
+      "title": "[Nível 1] Bênção do Senhor das Trevas",
+      "description": "<p><strong>Duração:</strong> Até o próximo descanso longo</p><p>Quando você reduz uma criatura hostil a 0 PV, você ganha vigor roubado dela.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Efeito:</strong> Você ganha Pontos de Vida Temporários iguais ao seu Modificador de Carisma + seu nível de Bruxo (mínimo 1).</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Subclasse",
+      "class": "Bruxo",
+      "subclass": "O Corruptor"
+    },
+    {
+      "id": 1768845762992,
+      "title": "[Nível 1] Feitiços de O Corruptor",
+      "description": "<p>Magias expandidas do patrono:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 1º:</strong> Mãos em Chamas, Comando</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 2º:</strong> Cegueira/Surdez, Raio Incandescente</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 3º:</strong> Bola de Fogo, Nuvem Fétida</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 4º:</strong> Escudo de Fogo, Muralha de Fogo</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 5º:</strong> Golpe Flamejante, Consagrar (Hallow)</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Subclasse",
+      "class": "Bruxo",
+      "subclass": "O Corruptor"
+    },
+    {
+      "id": 1768845762834,
+      "title": "[Nível 1] Patrono Transcendental (Subclasse)",
+      "description": "<p>No 1º nível, você firma um pacto com um ser transcendental. Sua escolha concede características no 1º nível e novamente no 6º, 10º e 14º nível.</p>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bruxo",
+      "subclass": ""
+    },
+    {
+      "id": 1768845743914,
+      "title": "[Nível 1] Magia do Pacto",
+      "description": "<p>Você extrai magia de um pacto com uma entidade extraplanar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Espaços de Magia:</strong> Diferente de outras classes, todos os seus espaços de magia são do <strong>mesmo nível</strong> (o nível mais alto disponível na tabela de Bruxo, até o 5º círculo).</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Recuperação:</strong> Você recupera <strong>todos</strong> os seus espaços de magia gastos ao terminar um <strong>Descanso Curto</strong> ou Longo.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Atributo de Conjuração:</strong> Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ CD de Resistência:</strong> 8 + Bônus de Proficiência + Modificador de Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Ataque Mágico:</strong> Bônus de Proficiência + Modificador de Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Foco:</strong> Foco Arcano.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Bruxo",
+      "subclass": ""
+    },
+    {
+      "id": 1768845713470,
+      "title": "[Nível 1] Recuperação Arcana",
+      "description": "<p><strong>Ação:</strong> Durante Descanso Curto<br><strong>Duração:</strong> Instantânea</p><p>Você aprendeu a recuperar energia mágica estudando seu grimório. Uma vez por dia, ao terminar um <strong>Descanso Curto</strong>, você pode escolher espaços de magia gastos para recuperar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Valor:</strong> A soma dos níveis dos espaços deve ser igual ou menor que metade do seu nível de mago (arredondado para cima).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Limite:</strong> Nenhum dos espaços pode ser de 6º nível ou superior.</li></ul>",
+      "expanded": false,
+      "active": true,
+      "category": "Classe",
+      "class": "Mago",
+      "subclass": ""
+    },
     {
       "id": 1768764085560,
       "title": "[Nível 1] Conjuração",
@@ -366,7 +460,7 @@
     },
     "Arcanismo": {
       "atributo": "INT",
-      "treinado": false,
+      "treinado": true,
       "outros": 0
     },
     "História": {
@@ -475,24 +569,25 @@
   "niveisClasses": {
     "artifice": 1,
     "barbaro": 0,
-    "bardo": 1,
+    "bardo": 0,
     "blood hunter": 0,
-    "bruxo": 0,
+    "bruxo": 1,
     "clerigo": 0,
-    "monge": 1,
+    "monge": 0,
     "druida": 0,
     "feiticeiro": 0,
     "guerreiro": 0,
     "ladino": 0,
-    "mago": 0,
+    "mago": 1,
     "paladino": 0,
     "patrulheiro": 0
   },
   "xp": "0",
   "inspiracao": 1,
   "vidaDadosSalvos": {
-    "v1": 8,
-    "v2": 3
+    "v1": 6,
+    "v2": 6,
+    "v3": 6
   },
   "marco": 0,
   "vidaAtual": 0,
@@ -534,7 +629,12 @@
     "Escudos",
     "Armas de fogo",
     "Ferramentas de Ladrão",
-    "Ferramentas de Funileiro"
+    "Ferramentas de Funileiro",
+    "Adagas",
+    "Dardos",
+    "Fundas",
+    "Bastões",
+    "Bestas leves"
   ],
   "idiomasList": [
     "Comum",
@@ -649,9 +749,9 @@
     "pl": 0,
     "pd": 4
   },
-  "hitDie": "d8",
+  "hitDie": "d6",
   "subclasses": {
-    "bruxo": "O Morto-Vivo",
+    "bruxo": "O Corruptor",
     "clerigo": "Domínio da Solidariedade",
     "guerreiro": "Arqueiro Arcano"
   },
@@ -662,5 +762,10 @@
     "Constituição": {
       "treinado": true
     }
-  }
+  },
+  "ordemClasses": [
+    "mago",
+    "artifice",
+    "bruxo"
+  ]
 }

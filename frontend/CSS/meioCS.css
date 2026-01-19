@@ -658,3 +658,71 @@ input[type=number] {
   overflow: visible;
   margin-bottom: 8px;
 }
+
+
+
+
+/* =============================================================
+   ESTILOS DAS MOEDAS (CENTRO)
+   ============================================================= */
+.coins-wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+    padding: 10px 5px;
+    margin: 10px 0;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    border: 1px solid #333;
+}
+
+.coin-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+}
+
+.coin-label {
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    cursor: help; /* Indica que tem tooltip */
+}
+
+/* Cores específicas para as moedas */
+.label-pc { color: #cd7f32; } /* Cobre */
+.label-pp { color: #c0c0c0; } /* Prata */
+.label-po { color: #ffd700; } /* Ouro */
+.label-pl { color: #e5e4e2; } /* Platina */
+.label-pd { color: #a020f0; } /* Dracônica (Roxo) */
+
+.coin-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #444;
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+    padding: 4px 0;
+    transition: 0.2s;
+}
+
+.coin-input:focus {
+    outline: none;
+    border-bottom-color: #9c27b0;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Remove setas do input number */
+.coin-input::-webkit-outer-spin-button,
+.coin-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.coin-input {
+    -moz-appearance: textfield;
+}

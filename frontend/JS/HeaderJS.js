@@ -1,12 +1,30 @@
 /* =============================================================
-   HEADER: ANTECEDENTES, CLASSES E RAÇA
-   (Suporte Completo a Automação de Perícias, Idiomas e Variantes)
+   FUNÇÃO AUXILIAR: GARANTIR ORDEM (VERSÃO SEGURA)
+   Cria uma memória de ordem se não existir
 ============================================================= */
+function syncOrdemClasses() {
+    // 1. SEGURANÇA: Se o state ainda não carregou, não faz nada
+    if (typeof state === 'undefined' || !state) return;
+    
+    // 2. Se não tem classes, não precisa ordenar
+    if (!state.niveisClasses) return;
 
-/* =============================================================
-   1. CONSTANTES E LISTAS DE DADOS
-============================================================= */
+    // 3. Inicializa a array se não existir
+    if (!state.ordemClasses) state.ordemClasses = [];
 
+    // 4. Limpeza: Remove classes que foram apagadas (nível 0 ou null) da lista de ordem
+    state.ordemClasses = state.ordemClasses.filter(key => 
+        state.niveisClasses[key] && parseInt(state.niveisClasses[key]) > 0
+    );
+
+    // 5. Adição: Adiciona ao FINAL classes que existem no nível mas não na ordem
+    Object.keys(state.niveisClasses).forEach(key => {
+        const nivel = parseInt(state.niveisClasses[key]);
+        if (nivel > 0 && !state.ordemClasses.includes(key)) {
+            state.ordemClasses.push(key);
+        }
+    });
+}
 // Tipos de Criatura e Tamanhos
 const CREATURE_TYPES = ['Humanoide', 'Construto', 'Fada', 'Dragão', 'Monstruosidade', 'Morto-vivo', 'Celestial', 'Corruptor', 'Elemental', 'Besta', 'Planta', 'Gigante', 'Limo', 'Aberração', 'Gosma'];
 const CREATURE_SIZES = ['Minúsculo', 'Pequeno', 'Médio', 'Grande', 'Enorme', 'Imenso'];
@@ -359,11 +377,17 @@ function atualizarHeader() {
     if (typeof atualizarTextoClassesHeader === 'function') atualizarTextoClassesHeader();
 }
 
+/* =============================================================
+   SUBSTITUA NO HEADERJS.js
+============================================================= */
 function atualizarTextoClassesHeader() {
     const el = document.getElementById('input-classesHeader');
     if (!el) return;
 
-    if (!state.niveisClasses || Object.keys(state.niveisClasses).length === 0) {
+    // Garante que a lista de ordem esteja correta antes de exibir
+    syncOrdemClasses();
+
+    if (!state.ordemClasses || state.ordemClasses.length === 0) {
         el.value = "";
         autoResize(el);
         return;
@@ -377,24 +401,24 @@ function atualizarTextoClassesHeader() {
         'paladino': 'Paladino', 'patrulheiro': 'Patrulheiro'
     };
 
-    let partes = [];
-    Object.keys(state.niveisClasses).forEach(key => {
+    // AQUI ESTÁ O SEGREDO: Usamos .map na lista de ORDEM, não Object.keys
+    const partes = state.ordemClasses.map(key => {
         const nivel = parseInt(state.niveisClasses[key]);
-        if (!isNaN(nivel) && nivel > 0) {
-            let nomeDisplay = mapNomes[key] || key.charAt(0).toUpperCase() + key.slice(1);
+        let nomeDisplay = mapNomes[key] || key.charAt(0).toUpperCase() + key.slice(1);
 
-            if (state.subclasses && state.subclasses[key]) {
-                nomeDisplay += ` (${state.subclasses[key]})`;
-            }
-            else if (state.abilities && state.abilities.length > 0) {
-                const norm = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-                const habilidadeSubclasse = state.abilities.find(a =>
-                    a.category === 'Subclasse' && norm(a.class) === norm(nomeDisplay)
-                );
-                if (habilidadeSubclasse) nomeDisplay += ` [${habilidadeSubclasse.subclass}]`;
-            }
-            partes.push(`${nomeDisplay} ${nivel}`);
+        // Adiciona Subclasse se houver
+        if (state.subclasses && state.subclasses[key]) {
+            nomeDisplay += ` (${state.subclasses[key]})`;
         }
+        else if (state.abilities && state.abilities.length > 0) {
+            const norm = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+            const habilidadeSubclasse = state.abilities.find(a =>
+                a.category === 'Subclasse' && norm(a.class) === norm(nomeDisplay)
+            );
+            if (habilidadeSubclasse) nomeDisplay += ` [${habilidadeSubclasse.subclass}]`;
+        }
+
+        return `${nomeDisplay} ${nivel}`;
     });
 
     const novoTexto = partes.join(' / ');
@@ -1371,9 +1395,19 @@ function aplicarClasseNaFicha(cls, subCls) {
     }
 
     // --- APLICAÇÃO ---
+    // ... (código anterior da função aplicarClasseNaFicha) ...
+
+    // --- APLICAÇÃO ---
     state.niveisClasses[classKey] = newLevelInClass;
     
+    // NOVO: Adiciona à ordem se for o primeiro nível dessa classe
+    if (!state.ordemClasses) state.ordemClasses = [];
+    if (!state.ordemClasses.includes(classKey)) {
+        state.ordemClasses.push(classKey);
+    }
+
     if (isFirstLevelCharacter) {
+    // ... (resto do código igual) ...
         state.hitDie = `d${cls.hit_die}`;
         // Define vida inicial cheia se for nível 1 total
         if(!state.vidaDadosSalvos) state.vidaDadosSalvos = {};

@@ -2,10 +2,6 @@
    LÓGICA DO CENTRO (PERÍCIAS, DINHEIRO E SANIDADE)
 ============================================================= */
 
-/* =============================================================
-   LÓGICA DO CENTRO (PERÍCIAS, DINHEIRO E SANIDADE)
-============================================================= */
-
 document.addEventListener("DOMContentLoaded", () => {
     const listaPericias = document.querySelector(".pericias");
     const containerCentro = document.querySelector('.lado-centro');
@@ -101,13 +97,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 const expressao = `1d20 ${sinal} ${bonusTotal}`;
 
                 // Chama as funções globais definidas no DireitaJS.js
+                // REMOVIDO O AVISO (ALERT) DO ELSE
                 if (typeof rollDiceExpression === 'function' && typeof showDiceResults === 'function') {
                     const resultado = rollDiceExpression(expressao);
                     showDiceResults(`Perícia: ${nome}`, resultado);
-                } else {
-                    console.error("Funções de dado não encontradas. Verifique se o arquivo da Direita está carregado.");
-                    alert(`Resultado: ${Math.floor(Math.random() * 20) + 1 + bonusTotal}`);
-                }
+                } 
             });
             // ------------------------------------------
 

@@ -703,14 +703,26 @@ if (btnVida) {
     };
 }
 
+/* =============================================================
+   SUBSTITUA NO ESQUERDAJS.js (Para sincronizar com o Header)
+============================================================= */
 function renderizarDadosVida() {
     const lista = document.getElementById('classesLista');
     if (!lista) return;
     lista.innerHTML = '';
+    
+    // Garante sincronia antes de renderizar
+    if (typeof syncOrdemClasses === 'function') syncOrdemClasses();
+    // Fallback se a função não estiver no escopo global
+    else if (state.niveisClasses && !state.ordemClasses) state.ordemClasses = Object.keys(state.niveisClasses);
+
     let counter = 1;
 
-    Object.entries(state.niveisClasses).forEach(([key, nivel]) => {
+    // Usa a ordemClasses para iterar
+    state.ordemClasses.forEach(key => {
+        const nivel = parseInt(state.niveisClasses[key]) || 0;
         const classeRef = classesPadrao.find(c => c.key === key);
+        
         if (!classeRef || nivel <= 0) return;
 
         for (let i = 1; i <= nivel; i++) {
@@ -741,7 +753,6 @@ function renderizarDadosVida() {
     });
     atualizarVidaCalculada();
 }
-
 window.rolarDadoVida = (id, dado) => {
     const faces = parseInt(dado.replace('d', ''));
     state.vidaDadosSalvos[id] = Math.floor(Math.random() * faces) + 1;
