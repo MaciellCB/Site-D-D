@@ -1,7 +1,7 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
-  "activeTab": "Habilidades",
+  "activeTab": "Magias",
   "spellDCConfig": {
     "selectedAttr": "sab",
     "extraMod": 0,
@@ -25,7 +25,8 @@
         "Leve"
       ],
       "description": "<p>Uma lâmina reta de tamanho médio, versátil o suficiente para estocadas ou cortes rápidos. Comum como arma secundária.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 4 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 1 kg</li></ul>",
-      "quantity": 1
+      "quantity": 1,
+      "expanded": true
     },
     {
       "id": 1768763809374,
@@ -650,6 +651,7 @@
       "used": 0,
       "status": [
         false,
+        false,
         false
       ]
     },
@@ -687,7 +689,9 @@
     },
     "pact": {
       "used": 0,
-      "status": []
+      "status": [
+        false
+      ]
     },
     "ki": {
       "used": 0,

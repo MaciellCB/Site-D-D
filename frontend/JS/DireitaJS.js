@@ -3882,11 +3882,10 @@ function initRichEditorEvents(idContainer) {
 }
 
 /* ==========================================================================
-   SISTEMA DE DADOS V5 (FINAL: TOOLTIPS COLORIDOS + CRÍTICO NO DANO)
-   Cole isto no final do arquivo JS/DireitaJS.js
+   SISTEMA DE DADOS V5 (FINAL: BRILHO VERMELHO NA FALHA APENAS NO ACERTO)
    ========================================================================== */
 
-/* 1. CSS DA JANELA DE RESULTADOS (COM TOOLTIP HTML) */
+/* 1. CSS DA JANELA DE RESULTADOS (COM TOOLTIP E BRILHOS) */
 const diceStyles = document.createElement('style');
 diceStyles.textContent = `
     #dice-results-container {
@@ -3907,7 +3906,7 @@ diceStyles.textContent = `
     .dice-row {
         display: flex; justify-content: space-between; align-items: center;
         margin-bottom: 8px; padding: 4px 0;
-        position: relative; /* Para posicionar o tooltip */
+        position: relative;
     }
     
     .dice-label { font-size: 13px; color: #bbb; font-weight: 600; }
@@ -3922,7 +3921,7 @@ diceStyles.textContent = `
         cursor: help; 
     }
     
-    /* TOOLTIP HTML (Permite cores dentro) */
+    /* TOOLTIP HTML */
     .dice-tooltip {
         visibility: hidden; opacity: 0;
         position: absolute; bottom: 100%; right: 0;
@@ -3934,19 +3933,24 @@ diceStyles.textContent = `
         pointer-events: none;
     }
     
-    /* Mostra o tooltip ao passar o mouse no valor */
     .dice-value-wrapper:hover .dice-tooltip {
         visibility: visible; opacity: 1;
     }
 
-    /* ESTILO PARA DADOS INDIVIDUAIS NO TOOLTIP */
+    /* --- ESTILOS DE DESTAQUE (TEXTO PEQUENO) --- */
     .dice-roll-max { color: #e040fb !important; font-weight: bold; text-shadow: 0 0 5px #e040fb; } 
-    .dice-roll-min { color: #f44336 !important; font-weight: bold; }
+    .dice-roll-min { color: #ff3333 !important; font-weight: bold; text-shadow: 0 0 5px #ff3333; }
     
-    /* TOTAL ROXO BRILHANTE SE FOR CRÍTICO (NO VALOR GRANDE) */
+    /* --- BRILHO ROXO (CRÍTICO) NO RESULTADO GRANDE --- */
     .crit-total { 
         color: #e040fb !important; 
         text-shadow: 0 0 10px rgba(224, 64, 251, 0.8), 0 0 20px rgba(224, 64, 251, 0.4);
+    }
+
+    /* --- BRILHO VERMELHO (FALHA) NO RESULTADO GRANDE (NOVO) --- */
+    .fumble-total {
+        color: #ff3333 !important;
+        text-shadow: 0 0 10px rgba(255, 51, 51, 0.8), 0 0 20px rgba(255, 51, 51, 0.4);
     }
 `;
 document.head.appendChild(diceStyles);
@@ -3954,6 +3958,7 @@ document.head.appendChild(diceStyles);
 
 /* 2. FUNÇÕES DE CÁLCULO E EXIBIÇÃO */
 
+// Usada principalmente para rolar DANO
 function rollDiceExpression(expression) {
     const cleanExpr = expression.toLowerCase().trim();
     const regex = /^(\d*)d(\d+)\s*([+-]?\s*\d+)?$/i;
@@ -3970,14 +3975,13 @@ function rollDiceExpression(expression) {
             const roll = Math.floor(Math.random() * sides) + 1;
             total += roll;
             
-            // Lógica de destaque visual
+            // Destaque apenas para CRÍTICO no dano (Roxo)
+            // Removemos o destaque vermelho para o número 1 no dano conforme solicitado
             if (roll === sides) { 
                 isMaxRoll = true; 
                 parts.push(`<span class="dice-roll-max">${roll}</span>`);
-            } else if (roll === 1 && sides > 1) {
-                parts.push(`<span class="dice-roll-min">${roll}</span>`);
             } else {
-                parts.push(roll);
+                parts.push(roll); // 1 agora fica normal no dano
             }
         }
 
@@ -3992,14 +3996,14 @@ function rollDiceExpression(expression) {
         else return { total: 0, text: "Erro", detail: "Erro" };
     }
 
-    // Monta texto HTML: "15 + 3 + 2"
     let detailText = parts.join(' + ').replace(/\+ \+/g, '+ ').replace(/\+ -/g, '- ');
 
     return { 
         total: total, 
         text: total.toString(), 
-        detail: detailText, // HTML com spans
-        isCrit: isMaxRoll 
+        detail: detailText, 
+        isCrit: isMaxRoll,
+        isFumble: false // Dano nunca gera falha crítica visual no total
     };
 }
 
@@ -4013,9 +4017,12 @@ function showCombatResults(title, attackResult, damageResult) {
     
     let html = `<div class="dice-header">${title}</div>`;
 
-    // ACERTO
+    // --- BLOCO DE ACERTO (Permite Vermelho e Roxo) ---
     if (attackResult) {
-        const totalClass = attackResult.isCrit ? 'crit-total' : '';
+        let totalClass = '';
+        if (attackResult.isCrit) totalClass = 'crit-total';       // 20 Natural = Roxo
+        else if (attackResult.isFumble) totalClass = 'fumble-total'; // 1 Natural = Vermelho
+
         html += `
             <div class="dice-row">
                 <span class="dice-label">ACERTO</span>
@@ -4028,10 +4035,11 @@ function showCombatResults(title, attackResult, damageResult) {
             </div>`;
     }
 
-    // DANO
+    // --- BLOCO DE DANO (Apenas Roxo, nunca Vermelho) ---
     if (damageResult) {
-        // Agora aplica o brilho se tiver crítico no dano também
-        const totalClass = damageResult.isCrit ? 'crit-total' : ''; 
+        let totalClass = damageResult.isCrit ? 'crit-total' : ''; 
+        // Nota: Não verificamos isFumble aqui, garantindo que dano não fique vermelho
+
         html += `
             <div class="dice-row">
                 <span class="dice-label">DANO</span>
@@ -4051,7 +4059,7 @@ function showCombatResults(title, attackResult, damageResult) {
     diceTimer = setTimeout(() => container.classList.remove('active'), 8000); 
 }
 
-/* 3. AUXILIARES DE CÁLCULO */
+/* 3. AUXILIARES */
 function getAttributeMod(attrKey) {
     const sel = DOM_SELECTORS[attrKey]; if(!sel) return 0;
     const el = document.querySelector(sel); if(!el) return 0;
@@ -4070,7 +4078,6 @@ function getItemAttackValues(item) {
     
     const attrMap = { 'Força': 'for', 'Destreza': 'dex', 'Constituição': 'con', 'Inteligência': 'int', 'Sabedoria': 'sab', 'Carisma': 'car' };
     const key = attrMap[attrName];
-    
     if (key) modAttr = getAttributeMod(key);
 
     let profBonus = 0;
@@ -4078,9 +4085,7 @@ function getItemAttackValues(item) {
         const profEl = document.getElementById('proficienciaValor');
         if (profEl) profBonus = parseInt(profEl.textContent) || 2;
     }
-
     const itemBonus = parseInt(item.attackBonus) || 0;
-
     return { modAttr, profBonus, itemBonus };
 }
 
@@ -4095,28 +4100,28 @@ function getSpellAttackValues() {
 /* 4. ESCUTADOR GLOBAL DE CLIQUES */
 document.addEventListener('click', function(e) {
     
-    // --- CASO 1: ITEM DE INVENTÁRIO (ACERTO + DANO) ---
+    // --- CASO 1: ITEM DE INVENTÁRIO ---
     if (e.target.classList.contains('dice-img')) {
         const itemCard = e.target.closest('.item-card');
         
         if (itemCard) {
             e.preventDefault(); e.stopPropagation();
-
             const itemId = itemCard.getAttribute('data-id');
             const item = state.inventory.find(i => String(i.id) === String(itemId));
 
             if (item) {
                 let attackRes = null;
-                // Rola Acerto se for Arma ou tiver atributo definido
+                // LÓGICA DE ATAQUE (ONDE APLICA O VERMELHO)
                 if (item.type === 'Arma' || (item.attackAttribute && item.attackAttribute !== 'Nenhum')) {
                     const { modAttr, profBonus, itemBonus } = getItemAttackValues(item);
                     
                     const d20 = Math.floor(Math.random() * 20) + 1;
                     const totalAttack = d20 + modAttr + profBonus + itemBonus;
                     const isCrit = (d20 === 20); 
+                    const isFumble = (d20 === 1); // <--- Detecta Falha Crítica
                     
-                    // HTML para o tooltip
-                    const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (d20 === 1 ? `<span class="dice-roll-min">1</span>` : d20);
+                    // Monta o Tooltip: 20=Roxo, 1=Vermelho
+                    const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
                     
                     const detailParts = [d20Html];
                     if (modAttr !== 0) detailParts.push(modAttr); 
@@ -4127,10 +4132,12 @@ document.addEventListener('click', function(e) {
                         total: totalAttack, 
                         text: totalAttack.toString(), 
                         detail: detailParts.join(' + '),
-                        isCrit: isCrit
+                        isCrit: isCrit,
+                        isFumble: isFumble // Envia flag para o prompt
                     };
                 }
 
+                // LÓGICA DE DANO
                 let damageRes = null;
                 let damageText = '';
                 const spellDamageDiv = e.target.closest('.spell-damage');
@@ -4149,7 +4156,7 @@ document.addEventListener('click', function(e) {
             return;
         }
 
-        // Se for Dano de Magia (dentro do card de magia) - Apenas Dano
+        // DANO DE MAGIA (CARD)
         const spellCard = e.target.closest('.spell-card');
         if (spellCard) {
             e.preventDefault(); e.stopPropagation();
@@ -4167,7 +4174,7 @@ document.addEventListener('click', function(e) {
         }
     }
 
-    // --- CASO 2: BOTÃO DE ATAQUE MÁGICO (CABEÇALHOS) ---
+    // --- CASO 2: ATAQUE MÁGICO (CABEÇALHO) ---
     const btnHeader = e.target.closest('#btnRollSpellAttack_Header');
     const btnPrep   = e.target.closest('#btnRollSpellAttack_PrepHeader');
 
@@ -4180,8 +4187,9 @@ document.addEventListener('click', function(e) {
         const d20 = Math.floor(Math.random() * 20) + 1;
         const total = d20 + vals.prof + vals.mod + vals.extra;
         const isCrit = (d20 === 20);
+        const isFumble = (d20 === 1); // <--- Detecta Falha Crítica
 
-        const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (d20 === 1 ? `<span class="dice-roll-min">1</span>` : d20);
+        const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
         const parts = [d20Html];
         if (vals.mod !== 0) parts.push(vals.mod);   
         if (vals.prof !== 0) parts.push(vals.prof); 
@@ -4191,7 +4199,8 @@ document.addEventListener('click', function(e) {
             total: total, 
             text: total.toString(), 
             detail: parts.join(' + '),
-            isCrit: isCrit
+            isCrit: isCrit,
+            isFumble: isFumble // Envia flag para o prompt
         };
         
         showCombatResults("Ataque Mágico", res, null);
@@ -4207,13 +4216,16 @@ document.addEventListener('click', function(e) {
         const d20 = Math.floor(Math.random() * 20) + 1;
         const total = d20 + bonus;
         const isCrit = (d20 === 20);
-        const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (d20 === 1 ? `<span class="dice-roll-min">1</span>` : d20);
+        const isFumble = (d20 === 1); // <--- Detecta Falha Crítica
+
+        const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
         
         const res = { 
             total: total, 
             text: total.toString(), 
             detail: `${d20Html} + ${bonus}`, 
-            isCrit: isCrit 
+            isCrit: isCrit,
+            isFumble: isFumble // Envia flag para o prompt
         };
         showCombatResults(nome, res, null);
     }
