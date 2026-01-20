@@ -435,7 +435,7 @@
     /* =================================================================
        LÓGICA DO SOCKET.IO (SINCRONIZAÇÃO EM TEMPO REAL)
        ================================================================= */
-    const socket = io('http://localhost:3000'); 
+    const socket = io('https://dandd-chan.onrender.com'); 
 
     socket.on('connect', () => {
         console.log("Conectado ao servidor de atualizações! ID:", socket.id);
@@ -472,7 +472,7 @@
 
     async function carregarFichaMestre(nome) {
         try {
-            const res = await fetch('http://localhost:3000/api/load-ficha-mestre', {
+            const res = await fetch('https://dandd-chan.onrender.com/api/load-ficha-mestre', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nome: nome })
@@ -500,33 +500,30 @@
     }
 
     function preencherFichaNaTela(data) {
-        setVal('input-personagem', data.nome);
-        setVal('input-jogador', data.jogador);
-        setVal('input-raca', data.raca);
-        setTxt('btn-antecedente', data.antecedente);
-
-        // --- LÓGICA DA FOTO DE PERFIL ---
-        const imgElement = document.getElementById('img-personagem-visual');
-        if (imgElement) {
-            if (data.fotoPerfil && data.fotoPerfil.length > 10) {
-                imgElement.src = data.fotoPerfil;
-            } else {
-                imgElement.src = "img/imagem-no-site/personagem.png";
-            }
-        }
-const overlayNome = document.getElementById('nome-personagem-overlay');
-    if (overlayNome) overlayNome.textContent = data.nome || "Sem Nome";
-    
+    // ALTERADO: Agora preenche o input com 'personagem' e só usa 'nome' se o outro estiver vazio
+    setVal('input-personagem', data.personagem || data.nome); 
     setVal('input-jogador', data.jogador);
-        if (data.atributos) {
-            setTxtQ('.num.n1', data.atributos.n1);
-            setTxtQ('.num.n2', data.atributos.n2);
-            setTxtQ('.num.n3', data.atributos.n3);
-            setTxtQ('.num.n4', data.atributos.n4);
-            setTxtQ('.num.n5', data.atributos.n5);
-            setTxtQ('.num.n6', data.atributos.n6);
-        }
+    setVal('input-raca', data.raca);
+    setTxt('btn-antecedente', data.antecedente);
+
+    // Atualiza o HUD do OBS se estiver aberto (Nome Visual)
+    const overlayNome = document.getElementById('nome-personagem-overlay');
+    if (overlayNome) overlayNome.textContent = data.personagem || data.nome;
+
+    const imgElement = document.getElementById('img-personagem-visual');
+    if (imgElement) {
+        imgElement.src = (data.fotoPerfil && data.fotoPerfil.length > 10) ? data.fotoPerfil : "img/imagem-no-site/personagem.png";
     }
+
+    if (data.atributos) {
+        setTxtQ('.num.n1', data.atributos.n1);
+        setTxtQ('.num.n2', data.atributos.n2);
+        setTxtQ('.num.n3', data.atributos.n3);
+        setTxtQ('.num.n4', data.atributos.n4);
+        setTxtQ('.num.n5', data.atributos.n5);
+        setTxtQ('.num.n6', data.atributos.n6);
+    }
+}
 
     function setVal(id, valor) { const el = document.getElementById(id); if(el) el.value = valor !== undefined ? valor : ''; }
     function setTxt(id, valor) { const el = document.getElementById(id); if(el) el.innerText = valor !== undefined ? valor : ''; }

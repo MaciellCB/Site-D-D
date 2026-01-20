@@ -237,27 +237,32 @@
         }
 
         function atualizarInterface(data) {
-            document.getElementById('display-nome').innerText = data.nome || "HERÓI";
-            const imgEl = document.getElementById('img-personagem');
-            imgEl.src = (data.fotoPerfil && data.fotoPerfil.length > 10) ? data.fotoPerfil : 'img/imagem-no-site/personagem.png';
-            
-            const atual = parseInt(data.vidaAtual) || 0;
-            const total = parseInt(data.vidaTotalCalculada) || 1;
-            document.getElementById('hp-atual').innerText = atual;
-            document.getElementById('hp-total').innerText = total;
-            document.getElementById('health-fill-bar').style.width = Math.min(100, (atual/total)*100) + "%";
+    // 0. Atualiza o Nome: Prioriza o campo PERSONAGEM (do header)
+    const nomeExibicao = data.personagem || data.nome || "HERÓI";
+    document.getElementById('display-nome').innerText = nomeExibicao;
 
-            const temp = parseInt(data.vidaTempAtual) || 0;
-            const necro = parseInt(data.danoNecroAtual) || 0;
-            document.getElementById('temp-fill').style.width = Math.min(100, temp) + "%";
-            document.getElementById('temp-text').innerText = temp > 0 ? `Temp: ${temp}` : "";
-            document.getElementById('necro-fill').style.width = Math.min(100, necro) + "%";
-            document.getElementById('necro-text').innerText = necro > 0 ? `Necro: ${necro}` : "";
+    // 1. Imagem
+    const imgEl = document.getElementById('img-personagem');
+    imgEl.src = (data.fotoPerfil && data.fotoPerfil.length > 10) ? data.fotoPerfil : 'img/imagem-no-site/personagem.png';
+    
+    // 2. Vida e Barras
+    const atual = parseInt(data.vidaAtual) || 0;
+    const total = parseInt(data.vidaTotalCalculada) || 1;
+    document.getElementById('hp-atual').innerText = atual;
+    document.getElementById('hp-total').innerText = total;
+    document.getElementById('health-fill-bar').style.width = Math.min(100, (atual/total)*100) + "%";
 
-            const insp = parseInt(data.inspiracao) || 0;
-            document.getElementById('inspiration-val').innerText = insp;
-            document.getElementById('insp-container').style.display = insp > 0 ? 'flex' : 'none';
-        }
+    const temp = parseInt(data.vidaTempAtual) || 0;
+    const necro = parseInt(data.danoNecroAtual) || 0;
+    document.getElementById('temp-fill').style.width = Math.min(100, temp) + "%";
+    document.getElementById('temp-text').innerText = temp > 0 ? `Temp: ${temp}` : "";
+    document.getElementById('necro-fill').style.width = Math.min(100, necro) + "%";
+    document.getElementById('necro-text').innerText = necro > 0 ? `Necro: ${necro}` : "";
+
+    const insp = parseInt(data.inspiracao) || 0;
+    document.getElementById('inspiration-val').innerText = insp;
+    document.getElementById('insp-container').style.display = insp > 0 ? 'flex' : 'none';
+}
 
         carregarDados();
     </script>
