@@ -42,7 +42,7 @@
         border-radius: 50%;
         margin-bottom: 15px;
         border: 3px solid #555;
-        object-fit: cover; /* Garante que a imagem preencha o círculo sem deformar */
+        object-fit: cover;
         background-color: #000;
     }
 
@@ -53,16 +53,44 @@
         text-transform: capitalize;
     }
 
-    /* Loading suave na imagem */
-    .img-loading {
-        opacity: 0.5;
-        filter: grayscale(100%);
+    /* ESTILO DO BOTÃO DE CRIAR NOVO */
+    .card-novo {
+        border: 2px dashed #555;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #555;
     }
-    .img-loaded {
-        opacity: 1;
-        filter: none;
-        transition: opacity 0.5s ease;
+    .card-novo:hover {
+        border-color: #00ff00;
+        color: #00ff00;
+        background: rgba(0, 255, 0, 0.05);
     }
+    .plus-icon { font-size: 50px; line-height: 50px; margin-bottom: 10px; }
+
+    /* ESTILO DO BOTÃO DE DELETAR (X) */
+    .btn-delete {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: transparent;
+        border: none;
+        color: #555;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        z-index: 10;
+        padding: 5px 8px;
+        border-radius: 4px;
+    }
+    .btn-delete:hover {
+        background: #ff0000;
+        color: white;
+    }
+
+    .img-loading { opacity: 0.5; filter: grayscale(100%); }
+    .img-loaded { opacity: 1; filter: none; transition: opacity 0.5s ease; }
   </style>
 </head>
 <body>
@@ -71,68 +99,127 @@
     <nav class="navbar">
       <div class="nav-links">
         <a href="#" onclick="alert('Você já está no painel.')">Personagem</a>
-        <a href="#" class="active">Todos os Personagens</a>
+        <a href="#" class="active">Painel do Mestre</a>
       </div>
       <img src="img/imagem-no-site/perfil.png" alt="perfil" class="perfil-img" />
     </nav>
   </header>
 
-  <h2 style="text-align:center; margin-top:40px; color:#9c27b0;">FICHAS DISPONÍVEIS</h2>
+  <h2 style="text-align:center; margin-top:40px; color:#9c27b0;">GERENCIAR FICHAS</h2>
 
   <div id="lista-personagens" class="grid-personagens">
     <p style="color:#666;">Carregando fichas...</p>
   </div>
 
   <script>
-    // URL da API
     const API_URL = 'https://dandd-chan.onrender.com/api'; 
+    // ATENÇÃO: Se estiver testando localmente, mude para 'http://localhost:3000/api'
 
-    // Ao carregar a página
-    window.onload = async function() {
+    window.onload = carregarLista;
+
+    async function carregarLista() {
+        const container = document.getElementById('lista-personagens');
+        container.innerHTML = '<p style="color:#666;">Atualizando...</p>';
+
         try {
-            // 1. Pega a lista de nomes (Ex: ["Pessoa1", "Pessoa2"])
             const response = await fetch(`${API_URL}/lista-personagens`);
             const nomes = await response.json();
             
-            const container = document.getElementById('lista-personagens');
-            container.innerHTML = ''; // Limpa o loading
+            container.innerHTML = ''; 
 
-            if(nomes.length === 0) {
-                container.innerHTML = '<p>Nenhum personagem encontrado.</p>';
-                return;
+            // 1. ADICIONA O BOTÃO DE "CRIAR NOVO" PRIMEIRO
+            const cardNovo = document.createElement('div');
+            cardNovo.className = 'card-personagem card-novo';
+            cardNovo.onclick = criarPersonagem;
+            cardNovo.innerHTML = `
+                <div class="plus-icon">+</div>
+                <div>Nova Ficha</div>
+            `;
+            container.appendChild(cardNovo);
+
+            // 2. LISTA OS PERSONAGENS EXISTENTES
+            if(nomes.length > 0) {
+                nomes.forEach(nome => {
+                    const card = document.createElement('div');
+                    card.className = 'card-personagem';
+                    
+                    const imgId = `img-card-${nome.replace(/\s+/g, '-')}`;
+
+                    card.innerHTML = `
+                        <button class="btn-delete" title="Apagar Ficha" onclick="deletarPersonagem(event, '${nome}')">✕</button>
+                        <img id="${imgId}" src="img/imagem-no-site/personagem.png" class="card-img img-loading" alt="${nome}">
+                        <div class="card-name">${nome}</div>
+                    `;
+
+                    // Clique na imagem ou no texto abre a ficha
+                    card.onclick = (e) => {
+                        // Se clicou no botão de deletar, não abre a ficha
+                        if(e.target.classList.contains('btn-delete')) return;
+                        abrirFichaDoJogador(nome);
+                    };
+
+                    container.appendChild(card);
+                    carregarFotoIndividual(nome, imgId);
+                });
             }
-
-            // 2. Cria os cards para cada nome
-            nomes.forEach(nome => {
-                const card = document.createElement('div');
-                card.className = 'card-personagem';
-                
-                // Cria um ID único para a imagem para podermos atualizá-la depois
-                // Remove espaços para evitar erro no ID
-                const imgId = `img-card-${nome.replace(/\s+/g, '-')}`;
-
-                // HTML do Card (Começa com a imagem padrão)
-                card.innerHTML = `
-                    <img id="${imgId}" src="img/imagem-no-site/personagem.png" class="card-img img-loading" alt="${nome}">
-                    <div class="card-name">${nome}</div>
-                `;
-
-                // Clique no card
-                card.onclick = () => abrirFichaDoJogador(nome);
-
-                container.appendChild(card);
-
-                // 3. Busca a foto personalizada individualmente (Lazy Load)
-                carregarFotoIndividual(nome, imgId);
-            });
 
         } catch (error) {
             console.error(error);
-            alert('Erro ao conectar com o backend. O server.js está rodando?');
+            container.innerHTML = '<p style="color:red">Erro ao conectar com o servidor.</p>';
         }
     };
 
-    // Função para buscar os dados de UM personagem e atualizar a foto
+    // --- FUNÇÃO DE CRIAR ---
+    async function criarPersonagem() {
+        const nome = prompt("Nome do novo personagem:");
+        if(!nome) return;
+        const senha = prompt("Senha para o jogador:");
+        if(!senha) return;
+
+        try {
+            const res = await fetch(`${API_URL}/criar-ficha`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ nome, senha })
+            });
+
+            const data = await res.json();
+
+            if(res.ok) {
+                alert("Personagem criado!");
+                carregarLista(); // Atualiza a tela
+            } else {
+                alert("Erro: " + data.error);
+            }
+        } catch(e) {
+            alert("Erro de conexão.");
+        }
+    }
+
+    // --- FUNÇÃO DE DELETAR ---
+    async function deletarPersonagem(event, nome) {
+        event.stopPropagation(); // Impede de abrir a ficha ao clicar no X
+
+        const confirmacao = confirm(`Tem certeza que deseja apagar a ficha de: ${nome}?\nIsso não pode ser desfeito.`);
+        if(!confirmacao) return;
+
+        try {
+            const res = await fetch(`${API_URL}/deletar-ficha`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ nome })
+            });
+
+            if(res.ok) {
+                carregarLista(); // Atualiza a tela
+            } else {
+                alert("Erro ao deletar.");
+            }
+        } catch(e) {
+            alert("Erro de conexão.");
+        }
+    }
+
     async function carregarFotoIndividual(nome, imgId) {
         try {
             const res = await fetch(`${API_URL}/load-ficha-mestre`, {
@@ -140,33 +227,19 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nome: nome })
             });
-
             if (res.ok) {
                 const data = await res.json();
                 const imgElement = document.getElementById(imgId);
-                
-                if (imgElement) {
-                    // Verifica se existe fotoPerfil salva
-                    if (data.fotoPerfil && data.fotoPerfil.length > 50) {
-                        imgElement.src = data.fotoPerfil;
-                    }
-                    // Remove o estilo de carregamento
+                if (imgElement && data.fotoPerfil && data.fotoPerfil.length > 50) {
+                    imgElement.src = data.fotoPerfil;
                     imgElement.classList.remove('img-loading');
                     imgElement.classList.add('img-loaded');
-                    
-                    // Borda colorida baseada na classe (Opcional - perfumaria)
-                    // if (data.ordemClasses && data.ordemClasses[0]) {
-                    //    imgElement.style.borderColor = getCorDaClasse(data.ordemClasses[0]);
-                    // }
                 }
             }
-        } catch (e) {
-            console.error(`Erro ao carregar imagem de ${nome}:`, e);
-        }
+        } catch (e) { console.error(e); }
     }
 
     function abrirFichaDoJogador(nome) {
-        // Abre o index.html passando o parâmetro masterView
         window.open(`index.html?masterView=${nome}`, '_blank');
     }
   </script>
