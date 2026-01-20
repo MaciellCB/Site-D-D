@@ -2,127 +2,55 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>OBS Portrait - HUD Pro</title>
+    <title>OBS Portrait - HUD</title>
     <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Roboto:wght@500;900&display=swap" rel="stylesheet">
     <style>
-        body, html {
-            background-color: transparent;
-            margin: 0; padding: 0; overflow: hidden;
-            width: 100%; height: 100%;
-            display: flex; justify-content: center; align-items: center;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        .portrait-container {
-            position: relative;
-            display: flex;
-            align-items: flex-end;
-            padding: 20px;
-        }
-
-        /* --- IMAGEM --- */
-        .image-wrapper {
-            position: relative;
-            width: 200px; height: 200px;
-            border-radius: 50%;
-            border: 8px solid #000;
-            overflow: hidden;
-            background-color: #222;
-            z-index: 20;
-            flex-shrink: 0;
-            box-shadow: 0 0 15px rgba(0,0,0,0.8);
-        }
+        body, html { background-color: transparent; margin: 0; padding: 0; overflow: hidden; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; font-family: 'Roboto', sans-serif; }
+        .portrait-container { position: relative; display: flex; align-items: flex-end; padding: 20px; }
+        
+        .image-wrapper { position: relative; width: 200px; height: 200px; border-radius: 50%; border: 8px solid #000; overflow: hidden; background-color: #222; z-index: 20; flex-shrink: 0; box-shadow: 0 0 15px rgba(0,0,0,0.8); }
         .char-img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* --- BARRAS --- */
-        .bars-group {
-            display: flex; flex-direction: column;
-            margin-left: -50px; margin-bottom: 20px; z-index: 5;
-        }
+        .bars-group { display: flex; flex-direction: column; margin-left: -50px; margin-bottom: 20px; z-index: 5; }
+        
+        /* DESIGN ORIGINAL DO NOME */
         .char-name-box {
-            color: #fff; font-family: 'Cinzel Decorative', cursive; font-size: 26px;
-            padding: 5px 60px;
-            background: linear-gradient(to right, rgba(0,0,0,0.9) 20%, transparent);
-            text-transform: uppercase; letter-spacing: 2px; margin-bottom: -2px;
-            text-shadow: 2px 2px 4px #000;
+            color: #fff; font-family: 'Cinzel Decorative', cursive; font-size: 26px; font-weight: bold;
+            padding: 5px 60px; background: linear-gradient(to right, rgba(0,0,0,0.9) 20%, rgba(0,0,0,0.5) 70%, transparent);
+            width: fit-content; text-transform: uppercase; letter-spacing: 2px; margin-bottom: -2px; text-shadow: 2px 2px 4px #000;
         }
-        .health-bar-container {
-            position: relative;
-            height: 60px; width: 500px; background: #000;
-            border: 4px solid #000; display: flex; align-items: center; justify-content: center;
-            border-radius: 0 10px 0 0; overflow: hidden;
-        }
-        .health-fill {
-            position: absolute; top: 0; left: 0; height: 100%; width: 0%;
-            background: linear-gradient(to right, #500000, #b30000, #ff3333);
-            transition: width 0.4s ease-out;
-        }
-        .health-text {
-            position: relative; color: #fff; font-family: 'Cinzel Decorative', cursive;
-            font-size: 36px; font-weight: 900; text-shadow: 3px 3px 0 #000;
-        }
+
+        .health-bar-container { position: relative; height: 60px; width: 500px; background-color: #000; border: 4px solid #000; border-bottom: none; display: flex; align-items: center; justify-content: center; border-radius: 0 10px 0 0; overflow: hidden; }
+        .health-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: linear-gradient(to right, #500000, #b30000, #ff3333); z-index: 1; transition: width 0.4s ease-out; }
+        .health-text { position: relative; color: #fff; font-family: 'Cinzel Decorative', cursive; font-size: 36px; font-weight: 900; text-shadow: 3px 3px 0 #000; letter-spacing: 2px; z-index: 2; }
+        
         .sub-bars-row { display: flex; width: 500px; height: 25px; background: #000; border: 4px solid #000; border-top: none; border-radius: 0 0 10px 10px; overflow: hidden; }
         .mini-bar-box { flex: 1; position: relative; background: #1a1a1a; display: flex; align-items: center; justify-content: center; border-right: 2px solid #000; }
-        .mini-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; transition: width 0.4s; }
+        .mini-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; transition: width 0.4s; z-index: 1; }
         .fill-temp { background: linear-gradient(to right, #004d40, #00bcd4); }
         .fill-necro { background: linear-gradient(to right, #311b92, #7c4dff); }
-        .mini-text { position: relative; z-index: 2; color: #fff; font-size: 14px; font-weight: bold; }
+        .mini-text { position: relative; z-index: 2; color: #fff; font-size: 14px; font-weight: bold; text-shadow: 1px 1px 2px #000; }
 
-        /* --- POPUP DE DADOS (DESIGN NOVO) --- */
-        #dice-popups-container {
-            position: absolute;
-            left: 730px; /* À direita das barras */
-            bottom: 40px;
-            display: flex;
-            flex-direction: column-reverse;
-            gap: 12px;
+        /* AREA DOS DADOS (À DIREITA) */
+        #dice-display {
+            position: absolute; left: 670px; bottom: 45px;
+            display: flex; flex-direction: column; gap: 5px;
             pointer-events: none;
         }
-
-        .roll-item {
-            background: linear-gradient(135deg, rgba(15,15,15,0.95) 0%, rgba(30,30,30,0.9) 100%);
-            border-left: 4px solid #9c27b0;
-            border-radius: 4px;
-            padding: 12px 18px;
-            min-width: 200px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 15px rgba(156,39,176,0.1);
-            animation: slideIn 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
-            position: relative;
+        .dice-item {
+            background: rgba(0,0,0,0.8); border-left: 4px solid #9c27b0; padding: 8px 15px;
+            border-radius: 0 5px 5px 0; color: white; min-width: 150px;
+            animation: slideData 0.4s ease-out;
         }
+        @keyframes slideData { from { transform: translateX(30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .dice-item.fade { opacity: 0; transform: translateY(-20px); transition: 1s; }
 
-        .roll-item.fade-out {
-            animation: fadeSmoke 1.5s forwards;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes fadeSmoke {
-            to { transform: translateY(-40px) scale(1.1); filter: blur(20px); opacity: 0; }
-        }
-
-        .roll-title { font-size: 10px; color: #e0aaff; text-transform: uppercase; font-weight: 900; margin-bottom: 8px; letter-spacing: 1px; opacity: 0.7; }
-        .roll-values { display: flex; gap: 25px; align-items: center; }
-        
-        .val-group { display: flex; align-items: center; gap: 10px; }
-        .val-icon { width: 24px; height: 24px; filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); }
-        .val-num { font-size: 32px; font-weight: 900; color: #fff; text-shadow: 2px 2px 0 #000; line-height: 1; }
-        
-        /* Cores de Destaque */
-        .val-num.crit { color: #ffcc00; text-shadow: 0 0 15px rgba(255,204,0,0.6), 2px 2px 0 #000; }
-        .val-num.fumble { color: #ff3333; text-shadow: 0 0 15px rgba(255,51,51,0.6), 2px 2px 0 #000; }
-        .val-num.damage { color: #ff5252; }
-
-        .val-label { font-size: 9px; color: #777; text-transform: uppercase; font-weight: bold; display: block; margin-top: 2px; }
-
-        /* Inspiração */
+        /* INSPIRAÇÃO */
         .inspiration-container { position: absolute; bottom: 30px; left: 5px; width: 90px; height: 90px; display: flex; justify-content: center; align-items: center; z-index: 30; }
-        .smoke-effect { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, rgba(0,0,0,0.95) 10%, transparent 70%); filter: blur(5px); animation: pulseSmoke 3s infinite alternate; }
+        .smoke-effect { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, rgba(0,0,0,0.95) 10%, transparent 70%); filter: blur(5px); border-radius: 50%; animation: pulseSmoke 3s infinite alternate; }
         @keyframes pulseSmoke { 0% { transform: scale(0.95); } 100% { transform: scale(1.1); } }
-        .inspiration-number { position: relative; color: #ffcc00; font-family: 'Cinzel Decorative', cursive; font-size: 42px; font-weight: bold; text-shadow: 0 0 10px #ffaa00, 2px 2px 0 #000; }
+        .inspiration-number { position: relative; color: #ffcc00; font-family: 'Cinzel Decorative', cursive; font-size: 42px; text-shadow: 0 0 10px #ffaa00, 2px 2px 0 #000; }
     </style>
 </head>
 <body>
@@ -152,7 +80,7 @@
             </div>
         </div>
 
-        <div id="dice-popups-container"></div>
+        <div id="dice-display"></div>
 
         <div class="inspiration-container" id="insp-container">
             <div class="smoke-effect"></div>
@@ -163,114 +91,64 @@
     <script>
         const socket = io('https://dandd-chan.onrender.com');
         const params = new URLSearchParams(window.location.search);
-        const nomeDaURL = params.get('nome'); // Nome da conta/personagem vindo da URL
+        const nomeAlvo = params.get('nome');
 
-        // --- ATUALIZAÇÃO DE INTERFACE ---
+        // Escuta Dados
+        socket.on('dados_rolados', (data) => {
+            if (data.personagem.toLowerCase() === nomeAlvo.toLowerCase()) {
+                mostrarDadoNoHUD(data);
+            }
+        });
+
+        function mostrarDadoNoHUD(data) {
+            const container = document.getElementById('dice-display');
+            const div = document.createElement('div');
+            div.className = 'dice-item';
+            
+            let resHtml = `<div style="font-size:10px; color:#e0aaff;">${data.titulo}</div><div style="display:flex; gap:15px; align-items:center;">`;
+            if(data.ataque) resHtml += `<div><span style="font-size:10px; color:#aaa; display:block;">ACERTO</span><span style="font-size:22px; font-weight:900; color:${data.ataque.isCrit ? '#ffcc00' : (data.ataque.isFumble ? '#ff3333' : '#fff')}">${data.ataque.text}</span></div>`;
+            if(data.dano) resHtml += `<div><span style="font-size:10px; color:#aaa; display:block;">DANO</span><span style="font-size:22px; font-weight:900; color:#ff5252;">${data.dano.text}</span></div>`;
+            resHtml += `</div>`;
+            
+            div.innerHTML = resHtml;
+            container.appendChild(div);
+            setTimeout(() => { div.classList.add('fade'); setTimeout(() => div.remove(), 1000); }, 6000);
+        }
+
         socket.on('ficha_atualizada', (novaFicha) => {
-            // Filtra: verifica se a conta ou o nome do personagem batem
-            if (novaFicha.nome?.toLowerCase() === nomeDaURL.toLowerCase() || 
-                novaFicha.personagem?.toLowerCase() === nomeDaURL.toLowerCase()) {
+            // Se o nome real mudou ou o login bate, atualiza
+            if (novaFicha.nome?.toLowerCase() === nomeAlvo.toLowerCase() || novaFicha.personagem?.toLowerCase() === nomeAlvo.toLowerCase()) {
                 atualizarInterface(novaFicha);
             }
         });
 
-        // --- ESCUTADOR DE ROLAGENS ---
-        socket.on('dados_rolados', (data) => {
-            // Só mostra se os dados forem desse personagem
-            if (data.contaFicha?.toLowerCase() === nomeDaURL.toLowerCase() || 
-                data.personagem?.toLowerCase() === nomeDaURL.toLowerCase()) {
-                criarPopUpDado(data);
-            }
-        });
-
-        function criarPopUpDado(data) {
-            const container = document.getElementById('dice-popups-container');
-            const item = document.createElement('div');
-            item.className = 'roll-item';
-
-            let ataqueHtml = '';
-            if (data.ataque) {
-                const extraClass = data.ataque.isCrit ? 'crit' : (data.ataque.isFumble ? 'fumble' : '');
-                ataqueHtml = `
-                    <div class="val-group">
-                        <img src="img/imagem-no-site/dado.png" class="val-icon">
-                        <div>
-                            <div class="val-num ${extraClass}">${data.ataque.text}</div>
-                            <span class="val-label">Acerto</span>
-                        </div>
-                    </div>`;
-            }
-
-            let danoHtml = '';
-            if (data.dano) {
-                danoHtml = `
-                    <div class="val-group">
-                        <img src="https://cdn-icons-png.flaticon.com/512/826/826070.png" class="val-icon" style="filter: invert(1);">
-                        <div>
-                            <div class="val-num damage">${data.dano.text}</div>
-                            <span class="val-label">Dano</span>
-                        </div>
-                    </div>`;
-            }
-
-            item.innerHTML = `
-                <div class="roll-title">${data.titulo}</div>
-                <div class="roll-values">
-                    ${ataqueHtml}
-                    ${danoHtml}
-                </div>
-            `;
-
-            container.appendChild(item);
-
-            // Tempo de exibição: 8 segundos
-            setTimeout(() => {
-                item.classList.add('fade-out');
-                setTimeout(() => item.remove(), 1500); // Espera animação de fumaça
-            }, 8000);
-        }
-
-        async function carregarDados() {
-            if(!nomeDaURL) return;
-            try {
-                const res = await fetch('https://dandd-chan.onrender.com/api/load-ficha-mestre', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nome: nomeDaURL })
-                });
-                if(res.ok) {
-                    const data = await res.json();
-                    atualizarInterface(data);
-                }
-            } catch(e) { console.error(e); }
-        }
-
         function atualizarInterface(data) {
-            // Prioriza o nome do "Personagem" sobre o da "Conta"
             document.getElementById('display-nome').innerText = data.personagem || data.nome || "HERÓI";
-
             const imgEl = document.getElementById('img-personagem');
             imgEl.src = (data.fotoPerfil && data.fotoPerfil.length > 10) ? data.fotoPerfil : 'img/imagem-no-site/personagem.png';
-
+            
             const atual = parseInt(data.vidaAtual) || 0;
             const total = parseInt(data.vidaTotalCalculada) || 1;
             document.getElementById('hp-atual').innerText = atual;
             document.getElementById('hp-total').innerText = total;
             document.getElementById('health-fill-bar').style.width = Math.min(100, (atual/total)*100) + "%";
 
-            const temp = parseInt(data.vidaTempAtual) || 0;
-            const necro = parseInt(data.danoNecroAtual) || 0;
-            document.getElementById('temp-fill').style.width = Math.min(100, temp) + "%";
-            document.getElementById('temp-text').innerText = temp > 0 ? `Temp: ${temp}` : "";
-            document.getElementById('necro-fill').style.width = Math.min(100, necro) + "%";
-            document.getElementById('necro-text').innerText = necro > 0 ? `Necro: ${necro}` : "";
+            document.getElementById('temp-fill').style.width = Math.min(100, (parseInt(data.vidaTempAtual)||0)) + "%";
+            document.getElementById('temp-text').innerText = data.vidaTempAtual > 0 ? `Temp: ${data.vidaTempAtual}` : "";
+            document.getElementById('necro-fill').style.width = Math.min(100, (parseInt(data.danoNecroAtual)||0)) + "%";
+            document.getElementById('necro-text').innerText = data.danoNecroAtual > 0 ? `Necro: ${data.danoNecroAtual}` : "";
 
-            const insp = parseInt(data.inspiracao) || 0;
-            document.getElementById('inspiration-val').innerText = insp;
-            document.getElementById('insp-container').style.display = insp > 0 ? 'flex' : 'none';
+            const inspVal = parseInt(data.inspiracao) || 0;
+            document.getElementById('inspiration-val').innerText = inspVal;
+            document.getElementById('insp-container').style.display = inspVal > 0 ? 'flex' : 'none';
         }
 
-        carregarDados();
+        async function carregar() {
+            if(!nomeAlvo) return;
+            const res = await fetch('https://dandd-chan.onrender.com/api/load-ficha-mestre', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nome: nomeAlvo }) });
+            if(res.ok) atualizarInterface(await res.json());
+        }
+        carregar();
     </script>
 </body>
 </html>

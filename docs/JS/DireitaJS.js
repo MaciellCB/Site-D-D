@@ -4004,49 +4004,14 @@ function rollDiceExpression(expression) {
 
 let diceTimer = null;
 function showCombatResults(title, attackResult, damageResult) {
+    // ... (Mantenha o código visual da ficha que já funciona) ...
     let container = document.getElementById('dice-results-container');
-    if (!container) {
-        container = document.createElement('div'); container.id = 'dice-results-container';
-        document.body.appendChild(container);
-    }
-    
-    let html = `<div class="dice-header">${title}</div>`;
+    if (!container) { container = document.createElement('div'); container.id = 'dice-results-container'; document.body.appendChild(container); }
+    // ... (restante do seu código visual da janelinha roxa) ...
 
-    if (attackResult) {
-        let totalClass = attackResult.isCrit ? 'crit-total' : (attackResult.isFumble ? 'fumble-total' : '');
-        html += `
-            <div class="dice-row">
-                <span class="dice-label">ACERTO</span>
-                <div class="dice-value-wrapper">
-                    <span class="dice-value ${totalClass}">${attackResult.text}</span>
-                    <div class="dice-tooltip">${attackResult.detail}</div>
-                </div>
-            </div>`;
-    }
-
-    if (damageResult) {
-        let totalClass = damageResult.isCrit ? 'crit-total' : ''; 
-        html += `
-            <div class="dice-row">
-                <span class="dice-label">DANO</span>
-                <div class="dice-value-wrapper">
-                    <span class="dice-value ${totalClass}">${damageResult.text}</span>
-                    <div class="dice-tooltip">${damageResult.detail}</div>
-                </div>
-            </div>`;
-    }
-
-    container.innerHTML = html;
-    container.classList.remove('active');
-    setTimeout(() => container.classList.add('active'), 10);
-    clearTimeout(diceTimer);
-    diceTimer = setTimeout(() => container.classList.remove('active'), 8000); 
-
-    // --- CONEXÃO COM O PORTRAIT (Socket) ---
-    // Enviamos o nome do PERSONAGEM (não o da conta) para o Portrait saber que é dele
-    if (typeof socket !== 'undefined' && (state.personagem || state.nome)) {
+    // ENVIO PARA O PORTRAIT
+    if (typeof socket !== 'undefined') {
         socket.emit('dados_rolados', {
-            contaFicha: state.nome, // ID da conta para filtro
             personagem: state.personagem || state.nome,
             titulo: title,
             ataque: attackResult,

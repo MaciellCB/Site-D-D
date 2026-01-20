@@ -38,7 +38,12 @@ const Ficha = mongoose.model('Ficha', FichaSchema);
 
 // --- SOCKET.IO ---
 io.on('connection', (socket) => {
-    console.log('Cliente conectado via Socket:', socket.id);
+    console.log('Cliente conectado:', socket.id);
+
+    // ADICIONE ISSO AQUI:
+    socket.on('dados_rolados', (data) => {
+        io.emit('dados_rolados', data); // Isso repassa o dado para todos os portraits
+    });
 });
 
 // =================================================================
