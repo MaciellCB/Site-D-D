@@ -3880,17 +3880,63 @@ function initRichEditorEvents(idContainer) {
    SISTEMA DE DADOS V5 (FINAL: BRILHO VERMELHO NA FALHA APENAS NO ACERTO)
    ========================================================================== */
 
-/* 1. CSS DA JANELA DE RESULTADOS (COM TOOLTIP E BRILHOS) */
+/* =============================================================
+   CORREÇÃO: CSS E FUNÇÃO DE RESULTADOS DE DADOS
+   Substitua os blocos correspondentes no seu arquivo DireitaJS.js
+============================================================= */
+
+/* 1. CSS ATUALIZADO DA JANELA DE RESULTADOS (Com Inspiração na Esquerda e sem GIF) */
 const diceStyles = document.createElement('style');
 diceStyles.textContent = `
     #dice-results-container {
-        position: fixed; bottom: 20px; right: -300px; width: 270px;
+        position: fixed; bottom: 20px; right: -350px; /* Largura um pouco maior */
+        min-width: 280px; max-width: 400px;
+        
         background: #0f0f0f; border: 1px solid #9c27b0; border-radius: 8px;
-        padding: 15px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.9);
+        /* padding removido daqui, aplicado nos filhos */
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.9);
         color: #fff; z-index: 15000; transition: right 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); 
         font-family: 'Segoe UI', sans-serif;
+
+        display: flex; /* Para alinhar lado a lado */
+        flex-direction: row; /* Inspiração na esquerda, conteúdo na direita */
+        overflow: hidden; /* Para as bordas arredondadas da mancha */
     }
     #dice-results-container.active { right: 20px; }
+
+    /* Container para a Inspiração (Esquerda) */
+    .inspiration-container {
+        width: 70px; /* Largura fixa para o ícone */
+        flex-shrink: 0; /* Não encolhe */
+        
+        /* Fundo "Mancha preta, meio transparente" */
+        background-color: rgba(0, 0, 0, 0.5);
+        /* Opcional: gradiente sutil para efeito de mancha */
+        background-image: radial-gradient(circle at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 70%, transparent 100%);
+        
+        border-right: 1px solid rgba(156, 39, 176, 0.5); /* Separador à direita */
+        
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Ícone de Inspiração (Estático, Dourado) */
+    .inspiration-icon {
+        font-size: 36px; /* Tamanho do ícone */
+        color: #FFD700; /* Dourado */
+        text-shadow: 0 0 15px rgba(255, 215, 0, 0.8), 0 0 5px #fff;
+        cursor: help;
+    }
+
+    /* Container para o Conteúdo Principal (Direita) */
+    .dice-content-wrapper {
+        flex-grow: 1; /* Ocupa o espaço restante */
+        padding: 15px; /* Padding interno */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
     
     .dice-header {
         font-size: 12px; color: #e1bee7; margin-bottom: 10px;
@@ -3932,17 +3978,15 @@ diceStyles.textContent = `
         visibility: visible; opacity: 1;
     }
 
-    /* --- ESTILOS DE DESTAQUE (TEXTO PEQUENO) --- */
+    /* --- ESTILOS DE DESTAQUE --- */
     .dice-roll-max { color: #e040fb !important; font-weight: bold; text-shadow: 0 0 5px #e040fb; } 
     .dice-roll-min { color: #ff3333 !important; font-weight: bold; text-shadow: 0 0 5px #ff3333; }
     
-    /* --- BRILHO ROXO (CRÍTICO) NO RESULTADO GRANDE --- */
     .crit-total { 
         color: #e040fb !important; 
         text-shadow: 0 0 10px rgba(224, 64, 251, 0.8), 0 0 20px rgba(224, 64, 251, 0.4);
     }
 
-    /* --- BRILHO VERMELHO (FALHA) NO RESULTADO GRANDE (NOVO) --- */
     .fumble-total {
         color: #ff3333 !important;
         text-shadow: 0 0 10px rgba(255, 51, 51, 0.8), 0 0 20px rgba(255, 51, 51, 0.4);
@@ -3950,6 +3994,113 @@ diceStyles.textContent = `
 `;
 document.head.appendChild(diceStyles);
 
+
+/* 2. FUNÇÃO showCombatResults ATUALIZADA */
+let diceTimer = null;
+function showCombatResults(title, attackResult, damageResult) {
+    // 1. Criação/Busca do Container Visual
+    let container = document.getElementById('dice-results-container');
+    if (!container) { 
+        container = document.createElement('div'); 
+        container.id = 'dice-results-container'; 
+        document.body.appendChild(container); 
+    }
+
+    // 2. Limpa timer anterior
+    if (diceTimer) clearTimeout(diceTimer);
+
+    // --- MONTAGEM DO HTML DO CONTEÚDO (DIREITA) ---
+    let contentHtml = `<div class="dice-content-wrapper">`;
+    contentHtml += `<div class="dice-header">${title}</div>`;
+
+    // Linha de Ataque
+    if (attackResult) {
+        let totalClass = "";
+        if (attackResult.isCrit) totalClass = "crit-total";
+        else if (attackResult.isFumble) totalClass = "fumble-total";
+
+        contentHtml += `
+            <div class="dice-row">
+                <div class="dice-label">ACERTO</div>
+                <div class="dice-value-wrapper">
+                    <div class="dice-value ${totalClass}">${attackResult.text}</div>
+                    <div class="dice-tooltip">${attackResult.detail}</div>
+                </div>
+            </div>
+        `;
+    }
+
+    // Linha de Dano
+    if (damageResult) {
+        let totalClass = damageResult.isCrit ? "crit-total" : "";
+        
+        contentHtml += `
+            <div class="dice-row">
+                <div class="dice-label">DANO</div>
+                <div class="dice-value-wrapper">
+                    <div class="dice-value ${totalClass}">${damageResult.text}</div>
+                    <div class="dice-tooltip">${damageResult.detail}</div>
+                </div>
+            </div>
+        `;
+    }
+    contentHtml += `</div>`; // Fecha .dice-content-wrapper
+
+
+    // --- MONTAGEM DO HTML DA INSPIRAÇÃO (ESQUERDA) ---
+    let inspirationHtml = '';
+    // Verifica se a inspiração está ativa no estado global
+    if (typeof state !== 'undefined' && state.inspiration) {
+        inspirationHtml = `
+            <div class="inspiration-container">
+                <div class="inspiration-icon" title="Personagem Inspirado!">⭐</div>
+            </div>
+        `;
+    }
+
+    // 3. Injeta o HTML final (Inspiração na esquerda + Conteúdo na direita)
+    container.innerHTML = inspirationHtml + contentHtml;
+    
+    // 4. Mostrar com Animação
+    requestAnimationFrame(() => {
+        container.classList.add('active');
+    });
+
+    // 5. Esconder automático após 4 segundos
+    diceTimer = setTimeout(() => {
+        container.classList.remove('active');
+    }, 4000);
+
+    // 6. ENVIO PARA O PORTRAIT (Socket) - Mantido igual
+    if (typeof socket !== 'undefined') {
+        const payload = {
+            personagem: state.personagem || state.nome,
+            titulo: title,
+            ataque: null,
+            dano: null,
+            inspiracao: state.inspiration || false // Envia status pro OBS também
+        };
+
+        if (attackResult) {
+            payload.ataque = {
+                total: attackResult.total,
+                text: attackResult.text,
+                isCrit: attackResult.isCrit,
+                isFumble: attackResult.isFumble
+            };
+        }
+
+        if (damageResult) {
+            payload.dano = {
+                total: damageResult.total,
+                text: damageResult.text,
+                isCrit: damageResult.isCrit
+            };
+        }
+
+        socket.emit('dados_rolados', payload);
+    }
+}
 
 /* 2. FUNÇÕES DE CÁLCULO E EXIBIÇÃO */
 
@@ -4002,99 +4153,7 @@ function rollDiceExpression(expression) {
     };
 }
 
-let diceTimer = null;
 
-function showCombatResults(title, attackResult, damageResult) {
-    // 1. Criação/Busca do Container Visual (Janelinha Roxa)
-    let container = document.getElementById('dice-results-container');
-    if (!container) { 
-        container = document.createElement('div'); 
-        container.id = 'dice-results-container'; 
-        document.body.appendChild(container); 
-    }
-
-    // 2. Limpa timer anterior para não fechar na cara do usuário
-    if (diceTimer) clearTimeout(diceTimer);
-
-    // 3. Montagem do HTML Visual
-    let html = `<div class="dice-header">${title}</div>`;
-
-    // --- Linha de Ataque ---
-    if (attackResult) {
-        // Verifica Crítico/Falha para colorir o TOTAL (Visual da Ficha)
-        let totalClass = "";
-        if (attackResult.isCrit) totalClass = "crit-total";
-        else if (attackResult.isFumble) totalClass = "fumble-total";
-
-        html += `
-            <div class="dice-row">
-                <div class="dice-label">ACERTO</div>
-                <div class="dice-value-wrapper">
-                    <div class="dice-value ${totalClass}">${attackResult.text}</div>
-                    <div class="dice-tooltip">${attackResult.detail}</div>
-                </div>
-            </div>
-        `;
-    }
-
-    // --- Linha de Dano ---
-    if (damageResult) {
-        let totalClass = damageResult.isCrit ? "crit-total" : "";
-        
-        html += `
-            <div class="dice-row">
-                <div class="dice-label">DANO</div>
-                <div class="dice-value-wrapper">
-                    <div class="dice-value ${totalClass}">${damageResult.text}</div>
-                    <div class="dice-tooltip">${damageResult.detail}</div>
-                </div>
-            </div>
-        `;
-    }
-
-    // Aplica o HTML no container
-    container.innerHTML = html;
-    
-    // 4. Mostrar com Animação
-    requestAnimationFrame(() => {
-        container.classList.add('active');
-    });
-
-    // 5. Esconder automático após 4 segundos
-    diceTimer = setTimeout(() => {
-        container.classList.remove('active');
-    }, 4000);
-
-    // 6. ENVIO PARA O PORTRAIT (Socket)
-    // Envia os dados limpos para o OBS
-    if (typeof socket !== 'undefined') {
-        const payload = {
-            personagem: state.personagem || state.nome,
-            titulo: title,
-            ataque: null,
-            dano: null
-        };
-
-        if (attackResult) {
-            payload.ataque = {
-                total: attackResult.total,
-                text: attackResult.text,
-                isCrit: attackResult.isCrit,
-                isFumble: attackResult.isFumble
-            };
-        }
-
-        if (damageResult) {
-            payload.dano = {
-                total: damageResult.total,
-                text: damageResult.text,
-                isCrit: damageResult.isCrit
-            };
-        }
-
-        socket.emit('dados_rolados', payload);
-    }
-}
 
 /* 3. AUXILIARES */
 function getAttributeMod(attrKey) {
