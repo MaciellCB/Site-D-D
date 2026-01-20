@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>OBS Portrait - Correção Barra</title>
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Roboto:wght@500;900&display=swap" rel="stylesheet">
+    <style>
+        /* Fundo transparente */
+        body, html {
+            background-color: transparent;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .portrait-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            width: auto;
+            height: auto;
+            padding: 20px;
+        }
+
+        /* Agrupador para Imagem e Barras */
+        .layout-row {
+            display: flex;
+            align-items: flex-end;
+            position: relative;
+        }
+
+        /* --- IMAGEM --- */
+        .image-wrapper {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 8px solid #000;
+            overflow: hidden;
+            background-color: #222;
+            z-index: 20; /* Imagem fica na frente de tudo */
+            flex-shrink: 0;
+            box-shadow: 0 0 15px rgba(0,0,0,0.8);
+        }
+
+        .char-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* --- GRUPO DAS BARRAS --- */
+        .bars-group {
+            display: flex;
+            flex-direction: column;
+            margin-left: -50px; /* Entra atrás da imagem */
+            margin-bottom: 20px;
+            z-index: 5; /* Grupo atrás da imagem */
+        }
+
+        /* --- BARRA DE VIDA PRINCIPAL --- */
+        .health-bar-container {
+            position: relative;
+            height: 60px;
+            width: 500px;
+            background-color: #000; /* Fundo Preto */
+            border: 4px solid #000;
+            border-bottom: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0 10px 0 0;
+            overflow: hidden;
+            box-shadow: 5px -2px 10px rgba(0,0,0,0.5);
+            /* Z-index removido daqui para não criar contexto de empilhamento errado */
+        }
+
+        .health-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%; /* Começa zerado e o JS preenche */
+            background: linear-gradient(to right, #500000, #b30000, #ff3333);
+            z-index: 1; /* Camada 1: Acima do fundo preto */
+            transition: width 0.4s ease-out;
+        }
+
+        .health-text {
+            position: relative;
+            color: #fff;
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 36px;
+            font-weight: 900;
+            text-shadow: 3px 3px 0 #000, -1px -1px 0 #000;
+            letter-spacing: 2px;
+            z-index: 2; /* Camada 2: Acima da barra vermelha */
+        }
+
+        /* --- BARRAS SECUNDÁRIAS (Container) --- */
+        .sub-bars-row {
+            display: flex;
+            width: 500px;
+            height: 25px; 
+            background: #000;
+            border: 4px solid #000;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            overflow: hidden;
+        }
+
+        .mini-bar-box {
+            flex: 1;
+            position: relative;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-right: 2px solid #000;
+        }
+        .mini-bar-box:last-child { border-right: none; }
+
+        .mini-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+            z-index: 1; /* Acima do fundo cinza */
+        }
+
+        /* Cores Específicas */
+        .fill-temp { background: linear-gradient(to right, #004d40, #00bcd4); }
+        .fill-necro { background: linear-gradient(to right, #311b92, #7c4dff); }
+
+        .mini-text {
+            position: relative;
+            z-index: 2; /* Texto acima da cor */
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px #000;
+            text-transform: uppercase;
+        }
+
+        /* --- INSPIRAÇÃO --- */
+        .inspiration-container {
+            position: absolute;
+            bottom: 30px; 
+            left: 5px; 
+            width: 90px;
+            height: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 30; /* Acima de tudo */
+        }
+
+        .smoke-effect {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0,0,0,0.95) 10%, rgba(20,20,20,0.8) 40%, transparent 70%);
+            filter: blur(5px);
+            border-radius: 50%;
+            animation: pulseSmoke 3s infinite alternate;
+        }
+
+        @keyframes pulseSmoke {
+            0% { transform: scale(0.95) rotate(0deg); opacity: 0.9; }
+            100% { transform: scale(1.1) rotate(5deg); opacity: 1; }
+        }
+
+        .inspiration-number {
+            position: relative;
+            color: #ffcc00;
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #ffaa00, 2px 2px 0 #000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="portrait-container">
+        <div class="layout-row">
+            <div class="image-wrapper">
+                <img id="img-personagem" class="char-img" src="" alt="">
+            </div>
+
+            <div class="bars-group">
+                <div class="health-bar-container">
+                    <div id="health-fill-bar" class="health-fill"></div>
+                    <div class="health-text">
+                        <span id="hp-atual">?</span> / <span id="hp-total">?</span>
+                    </div>
+                </div>
+
+                <div class="sub-bars-row">
+                    <div class="mini-bar-box">
+                        <div id="temp-fill" class="mini-fill fill-temp"></div>
+                        <span class="mini-text" id="temp-text">Temp: 0</span>
+                    </div>
+                    <div class="mini-bar-box">
+                        <div id="necro-fill" class="mini-fill fill-necro"></div>
+                        <span class="mini-text" id="necro-text">Necro: 0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="inspiration-container" id="insp-container">
+            <div class="smoke-effect"></div>
+            <div id="inspiration-val" class="inspiration-number">0</div>
+        </div>
+    </div>
+
+    <script>
+        const socket = io('http://localhost:3000');
+        const params = new URLSearchParams(window.location.search);
+        const nomePersonagem = params.get('nome');
+
+        async function carregarDados() {
+            if(!nomePersonagem) return;
+            try {
+                const res = await fetch('http://localhost:3000/api/load-ficha-mestre', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome: nomePersonagem })
+                });
+                if(res.ok) {
+                    const data = await res.json();
+                    atualizarInterface(data);
+                }
+            } catch(e) { console.error(e); }
+        }
+
+        socket.on('ficha_atualizada', (novaFicha) => {
+            if (novaFicha.nome && novaFicha.nome.toLowerCase() === nomePersonagem.toLowerCase()) {
+                atualizarInterface(novaFicha);
+            }
+        });
+
+        function atualizarInterface(data) {
+            // 1. Imagem
+            const imgEl = document.getElementById('img-personagem');
+            if (data.fotoPerfil && data.fotoPerfil.length > 10) {
+                imgEl.src = data.fotoPerfil;
+            } else {
+                imgEl.src = 'img/imagem-no-site/personagem.png';
+            }
+
+            // 2. Valores e Tratamento de Erros
+            const atual = parseInt(data.vidaAtual) || 0;
+            const temp = parseInt(data.vidaTempAtual) || 0;
+            const necro = parseInt(data.danoNecroAtual) || 0;
+            
+            // Lógica para obter o Total: Tenta o calculado, se falhar, tenta somar dados, se falhar vira 1.
+            let total = parseInt(data.vidaTotalCalculada) || 0;
+            if (total === 0 && data.vidaDadosSalvos) {
+                 total = Object.values(data.vidaDadosSalvos).reduce((a, b) => a + (parseInt(b)||0), 0);
+            }
+            if (total <= 0) total = 1; // Evita divisão por zero e garante barra cheia se não tiver maximo
+
+            // 3. Atualiza Barra de Vida Principal
+            document.getElementById('hp-atual').innerText = atual;
+            document.getElementById('hp-total').innerText = total;
+            
+            // Cálculo da porcentagem da vida
+            let pctVida = (atual / total) * 100;
+            if (pctVida > 100) pctVida = 100;
+            if (pctVida < 0) pctVida = 0;
+            
+            document.getElementById('health-fill-bar').style.width = pctVida + "%";
+
+            // 4. Atualiza Barra Temporária (Base fixa 100)
+            document.getElementById('temp-fill').style.width = `${Math.min(100, temp)}%`;
+            document.getElementById('temp-text').innerText = temp > 0 ? `Temp: ${temp}` : "";
+
+            // 5. Atualiza Barra Necrótica (Base fixa 100)
+            document.getElementById('necro-fill').style.width = `${Math.min(100, necro)}%`;
+            document.getElementById('necro-text').innerText = necro > 0 ? `Necro: ${necro}` : "";
+
+            // 6. Inspiração
+            const inspVal = parseInt(data.inspiracao) || 0;
+            document.getElementById('inspiration-val').innerText = inspVal;
+            
+            if (inspVal > 0) {
+                document.getElementById('insp-container').style.display = 'flex';
+            } else {
+                document.getElementById('insp-container').style.display = 'none';
+            }
+        }
+
+        carregarDados();
+    </script>
+</body>
+</html>

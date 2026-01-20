@@ -667,8 +667,8 @@
     "v3": 6
   },
   "marco": 0,
-  "vidaAtual": 14,
-  "vidaTempAtual": 35,
+  "vidaAtual": 8,
+  "vidaTempAtual": 55,
   "danoNecroAtual": 30,
   "metros": 123,
   "iniciativaBonus": 0,
@@ -815,5 +815,6 @@
     "artifice",
     "bruxo",
     "bardo"
-  ]
+  ],
+  "vidaTotalCalculada": 18
 }

@@ -781,8 +781,14 @@ window.salvarDadoVida = (id, val) => {
 // 7. Atualizações Visuais (Vida, Iniciativa)
 // ======================================
 
+// --- No EsquerdaJS.js, SUBSTITUA a função atualizarVidaCalculada por esta: ---
+
 function atualizarVidaCalculada() {
     const vidaMax = Object.values(state.vidaDadosSalvos || {}).reduce((acc, val) => acc + (parseInt(val) || 0), 0);
+    
+    // ATUALIZAÇÃO: Salva o total calculado no estado para o Portrait ler
+    state.vidaTotalCalculada = vidaMax; 
+    
     const elVidaTotal = document.getElementById('vida-total');
     if (elVidaTotal) elVidaTotal.textContent = vidaMax;
 
@@ -790,6 +796,18 @@ function atualizarVidaCalculada() {
     atualizarBarraUI('vida-temp', state.vidaTempAtual, 100);
     atualizarBarraUI('dano-necro', state.danoNecroAtual, 100);
 }
+
+// --- ADICIONE esta nova função em qualquer lugar do EsquerdaJS.js (pode ser no final) ---
+
+window.abrirPortraitOBS = function() {
+    if (!state.nome) {
+        alert("Defina um nome para o personagem antes de abrir o Portrait.");
+        return;
+    }
+    // Abre uma janela popup dimensionada para o portrait
+    const url = `portrait.html?nome=${encodeURIComponent(state.nome)}`;
+    window.open(url, 'PortraitOBS', 'width=400,height=500,menubar=no,toolbar=no,location=no,status=no,resizable=yes');
+};
 
 function atualizarBarraUI(prefixo, atual, total) {
     const fill = document.getElementById(`${prefixo}-fill`);
