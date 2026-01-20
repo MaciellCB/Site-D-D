@@ -19,13 +19,13 @@
             bottom: 50px;
             left: 50px;
             display: flex;
-            align-items: flex-end; /* Alinha a base da imagem com as barras */
+            align-items: flex-end;
         }
 
         /* --- ÁREA DA IMAGEM (Esquerda) --- */
         .char-image-container {
             position: relative;
-            z-index: 10; /* Fica por cima das barras */
+            z-index: 10;
             width: 180px;
             height: 180px;
             flex-shrink: 0;
@@ -40,6 +40,7 @@
             overflow: hidden;
             background: #000;
             position: relative;
+            z-index: 2; /* Garante que a imagem fique acima da mancha da inspiração */
         }
 
         .char-img {
@@ -48,92 +49,94 @@
             object-fit: cover;
         }
 
-        /* Inspiração (Canto da Imagem) */
+        /* Inspiração (AGORA NA ESQUERDA - Mancha Preta) */
         .inspiration-badge {
             position: absolute;
-            bottom: 0;
-            right: 0; /* Canto inferior direito da imagem */
-            width: 50px;
-            height: 50px;
-            background: radial-gradient(circle, rgba(0,0,0,0.9) 20%, transparent 80%);
+            bottom: -10px; /* Levemente para fora */
+            left: -10px;   /* Na esquerda */
+            width: 80px;
+            height: 80px;
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 15;
+            pointer-events: none;
         }
         
+        /* Efeito de Fumaça/Mancha Preta no Fundo */
         .insp-smoke {
-            position: absolute; width: 100%; height: 100%;
+            position: absolute; 
+            width: 100%; 
+            height: 100%;
             border-radius: 50%;
-            box-shadow: 0 0 15px #ffcc00;
-            animation: pulseInsp 2s infinite;
-            opacity: 0.6;
+            background: radial-gradient(circle, rgba(0,0,0,1) 20%, rgba(20,20,20,0.8) 50%, transparent 80%);
+            filter: blur(4px);
+            z-index: 1;
         }
-        @keyframes pulseInsp { 0% { transform: scale(0.8); opacity: 0.4; } 50% { transform: scale(1.1); opacity: 0.7; } 100% { transform: scale(0.8); opacity: 0.4; } }
 
         .insp-number {
             position: relative;
             color: #ffcc00;
             font-family: 'Cinzel Decorative', cursive;
-            font-size: 28px;
-            text-shadow: 2px 2px 0 #000;
-            z-index: 16;
+            font-size: 32px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.5), 2px 2px 0 #000;
+            z-index: 2;
         }
 
-        /* --- ÁREA DAS BARRAS (Direita, ligada à imagem) --- */
+        /* --- ÁREA DAS BARRAS (Direita) --- */
         .stats-container {
             position: relative;
-            margin-left: -40px; /* Sobreposição: Entra "dentro" da imagem */
-            margin-bottom: 15px; /* Ajuste vertical */
+            margin-left: -40px; /* Sobreposição na imagem */
+            margin-bottom: 15px;
             z-index: 5;
             display: flex;
             flex-direction: column;
             width: 450px;
         }
 
-        /* Nome (Acima da vida) */
+        /* Nome (Ajustado: Mais baixo e esquerda para colar na barra) */
         .char-name {
-            margin-left: 50px; /* Compensa a sobreposição da imagem */
-            margin-bottom: 4px;
+            margin-left: 25px; /* Mais p/ esquerda (antes era 50px) */
+            margin-bottom: -2px; /* Mais p/ baixo para encostar na barra */
             color: #fff;
             font-family: 'Cinzel Decorative', cursive;
             font-size: 24px;
             text-transform: uppercase;
             text-shadow: 2px 2px 4px #000;
-            background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, transparent 100%);
-            padding: 2px 15px;
-            border-radius: 4px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+            padding: 4px 20px 4px 25px;
+            border-radius: 4px 4px 0 0; /* Arredondado só em cima */
             display: inline-block;
             align-self: flex-start;
+            z-index: 6; /* Acima da barra */
         }
 
-        /* Barra de Vida (Container) */
+        /* Barra de Vida */
         .health-bar-frame {
             position: relative;
             height: 50px;
             background: #0f0f0f;
             border: 4px solid #1a1a1a;
-            /* Borda arredondada só na direita e overflow hidden pra não vazar */
             border-radius: 0 12px 12px 0; 
             overflow: hidden; 
             box-shadow: 3px 3px 10px rgba(0,0,0,0.5);
             display: flex;
             align-items: center;
-            padding-left: 45px; /* Espaço onde a imagem corta */
+            padding-left: 45px;
+            z-index: 5;
         }
 
-        /* Preenchimento Vida (Vermelho) */
         .hp-fill {
             position: absolute;
             top: 0; left: 0; bottom: 0;
             background: linear-gradient(90deg, #500000, #b30000, #ff3333);
-            width: 0%; /* JS controla */
+            width: 0%;
             transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
             box-shadow: 2px 0 10px rgba(255, 50, 50, 0.3);
             z-index: 1;
         }
 
-        /* Texto Vida */
         .hp-text {
             position: relative;
             z-index: 5;
@@ -144,13 +147,14 @@
             margin-left: 10px;
         }
 
-        /* Sub-barras (Temp / Necro) */
+        /* Sub-barras */
         .sub-bars {
             display: flex;
             height: 18px;
-            margin-left: 4px; /* Pequeno ajuste */
+            margin-left: 4px;
             width: 98%;
             margin-top: -2px;
+            z-index: 4;
         }
 
         .mini-bar {
@@ -174,16 +178,17 @@
             display: block; line-height: 16px; text-shadow: 1px 1px 0 #000;
         }
 
-        /* --- POPUPS DE DADOS (Direita do Portrait) --- */
+        /* --- POPUPS DE DADOS (Área de Resultados) --- */
         .dice-area {
             position: absolute;
-            left: 430px; /* À direita das barras */
+            left: 430px; /* Posicionado logo à direita das barras */
             bottom: 20px;
             display: flex;
-            flex-direction: column-reverse; /* Novos embaixo ou em cima, conforme preferir. Aqui sobe. */
+            flex-direction: column-reverse; 
             gap: 12px;
             width: 350px;
             pointer-events: none;
+            z-index: 20; /* Bem acima de tudo */
         }
 
         .roll-card {
@@ -191,10 +196,10 @@
             border-left: 4px solid #9c27b0;
             border-radius: 4px;
             padding: 10px 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.6);
-            animation: slideInDice 0.4s ease-out forwards;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+            animation: slideInDice 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
             opacity: 0;
-            transform: translateX(-20px);
+            transform: translateX(-30px);
             display: flex;
             flex-direction: column;
             color: #fff;
@@ -230,12 +235,9 @@
         }
 
         .d-icon { width: 24px; height: 24px; filter: drop-shadow(0 2px 2px #000); }
-        
         .d-val { font-size: 26px; font-weight: 900; text-shadow: 2px 2px 0 #000; }
-        
         .d-label { font-size: 10px; color: #aaa; text-transform: uppercase; margin-top: 2px; }
 
-        /* Cores Específicas */
         .crit { color: #ffcc00; text-shadow: 0 0 10px #ffcc00, 2px 2px 0 #000; }
         .fumble { color: #ff3333; text-shadow: 0 0 10px #ff0000, 2px 2px 0 #000; }
         .dmg-val { color: #ff5252; }
@@ -283,12 +285,11 @@
     </div>
 
     <script>
-        // --- CONEXÃO SOCKET ---
         const socket = io('https://dandd-chan.onrender.com');
         const params = new URLSearchParams(window.location.search);
         const nomeOriginalURL = params.get('nome');
 
-        // --- 1. ATUALIZAÇÃO DA FICHA ---
+        // --- ATUALIZAÇÃO DA FICHA ---
         socket.on('ficha_atualizada', (novaFicha) => {
             if (novaFicha.nome && novaFicha.nome.toLowerCase() === nomeOriginalURL.toLowerCase()) {
                 atualizarInterface(novaFicha);
@@ -296,15 +297,12 @@
         });
 
         function atualizarInterface(data) {
-            // Nome
             const nomeExibicao = data.personagem || data.nome || "HERÓI";
             document.getElementById('display-nome').innerText = nomeExibicao;
 
-            // Imagem
             const imgEl = document.getElementById('img-personagem');
             imgEl.src = (data.fotoPerfil && data.fotoPerfil.length > 10) ? data.fotoPerfil : 'img/imagem-no-site/personagem.png';
 
-            // Vida
             const atual = parseInt(data.vidaAtual) || 0;
             const total = parseInt(data.vidaTotalCalculada) || 1;
             document.getElementById('hp-atual').innerText = atual;
@@ -313,26 +311,21 @@
             const pct = Math.min(100, Math.max(0, (atual / total) * 100));
             document.getElementById('hp-bar').style.width = pct + "%";
 
-            // Sub-barras
             const temp = parseInt(data.vidaTempAtual) || 0;
             const necro = parseInt(data.danoNecroAtual) || 0;
-            
             document.getElementById('temp-bar').style.width = Math.min(100, temp) + "%";
             document.getElementById('temp-text').innerText = temp > 0 ? `Temp: ${temp}` : "";
-            
             document.getElementById('necro-bar').style.width = Math.min(100, necro) + "%";
             document.getElementById('necro-text').innerText = necro > 0 ? `Necro: ${necro}` : "";
 
-            // Inspiração
             const insp = parseInt(data.inspiracao) || 0;
             const inspBadge = document.getElementById('insp-badge');
             document.getElementById('insp-val').innerText = insp;
             inspBadge.style.display = insp > 0 ? 'flex' : 'none';
         }
 
-        // --- 2. ROLAGEM DE DADOS ---
+        // --- ROLAGEM DE DADOS (CORREÇÃO DO BUG) ---
         socket.on('dados_rolados', (data) => {
-            // Verifica se é o personagem correto
             if (data.personagem && data.personagem.toLowerCase() === nomeOriginalURL.toLowerCase()) {
                 criarPopUpDado(data);
             }
@@ -343,34 +336,32 @@
             const card = document.createElement('div');
             card.className = 'roll-card';
 
-            // HTML Interno
             let conteudoHTML = `<div class="roll-header">${data.titulo}</div><div class="roll-body">`;
 
-            // Parte Esquerda: ATAQUE (Se houver)
+            // ATAQUE (Esquerda)
             if (data.ataque) {
                 const isCrit = data.ataque.isCrit;
                 const isFumble = data.ataque.isFumble;
                 const valClass = isCrit ? 'crit' : (isFumble ? 'fumble' : '');
                 
+                // Exibe o 'text' que já é a soma total
                 conteudoHTML += `
                     <div class="dice-result-box">
                         <img src="img/imagem-no-site/dado.png" class="d-icon">
                         <div>
-                            <div class="d-val ${valClass}">${data.ataque.total || data.ataque.text}</div>
+                            <div class="d-val ${valClass}">${data.ataque.text}</div> 
                             <div class="d-label">Acerto</div>
                         </div>
                     </div>
                 `;
             }
 
-            // Separador (Se tiver os dois)
             if (data.ataque && data.dano) {
                 conteudoHTML += `<div class="sep-line"></div>`;
             }
 
-            // Parte Direita: DANO (Se houver)
+            // DANO (Direita)
             if (data.dano) {
-                // Para dano, crítico geralmente só dobra dados, mas vamos destacar também
                 const isCritDmg = data.dano.isCrit; 
                 const valClass = isCritDmg ? 'crit' : 'dmg-val';
 
@@ -378,26 +369,23 @@
                     <div class="dice-result-box">
                         <img src="https://cdn-icons-png.flaticon.com/512/826/826070.png" class="d-icon" style="filter: invert(1);">
                         <div>
-                            <div class="d-val ${valClass}">${data.dano.total || data.dano.text}</div>
+                            <div class="d-val ${valClass}">${data.dano.text}</div>
                             <div class="d-label">Dano</div>
                         </div>
                     </div>
                 `;
             }
 
-            conteudoHTML += `</div>`; // Fecha body
+            conteudoHTML += `</div>`;
             card.innerHTML = conteudoHTML;
-
             area.appendChild(card);
 
-            // Remove após 8 segundos
             setTimeout(() => {
                 card.classList.add('fade-out');
                 setTimeout(() => card.remove(), 1000);
             }, 8000);
         }
 
-        // Carregamento Inicial
         async function carregarDados() {
             if(!nomeOriginalURL) return;
             try {
