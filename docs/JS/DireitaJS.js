@@ -4003,7 +4003,6 @@ function rollDiceExpression(expression) {
 }
 
 let diceTimer = null;
-let diceTimer = null;
 
 function showCombatResults(title, attackResult, damageResult) {
     // 1. Criação/Busca do Container Visual (Janelinha Roxa)
