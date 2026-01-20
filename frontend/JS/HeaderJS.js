@@ -70,7 +70,7 @@ const LISTA_FERRAMENTAS_ARTESAO = [
     "Ferramentas de Ladrão", "Ferramentas de Navegador", "Ferramentas de Oleiro",
     "Ferramentas de Pedreiro", "Ferramentas de Sapateiro", "Ferramentas de Tecelão",
     "Ferramentas de Vidreiro", "Suprimentos de Cervejeiro", "Suprimentos de Calígrafo",
-    "Suprimentos de Pintor", "Utensílios de Cozinheiro", "Ferramentas de Funileiro","Ferramentas de Navegador", "Ferramentas de Funileiro"
+    "Suprimentos de Pintor", "Utensílios de Cozinheiro", "Ferramentas de Funileiro","Ferramentas de Navegador",
 ];
 
 const LISTA_JOGOS = ['Baralho', 'Dados', 'Xadrez do Dragão'];

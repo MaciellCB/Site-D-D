@@ -12,6 +12,9 @@
   <link rel="stylesheet" href="CSS/headerCS.css">
 
   <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
 
   <style>
     /* CSS DO AVISO CUSTOMIZADO (TOAST) */
@@ -64,6 +67,17 @@
         font-size: 14px;
     }
     .nav-mestre-link:hover { color: #fff !important; }
+
+    /* Estilo da Imagem Editável */
+    .foto-personagem {
+        cursor: pointer;
+        transition: opacity 0.2s, transform 0.2s;
+    }
+    .foto-personagem:hover {
+        opacity: 0.8;
+        transform: scale(1.02);
+        border: 2px solid #9c27b0;
+    }
   </style>
 </head>
 <body>
@@ -73,28 +87,27 @@
         <a href="#" class="active">Personagem</a>
         <a href="mestre.html" id="link-voltar-painel" class="nav-mestre-link">Voltar ao Painel (Mestre)</a>
       </div>
-    
     </nav>
   </header>
 
   <section class="info-personagem">
     <div class="info-esquerda">
-  <img 
-    src="img/imagem-no-site/personagem.png" 
-    alt="Foto do personagem" 
-    class="foto-personagem" 
-    id="img-personagem-visual"
-    onclick="document.getElementById('input-foto-upload').click()" 
-    title="Clique para alterar a foto"
-  />
-  
-  <input 
-    type="file" 
-    id="input-foto-upload" 
-    accept="image/*" 
-    style="display: none;" 
-  />
-</div>
+      <img 
+        src="img/imagem-no-site/personagem.png" 
+        alt="Foto do personagem" 
+        class="foto-personagem" 
+        id="img-personagem-visual"
+        onclick="document.getElementById('input-foto-upload').click()" 
+        title="Clique para alterar a foto"
+      />
+      
+      <input 
+        type="file" 
+        id="input-foto-upload" 
+        accept="image/*" 
+        style="display: none;" 
+      />
+    </div>
     <div class="info-direita">
       <div class="linha-info">
         <div class="campo">
@@ -332,6 +345,21 @@
     </div>
   </div>
 
+  <div id="modal-crop-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:999999; flex-direction:column; align-items:center; justify-content:center;">
+    <div style="background:#1a1a1a; padding:20px; border-radius:10px; border:1px solid #9c27b0; width:90%; max-width:500px; max-height:90vh; display:flex; flex-direction:column;">
+        <h3 style="color:#fff; margin-bottom:15px; text-align:center;">Ajustar Imagem</h3>
+        
+        <div style="width:100%; height:300px; background:#000; margin-bottom:20px; overflow:hidden;">
+            <img id="imagem-para-crop" style="max-width:100%; display:block;">
+        </div>
+
+        <div style="display:flex; gap:10px; justify-content:center;">
+            <button id="btn-cancelar-crop" style="background:#333; color:#fff; border:1px solid #555; padding:10px 20px; cursor:pointer; border-radius:4px;">Cancelar</button>
+            <button id="btn-confirmar-crop" style="background:#9c27b0; color:#fff; border:none; padding:10px 20px; cursor:pointer; font-weight:bold; border-radius:4px;">Salvar Imagem</button>
+        </div>
+    </div>
+  </div>
+
   <div id="mobile-navbar">
     <button class="mobile-nav-btn active" onclick="setMobileView('header')">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
@@ -365,22 +393,16 @@
        LÓGICA DO MODO MOBILE
        ================================================================= */
     function setMobileView(view) {
-      // 1. Define o atributo no body para o CSS controlar a visibilidade
       document.body.setAttribute('data-mobile-view', view);
-      
-      // 2. Atualiza a classe ativa nos botões
       document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
         btn.classList.remove('active');
         if(btn.getAttribute('onclick').includes(view)) {
           btn.classList.add('active');
         }
       });
-
-      // 3. Scroll para o topo
       window.scrollTo(0,0);
     }
 
-    // Define a view padrão ao carregar (se for mobile)
     if (window.innerWidth <= 768) {
       setMobileView('status');
     }
@@ -388,66 +410,43 @@
     /* =================================================================
        LÓGICA DO SOCKET.IO (SINCRONIZAÇÃO EM TEMPO REAL)
        ================================================================= */
-    
-    // Conecta ao servidor (assumindo que o server.js está na porta 3000)
     const socket = io('http://localhost:3000'); 
 
     socket.on('connect', () => {
         console.log("Conectado ao servidor de atualizações! ID:", socket.id);
     });
 
-    // Evento disparado pelo server.js quando ALGUÉM salva uma ficha
     socket.on('ficha_atualizada', (novaFicha) => {
-        // Verifica se a ficha recebida é a mesma que estou visualizando
         if (state && state.nome && novaFicha.nome && novaFicha.nome.toLowerCase() === state.nome.toLowerCase()) {
-            
             console.log("Recebi atualização externa para: " + novaFicha.nome);
-            
-            // 1. Atualiza a memória (state) com os novos dados
             Object.assign(state, novaFicha);
 
-            // 2. Chama as funções dos seus arquivos JS para redesenhar a tela
-            // Mestre: Preenche inputs básicos
             if(typeof preencherFichaNaTela === 'function') preencherFichaNaTela(state); 
-            
-            // HeaderJS: Atualiza raça, classes, antecedentes
             if(typeof atualizarHeader === 'function') atualizarHeader();
             if(typeof atualizarTextoClassesHeader === 'function') atualizarTextoClassesHeader();
-
-            // EsquerdaJS: Atualiza Atributos, Vida, CA, Barras
             if(typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
             if(typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
             
-            // DireitaJS e MeioJS: Ouvem este evento para atualizar Perícias, Inventário, Magias
             window.dispatchEvent(new CustomEvent('sheet-updated'));
-            
-            // SILENCIOSO: Aviso removido conforme solicitado
         }
     });
 
     /* =================================================================
        LÓGICA DO MESTRE & PREENCHIMENTO DE DADOS
        ================================================================= */
-    
-    // Verifica se veio do Painel do Mestre (URL: index.html?masterView=Pessoa1)
     window.addEventListener('DOMContentLoaded', () => {
         const params = new URLSearchParams(window.location.search);
         const masterChar = params.get('masterView');
 
         if (masterChar) {
-            // Remove o overlay de login
             document.getElementById('login-overlay').style.display = 'none';
-            // Mostra o botão de voltar
             document.getElementById('link-voltar-painel').style.display = 'block';
-            
-            // Carrega os dados
             carregarFichaMestre(masterChar);
         }
     });
 
     async function carregarFichaMestre(nome) {
         try {
-            // Usa a rota 'secreta' do Mestre que não pede senha
             const res = await fetch('http://localhost:3000/api/load-ficha-mestre', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -456,23 +455,14 @@
 
             if(res.ok) {
                 const ficha = await res.json();
-                
-                // INICIALIZA O STATE GLOBALMENTE (Crucial para os outros scripts)
                 if(typeof state !== 'undefined') {
                     Object.assign(state, ficha);
-                    
-                    // Renderiza a interface completa
-                    preencherFichaNaTela(ficha); // Inputs HTML puro
+                    preencherFichaNaTela(ficha);
                     if(typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
                     if(typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
                     if(typeof atualizarHeader === 'function') atualizarHeader();
-                    
-                    // Dispara evento para carregar abas e perícias
                     window.dispatchEvent(new CustomEvent('sheet-updated'));
-                    
-                    // Define aba ativa
                     if(typeof setActiveTab === 'function') setActiveTab(state.activeTab || 'Combate');
-
                     exibirAvisoTemporario("Mestre: Visualizando " + ficha.nome);
                 }
             } else {
@@ -484,38 +474,32 @@
         }
     }
 
-    // Função auxiliar para preencher inputs que não são controlados pelos módulos JS complexos
     function preencherFichaNaTela(data) {
-    setVal('input-personagem', data.nome);
-    setVal('input-jogador', data.jogador);
-    setVal('input-raca', data.raca);
-    setTxt('btn-antecedente', data.antecedente);
+        setVal('input-personagem', data.nome);
+        setVal('input-jogador', data.jogador);
+        setVal('input-raca', data.raca);
+        setTxt('btn-antecedente', data.antecedente);
 
-    // --- NOVO: LÓGICA DA FOTO DE PERFIL ---
-    const imgElement = document.getElementById('img-personagem-visual');
-    if (imgElement) {
-        // Se tiver uma foto salva no JSON (e for válida), usa ela
-        if (data.fotoPerfil && data.fotoPerfil.length > 10) {
-            imgElement.src = data.fotoPerfil;
-        } else {
-            // Se não tiver, usa a imagem padrão original
-            imgElement.src = "img/imagem-no-site/personagem.png";
+        // --- LÓGICA DA FOTO DE PERFIL ---
+        const imgElement = document.getElementById('img-personagem-visual');
+        if (imgElement) {
+            if (data.fotoPerfil && data.fotoPerfil.length > 10) {
+                imgElement.src = data.fotoPerfil;
+            } else {
+                imgElement.src = "img/imagem-no-site/personagem.png";
+            }
+        }
+
+        if (data.atributos) {
+            setTxtQ('.num.n1', data.atributos.n1);
+            setTxtQ('.num.n2', data.atributos.n2);
+            setTxtQ('.num.n3', data.atributos.n3);
+            setTxtQ('.num.n4', data.atributos.n4);
+            setTxtQ('.num.n5', data.atributos.n5);
+            setTxtQ('.num.n6', data.atributos.n6);
         }
     }
-    // ---------------------------------------
 
-    // Atualiza visualmente os atributos (Hexagrama)
-    if (data.atributos) {
-        setTxtQ('.num.n1', data.atributos.n1);
-        setTxtQ('.num.n2', data.atributos.n2);
-        setTxtQ('.num.n3', data.atributos.n3);
-        setTxtQ('.num.n4', data.atributos.n4);
-        setTxtQ('.num.n5', data.atributos.n5);
-        setTxtQ('.num.n6', data.atributos.n6);
-    }
-}
-
-    // Helpers
     function setVal(id, valor) { const el = document.getElementById(id); if(el) el.value = valor !== undefined ? valor : ''; }
     function setTxt(id, valor) { const el = document.getElementById(id); if(el) el.innerText = valor !== undefined ? valor : ''; }
     function setTxtQ(selector, valor) { const el = document.querySelector(selector); if(el) el.innerText = valor !== undefined ? valor : ''; }
@@ -552,27 +536,20 @@
         }, 5000);
     }
 
-    // Substitui o alert padrão
     window.alert = function(msg) { exibirAvisoTemporario(msg); };
 
     function tentarLogin() {
         const nome = document.getElementById('login-nome').value;
         const senha = document.getElementById('login-senha').value;
 
-        // --- CORREÇÃO: LÓGICA DO MESTRE ---
-        // Abre nova aba e RESETA o formulário atual sem esconder o modal
         if(nome.toLowerCase() === 'mestre' && senha === 'admin') { 
             window.open('mestre.html', '_blank');
-            
-            // Limpa os campos para segurança
             document.getElementById('login-nome').value = '';
             document.getElementById('login-senha').value = '';
-            
             exibirAvisoTemporario("Painel do Mestre aberto em nova aba.");
-            return; // Retorna aqui para não logar na aba atual
+            return; 
         }
 
-        // --- LOGIN DO JOGADOR ---
         if(nome && senha) {
             if(typeof carregarDadosIniciais === 'function') {
                 carregarDadosIniciais(nome, senha);
@@ -584,46 +561,114 @@
         }
     }
 
-    
     /* =================================================================
-   LÓGICA PARA TROCAR A FOTO DO PERSONAGEM (ATUALIZADA)
-   ================================================================= */
-const inputFoto = document.getElementById('input-foto-upload');
-const imgVisual = document.getElementById('img-personagem-visual');
+       LÓGICA DE RECORTE (CROP) E SALVAMENTO REORDENADO
+       ================================================================= */
+    
+    // Função auxiliar para garantir a ordem das chaves no JSON
+    function reordenarObjeto(obj) {
+        const chavesPrioritarias = ["nome", "senha", "fotoPerfil", "activeTab", "spellDCConfig", "dtMagias"];
+        const novoObj = {};
+        chavesPrioritarias.forEach(chave => {
+            if (obj.hasOwnProperty(chave)) {
+                novoObj[chave] = obj[chave];
+            }
+        });
+        Object.keys(obj).forEach(chave => {
+            if (!chavesPrioritarias.includes(chave)) {
+                novoObj[chave] = obj[chave];
+            }
+        });
+        return novoObj;
+    }
 
-if(inputFoto && imgVisual) {
-    inputFoto.addEventListener('change', function(e) {
-        if (e.target.files && e.target.files[0]) {
-            const reader = new FileReader();
+    // Elementos do DOM
+    const inputFoto = document.getElementById('input-foto-upload');
+    const modalCrop = document.getElementById('modal-crop-overlay');
+    const imgParaCrop = document.getElementById('imagem-para-crop');
+    const btnConfirmarCrop = document.getElementById('btn-confirmar-crop');
+    const btnCancelarCrop = document.getElementById('btn-cancelar-crop');
+    const imgVisual = document.getElementById('img-personagem-visual');
 
-            reader.onload = function(e) {
-                const imagemBase64 = e.target.result;
+    let cropper = null; 
 
-                // 1. Atualiza a imagem na tela na hora
-                imgVisual.src = imagemBase64;
+    if(inputFoto) {
+        // 1. Ao selecionar arquivo, abre o modal
+        inputFoto.addEventListener('change', function(e) {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+                const file = files[0];
+                const url = URL.createObjectURL(file);
 
-                // 2. SALVA NO PERFIL (Adicione isso aqui)
-                if (typeof state !== 'undefined') {
-                    // Salva a imagem na variável do personagem
-                    state.fotoPerfil = imagemBase64; 
-                    
-                    console.log("Salvando nova foto no perfil...");
+                imgParaCrop.src = url;
+                modalCrop.style.display = 'flex'; // Exibe o modal
 
-                    // Se você usa a função saveStateToServer() (que vi no seu HeaderJS):
-                    if (typeof saveStateToServer === 'function') {
-                        saveStateToServer(); 
-                    } 
-                    // Se você usa socket direto:
-                    else if (typeof socket !== 'undefined') {
-                        socket.emit('ficha_atualizada', state); 
-                    }
+                if (cropper) cropper.destroy();
+
+                cropper = new Cropper(imgParaCrop, {
+                    aspectRatio: 1, // Força quadrado
+                    viewMode: 1,
+                    dragMode: 'move',
+                    autoCropArea: 1,
+                    restore: false,
+                    guides: true,
+                    center: true,
+                    highlight: false,
+                    cropBoxMovable: true,
+                    cropBoxResizable: true,
+                    toggleDragModeOnDblclick: false,
+                });
+                
+                inputFoto.value = ''; // Limpa input para permitir re-seleção
+            }
+        });
+
+        // 2. Botão Cancelar
+        btnCancelarCrop.onclick = function() {
+            modalCrop.style.display = 'none';
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+        };
+
+        // 3. Botão Salvar (Recortar e Enviar)
+        btnConfirmarCrop.onclick = function() {
+            if (!cropper) return;
+
+            // Pega o resultado (300x300px)
+            const canvas = cropper.getCroppedCanvas({
+                width: 300,
+                height: 300,
+            });
+
+            const imagemBase64 = canvas.toDataURL('image/jpeg', 0.85);
+
+            // Atualiza na tela
+            if(imgVisual) imgVisual.src = imagemBase64;
+
+            // Fecha modal
+            modalCrop.style.display = 'none';
+            cropper.destroy();
+            cropper = null;
+
+            // Salva no State com Reordenação
+            if (typeof state !== 'undefined') {
+                state.fotoPerfil = imagemBase64;
+                
+                const stateOrdenado = reordenarObjeto(state);
+                Object.assign(state, stateOrdenado);
+
+                console.log("Salvando foto recortada e reordenando JSON...");
+
+                if (typeof saveStateToServer === 'function') {
+                    saveStateToServer(); 
+                } else if (typeof socket !== 'undefined') {
+                    socket.emit('ficha_atualizada', stateOrdenado); 
                 }
             }
-
-            reader.readAsDataURL(e.target.files[0]);
-        }
-    });
-}
+        };
+    }
   </script>
 </body>
 </html>

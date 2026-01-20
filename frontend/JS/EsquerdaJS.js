@@ -41,7 +41,7 @@ const DADOS_VALORES = {
 
 // --- LISTAS DE SELEÇÃO (Solicitadas) ---
 const TIPOS_DANO_LISTA = [
-    'Ácido', 'Contundente', 'Cortante', 'Perfurante', 'Fogo', 'Frio',
+    'Ácido', 'Contundente','Doenças', 'Cortante', 'Perfurante', 'Fogo', 'Frio',
     'Elétrico', 'Trovão', 'Veneno', 'Radiante', 'Necrótico', 'Psíquico', 'Energético'
 ];
 

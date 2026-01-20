@@ -9,7 +9,7 @@
     "climbSpeed": 0,
     "description": "Descendentes dos ventos uivantes do <b>Plano Elemental do Ar</b>, os Aarakocra são a personificação da liberdade. Eles planam pelos céus onde quer que vão, observando o mundo de uma perspectiva que os habitantes da terra não conseguem compreender. Suas penas variam de cores vibrantes de papagaios a tons sóbrios de águias, e eles abominam o confinamento acima de tudo.",
     "image": "img/races/Aaracokra.png",
-    "languages": ["Comum", "Aarakocra", "Auran"],
+    "languages": ["Comum", "Auran"],
     "traits": [
       {
         "name": "Voo",
