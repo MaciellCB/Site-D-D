@@ -1,0 +1,309 @@
+{
+  "nome": "jennifer",
+  "senha": "123",
+  "activeTab": "Descrição",
+  "spellDCConfig": {
+    "selectedAttr": "none",
+    "extraMod": 0,
+    "lastKnownLevel": 0
+  },
+  "dtMagias": "Selecione",
+  "inventory": [],
+  "abilities": [],
+  "description": {
+    "anotacoes": "",
+    "aparencia": "",
+    "personalidade": "",
+    "objetivo": "",
+    "ideais": "",
+    "vinculos": "",
+    "fraquezas": "",
+    "historia": ""
+  },
+  "sanidade": {
+    "estresse": 0,
+    "vazio": 0
+  },
+  "fotoPerfil": "",
+  "spells": [],
+  "abilityCatalog": [],
+  "spellCatalog": [],
+  "pericias": {
+    "Atletismo": {
+      "atributo": "FOR",
+      "treinado": false,
+      "outros": 0
+    },
+    "Acrobacia": {
+      "atributo": "DEX",
+      "treinado": false,
+      "outros": 0
+    },
+    "Furtividade": {
+      "atributo": "DEX",
+      "treinado": false,
+      "outros": 0
+    },
+    "Prestidigitação": {
+      "atributo": "DEX",
+      "treinado": false,
+      "outros": 0
+    },
+    "Arcanismo": {
+      "atributo": "INT",
+      "treinado": false,
+      "outros": 0
+    },
+    "História": {
+      "atributo": "INT",
+      "treinado": false,
+      "outros": 0
+    },
+    "Investigação": {
+      "atributo": "INT",
+      "treinado": false,
+      "outros": 0
+    },
+    "Natureza": {
+      "atributo": "INT",
+      "treinado": false,
+      "outros": 0
+    },
+    "Religião": {
+      "atributo": "INT",
+      "treinado": false,
+      "outros": 0
+    },
+    "Intuição": {
+      "atributo": "SAB",
+      "treinado": false,
+      "outros": 0
+    },
+    "Lidar com animais": {
+      "treinado": false,
+      "bonus": 0,
+      "atributo": "SAB"
+    },
+    "Medicina": {
+      "atributo": "SAB",
+      "treinado": false,
+      "outros": 0
+    },
+    "Percepção": {
+      "atributo": "SAB",
+      "treinado": false,
+      "outros": 0
+    },
+    "Sobrevivência": {
+      "atributo": "SAB",
+      "treinado": false,
+      "outros": 0
+    },
+    "Atuação": {
+      "atributo": "CAR",
+      "treinado": false,
+      "outros": 0
+    },
+    "Enganação": {
+      "atributo": "CAR",
+      "treinado": false,
+      "outros": 0
+    },
+    "Intimidação": {
+      "atributo": "CAR",
+      "treinado": false,
+      "outros": 0
+    },
+    "Persuasão": {
+      "atributo": "CAR",
+      "treinado": false,
+      "outros": 0
+    },
+    "Salvaguarda (Força)": {
+      "atributo": "FOR",
+      "treinado": false,
+      "outros": 0
+    },
+    "Salvaguarda (Destreza)": {
+      "atributo": "DEX",
+      "treinado": false,
+      "outros": 0
+    },
+    "Salvaguarda (Constituição)": {
+      "atributo": "CON",
+      "treinado": false,
+      "outros": 0
+    },
+    "Salvaguarda (Inteligência)": {
+      "atributo": "INT",
+      "treinado": false,
+      "outros": 0
+    },
+    "Salvaguarda (Sabedoria)": {
+      "atributo": "SAB",
+      "treinado": false,
+      "outros": 0
+    },
+    "Salvaguarda (Carisma)": {
+      "atributo": "CAR",
+      "treinado": false,
+      "outros": 0
+    }
+  },
+  "atributos": {
+    "n1": 10,
+    "n2": 10,
+    "n3": 10,
+    "n4": 10,
+    "n5": 10,
+    "n6": 10
+  },
+  "niveisClasses": {},
+  "xp": "0",
+  "inspiracao": 0,
+  "vidaDadosSalvos": {
+    "v1": 0,
+    "v2": 0,
+    "v3": 0
+  },
+  "marco": 0,
+  "vidaAtual": 0,
+  "vidaTempAtual": 0,
+  "danoNecroAtual": 0,
+  "metros": 0,
+  "iniciativaBonus": 0,
+  "acOutros": 0,
+  "resistencias": "",
+  "imunidades": "",
+  "fraquezas": "",
+  "proficiencias": "",
+  "minimizedPreparedSpells": false,
+  "minimizedPreparedAbilities": false,
+  "fraquezasList": [],
+  "resistenciasList": [],
+  "imunidadesList": [],
+  "proficienciasList": [],
+  "idiomasList": [],
+  "spellSlots": {
+    "1": {
+      "used": 0,
+      "status": []
+    },
+    "2": {
+      "used": 0,
+      "status": []
+    },
+    "3": {
+      "used": 0,
+      "status": []
+    },
+    "4": {
+      "used": 0,
+      "status": []
+    },
+    "5": {
+      "used": 0,
+      "status": []
+    },
+    "6": {
+      "used": 0,
+      "status": []
+    },
+    "7": {
+      "used": 0,
+      "status": []
+    },
+    "8": {
+      "used": 0,
+      "status": []
+    },
+    "9": {
+      "used": 0,
+      "status": []
+    },
+    "pact": {
+      "used": 0,
+      "status": []
+    },
+    "ki": {
+      "used": 0,
+      "status": []
+    },
+    "furia": {
+      "used": 0,
+      "status": []
+    },
+    "sorcery": {
+      "used": 0,
+      "status": []
+    },
+    "mutagen": {
+      "used": 0,
+      "status": []
+    },
+    "blood_curse": {
+      "status": []
+    },
+    "infusions": {
+      "status": []
+    }
+  },
+  "isSlotsCollapsed": false,
+  "collapsedSections": {
+    "class-Blood Hunter": false,
+    "origem": false,
+    "inv-armas": false,
+    "inv-armaduras": false,
+    "cmb-ataques": false,
+    "class-Bárbaro": false,
+    "class-Druida": false,
+    "talentos": false,
+    "inv-gerais": false,
+    "class-Patrulheiro": false,
+    "class-Guerreiro": false,
+    "class-Bardo": false,
+    "class-Bruxo": false,
+    "class-Ladino": false,
+    "class-Monge": false
+  },
+  "antecedente": "",
+  "personagem": "",
+  "jogador": "",
+  "raca": "",
+  "customResources": [],
+  "deslocamentoVoo": 0,
+  "subRaca": "",
+  "racaTipo": "Humanoide",
+  "racaTamanho": "Médio",
+  "money": {
+    "pc": 0,
+    "pp": 0,
+    "po": 0,
+    "pl": 0,
+    "pd": 0
+  },
+  "hitDie": "",
+  "subclasses": {},
+  "salvaguardas": {
+    "Força": {
+      "treinado": false
+    },
+    "Constituição": {
+      "treinado": false
+    },
+    "Destreza": {
+      "treinado": false
+    },
+    "Inteligência": {
+      "treinado": false
+    },
+    "Sabedoria": {
+      "treinado": false
+    },
+    "Carisma": {
+      "treinado": false
+    }
+  },
+  "ordemClasses": [],
+  "vidaTotalCalculada": 0
+}
