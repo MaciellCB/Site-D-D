@@ -435,7 +435,7 @@
     /* =================================================================
        LÓGICA DO SOCKET.IO (SINCRONIZAÇÃO EM TEMPO REAL)
        ================================================================= */
-    const socket = io('http://localhost:3000'); 
+    const socket = io('https://dandd-chan.onrender.com'); 
 
     socket.on('connect', () => {
         console.log("Conectado ao servidor de atualizações! ID:", socket.id);
@@ -472,7 +472,7 @@
 
     async function carregarFichaMestre(nome) {
         try {
-            const res = await fetch('http://localhost:3000/api/load-ficha-mestre', {
+            const res = await fetch('https://dandd-chan.onrender.com/api/load-ficha-mestre', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nome: nome })

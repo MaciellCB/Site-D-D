@@ -321,7 +321,7 @@ function openSkillSelector(count, sourceName, limitToList = null, onComplete = n
 
 
 // --- CONFIGURAÇÃO DA API E CARREGAMENTO ---
-var BASE_API_URL = (typeof API_URL !== 'undefined') ? API_URL : 'http://localhost:3000/api';
+var BASE_API_URL = (typeof API_URL !== 'undefined') ? API_URL : 'https://dandd-chan.onrender.com/api';
 
 async function carregarDadosHeader() {
     try {

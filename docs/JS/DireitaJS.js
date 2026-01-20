@@ -2,7 +2,7 @@
    JS/DireitaJS.js - INTEGRAÇÃO E LÓGICA PRINCIPAL
 ============================================================= */
 
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://dandd-chan.onrender.com/api';
 
 // --- VARIÁVEIS GLOBAIS DE CATÁLOGO ---
 let spellCatalog = [];

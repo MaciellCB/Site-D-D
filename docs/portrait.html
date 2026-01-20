@@ -227,14 +227,14 @@
     </div>
 
     <script>
-        const socket = io('http://localhost:3000');
+        const socket = io('https://dandd-chan.onrender.com');
         const params = new URLSearchParams(window.location.search);
         const nomePersonagem = params.get('nome');
 
         async function carregarDados() {
             if(!nomePersonagem) return;
             try {
-                const res = await fetch('http://localhost:3000/api/load-ficha-mestre', {
+                const res = await fetch('https://dandd-chan.onrender.com/api/load-ficha-mestre', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ nome: nomePersonagem })
