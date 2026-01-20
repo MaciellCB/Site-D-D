@@ -4012,39 +4012,14 @@ function showCombatResults(title, attackResult, damageResult) {
     
     let html = `<div class="dice-header">${title}</div>`;
 
-    // --- BLOCO DE ACERTO (Permite Vermelho e Roxo) ---
     if (attackResult) {
-        let totalClass = '';
-        if (attackResult.isCrit) totalClass = 'crit-total';       // 20 Natural = Roxo
-        else if (attackResult.isFumble) totalClass = 'fumble-total'; // 1 Natural = Vermelho
-
-        html += `
-            <div class="dice-row">
-                <span class="dice-label">ACERTO</span>
-                <div class="dice-value-wrapper">
-                    <span class="dice-value ${totalClass}">
-                        ${attackResult.text}
-                    </span>
-                    <div class="dice-tooltip">${attackResult.detail}</div>
-                </div>
-            </div>`;
+        let totalClass = attackResult.isCrit ? 'crit-total' : (attackResult.isFumble ? 'fumble-total' : '');
+        html += `<div class="dice-row"><span class="dice-label">ACERTO</span><div class="dice-value-wrapper"><span class="dice-value ${totalClass}">${attackResult.text}</span><div class="dice-tooltip">${attackResult.detail}</div></div></div>`;
     }
 
-    // --- BLOCO DE DANO (Apenas Roxo, nunca Vermelho) ---
     if (damageResult) {
         let totalClass = damageResult.isCrit ? 'crit-total' : ''; 
-        // Nota: Não verificamos isFumble aqui, garantindo que dano não fique vermelho
-
-        html += `
-            <div class="dice-row">
-                <span class="dice-label">DANO</span>
-                 <div class="dice-value-wrapper">
-                    <span class="dice-value ${totalClass}">
-                        ${damageResult.text}
-                    </span>
-                    <div class="dice-tooltip">${damageResult.detail}</div>
-                </div>
-            </div>`;
+        html += `<div class="dice-row"><span class="dice-label">DANO</span><div class="dice-value-wrapper"><span class="dice-value ${totalClass}">${damageResult.text}</span><div class="dice-tooltip">${damageResult.detail}</div></div></div>`;
     }
 
     container.innerHTML = html;
@@ -4052,7 +4027,22 @@ function showCombatResults(title, attackResult, damageResult) {
     setTimeout(() => container.classList.add('active'), 10);
     clearTimeout(diceTimer);
     diceTimer = setTimeout(() => container.classList.remove('active'), 8000); 
+
+    // --- NOVA LINHA: ENVIA PARA O PORTRAIT ---
+    if (typeof socket !== 'undefined' && state.nome) {
+        socket.emit('dados_rolados', {
+            personagem: state.nome,
+            titulo: title,
+            ataque: attackResult,
+            dano: damageResult
+        });
+    }
 }
+
+// Criar essa função para as pericias que usam ela no MeioJS
+window.showDiceResults = function(title, result) {
+    showCombatResults(title, result, null);
+};
 
 /* 3. AUXILIARES */
 function getAttributeMod(attrKey) {

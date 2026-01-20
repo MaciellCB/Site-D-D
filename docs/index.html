@@ -92,25 +92,7 @@
 
   <section class="info-personagem">
     <div class="info-esquerda">
-  <div id="nome-personagem-overlay" style="
-      background: rgba(0, 0, 0, 0.6); 
-      color: white; 
-      padding: 5px 10px; 
-      border-radius: 4px; 
-      margin-bottom: 5px; 
-      font-weight: bold; 
-      text-transform: uppercase; 
-      letter-spacing: 1px;
-      text-align: center;
-      font-size: 14px;
-      border: 1px solid rgba(156, 39, 176, 0.3);
-      max-width: 150px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-  ">Carregando...</div>
-
-  <div style="position: relative; display: inline-block; margin-bottom: 15px;">
+      <div style="position: relative; display: inline-block; margin-bottom: 15px;">
           <img 
             src="img/imagem-no-site/personagem.png" 
             alt="Foto do personagem" 
@@ -122,15 +104,15 @@
           
           <button onclick="abrirPortraitOBS()" style="
               position: absolute; 
-              bottom: -12px; /* Joga para baixo da imagem */
-              left: 50%; /* Centraliza horizontalmente */
-              transform: translateX(-50%); /* Ajuste fino do centro */
+              bottom: -12px; 
+              left: 50%; 
+              transform: translateX(-50%); 
               background: #9c27b0; 
               color: white; 
               border: 1px solid #fff; 
               border-radius: 50%; 
-              width: 24px; /* Menor */
-              height: 24px; /* Menor */
+              width: 24px; 
+              height: 24px; 
               font-size: 8px; 
               font-weight: bold; 
               cursor: pointer;
@@ -453,7 +435,7 @@
     /* =================================================================
        LÓGICA DO SOCKET.IO (SINCRONIZAÇÃO EM TEMPO REAL)
        ================================================================= */
-    const socket = io('https://dandd-chan.onrender.com'); 
+    const socket = io('http://localhost:3000'); 
 
     socket.on('connect', () => {
         console.log("Conectado ao servidor de atualizações! ID:", socket.id);
@@ -490,7 +472,7 @@
 
     async function carregarFichaMestre(nome) {
         try {
-            const res = await fetch('https://dandd-chan.onrender.com/api/load-ficha-mestre', {
+            const res = await fetch('http://localhost:3000/api/load-ficha-mestre', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nome: nome })
