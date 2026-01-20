@@ -4003,27 +4003,99 @@ function rollDiceExpression(expression) {
 }
 
 let diceTimer = null;
-function showCombatResults(title, attackResult, damageResult) {
-    // ... (Mantenha o código visual da ficha que já funciona) ...
-    let container = document.getElementById('dice-results-container');
-    if (!container) { container = document.createElement('div'); container.id = 'dice-results-container'; document.body.appendChild(container); }
-    // ... (restante do seu código visual da janelinha roxa) ...
+let diceTimer = null;
 
-    // ENVIO PARA O PORTRAIT
+function showCombatResults(title, attackResult, damageResult) {
+    // 1. Criação/Busca do Container Visual (Janelinha Roxa)
+    let container = document.getElementById('dice-results-container');
+    if (!container) { 
+        container = document.createElement('div'); 
+        container.id = 'dice-results-container'; 
+        document.body.appendChild(container); 
+    }
+
+    // 2. Limpa timer anterior para não fechar na cara do usuário
+    if (diceTimer) clearTimeout(diceTimer);
+
+    // 3. Montagem do HTML Visual
+    let html = `<div class="dice-header">${title}</div>`;
+
+    // --- Linha de Ataque ---
+    if (attackResult) {
+        // Verifica Crítico/Falha para colorir o TOTAL (Visual da Ficha)
+        let totalClass = "";
+        if (attackResult.isCrit) totalClass = "crit-total";
+        else if (attackResult.isFumble) totalClass = "fumble-total";
+
+        html += `
+            <div class="dice-row">
+                <div class="dice-label">ACERTO</div>
+                <div class="dice-value-wrapper">
+                    <div class="dice-value ${totalClass}">${attackResult.text}</div>
+                    <div class="dice-tooltip">${attackResult.detail}</div>
+                </div>
+            </div>
+        `;
+    }
+
+    // --- Linha de Dano ---
+    if (damageResult) {
+        let totalClass = damageResult.isCrit ? "crit-total" : "";
+        
+        html += `
+            <div class="dice-row">
+                <div class="dice-label">DANO</div>
+                <div class="dice-value-wrapper">
+                    <div class="dice-value ${totalClass}">${damageResult.text}</div>
+                    <div class="dice-tooltip">${damageResult.detail}</div>
+                </div>
+            </div>
+        `;
+    }
+
+    // Aplica o HTML no container
+    container.innerHTML = html;
+    
+    // 4. Mostrar com Animação
+    requestAnimationFrame(() => {
+        container.classList.add('active');
+    });
+
+    // 5. Esconder automático após 4 segundos
+    diceTimer = setTimeout(() => {
+        container.classList.remove('active');
+    }, 4000);
+
+    // 6. ENVIO PARA O PORTRAIT (Socket)
+    // Envia os dados limpos para o OBS
     if (typeof socket !== 'undefined') {
-        socket.emit('dados_rolados', {
+        const payload = {
             personagem: state.personagem || state.nome,
             titulo: title,
-            ataque: attackResult,
-            dano: damageResult
-        });
+            ataque: null,
+            dano: null
+        };
+
+        if (attackResult) {
+            payload.ataque = {
+                total: attackResult.total,
+                text: attackResult.text,
+                isCrit: attackResult.isCrit,
+                isFumble: attackResult.isFumble
+            };
+        }
+
+        if (damageResult) {
+            payload.dano = {
+                total: damageResult.total,
+                text: damageResult.text,
+                isCrit: damageResult.isCrit
+            };
+        }
+
+        socket.emit('dados_rolados', payload);
     }
 }
-
-// Criar essa função para as pericias que usam ela no MeioJS
-window.showDiceResults = function(title, result) {
-    showCombatResults(title, result, null);
-};
 
 /* 3. AUXILIARES */
 function getAttributeMod(attrKey) {
