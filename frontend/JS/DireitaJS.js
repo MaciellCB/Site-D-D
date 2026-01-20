@@ -264,7 +264,7 @@ function formatInventoryItem(item) {
          <span style="font-weight: 800; color: #9c27b0; font-size: ${dmgFontSize}px; white-space: nowrap; transition: font-size 0.2s;">
             ${finalDamage}
          </span>
-         <img class="dice-img" src="img/dado.png" alt="dado" style="width: 20px; height: 20px;" />
+         <img class="dice-img" src="img/imagem-no-site/dado.png" alt="dado" style="width: 20px; height: 20px;" />
        </div>
     `;
 
@@ -503,7 +503,7 @@ function renderInventory() {
 
 /* =============================================================
    CORREÇÃO: bindInventoryCardEvents
-   (Impede que clicar no dado feche o item)
+   (Sem confirmação de exclusão)
 ============================================================= */
 
 function bindInventoryCardEvents() {
@@ -519,15 +519,13 @@ function bindInventoryCardEvents() {
     const header = card.querySelector('.card-header');
 
     header.onclick = (ev) => {
-      // --- CORREÇÃO AQUI ---
-      // Se clicar no Checkbox, Botões de Ação, DADO ou TEXTO DE DANO, não faz nada (não fecha o card)
+      // Se clicar no Checkbox, Botões de Ação, DADO ou TEXTO DE DANO, não faz nada
       if (ev.target.closest('.header-equip') || 
           ev.target.closest('.item-actions-footer') ||
-          ev.target.closest('.dice-img') ||        // <--- Bloqueia o clique no dado
-          ev.target.closest('.spell-damage')) {    // <--- Bloqueia o clique no texto do dano
+          ev.target.closest('.dice-img') || 
+          ev.target.closest('.spell-damage')) { 
           return;
       }
-      // ---------------------
 
       const it = findItemById(rawId);
       if (!it) return;
@@ -599,11 +597,9 @@ function bindInventoryCardEvents() {
           
           if (item) {
               item.useTwoHands = ev.target.checked;
-              
-              // Salva
               saveStateToServer();
               
-              // Re-renderiza a aba atual (para atualizar o número de dano visualmente)
+              // Re-renderiza a aba atual
               const scrollY = window.scrollY; 
               renderActiveTab();
               window.scrollTo(0, scrollY);
@@ -611,20 +607,19 @@ function bindInventoryCardEvents() {
       };
   });
 
-  // --- 4. REMOVER ---
+  // --- 4. REMOVER (CONFIRMAÇÃO REMOVIDA) ---
   document.querySelectorAll('.remover-item').forEach(el => {
     el.onclick = (ev) => {
       ev.preventDefault();
       const rawId = el.getAttribute('data-id');
       
-      if(confirm('Tem certeza que deseja remover este item?')) {
-          const scrollY = window.scrollY;
-          state.inventory = state.inventory.filter(i => String(i.id) !== String(rawId));
-          renderActiveTab();
-          window.scrollTo(0, scrollY);
-          saveStateToServer();
-          window.dispatchEvent(new CustomEvent('sheet-updated'));
-      }
+      // REMOVIDO O IF(CONFIRM(...))
+      const scrollY = window.scrollY;
+      state.inventory = state.inventory.filter(i => String(i.id) !== String(rawId));
+      renderActiveTab();
+      window.scrollTo(0, scrollY);
+      saveStateToServer();
+      window.dispatchEvent(new CustomEvent('sheet-updated'));
     };
   });
 
@@ -1316,21 +1311,21 @@ function bindAbilityEvents() {
     };
   });
 
-  // 3. REMOVER (Adicionado de volta)
+  // 3. REMOVER (CONFIRMAÇÃO REMOVIDA)
   document.querySelectorAll('.remover-hab').forEach(btn => {
       btn.onclick = (e) => {
           e.preventDefault();
           const id = Number(btn.getAttribute('data-id'));
-          if(confirm('Remover habilidade?')) {
-              state.abilities = state.abilities.filter(h => h.id !== id);
-              renderActiveTab();
-              saveStateToServer();
-              window.dispatchEvent(new CustomEvent('sheet-updated'));
-          }
+          
+          // REMOVIDO O IF(CONFIRM(...))
+          state.abilities = state.abilities.filter(h => h.id !== id);
+          renderActiveTab();
+          saveStateToServer();
+          window.dispatchEvent(new CustomEvent('sheet-updated'));
       }
   });
 
-  // 4. EDITAR (Adicionado de volta)
+  // 4. EDITAR
   document.querySelectorAll('.editar-hab').forEach(btn => {
       btn.onclick = (e) => {
           e.preventDefault();
@@ -1486,7 +1481,7 @@ function formatMySpellCard(s) {
             </div>
           </div>
           <div class="spell-right">
-            <div class="card-meta spell-damage">${s.damage || '-'} <img class="dice-img" src="img/dado.png" alt="dado" /></div>
+            <div class="card-meta spell-damage">${s.damage || '-'} <img class="dice-img" src="img/imagem-no-site/dado.png" alt="dado" /></div>
             <label class="check-ativar"><input class="spell-activate" type="checkbox" data-id="${s.id}" ${s.active ? 'checked' : ''}/><span class="square-check"></span></label>
           </div>
         </div>
@@ -1561,7 +1556,7 @@ function renderSpells() {
           <h4 style="margin:0; color:#ddd; font-size:16px;">Minhas Magias</h4>
           
           <div id="btnRollSpellAttack_Header" title="Rolar Ataque Mágico (1d20 + Prof + Mod)" style="cursor:pointer; margin-left:10px; transition: transform 0.2s;">
-              <img src="img/dado.png" alt="Rolar Ataque" style="width:26px; height:26px; display:block; opacity:0.9; filter: drop-shadow(0 0 2px rgba(156, 39, 176, 0.5));" />
+              <img src="img/imagem-no-site/dado.png" alt="Rolar Ataque" style="width:26px; height:26px; display:block; opacity:0.9; filter: drop-shadow(0 0 2px rgba(156, 39, 176, 0.5));" />
           </div>
       </div>
 
@@ -2592,7 +2587,7 @@ function renderPreparedSpells() {
                 <span style="color: #ddd; text-transform: uppercase; font-size: 14px; font-weight:700;">Magias Preparadas</span>
                 
                 <div id="btnRollSpellAttack_PrepHeader" title="Rolar Ataque Mágico (d20 + Prof + Mod)" style="cursor:pointer; margin-left:auto; padding-left:10px; transition: transform 0.2s;">
-                    <img src="img/dado.png" alt="dado" style="width:26px; height:26px; opacity:0.9; display:block; filter: drop-shadow(0 0 2px rgba(156, 39, 176, 0.5));" />
+                    <img src="img/imagem-no-site/dado.png" alt="dado" style="width:26px; height:26px; opacity:0.9; display:block; filter: drop-shadow(0 0 2px rgba(156, 39, 176, 0.5));" />
                 </div>
             </div>
 

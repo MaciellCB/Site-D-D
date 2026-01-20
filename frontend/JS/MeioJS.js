@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             // Adicionado style cursor:pointer na imagem
             li.innerHTML = `
-                <img src="img/dado.png" class="col-icon" style="cursor:pointer; transition: transform 0.2s;" title="Rolar ${nome}">
+                <img src="img/imagem-no-site/dado.png" class="col-icon" style="cursor:pointer; transition: transform 0.2s;" title="Rolar ${nome}">
                 <div class="col-nome" title="${nome}">${nome}</div>
                 <div class="col-dados">
                     <select class="atributo-select">
@@ -310,7 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // HTML com o Tooltip dentro do label interativo
         wrap.innerHTML = `
-        <img src="img/sanidade.png" id="btn-open-sanidade" class="btn-sanidade-img" alt="Abrir Sanidade" />
+        <img src="img/imagem-no-site/sanidade.png" id="btn-open-sanidade" class="btn-sanidade-img" alt="Abrir Sanidade" />
         
         <div id="sanidade-panel" class="sanidade-panel" style="display: none;">
             
@@ -339,7 +339,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <input type="text" id="input-vazio" class="sanidade-input" value="0" />
             </div>
 
-            <img src="img/sanidade.png" id="btn-close-sanidade" class="btn-sanidade1-img" alt="Fechar" style="margin-top: 10px; width: 300px;" />
+            <img src="img/imagem-no-site/sanidade.png" id="btn-close-sanidade" class="btn-sanidade1-img" alt="Fechar" style="margin-top: 10px; width: 300px;" />
         </div>
     `;
         containerCentro.appendChild(wrap);

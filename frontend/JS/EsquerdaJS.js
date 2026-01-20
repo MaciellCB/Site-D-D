@@ -513,7 +513,7 @@ if (hexOverlay) {
     hexOverlay.onclick = () => {
         if (editMode) toggleEditMode();
         mostrandoAtributos = !mostrandoAtributos;
-        hexOverlay.src = mostrandoAtributos ? 'img/atributos.png' : 'img/modificador.png';
+        hexOverlay.src = mostrandoAtributos ? 'img/imagem-no-site/atributos.png' : 'img/imagem-no-site/modificador.png';
         numerosHex.forEach(n => {
             const val = n.dataset.attrValue;
             n.textContent = mostrandoAtributos ? val : formatMod(calcularModificador(val));
@@ -526,7 +526,7 @@ if (btnEditarHex) {
     btnEditarHex.onclick = () => {
         if (!mostrandoAtributos) {
             mostrandoAtributos = true;
-            hexOverlay.src = 'img/atributos.png';
+            hexOverlay.src = 'img/imagem-no-site/atributos.png';
             numerosHex.forEach(n => n.textContent = n.dataset.attrValue);
         }
         toggleEditMode();
@@ -750,7 +750,7 @@ function renderizarDadosVida() {
             li.style.cssText = "display: flex; align-items: center; gap: 10px; padding: 4px 0;";
             li.innerHTML = `
                 <span style="min-width:90px; font-size:12px; font-weight:bold;">${classeRef.nome}</span>
-                <img src="img/dado.png" style="width:18px; cursor:pointer" onclick="rolarDadoVida('${vidId}', '${classeRef.dado}')">
+                <img src="img/imagem-no-site/dado.png" style="width:18px; cursor:pointer" onclick="rolarDadoVida('${vidId}', '${classeRef.dado}')">
                 <select onchange="salvarDadoVida('${vidId}', this.value)" style="background:#000; color:#fff; border:1px solid #9c27b0; border-radius:4px; font-size:12px; width:50px;">
                     <option value="0" ${valorSalvo == 0 ? 'selected' : ''}>-</option>
                     ${opcoes.map(n => `<option value="${n}" ${valorSalvo == n ? 'selected' : ''}>${n}</option>`).join('')}

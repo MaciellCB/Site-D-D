@@ -1,6 +1,7 @@
 {
   "nome": "Pessoa1",
   "senha": "123",
+  "fotoPerfil": "",
   "activeTab": "Inventário",
   "spellDCConfig": {
     "selectedAttr": "sab",
@@ -9,33 +10,6 @@
   },
   "dtMagias": 11,
   "inventory": [
-    {
-      "id": 1768849242876,
-      "name": "Machado de Batalha",
-      "description": "<p>Uma cabeça de aço pesado em um cabo de carvalho envernizado. A lâmina em forma de meia-lua possui um fio capaz de partir escudos de madeira com facilidade.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>",
-      "expanded": false,
-      "equip": true,
-      "type": "Arma",
-      "isEquipable": true,
-      "proficiency": "Armas Marciais",
-      "defense": "",
-      "tipoItem": "",
-      "minStrength": "",
-      "tipoArma": "Corpo a Corpo",
-      "empunhadura": "Versátil",
-      "crit": "20",
-      "multiplicador": "2",
-      "alcance": "1.5m",
-      "attunement": "Não",
-      "damage": "1d8",
-      "damage2Hands": "1d10",
-      "useTwoHands": false,
-      "damageTypes": [
-        "Cortante"
-      ],
-      "moreDmgList": [],
-      "caracteristicas": []
-    },
     {
       "id": 1768763873026,
       "name": "Espada Curta",
@@ -512,7 +486,7 @@
     "estresse": 0,
     "vazio": 0
   },
-  "spells": [],
+ "spells": [],
   "abilityCatalog": [],
   "spellCatalog": [],
   "pericias": {

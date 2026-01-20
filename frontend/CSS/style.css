@@ -458,3 +458,15 @@ header {
         margin-top: 15px !important;
     }
 }
+/* Torna o cursor uma 'mãozinha' ao passar sobre a foto */
+.foto-personagem {
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+/* Efeito visual ao passar o mouse */
+.foto-personagem:hover {
+    opacity: 0.8;
+    transform: scale(1.02);
+    border: 2px solid #9c27b0; /* Borda roxa para indicar foco */
+}

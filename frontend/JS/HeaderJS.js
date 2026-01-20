@@ -532,7 +532,7 @@ function openBackgroundSelectionModal() {
         btnSelect.textContent = `Selecionar ${bg.name}`;
         btnSelect.style.background = '#9c27b0';
 
-        const imagePath = bg.image || 'img/dado.png';
+        const imagePath = bg.image || 'img/imagem-no-site/dado.png';
         const skillsHtml = bg.skills ? bg.skills.join(', ') : '-';
         const toolsHtml = bg.tools && bg.tools.length ? bg.tools.join(', ') : '-';
         const equipsHtml = bg.equipment ? bg.equipment.join(', ') : '-';
@@ -572,7 +572,7 @@ function openBackgroundSelectionModal() {
         detailsContainer.innerHTML = `
             <div class="race-detail-header">
                 <div class="race-img-container" onclick="window.openImageLightbox('${imagePath}')">
-                    <img src="${imagePath}" class="race-img-display" onerror="this.src='img/dado.png'">
+                    <img src="${imagePath}" class="race-img-display" onerror="this.src='img/imagem-no-site/dado.png'">
                 </div>
                 <div class="race-title-box">
                     <h2>${bg.name}</h2>
@@ -910,7 +910,7 @@ function openRaceSelectionModal() {
         }
 
         const flyInfo = race.flySpeed ? `<span style="color:#4fc3f7; margin-left:8px;">🦅 Voo: ${race.flySpeed}m</span>` : '';
-        const imagePath = race.image || 'img/dado.png';
+        const imagePath = race.image || 'img/imagem-no-site/dado.png';
 
         const traitsHtml = race.traits.map(t => `<div class="race-trait-item"><div class="race-trait-name">${t.name}</div><div class="race-trait-desc">${t.desc}</div></div>`).join('');
 
@@ -943,7 +943,7 @@ function openRaceSelectionModal() {
 
         detailsContainer.innerHTML = `
             <div class="race-detail-header">
-                <div class="race-img-container" onclick="window.openImageLightbox('${imagePath}')"><img src="${imagePath}" class="race-img-display" onerror="this.src='img/dado.png'"></div>
+                <div class="race-img-container" onclick="window.openImageLightbox('${imagePath}')"><img src="${imagePath}" class="race-img-display" onerror="this.src='img/imagem-no-site/dado.png'"></div>
                 <div class="race-title-box">
                     <h2>${race.name}</h2>
                     <div class="race-info-line">
@@ -1131,7 +1131,7 @@ function openClassSelectionModal() {
         btnSelect.style.background = '#9c27b0';
         
         // ... (resto da renderização igual ao anterior) ...
-        const imagePath = cls.image || 'img/dado.png';
+        const imagePath = cls.image || 'img/imagem-no-site/dado.png';
         const subclassReqLevel = cls.subclass_level || 3;
         const canPickSubclass = simulatedLevel >= subclassReqLevel;
 
@@ -1184,7 +1184,7 @@ function openClassSelectionModal() {
 
         detailsContainer.innerHTML = `
                 <div class="race-detail-header">
-                    <div class="race-img-container" onclick="window.openImageLightbox('${imagePath}')"><img src="${imagePath}" class="race-img-display" onerror="this.src='img/dado.png'"></div>
+                    <div class="race-img-container" onclick="window.openImageLightbox('${imagePath}')"><img src="${imagePath}" class="race-img-display" onerror="this.src='img/imagem-no-site/dado.png'"></div>
                     <div class="race-title-box">
                         <h2>${cls.name}</h2>
                         <div class="race-info-line">
@@ -2127,11 +2127,11 @@ function openAncestralRaceSelector(lineageData) {
             `;
         }
 
-        const imagePath = race.image || 'img/dado.png';
+        const imagePath = race.image || 'img/imagem-no-site/dado.png';
         detailsContainer.innerHTML = `
             <div class="race-detail-header">
                 <div class="race-img-container" onclick="window.openImageLightbox('${imagePath}')" title="Clique para ampliar">
-                    <img src="${imagePath}" class="race-img-display" onerror="this.src='img/dado.png'">
+                    <img src="${imagePath}" class="race-img-display" onerror="this.src='img/imagem-no-site/dado.png'">
                 </div>
                 <div class="race-title-box">
                     <h2>${race.name}</h2>

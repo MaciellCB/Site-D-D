@@ -73,14 +73,28 @@
         <a href="#" class="active">Personagem</a>
         <a href="mestre.html" id="link-voltar-painel" class="nav-mestre-link">Voltar ao Painel (Mestre)</a>
       </div>
-      <img src="img/perfil.png" alt="perfil" class="perfil-img" />
+    
     </nav>
   </header>
 
   <section class="info-personagem">
     <div class="info-esquerda">
-      <img src="img/personagem.png" alt="Foto do personagem" class="foto-personagem" />
-    </div>
+  <img 
+    src="img/imagem-no-site/personagem.png" 
+    alt="Foto do personagem" 
+    class="foto-personagem" 
+    id="img-personagem-visual"
+    onclick="document.getElementById('input-foto-upload').click()" 
+    title="Clique para alterar a foto"
+  />
+  
+  <input 
+    type="file" 
+    id="input-foto-upload" 
+    accept="image/*" 
+    style="display: none;" 
+  />
+</div>
     <div class="info-direita">
       <div class="linha-info">
         <div class="campo">
@@ -116,7 +130,7 @@
           <h3>Atributos</h3>
         </div>
         <div class="hexagrama">
-          <img src="img/atributos.png" alt="Atributos" class="hex-overlay" />
+          <img src="img/imagem-no-site/atributos.png" alt="Atributos" class="hex-overlay" />
           <span class="editar-hex">✏️</span>
           <div class="num n1">10</div>
           <div class="num n2">10</div>
@@ -240,7 +254,7 @@
               <div class="armadura-grid">
                 <div class="escudo-col">
                   <div class="escudo-wrap">
-                    <img src="img/escudoArmad.png" alt="escudo" class="escudo-img" />
+                    <img src="img/imagem-no-site/escudoArmad.png" alt="escudo" class="escudo-img" />
                     <div class="armadura-valor" id="armaduraValor">10</div>
                   </div>
                   <div class="iniciativa-block">
@@ -310,7 +324,7 @@
 
   <div id="login-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:100000; display:flex; align-items:center; justify-content:center; font-family: sans-serif;">
     <div style="background:#1a1a1a; padding:40px; border-radius:12px; border:2px solid #9c27b0; text-align:center; width:320px;">
-        <img src="img/personagem.png" style="width:80px; margin-bottom:20px; border-radius:50%; border:2px solid #9c27b0;">
+        <img src="img/imagem-no-site/dado-logo.png" style="width:120px; margin-bottom:20px; border-radius:50%; ">
         <h2 style="color:#fff; margin-bottom:25px; letter-spacing:1px;">ACESSO À FICHA</h2>
         <input type="text" id="login-nome" placeholder="Nome do Personagem" style="width:100%; padding:12px; margin-bottom:15px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
         <input type="password" id="login-senha" placeholder="Senha" style="width:100%; padding:12px; margin-bottom:25px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
@@ -472,21 +486,34 @@
 
     // Função auxiliar para preencher inputs que não são controlados pelos módulos JS complexos
     function preencherFichaNaTela(data) {
-        setVal('input-personagem', data.nome);
-        setVal('input-jogador', data.jogador);
-        setVal('input-raca', data.raca);
-        setTxt('btn-antecedente', data.antecedente);
+    setVal('input-personagem', data.nome);
+    setVal('input-jogador', data.jogador);
+    setVal('input-raca', data.raca);
+    setTxt('btn-antecedente', data.antecedente);
 
-        // Atualiza visualmente os atributos (Hexagrama)
-        if (data.atributos) {
-            setTxtQ('.num.n1', data.atributos.n1);
-            setTxtQ('.num.n2', data.atributos.n2);
-            setTxtQ('.num.n3', data.atributos.n3);
-            setTxtQ('.num.n4', data.atributos.n4);
-            setTxtQ('.num.n5', data.atributos.n5);
-            setTxtQ('.num.n6', data.atributos.n6);
+    // --- NOVO: LÓGICA DA FOTO DE PERFIL ---
+    const imgElement = document.getElementById('img-personagem-visual');
+    if (imgElement) {
+        // Se tiver uma foto salva no JSON (e for válida), usa ela
+        if (data.fotoPerfil && data.fotoPerfil.length > 10) {
+            imgElement.src = data.fotoPerfil;
+        } else {
+            // Se não tiver, usa a imagem padrão original
+            imgElement.src = "img/imagem-no-site/personagem.png";
         }
     }
+    // ---------------------------------------
+
+    // Atualiza visualmente os atributos (Hexagrama)
+    if (data.atributos) {
+        setTxtQ('.num.n1', data.atributos.n1);
+        setTxtQ('.num.n2', data.atributos.n2);
+        setTxtQ('.num.n3', data.atributos.n3);
+        setTxtQ('.num.n4', data.atributos.n4);
+        setTxtQ('.num.n5', data.atributos.n5);
+        setTxtQ('.num.n6', data.atributos.n6);
+    }
+}
 
     // Helpers
     function setVal(id, valor) { const el = document.getElementById(id); if(el) el.value = valor !== undefined ? valor : ''; }
@@ -556,6 +583,47 @@
             exibirAvisoTemporario("Preencha todos os campos!");
         }
     }
+
+    
+    /* =================================================================
+   LÓGICA PARA TROCAR A FOTO DO PERSONAGEM (ATUALIZADA)
+   ================================================================= */
+const inputFoto = document.getElementById('input-foto-upload');
+const imgVisual = document.getElementById('img-personagem-visual');
+
+if(inputFoto && imgVisual) {
+    inputFoto.addEventListener('change', function(e) {
+        if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const imagemBase64 = e.target.result;
+
+                // 1. Atualiza a imagem na tela na hora
+                imgVisual.src = imagemBase64;
+
+                // 2. SALVA NO PERFIL (Adicione isso aqui)
+                if (typeof state !== 'undefined') {
+                    // Salva a imagem na variável do personagem
+                    state.fotoPerfil = imagemBase64; 
+                    
+                    console.log("Salvando nova foto no perfil...");
+
+                    // Se você usa a função saveStateToServer() (que vi no seu HeaderJS):
+                    if (typeof saveStateToServer === 'function') {
+                        saveStateToServer(); 
+                    } 
+                    // Se você usa socket direto:
+                    else if (typeof socket !== 'undefined') {
+                        socket.emit('ficha_atualizada', state); 
+                    }
+                }
+            }
+
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+}
   </script>
 </body>
 </html>
