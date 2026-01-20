@@ -14,7 +14,7 @@
       "name": "Machado de Batalha",
       "description": "<p>Uma cabeça de aço pesado em um cabo de carvalho envernizado. A lâmina em forma de meia-lua possui um fio capaz de partir escudos de madeira com facilidade.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 2 kg</li></ul>",
       "expanded": false,
-      "equip": false,
+      "equip": true,
       "type": "Arma",
       "isEquipable": true,
       "proficiency": "Armas Marciais",
@@ -538,7 +538,7 @@
     },
     "Arcanismo": {
       "atributo": "INT",
-      "treinado": true,
+      "treinado": false,
       "outros": 0
     },
     "História": {
@@ -721,7 +721,6 @@
     "Celestial",
     "Anão",
     "Aarakocra",
-    "Auran",
     "Gnômico",
     "Dracônico",
     "Dialeto Subterrâneo"
@@ -832,11 +831,11 @@
   "racaTipo": "Humanoide",
   "racaTamanho": "Médio ou Pequeno",
   "money": {
-    "pc": 0,
-    "pp": 0,
-    "po": 90,
-    "pl": 0,
-    "pd": 4
+    "pc": 100,
+    "pp": 99,
+    "po": 189,
+    "pl": 99,
+    "pd": 3
   },
   "hitDie": "d6",
   "subclasses": {

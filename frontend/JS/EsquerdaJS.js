@@ -72,10 +72,20 @@ const PROFICIENCIAS_LISTA_ESQUERDA = [
 ];
 
 const IDIOMAS_LISTA = [
+    // Comuns
     'Comum', 'Anão', 'Élfico', 'Gigante', 'Gnômico', 'Goblin', 'Halfling', 'Orc',
-    'Abissal', 'Celestial', 'Dialeto Subterrâneo', 'Dracônico', 'Infernal', 'Primordial',
-    'Silvestre', 'Druídico', 'Gíria de Ladrões'
+
+    // Exóticas
+    'Abissal', 'Celestial', 'Dialeto Subterrâneo', 'Dracônico', 'Infernal',
+    'Primordial', 'Silvestre', 'Druídico', 'Gíria de Ladrões',
+
+    // Subidiomas do Primordial
+    'Auran', 'Aquan', 'Ignan', 'Terrano',
+
+    // Idiomas de cenários (oficiais)
+    'Qualith', 'Loross', 'Roussar', 'Aquan Antigo'
 ];
+
 
 // Variáveis Globais de Controle
 let mostrandoAtributos = true;
