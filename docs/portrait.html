@@ -2,153 +2,414 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>OBS Portrait - HUD</title>
+    <title>OBS Portrait - HUD Pro</title>
     <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Roboto:wght@500;900&display=swap" rel="stylesheet">
     <style>
-        body, html { background-color: transparent; margin: 0; padding: 0; overflow: hidden; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; font-family: 'Roboto', sans-serif; }
-        .portrait-container { position: relative; display: flex; align-items: flex-end; padding: 20px; }
-        
-        .image-wrapper { position: relative; width: 200px; height: 200px; border-radius: 50%; border: 8px solid #000; overflow: hidden; background-color: #222; z-index: 20; flex-shrink: 0; box-shadow: 0 0 15px rgba(0,0,0,0.8); }
-        .char-img { width: 100%; height: 100%; object-fit: cover; }
-
-        .bars-group { display: flex; flex-direction: column; margin-left: -50px; margin-bottom: 20px; z-index: 5; }
-        
-        /* DESIGN ORIGINAL DO NOME */
-        .char-name-box {
-            color: #fff; font-family: 'Cinzel Decorative', cursive; font-size: 26px; font-weight: bold;
-            padding: 5px 60px; background: linear-gradient(to right, rgba(0,0,0,0.9) 20%, rgba(0,0,0,0.5) 70%, transparent);
-            width: fit-content; text-transform: uppercase; letter-spacing: 2px; margin-bottom: -2px; text-shadow: 2px 2px 4px #000;
+        body, html {
+            background-color: transparent;
+            margin: 0; padding: 0; overflow: hidden;
+            width: 100%; height: 100%;
+            font-family: 'Roboto', sans-serif;
         }
 
-        .health-bar-container { position: relative; height: 60px; width: 500px; background-color: #000; border: 4px solid #000; border-bottom: none; display: flex; align-items: center; justify-content: center; border-radius: 0 10px 0 0; overflow: hidden; }
-        .health-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: linear-gradient(to right, #500000, #b30000, #ff3333); z-index: 1; transition: width 0.4s ease-out; }
-        .health-text { position: relative; color: #fff; font-family: 'Cinzel Decorative', cursive; font-size: 36px; font-weight: 900; text-shadow: 3px 3px 0 #000; letter-spacing: 2px; z-index: 2; }
-        
-        .sub-bars-row { display: flex; width: 500px; height: 25px; background: #000; border: 4px solid #000; border-top: none; border-radius: 0 0 10px 10px; overflow: hidden; }
-        .mini-bar-box { flex: 1; position: relative; background: #1a1a1a; display: flex; align-items: center; justify-content: center; border-right: 2px solid #000; }
-        .mini-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; transition: width 0.4s; z-index: 1; }
-        .fill-temp { background: linear-gradient(to right, #004d40, #00bcd4); }
-        .fill-necro { background: linear-gradient(to right, #311b92, #7c4dff); }
-        .mini-text { position: relative; z-index: 2; color: #fff; font-size: 14px; font-weight: bold; text-shadow: 1px 1px 2px #000; }
+        /* Container Principal */
+        .hud-wrapper {
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
+            display: flex;
+            align-items: flex-end; /* Alinha a base da imagem com as barras */
+        }
 
-        /* AREA DOS DADOS (À DIREITA) */
-        #dice-display {
-            position: absolute; left: 670px; bottom: 45px;
-            display: flex; flex-direction: column; gap: 5px;
+        /* --- ÁREA DA IMAGEM (Esquerda) --- */
+        .char-image-container {
+            position: relative;
+            z-index: 10; /* Fica por cima das barras */
+            width: 180px;
+            height: 180px;
+            flex-shrink: 0;
+        }
+
+        .char-frame {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 6px solid #1a1a1a;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            overflow: hidden;
+            background: #000;
+            position: relative;
+        }
+
+        .char-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Inspiração (Canto da Imagem) */
+        .inspiration-badge {
+            position: absolute;
+            bottom: 0;
+            right: 0; /* Canto inferior direito da imagem */
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, rgba(0,0,0,0.9) 20%, transparent 80%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 15;
+        }
+        
+        .insp-smoke {
+            position: absolute; width: 100%; height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #ffcc00;
+            animation: pulseInsp 2s infinite;
+            opacity: 0.6;
+        }
+        @keyframes pulseInsp { 0% { transform: scale(0.8); opacity: 0.4; } 50% { transform: scale(1.1); opacity: 0.7; } 100% { transform: scale(0.8); opacity: 0.4; } }
+
+        .insp-number {
+            position: relative;
+            color: #ffcc00;
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 28px;
+            text-shadow: 2px 2px 0 #000;
+            z-index: 16;
+        }
+
+        /* --- ÁREA DAS BARRAS (Direita, ligada à imagem) --- */
+        .stats-container {
+            position: relative;
+            margin-left: -40px; /* Sobreposição: Entra "dentro" da imagem */
+            margin-bottom: 15px; /* Ajuste vertical */
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            width: 450px;
+        }
+
+        /* Nome (Acima da vida) */
+        .char-name {
+            margin-left: 50px; /* Compensa a sobreposição da imagem */
+            margin-bottom: 4px;
+            color: #fff;
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 24px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px #000;
+            background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+            padding: 2px 15px;
+            border-radius: 4px;
+            display: inline-block;
+            align-self: flex-start;
+        }
+
+        /* Barra de Vida (Container) */
+        .health-bar-frame {
+            position: relative;
+            height: 50px;
+            background: #0f0f0f;
+            border: 4px solid #1a1a1a;
+            /* Borda arredondada só na direita e overflow hidden pra não vazar */
+            border-radius: 0 12px 12px 0; 
+            overflow: hidden; 
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            padding-left: 45px; /* Espaço onde a imagem corta */
+        }
+
+        /* Preenchimento Vida (Vermelho) */
+        .hp-fill {
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            background: linear-gradient(90deg, #500000, #b30000, #ff3333);
+            width: 0%; /* JS controla */
+            transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 2px 0 10px rgba(255, 50, 50, 0.3);
+            z-index: 1;
+        }
+
+        /* Texto Vida */
+        .hp-text {
+            position: relative;
+            z-index: 5;
+            color: #fff;
+            font-size: 28px;
+            font-weight: 900;
+            text-shadow: 2px 2px 0 #000, 0 0 5px rgba(0,0,0,0.8);
+            margin-left: 10px;
+        }
+
+        /* Sub-barras (Temp / Necro) */
+        .sub-bars {
+            display: flex;
+            height: 18px;
+            margin-left: 4px; /* Pequeno ajuste */
+            width: 98%;
+            margin-top: -2px;
+        }
+
+        .mini-bar {
+            flex: 1;
+            background: #000;
+            border: 2px solid #1a1a1a;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            position: relative;
+            overflow: hidden;
+            margin-right: 2px;
+        }
+
+        .mini-fill { height: 100%; width: 0%; transition: width 0.4s; position: absolute; left: 0; top: 0; }
+        .fill-temp { background: linear-gradient(90deg, #004d40, #00e5ff); }
+        .fill-necro { background: linear-gradient(90deg, #311b92, #d500f9); }
+        
+        .mini-val { 
+            position: relative; z-index: 2; color: #fff; 
+            font-size: 11px; font-weight: bold; text-align: center; 
+            display: block; line-height: 16px; text-shadow: 1px 1px 0 #000;
+        }
+
+        /* --- POPUPS DE DADOS (Direita do Portrait) --- */
+        .dice-area {
+            position: absolute;
+            left: 430px; /* À direita das barras */
+            bottom: 20px;
+            display: flex;
+            flex-direction: column-reverse; /* Novos embaixo ou em cima, conforme preferir. Aqui sobe. */
+            gap: 12px;
+            width: 350px;
             pointer-events: none;
         }
-        .dice-item {
-            background: rgba(0,0,0,0.8); border-left: 4px solid #9c27b0; padding: 8px 15px;
-            border-radius: 0 5px 5px 0; color: white; min-width: 150px;
-            animation: slideData 0.4s ease-out;
-        }
-        @keyframes slideData { from { transform: translateX(30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .dice-item.fade { opacity: 0; transform: translateY(-20px); transition: 1s; }
 
-        /* INSPIRAÇÃO */
-        .inspiration-container { position: absolute; bottom: 30px; left: 5px; width: 90px; height: 90px; display: flex; justify-content: center; align-items: center; z-index: 30; }
-        .smoke-effect { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, rgba(0,0,0,0.95) 10%, transparent 70%); filter: blur(5px); border-radius: 50%; animation: pulseSmoke 3s infinite alternate; }
-        @keyframes pulseSmoke { 0% { transform: scale(0.95); } 100% { transform: scale(1.1); } }
-        .inspiration-number { position: relative; color: #ffcc00; font-family: 'Cinzel Decorative', cursive; font-size: 42px; text-shadow: 0 0 10px #ffaa00, 2px 2px 0 #000; }
+        .roll-card {
+            background: rgba(15, 15, 15, 0.95);
+            border-left: 4px solid #9c27b0;
+            border-radius: 4px;
+            padding: 10px 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+            animation: slideInDice 0.4s ease-out forwards;
+            opacity: 0;
+            transform: translateX(-20px);
+            display: flex;
+            flex-direction: column;
+            color: #fff;
+        }
+
+        .roll-card.fade-out {
+            animation: smokeOut 1s forwards;
+        }
+
+        @keyframes slideInDice { to { opacity: 1; transform: translateX(0); } }
+        @keyframes smokeOut { to { opacity: 0; transform: translateY(-20px) scale(1.1); filter: blur(5px); } }
+
+        .roll-header {
+            font-size: 12px;
+            color: #e0aaff;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 4px;
+        }
+
+        .roll-body {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .dice-result-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .d-icon { width: 24px; height: 24px; filter: drop-shadow(0 2px 2px #000); }
+        
+        .d-val { font-size: 26px; font-weight: 900; text-shadow: 2px 2px 0 #000; }
+        
+        .d-label { font-size: 10px; color: #aaa; text-transform: uppercase; margin-top: 2px; }
+
+        /* Cores Específicas */
+        .crit { color: #ffcc00; text-shadow: 0 0 10px #ffcc00, 2px 2px 0 #000; }
+        .fumble { color: #ff3333; text-shadow: 0 0 10px #ff0000, 2px 2px 0 #000; }
+        .dmg-val { color: #ff5252; }
+
+        .sep-line { width: 1px; height: 30px; background: rgba(255,255,255,0.2); }
+
     </style>
 </head>
 <body>
 
-    <div class="portrait-container">
-        <div class="layout-row">
-            <div class="image-wrapper">
-                <img id="img-personagem" class="char-img" src="" alt="">
+    <div class="hud-wrapper">
+        <div class="char-image-container">
+            <div class="char-frame">
+                <img id="img-personagem" class="char-img" src="" alt="Personagem">
+            </div>
+            <div id="insp-badge" class="inspiration-badge" style="display:none;">
+                <div class="insp-smoke"></div>
+                <span id="insp-val" class="insp-number">0</span>
+            </div>
+        </div>
+
+        <div class="stats-container">
+            <div id="display-nome" class="char-name">CARREGANDO...</div>
+            
+            <div class="health-bar-frame">
+                <div id="hp-bar" class="hp-fill"></div>
+                <div class="hp-text">
+                    <span id="hp-atual">?</span> / <span id="hp-total">?</span>
+                </div>
             </div>
 
-            <div class="bars-group">
-                <div id="display-nome" class="char-name-box">CARREGANDO...</div>
-                <div class="health-bar-container">
-                    <div id="health-fill-bar" class="health-fill"></div>
-                    <div class="health-text"><span id="hp-atual">?</span> / <span id="hp-total">?</span></div>
+            <div class="sub-bars">
+                <div class="mini-bar">
+                    <div id="temp-bar" class="mini-fill fill-temp"></div>
+                    <span id="temp-text" class="mini-val"></span>
                 </div>
-                <div class="sub-bars-row">
-                    <div class="mini-bar-box">
-                        <div id="temp-fill" class="mini-fill fill-temp"></div>
-                        <span class="mini-text" id="temp-text"></span>
-                    </div>
-                    <div class="mini-bar-box">
-                        <div id="necro-fill" class="mini-fill fill-necro"></div>
-                        <span class="mini-text" id="necro-text"></span>
-                    </div>
+                <div class="mini-bar">
+                    <div id="necro-bar" class="mini-fill fill-necro"></div>
+                    <span id="necro-text" class="mini-val"></span>
                 </div>
             </div>
         </div>
 
-        <div id="dice-display"></div>
-
-        <div class="inspiration-container" id="insp-container">
-            <div class="smoke-effect"></div>
-            <div id="inspiration-val" class="inspiration-number">0</div>
-        </div>
+        <div id="dice-area" class="dice-area"></div>
     </div>
 
     <script>
+        // --- CONEXÃO SOCKET ---
         const socket = io('https://dandd-chan.onrender.com');
         const params = new URLSearchParams(window.location.search);
-        const nomeAlvo = params.get('nome');
+        const nomeOriginalURL = params.get('nome');
 
-        // Escuta Dados
-        socket.on('dados_rolados', (data) => {
-            if (data.personagem.toLowerCase() === nomeAlvo.toLowerCase()) {
-                mostrarDadoNoHUD(data);
-            }
-        });
-
-        function mostrarDadoNoHUD(data) {
-            const container = document.getElementById('dice-display');
-            const div = document.createElement('div');
-            div.className = 'dice-item';
-            
-            let resHtml = `<div style="font-size:10px; color:#e0aaff;">${data.titulo}</div><div style="display:flex; gap:15px; align-items:center;">`;
-            if(data.ataque) resHtml += `<div><span style="font-size:10px; color:#aaa; display:block;">ACERTO</span><span style="font-size:22px; font-weight:900; color:${data.ataque.isCrit ? '#ffcc00' : (data.ataque.isFumble ? '#ff3333' : '#fff')}">${data.ataque.text}</span></div>`;
-            if(data.dano) resHtml += `<div><span style="font-size:10px; color:#aaa; display:block;">DANO</span><span style="font-size:22px; font-weight:900; color:#ff5252;">${data.dano.text}</span></div>`;
-            resHtml += `</div>`;
-            
-            div.innerHTML = resHtml;
-            container.appendChild(div);
-            setTimeout(() => { div.classList.add('fade'); setTimeout(() => div.remove(), 1000); }, 6000);
-        }
-
+        // --- 1. ATUALIZAÇÃO DA FICHA ---
         socket.on('ficha_atualizada', (novaFicha) => {
-            // Se o nome real mudou ou o login bate, atualiza
-            if (novaFicha.nome?.toLowerCase() === nomeAlvo.toLowerCase() || novaFicha.personagem?.toLowerCase() === nomeAlvo.toLowerCase()) {
+            if (novaFicha.nome && novaFicha.nome.toLowerCase() === nomeOriginalURL.toLowerCase()) {
                 atualizarInterface(novaFicha);
             }
         });
 
         function atualizarInterface(data) {
-            document.getElementById('display-nome').innerText = data.personagem || data.nome || "HERÓI";
+            // Nome
+            const nomeExibicao = data.personagem || data.nome || "HERÓI";
+            document.getElementById('display-nome').innerText = nomeExibicao;
+
+            // Imagem
             const imgEl = document.getElementById('img-personagem');
             imgEl.src = (data.fotoPerfil && data.fotoPerfil.length > 10) ? data.fotoPerfil : 'img/imagem-no-site/personagem.png';
-            
+
+            // Vida
             const atual = parseInt(data.vidaAtual) || 0;
             const total = parseInt(data.vidaTotalCalculada) || 1;
             document.getElementById('hp-atual').innerText = atual;
             document.getElementById('hp-total').innerText = total;
-            document.getElementById('health-fill-bar').style.width = Math.min(100, (atual/total)*100) + "%";
+            
+            const pct = Math.min(100, Math.max(0, (atual / total) * 100));
+            document.getElementById('hp-bar').style.width = pct + "%";
 
-            document.getElementById('temp-fill').style.width = Math.min(100, (parseInt(data.vidaTempAtual)||0)) + "%";
-            document.getElementById('temp-text').innerText = data.vidaTempAtual > 0 ? `Temp: ${data.vidaTempAtual}` : "";
-            document.getElementById('necro-fill').style.width = Math.min(100, (parseInt(data.danoNecroAtual)||0)) + "%";
-            document.getElementById('necro-text').innerText = data.danoNecroAtual > 0 ? `Necro: ${data.danoNecroAtual}` : "";
+            // Sub-barras
+            const temp = parseInt(data.vidaTempAtual) || 0;
+            const necro = parseInt(data.danoNecroAtual) || 0;
+            
+            document.getElementById('temp-bar').style.width = Math.min(100, temp) + "%";
+            document.getElementById('temp-text').innerText = temp > 0 ? `Temp: ${temp}` : "";
+            
+            document.getElementById('necro-bar').style.width = Math.min(100, necro) + "%";
+            document.getElementById('necro-text').innerText = necro > 0 ? `Necro: ${necro}` : "";
 
-            const inspVal = parseInt(data.inspiracao) || 0;
-            document.getElementById('inspiration-val').innerText = inspVal;
-            document.getElementById('insp-container').style.display = inspVal > 0 ? 'flex' : 'none';
+            // Inspiração
+            const insp = parseInt(data.inspiracao) || 0;
+            const inspBadge = document.getElementById('insp-badge');
+            document.getElementById('insp-val').innerText = insp;
+            inspBadge.style.display = insp > 0 ? 'flex' : 'none';
         }
 
-        async function carregar() {
-            if(!nomeAlvo) return;
-            const res = await fetch('https://dandd-chan.onrender.com/api/load-ficha-mestre', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nome: nomeAlvo }) });
-            if(res.ok) atualizarInterface(await res.json());
+        // --- 2. ROLAGEM DE DADOS ---
+        socket.on('dados_rolados', (data) => {
+            // Verifica se é o personagem correto
+            if (data.personagem && data.personagem.toLowerCase() === nomeOriginalURL.toLowerCase()) {
+                criarPopUpDado(data);
+            }
+        });
+
+        function criarPopUpDado(data) {
+            const area = document.getElementById('dice-area');
+            const card = document.createElement('div');
+            card.className = 'roll-card';
+
+            // HTML Interno
+            let conteudoHTML = `<div class="roll-header">${data.titulo}</div><div class="roll-body">`;
+
+            // Parte Esquerda: ATAQUE (Se houver)
+            if (data.ataque) {
+                const isCrit = data.ataque.isCrit;
+                const isFumble = data.ataque.isFumble;
+                const valClass = isCrit ? 'crit' : (isFumble ? 'fumble' : '');
+                
+                conteudoHTML += `
+                    <div class="dice-result-box">
+                        <img src="img/imagem-no-site/dado.png" class="d-icon">
+                        <div>
+                            <div class="d-val ${valClass}">${data.ataque.total || data.ataque.text}</div>
+                            <div class="d-label">Acerto</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Separador (Se tiver os dois)
+            if (data.ataque && data.dano) {
+                conteudoHTML += `<div class="sep-line"></div>`;
+            }
+
+            // Parte Direita: DANO (Se houver)
+            if (data.dano) {
+                // Para dano, crítico geralmente só dobra dados, mas vamos destacar também
+                const isCritDmg = data.dano.isCrit; 
+                const valClass = isCritDmg ? 'crit' : 'dmg-val';
+
+                conteudoHTML += `
+                    <div class="dice-result-box">
+                        <img src="https://cdn-icons-png.flaticon.com/512/826/826070.png" class="d-icon" style="filter: invert(1);">
+                        <div>
+                            <div class="d-val ${valClass}">${data.dano.total || data.dano.text}</div>
+                            <div class="d-label">Dano</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            conteudoHTML += `</div>`; // Fecha body
+            card.innerHTML = conteudoHTML;
+
+            area.appendChild(card);
+
+            // Remove após 8 segundos
+            setTimeout(() => {
+                card.classList.add('fade-out');
+                setTimeout(() => card.remove(), 1000);
+            }, 8000);
         }
-        carregar();
+
+        // Carregamento Inicial
+        async function carregarDados() {
+            if(!nomeOriginalURL) return;
+            try {
+                const res = await fetch('https://dandd-chan.onrender.com/api/load-ficha-mestre', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome: nomeOriginalURL })
+                });
+                if(res.ok) atualizarInterface(await res.json());
+            } catch(e) { console.error(e); }
+        }
+
+        carregarDados();
     </script>
 </body>
 </html>
