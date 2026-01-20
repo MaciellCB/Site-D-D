@@ -26,6 +26,8 @@
         text-align: center;
         cursor: pointer;
         transition: transform 0.2s, border-color 0.2s;
+        position: relative;
+        overflow: hidden;
     }
 
     .card-personagem:hover {
@@ -35,33 +37,32 @@
     }
 
     .card-img {
-        width: 80px;
-        height: 80px;
+        width: 100px;
+        height: 100px;
         border-radius: 50%;
         margin-bottom: 15px;
-        border: 2px solid #555;
+        border: 3px solid #555;
+        object-fit: cover; /* Garante que a imagem preencha o círculo sem deformar */
+        background-color: #000;
     }
 
     .card-name {
         font-weight: bold;
         color: #e0aaff;
         font-size: 1.1em;
+        text-transform: capitalize;
     }
 
-    /* Modal de Visualização Rápida (Opcional) */
-    #iframe-container {
-        display: none;
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.9);
-        z-index: 5000;
-        flex-direction: column;
+    /* Loading suave na imagem */
+    .img-loading {
+        opacity: 0.5;
+        filter: grayscale(100%);
     }
-    #iframe-close {
-        background: #9c27b0; color: white; border: none;
-        padding: 10px; cursor: pointer; text-align: center; font-weight: bold;
+    .img-loaded {
+        opacity: 1;
+        filter: none;
+        transition: opacity 0.5s ease;
     }
-    iframe { width: 100%; height: 100%; border: none; }
   </style>
 </head>
 <body>
@@ -89,6 +90,7 @@
     // Ao carregar a página
     window.onload = async function() {
         try {
+            // 1. Pega a lista de nomes (Ex: ["Pessoa1", "Pessoa2"])
             const response = await fetch(`${API_URL}/lista-personagens`);
             const nomes = await response.json();
             
@@ -100,21 +102,28 @@
                 return;
             }
 
+            // 2. Cria os cards para cada nome
             nomes.forEach(nome => {
                 const card = document.createElement('div');
                 card.className = 'card-personagem';
                 
-                // HTML do Card
+                // Cria um ID único para a imagem para podermos atualizá-la depois
+                // Remove espaços para evitar erro no ID
+                const imgId = `img-card-${nome.replace(/\s+/g, '-')}`;
+
+                // HTML do Card (Começa com a imagem padrão)
                 card.innerHTML = `
-                    <img src="img/imagem-no-site/personagem.png" class="card-img" alt="Icon">
+                    <img id="${imgId}" src="img/imagem-no-site/personagem.png" class="card-img img-loading" alt="${nome}">
                     <div class="card-name">${nome}</div>
                 `;
 
-                // Clique no card: Abre a ficha normal carregando esse personagem
-                // Nota: Isso requer que o index.html saiba ler parâmetros de URL ou use localStorage
+                // Clique no card
                 card.onclick = () => abrirFichaDoJogador(nome);
 
                 container.appendChild(card);
+
+                // 3. Busca a foto personalizada individualmente (Lazy Load)
+                carregarFotoIndividual(nome, imgId);
             });
 
         } catch (error) {
@@ -123,14 +132,41 @@
         }
     };
 
+    // Função para buscar os dados de UM personagem e atualizar a foto
+    async function carregarFotoIndividual(nome, imgId) {
+        try {
+            const res = await fetch(`${API_URL}/load-ficha-mestre`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome: nome })
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                const imgElement = document.getElementById(imgId);
+                
+                if (imgElement) {
+                    // Verifica se existe fotoPerfil salva
+                    if (data.fotoPerfil && data.fotoPerfil.length > 50) {
+                        imgElement.src = data.fotoPerfil;
+                    }
+                    // Remove o estilo de carregamento
+                    imgElement.classList.remove('img-loading');
+                    imgElement.classList.add('img-loaded');
+                    
+                    // Borda colorida baseada na classe (Opcional - perfumaria)
+                    // if (data.ordemClasses && data.ordemClasses[0]) {
+                    //    imgElement.style.borderColor = getCorDaClasse(data.ordemClasses[0]);
+                    // }
+                }
+            }
+        } catch (e) {
+            console.error(`Erro ao carregar imagem de ${nome}:`, e);
+        }
+    }
+
     function abrirFichaDoJogador(nome) {
-        // Armazena no LocalStorage para o index.html ler (truque rápido)
-        // Ou abre uma nova janela passando o nome
-        localStorage.setItem('mestreLoadTarget', nome);
-        
-        // Abre o index.html original em nova aba (ou na mesma)
-        // Como o index precisa de SENHA, vamos precisar de um "bypass" ou o mestre ver apenas modo leitura.
-        // Para simplificar, vou assumir que o mestre sabe a senha ou vamos burlar o login:
+        // Abre o index.html passando o parâmetro masterView
         window.open(`index.html?masterView=${nome}`, '_blank');
     }
   </script>
