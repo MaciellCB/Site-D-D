@@ -4014,12 +4014,26 @@ function showCombatResults(title, attackResult, damageResult) {
 
     if (attackResult) {
         let totalClass = attackResult.isCrit ? 'crit-total' : (attackResult.isFumble ? 'fumble-total' : '');
-        html += `<div class="dice-row"><span class="dice-label">ACERTO</span><div class="dice-value-wrapper"><span class="dice-value ${totalClass}">${attackResult.text}</span><div class="dice-tooltip">${attackResult.detail}</div></div></div>`;
+        html += `
+            <div class="dice-row">
+                <span class="dice-label">ACERTO</span>
+                <div class="dice-value-wrapper">
+                    <span class="dice-value ${totalClass}">${attackResult.text}</span>
+                    <div class="dice-tooltip">${attackResult.detail}</div>
+                </div>
+            </div>`;
     }
 
     if (damageResult) {
         let totalClass = damageResult.isCrit ? 'crit-total' : ''; 
-        html += `<div class="dice-row"><span class="dice-label">DANO</span><div class="dice-value-wrapper"><span class="dice-value ${totalClass}">${damageResult.text}</span><div class="dice-tooltip">${damageResult.detail}</div></div></div>`;
+        html += `
+            <div class="dice-row">
+                <span class="dice-label">DANO</span>
+                <div class="dice-value-wrapper">
+                    <span class="dice-value ${totalClass}">${damageResult.text}</span>
+                    <div class="dice-tooltip">${damageResult.detail}</div>
+                </div>
+            </div>`;
     }
 
     container.innerHTML = html;
@@ -4028,10 +4042,12 @@ function showCombatResults(title, attackResult, damageResult) {
     clearTimeout(diceTimer);
     diceTimer = setTimeout(() => container.classList.remove('active'), 8000); 
 
-    // --- NOVA LINHA: ENVIA PARA O PORTRAIT ---
-    if (typeof socket !== 'undefined' && state.nome) {
+    // --- CONEXÃO COM O PORTRAIT (Socket) ---
+    // Enviamos o nome do PERSONAGEM (não o da conta) para o Portrait saber que é dele
+    if (typeof socket !== 'undefined' && (state.personagem || state.nome)) {
         socket.emit('dados_rolados', {
-            personagem: state.nome,
+            contaFicha: state.nome, // ID da conta para filtro
+            personagem: state.personagem || state.nome,
             titulo: title,
             ataque: attackResult,
             dano: damageResult
