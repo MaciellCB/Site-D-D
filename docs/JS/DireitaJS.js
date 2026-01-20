@@ -4003,45 +4003,20 @@ function rollDiceExpression(expression) {
 }
 
 let diceTimer = null;
-// No arquivo JS/DireitaJS.js
-
 function showCombatResults(title, attackResult, damageResult) {
-    // 1. Criação do HTML Visual na Ficha (MANTENHA SEU CÓDIGO EXISTENTE AQUI PARA O TOAST ROXO DO USUÁRIO)
-    // ... (Seu código que cria o div #dice-results-container na tela do jogador) ...
-    // Exemplo do que você já deve ter:
+    // ... (Mantenha o código visual da ficha que já funciona) ...
     let container = document.getElementById('dice-results-container');
-    if (!container) { /* cria container */ }
-    // ... lógica visual ...
+    if (!container) { container = document.createElement('div'); container.id = 'dice-results-container'; document.body.appendChild(container); }
+    // ... (restante do seu código visual da janelinha roxa) ...
 
-    // 2. ENVIO PARA O PORTRAIT (OBS) - ESTA É A PARTE IMPORTANTE PARA O PORTRAIT
+    // ENVIO PARA O PORTRAIT
     if (typeof socket !== 'undefined') {
-        // Prepara os objetos de forma limpa para o portrait
-        const payload = {
-            personagem: state.personagem || state.nome, // Garante que o nome vai
+        socket.emit('dados_rolados', {
+            personagem: state.personagem || state.nome,
             titulo: title,
-            ataque: null,
-            dano: null
-        };
-
-        if (attackResult) {
-            payload.ataque = {
-                total: attackResult.total,
-                text: attackResult.text,
-                isCrit: attackResult.isCrit,
-                isFumble: attackResult.isFumble
-            };
-        }
-
-        if (damageResult) {
-            payload.dano = {
-                total: damageResult.total,
-                text: damageResult.text,
-                isCrit: damageResult.isCrit
-            };
-        }
-
-        console.log("Enviando dados para o portrait:", payload); // Debug
-        socket.emit('dados_rolados', payload);
+            ataque: attackResult,
+            dano: damageResult
+        });
     }
 }
 
