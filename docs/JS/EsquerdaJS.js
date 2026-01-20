@@ -804,11 +804,13 @@ window.abrirPortraitOBS = function() {
         alert("Defina um nome para o personagem antes de abrir o Portrait.");
         return;
     }
-    // Abre uma janela popup dimensionada para o portrait
+    // Identificador único por personagem
+    const windowId = "Portrait_" + state.nome.replace(/\s+/g, '_');
     const url = `portrait.html?nome=${encodeURIComponent(state.nome)}`;
-    window.open(url, 'PortraitOBS', 'width=400,height=500,menubar=no,toolbar=no,location=no,status=no,resizable=yes');
+    
+    // Abre em nova guia ou janela independente
+    window.open(url, windowId);
 };
-
 function atualizarBarraUI(prefixo, atual, total) {
     const fill = document.getElementById(`${prefixo}-fill`);
     const texto = document.getElementById(`${prefixo}-atual`);

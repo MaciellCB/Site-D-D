@@ -6,9 +6,10 @@
   <title>Painel do Mestre</title>
   <link rel="stylesheet" href="CSS/style.css" />
   <style>
-    /* Estilos específicos do Painel do Mestre */
-    body { background-color: #0a0a0a; color: white; font-family: Arial, sans-serif; }
+    /* --- ESTILOS GERAIS --- */
+    body { background-color: #0a0a0a; color: white; font-family: Arial, sans-serif; margin: 0; }
     
+    /* --- GRID DE PERSONAGENS --- */
     .grid-personagens {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -53,7 +54,7 @@
         text-transform: capitalize;
     }
 
-    /* ESTILO DO BOTÃO DE CRIAR NOVO */
+    /* --- BOTÃO DE CRIAR NOVO --- */
     .card-novo {
         border: 2px dashed #555;
         display: flex;
@@ -69,7 +70,7 @@
     }
     .plus-icon { font-size: 50px; line-height: 50px; margin-bottom: 10px; }
 
-    /* ESTILO DO BOTÃO DE DELETAR (X) */
+    /* --- BOTÃO DE DELETAR (X) --- */
     .btn-delete {
         position: absolute;
         top: 5px;
@@ -91,6 +92,98 @@
 
     .img-loading { opacity: 0.5; filter: grayscale(100%); }
     .img-loaded { opacity: 1; filter: none; transition: opacity 0.5s ease; }
+
+    /* --- NOVOS MODAIS (Estilo Dark) --- */
+    .modal-overlay {
+        display: none; /* Escondido por padrão */
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+    }
+
+    .modal-box {
+        background: #1a1a1a;
+        border: 2px solid #9c27b0;
+        border-radius: 10px;
+        padding: 30px;
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+        box-shadow: 0 0 20px rgba(156, 39, 176, 0.2);
+        animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+        from { transform: translateY(-50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-titulo {
+        color: #e0aaff;
+        margin-bottom: 20px;
+        font-size: 1.5em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .modal-input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        background: #000;
+        border: 1px solid #333;
+        color: white;
+        border-radius: 5px;
+        font-size: 16px;
+        box-sizing: border-box; /* Garante que padding não estoure a largura */
+    }
+
+    .modal-input:focus {
+        border-color: #9c27b0;
+        outline: none;
+    }
+
+    .modal-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .btn-modal {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.2s;
+        flex: 1;
+    }
+
+    .btn-confirmar { background: #9c27b0; color: white; }
+    .btn-confirmar:hover { background: #7b1fa2; }
+
+    .btn-cancelar { background: #333; color: white; }
+    .btn-cancelar:hover { background: #555; }
+
+    .btn-perigo { background: #d32f2f; color: white; }
+    .btn-perigo:hover { background: #b71c1c; }
+
+    /* --- TOAST CUSTOMIZADO (Aviso) --- */
+    .custom-toast {
+        position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+        background-color: #1a1a1a; color: #fff; border: 1px solid #9c27b0;
+        border-radius: 6px; padding: 15px 20px; z-index: 10000;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+        animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; top: -20px; } to { opacity: 1; top: 20px; } }
+
   </style>
 </head>
 <body>
@@ -98,7 +191,7 @@
   <header>
     <nav class="navbar">
       <div class="nav-links">
-        <a href="#" onclick="alert('Você já está no painel.')">Personagem</a>
+        <a href="#" onclick="mostrarAviso('Você já está no painel.')">Personagem</a>
         <a href="#" class="active">Painel do Mestre</a>
       </div>
       <img src="img/imagem-no-site/perfil.png" alt="perfil" class="perfil-img" />
@@ -111,12 +204,46 @@
     <p style="color:#666;">Carregando fichas...</p>
   </div>
 
+  <div id="modal-criar" class="modal-overlay">
+      <div class="modal-box">
+          <h3 class="modal-titulo">Nova Ficha</h3>
+          <p style="color:#aaa; font-size:0.9em; margin-bottom:15px;">Crie um novo herói para a aventura.</p>
+          
+          <input type="text" id="novo-nome" class="modal-input" placeholder="Nome do Personagem" autocomplete="off">
+          <input type="password" id="novo-senha" class="modal-input" placeholder="Senha do Jogador" autocomplete="off">
+          
+          <div class="modal-buttons">
+              <button class="btn-modal btn-cancelar" onclick="fecharModalCriar()">Cancelar</button>
+              <button class="btn-modal btn-confirmar" onclick="confirmarCriacao()">Criar Ficha</button>
+          </div>
+      </div>
+  </div>
+
+  <div id="modal-deletar" class="modal-overlay">
+      <div class="modal-box" style="border-color: #d32f2f;">
+          <h3 class="modal-titulo" style="color: #ef5350;">Apagar Ficha?</h3>
+          <p style="color:#ddd; margin-bottom:20px;">
+            Tem certeza que deseja excluir 
+            <strong id="nome-para-deletar" style="color: #e0aaff;"></strong>?
+            <br><span style="font-size:0.8em; color:#777;">Essa ação não pode ser desfeita.</span>
+          </p>
+          
+          <div class="modal-buttons">
+              <button class="btn-modal btn-cancelar" onclick="fecharModalDeletar()">Cancelar</button>
+              <button class="btn-modal btn-perigo" onclick="confirmarDelecao()">Sim, Apagar</button>
+          </div>
+      </div>
+  </div>
+
   <script>
     const API_URL = 'https://dandd-chan.onrender.com/api'; 
-    // ATENÇÃO: Se estiver testando localmente, mude para 'http://localhost:3000/api'
+    // const API_URL = 'https://dandd-chan.onrender.com/api'; // Use para testes locais
+
+    let nomeDelecaoPendente = ''; // Variável para guardar quem vamos deletar
 
     window.onload = carregarLista;
 
+    // --- FUNÇÕES DE CARREGAMENTO ---
     async function carregarLista() {
         const container = document.getElementById('lista-personagens');
         container.innerHTML = '<p style="color:#666;">Atualizando...</p>';
@@ -127,33 +254,30 @@
             
             container.innerHTML = ''; 
 
-            // 1. ADICIONA O BOTÃO DE "CRIAR NOVO" PRIMEIRO
+            // Botão Criar Novo
             const cardNovo = document.createElement('div');
             cardNovo.className = 'card-personagem card-novo';
-            cardNovo.onclick = criarPersonagem;
+            cardNovo.onclick = abrirModalCriar; // Agora chama o Modal
             cardNovo.innerHTML = `
                 <div class="plus-icon">+</div>
                 <div>Nova Ficha</div>
             `;
             container.appendChild(cardNovo);
 
-            // 2. LISTA OS PERSONAGENS EXISTENTES
+            // Lista Personagens
             if(nomes.length > 0) {
                 nomes.forEach(nome => {
                     const card = document.createElement('div');
                     card.className = 'card-personagem';
-                    
                     const imgId = `img-card-${nome.replace(/\s+/g, '-')}`;
 
                     card.innerHTML = `
-                        <button class="btn-delete" title="Apagar Ficha" onclick="deletarPersonagem(event, '${nome}')">✕</button>
+                        <button class="btn-delete" title="Apagar Ficha" onclick="abrirModalDeletar(event, '${nome}')">✕</button>
                         <img id="${imgId}" src="img/imagem-no-site/personagem.png" class="card-img img-loading" alt="${nome}">
                         <div class="card-name">${nome}</div>
                     `;
 
-                    // Clique na imagem ou no texto abre a ficha
                     card.onclick = (e) => {
-                        // Se clicou no botão de deletar, não abre a ficha
                         if(e.target.classList.contains('btn-delete')) return;
                         abrirFichaDoJogador(nome);
                     };
@@ -162,19 +286,32 @@
                     carregarFotoIndividual(nome, imgId);
                 });
             }
-
         } catch (error) {
             console.error(error);
             container.innerHTML = '<p style="color:red">Erro ao conectar com o servidor.</p>';
         }
     };
 
-    // --- FUNÇÃO DE CRIAR ---
-    async function criarPersonagem() {
-        const nome = prompt("Nome do novo personagem:");
-        if(!nome) return;
-        const senha = prompt("Senha para o jogador:");
-        if(!senha) return;
+    // --- LÓGICA DO MODAL DE CRIAÇÃO ---
+    function abrirModalCriar() {
+        document.getElementById('novo-nome').value = '';
+        document.getElementById('novo-senha').value = '';
+        document.getElementById('modal-criar').style.display = 'flex';
+        document.getElementById('novo-nome').focus();
+    }
+
+    function fecharModalCriar() {
+        document.getElementById('modal-criar').style.display = 'none';
+    }
+
+    async function confirmarCriacao() {
+        const nome = document.getElementById('novo-nome').value;
+        const senha = document.getElementById('novo-senha').value;
+
+        if(!nome || !senha) {
+            mostrarAviso("Preencha nome e senha!");
+            return;
+        }
 
         try {
             const res = await fetch(`${API_URL}/criar-ficha`, {
@@ -182,44 +319,56 @@
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ nome, senha })
             });
-
             const data = await res.json();
 
             if(res.ok) {
-                alert("Personagem criado!");
-                carregarLista(); // Atualiza a tela
+                mostrarAviso("Personagem criado com sucesso!");
+                fecharModalCriar();
+                carregarLista();
             } else {
-                alert("Erro: " + data.error);
+                mostrarAviso("Erro: " + data.error);
             }
         } catch(e) {
-            alert("Erro de conexão.");
+            mostrarAviso("Erro de conexão.");
         }
     }
 
-    // --- FUNÇÃO DE DELETAR ---
-    async function deletarPersonagem(event, nome) {
-        event.stopPropagation(); // Impede de abrir a ficha ao clicar no X
+    // --- LÓGICA DO MODAL DE DELEÇÃO ---
+    function abrirModalDeletar(event, nome) {
+        event.stopPropagation(); // Não abre a ficha
+        nomeDelecaoPendente = nome;
+        document.getElementById('nome-para-deletar').innerText = nome;
+        document.getElementById('modal-deletar').style.display = 'flex';
+    }
 
-        const confirmacao = confirm(`Tem certeza que deseja apagar a ficha de: ${nome}?\nIsso não pode ser desfeito.`);
-        if(!confirmacao) return;
+    function fecharModalDeletar() {
+        nomeDelecaoPendente = '';
+        document.getElementById('modal-deletar').style.display = 'none';
+    }
+
+    async function confirmarDelecao() {
+        if(!nomeDelecaoPendente) return;
 
         try {
             const res = await fetch(`${API_URL}/deletar-ficha`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ nome })
+                body: JSON.stringify({ nome: nomeDelecaoPendente })
             });
 
             if(res.ok) {
-                carregarLista(); // Atualiza a tela
+                mostrarAviso("Ficha deletada.");
+                fecharModalDeletar();
+                carregarLista();
             } else {
-                alert("Erro ao deletar.");
+                mostrarAviso("Erro ao deletar.");
             }
         } catch(e) {
-            alert("Erro de conexão.");
+            mostrarAviso("Erro de conexão.");
         }
     }
 
+    // --- UTILITÁRIOS ---
     async function carregarFotoIndividual(nome, imgId) {
         try {
             const res = await fetch(`${API_URL}/load-ficha-mestre`, {
@@ -241,6 +390,14 @@
 
     function abrirFichaDoJogador(nome) {
         window.open(`index.html?masterView=${nome}`, '_blank');
+    }
+
+    function mostrarAviso(msg) {
+        const div = document.createElement('div');
+        div.className = 'custom-toast';
+        div.innerText = msg;
+        document.body.appendChild(div);
+        setTimeout(() => div.remove(), 3000);
     }
   </script>
 </body>

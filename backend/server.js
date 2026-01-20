@@ -3,7 +3,7 @@ const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
 const mongoose = require('mongoose');
-const fs = require('fs'); // VOLTAMOS COM O FS (Para ler os arquivos do sistema)
+const fs = require('fs');
 const path = require('path');
 
 // --- CONFIGURAÇÃO DO APP ---
@@ -17,7 +17,7 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
-// --- CONEXÃO COM O MONGODB (Para Fichas) ---
+// --- CONEXÃO COM O MONGODB ---
 const mongoURI = process.env.MONGO_URI; 
 
 if (!mongoURI) {
@@ -28,7 +28,7 @@ if (!mongoURI) {
         .catch(err => console.error("❌ Erro ao conectar no MongoDB:", err));
 }
 
-// --- MODELO DA FICHA (MongoDB) ---
+// --- MODELO DA FICHA ---
 const FichaSchema = new mongoose.Schema({
     nome: { type: String, required: true, unique: true }, 
     senha: { type: String, required: true },
@@ -42,13 +42,10 @@ io.on('connection', (socket) => {
 });
 
 // =================================================================
-// ROTAS DO SISTEMA (LENDO SEUS ARQUIVOS JSON ANTIGOS)
+// ROTAS DO SISTEMA (LENDO ARQUIVOS JSON)
 // =================================================================
-// Essa rota permite que o site pegue classes, raças, magias, etc.
 app.get('/api/catalog/:tipo', (req, res) => {
     const tipo = req.params.tipo;
-    // Procura o arquivo na pasta 'data' (ex: classes_db.json, spells.json)
-    // Tenta achar com ou sem o "_db" no nome pra garantir
     let possiblePaths = [
         path.join(__dirname, 'data', `${tipo}.json`),
         path.join(__dirname, 'data', `${tipo}_db.json`)
@@ -70,16 +67,12 @@ app.get('/api/catalog/:tipo', (req, res) => {
         }
     }
 
-    if (found) {
-        res.json(fileData);
-    } else {
-        console.log(`Arquivo não encontrado para: ${tipo}`);
-        res.json([]); // Retorna lista vazia se não achar
-    }
+    if (found) res.json(fileData);
+    else res.json([]); 
 });
 
 // =================================================================
-// ROTAS DE PERSONAGEM (USANDO MONGODB)
+// ROTAS DE PERSONAGEM
 // =================================================================
 
 // 1. LISTAR PERSONAGENS
@@ -93,7 +86,7 @@ app.get('/api/lista-personagens', async (req, res) => {
     }
 });
 
-// 2. CRIAR NOVA FICHA
+// 2. CRIAR NOVA FICHA (AGORA COM O MOLDE COMPLETO!)
 app.post('/api/criar-ficha', async (req, res) => {
     try {
         const { nome, senha } = req.body;
@@ -102,13 +95,105 @@ app.post('/api/criar-ficha', async (req, res) => {
         const existe = await Ficha.findOne({ nome: { $regex: new RegExp(`^${nome}$`, 'i') } });
         if (existe) return res.status(400).json({ error: "Já existe!" });
 
+        // --- O MOLDE COMPLETO ZERADO ---
         const novaFicha = new Ficha({
             nome: nome,
             senha: senha,
+            fotoPerfil: "",
             activeTab: "Descrição",
-            vidaAtual: 0,
+            spellDCConfig: { "selectedAttr": "none", "extraMod": 0, "lastKnownLevel": 0 },
+            dtMagias: 0,
+            inventory: [],
+            abilities: [],
+            spells: [],
+            abilityCatalog: [],
+            spellCatalog: [],
+            description: {
+                anotacoes: "", aparencia: "", personalidade: "", objetivo: "",
+                ideais: "", vinculos: "", fraquezas: "", historia: ""
+            },
+            sanidade: { estresse: 0, vazio: 0 },
+            pericias: {
+                "Atletismo": { "atributo": "FOR", "treinado": false, "outros": 0 },
+                "Acrobacia": { "atributo": "DEX", "treinado": false, "outros": 0 },
+                "Furtividade": { "atributo": "DEX", "treinado": false, "outros": 0 },
+                "Prestidigitação": { "atributo": "DEX", "treinado": false, "outros": 0 },
+                "Arcanismo": { "atributo": "INT", "treinado": false, "outros": 0 },
+                "História": { "atributo": "INT", "treinado": false, "outros": 0 },
+                "Investigação": { "atributo": "INT", "treinado": false, "outros": 0 },
+                "Natureza": { "atributo": "INT", "treinado": false, "outros": 0 },
+                "Religião": { "atributo": "INT", "treinado": false, "outros": 0 },
+                "Intuição": { "atributo": "SAB", "treinado": false, "outros": 0 },
+                "Lidar com animais": { "treinado": false, "bonus": 0, "atributo": "SAB" },
+                "Medicina": { "atributo": "SAB", "treinado": false, "outros": 0 },
+                "Percepção": { "atributo": "SAB", "treinado": false, "outros": 0 },
+                "Sobrevivência": { "atributo": "SAB", "treinado": false, "outros": 0 },
+                "Atuação": { "atributo": "CAR", "treinado": false, "outros": 0 },
+                "Enganação": { "atributo": "CAR", "treinado": false, "outros": 0 },
+                "Intimidação": { "atributo": "CAR", "treinado": false, "outros": 0 },
+                "Persuasão": { "atributo": "CAR", "treinado": false, "outros": 0 },
+                "Salvaguarda (Força)": { "atributo": "FOR", "treinado": false, "outros": 0 },
+                "Salvaguarda (Destreza)": { "atributo": "DEX", "treinado": false, "outros": 0 },
+                "Salvaguarda (Constituição)": { "atributo": "CON", "treinado": false, "outros": 0 },
+                "Salvaguarda (Inteligência)": { "atributo": "INT", "treinado": false, "outros": 0 },
+                "Salvaguarda (Sabedoria)": { "atributo": "SAB", "treinado": false, "outros": 0 },
+                "Salvaguarda (Carisma)": { "atributo": "CAR", "treinado": false, "outros": 0 }
+            },
             atributos: { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 },
-            fotoPerfil: ""
+            niveisClasses: {},
+            xp: "0",
+            inspiracao: 0,
+            vidaDadosSalvos: { v1: 0, v2: 0, v3: 0 },
+            marco: 0,
+            vidaAtual: 0,
+            vidaTempAtual: 0,
+            danoNecroAtual: 0,
+            metros: 0,
+            iniciativaBonus: 0,
+            acOutros: 0,
+            resistencias: "",
+            imunidades: "",
+            fraquezas: "",
+            proficiencias: "",
+            minimizedPreparedSpells: false,
+            minimizedPreparedAbilities: false,
+            fraquezasList: [],
+            resistenciasList: [],
+            imunidadesList: [],
+            proficienciasList: [],
+            idiomasList: [],
+            spellSlots: {
+                "1": { "used": 0, "status": [] }, "2": { "used": 0, "status": [] },
+                "3": { "used": 0, "status": [] }, "4": { "used": 0, "status": [] },
+                "5": { "used": 0, "status": [] }, "6": { "used": 0, "status": [] },
+                "7": { "used": 0, "status": [] }, "8": { "used": 0, "status": [] },
+                "9": { "used": 0, "status": [] },
+                "pact": { "used": 0, "status": [] }, "ki": { "used": 0, "status": [] },
+                "furia": { "used": 0, "status": [] }, "sorcery": { "used": 0, "status": [] },
+                "mutagen": { "used": 0, "status": [] }, "blood_curse": { "status": [] },
+                "infusions": { "status": [] }
+            },
+            isSlotsCollapsed: false,
+            collapsedSections: {},
+            antecedente: "",
+            personagem: "",
+            jogador: "",
+            raca: "",
+            customResources: [],
+            deslocamentoVoo: 0,
+            subRaca: "",
+            racaTipo: "Humanoide",
+            racaTamanho: "Médio",
+            money: { pc: 0, pp: 0, po: 0, pl: 0, pd: 0 },
+            hitDie: "",
+            subclasses: {},
+            salvaguardas: {
+                "Força": { "treinado": false }, "Constituição": { "treinado": false },
+                "Destreza": { "treinado": false }, "Inteligência": { "treinado": false },
+                "Sabedoria": { "treinado": false }, "Carisma": { "treinado": false }
+            },
+            ordemClasses: [],
+            vidaTotalCalculada: 0
         });
 
         await novaFicha.save();

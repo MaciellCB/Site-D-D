@@ -92,7 +92,25 @@
 
   <section class="info-personagem">
     <div class="info-esquerda">
-      <div style="position: relative; display: inline-block; margin-bottom: 15px;">
+  <div id="nome-personagem-overlay" style="
+      background: rgba(0, 0, 0, 0.6); 
+      color: white; 
+      padding: 5px 10px; 
+      border-radius: 4px; 
+      margin-bottom: 5px; 
+      font-weight: bold; 
+      text-transform: uppercase; 
+      letter-spacing: 1px;
+      text-align: center;
+      font-size: 14px;
+      border: 1px solid rgba(156, 39, 176, 0.3);
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+  ">Carregando...</div>
+
+  <div style="position: relative; display: inline-block; margin-bottom: 15px;">
           <img 
             src="img/imagem-no-site/personagem.png" 
             alt="Foto do personagem" 
@@ -514,7 +532,10 @@
                 imgElement.src = "img/imagem-no-site/personagem.png";
             }
         }
-
+const overlayNome = document.getElementById('nome-personagem-overlay');
+    if (overlayNome) overlayNome.textContent = data.nome || "Sem Nome";
+    
+    setVal('input-jogador', data.jogador);
         if (data.atributos) {
             setTxtQ('.num.n1', data.atributos.n1);
             setTxtQ('.num.n2', data.atributos.n2);
