@@ -3995,9 +3995,14 @@ diceStyles.textContent = `
 document.head.appendChild(diceStyles);
 
 
-/* 2. FUNÇÃO showCombatResults ATUALIZADA */
+/* =============================================================
+   ATUALIZAÇÃO: showCombatResults com suporte a Remoto
+============================================================= */
 let diceTimer = null;
-function showCombatResults(title, attackResult, damageResult) {
+
+// Adicionado parametro 'isRemote' no final
+function showCombatResults(title, attackResult, damageResult, isRemote = false) {
+    
     // 1. Criação/Busca do Container Visual
     let container = document.getElementById('dice-results-container');
     if (!container) { 
@@ -4009,11 +4014,10 @@ function showCombatResults(title, attackResult, damageResult) {
     // 2. Limpa timer anterior
     if (diceTimer) clearTimeout(diceTimer);
 
-    // --- MONTAGEM DO HTML DO CONTEÚDO (DIREITA) ---
+    // --- MONTAGEM DO HTML (Igual ao seu original) ---
     let contentHtml = `<div class="dice-content-wrapper">`;
     contentHtml += `<div class="dice-header">${title}</div>`;
 
-    // Linha de Ataque
     if (attackResult) {
         let totalClass = "";
         if (attackResult.isCrit) totalClass = "crit-total";
@@ -4024,33 +4028,32 @@ function showCombatResults(title, attackResult, damageResult) {
                 <div class="dice-label">ACERTO</div>
                 <div class="dice-value-wrapper">
                     <div class="dice-value ${totalClass}">${attackResult.text}</div>
-                    <div class="dice-tooltip">${attackResult.detail}</div>
+                    <div class="dice-tooltip">${attackResult.detail || ''}</div>
                 </div>
             </div>
         `;
     }
 
-    // Linha de Dano
     if (damageResult) {
         let totalClass = damageResult.isCrit ? "crit-total" : "";
-        
         contentHtml += `
             <div class="dice-row">
                 <div class="dice-label">DANO</div>
                 <div class="dice-value-wrapper">
                     <div class="dice-value ${totalClass}">${damageResult.text}</div>
-                    <div class="dice-tooltip">${damageResult.detail}</div>
+                    <div class="dice-tooltip">${damageResult.detail || ''}</div>
                 </div>
             </div>
         `;
     }
-    contentHtml += `</div>`; // Fecha .dice-content-wrapper
+    contentHtml += `</div>`; 
 
-
-    // --- MONTAGEM DO HTML DA INSPIRAÇÃO (ESQUERDA) ---
+    // --- HTML INSPIRAÇÃO ---
     let inspirationHtml = '';
-    // Verifica se a inspiração está ativa no estado global
-    if (typeof state !== 'undefined' && state.inspiration) {
+    // Se for remoto, usamos o dado que veio no payload, se for local, usamos o state
+    const isInspirado = isRemote ? (attackResult?.inspiracao || damageResult?.inspiracao) : (typeof state !== 'undefined' && state.inspiration);
+
+    if (isInspirado) {
         inspirationHtml = `
             <div class="inspiration-container">
                 <div class="inspiration-icon" title="Personagem Inspirado!">⭐</div>
@@ -4058,35 +4061,33 @@ function showCombatResults(title, attackResult, damageResult) {
         `;
     }
 
-    // 3. Injeta o HTML final (Inspiração na esquerda + Conteúdo na direita)
     container.innerHTML = inspirationHtml + contentHtml;
     
-    // 4. Mostrar com Animação
-    requestAnimationFrame(() => {
-        container.classList.add('active');
-    });
+    requestAnimationFrame(() => { container.classList.add('active'); });
 
-    // 5. Esconder automático após 4 segundos
-    diceTimer = setTimeout(() => {
-        container.classList.remove('active');
-    }, 4000);
+    diceTimer = setTimeout(() => { container.classList.remove('active'); }, 4000);
 
-    // 6. ENVIO PARA O PORTRAIT (Socket) - Mantido igual
-    if (typeof socket !== 'undefined') {
+    // ---------------------------------------------------------
+    // LÓGICA DE SOCKET (SÓ ENVIA SE NÃO FOR REMOTO)
+    // ---------------------------------------------------------
+    if (!isRemote && typeof socket !== 'undefined') {
         const payload = {
-            personagem: state.personagem || state.nome,
+            socketId: socket.id, // Importante: Envia quem rolou
+            personagem: state.nome || "Desconhecido", // Nome da ficha para filtrar
             titulo: title,
             ataque: null,
             dano: null,
-            inspiracao: state.inspiration || false // Envia status pro OBS também
+            inspiracao: state.inspiration || false
         };
 
         if (attackResult) {
             payload.ataque = {
                 total: attackResult.total,
                 text: attackResult.text,
+                detail: attackResult.detail, // Envia o detalhe da conta
                 isCrit: attackResult.isCrit,
-                isFumble: attackResult.isFumble
+                isFumble: attackResult.isFumble,
+                inspiracao: state.inspiration
             };
         }
 
@@ -4094,7 +4095,9 @@ function showCombatResults(title, attackResult, damageResult) {
             payload.dano = {
                 total: damageResult.total,
                 text: damageResult.text,
-                isCrit: damageResult.isCrit
+                detail: damageResult.detail, // Envia o detalhe da conta
+                isCrit: damageResult.isCrit,
+                inspiracao: state.inspiration
             };
         }
 

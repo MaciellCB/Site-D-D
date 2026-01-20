@@ -694,6 +694,31 @@
             }
         };
     }
+
+
+/* =================================================================
+       RECEBIMENTO DE DADOS ROLADOS (SINCRONIZAÇÃO VISUAL)
+       ================================================================= */
+    socket.on('dados_rolados', (data) => {
+        // 1. Ignora se fui eu mesmo que enviei (pois já vi a animação localmente)
+        if (data.socketId === socket.id) return;
+
+        // 2. Verifica se é para a ficha que estou aberto
+        // (Compara o nome da ficha aberta com o nome da ficha que rolou o dado)
+        if (state && state.nome && data.personagem && 
+            data.personagem.toLowerCase() === state.nome.toLowerCase()) {
+            
+            console.log("Recebendo rolagem remota de outra tela...");
+
+            // Chama a função visual marcando como TRUE (é remoto)
+            // Isso exibe o popup mas impede que ele seja reenviado para o servidor
+            if (typeof showCombatResults === 'function') {
+                showCombatResults(data.titulo, data.ataque, data.dano, true);
+            }
+        }
+    });
+
+
   </script>
 </body>
 </html>
