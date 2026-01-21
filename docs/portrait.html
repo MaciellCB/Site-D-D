@@ -11,23 +11,21 @@
             margin: 0; padding: 0; overflow: hidden;
             width: 100%; height: 100%;
             font-family: 'Roboto', sans-serif;
-            /* Centraliza o conteúdo na tela */
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* Container Principal - Centralizado e Aumentado */
+        /* Container Principal */
         .hud-wrapper {
             position: relative; 
             display: flex;
             align-items: flex-end;
             transform: scale(1.5); 
             transform-origin: center center;
-            /* O width será definido pelo conteúdo (imagem + barras ~590px total) */
         }
 
-        /* --- ÁREA DA IMAGEM (Esquerda) --- */
+        /* --- ÁREA DA IMAGEM --- */
         .char-image-container {
             position: relative;
             z-index: 10;
@@ -88,7 +86,7 @@
             z-index: 2;
         }
 
-        /* --- ÁREA DAS BARRAS (Direita) --- */
+        /* --- ÁREA DAS BARRAS --- */
         .stats-container {
             position: relative;
             margin-left: -40px;
@@ -180,17 +178,17 @@
         }
 
         /* =========================================================================
-           CSS DOS DADOS (CORRIGIDO: Ancorado à DIREITA)
+           CSS DOS DADOS (MATEMATICA EXATA)
            ========================================================================= */
         .dice-area {
             position: absolute;
-            /* MUDANÇA PRINCIPAL: Em vez de left, usamos RIGHT: 0. 
-               Isso cola o container no final exato do wrapper (final da barra). */
-            right: 0;
+            /* CÁLCULO EXATO:
+               590px (Fim da barra) - 115px (2 dados + gap) = 475px
+            */
+            left: 475px;
             bottom: 12px;
             display: flex;
-            /* Mantemos row-reverse para empilhar da direita para a esquerda (Ataque na ponta, Dano empurra pra dentro) */
-            flex-direction: row-reverse;
+            flex-direction: row; 
             gap: 10px; 
             pointer-events: none;
             z-index: 20; 
@@ -201,12 +199,12 @@
             border: none;
             box-shadow: none;
             animation: popInDice 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            transform-origin: bottom center;
+            transform-origin: bottom center; 
             opacity: 0;
             transform: scale(0.5);
             display: flex;
             flex-direction: row;
-            gap: 15px;
+            gap: 15px; /* GAP QUE CONTA NO TAMANHO TOTAL */
         }
 
         .roll-card.fade-out {
@@ -224,7 +222,7 @@
         /* Caixa que segura o ícone e o número */
         .dice-result-box {
             position: relative;
-            width: 50px;  
+            width: 50px; /* LARGURA DO DADO */
             height: 50px; 
             display: flex;
             align-items: center;
