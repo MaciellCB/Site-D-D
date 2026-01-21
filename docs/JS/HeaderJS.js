@@ -125,37 +125,73 @@ let CLASSES_DB = [];
 let items = [];
 
 
+/* =============================================================
+   FUNÇÃO CORRIGIDA: SELETOR GENÉRICO COM DUPLICATAS
+   Permite selecionar 2 itens iguais (ex: 2 Adagas)
+============================================================= */
 function openGenericSelector(title, count, options, onConfirmCallback) {
     const overlay = document.createElement('div');
     overlay.className = 'spell-modal-overlay race-modal-overlay';
     overlay.style.zIndex = '50000';
 
+    // 1. Verifica o que o personagem já tem
     let alreadyKnown = [];
     if (title.includes("Idiomas")) alreadyKnown = state.idiomasList || [];
     else if (title.includes("Ferramentas") || title.includes("Instrumento")) alreadyKnown = state.proficienciasList || [];
 
+    // 2. Define se permite duplicatas (Armas/Itens = Sim, Perícias/Idiomas = Não)
+    // Se o título NÃO tiver Perícia nem Idioma, assumimos que é equipamento e permite pegar 2 iguais.
+    const allowDuplicates = (!title.includes("Perícia") && !title.includes("Idioma") && count > 1);
+
     const uniqueOptions = [...new Set(options)].sort();
-    const availableOptionsCount = uniqueOptions.filter(opt => !alreadyKnown.includes(opt)).length;
+    
+    // Se for item duplicável, não filtramos o que já tem (você pode querer uma 3ª adaga), 
+    // mas se for Perícia/Idioma, filtramos.
+    const availableOptionsCount = allowDuplicates 
+        ? uniqueOptions.length 
+        : uniqueOptions.filter(opt => !alreadyKnown.includes(opt)).length;
+
     const effectiveCount = Math.min(count, availableOptionsCount);
 
     const checkboxesHtml = uniqueOptions.map(opt => {
-        const isKnown = alreadyKnown.includes(opt);
-        const styleLabel = isKnown ? "background:#222; border:1px solid #444; opacity:0.6;" : "background:#1a1a1a; border:1px solid #555; cursor:pointer;";
-        return `
-            <label style="display:flex; align-items:center; gap:10px; padding:8px; border-radius:4px; ${styleLabel}">
-                <input type="checkbox" value="${opt}" ${isKnown ? 'checked disabled' : 'class="gen-check"'} style="accent-color:#9c27b0;">
-                <span style="color:${isKnown ? '#888' : '#fff'};">${opt} ${isKnown ? '<small>(Já possui)</small>' : ''}</span>
-            </label>
+        const isKnown = alreadyKnown.includes(opt) && !allowDuplicates; // Só desabilita se já tem e NÃO pode duplicar
+        
+        // Estilo base
+        const styleLabel = isKnown 
+            ? "background:#222; border:1px solid #444; opacity:0.6;" 
+            : "background:#1a1a1a; border:1px solid #555; cursor:pointer;";
+
+        // HTML do Checkbox Principal
+        let html = `
+            <label class="option-row" style="display:flex; align-items:center; justify-content:space-between; padding:8px; border-radius:4px; ${styleLabel} transition:0.2s;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <input type="checkbox" value="${opt}" class="gen-check main-check" ${isKnown ? 'checked disabled' : ''} style="accent-color:#9c27b0; transform:scale(1.1);">
+                    <span style="color:${isKnown ? '#888' : '#fff'};">${opt} ${isKnown ? '<small>(Já possui)</small>' : ''}</span>
+                </div>
         `;
+
+        // HTML do Checkbox de Duplicata (Só aparece se permitir duplicatas e count > 1)
+        if (allowDuplicates && !isKnown) {
+            html += `
+                <div class="dup-box" style="display:flex; align-items:center; gap:5px; opacity:0.3; transition:0.3s; border-left:1px solid #444; padding-left:8px;">
+                    <span style="font-size:10px; color:#aaa;">+1</span>
+                    <input type="checkbox" value="${opt}" class="gen-check dup-check" disabled style="accent-color:#e0aaff;">
+                </div>
+            `;
+        }
+
+        html += `</label>`;
+        return html;
     }).join('');
 
     overlay.innerHTML = `
-        <div class="spell-modal" style="width: 500px; height: 80vh; display:flex; flex-direction:column;">
+        <div class="spell-modal" style="width: 550px; height: 80vh; display:flex; flex-direction:column;">
             <div class="modal-header"><h3>${title}</h3></div>
             <div class="modal-body" style="padding: 15px; overflow-y: auto; flex:1;">
                 <div style="font-size:14px; color:#e0aaff; margin-bottom:15px; text-align:center;">
                     Escolha <strong>${effectiveCount}</strong> opção(ões). 
                     ${effectiveCount < count ? '<br><small style="color:#aaa">(Opções limitadas disponíveis)</small>' : ''}
+                    <div id="gen-counter" style="color:#fff; font-weight:bold; margin-top:5px;">0/${effectiveCount}</div>
                 </div>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">${checkboxesHtml}</div>
             </div>
@@ -168,7 +204,84 @@ function openGenericSelector(title, count, options, onConfirmCallback) {
     document.body.appendChild(overlay);
 
     const btnConfirm = overlay.querySelector('#btn-confirm-gen');
-    const checks = overlay.querySelectorAll('.gen-check');
+    const counterDisplay = overlay.querySelector('#gen-counter');
+    const allMainChecks = overlay.querySelectorAll('.main-check');
+    const allDupChecks = overlay.querySelectorAll('.dup-check');
+
+    // Lógica para lidar com duplicatas
+    // 1. Quando clica no Principal
+    allMainChecks.forEach(chk => {
+        chk.addEventListener('change', (e) => {
+            const row = chk.closest('.option-row');
+            const dupBox = row.querySelector('.dup-box');
+            const dupCheck = row.querySelector('.dup-check');
+
+            if (dupCheck) {
+                if (chk.checked) {
+                    // Se marcou o principal, habilita o visual do secundário
+                    dupBox.style.opacity = '1';
+                    dupCheck.removeAttribute('disabled');
+                } else {
+                    // Se desmarcou o principal, reseta o secundário
+                    dupCheck.checked = false;
+                    dupCheck.setAttribute('disabled', true);
+                    dupBox.style.opacity = '0.3';
+                }
+            }
+            updateSelection();
+        });
+    });
+
+    // 2. Quando clica na Duplicata
+    allDupChecks.forEach(chk => {
+        chk.addEventListener('change', updateSelection);
+    });
+
+    function updateSelection() {
+        // Conta quantos checks totais (principais + duplicatas) estão marcados
+        const totalChecked = overlay.querySelectorAll('.gen-check:checked').length;
+        
+        counterDisplay.textContent = `${totalChecked}/${effectiveCount}`;
+
+        // Lógica de Limite
+        if (totalChecked >= effectiveCount) {
+            // Habilita botão
+            btnConfirm.removeAttribute('disabled');
+            btnConfirm.style.background = '#9c27b0';
+
+            // Desabilita tudo que NÃO está marcado
+            allMainChecks.forEach(c => { if (!c.checked) c.disabled = true; });
+            allDupChecks.forEach(c => { if (!c.checked) c.disabled = true; });
+            
+            // Visual: Opacidade nas linhas não selecionadas
+            overlay.querySelectorAll('.option-row').forEach(row => {
+                if (!row.querySelector('.gen-check:checked')) row.style.opacity = '0.5';
+            });
+
+        } else {
+            // Desabilita botão
+            btnConfirm.setAttribute('disabled', true);
+            btnConfirm.style.background = '#444';
+
+            // Reabilita checks principais
+            allMainChecks.forEach(c => { 
+                // Só reabilita se não for um item "Já possui" fixo
+                if (!alreadyKnown.includes(c.value) || allowDuplicates) {
+                    c.disabled = false; 
+                }
+            });
+
+            // Reabilita checks duplicados (apenas se o pai estiver checado)
+            allDupChecks.forEach(c => {
+                const parentRow = c.closest('.option-row');
+                const parentMain = parentRow.querySelector('.main-check');
+                if (parentMain.checked) c.disabled = false;
+            });
+
+            // Restaura opacidade
+            overlay.querySelectorAll('.option-row').forEach(row => row.style.opacity = '1');
+        }
+    }
 
     if (effectiveCount === 0) {
         btnConfirm.removeAttribute('disabled');
@@ -176,22 +289,8 @@ function openGenericSelector(title, count, options, onConfirmCallback) {
         btnConfirm.textContent = "Continuar (Nada a escolher)";
     }
 
-    checks.forEach(chk => {
-        chk.addEventListener('change', () => {
-            const selectedCount = overlay.querySelectorAll('.gen-check:checked').length;
-            if (selectedCount >= effectiveCount) {
-                checks.forEach(c => { if (!c.checked) c.disabled = true; });
-                btnConfirm.removeAttribute('disabled');
-                btnConfirm.style.background = '#9c27b0';
-            } else {
-                checks.forEach(c => c.disabled = false);
-                btnConfirm.setAttribute('disabled', true);
-                btnConfirm.style.background = '#444';
-            }
-        });
-    });
-
     btnConfirm.onclick = () => {
+        // Coleta os valores. Se marcou principal e duplicata, o valor aparece 2x no array
         const selectedValues = Array.from(overlay.querySelectorAll('.gen-check:checked')).map(c => c.value);
         onConfirmCallback(selectedValues);
         overlay.remove();

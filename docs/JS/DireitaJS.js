@@ -2297,6 +2297,7 @@ function openSpellModal(existingSpell = null) {
   modal.querySelector('.btn-cancel').addEventListener('click', (ev) => { ev.preventDefault(); closeModalClean(); });
 
   const saveBtn = modal.querySelector('.btn-save-modal');
+  // ... dentro de openSpellModal ...
   if (saveBtn) {
     saveBtn.addEventListener('click', (ev) => {
       ev.preventDefault();
@@ -2310,13 +2311,17 @@ function openSpellModal(existingSpell = null) {
         name: modal.querySelector('#modal-name').value.trim() || 'Sem nome',
         levelNumber: Number(modal.querySelector('#modal-level').value) || 0,
         damage: modal.querySelector('#modal-damage').value.trim() || '-',
-        expanded: true,
+        
+        // ALTERADO: Se for nova (existingSpell null), expanded é false. Se for edição, mantém o que estava.
+        expanded: existingSpell ? existingSpell.expanded : false, 
+        
         active: existingSpell ? existingSpell.active : false,
         components: {
           V: modal.querySelector('#comp-v').checked,
           S: modal.querySelector('#comp-s').checked,
           M: modal.querySelector('#comp-m').checked
         },
+        // ... restante do código ...
         material: modal.querySelector('#modal-material').value.trim(),
         attrs: {
           execucao: modal.querySelector('#modal-exec').value.trim() || 'padrão',
@@ -2484,11 +2489,16 @@ function openSpellCatalogOverlay(parentModal = null) {
     };
   });
 
-  function adicionarMagiaAoState(c, classeFinal) {
-    state.spells.unshift({ ...c, id: uid(), expanded: true, active: false, spellClass: classeFinal });
+function adicionarMagiaAoState(c, classeFinal) {
+    // Agora active: true faz ela aparecer imediatamente na lista de preparadas
+    state.spells.unshift({ ...c, id: uid(), expanded: false, active: true, spellClass: classeFinal });
+    
     renderSpells();
     saveStateToServer();
-  }
+    
+    // Recomendado: Adicionar isso para forçar atualização de contadores/DT se houver listeners
+    window.dispatchEvent(new CustomEvent('sheet-updated'));
+}
 
   // LÓGICA DE EXPANDIR
   overlay.querySelectorAll('.catalog-card-header').forEach(header => {
@@ -2561,27 +2571,27 @@ function formatCatalogSpellCard(c) {
     `;
 }
 
-/* --- SUBSTITUA A FUNÇÃO renderPreparedSpells INTEIRA POR ESTA --- */
+/* --- FUNÇÃO CORRIGIDA: MAGIAS PREPARADAS --- */
 function renderPreparedSpells() {
-  state.dtMagias = calculateSpellDC();
-  const slotsHTML = renderSpellSlotsHTML();
+    state.dtMagias = calculateSpellDC();
+    const slotsHTML = renderSpellSlotsHTML();
 
-  const habilidadesPreparadas = state.abilities.filter(h => h.active);
-  const magiasPreparadas = state.spells.filter(s => s.active);
+    const habilidadesPreparadas = state.abilities.filter(h => h.active);
+    const magiasPreparadas = state.spells.filter(s => s.active);
 
-  // Estados iniciais
-  const isMagiasMin = !!state.minimizedPreparedSpells;
-  const isHabsMin = !!state.minimizedPreparedAbilities;
+    // Estados iniciais
+    const isMagiasMin = !!state.minimizedPreparedSpells;
+    const isHabsMin = !!state.minimizedPreparedAbilities;
 
-  const arrowMagias = isMagiasMin ? '▸' : '▾';
-  const arrowHabs = isHabsMin ? '▸' : '▾';
-  const styleMagias = isMagiasMin ? 'display:none;' : '';
-  const styleHabs = isHabsMin ? 'display:none;' : '';
+    const arrowMagias = isMagiasMin ? '▸' : '▾';
+    const arrowHabs = isHabsMin ? '▸' : '▾';
+    const styleMagias = isMagiasMin ? 'display:none;' : '';
+    const styleHabs = isHabsMin ? 'display:none;' : '';
 
-  // HTML Magias (Com o dado MAIOR no título)
-  let magiasHTML = '';
-  if (magiasPreparadas.length > 0) {
-    magiasHTML = `
+    // HTML Magias
+    let magiasHTML = '';
+    if (magiasPreparadas.length > 0) {
+        magiasHTML = `
             <div id="toggle-magias" class="toggle-section-header" style="margin: 10px 0 6px 4px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; cursor:pointer; display:flex; align-items:center;">
                 <span style="font-size:16px; color:#9c27b0; width:15px;">${arrowMagias}</span> 
                 <span style="color: #ddd; text-transform: uppercase; font-size: 14px; font-weight:700;">Magias Preparadas</span>
@@ -2595,12 +2605,12 @@ function renderPreparedSpells() {
                 ${magiasPreparadas.map(formatMySpellCard).join('')}
             </div>
         `;
-  }
+    }
 
-  // HTML Habilidades
-  let habilidadesHTML = '';
-  if (habilidadesPreparadas.length > 0) {
-    habilidadesHTML = `
+    // HTML Habilidades
+    let habilidadesHTML = '';
+    if (habilidadesPreparadas.length > 0) {
+        habilidadesHTML = `
             <h4 id="toggle-habs" class="toggle-section-header" style="margin: 20px 0 6px 4px; color: #b39cff; text-transform: uppercase; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px; cursor:pointer;">
                 <span style="font-size:14px; color:#9c27b0; width:12px;">${arrowHabs}</span> Habilidades Ativas
             </h4>
@@ -2608,7 +2618,7 @@ function renderPreparedSpells() {
                 ${habilidadesPreparadas.map(a => `
                     <div class="card hab-card ${a.expanded ? 'expanded' : ''}" data-id="${a.id}" data-type="hab">
                         <div class="card-header">
-                            <div class="left" data-id="${a.id}" style="cursor:pointer;">
+                            <div class="left" data-id="${a.id}" style="cursor:pointer; display:flex; align-items:center; gap:8px;">
                                 <span class="caret">${a.expanded ? '▾' : '▸'}</span>
                                 <div class="card-title" style="color:#b39cff;">${a.title}</div>
                             </div>
@@ -2626,14 +2636,14 @@ function renderPreparedSpells() {
                 `).join('')}
             </div>
         `;
-  }
+    }
 
-  let listaContent = `${magiasHTML}${habilidadesHTML}`;
-  if (!habilidadesPreparadas.length && !magiasPreparadas.length) {
-      listaContent = `<div class="empty-tip">Nenhuma habilidade ou magia preparada/ativa.</div>`;
-  }
+    let listaContent = `${magiasHTML}${habilidadesHTML}`;
+    if (!habilidadesPreparadas.length && !magiasPreparadas.length) {
+        listaContent = `<div class="empty-tip">Nenhuma habilidade ou magia preparada/ativa.</div>`;
+    }
 
-  conteudoEl.innerHTML = `
+    conteudoEl.innerHTML = `
         <div class="spells-wrapper">
             ${slotsHTML}
             ${slotsHTML ? '<hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 15px 0;">' : ''}
@@ -2655,48 +2665,106 @@ function renderPreparedSpells() {
         </div>
     `;
 
-  // EVENTOS
-  const btnDTPrep = document.getElementById('btnOpenDTConfig_Prep');
-  if (btnDTPrep) btnDTPrep.addEventListener('click', openDTConfigModal);
+    // --- EVENTOS ---
 
-  bindSlotEvents();
-  bindSpellAttackEvents(); // <--- Liga a função de cálculo e rolagem
-  
-  // Toggle sections
-  const btnToggleMagias = document.getElementById('toggle-magias');
-  if (btnToggleMagias) {
-    btnToggleMagias.addEventListener('click', (e) => {
-      // Impede que clicar no dado feche a aba
-      if(e.target.closest('#btnRollSpellAttack_PrepHeader')) return;
-      
-      state.minimizedPreparedSpells = !state.minimizedPreparedSpells;
-      saveStateToServer(); renderActiveTab();
-    });
-  }
-  const btnToggleHabs = document.getElementById('toggle-habs');
-  if (btnToggleHabs) {
-    btnToggleHabs.addEventListener('click', () => {
-      state.minimizedPreparedAbilities = !state.minimizedPreparedAbilities;
-      saveStateToServer(); renderActiveTab();
-    });
-  }
+    // 1. Configurar DT
+    const btnDTPrep = document.getElementById('btnOpenDTConfig_Prep');
+    if (btnDTPrep) btnDTPrep.addEventListener('click', openDTConfigModal);
 
-  // Eventos de cards
-  conteudoEl.querySelectorAll('.spell-card .card-header').forEach(h => {
-     h.addEventListener('click', (ev) => {
-         if(ev.target.closest('.check-ativar')) return;
-         const id = Number(h.closest('.card').dataset.id);
-         const s = state.spells.find(x => x.id === id);
-         if(s) { s.expanded = !s.expanded; saveStateToServer(); renderActiveTab(); }
-     });
-  });
-  conteudoEl.querySelectorAll('.spell-activate').forEach(ch => {
-     ch.addEventListener('change', (ev) => {
-        const id = Number(ev.target.dataset.id);
-        const s = state.spells.find(x => x.id === id);
-        if(s) { s.active = ev.target.checked; saveStateToServer(); renderActiveTab(); }
-     });
-  });
+    // 2. Filtro Rápido (Opcional, busca simples visual)
+    const filterInput = document.getElementById('filterPrepared');
+    if(filterInput) {
+        filterInput.addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase();
+            conteudoEl.querySelectorAll('.card').forEach(c => {
+                const txt = c.textContent.toLowerCase();
+                c.style.display = txt.includes(val) ? '' : 'none';
+            });
+        });
+    }
+
+    bindSlotEvents();
+    bindSpellAttackEvents(); 
+    
+    // 3. Toggles de Seção (Minimizar grupos)
+    const btnToggleMagias = document.getElementById('toggle-magias');
+    if (btnToggleMagias) {
+        btnToggleMagias.addEventListener('click', (e) => {
+            if(e.target.closest('#btnRollSpellAttack_PrepHeader')) return;
+            state.minimizedPreparedSpells = !state.minimizedPreparedSpells;
+            saveStateToServer(); renderActiveTab();
+        });
+    }
+    const btnToggleHabs = document.getElementById('toggle-habs');
+    if (btnToggleHabs) {
+        btnToggleHabs.addEventListener('click', () => {
+            state.minimizedPreparedAbilities = !state.minimizedPreparedAbilities;
+            saveStateToServer(); renderActiveTab();
+        });
+    }
+
+    // =================================================================
+    // 4. EVENTOS DE CARDS (CORRIGIDOS E UNIFICADOS)
+    // =================================================================
+
+    // A. MAGIAS - EXPANDIR
+    conteudoEl.querySelectorAll('.spell-card .card-header').forEach(h => {
+         h.addEventListener('click', (ev) => {
+             // Ignora clique no checkbox ou na área direita (dados)
+             if(ev.target.closest('.check-ativar') || ev.target.closest('.spell-right')) return;
+             
+             const id = Number(h.closest('.card').dataset.id);
+             const s = state.spells.find(x => x.id === id);
+             if(s) { 
+                 s.expanded = !s.expanded; 
+                 saveStateToServer(); 
+                 renderActiveTab(); 
+             }
+         });
+    });
+
+    // B. MAGIAS - CHECKBOX (Despreparar)
+    conteudoEl.querySelectorAll('.spell-activate').forEach(ch => {
+         ch.addEventListener('change', (ev) => {
+            const id = Number(ev.target.dataset.id);
+            const s = state.spells.find(x => x.id === id);
+            if(s) { 
+                s.active = ev.target.checked; 
+                saveStateToServer(); 
+                renderActiveTab(); 
+            }
+         });
+         ch.addEventListener('click', e => e.stopPropagation());
+    });
+
+    // C. HABILIDADES - EXPANDIR (ESTE ERA O QUE FALTAVA)
+    conteudoEl.querySelectorAll('.hab-card .card-header').forEach(h => {
+        h.addEventListener('click', (ev) => {
+            if(ev.target.closest('.check-ativar')) return;
+
+            const id = Number(h.closest('.card').dataset.id);
+            const hab = state.abilities.find(a => a.id === id);
+            if(hab) {
+                hab.expanded = !hab.expanded;
+                saveStateToServer();
+                renderActiveTab();
+            }
+        });
+    });
+
+    // D. HABILIDADES - CHECKBOX (Desativar) (TAMBÉM FALTAVA)
+    conteudoEl.querySelectorAll('.hab-activate').forEach(ch => {
+        ch.addEventListener('change', (ev) => {
+           const id = Number(ev.target.dataset.id);
+           const hab = state.abilities.find(a => a.id === id);
+           if(hab) { 
+               hab.active = ev.target.checked; 
+               saveStateToServer(); 
+               renderActiveTab(); 
+           }
+        });
+        ch.addEventListener('click', e => e.stopPropagation());
+   });
 }
 
 
@@ -3174,7 +3242,9 @@ function openAbilityCatalogOverlay() {
           id: uid(),
           title: c.name,
           description: c.description || '',
-          expanded: true,
+          
+          expanded: false, // ALTERADO: Começa fechado
+          
           class: c.class || '',
           subclass: c.subclass || '',
           category: c.category || 'Geral',
@@ -3493,7 +3563,9 @@ function openNewAbilityModal(existingAbility = null) {
         id: uid(),
         title: nome,
         description: desc,
-        expanded: true,
+        
+        expanded: false, // ALTERADO: Começa fechado
+        
         active: false,
         category: selectedCategory,
         class: finalClass,
@@ -3713,50 +3785,88 @@ function escapeHtml(str) {
 }
 
 
-/* ---------------- POPUP DE SELEÇÃO DE CLASSE ---------------- */
+/* ---------------- POPUP DE SELEÇÃO DE CLASSE (CORRIGIDO + BOTÃO X) ---------------- */
 function abrirPopupSelecaoClasse(classes, callback) {
-  const overlay = document.createElement('div');
-  overlay.style = `
+    // 1. Cria o Overlay (Fundo Escuro)
+    const overlay = document.createElement('div');
+    overlay.className = 'class-selection-overlay';
+    overlay.style = `
         position: fixed; inset: 0; background: rgba(0,0,0,0.85); 
         display: flex; align-items: center; justify-content: center; 
         z-index: 20000; font-family: sans-serif;
     `;
 
-  const content = document.createElement('div');
-  content.style = `
+    // 2. Cria a Caixa de Conteúdo
+    const content = document.createElement('div');
+    content.style = `
         background: #1a1a1a; padding: 25px; border-radius: 8px; 
         border: 2px solid #9c27b0; text-align: center; width: 300px;
         box-shadow: 0 0 20px rgba(156,39,176,0.4);
+        position: relative; /* Necessário para posicionar o X */
     `;
 
-  content.innerHTML = `
-        <h4 style="color: #fff; margin-bottom: 15px;">Escolha a Classe</h4>
+    // 3. HTML Interno (Com o botão de fechar X)
+    content.innerHTML = `
+        <button id="btn-close-popup" title="Fechar" style="
+            position: absolute; top: 8px; right: 10px;
+            background: transparent; border: none; color: #888;
+            font-size: 18px; font-weight: bold; cursor: pointer;
+            transition: color 0.2s;
+        ">✖</button>
+
+        <h4 style="color: #fff; margin-bottom: 15px; margin-top: 5px;">Escolha a Classe</h4>
         <p style="color: #bbb; font-size: 13px; margin-bottom: 20px;">Esta magia pertence a múltiplas classes. Qual você deseja usar?</p>
         <div id="class-buttons-container" style="display: flex; flex-direction: column; gap: 10px;"></div>
     `;
 
-  overlay.appendChild(content);
-  document.body.appendChild(overlay);
+    overlay.appendChild(content);
+    document.body.appendChild(overlay);
 
-  const container = content.querySelector('#class-buttons-container');
+    // 4. Lógica para fechar o Popup (Remove do DOM)
+    const fecharPopup = () => {
+        if (overlay && overlay.parentElement) {
+            overlay.remove();
+        }
+    };
 
-  classes.forEach(cls => {
-    const btn = document.createElement('button');
-    btn.textContent = cls;
-    btn.style = `
+    // Ação do Botão X
+    const btnClose = content.querySelector('#btn-close-popup');
+    btnClose.onmouseover = () => btnClose.style.color = '#fff';
+    btnClose.onmouseout = () => btnClose.style.color = '#888';
+    btnClose.onclick = fecharPopup;
+
+    // Também fecha se clicar fora da caixa (no fundo escuro) - Opcional, melhora usabilidade
+    overlay.onclick = (e) => {
+        if (e.target === overlay) fecharPopup();
+    };
+
+    // 5. Gera os botões das Classes
+    const container = content.querySelector('#class-buttons-container');
+
+    classes.forEach(cls => {
+        const btn = document.createElement('button');
+        btn.textContent = cls;
+        btn.style = `
             background: #222; color: #fff; border: 1px solid #444; 
             padding: 10px; border-radius: 4px; cursor: pointer; 
             font-weight: bold; transition: 0.2s;
         `;
-    btn.onmouseover = () => btn.style.borderColor = '#9c27b0';
-    btn.onmouseout = () => btn.style.borderColor = '#444';
+        
+        btn.onmouseover = () => btn.style.borderColor = '#9c27b0';
+        btn.onmouseout = () => btn.style.borderColor = '#444';
 
-    btn.onclick = () => {
-      callback(cls);
-      overlay.remove();
-    };
-    container.appendChild(btn);
-  });
+        btn.onclick = () => {
+            // Executa a ação de adicionar a magia
+            try {
+                callback(cls);
+            } catch (error) {
+                console.error("Erro ao adicionar magia:", error);
+            }
+            // Fecha o popup DEPOIS de tentar adicionar (mesmo se der erro no callback, ele fecha)
+            fecharPopup();
+        };
+        container.appendChild(btn);
+    });
 }
 /* =============================================================
    OBSERVADORES: Atualiza a DT assim que a Esquerda muda
