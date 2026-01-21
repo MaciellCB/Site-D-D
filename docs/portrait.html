@@ -175,19 +175,19 @@
         }
 
         /* =========================================================================
-           CSS DOS DADOS (MODIFICADO)
+           CSS DOS DADOS (POSIÇÃO CORRIGIDA -> BEM À DIREITA)
            ========================================================================= */
         .dice-area {
             position: absolute;
-            /* AJUSTE DE POSIÇÃO: Para ficar dentro da barra, no canto direito */
-            left: 340px; 
-            /* AJUSTE VERTICAL: 18px faz ele cobrir a barra de baixo e subir para a de cima */
-            bottom: 18px; 
+            /* AGORA SIM: 435px joga lá para o final da barra */
+            left: 435px; 
+            /* 12px deixa ele mordendo um pedaço da barra de baixo e o resto na de cima */
+            bottom: 12px; 
             display: flex;
             flex-direction: row;
-            gap: 10px; /* Espaço entre os dados reduzido um pouco */
+            gap: 10px; 
             pointer-events: none;
-            z-index: 20; /* Garante que fique POR CIMA das barras */
+            z-index: 20; 
         }
 
         .roll-card {
@@ -213,24 +213,24 @@
             to { opacity: 0; transform: translateY(-40px) scale(1.1); filter: blur(2px); }
         }
 
-        /* Caixa que segura o ícone e o número - TAMANHO REDUZIDO */
+        /* Caixa que segura o ícone e o número - TAMANHO PEQUENO (60px) */
         .dice-result-box {
             position: relative;
-            width: 50px;  /* Reduzido de 100px */
-            height: 50px; /* Reduzido de 100px */
+            width: 50px;  
+            height: 50px; 
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* Ícone do Dado - SEM SOMBRA */
+        /* Ícone do Dado - SEM SOMBRA E COR ORIGINAL */
         .d-icon {
             width: 100%;
             height: 100%;
             position: absolute;
             top: 0;
             left: 0;
-            filter: none; /* Remove a sombra projetada */
+            filter: none; 
             z-index: 1;
             animation: wobble 3s ease-in-out infinite;
         }
@@ -240,14 +240,14 @@
             50% { transform: rotate(3deg); }
         }
 
-        /* O Número - Ajustado tamanho da fonte */
+        /* O Número */
         .d-val {
             position: relative;
             z-index: 2;
-            font-size: 20px; /* Reduzido proporcionalmente */
+            font-size: 20px; 
             font-weight: 900;
             color: #fff;
-            text-shadow: 0 0 5px #000, 2px 2px 0 #000, -2px -2px 0 #000; /* Sombra do texto mantida para leitura */
+            text-shadow: 0 0 5px #000, 2px 2px 0 #000, -2px -2px 0 #000;
             font-family: 'Roboto', sans-serif;
         }
 
@@ -260,7 +260,7 @@
             bottom: -12px;
             width: 140%;
             text-align: center;
-            font-size: 10px; /* Texto menor */
+            font-size: 10px;
             font-weight: bold;
             color: #ddd;
             text-transform: uppercase;
@@ -390,7 +390,7 @@
                 const isCritDmg = data.dano.isCrit; 
                 const valClass = isCritDmg ? 'crit' : 'dmg-val';
                 
-                // REMOVIDO: style="filter: invert(1)..." -> Agora mostra a cor original
+                // Sem filtro de inversão
                 conteudoHTML += `
                     <div class="dice-result-box">
                         <img src="${iconSrc}" class="d-icon">
