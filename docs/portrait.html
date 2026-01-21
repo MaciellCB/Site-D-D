@@ -11,15 +11,20 @@
             margin: 0; padding: 0; overflow: hidden;
             width: 100%; height: 100%;
             font-family: 'Roboto', sans-serif;
+            /* Centraliza o conteúdo na tela */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* Container Principal */
+        /* Container Principal - Centralizado e Aumentado */
         .hud-wrapper {
-            position: absolute;
-            bottom: 50px;
-            left: 50px;
+            position: relative; /* Muda de absolute para relative */
             display: flex;
             align-items: flex-end;
+            /* Aumenta todo o conjunto em 1.5x */
+            transform: scale(1.5); 
+            transform-origin: center center;
         }
 
         /* --- ÁREA DA IMAGEM (Esquerda) --- */
@@ -175,7 +180,7 @@
         }
 
         /* =========================================================================
-           CSS DOS DADOS (CORRIGIDO: Posição, Empilhamento e Cor)
+           CSS DOS DADOS (CORRIGIDO: Posição Relativa ao Container Centralizado)
            ========================================================================= */
         .dice-area {
             position: absolute;
@@ -195,7 +200,7 @@
             border: none;
             box-shadow: none;
             animation: popInDice 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            transform-origin: bottom center; /* Ajuste fino na animação */
+            transform-origin: bottom center;
             opacity: 0;
             transform: scale(0.5);
             display: flex;
@@ -232,7 +237,6 @@
             position: absolute;
             top: 0;
             left: 0;
-            /* CORRIGIDO: Brightness 2.5 clareia o preto para um cinza escuro */
             filter: brightness(2.5); 
             z-index: 1;
             animation: wobble 3s ease-in-out infinite;
@@ -268,7 +272,6 @@
             color: #ddd;
             text-transform: uppercase;
             text-shadow: 1px 1px 2px #000;
-            /* CORRIGIDO: Removido o background degradê preto */
             padding: 2px 0;
             border-radius: 4px;
         }
