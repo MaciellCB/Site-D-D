@@ -442,19 +442,32 @@
     });
 
     socket.on('ficha_atualizada', (novaFicha) => {
-        if (state && state.nome && novaFicha.nome && novaFicha.nome.toLowerCase() === state.nome.toLowerCase()) {
-            console.log("Recebi atualização externa para: " + novaFicha.nome);
-            Object.assign(state, novaFicha);
-
-            if(typeof preencherFichaNaTela === 'function') preencherFichaNaTela(state); 
-            if(typeof atualizarHeader === 'function') atualizarHeader();
-            if(typeof atualizarTextoClassesHeader === 'function') atualizarTextoClassesHeader();
-            if(typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
-            if(typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
-            
-            window.dispatchEvent(new CustomEvent('sheet-updated'));
+    // Verifica se a ficha é a mesma que está aberta
+    if (state && state.nome && novaFicha.nome && novaFicha.nome.toLowerCase() === state.nome.toLowerCase()) {
+        console.log("Recebi atualização externa para: " + novaFicha.nome);
+        
+        // 1. Chama a função de mesclagem que criamos no DireitaJS
+        // Se a função existir (carregada), usa ela. Se não, usa o dado bruto.
+        let estadoFinal = novaFicha;
+        
+        if (typeof window.mesclarEstadoVisual === 'function') {
+            estadoFinal = window.mesclarEstadoVisual(state, novaFicha);
         }
-    });
+
+        // 2. Atualiza o estado com os dados mesclados (Preservando abertas/fechadas)
+        Object.assign(state, estadoFinal);
+
+        // 3. Atualiza a tela
+        if(typeof preencherFichaNaTela === 'function') preencherFichaNaTela(state); 
+        if(typeof atualizarHeader === 'function') atualizarHeader();
+        if(typeof atualizarTextoClassesHeader === 'function') atualizarTextoClassesHeader();
+        if(typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+        if(typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
+        
+        // Dispara evento para redesenhar a Direita
+        window.dispatchEvent(new CustomEvent('sheet-updated'));
+    }
+});
 
     /* =================================================================
        LÓGICA DO MESTRE & PREENCHIMENTO DE DADOS

@@ -225,11 +225,18 @@ function checkScrollLock() {
 
 function setActiveTab(tabName) {
   state.activeTab = tabName;
+  
+  // Salva apenas no navegador deste usuário
+  if(state.nome) {
+      localStorage.setItem(`activeTab_${state.nome}`, tabName);
+  }
+
   document.querySelectorAll('.lado-direito .abas button').forEach(b => {
     b.classList.toggle('ativa', b.textContent.trim() === tabName);
   });
   renderActiveTab();
-  saveStateToServer(); // <--- SALVAR ABA ATIVA
+  
+  // REMOVIDO: saveStateToServer(); <--- O ERRO ESTAVA AQUI
 }
 
 /* ---------------- INVENTÁRIO (ORGANIZADO EM GRID/GRUPOS) ---------------- */
@@ -502,24 +509,19 @@ function renderInventory() {
 
 
 /* =============================================================
-   CORREÇÃO: bindInventoryCardEvents
-   (Sem confirmação de exclusão)
+   CORREÇÃO 2: INVENTÁRIO LOCAL
+   (Substitua bindInventoryCardEvents)
 ============================================================= */
-
 function bindInventoryCardEvents() {
-  
-  // Função auxiliar para buscar item ignorando se é Texto ou Número
-  const findItemById = (rawId) => {
-      return state.inventory.find(x => String(x.id) === String(rawId));
-  };
+  const findItemById = (rawId) => state.inventory.find(x => String(x.id) === String(rawId));
 
-  // --- 1. EXPANDIR/RECOLHER ---
+  // --- 1. EXPANDIR/RECOLHER (SOMENTE LOCAL) ---
   document.querySelectorAll('.item-card').forEach(card => {
     const rawId = card.getAttribute('data-id');
     const header = card.querySelector('.card-header');
 
     header.onclick = (ev) => {
-      // Se clicar no Checkbox, Botões de Ação, DADO ou TEXTO DE DANO, não faz nada
+      // Ignora cliques em botões interativos
       if (ev.target.closest('.header-equip') || 
           ev.target.closest('.item-actions-footer') ||
           ev.target.closest('.dice-img') || 
@@ -530,9 +532,9 @@ function bindInventoryCardEvents() {
       const it = findItemById(rawId);
       if (!it) return;
 
-      it.expanded = !it.expanded;
-      saveStateToServer();
-
+      // Altera o estado SOMENTE NA MEMÓRIA LOCAL
+      it.expanded = !it.expanded; 
+      
       const body = card.querySelector('.card-body');
       const caret = card.querySelector('.caret');
       
@@ -548,7 +550,7 @@ function bindInventoryCardEvents() {
     };
   });
 
-  // --- 2. CHECKBOX EQUIPAR ---
+  // --- 2. CHECKBOX EQUIPAR (GLOBAL - ISSO PRECISA SALVAR) ---
   document.querySelectorAll('.item-equip-checkbox').forEach(ch => {
     ch.onchange = (ev) => {
       const rawId = ev.target.getAttribute('data-id');
@@ -559,13 +561,12 @@ function bindInventoryCardEvents() {
         // Lógica de Exclusividade (Só 1 Armadura / Só 1 Escudo)
         if (item.type === 'Proteção' || item.type === 'protecao') {
           const isEscudo = item.tipoItem?.toLowerCase() === 'escudo' || item.proficiency?.toLowerCase() === 'escudo';
-
           state.inventory.forEach(other => {
             if (String(other.id) !== String(rawId) && (other.type === 'Proteção' || other.type === 'protecao')) {
               const otherIsEscudo = other.tipoItem?.toLowerCase() === 'escudo' || other.proficiency?.toLowerCase() === 'escudo';
               if (isEscudo === otherIsEscudo) {
-                other.equip = false;
-                // Desmarca visualmente o outro
+                other.equip = false; // Desmarca no dado
+                // Atualiza visualmente se existir na tela
                 const otherChk = document.querySelector(`.item-equip-checkbox[data-id="${other.id}"]`);
                 if (otherChk) otherChk.checked = false;
               }
@@ -575,31 +576,27 @@ function bindInventoryCardEvents() {
       }
 
       if (item) item.equip = isChecked;
-      saveStateToServer();
+      
+      // AQUI SIM SALVAMOS, POIS EQUIPAR AFETA A CA DE TODOS
+      saveStateToServer(); 
 
-      // Se estiver na aba Combate, atualiza para remover/adicionar da lista filtrada
       if (state.activeTab === 'Combate') {
         const scrollY = window.scrollY;
         renderActiveTab();
         window.scrollTo(0, scrollY);
       }
-
-      // Atualiza CA na esquerda
       if (typeof atualizarAC === 'function') atualizarAC();
     };
   });
 
-  // --- 3. ALTERNAR 2 MÃOS (VERSÁTIL) ---
+  // --- 3. ALTERNAR 2 MÃOS (GLOBAL) ---
   document.querySelectorAll('.toggle-versatile').forEach(ch => {
       ch.onchange = (ev) => {
           const rawId = ev.target.getAttribute('data-id');
           const item = findItemById(rawId);
-          
           if (item) {
               item.useTwoHands = ev.target.checked;
-              saveStateToServer();
-              
-              // Re-renderiza a aba atual
+              saveStateToServer(); // Salva pois afeta dano
               const scrollY = window.scrollY; 
               renderActiveTab();
               window.scrollTo(0, scrollY);
@@ -607,23 +604,20 @@ function bindInventoryCardEvents() {
       };
   });
 
-  // --- 4. REMOVER (CONFIRMAÇÃO REMOVIDA) ---
+  // --- 4. REMOVER e EDITAR (GLOBAL) ---
   document.querySelectorAll('.remover-item').forEach(el => {
     el.onclick = (ev) => {
       ev.preventDefault();
       const rawId = el.getAttribute('data-id');
-      
-      // REMOVIDO O IF(CONFIRM(...))
       const scrollY = window.scrollY;
       state.inventory = state.inventory.filter(i => String(i.id) !== String(rawId));
       renderActiveTab();
       window.scrollTo(0, scrollY);
-      saveStateToServer();
+      saveStateToServer(); // Remover afeta todos
       window.dispatchEvent(new CustomEvent('sheet-updated'));
     };
   });
 
-  // --- 5. EDITAR ---
   document.querySelectorAll('.editar-item').forEach(el => {
     el.onclick = (ev) => {
       ev.preventDefault();
@@ -641,7 +635,9 @@ function bindInventorySectionEvents() {
 
       const key = header.getAttribute('data-key');
       state.collapsedSections[key] = !state.collapsedSections[key];
-      saveStateToServer();
+      
+      // REMOVIDO: saveStateToServer(); <-- NÃO SALVAR NO SERVER
+      // A função mesclarEstadoVisual já cuida de manter isso salvo localmente quando atualiza
 
       // Atualiza DOM direto para não perder foco/scroll
       const contentDiv = header.nextElementSibling;
@@ -1183,26 +1179,22 @@ function renderAbilities() {
     }
 }
 
-// --- FUNÇÃO NOVA: EVENTOS DAS SEÇÕES DE HABILIDADE ---
 function bindAbilitySectionEvents() {
   document.querySelectorAll('.toggle-section-header').forEach(header => {
     header.addEventListener('click', (e) => {
       e.preventDefault();
 
       const key = header.getAttribute('data-key');
-      // Se era undefined (nunca clicado), assume que estava fechado (true), então agora vira false (aberto)
-      // Se já tinha valor, inverte.
       const current = state.collapsedSections[key] !== undefined ? state.collapsedSections[key] : true;
       state.collapsedSections[key] = !current;
       
-      saveStateToServer();
+      // REMOVIDO: saveStateToServer(); <-- NÃO SALVAR NO SERVER
 
       // Atualiza DOM direto
       const contentDiv = header.nextElementSibling;
       const arrowSpan = header.querySelector('span');
 
       if (contentDiv) {
-        // Se agora está colapsado (true) -> esconde
         if (state.collapsedSections[key]) {
              contentDiv.style.display = 'none';
              if (arrowSpan) arrowSpan.textContent = '▸';
@@ -1293,23 +1285,25 @@ function bindAbilityEvents() {
     };
   });
 
-  // 2. Expandir Card (DOM DIRETO)
-  document.querySelectorAll('.hab-card .left').forEach(leftDiv => {
-    leftDiv.onclick = () => {
-      const id = Number(leftDiv.getAttribute('data-id'));
-      const hab = state.abilities.find(h => h.id === id);
-      const card = leftDiv.closest('.hab-card');
-      if (hab) {
-        hab.expanded = !hab.expanded;
-        const body = card.querySelector('.card-body');
-        const caret = card.querySelector('.caret');
-        body.style.display = hab.expanded ? 'block' : 'none';
-        caret.textContent = hab.expanded ? '▾' : '▸';
-        card.classList.toggle('expanded', hab.expanded);
-        saveStateToServer();
-      }
-    };
-  });
+  // 2. Expandir Card
+document.querySelectorAll('.hab-card .left').forEach(leftDiv => {
+  leftDiv.onclick = () => {
+    const id = Number(leftDiv.getAttribute('data-id'));
+    const hab = state.abilities.find(h => h.id === id);
+    const card = leftDiv.closest('.hab-card');
+    if (hab) {
+      hab.expanded = !hab.expanded;
+      const body = card.querySelector('.card-body');
+      const caret = card.querySelector('.caret');
+      
+      body.style.display = hab.expanded ? 'block' : 'none';
+      caret.textContent = hab.expanded ? '▾' : '▸';
+      card.classList.toggle('expanded', hab.expanded);
+      
+      // saveStateToServer(); <--- REMOVA ESTA LINHA
+    }
+  };
+});
 
   // 3. REMOVER (CONFIRMAÇÃO REMOVIDA)
   document.querySelectorAll('.remover-hab').forEach(btn => {
@@ -1569,7 +1563,7 @@ function renderSpells() {
   conteudoEl.innerHTML = html;
   bindSpellEvents();
   bindSlotEvents();
-  bindSpellAttackEvents(); // <--- Liga o evento
+  // REMOVIDO: bindSpellAttackEvents(); -> Causava travamento do script
 }
 
 
@@ -2059,15 +2053,16 @@ function bindSpellEvents() {
     const header = card.querySelector('.card-header');
 
     // Expandir
-    header.addEventListener('click', (ev) => {
-      if (ev.target.closest('.spell-right') || ev.target.closest('.check-ativar')) return;
-      const s = state.spells.find(x => x.id === id);
-      if (s) {
-        s.expanded = !s.expanded;
-        renderSpells();
-        saveStateToServer();
-      }
-    });
+    // A. Expandir
+header.addEventListener('click', (ev) => {
+  if (ev.target.closest('.spell-right') || ev.target.closest('.check-ativar')) return;
+  const s = state.spells.find(x => x.id === id);
+  if (s) {
+    s.expanded = !s.expanded;
+    renderSpells(); 
+    // saveStateToServer(); <--- REMOVA ESTA LINHA
+  }
+});
 
     // Preparar
     const ch = card.querySelector('.spell-activate');
@@ -2690,22 +2685,24 @@ function renderPreparedSpells() {
         });
     }
 
-    // 3. Toggles de Seção (Minimizar grupos)
-    const btnToggleMagias = document.getElementById('toggle-magias');
-    if (btnToggleMagias) {
-        btnToggleMagias.addEventListener('click', (e) => {
-            if(e.target.closest('#btnRollSpellAttack_PrepHeader')) return;
-            state.minimizedPreparedSpells = !state.minimizedPreparedSpells;
-            saveStateToServer(); renderActiveTab();
-        });
-    }
-    const btnToggleHabs = document.getElementById('toggle-habs');
-    if (btnToggleHabs) {
-        btnToggleHabs.addEventListener('click', () => {
-            state.minimizedPreparedAbilities = !state.minimizedPreparedAbilities;
-            saveStateToServer(); renderActiveTab();
-        });
-    }
+   // 3. Toggles de Seção
+const btnToggleMagias = document.getElementById('toggle-magias');
+if (btnToggleMagias) {
+    btnToggleMagias.addEventListener('click', (e) => {
+        if(e.target.closest('#btnRollSpellAttack_PrepHeader')) return;
+        state.minimizedPreparedSpells = !state.minimizedPreparedSpells;
+        // saveStateToServer(); <--- REMOVA ISSO
+        renderActiveTab();
+    });
+}
+const btnToggleHabs = document.getElementById('toggle-habs');
+if (btnToggleHabs) {
+    btnToggleHabs.addEventListener('click', () => {
+        state.minimizedPreparedAbilities = !state.minimizedPreparedAbilities;
+        // saveStateToServer(); <--- REMOVA ISSO
+        renderActiveTab();
+    });
+}
 
     // =================================================================
     // 4. EVENTOS DE CARDS (CORRIGIDOS)
@@ -2713,19 +2710,19 @@ function renderPreparedSpells() {
 
     // --- MAGIAS ---
     
-    // A. Expandir
-    conteudoEl.querySelectorAll('.spell-card .card-header').forEach(h => {
-         h.addEventListener('click', (ev) => {
-             if(ev.target.closest('.check-ativar') || ev.target.closest('.spell-right')) return;
-             const id = Number(h.closest('.card').dataset.id);
-             const s = state.spells.find(x => x.id === id);
-             if(s) { 
-                 s.expanded = !s.expanded; 
-                 saveStateToServer(); 
-                 renderActiveTab(); 
-             }
-         });
-    });
+    // A. Expandir (Magias)
+conteudoEl.querySelectorAll('.spell-card .card-header').forEach(h => {
+     h.addEventListener('click', (ev) => {
+         if(ev.target.closest('.check-ativar') || ev.target.closest('.spell-right')) return;
+         const id = Number(h.closest('.card').dataset.id);
+         const s = state.spells.find(x => x.id === id);
+         if(s) { 
+             s.expanded = !s.expanded; 
+             // saveStateToServer();  <--- REMOVA OU COMENTE ISSO
+             renderActiveTab(); 
+         }
+     });
+});
 
     // B. Checkbox (Despreparar)
     conteudoEl.querySelectorAll('.spell-activate').forEach(ch => {
@@ -2765,19 +2762,19 @@ function renderPreparedSpells() {
 
     // --- HABILIDADES ---
 
-    // A. Expandir
-    conteudoEl.querySelectorAll('.hab-card .card-header').forEach(h => {
-        h.addEventListener('click', (ev) => {
-            if(ev.target.closest('.check-ativar')) return;
-            const id = Number(h.closest('.card').dataset.id);
-            const hab = state.abilities.find(a => a.id === id);
-            if(hab) {
-                hab.expanded = !hab.expanded;
-                saveStateToServer();
-                renderActiveTab();
-            }
-        });
+    // A. Expandir (Habilidades)
+conteudoEl.querySelectorAll('.hab-card .card-header').forEach(h => {
+    h.addEventListener('click', (ev) => {
+        if(ev.target.closest('.check-ativar')) return;
+        const id = Number(h.closest('.card').dataset.id);
+        const hab = state.abilities.find(a => a.id === id);
+        if(hab) {
+            hab.expanded = !hab.expanded;
+            // saveStateToServer(); <--- REMOVA OU COMENTE ISSO
+            renderActiveTab();
+        }
     });
+});
 
     // B. Checkbox (Desativar)
     conteudoEl.querySelectorAll('.hab-activate').forEach(ch => {
@@ -4486,3 +4483,60 @@ document.addEventListener('click', function(e) {
         showCombatResults(nome, res, null);
     }
 });
+
+/* =============================================================
+   NOVA FUNÇÃO: MESCLAR DADOS SEM PERDER O VISUAL
+   Coloque no final do DireitaJS.js
+============================================================= */
+window.mesclarEstadoVisual = function(estadoAntigo, estadoNovo) {
+    // 1. Preserva Aba Ativa (Prioridade: LocalStorage > Memória atual)
+    if(state.nome) {
+        const savedTab = localStorage.getItem(`activeTab_${state.nome}`);
+        if(savedTab) estadoNovo.activeTab = savedTab;
+        else if (estadoAntigo.activeTab) estadoNovo.activeTab = estadoAntigo.activeTab;
+    }
+
+    // 2. Preserva Seções Colapsadas (Habilidades/Inventário)
+    if (estadoAntigo.collapsedSections) {
+        estadoNovo.collapsedSections = { ...estadoAntigo.collapsedSections };
+    }
+
+    // 3. Preserva Itens Expandidos (Inventário)
+    if (estadoAntigo.inventory && estadoNovo.inventory) {
+        estadoNovo.inventory.forEach(newItem => {
+            // Busca o item correspondente no estado antigo pelo ID
+            const oldItem = estadoAntigo.inventory.find(old => String(old.id) === String(newItem.id));
+            if (oldItem) {
+                newItem.expanded = oldItem.expanded; // Mantém o estado visual local
+            } else {
+                newItem.expanded = false; // Se é novo, começa fechado
+            }
+        });
+    }
+
+    // 4. Preserva Magias Expandidas
+    if (estadoAntigo.spells && estadoNovo.spells) {
+        estadoNovo.spells.forEach(newSpell => {
+            const oldSpell = estadoAntigo.spells.find(old => String(old.id) === String(newSpell.id));
+            if (oldSpell) {
+                newSpell.expanded = oldSpell.expanded;
+            } else {
+                newSpell.expanded = false;
+            }
+        });
+    }
+
+    // 5. Preserva Habilidades Expandidas
+    if (estadoAntigo.abilities && estadoNovo.abilities) {
+        estadoNovo.abilities.forEach(newHab => {
+            const oldHab = estadoAntigo.abilities.find(old => String(old.id) === String(newHab.id));
+            if (oldHab) {
+                newHab.expanded = oldHab.expanded;
+            } else {
+                newHab.expanded = false;
+            }
+        });
+    }
+
+    return estadoNovo;
+}
