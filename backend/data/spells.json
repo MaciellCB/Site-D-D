@@ -1624,6 +1624,7 @@
     "school": "Encantamento",
     "spellClass": "Bardo, Feiticeiro, Mago",
     "damage": "5d8",
+    "scaling": "2d8",
     "components": { "V": true, "S": true, "M": true },
     "material": "Areia, pétalas ou grilo",
     "attrs": {
