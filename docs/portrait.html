@@ -40,7 +40,7 @@
             overflow: hidden;
             background: #000;
             position: relative;
-            z-index: 2; /* Garante que a imagem fique acima da mancha da inspiração */
+            z-index: 2;
         }
 
         .char-img {
@@ -49,11 +49,11 @@
             object-fit: cover;
         }
 
-        /* Inspiração (AGORA NA ESQUERDA - Mancha Preta) */
+        /* Inspiração */
         .inspiration-badge {
             position: absolute;
-            bottom: -10px; /* Levemente para fora */
-            left: -10px;   /* Na esquerda */
+            bottom: -10px;
+            left: -10px;
             width: 80px;
             height: 80px;
             display: flex;
@@ -63,7 +63,6 @@
             pointer-events: none;
         }
         
-        /* Efeito de Fumaça/Mancha Preta no Fundo */
         .insp-smoke {
             position: absolute; 
             width: 100%; 
@@ -87,7 +86,7 @@
         /* --- ÁREA DAS BARRAS (Direita) --- */
         .stats-container {
             position: relative;
-            margin-left: -40px; /* Sobreposição na imagem */
+            margin-left: -40px;
             margin-bottom: 15px;
             z-index: 5;
             display: flex;
@@ -95,10 +94,9 @@
             width: 450px;
         }
 
-        /* Nome (Ajustado: Mais baixo e esquerda para colar na barra) */
         .char-name {
-            margin-left: 25px; /* Mais p/ esquerda (antes era 50px) */
-            margin-bottom: -2px; /* Mais p/ baixo para encostar na barra */
+            margin-left: 25px;
+            margin-bottom: -2px;
             color: #fff;
             font-family: 'Cinzel Decorative', cursive;
             font-size: 24px;
@@ -106,13 +104,12 @@
             text-shadow: 2px 2px 4px #000;
             background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, transparent 100%);
             padding: 4px 20px 4px 25px;
-            border-radius: 4px 4px 0 0; /* Arredondado só em cima */
+            border-radius: 4px 4px 0 0;
             display: inline-block;
             align-self: flex-start;
-            z-index: 6; /* Acima da barra */
+            z-index: 6;
         }
 
-        /* Barra de Vida */
         .health-bar-frame {
             position: relative;
             height: 50px;
@@ -147,7 +144,6 @@
             margin-left: 10px;
         }
 
-        /* Sub-barras */
         .sub-bars {
             display: flex;
             height: 18px;
@@ -178,71 +174,114 @@
             display: block; line-height: 16px; text-shadow: 1px 1px 0 #000;
         }
 
-        /* --- POPUPS DE DADOS (Área de Resultados) --- */
+        /* =========================================================================
+           CSS DOS DADOS (NOVO ESTILO FLUTUANTE / TRANSPARENTE)
+           ========================================================================= */
         .dice-area {
             position: absolute;
-            left: 430px; /* Posicionado logo à direita das barras */
-            bottom: 20px;
+            left: 420px; /* Logo após as barras */
+            bottom: 25px;
             display: flex;
-            flex-direction: column-reverse; 
-            gap: 12px;
-            width: 350px;
+            flex-direction: row; /* Dados lado a lado se houver mais de um */
+            gap: 20px;
             pointer-events: none;
-            z-index: 20; /* Bem acima de tudo */
+            z-index: 20;
         }
 
+        /* O Container do Dado não tem mais fundo nem borda */
         .roll-card {
-            background: rgba(15, 15, 15, 0.95);
-            border-left: 4px solid #9c27b0;
-            border-radius: 4px;
-            padding: 10px 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
-            animation: slideInDice 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            animation: popInDice 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
             opacity: 0;
-            transform: translateX(-30px);
+            transform: scale(0.5);
             display: flex;
-            flex-direction: column;
-            color: #fff;
+            flex-direction: row; /* Ataque e Dano lado a lado */
+            gap: 25px;
         }
 
         .roll-card.fade-out {
-            animation: smokeOut 1s forwards;
+            animation: floatUpFade 0.8s forwards;
         }
 
-        @keyframes slideInDice { to { opacity: 1; transform: translateX(0); } }
-        @keyframes smokeOut { to { opacity: 0; transform: translateY(-20px) scale(1.1); filter: blur(5px); } }
+        @keyframes popInDice {
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes floatUpFade {
+            to { opacity: 0; transform: translateY(-40px) scale(1.1); filter: blur(2px); }
+        }
 
+        /* Título oculto ou muito discreto (opcional, aqui ocultei para limpar) */
         .roll-header {
-            font-size: 12px;
-            color: #e0aaff;
-            text-transform: uppercase;
-            font-weight: 700;
-            margin-bottom: 8px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 4px;
+            display: none; 
         }
 
         .roll-body {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
         }
 
+        /* Caixa que segura o ícone e o número */
         .dice-result-box {
+            position: relative;
+            width: 100px;
+            height: 100px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
         }
 
-        .d-icon { width: 24px; height: 24px; filter: drop-shadow(0 2px 2px #000); }
-        .d-val { font-size: 26px; font-weight: 900; text-shadow: 2px 2px 0 #000; }
-        .d-label { font-size: 10px; color: #aaa; text-transform: uppercase; margin-top: 2px; }
+        /* Ícone do Dado (Grande) */
+        .d-icon {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.8));
+            z-index: 1;
+            /* Leve animação de balanço */
+            animation: wobble 3s ease-in-out infinite;
+        }
 
-        .crit { color: #ffcc00; text-shadow: 0 0 10px #ffcc00, 2px 2px 0 #000; }
-        .fumble { color: #ff3333; text-shadow: 0 0 10px #ff0000, 2px 2px 0 #000; }
-        .dmg-val { color: #ff5252; }
+        @keyframes wobble {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
 
-        .sep-line { width: 1px; height: 30px; background: rgba(255,255,255,0.2); }
+        /* O Número (Sobreposto ao dado) */
+        .d-val {
+            position: relative;
+            z-index: 2;
+            font-size: 38px;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 10px #000, 2px 2px 0 #000, -2px -2px 0 #000;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Cores Específicas do Texto */
+        .d-val.crit { color: #e040fb; text-shadow: 0 0 15px #e040fb, 2px 2px 0 #000; }
+        .d-val.fumble { color: #ff3333; text-shadow: 0 0 15px #ff0000, 2px 2px 0 #000; }
+        .d-val.dmg-val { color: #ffeb3b; text-shadow: 0 0 10px #f57f17, 2px 2px 0 #000; }
+
+        /* Label pequeno embaixo (Acerto/Dano) */
+        .d-label {
+            position: absolute;
+            bottom: -15px;
+            width: 120%;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #ddd;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px #000;
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.8), transparent);
+            padding: 2px 0;
+            border-radius: 4px;
+        }
 
     </style>
 </head>
@@ -324,7 +363,7 @@
             inspBadge.style.display = insp > 0 ? 'flex' : 'none';
         }
 
-        // --- ROLAGEM DE DADOS (CORREÇÃO DO BUG) ---
+        // --- ROLAGEM DE DADOS (VISUALIZAÇÃO LIMPA) ---
         socket.on('dados_rolados', (data) => {
             if (data.personagem && data.personagem.toLowerCase() === nomeOriginalURL.toLowerCase()) {
                 criarPopUpDado(data);
@@ -333,57 +372,58 @@
 
         function criarPopUpDado(data) {
             const area = document.getElementById('dice-area');
+            
+            // Limpa dados anteriores para não acumular
+            area.innerHTML = '';
+
             const card = document.createElement('div');
             card.className = 'roll-card';
 
-            let conteudoHTML = `<div class="roll-header">${data.titulo}</div><div class="roll-body">`;
+            let conteudoHTML = '';
 
-            // ATAQUE (Esquerda)
+            // 1. DADO DE ATAQUE (D20)
             if (data.ataque) {
                 const isCrit = data.ataque.isCrit;
                 const isFumble = data.ataque.isFumble;
                 const valClass = isCrit ? 'crit' : (isFumble ? 'fumble' : '');
                 
-                // Exibe o 'text' que já é a soma total
+                // Ícone de d20 roxo
+                const iconSrc = "img/imagem-no-site/dado.png"; 
+
                 conteudoHTML += `
                     <div class="dice-result-box">
-                        <img src="img/imagem-no-site/dado.png" class="d-icon">
-                        <div>
-                            <div class="d-val ${valClass}">${data.ataque.text}</div> 
-                            <div class="d-label">Acerto</div>
-                        </div>
+                        <img src="${iconSrc}" class="d-icon">
+                        <div class="d-val ${valClass}">${data.ataque.text}</div>
+                        <div class="d-label">ACERTO</div>
                     </div>
                 `;
             }
 
-            if (data.ataque && data.dano) {
-                conteudoHTML += `<div class="sep-line"></div>`;
-            }
-
-            // DANO (Direita)
+            // 2. DADO DE DANO (Genérico)
             if (data.dano) {
                 const isCritDmg = data.dano.isCrit; 
                 const valClass = isCritDmg ? 'crit' : 'dmg-val';
+                
+                // Ícone de dano (branco/invertido ou outra cor)
+                const iconSrc = "https://cdn-icons-png.flaticon.com/512/826/826070.png";
 
                 conteudoHTML += `
                     <div class="dice-result-box">
-                        <img src="https://cdn-icons-png.flaticon.com/512/826/826070.png" class="d-icon" style="filter: invert(1);">
-                        <div>
-                            <div class="d-val ${valClass}">${data.dano.text}</div>
-                            <div class="d-label">Dano</div>
-                        </div>
+                        <img src="${iconSrc}" class="d-icon" style="filter: invert(1) drop-shadow(0 5px 5px rgba(0,0,0,0.8));">
+                        <div class="d-val ${valClass}">${data.dano.text}</div>
+                        <div class="d-label">DANO</div>
                     </div>
                 `;
             }
 
-            conteudoHTML += `</div>`;
             card.innerHTML = conteudoHTML;
             area.appendChild(card);
 
+            // Some após 6 segundos
             setTimeout(() => {
                 card.classList.add('fade-out');
                 setTimeout(() => card.remove(), 1000);
-            }, 8000);
+            }, 6000);
         }
 
         async function carregarDados() {
