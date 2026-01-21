@@ -1457,12 +1457,11 @@ function openAbilityCatalogOverlay() {
 
 /* ---------------- FORMATAR CARD DE MAGIA (COM UPCAST) ---------------- */
 function formatMySpellCard(s) {
-  // ... (código anterior de schoolPill, classDisplay mantém igual) ...
   const schoolPill = `<div class="pill" style="margin:0;">${s.school || '—'}${s.levelNumber !== undefined ? ` <span class="pill-level">${s.levelNumber}</span>` : ''}</div>`;
   const classDisplay = `<div class="class-box-display" style="margin:0; min-height:0; padding:6px 10px;">${s.spellClass || '—'}</div>`;
   const caretSymbol = s.expanded ? '▾' : '▸';
 
-  // --- LÓGICA DE UPCAST ---
+  // --- LÓGICA DE UPCAST (DROPDOWN) ---
   let levelOptions = '';
   const baseLevel = s.levelNumber || 0;
 
@@ -1473,11 +1472,11 @@ function formatMySpellCard(s) {
     }
   }
 
-  // Se tiver scaling, salvamos no dataset para usar no JS
   const scalingAttr = s.scaling ? `data-scaling="${s.scaling}"` : '';
   const baseDmgAttr = `data-base-dmg="${s.damage || ''}"`;
   const baseLvlAttr = `data-base-lvl="${baseLevel}"`;
 
+  // REMOVIDO O BOTÃO GASTAR, MANTIDO APENAS O SELECT
   const castControlsHTML = baseLevel > 0 ? `
       <div class="cast-controls">
           <span class="cast-label">Círculo:</span>
@@ -1486,12 +1485,9 @@ function formatMySpellCard(s) {
                   ${scalingAttr} ${baseDmgAttr} ${baseLvlAttr}>
               ${levelOptions}
           </select>
-          <button class="btn-cast btn-cast-action" data-id="${s.id}" data-name="${escapeHtml(s.name)}">GASTAR</button>
-      </div>
-  ` : `<div class="cast-controls" style="justify-content:center; color:#777; font-size:12px;">Truques (Evoluem por Nível de Personagem)</div>`;
+          </div>
+  ` : `<div class="cast-controls" style="justify-content:center; color:#777; font-size:12px;">Truques (Não gastam slot)</div>`;
 
-  // --- ONDE O DANO APARECE (Adicionamos uma classe alvo 'dynamic-damage') ---
-  // Note o id ou classe específica para podermos mudar o texto via JS
   const damageDisplay = `<span class="dynamic-damage-text">${s.damage || '-'}</span>`;
 
   return `
@@ -1506,7 +1502,7 @@ function formatMySpellCard(s) {
           <div class="spell-right">
             <div class="card-meta spell-damage">
                 ${damageDisplay} 
-                <img class="dice-img" src="img/imagem-no-site/dado.png" alt="dado" />
+                <img class="dice-img" src="img/imagem-no-site/dado.png" alt="dado" title="Rolar e Gastar Slot" />
             </div>
             <label class="check-ativar"><input class="spell-activate" type="checkbox" data-id="${s.id}" ${s.active ? 'checked' : ''}/><span class="square-check"></span></label>
           </div>
@@ -1517,7 +1513,7 @@ function formatMySpellCard(s) {
                 <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
                     ${schoolPill} ${classDisplay}
                 </div>
-                <div style="display:flex; gap:10px; align-items:center;">
+                 <div style="display:flex; gap:10px; align-items:center;">
                     <span class="comp-title" style="margin:0; font-size:13px; color:#ccc; font-weight:800;">Componentes:</span>
                     <div class="comp-letters">
                       <span class="comp-letter ${s.components && s.components.V ? 'on' : ''}">V</span>
@@ -2078,16 +2074,15 @@ function calculateNewDamage(baseDamage, scalingDamage, baseLevel, targetLevel) {
 
   return `${newQtd}d${dieType}${extraStr}`;
 }
-/* ---------------- EVENTOS DAS MAGIAS (COM UPCAST) ---------------- */
+/* ---------------- EVENTOS DAS MAGIAS (LIMPO) ---------------- */
 function bindSpellEvents() {
-    // 1. Re-conectar botões do topo (Adicionar / Configurar DT)
+    // 1. Botões do topo
     const botAdd = document.getElementById('botAddSpell');
     const btnDT = document.getElementById('btnOpenDTConfig');
-
     if (botAdd) botAdd.addEventListener('click', () => openSpellCatalogOverlay());
     if (btnDT) btnDT.addEventListener('click', openDTConfigModal);
 
-    // 2. Filtro de busca
+    // 2. Filtro
     const filtro = document.getElementById('filterMagias');
     if (filtro) filtro.addEventListener('input', (e) => {
         const q = e.target.value.toLowerCase();
@@ -2098,102 +2093,37 @@ function bindSpellEvents() {
     });
 
     // 3. EVENTO DE MUDANÇA NO DROPDOWN (UPCAST VISUAL)
-    // Isso faz o texto roxo mudar de "5d8" para "7d8" na hora
     document.querySelectorAll('.spell-slot-selector').forEach(sel => {
         sel.addEventListener('change', (ev) => {
-            ev.stopPropagation(); // Evita fechar o card
+            ev.stopPropagation(); 
             
             const targetLvl = parseInt(ev.target.value);
             const scaling = ev.target.dataset.scaling;
             const baseDmg = ev.target.dataset.baseDmg;
             const baseLvl = parseInt(ev.target.dataset.baseLvl);
             
-            // Acha o elemento de texto de dano neste card específico
             const card = ev.target.closest('.spell-card');
             const damageTextEl = card.querySelector('.dynamic-damage-text');
             
             if (damageTextEl && scaling && baseDmg) {
-                // Calcula o novo dano usando a função auxiliar
+                // Função calculateNewDamage deve estar definida no seu código (do passo anterior)
                 const newDmg = calculateNewDamage(baseDmg, scaling, baseLvl, targetLvl);
-                
-                // Atualiza o texto visualmente
                 damageTextEl.textContent = newDmg;
-                
-                // Efeito visual (piscar cor rosa) para mostrar que mudou
                 damageTextEl.style.color = '#e040fb';
                 setTimeout(() => damageTextEl.style.color = '#9c27b0', 500);
             } else if (damageTextEl) {
-                // Se não tiver scaling, mantém o base
                 damageTextEl.textContent = baseDmg;
             }
         });
     });
 
-    // 4. EVENTO DO BOTÃO "GASTAR" (CONSUMIR SLOT)
-    document.querySelectorAll('.btn-cast-action').forEach(btn => {
-        btn.addEventListener('click', (ev) => {
-            ev.preventDefault();
-            ev.stopPropagation();
-
-            // Pega o select vizinho para saber qual nível foi escolhido
-            const select = btn.parentElement.querySelector('.slot-select');
-            const levelToCast = select.value; // ex: "3"
-            const spellName = btn.dataset.name;
-            
-            // Verifica se o slot existe na estrutura de dados
-            if (!state.spellSlots[levelToCast]) {
-                alert(`Erro: Slot de nível ${levelToCast} não existe ou não configurado.`);
-                return;
-            }
-
-            const slotData = state.spellSlots[levelToCast];
-            
-            // Inicializa array se não existir
-            if (!Array.isArray(slotData.status)) slotData.status = [];
-            
-            // Garante que o array tem o tamanho certo (preenche com false se precisar)
-            const max = parseInt(slotData.max) || 0;
-            while (slotData.status.length < max) slotData.status.push(false);
-
-            // Procura o primeiro slot NÃO usado (false)
-            const firstAvailableIndex = slotData.status.findIndex(used => used === false);
-
-            if (firstAvailableIndex === -1) {
-                // Se não achou nenhum false, estão todos gastos
-                if (typeof showCombatResults === 'function') {
-                    showCombatResults("SEM RECURSO", { text: "Falha", detail: `Sem slots de ${levelToCast}º`, isCrit: false, isFumble: true }, null);
-                } else {
-                    alert(`Sem espaços de ${levelToCast}º Círculo disponíveis!`);
-                }
-                return;
-            }
-
-            // CONSOME O SLOT (Marca como true)
-            slotData.status[firstAvailableIndex] = true;
-            
-            // Salva no servidor
-            saveStateToServer();
-
-            // Feedback Visual Bonito
-            if (typeof showCombatResults === 'function') {
-                showCombatResults("CONJUROU", { text: "Sucesso", detail: `${spellName} (${levelToCast}º Círculo)`, isCrit: true }, null);
-            } else {
-                alert(`Magia ${spellName} conjurada usando slot de ${levelToCast}º nível.`);
-            }
-
-            // Atualiza a tela inteira (isso atualiza as bolinhas lá em cima)
-            renderActiveTab();
-        });
-    });
-
-    // 5. Listeners Padrão dos Cards (Expandir, Remover, Editar)
+    // 4. Listeners Padrão dos Cards (Expandir, Remover, Editar)
     document.querySelectorAll('.spell-card').forEach(card => {
         const id = Number(card.getAttribute('data-id'));
         const header = card.querySelector('.card-header');
 
         // A. Expandir Card
         header.addEventListener('click', (ev) => {
-            // Ignora se clicou nos controles novos ou no checkbox
             if (ev.target.closest('.spell-right') || 
                 ev.target.closest('.check-ativar') || 
                 ev.target.closest('.cast-controls')) return;
@@ -2219,7 +2149,7 @@ function bindSpellEvents() {
         }
     });
 
-    // C. Remover Magia
+    // C. Remover / Editar
     document.querySelectorAll('.remover-spell').forEach(a => {
         a.addEventListener('click', (ev) => {
             ev.preventDefault();
@@ -2229,8 +2159,6 @@ function bindSpellEvents() {
             saveStateToServer();
         });
     });
-
-    // D. Editar Magia
     document.querySelectorAll('.editar-spell').forEach(a => {
         a.addEventListener('click', (ev) => {
             ev.preventDefault();
@@ -4493,137 +4421,183 @@ function getSpellAttackValues() {
 }
 
 /* 4. ESCUTADOR GLOBAL DE CLIQUES */
-document.addEventListener('click', function (e) {
+/* 4. ESCUTADOR GLOBAL DE CLIQUES (COM CONSUMO AUTOMÁTICO DE SLOT) */
+document.addEventListener('click', function(e) {
+    
+    // --- CASO 1: ITEM DE INVENTÁRIO OU MAGIA (CLIQUE NO DADO) ---
+    if (e.target.classList.contains('dice-img')) {
+        e.preventDefault(); 
+        e.stopPropagation();
 
-  // --- CASO 1: ITEM DE INVENTÁRIO ---
-  if (e.target.classList.contains('dice-img')) {
-    const itemCard = e.target.closest('.item-card');
+        // A. VERIFICA SE É MAGIA (SPELL CARD)
+        const spellCard = e.target.closest('.spell-card');
+        if (spellCard) {
+            const spellTitle = spellCard.querySelector('.spell-title')?.textContent || "Magia";
+            
+            // --- LÓGICA DE CONSUMO DE SLOT ---
+            const selectSlot = spellCard.querySelector('.spell-slot-selector');
+            
+            // Se tem selector, é magia de nível (não truque)
+            if (selectSlot) {
+                const levelToCast = selectSlot.value; // Nível escolhido (ex: "3")
+                
+                // Validação de Segurança
+                if (!state.spellSlots[levelToCast]) {
+                    alert(`Erro de configuração: Slot nível ${levelToCast} não encontrado.`);
+                    return; 
+                }
 
-    if (itemCard) {
-      e.preventDefault(); e.stopPropagation();
-      const itemId = itemCard.getAttribute('data-id');
-      const item = state.inventory.find(i => String(i.id) === String(itemId));
+                const slotData = state.spellSlots[levelToCast];
+                const max = parseInt(slotData.max) || 0;
+                
+                // Preenche array se necessário
+                if (!Array.isArray(slotData.status)) slotData.status = [];
+                while (slotData.status.length < max) slotData.status.push(false);
 
-      if (item) {
-        let attackRes = null;
-        // LÓGICA DE ATAQUE (ONDE APLICA O VERMELHO)
-        if (item.type === 'Arma' || (item.attackAttribute && item.attackAttribute !== 'Nenhum')) {
-          const { modAttr, profBonus, itemBonus } = getItemAttackValues(item);
+                // Busca slot livre
+                const firstAvailableIndex = slotData.status.findIndex(used => used === false);
 
-          const d20 = Math.floor(Math.random() * 20) + 1;
-          const totalAttack = d20 + modAttr + profBonus + itemBonus;
-          const isCrit = (d20 === 20);
-          const isFumble = (d20 === 1); // <--- Detecta Falha Crítica
+                if (firstAvailableIndex === -1) {
+                    // BLOQUEIA O ROLAMENTO se não tiver slot
+                    alert(`Você não tem espaços de ${levelToCast}º Círculo disponíveis para conjurar ${spellTitle}!`);
+                    return; // Para tudo aqui
+                }
 
-          // Monta o Tooltip: 20=Roxo, 1=Vermelho
-          const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
+                // CONSOME O SLOT
+                slotData.status[firstAvailableIndex] = true;
+                saveStateToServer();
+                
+                // Atualiza visualmente (Bolinhas cinzas)
+                // Usamos setTimeout pequeno para garantir que o roll aconteça visualmente junto
+                setTimeout(() => renderActiveTab(), 100); 
+            }
+            // ----------------------------------
 
-          const detailParts = [d20Html];
-          if (modAttr !== 0) detailParts.push(modAttr);
-          if (profBonus !== 0) detailParts.push(profBonus);
-          if (itemBonus !== 0) detailParts.push(itemBonus);
+            // --- LÓGICA DE ROLAGEM (Igual antes) ---
+            let damageText = '';
+            const parent = e.target.closest('.spell-damage');
+            if (parent) {
+                 damageText = Array.from(parent.childNodes)
+                    .filter(n => n.nodeType === Node.TEXT_NODE)
+                    .map(n => n.textContent.trim()).join('');
+            }
+            
+            // Se o texto estiver vazio, tenta pegar do objeto se possível, mas o HTML já deve ter o texto atualizado pelo dropdown
+            if (damageText && damageText !== '-') {
+                const res = rollDiceExpression(damageText);
+                showCombatResults(spellTitle, null, res);
+            }
+            return;
+        }
 
-          attackRes = {
-            total: totalAttack,
-            text: totalAttack.toString(),
-            detail: detailParts.join(' + '),
+        // B. VERIFICA SE É ITEM (ARMA/INVENTÁRIO) - (Código original mantido)
+        const itemCard = e.target.closest('.item-card');
+        if (itemCard) {
+            const itemId = itemCard.getAttribute('data-id');
+            const item = state.inventory.find(i => String(i.id) === String(itemId));
+
+            if (item) {
+                let attackRes = null;
+                // ATAQUE
+                if (item.type === 'Arma' || (item.attackAttribute && item.attackAttribute !== 'Nenhum')) {
+                    const { modAttr, profBonus, itemBonus } = getItemAttackValues(item);
+                    const d20 = Math.floor(Math.random() * 20) + 1;
+                    const totalAttack = d20 + modAttr + profBonus + itemBonus;
+                    const isCrit = (d20 === 20); 
+                    const isFumble = (d20 === 1);
+                    
+                    const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
+                    const detailParts = [d20Html];
+                    if (modAttr !== 0) detailParts.push(modAttr); 
+                    if (profBonus !== 0) detailParts.push(profBonus); 
+                    if (itemBonus !== 0) detailParts.push(itemBonus);
+                    
+                    attackRes = { 
+                        total: totalAttack, 
+                        text: totalAttack.toString(), 
+                        detail: detailParts.join(' + '),
+                        isCrit: isCrit,
+                        isFumble: isFumble
+                    };
+                }
+
+                // DANO
+                let damageRes = null;
+                let damageText = '';
+                const spellDamageDiv = e.target.closest('.spell-damage');
+                if (spellDamageDiv) {
+                    damageText = Array.from(spellDamageDiv.childNodes)
+                        .filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent.trim()).join('');
+                }
+                if (!damageText || damageText === '-') damageText = item.damage || '0';
+
+                if (damageText && damageText !== '-' && damageText !== '0') {
+                    damageRes = rollDiceExpression(damageText);
+                }
+
+                if (attackRes || damageRes) showCombatResults(item.name, attackRes, damageRes);
+            }
+            return;
+        }
+    }
+
+    // --- CASO 2: ATAQUE MÁGICO (CABEÇALHO) ---
+    // (Mantém o código original do btnHeader/btnPrep)
+    const btnHeader = e.target.closest('#btnRollSpellAttack_Header');
+    const btnPrep   = e.target.closest('#btnRollSpellAttack_PrepHeader');
+
+    if (btnHeader || btnPrep) {
+        e.preventDefault(); e.stopPropagation();
+        
+        const vals = getSpellAttackValues(); 
+        if (vals === null) { alert("⚠️ Configure a DT de Magia primeiro (ícone ⚙️)!"); return; }
+        
+        const d20 = Math.floor(Math.random() * 20) + 1;
+        const total = d20 + vals.prof + vals.mod + vals.extra;
+        const isCrit = (d20 === 20);
+        const isFumble = (d20 === 1); 
+
+        const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
+        const parts = [d20Html];
+        if (vals.mod !== 0) parts.push(vals.mod);    
+        if (vals.prof !== 0) parts.push(vals.prof);  
+        if (vals.extra !== 0) parts.push(vals.extra); 
+
+        const res = { 
+            total: total, 
+            text: total.toString(), 
+            detail: parts.join(' + '),
             isCrit: isCrit,
-            isFumble: isFumble // Envia flag para o prompt
-          };
-        }
-
-        // LÓGICA DE DANO
-        let damageRes = null;
-        let damageText = '';
-        const spellDamageDiv = e.target.closest('.spell-damage');
-        if (spellDamageDiv) {
-          damageText = Array.from(spellDamageDiv.childNodes)
-            .filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent.trim()).join('');
-        }
-        if (!damageText || damageText === '-') damageText = item.damage || '0';
-
-        if (damageText && damageText !== '-' && damageText !== '0') {
-          damageRes = rollDiceExpression(damageText);
-        }
-
-        if (attackRes || damageRes) showCombatResults(item.name, attackRes, damageRes);
-      }
-      return;
+            isFumble: isFumble 
+        };
+        
+        showCombatResults("Ataque Mágico", res, null);
     }
+    
+    // --- CASO 3: PERÍCIAS ---
+    // (Mantém o código original das perícias)
+    if (e.target.classList.contains('col-icon') && e.target.closest('.pericia-item')) {
+        e.preventDefault(); e.stopPropagation();
+        const itemLi = e.target.closest('.pericia-item');
+        const nome = itemLi.querySelector('.col-nome').textContent.trim();
+        const bonus = parseInt(itemLi.querySelector('.bonus-span').textContent.replace(/[()]/g, '')) || 0;
+        
+        const d20 = Math.floor(Math.random() * 20) + 1;
+        const total = d20 + bonus;
+        const isCrit = (d20 === 20);
+        const isFumble = (d20 === 1); 
 
-    // DANO DE MAGIA (CARD)
-    const spellCard = e.target.closest('.spell-card');
-    if (spellCard) {
-      e.preventDefault(); e.stopPropagation();
-      let damageText = '';
-      const parent = e.target.closest('.spell-damage');
-      if (parent) {
-        damageText = Array.from(parent.childNodes).filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent.trim()).join('');
-      }
-      if (damageText && damageText !== '-') {
-        const res = rollDiceExpression(damageText);
-        const title = spellCard.querySelector('.spell-title')?.textContent || "Magia";
-        showCombatResults(title, null, res);
-      }
-      return;
+        const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
+        
+        const res = { 
+            total: total, 
+            text: total.toString(), 
+            detail: `${d20Html} + ${bonus}`, 
+            isCrit: isCrit, 
+            isFumble: isFumble 
+        };
+        showCombatResults(nome, res, null);
     }
-  }
-
-  // --- CASO 2: ATAQUE MÁGICO (CABEÇALHO) ---
-  const btnHeader = e.target.closest('#btnRollSpellAttack_Header');
-  const btnPrep = e.target.closest('#btnRollSpellAttack_PrepHeader');
-
-  if (btnHeader || btnPrep) {
-    e.preventDefault(); e.stopPropagation();
-
-    const vals = getSpellAttackValues();
-    if (vals === null) { alert("⚠️ Configure a DT de Magia primeiro (ícone ⚙️)!"); return; }
-
-    const d20 = Math.floor(Math.random() * 20) + 1;
-    const total = d20 + vals.prof + vals.mod + vals.extra;
-    const isCrit = (d20 === 20);
-    const isFumble = (d20 === 1); // <--- Detecta Falha Crítica
-
-    const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
-    const parts = [d20Html];
-    if (vals.mod !== 0) parts.push(vals.mod);
-    if (vals.prof !== 0) parts.push(vals.prof);
-    if (vals.extra !== 0) parts.push(vals.extra);
-
-    const res = {
-      total: total,
-      text: total.toString(),
-      detail: parts.join(' + '),
-      isCrit: isCrit,
-      isFumble: isFumble // Envia flag para o prompt
-    };
-
-    showCombatResults("Ataque Mágico", res, null);
-  }
-
-  // --- CASO 3: PERÍCIAS ---
-  if (e.target.classList.contains('col-icon') && e.target.closest('.pericia-item')) {
-    e.preventDefault(); e.stopPropagation();
-    const itemLi = e.target.closest('.pericia-item');
-    const nome = itemLi.querySelector('.col-nome').textContent.trim();
-    const bonus = parseInt(itemLi.querySelector('.bonus-span').textContent.replace(/[()]/g, '')) || 0;
-
-    const d20 = Math.floor(Math.random() * 20) + 1;
-    const total = d20 + bonus;
-    const isCrit = (d20 === 20);
-    const isFumble = (d20 === 1); // <--- Detecta Falha Crítica
-
-    const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
-
-    const res = {
-      total: total,
-      text: total.toString(),
-      detail: `${d20Html} + ${bonus}`,
-      isCrit: isCrit,
-      isFumble: isFumble // Envia flag para o prompt
-    };
-    showCombatResults(nome, res, null);
-  }
 });
 
 /* =============================================================
