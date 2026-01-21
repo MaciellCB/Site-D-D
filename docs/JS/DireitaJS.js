@@ -4222,9 +4222,36 @@ document.head.appendChild(diceStyles);
 /* =============================================================
    ATUALIZAÇÃO: showCombatResults com suporte a Remoto
 ============================================================= */
+/* =============================================================
+   ATUALIZAÇÃO: showCombatResults (Com botão X e mais tempo)
+============================================================= */
 let diceTimer = null;
 
-// Adicionado parametro 'isRemote' no final
+// CSS para o botão X (Adicione isso se não quiser poluir o arquivo CSS)
+const closeBtnStyle = document.createElement('style');
+closeBtnStyle.textContent = `
+    .dice-close {
+        position: absolute;
+        top: 5px;
+        right: 8px;
+        font-size: 16px;
+        color: #777;
+        cursor: pointer;
+        z-index: 10;
+        line-height: 1;
+        transition: color 0.2s;
+    }
+    .dice-close:hover {
+        color: #fff;
+    }
+    /* Ajuste para o conteúdo não ficar por cima do X */
+    .dice-content-wrapper {
+        padding-right: 25px !important; 
+    }
+`;
+document.head.appendChild(closeBtnStyle);
+
+
 function showCombatResults(title, attackResult, damageResult, isRemote = false) {
 
   // 1. Criação/Busca do Container Visual
@@ -4235,11 +4262,16 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
     document.body.appendChild(container);
   }
 
-  // 2. Limpa timer anterior
+  // 2. Limpa timer anterior se houver
   if (diceTimer) clearTimeout(diceTimer);
 
-  // --- MONTAGEM DO HTML (Igual ao seu original) ---
-  let contentHtml = `<div class="dice-content-wrapper">`;
+  // --- MONTAGEM DO HTML ---
+  // Adicionei o botão de fechar aqui
+  let contentHtml = `
+      <div class="dice-close" onclick="fecharDiceResult()">✖</div>
+      <div class="dice-content-wrapper">
+  `;
+  
   contentHtml += `<div class="dice-header">${title}</div>`;
 
   if (attackResult) {
@@ -4270,11 +4302,10 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
             </div>
         `;
   }
-  contentHtml += `</div>`;
+  contentHtml += `</div>`; // Fecha wrapper
 
   // --- HTML INSPIRAÇÃO ---
   let inspirationHtml = '';
-  // Se for remoto, usamos o dado que veio no payload, se for local, usamos o state
   const isInspirado = isRemote ? (attackResult?.inspiracao || damageResult?.inspiracao) : (typeof state !== 'undefined' && state.inspiration);
 
   if (isInspirado) {
@@ -4287,17 +4318,19 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
 
   container.innerHTML = inspirationHtml + contentHtml;
 
+  // Mostra o container
   requestAnimationFrame(() => { container.classList.add('active'); });
 
-  diceTimer = setTimeout(() => { container.classList.remove('active'); }, 4000);
+  // --- TEMPO DE DURAÇÃO (10 Segundos) ---
+  diceTimer = setTimeout(() => { 
+      container.classList.remove('active'); 
+  }, 15000); // 10000 ms = 15 segundos
 
-  // ---------------------------------------------------------
-  // LÓGICA DE SOCKET (SÓ ENVIA SE NÃO FOR REMOTO)
-  // ---------------------------------------------------------
+  // --- LÓGICA DE SOCKET (SÓ ENVIA SE NÃO FOR REMOTO) ---
   if (!isRemote && typeof socket !== 'undefined') {
     const payload = {
-      socketId: socket.id, // Importante: Envia quem rolou
-      personagem: state.nome || "Desconhecido", // Nome da ficha para filtrar
+      socketId: socket.id,
+      personagem: state.nome || "Desconhecido",
       titulo: title,
       ataque: null,
       dano: null,
@@ -4308,7 +4341,7 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
       payload.ataque = {
         total: attackResult.total,
         text: attackResult.text,
-        detail: attackResult.detail, // Envia o detalhe da conta
+        detail: attackResult.detail,
         isCrit: attackResult.isCrit,
         isFumble: attackResult.isFumble,
         inspiracao: state.inspiration
@@ -4319,7 +4352,7 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
       payload.dano = {
         total: damageResult.total,
         text: damageResult.text,
-        detail: damageResult.detail, // Envia o detalhe da conta
+        detail: damageResult.detail,
         isCrit: damageResult.isCrit,
         inspiracao: state.inspiration
       };
@@ -4328,6 +4361,15 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
     socket.emit('dados_rolados', payload);
   }
 }
+
+// Função global para fechar manualmente
+window.fecharDiceResult = function() {
+    const container = document.getElementById('dice-results-container');
+    if (container) {
+        container.classList.remove('active');
+        if (diceTimer) clearTimeout(diceTimer); // Cancela o timer para não tentar fechar de novo depois
+    }
+};
 
 /* 2. FUNÇÕES DE CÁLCULO E EXIBIÇÃO */
 
