@@ -175,20 +175,21 @@
         }
 
         /* =========================================================================
-           CSS DOS DADOS (NOVO ESTILO FLUTUANTE / TRANSPARENTE)
+           CSS DOS DADOS (MODIFICADO)
            ========================================================================= */
         .dice-area {
             position: absolute;
-            left: 420px; /* Logo após as barras */
-            bottom: 25px;
+            /* AJUSTE DE POSIÇÃO: Para ficar dentro da barra, no canto direito */
+            left: 340px; 
+            /* AJUSTE VERTICAL: 18px faz ele cobrir a barra de baixo e subir para a de cima */
+            bottom: 18px; 
             display: flex;
-            flex-direction: row; /* Dados lado a lado se houver mais de um */
-            gap: 20px;
+            flex-direction: row;
+            gap: 10px; /* Espaço entre os dados reduzido um pouco */
             pointer-events: none;
-            z-index: 20;
+            z-index: 20; /* Garante que fique POR CIMA das barras */
         }
 
-        /* O Container do Dado não tem mais fundo nem borda */
         .roll-card {
             background: transparent;
             border: none;
@@ -197,8 +198,8 @@
             opacity: 0;
             transform: scale(0.5);
             display: flex;
-            flex-direction: row; /* Ataque e Dano lado a lado */
-            gap: 25px;
+            flex-direction: row;
+            gap: 15px;
         }
 
         .roll-card.fade-out {
@@ -212,37 +213,25 @@
             to { opacity: 0; transform: translateY(-40px) scale(1.1); filter: blur(2px); }
         }
 
-        /* Título oculto ou muito discreto (opcional, aqui ocultei para limpar) */
-        .roll-header {
-            display: none; 
-        }
-
-        .roll-body {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        /* Caixa que segura o ícone e o número */
+        /* Caixa que segura o ícone e o número - TAMANHO REDUZIDO */
         .dice-result-box {
             position: relative;
-            width: 100px;
-            height: 100px;
+            width: 50px;  /* Reduzido de 100px */
+            height: 50px; /* Reduzido de 100px */
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* Ícone do Dado (Grande) */
+        /* Ícone do Dado - SEM SOMBRA */
         .d-icon {
             width: 100%;
             height: 100%;
             position: absolute;
             top: 0;
             left: 0;
-            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.8));
+            filter: none; /* Remove a sombra projetada */
             z-index: 1;
-            /* Leve animação de balanço */
             animation: wobble 3s ease-in-out infinite;
         }
 
@@ -251,33 +240,31 @@
             50% { transform: rotate(3deg); }
         }
 
-        /* O Número (Sobreposto ao dado) */
+        /* O Número - Ajustado tamanho da fonte */
         .d-val {
             position: relative;
             z-index: 2;
-            font-size: 38px;
+            font-size: 20px; /* Reduzido proporcionalmente */
             font-weight: 900;
             color: #fff;
-            text-shadow: 0 0 10px #000, 2px 2px 0 #000, -2px -2px 0 #000;
+            text-shadow: 0 0 5px #000, 2px 2px 0 #000, -2px -2px 0 #000; /* Sombra do texto mantida para leitura */
             font-family: 'Roboto', sans-serif;
         }
 
-        /* Cores Específicas do Texto */
         .d-val.crit { color: #e040fb; text-shadow: 0 0 15px #e040fb, 2px 2px 0 #000; }
         .d-val.fumble { color: #ff3333; text-shadow: 0 0 15px #ff0000, 2px 2px 0 #000; }
-        .d-val.dmg-val { color: #ffeb3b; text-shadow: 0 0 10px #f57f17, 2px 2px 0 #000; }
+        .d-val.dmg-val { color: #ffffff; text-shadow: 0 0 10px #ffffff, 2px 2px 0 #000; }
 
-        /* Label pequeno embaixo (Acerto/Dano) */
         .d-label {
             position: absolute;
-            bottom: -15px;
-            width: 120%;
+            bottom: -12px;
+            width: 140%;
             text-align: center;
-            font-size: 14px;
+            font-size: 10px; /* Texto menor */
             font-weight: bold;
             color: #ddd;
             text-transform: uppercase;
-            text-shadow: 2px 2px 4px #000;
+            text-shadow: 1px 1px 2px #000;
             background: linear-gradient(90deg, transparent, rgba(0,0,0,0.8), transparent);
             padding: 2px 0;
             border-radius: 4px;
@@ -380,6 +367,8 @@
             card.className = 'roll-card';
 
             let conteudoHTML = '';
+            // Ícone padrão do dado
+            const iconSrc = "img/imagem-no-site/fundo-dado-portrait.png"; 
 
             // 1. DADO DE ATAQUE (D20)
             if (data.ataque) {
@@ -387,9 +376,6 @@
                 const isFumble = data.ataque.isFumble;
                 const valClass = isCrit ? 'crit' : (isFumble ? 'fumble' : '');
                 
-                // Ícone de d20 roxo
-                const iconSrc = "img/imagem-no-site/fundo-dado-portrait.png"; 
-
                 conteudoHTML += `
                     <div class="dice-result-box">
                         <img src="${iconSrc}" class="d-icon">
@@ -404,12 +390,10 @@
                 const isCritDmg = data.dano.isCrit; 
                 const valClass = isCritDmg ? 'crit' : 'dmg-val';
                 
-                // Ícone de dano (branco/invertido ou outra cor)
-                const iconSrc = "img/imagem-no-site/fundo-dado-portrait.png";
-
+                // REMOVIDO: style="filter: invert(1)..." -> Agora mostra a cor original
                 conteudoHTML += `
                     <div class="dice-result-box">
-                        <img src="${iconSrc}" class="d-icon" style="filter: invert(1) drop-shadow(0 5px 5px rgba(0,0,0,0.8));">
+                        <img src="${iconSrc}" class="d-icon">
                         <div class="d-val ${valClass}">${data.dano.text}</div>
                         <div class="d-label"></div>
                     </div>
