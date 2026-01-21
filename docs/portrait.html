@@ -19,12 +19,12 @@
 
         /* Container Principal - Centralizado e Aumentado */
         .hud-wrapper {
-            position: relative; /* Muda de absolute para relative */
+            position: relative; 
             display: flex;
             align-items: flex-end;
-            /* Aumenta todo o conjunto em 1.5x */
             transform: scale(1.5); 
             transform-origin: center center;
+            /* O width será definido pelo conteúdo (imagem + barras ~590px total) */
         }
 
         /* --- ÁREA DA IMAGEM (Esquerda) --- */
@@ -180,16 +180,17 @@
         }
 
         /* =========================================================================
-           CSS DOS DADOS (CORRIGIDO: Posição Relativa ao Container Centralizado)
+           CSS DOS DADOS (CORRIGIDO: Ancorado à DIREITA)
            ========================================================================= */
         .dice-area {
             position: absolute;
-            /* ÂNCORA: 590px é o final exato da barra de vida. */
-            left: 590px; 
-            bottom: 12px; 
+            /* MUDANÇA PRINCIPAL: Em vez de left, usamos RIGHT: 0. 
+               Isso cola o container no final exato do wrapper (final da barra). */
+            right: 0;
+            bottom: 12px;
             display: flex;
-            /* IMPORTANTE: row-reverse faz eles empilharem da direita para a esquerda */
-            flex-direction: row-reverse; 
+            /* Mantemos row-reverse para empilhar da direita para a esquerda (Ataque na ponta, Dano empurra pra dentro) */
+            flex-direction: row-reverse;
             gap: 10px; 
             pointer-events: none;
             z-index: 20; 
