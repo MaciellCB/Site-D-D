@@ -777,16 +777,30 @@ window.salvarDadoVida = (id, val) => {
     saveStateToServer();
 };
 
-// ======================================
-// 7. Atualizações Visuais (Vida, Iniciativa)
-// ======================================
-
-// --- No EsquerdaJS.js, SUBSTITUA a função atualizarVidaCalculada por esta: ---
-
+/* =============================================================
+   CORREÇÃO: VIDA TOTAL = DADOS + (MOD. CON * NÍVEL)
+============================================================= */
 function atualizarVidaCalculada() {
-    const vidaMax = Object.values(state.vidaDadosSalvos || {}).reduce((acc, val) => acc + (parseInt(val) || 0), 0);
+    // 1. Soma os valores dos dados de vida salvos
+    const somaDados = Object.values(state.vidaDadosSalvos || {}).reduce((acc, val) => acc + (parseInt(val) || 0), 0);
     
-    // ATUALIZAÇÃO: Salva o total calculado no estado para o Portrait ler
+    // 2. Calcula o Modificador de Constituição (n1)
+    // Se o atributo não existir, assume 10 (modificador 0)
+    const conScore = state.atributos?.n1 || 10; 
+    const modCon = Math.floor((parseInt(conScore) - 10) / 2);
+
+    // 3. Calcula o Nível Total do Personagem (soma de todas as classes)
+    const nivelTotal = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0);
+
+    // 4. Cálculo Final: Soma dos Dados + (Modificador * Nível)
+    let vidaMax = somaDados + (modCon * nivelTotal);
+
+    // Segurança: Evita que a vida máxima seja 0 ou negativa (opcional, mas recomendado)
+    if (vidaMax < 1) vidaMax = 1;
+    
+    // --- ATUALIZAÇÃO DO ESTADO E VISUAL ---
+    
+    // Salva o total calculado no estado para o Portrait ler
     state.vidaTotalCalculada = vidaMax; 
     
     const elVidaTotal = document.getElementById('vida-total');
