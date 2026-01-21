@@ -5983,7 +5983,7 @@
     {
       "name": "[Nível 18] Corpo Vazio",
       "level": 18,
-      "description": "<p><strong>Ação:</strong> Ação Padrão<br><strong>Duração:</strong> 1 minuto</p><p>Você pode gastar 4 pontos de Ki para se tornar <strong>Invisível</strong> por 1 minuto. Durante esse tempo, você também tem resistência a todos os danos, exceto dano de força.</p><p>Além disso, você pode gastar 8 pontos de Ki para conjurar a magia <em>Projeção Astral</em>, sem precisar de componentes materiais. Quando o faz, você não pode levar nenhuma outra criatura com você.</p>"
+      "description": "<p><strong>Ação:</strong> Ação Padrão<br><strong>Duração:</strong> 1 minuto</p><p>Você pode gastar 4 pontos de Ki para se tornar <strong>Invisível</strong> por 1 minuto. Durante esse tempo, você também tem resistência a todos os danos, exceto Dano de Energia.</p><p>Além disso, você pode gastar 8 pontos de Ki para conjurar a magia <em>Projeção Astral</em>, sem precisar de componentes materiais. Quando o faz, você não pode levar nenhuma outra criatura com você.</p>"
     },
     {
       "name": "[Nível 20] Eu Perfeito",

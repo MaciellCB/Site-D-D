@@ -1333,7 +1333,7 @@
       "duracao": "Instantânea",
       "resistencia": "-"
     },
-    "description": "<p>Você cria três dardos brilhantes de força mágica. Cada dardo atinge uma criatura de sua escolha que você possa ver dentro do alcance. Um dardo causa <strong>1d4 + 1</strong> de dano de força.</p><p>Os dardos acertam simultaneamente e você pode direcioná-los para um único alvo ou para vários.</p><p><strong>Níveis Superiores:</strong> Você cria um dardo adicional para cada nível de slot acima do 1º.</p>"
+    "description": "<p>Você cria três dardos brilhantes de força mágica. Cada dardo atinge uma criatura de sua escolha que você possa ver dentro do alcance. Um dardo causa <strong>1d4 + 1</strong> de Dano de Energia.</p><p>Os dardos acertam simultaneamente e você pode direcioná-los para um único alvo ou para vários.</p><p><strong>Níveis Superiores:</strong> Você cria um dardo adicional para cada nível de slot acima do 1º.</p>"
   },
   {
     "id": "s_nevoa_obscurecente",
@@ -1875,7 +1875,7 @@
       "duracao": "1 min",
       "resistencia": "-"
     },
-    "description": "<p>Você cria uma arma espectral flutuante ao alcance. Quando conjura, você pode fazer um ataque corpo-a-corpo com magia contra uma criatura a 1,5m da arma.</p><p>Se atingir, o alvo sofre <strong>1d8 + modificador de conjuração</strong> de dano de força. Como uma <strong>ação bônus</strong> no seu turno, você pode mover a arma até 6 metros e repetir o ataque.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d8</strong> para cada dois níveis de slot acima do 2º.</p>"
+    "description": "<p>Você cria uma arma espectral flutuante ao alcance. Quando conjura, você pode fazer um ataque corpo-a-corpo com magia contra uma criatura a 1,5m da arma.</p><p>Se atingir, o alvo sofre <strong>1d8 + modificador de conjuração</strong> de Dano de Energia. Como uma <strong>ação bônus</strong> no seu turno, você pode mover a arma até 6 metros e repetir o ataque.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d8</strong> para cada dois níveis de slot acima do 2º.</p>"
   },
   {
     "id": "s_arma_magica",
@@ -4513,7 +4513,7 @@
       "duracao": "Instantânea",
       "resistencia": "-"
     },
-    "description": "<p>Você se teletransporta para outro lugar dentro do alcance (150m). Você não precisa ver o local de destino, basta visualizá-lo ou descrevê-lo.</p><p>Você pode levar uma criatura voluntária do seu tamanho ou menor (e objetos). Se o local de destino já estiver ocupado, a magia falha e você e a criatura sofrem <strong>4d6</strong> de dano de força.</p>"
+    "description": "<p>Você se teletransporta para outro lugar dentro do alcance (150m). Você não precisa ver o local de destino, basta visualizá-lo ou descrevê-lo.</p><p>Você pode levar uma criatura voluntária do seu tamanho ou menor (e objetos). Se o local de destino já estiver ocupado, a magia falha e você e a criatura sofrem <strong>4d6</strong> de Dano de Energia.</p>"
   },
   {
     "id": "s_protecao_morte",
@@ -5076,7 +5076,7 @@
       "duracao": "Até 1 min",
       "resistencia": "-"
     },
-    "description": "<p>A próxima vez que você atingir uma criatura com um ataque com arma, sua arma crepita com força e o ataque causa <strong>5d10</strong> de dano de força extra.</p><p>Além disso, se este ataque reduzir o alvo a 50 pontos de vida ou menos, você o bane. Se o alvo for nativo de outro plano, ele desaparece para seu plano natal. Se for nativo, vai para um semiplano inofensivo até a magia acabar.</p>"
+    "description": "<p>A próxima vez que você atingir uma criatura com um ataque com arma, sua arma crepita com força e o ataque causa <strong>5d10</strong> de Dano de Energia extra.</p><p>Além disso, se este ataque reduzir o alvo a 50 pontos de vida ou menos, você o bane. Se o alvo for nativo de outro plano, ele desaparece para seu plano natal. Se for nativo, vai para um semiplano inofensivo até a magia acabar.</p>"
   },
   {
     "id": "s_dissipar_bem_mal",
@@ -5755,7 +5755,7 @@
       "duracao": "Instantânea",
       "resistencia": "Destreza"
     },
-    "description": "<p>Um raio verde fino sai do seu dedo. O alvo deve fazer resistência de <strong>Destreza</strong>. Sofre <strong>10d6 + 40</strong> de dano de força se falhar. Se passar, não sofre nenhum dano.</p><p>Se esse dano reduzir os PV do alvo a 0, ele é desintegrado e transformado em pó fino. Um alvo desintegrado só pode ser trazido de volta com <em>Ressurreição Verdadeira</em> ou <em>Desejo</em>. A magia destrói automaticamente criações de força mágica, como <em>Muralha de Energia</em>.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>3d6</strong> para cada nível de slot acima do 6º.</p>"
+    "description": "<p>Um raio verde fino sai do seu dedo. O alvo deve fazer resistência de <strong>Destreza</strong>. Sofre <strong>10d6 + 40</strong> de Dano de Energia se falhar. Se passar, não sofre nenhum dano.</p><p>Se esse dano reduzir os PV do alvo a 0, ele é desintegrado e transformado em pó fino. Um alvo desintegrado só pode ser trazido de volta com <em>Ressurreição Verdadeira</em> ou <em>Desejo</em>. A magia destrói automaticamente criações de força mágica, como <em>Muralha de Energia</em>.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>3d6</strong> para cada nível de slot acima do 6º.</p>"
   },
   {
     "id": "s_doenca_plena",
@@ -6204,7 +6204,7 @@
       "duracao": "Até 1 min",
       "resistencia": "-"
     },
-    "description": "<p>Você cria uma espada em forma de plano de força que flutua dentro do alcance. Quando a espada aparece, você faz um ataque corpo-a-corpo com magia contra um alvo a até 1,5 metro dela. Se acertar, causa <strong>3d10</strong> de dano de força.</p><p>Até a magia acabar, você pode usar uma ação bônus para mover a espada até 6 metros e repetir o ataque.</p>"
+    "description": "<p>Você cria uma espada em forma de plano de força que flutua dentro do alcance. Quando a espada aparece, você faz um ataque corpo-a-corpo com magia contra um alvo a até 1,5 metro dela. Se acertar, causa <strong>3d10</strong> de Dano de Energia.</p><p>Até a magia acabar, você pode usar uma ação bônus para mover a espada até 6 metros e repetir o ataque.</p>"
   },
   {
     "id": "s_forma_eterea",

@@ -7195,7 +7195,7 @@
     "class": "Monge",
     "subclass": "",
     "name": "(18º nível) Corpo Vazio",
-    "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Você pode gastar 4 pontos de Ki para se tornar <strong>Invisível</strong> por 1 minuto. Durante esse tempo, você também tem resistência a todos os danos, exceto dano de força.</p><p>Além disso, você pode gastar 8 pontos de Ki para conjurar a magia <em>Projeção Astral</em>, sem precisar de componentes materiais. Quando o faz, você não pode levar nenhuma outra criatura com você.</p>"
+    "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Você pode gastar 4 pontos de Ki para se tornar <strong>Invisível</strong> por 1 minuto. Durante esse tempo, você também tem resistência a todos os danos, exceto Dano de Energia.</p><p>Além disso, você pode gastar 8 pontos de Ki para conjurar a magia <em>Projeção Astral</em>, sem precisar de componentes materiais. Quando o faz, você não pode levar nenhuma outra criatura com você.</p>"
   },
   {
     "id": "mon_base_20_perfeito",
@@ -8515,7 +8515,7 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Marca Aberrante",
-    "description": "<p>Aumente sua Constituição em +1. Você aprende um truque e uma magia de 1º nível da lista de Feiticeiro. Constituição é seu atributo para essas magias.</p><p>Você pode conjurar a magia de 1º nível uma vez por descanso curto ou longo. Ao fazê-lo, você pode gastar um Dado de Vida para causar dano de força a uma criatura próxima ou ganhar PV temporários.</p>"
+    "description": "<p>Aumente sua Constituição em +1. Você aprende um truque e uma magia de 1º nível da lista de Feiticeiro. Constituição é seu atributo para essas magias.</p><p>Você pode conjurar a magia de 1º nível uma vez por descanso curto ou longo. Ao fazê-lo, você pode gastar um Dado de Vida para causar Dano de Energia a uma criatura próxima ou ganhar PV temporários.</p>"
   },
   {
     "id": "feat_matador_magos",
