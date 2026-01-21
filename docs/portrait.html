@@ -175,17 +175,16 @@
         }
 
         /* =========================================================================
-           CSS DOS DADOS
+           CSS DOS DADOS (CORRIGIDO: Posição, Empilhamento e Cor)
            ========================================================================= */
         .dice-area {
             position: absolute;
-            /* CÁLCULO: Imagem(180) - Margin(-40) + Barra(450) = ~590px é o final.
-               Coloquei 540px para ficar no canto direito, dentro da barra. */
-            left: 540px; 
+            /* ÂNCORA: 590px é o final exato da barra de vida. */
+            left: 590px; 
             bottom: 12px; 
             display: flex;
-            flex-direction: row;
-            justify-content: flex-start; /* Garante alinhamento à esquerda do container */
+            /* IMPORTANTE: row-reverse faz eles empilharem da direita para a esquerda */
+            flex-direction: row-reverse; 
             gap: 10px; 
             pointer-events: none;
             z-index: 20; 
@@ -196,8 +195,7 @@
             border: none;
             box-shadow: none;
             animation: popInDice 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            /* IMPORTANTE: Isso evita que ele pareça estar centralizando durante a animação */
-            transform-origin: bottom left; 
+            transform-origin: bottom center; /* Ajuste fino na animação */
             opacity: 0;
             transform: scale(0.5);
             display: flex;
@@ -207,7 +205,7 @@
 
         .roll-card.fade-out {
             animation: floatUpFade 0.8s forwards;
-            transform-origin: bottom left;
+            transform-origin: bottom center;
         }
 
         @keyframes popInDice {
@@ -227,14 +225,15 @@
             justify-content: center;
         }
 
-        /* Ícone do Dado */
+        /* Ícone do Dado - COR CINZA ESCURO */
         .d-icon {
             width: 100%;
             height: 100%;
             position: absolute;
             top: 0;
             left: 0;
-            filter: none; 
+            /* CORRIGIDO: Brightness 2.5 clareia o preto para um cinza escuro */
+            filter: brightness(2.5); 
             z-index: 1;
             animation: wobble 3s ease-in-out infinite;
         }
@@ -269,7 +268,7 @@
             color: #ddd;
             text-transform: uppercase;
             text-shadow: 1px 1px 2px #000;
-            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.8), transparent);
+            /* CORRIGIDO: Removido o background degradê preto */
             padding: 2px 0;
             border-radius: 4px;
         }
@@ -394,7 +393,7 @@
                 const isCritDmg = data.dano.isCrit; 
                 const valClass = isCritDmg ? 'crit' : 'dmg-val';
                 
-                // Sem filtro de inversão, cor original
+                // Sem filtro de inversão, cor original (agora tratada no CSS com brightness)
                 conteudoHTML += `
                     <div class="dice-result-box">
                         <img src="${iconSrc}" class="d-icon">
