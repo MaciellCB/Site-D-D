@@ -13,7 +13,9 @@
             font-family: 'Roboto', sans-serif;
         }
 
-        /* Container Principal */
+        /* =========================================================================
+           ESTRUTURA PRINCIPAL
+           ========================================================================= */
         .hud-wrapper {
             position: absolute;
             bottom: 50px;
@@ -22,7 +24,7 @@
             align-items: flex-end;
         }
 
-        /* --- ÁREA DA IMAGEM (Esquerda) --- */
+        /* IMAGEM DO PERSONAGEM (ESQUERDA) */
         .char-image-container {
             position: relative;
             z-index: 10;
@@ -49,7 +51,7 @@
             object-fit: cover;
         }
 
-        /* Inspiração */
+        /* INSPIRAÇÃO */
         .inspiration-badge {
             position: absolute;
             bottom: -10px;
@@ -83,7 +85,7 @@
             z-index: 2;
         }
 
-        /* --- ÁREA DAS BARRAS (Direita) --- */
+        /* BARRAS DE VIDA (DIREITA) */
         .stats-container {
             position: relative;
             margin-left: -40px;
@@ -175,112 +177,116 @@
         }
 
         /* =========================================================================
-           CSS DOS DADOS (NOVO ESTILO FLUTUANTE / TRANSPARENTE)
+           CSS DOS DADOS (BOX COM FUNDO E CORES ESPECÍFICAS)
            ========================================================================= */
         .dice-area {
             position: absolute;
-            left: 420px; /* Logo após as barras */
-            bottom: 25px;
+            left: 455px; /* Ajustado para ficar à direita da barra de vida */
+            bottom: 20px; /* Alinhado na parte inferior */
             display: flex;
-            flex-direction: row; /* Dados lado a lado se houver mais de um */
-            gap: 20px;
+            flex-direction: row;
+            gap: 10px; /* Espaço entre Acerto e Dano */
             pointer-events: none;
             z-index: 20;
         }
 
-        /* O Container do Dado não tem mais fundo nem borda */
         .roll-card {
-            background: transparent;
-            border: none;
-            box-shadow: none;
-            animation: popInDice 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            opacity: 0;
-            transform: scale(0.5);
             display: flex;
-            flex-direction: row; /* Ataque e Dano lado a lado */
-            gap: 25px;
+            gap: 10px;
+            animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0;
+            transform: translateX(-20px);
         }
 
         .roll-card.fade-out {
-            animation: floatUpFade 0.8s forwards;
+            animation: fadeOutRight 0.8s forwards;
         }
 
-        @keyframes popInDice {
-            to { opacity: 1; transform: scale(1); }
+        @keyframes slideInRight {
+            to { opacity: 1; transform: translateX(0); }
         }
-        @keyframes floatUpFade {
-            to { opacity: 0; transform: translateY(-40px) scale(1.1); filter: blur(2px); }
-        }
-
-        /* Título oculto ou muito discreto (opcional, aqui ocultei para limpar) */
-        .roll-header {
-            display: none; 
+        @keyframes fadeOutRight {
+            to { opacity: 0; transform: translateX(20px); }
         }
 
-        .roll-body {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        /* Caixa que segura o ícone e o número */
+        /* CAIXA DO RESULTADO (FUNDO PRETO/IMAGEM) */
         .dice-result-box {
-            position: relative;
-            width: 100px;
-            height: 100px;
+            /* Caminho da imagem que você pediu */
+            background-image: url('img/imagem-no-site/fundo-dado-portrait.png');
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+            
+            /* Fallback caso a imagem falhe: fundo preto arredondado */
+            background-color: rgba(0,0,0,0.85);
+            border-radius: 6px;
+            border-left: 3px solid #9c27b0; /* Detalhe roxo na esquerda */
+
+            width: 130px; /* Tamanho menor */
+            height: 55px; /* Altura compacta */
+            
             display: flex;
             align-items: center;
-            justify-content: center;
-        }
-
-        /* Ícone do Dado (Grande) */
-        .d-icon {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.8));
-            z-index: 1;
-            /* Leve animação de balanço */
-            animation: wobble 3s ease-in-out infinite;
-        }
-
-        @keyframes wobble {
-            0%, 100% { transform: rotate(-3deg); }
-            50% { transform: rotate(3deg); }
-        }
-
-        /* O Número (Sobreposto ao dado) */
-        .d-val {
+            justify-content: space-between;
+            padding: 0 10px;
             position: relative;
-            z-index: 2;
-            font-size: 38px;
-            font-weight: 900;
-            color: #fff;
-            text-shadow: 0 0 10px #000, 2px 2px 0 #000, -2px -2px 0 #000;
-            font-family: 'Roboto', sans-serif;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
-        /* Cores Específicas do Texto */
-        .d-val.crit { color: #e040fb; text-shadow: 0 0 15px #e040fb, 2px 2px 0 #000; }
-        .d-val.fumble { color: #ff3333; text-shadow: 0 0 15px #ff0000, 2px 2px 0 #000; }
-        .d-val.dmg-val { color: #ffeb3b; text-shadow: 0 0 10px #f57f17, 2px 2px 0 #000; }
+        /* Texto (Título do lado esquerdo ou topo) */
+        .box-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
 
-        /* Label pequeno embaixo (Acerto/Dano) */
         .d-label {
-            position: absolute;
-            bottom: -15px;
-            width: 120%;
-            text-align: center;
-            font-size: 14px;
+            font-size: 10px;
             font-weight: bold;
-            color: #ddd;
+            color: #d0d0d0;
             text-transform: uppercase;
-            text-shadow: 2px 2px 4px #000;
-            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.8), transparent);
-            padding: 2px 0;
-            border-radius: 4px;
+            letter-spacing: 1px;
+        }
+
+        .d-icon-small {
+            width: 16px;
+            height: 16px;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        /* O Número (Lado direito da caixa) */
+        .d-val {
+            font-size: 28px; /* Fonte menor */
+            font-weight: 900;
+            font-family: 'Roboto', sans-serif;
+            text-shadow: 2px 2px 0 #000;
+            line-height: 1;
+        }
+
+        /* ================= CORES SOLICITADAS ================= */
+        
+        /* Padrão: Branco */
+        .d-val { color: #ffffff; }
+
+        /* Crítico (20): Roxo Brilhante */
+        .d-val.crit { 
+            color: #b026ff; /* Roxo neon */
+            text-shadow: 0 0 10px #b026ff, 2px 2px 0 #000;
+        }
+
+        /* Falha (1): Vermelho */
+        .d-val.fumble { 
+            color: #ff3333; /* Vermelho */
+            text-shadow: 0 0 5px #ff0000, 2px 2px 0 #000;
+        }
+
+        /* Dano Crítico (Também roxo, ou amarelo se preferir manter o padrão de dano) */
+        /* Vou deixar roxo pois você pediu "o critico ser roxo brilhante" */
+        .d-val.dmg-crit {
+            color: #b026ff;
+            text-shadow: 0 0 10px #b026ff, 2px 2px 0 #000;
         }
 
     </style>
@@ -363,7 +369,7 @@
             inspBadge.style.display = insp > 0 ? 'flex' : 'none';
         }
 
-        // --- ROLAGEM DE DADOS (VISUALIZAÇÃO LIMPA) ---
+        // --- ROLAGEM DE DADOS (NOVO FORMATO BOX) ---
         socket.on('dados_rolados', (data) => {
             if (data.personagem && data.personagem.toLowerCase() === nomeOriginalURL.toLowerCase()) {
                 criarPopUpDado(data);
@@ -372,46 +378,48 @@
 
         function criarPopUpDado(data) {
             const area = document.getElementById('dice-area');
-            
-            // Limpa dados anteriores para não acumular
-            area.innerHTML = '';
+            area.innerHTML = ''; // Limpa anteriores
 
             const card = document.createElement('div');
             card.className = 'roll-card';
 
             let conteudoHTML = '';
 
-            // 1. DADO DE ATAQUE (D20)
+            // 1. DADO DE ATAQUE (ACERTO)
             if (data.ataque) {
                 const isCrit = data.ataque.isCrit;
                 const isFumble = data.ataque.isFumble;
+                // Lógica de Classes de Cor
                 const valClass = isCrit ? 'crit' : (isFumble ? 'fumble' : '');
                 
-                // Ícone de d20 roxo
                 const iconSrc = "img/imagem-no-site/dado.png"; 
 
                 conteudoHTML += `
                     <div class="dice-result-box">
-                        <img src="${iconSrc}" class="d-icon">
+                        <div class="box-info">
+                            <div class="d-label">ACERTO</div>
+                            <img src="${iconSrc}" class="d-icon-small">
+                        </div>
                         <div class="d-val ${valClass}">${data.ataque.text}</div>
-                        <div class="d-label">ACERTO</div>
                     </div>
                 `;
             }
 
-            // 2. DADO DE DANO (Genérico)
+            // 2. DADO DE DANO
             if (data.dano) {
                 const isCritDmg = data.dano.isCrit; 
-                const valClass = isCritDmg ? 'crit' : 'dmg-val';
+                // Se for crítico no dano, usa a classe roxa também
+                const valClass = isCritDmg ? 'dmg-crit' : '';
                 
-                // Ícone de dano (branco/invertido ou outra cor)
                 const iconSrc = "https://cdn-icons-png.flaticon.com/512/826/826070.png";
 
                 conteudoHTML += `
                     <div class="dice-result-box">
-                        <img src="${iconSrc}" class="d-icon" style="filter: invert(1) drop-shadow(0 5px 5px rgba(0,0,0,0.8));">
+                        <div class="box-info">
+                            <div class="d-label">DANO</div>
+                            <img src="${iconSrc}" class="d-icon-small" style="filter: invert(1);">
+                        </div>
                         <div class="d-val ${valClass}">${data.dano.text}</div>
-                        <div class="d-label">DANO</div>
                     </div>
                 `;
             }
@@ -419,11 +427,11 @@
             card.innerHTML = conteudoHTML;
             area.appendChild(card);
 
-            // Some após 6 segundos
+            // Some após 8 segundos
             setTimeout(() => {
                 card.classList.add('fade-out');
                 setTimeout(() => card.remove(), 1000);
-            }, 6000);
+            }, 8000);
         }
 
         async function carregarDados() {
