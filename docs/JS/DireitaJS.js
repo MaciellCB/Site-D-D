@@ -2607,7 +2607,7 @@ function renderPreparedSpells() {
         `;
     }
 
-    // HTML Habilidades (ADICIONADO OS BOTÕES QUE FALTAVAM)
+    // HTML Habilidades
     let habilidadesHTML = '';
     if (habilidadesPreparadas.length > 0) {
         habilidadesHTML = `
@@ -2675,7 +2675,8 @@ function renderPreparedSpells() {
     const btnDTPrep = document.getElementById('btnOpenDTConfig_Prep');
     if (btnDTPrep) btnDTPrep.addEventListener('click', openDTConfigModal);
     bindSlotEvents();
-    bindSpellAttackEvents(); 
+    
+    // REMOVIDO: bindSpellAttackEvents(); -> Essa função não existe e estava travando o código.
 
     // 2. Filtro Rápido
     const filterInput = document.getElementById('filterPrepared');
@@ -2707,7 +2708,7 @@ function renderPreparedSpells() {
     }
 
     // =================================================================
-    // 4. EVENTOS DE CARDS (CORRIGIDOS: AGORA INCLUEM EDITAR E REMOVER)
+    // 4. EVENTOS DE CARDS (CORRIGIDOS)
     // =================================================================
 
     // --- MAGIAS ---
@@ -2740,7 +2741,7 @@ function renderPreparedSpells() {
          ch.addEventListener('click', e => e.stopPropagation());
     });
 
-    // C. REMOVER Magia (NOVO)
+    // C. REMOVER Magia
     conteudoEl.querySelectorAll('.remover-spell').forEach(btn => {
         btn.addEventListener('click', (ev) => {
             ev.preventDefault();
@@ -2751,7 +2752,7 @@ function renderPreparedSpells() {
         });
     });
 
-    // D. EDITAR Magia (NOVO)
+    // D. EDITAR Magia
     conteudoEl.querySelectorAll('.editar-spell').forEach(btn => {
         btn.addEventListener('click', (ev) => {
             ev.preventDefault();
@@ -2792,7 +2793,7 @@ function renderPreparedSpells() {
         ch.addEventListener('click', e => e.stopPropagation());
    });
 
-   // C. REMOVER Habilidade (NOVO)
+   // C. REMOVER Habilidade
    conteudoEl.querySelectorAll('.remover-hab').forEach(btn => {
        btn.addEventListener('click', (ev) => {
            ev.preventDefault();
@@ -2803,7 +2804,7 @@ function renderPreparedSpells() {
        });
    });
 
-   // D. EDITAR Habilidade (NOVO)
+   // D. EDITAR Habilidade
    conteudoEl.querySelectorAll('.editar-hab').forEach(btn => {
        btn.addEventListener('click', (ev) => {
            ev.preventDefault();
@@ -2813,7 +2814,6 @@ function renderPreparedSpells() {
        });
    });
 }
-
 
 /* ---------------- CATALOGO DE ITENS (DESIGN UNIFICADO) ---------------- */
 
