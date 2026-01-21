@@ -11,30 +11,30 @@ let itemCatalog = [];
 
 // --- CARREGAMENTO IMEDIATO DOS DADOS (Correção do Erro) ---
 async function carregarCatalogosDireita() {
-    try {
-        console.log("Buscando catálogos de itens, magias e habilidades...");
-        
-        // Faz as 3 requisições ao mesmo tempo
-        const [resSpells, resAbilities, resItems] = await Promise.all([
-            fetch(`${API_URL}/catalog/spells`),
-            fetch(`${API_URL}/catalog/abilities`),
-            fetch(`${API_URL}/catalog/items`)
-        ]);
+  try {
+    console.log("Buscando catálogos de itens, magias e habilidades...");
 
-        if (resSpells.ok) spellCatalog = await resSpells.json();
-        if (resAbilities.ok) abilityCatalog = await resAbilities.json();
-        if (resItems.ok) itemCatalog = await resItems.json();
+    // Faz as 3 requisições ao mesmo tempo
+    const [resSpells, resAbilities, resItems] = await Promise.all([
+      fetch(`${API_URL}/catalog/spells`),
+      fetch(`${API_URL}/catalog/abilities`),
+      fetch(`${API_URL}/catalog/items`)
+    ]);
 
-        console.log("Catálogos carregados:", {
-            Magias: spellCatalog.length,
-            Habilidades: abilityCatalog.length,
-            Itens: itemCatalog.length
-        });
+    if (resSpells.ok) spellCatalog = await resSpells.json();
+    if (resAbilities.ok) abilityCatalog = await resAbilities.json();
+    if (resItems.ok) itemCatalog = await resItems.json();
 
-    } catch (e) {
-        console.error("Erro ao carregar catálogos da Direita:", e);
-        alert("Erro: Não foi possível carregar Itens/Magias/Habilidades. Verifique se o servidor está rodando e se os arquivos .json existem na pasta data.");
-    }
+    console.log("Catálogos carregados:", {
+      Magias: spellCatalog.length,
+      Habilidades: abilityCatalog.length,
+      Itens: itemCatalog.length
+    });
+
+  } catch (e) {
+    console.error("Erro ao carregar catálogos da Direita:", e);
+    alert("Erro: Não foi possível carregar Itens/Magias/Habilidades. Verifique se o servidor está rodando e se os arquivos .json existem na pasta data.");
+  }
 }
 
 // Executa assim que o arquivo é lido
@@ -44,7 +44,7 @@ carregarCatalogosDireita();
 // --- FUNÇÕES DE LOGIN E SALVAMENTO ---
 
 async function saveStateToServer() {
-  if (!state.nome) return; 
+  if (!state.nome) return;
   try {
     await fetch(`${API_URL}/save-ficha`, {
       method: 'POST',
@@ -71,12 +71,12 @@ async function carregarDadosIniciais(nome, senha) {
 
       document.getElementById('login-overlay').style.display = 'none';
       setActiveTab(state.activeTab || 'Combate');
-      
+
       // Atualiza tudo
       window.dispatchEvent(new CustomEvent('sheet-updated'));
-      if(typeof atualizarHeader === 'function') atualizarHeader();
-      if(typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
-      
+      if (typeof atualizarHeader === 'function') atualizarHeader();
+      if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+
     } else {
       alert("Nome ou senha incorretos.");
     }
@@ -203,8 +203,8 @@ const CLASSES_WITH_SUBCLASSES = {
   'Mago': ['Abjuração', 'Conjuração', 'Adivinhação', 'Encantamento', 'Evocação', 'Ilusão', 'Cronurgia', 'Necromancia', 'Criador de Runas', 'Tecnomancia', 'Teurgia', 'Transmutação', 'Graviturgia', 'Mago de Guerra', 'Cantor da Lâmina', 'Ordem dos Escribas'],
   'Monge': ['Caminho da Mão Aberta', 'Caminho das Sombras', , 'Caminho da Tranquilidade', 'Caminho dos Quatro Elementos', 'Longa Morte', 'Kensei', 'Mestre Bêbado', 'Alma Solar', 'Misericórdia', 'Forma Astral', 'Dragão Ascendente'],
   'Paladino': ['Juramento dos Anciões', 'Juramento da Conquista', 'Juramento da Coroa', 'Juramento de Devoção', 'Juramento de Glória', 'Juramento de Redenção', 'Juramento de Vingança', 'Juramento dos Observadores', 'Quebrador de Juramento', 'Juramento da Traição', 'Juramento de Heroísmo', ''],
-  'Patrulheiro': ['Conclave da Fera', 'Conclave do Caçador',  'Espreitador das Profundezas','Conclave do Guardião Primordial','Conclave do Horizonte','Conclave do Matador','Conclave Feérico','Conclave do Enxame','Guardião do Draco' ],
-  
+  'Patrulheiro': ['Conclave da Fera', 'Conclave do Caçador', 'Espreitador das Profundezas', 'Conclave do Guardião Primordial', 'Conclave do Horizonte', 'Conclave do Matador', 'Conclave Feérico', 'Conclave do Enxame', 'Guardião do Draco'],
+
   'Talentos': []
 };
 
@@ -225,17 +225,17 @@ function checkScrollLock() {
 
 function setActiveTab(tabName) {
   state.activeTab = tabName;
-  
+
   // Salva apenas no navegador deste usuário
-  if(state.nome) {
-      localStorage.setItem(`activeTab_${state.nome}`, tabName);
+  if (state.nome) {
+    localStorage.setItem(`activeTab_${state.nome}`, tabName);
   }
 
   document.querySelectorAll('.lado-direito .abas button').forEach(b => {
     b.classList.toggle('ativa', b.textContent.trim() === tabName);
   });
   renderActiveTab();
-  
+
   // REMOVIDO: saveStateToServer(); <--- O ERRO ESTAVA AQUI
 }
 
@@ -292,7 +292,7 @@ function formatInventoryItem(item) {
   const checked = item.equip ? 'checked' : '';
 
   // --- FUNÇÕES AUXILIARES DE RENDERIZAÇÃO ---
-  
+
   // Cria um stat simples (Rótulo: Valor)
   const createSimpleStat = (label, value) => {
     if (!value || value === '0' || value === '-') return '';
@@ -301,9 +301,9 @@ function formatInventoryItem(item) {
 
   // Cria badges para listas (Vantagens/Desvantagens)
   const createBadgeRow = (label, list) => {
-      if(!list || list.length === 0) return '';
-      const badges = list.map(x => `<span style="background:#333; padding:2px 6px; border-radius:4px; font-size:11px; margin-right:4px; border:1px solid #444; color:#ddd;">${x}</span>`).join('');
-      return `<div style="margin-top:4px; display:flex; align-items:center; flex-wrap:wrap;"><span class="purple-label" style="margin-right:6px;">${label}:</span> ${badges}</div>`;
+    if (!list || list.length === 0) return '';
+    const badges = list.map(x => `<span style="background:#333; padding:2px 6px; border-radius:4px; font-size:11px; margin-right:4px; border:1px solid #444; color:#ddd;">${x}</span>`).join('');
+    return `<div style="margin-top:4px; display:flex; align-items:center; flex-wrap:wrap;"><span class="purple-label" style="margin-right:6px;">${label}:</span> ${badges}</div>`;
   };
 
   let bodyContent = '';
@@ -359,7 +359,7 @@ function formatInventoryItem(item) {
 
   // 2. BÔNUS GERAIS E EFEITOS MÁGICOS (GRID ORGANIZADO)
   let bonusHTML = '';
-  
+
   // Grupo Ofensivo
   let offenseGroup = '';
   offenseGroup += createSimpleStat('Acerto Bônus', item.acertoBonus);
@@ -375,15 +375,15 @@ function formatInventoryItem(item) {
   // 3. GRUPO PERÍCIAS (CORREÇÃO APLICADA AQUI)
   // =====================================================================
   let skillGroup = '';
-  
-  // Normaliza para array (se for string vira array, se for undefined vira array vazio)
-  const disList = Array.isArray(item.disadvantageSkill) 
-      ? item.disadvantageSkill 
-      : (item.disadvantageSkill ? [item.disadvantageSkill] : []);
 
-  const advList = Array.isArray(item.advantageSkill) 
-      ? item.advantageSkill 
-      : (item.advantageSkill ? [item.advantageSkill] : []);
+  // Normaliza para array (se for string vira array, se for undefined vira array vazio)
+  const disList = Array.isArray(item.disadvantageSkill)
+    ? item.disadvantageSkill
+    : (item.disadvantageSkill ? [item.disadvantageSkill] : []);
+
+  const advList = Array.isArray(item.advantageSkill)
+    ? item.advantageSkill
+    : (item.advantageSkill ? [item.advantageSkill] : []);
 
   skillGroup += createBadgeRow('Desvantagem', disList);
   skillGroup += createBadgeRow('Vantagem', advList);
@@ -391,19 +391,19 @@ function formatInventoryItem(item) {
 
   // Montagem Condicional dos Bônus
   if (offenseGroup || defenseGroup || skillGroup) {
-      bonusHTML += `<div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.1);">`;
-      
-      if (offenseGroup) {
-          bonusHTML += `<div style="display:flex; flex-wrap:wrap; margin-bottom:4px;">${offenseGroup}</div>`;
-      }
-      if (defenseGroup) {
-          bonusHTML += `<div style="display:flex; flex-wrap:wrap; margin-bottom:4px;">${defenseGroup}</div>`;
-      }
-      if (skillGroup) {
-          bonusHTML += `<div>${skillGroup}</div>`;
-      }
-      
-      bonusHTML += `</div>`;
+    bonusHTML += `<div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.1);">`;
+
+    if (offenseGroup) {
+      bonusHTML += `<div style="display:flex; flex-wrap:wrap; margin-bottom:4px;">${offenseGroup}</div>`;
+    }
+    if (defenseGroup) {
+      bonusHTML += `<div style="display:flex; flex-wrap:wrap; margin-bottom:4px;">${defenseGroup}</div>`;
+    }
+    if (skillGroup) {
+      bonusHTML += `<div>${skillGroup}</div>`;
+    }
+
+    bonusHTML += `</div>`;
   }
 
   bodyContent += bonusHTML;
@@ -447,33 +447,33 @@ function formatInventoryItem(item) {
 
 /* ---------------- INVENTÁRIO (CORRIGIDO: NÃO FOCA SE ESTIVER VAZIO) ---------------- */
 function renderInventory() {
-    const inputAntigo = document.getElementById('filterItens');
-    // Pega o valor antes de destruir o HTML
-    const termo = (inputAntigo?.value || '').toLowerCase();
+  const inputAntigo = document.getElementById('filterItens');
+  // Pega o valor antes de destruir o HTML
+  const termo = (inputAntigo?.value || '').toLowerCase();
 
-    // 1. Filtra itens
-    const itensFiltrados = state.inventory.filter(i => {
-        const text = (i.name + (i.description || "") + (i.type || "")).toLowerCase();
-        return text.includes(termo);
-    });
+  // 1. Filtra itens
+  const itensFiltrados = state.inventory.filter(i => {
+    const text = (i.name + (i.description || "") + (i.type || "")).toLowerCase();
+    return text.includes(termo);
+  });
 
-    // 2. Separa em Grupos
-    const armas = itensFiltrados.filter(i => i.type === 'Arma');
-    const armaduras = itensFiltrados.filter(i => i.type === 'Proteção' || i.type === 'protecao');
-    const gerais = itensFiltrados.filter(i => i.type !== 'Arma' && i.type !== 'Proteção' && i.type !== 'protecao');
+  // 2. Separa em Grupos
+  const armas = itensFiltrados.filter(i => i.type === 'Arma');
+  const armaduras = itensFiltrados.filter(i => i.type === 'Proteção' || i.type === 'protecao');
+  const gerais = itensFiltrados.filter(i => i.type !== 'Arma' && i.type !== 'Proteção' && i.type !== 'protecao');
 
-    // Se tem texto, expande. Se não, recolhe.
-    const forceExpand = termo.length > 0;
+  // Se tem texto, expande. Se não, recolhe.
+  const forceExpand = termo.length > 0;
 
-    // 3. Monta o HTML
-    let listaHTML = '';
-    if (armas.length > 0) listaHTML += renderItemGroup('Armas', armas, 'inv-armas', forceExpand);
-    if (armaduras.length > 0) listaHTML += renderItemGroup('Armaduras & Proteção', armaduras, 'inv-armaduras', forceExpand);
-    if (gerais.length > 0) listaHTML += renderItemGroup('Itens Gerais', gerais, 'inv-gerais', forceExpand);
+  // 3. Monta o HTML
+  let listaHTML = '';
+  if (armas.length > 0) listaHTML += renderItemGroup('Armas', armas, 'inv-armas', forceExpand);
+  if (armaduras.length > 0) listaHTML += renderItemGroup('Armaduras & Proteção', armaduras, 'inv-armaduras', forceExpand);
+  if (gerais.length > 0) listaHTML += renderItemGroup('Itens Gerais', gerais, 'inv-gerais', forceExpand);
 
-    if (!listaHTML) listaHTML = `<div class="empty-tip">Nenhum item encontrado.</div>`;
+  if (!listaHTML) listaHTML = `<div class="empty-tip">Nenhum item encontrado.</div>`;
 
-    const html = `
+  const html = `
         <div class="inventory-controls controls-row">
             <input id="filterItens" placeholder="Filtrar itens..." value="${escapeHtml(termo)}" />
             <div class="right-controls">
@@ -485,26 +485,26 @@ function renderInventory() {
         </div>
     `;
 
-    conteudoEl.innerHTML = html;
+  conteudoEl.innerHTML = html;
 
-    document.getElementById('botAddItem').addEventListener('click', () => openItemCatalogOverlay());
+  document.getElementById('botAddItem').addEventListener('click', () => openItemCatalogOverlay());
 
-    bindInventoryCardEvents();
-    bindInventorySectionEvents();
-    aplicarEnterNosInputs(conteudoEl);
+  bindInventoryCardEvents();
+  bindInventorySectionEvents();
+  aplicarEnterNosInputs(conteudoEl);
 
-    // --- CORREÇÃO DO FOCO AUTOMÁTICO ---
-    const inputFiltro = document.getElementById('filterItens');
-    if (inputFiltro) {
-        // Só foca se houver texto digitado (usuário pesquisando)
-        // Se estiver vazio (mudança de aba), não foca.
-        if (inputFiltro.value.length > 0) {
-            inputFiltro.focus();
-            const len = inputFiltro.value.length;
-            inputFiltro.setSelectionRange(len, len);
-        }
-        inputFiltro.oninput = renderInventory;
+  // --- CORREÇÃO DO FOCO AUTOMÁTICO ---
+  const inputFiltro = document.getElementById('filterItens');
+  if (inputFiltro) {
+    // Só foca se houver texto digitado (usuário pesquisando)
+    // Se estiver vazio (mudança de aba), não foca.
+    if (inputFiltro.value.length > 0) {
+      inputFiltro.focus();
+      const len = inputFiltro.value.length;
+      inputFiltro.setSelectionRange(len, len);
     }
+    inputFiltro.oninput = renderInventory;
+  }
 }
 
 
@@ -522,30 +522,30 @@ function bindInventoryCardEvents() {
 
     header.onclick = (ev) => {
       // Ignora cliques em botões interativos
-      if (ev.target.closest('.header-equip') || 
-          ev.target.closest('.item-actions-footer') ||
-          ev.target.closest('.dice-img') || 
-          ev.target.closest('.spell-damage')) { 
-          return;
+      if (ev.target.closest('.header-equip') ||
+        ev.target.closest('.item-actions-footer') ||
+        ev.target.closest('.dice-img') ||
+        ev.target.closest('.spell-damage')) {
+        return;
       }
 
       const it = findItemById(rawId);
       if (!it) return;
 
       // Altera o estado SOMENTE NA MEMÓRIA LOCAL
-      it.expanded = !it.expanded; 
-      
+      it.expanded = !it.expanded;
+
       const body = card.querySelector('.card-body');
       const caret = card.querySelector('.caret');
-      
+
       if (it.expanded) {
-          body.style.display = 'block';
-          caret.textContent = '▾';
-          card.classList.add('expanded');
+        body.style.display = 'block';
+        caret.textContent = '▾';
+        card.classList.add('expanded');
       } else {
-          body.style.display = 'none';
-          caret.textContent = '▸';
-          card.classList.remove('expanded');
+        body.style.display = 'none';
+        caret.textContent = '▸';
+        card.classList.remove('expanded');
       }
     };
   });
@@ -576,9 +576,9 @@ function bindInventoryCardEvents() {
       }
 
       if (item) item.equip = isChecked;
-      
+
       // AQUI SIM SALVAMOS, POIS EQUIPAR AFETA A CA DE TODOS
-      saveStateToServer(); 
+      saveStateToServer();
 
       if (state.activeTab === 'Combate') {
         const scrollY = window.scrollY;
@@ -591,17 +591,17 @@ function bindInventoryCardEvents() {
 
   // --- 3. ALTERNAR 2 MÃOS (GLOBAL) ---
   document.querySelectorAll('.toggle-versatile').forEach(ch => {
-      ch.onchange = (ev) => {
-          const rawId = ev.target.getAttribute('data-id');
-          const item = findItemById(rawId);
-          if (item) {
-              item.useTwoHands = ev.target.checked;
-              saveStateToServer(); // Salva pois afeta dano
-              const scrollY = window.scrollY; 
-              renderActiveTab();
-              window.scrollTo(0, scrollY);
-          }
-      };
+    ch.onchange = (ev) => {
+      const rawId = ev.target.getAttribute('data-id');
+      const item = findItemById(rawId);
+      if (item) {
+        item.useTwoHands = ev.target.checked;
+        saveStateToServer(); // Salva pois afeta dano
+        const scrollY = window.scrollY;
+        renderActiveTab();
+        window.scrollTo(0, scrollY);
+      }
+    };
   });
 
   // --- 4. REMOVER e EDITAR (GLOBAL) ---
@@ -635,7 +635,7 @@ function bindInventorySectionEvents() {
 
       const key = header.getAttribute('data-key');
       state.collapsedSections[key] = !state.collapsedSections[key];
-      
+
       // REMOVIDO: saveStateToServer(); <-- NÃO SALVAR NO SERVER
       // A função mesclarEstadoVisual já cuida de manter isso salvo localmente quando atualiza
 
@@ -658,32 +658,32 @@ function bindInventorySectionEvents() {
 
 /* ---------------- COMBATE (CORRIGIDO: NÃO FOCA SE ESTIVER VAZIO) ---------------- */
 function renderCombat() {
-    const inputAntigo = document.getElementById('filterCombat');
-    const termo = (inputAntigo?.value || '').toLowerCase();
+  const inputAntigo = document.getElementById('filterCombat');
+  const termo = (inputAntigo?.value || '').toLowerCase();
 
-    // 1. Filtra apenas equipados e pelo texto
-    const equipados = state.inventory.filter(i => i.equip && (i.name + (i.description || "")).toLowerCase().includes(termo));
+  // 1. Filtra apenas equipados e pelo texto
+  const equipados = state.inventory.filter(i => i.equip && (i.name + (i.description || "")).toLowerCase().includes(termo));
 
-    // 2. Agrupa
-    const armas = equipados.filter(i => i.type === 'Arma');
-    const defesas = equipados.filter(i => i.type === 'Proteção' || i.type === 'protecao');
-    const outros = equipados.filter(i => i.type !== 'Arma' && i.type !== 'Proteção' && i.type !== 'protecao');
+  // 2. Agrupa
+  const armas = equipados.filter(i => i.type === 'Arma');
+  const defesas = equipados.filter(i => i.type === 'Proteção' || i.type === 'protecao');
+  const outros = equipados.filter(i => i.type !== 'Arma' && i.type !== 'Proteção' && i.type !== 'protecao');
 
-    // 3. Monta HTML
-    let listaHTML = '';
+  // 3. Monta HTML
+  let listaHTML = '';
 
-    // Expande se estiver buscando
-    const forceExpand = termo.length > 0;
+  // Expande se estiver buscando
+  const forceExpand = termo.length > 0;
 
-    if (armas.length > 0) listaHTML += renderItemGroup('Ataques Disponíveis', armas, 'cmb-ataques', forceExpand);
-    if (defesas.length > 0) listaHTML += renderItemGroup('Equipamento Defensivo', defesas, 'cmb-defesa', forceExpand);
-    if (outros.length > 0) listaHTML += renderItemGroup('Acessórios & Outros', outros, 'cmb-outros', forceExpand);
+  if (armas.length > 0) listaHTML += renderItemGroup('Ataques Disponíveis', armas, 'cmb-ataques', forceExpand);
+  if (defesas.length > 0) listaHTML += renderItemGroup('Equipamento Defensivo', defesas, 'cmb-defesa', forceExpand);
+  if (outros.length > 0) listaHTML += renderItemGroup('Acessórios & Outros', outros, 'cmb-outros', forceExpand);
 
-    if (!listaHTML) {
-        listaHTML = `<p class="empty-tip">Nada equipado para combate.</p>`;
-    }
+  if (!listaHTML) {
+    listaHTML = `<p class="empty-tip">Nada equipado para combate.</p>`;
+  }
 
-    const html = `
+  const html = `
         <div class="controls-row">
             <input id="filterCombat" placeholder="Filtrar combate..." value="${escapeHtml(termo)}" />
         </div>
@@ -692,22 +692,22 @@ function renderCombat() {
         </div>
     `;
 
-    conteudoEl.innerHTML = html;
+  conteudoEl.innerHTML = html;
 
-    bindInventoryCardEvents();
-    bindInventorySectionEvents();
+  bindInventoryCardEvents();
+  bindInventorySectionEvents();
 
-    // --- CORREÇÃO DO FOCO AUTOMÁTICO ---
-    const inputFiltro = document.getElementById('filterCombat');
-    if (inputFiltro) {
-        // Só foca se o usuário já estiver digitando algo
-        if (inputFiltro.value.length > 0) {
-            inputFiltro.focus();
-            const len = inputFiltro.value.length;
-            inputFiltro.setSelectionRange(len, len);
-        }
-        inputFiltro.oninput = renderCombat;
+  // --- CORREÇÃO DO FOCO AUTOMÁTICO ---
+  const inputFiltro = document.getElementById('filterCombat');
+  if (inputFiltro) {
+    // Só foca se o usuário já estiver digitando algo
+    if (inputFiltro.value.length > 0) {
+      inputFiltro.focus();
+      const len = inputFiltro.value.length;
+      inputFiltro.setSelectionRange(len, len);
     }
+    inputFiltro.oninput = renderCombat;
+  }
 }
 
 /* ---------------- MODAL UNIFICADO (Item, Arma, Armadura) ---------------- */
@@ -752,18 +752,18 @@ function openItemModal(existingItem = null) {
 
   // --- LÓGICA DE ATRIBUTO PADRÃO INTELIGENTE ---
   let defaultAttackAttr = pre.attackAttribute;
-  
+
   if (!defaultAttackAttr) {
-      // Se não tem nada salvo, adivinha pelo tipo
-      const tipo = (pre.tipoArma || '').toLowerCase();
-      if (tipo.includes('distancia') || tipo.includes('distância')) {
-          defaultAttackAttr = 'Destreza';
-      } else {
-          defaultAttackAttr = 'Força';
-      }
+    // Se não tem nada salvo, adivinha pelo tipo
+    const tipo = (pre.tipoArma || '').toLowerCase();
+    if (tipo.includes('distancia') || tipo.includes('distância')) {
+      defaultAttackAttr = 'Destreza';
+    } else {
+      defaultAttackAttr = 'Força';
+    }
   }
   // ---------------------------------------------
-  
+
   const defaultAttackBonus = pre.attackBonus || '0';
   const ATTR_OPTIONS = ['Força', 'Destreza', 'Constituição', 'Inteligência', 'Sabedoria', 'Carisma', 'Nenhum'];
   const renderAttrOptions = (selected) => ATTR_OPTIONS.map(a => `<option value="${a}" ${a === selected ? 'selected' : ''}>${a}</option>`).join('');
@@ -956,50 +956,50 @@ function openItemModal(existingItem = null) {
   }
 
   function createDamageRow(danoVal = '', typesVal = []) {
-      const row = document.createElement('div');
-      row.className = 'extra-dmg-row';
-      row.style.display = 'grid';
-      row.style.gridTemplateColumns = '1fr 1fr 1fr 1fr';
-      row.style.gap = '12px';
-      row.style.alignItems = 'start';
-      const html = `<div style="grid-column:1/span 2;"><input type="text" class="extra-dmg-input" value="${escapeHtml(danoVal)}" placeholder="Ex: +1d6"/></div><div style="grid-column:3/span 2;position:relative;" class="extra-dmg-select-container"><div class="multi-select-field"><div class="display"><span>${typesVal.length ? typesVal.join(', ') : 'Tipo'}</span> <span style="color:#9c27b0;">▾</span></div><div class="panel" style="display:none;position:absolute;z-index:12000;width:100%;">${TIPOS_DANO.map(c => `<label style="display:block;padding:6px;"><input type="checkbox" value="${c}" ${typesVal.includes(c) ? 'checked' : ''} /> ${c}</label>`).join('')}</div></div><button type="button" class="remove-dmg-row" style="position:absolute;right:-25px;top:5px;background:none;border:none;color:#d88;font-weight:bold;cursor:pointer;">✖</button></div>`;
-      row.innerHTML = html;
-      const field = row.querySelector('.multi-select-field'); const display = field.querySelector('.display'); const panel = field.querySelector('.panel');
-      display.addEventListener('click', (e) => { e.stopPropagation(); const isOpen = panel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); panel.style.display = isOpen ? 'none' : 'block'; });
-      panel.querySelectorAll('input').forEach(chk => { chk.addEventListener('change', () => { const vals = Array.from(panel.querySelectorAll('input:checked')).map(x => x.value); display.querySelector('span').textContent = vals.length ? vals.join(', ') : 'Tipo'; }); });
-      row.querySelector('.remove-dmg-row').addEventListener('click', () => row.remove());
-      return row;
+    const row = document.createElement('div');
+    row.className = 'extra-dmg-row';
+    row.style.display = 'grid';
+    row.style.gridTemplateColumns = '1fr 1fr 1fr 1fr';
+    row.style.gap = '12px';
+    row.style.alignItems = 'start';
+    const html = `<div style="grid-column:1/span 2;"><input type="text" class="extra-dmg-input" value="${escapeHtml(danoVal)}" placeholder="Ex: +1d6"/></div><div style="grid-column:3/span 2;position:relative;" class="extra-dmg-select-container"><div class="multi-select-field"><div class="display"><span>${typesVal.length ? typesVal.join(', ') : 'Tipo'}</span> <span style="color:#9c27b0;">▾</span></div><div class="panel" style="display:none;position:absolute;z-index:12000;width:100%;">${TIPOS_DANO.map(c => `<label style="display:block;padding:6px;"><input type="checkbox" value="${c}" ${typesVal.includes(c) ? 'checked' : ''} /> ${c}</label>`).join('')}</div></div><button type="button" class="remove-dmg-row" style="position:absolute;right:-25px;top:5px;background:none;border:none;color:#d88;font-weight:bold;cursor:pointer;">✖</button></div>`;
+    row.innerHTML = html;
+    const field = row.querySelector('.multi-select-field'); const display = field.querySelector('.display'); const panel = field.querySelector('.panel');
+    display.addEventListener('click', (e) => { e.stopPropagation(); const isOpen = panel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); panel.style.display = isOpen ? 'none' : 'block'; });
+    panel.querySelectorAll('input').forEach(chk => { chk.addEventListener('change', () => { const vals = Array.from(panel.querySelectorAll('input:checked')).map(x => x.value); display.querySelector('span').textContent = vals.length ? vals.join(', ') : 'Tipo'; }); });
+    row.querySelector('.remove-dmg-row').addEventListener('click', () => row.remove());
+    return row;
   }
 
   function bindTabEvents(tab) {
-     modal.querySelectorAll('.pill.single-select').forEach(p => { p.addEventListener('click', () => { p.parentElement.querySelectorAll('.pill').forEach(x => x.classList.remove('active')); p.classList.add('active'); }); });
-     modal.querySelectorAll('.multi-select-field').forEach(field => { if (field.id === 'dmg-field' || field.closest('.extra-dmg-row')) return; let trigger = field.querySelector('.label-dropdown-trigger') || field.querySelector('.display'); const panel = field.querySelector('.panel'); trigger.onclick = (e) => { e.stopPropagation(); const isOpen = panel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); panel.style.display = isOpen ? 'none' : 'block'; }; panel.querySelectorAll('input[type="checkbox"]').forEach(chk => { chk.onchange = () => { const vals = Array.from(panel.querySelectorAll('input:checked')).map(x => x.value); const span = trigger.querySelector('span:first-child') || modal.querySelector('#min-req-label-text'); if (span) span.textContent = vals.length ? vals.join(', ') : (field.id === 'min-req-container' ? '' : 'Selecione...'); }; }); });
-     
-     if (tab === 'Arma') {
-         const empPills = modal.querySelectorAll('#emp-pills .pill');
-         const inputDanoPrincipal = modal.querySelector('#item-damage');
-         const inputDano1Mao = modal.querySelector('#item-damage-1hand');
-         const dmgWrapper = modal.querySelector('#dmg-field-wrapper');
-         const layoutStd = modal.querySelector('#layout-standard');
-         const layoutVer = modal.querySelector('#layout-versatile');
-         const containerStd = modal.querySelector('#dmg-type-container-std');
-         const containerVer = modal.querySelector('#dmg-type-container-ver');
-         const organizarLayoutDano = (isVersatil) => {
-             dmgWrapper.style.display = 'block';
-             if (isVersatil) { layoutStd.style.display = 'none'; layoutVer.style.display = 'contents'; if (containerVer) containerVer.appendChild(dmgWrapper); if (inputDanoPrincipal.value) inputDano1Mao.value = inputDanoPrincipal.value; } 
-             else { layoutStd.style.display = 'contents'; layoutVer.style.display = 'none'; if (containerStd) containerStd.appendChild(dmgWrapper); if (inputDano1Mao.value) inputDanoPrincipal.value = inputDano1Mao.value; }
-         };
-         inputDano1Mao.oninput = () => { inputDanoPrincipal.value = inputDano1Mao.value; };
-         empPills.forEach(p => { p.addEventListener('click', () => { organizarLayoutDano(p.getAttribute('data-val') === 'Versátil'); }); });
-         const empInicial = modal.querySelector('#emp-pills .pill.active')?.getAttribute('data-val');
-         organizarLayoutDano(empInicial === 'Versátil');
-         const dmgField = dmgWrapper.querySelector('.multi-select-field'); const dmgDisplay = dmgField.querySelector('.display'); const dmgPanel = dmgField.querySelector('.panel');
-         dmgDisplay.onclick = (e) => { e.stopPropagation(); const isNowOpen = dmgPanel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); dmgPanel.style.display = isNowOpen ? 'none' : 'block'; };
-         dmgPanel.querySelectorAll('input').forEach(chk => { chk.onchange = () => { const vals = Array.from(dmgPanel.querySelectorAll('input:checked')).map(x => x.value); dmgDisplay.querySelector('span').textContent = vals.length ? vals.join(', ') : 'Selecione...'; }; });
-         const extraDmgContainer = modal.querySelector('#extra-dmg-list'); const btnAddExtra = modal.querySelector('#btn-add-dmg');
-         if (pre.moreDmgList?.length && extraDmgContainer.children.length === 0) { pre.moreDmgList.forEach(item => extraDmgContainer.appendChild(createDamageRow(item.dano, item.types))); }
-         btnAddExtra.onclick = (ev) => { ev.preventDefault(); extraDmgContainer.appendChild(createDamageRow()); };
-     }
+    modal.querySelectorAll('.pill.single-select').forEach(p => { p.addEventListener('click', () => { p.parentElement.querySelectorAll('.pill').forEach(x => x.classList.remove('active')); p.classList.add('active'); }); });
+    modal.querySelectorAll('.multi-select-field').forEach(field => { if (field.id === 'dmg-field' || field.closest('.extra-dmg-row')) return; let trigger = field.querySelector('.label-dropdown-trigger') || field.querySelector('.display'); const panel = field.querySelector('.panel'); trigger.onclick = (e) => { e.stopPropagation(); const isOpen = panel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); panel.style.display = isOpen ? 'none' : 'block'; }; panel.querySelectorAll('input[type="checkbox"]').forEach(chk => { chk.onchange = () => { const vals = Array.from(panel.querySelectorAll('input:checked')).map(x => x.value); const span = trigger.querySelector('span:first-child') || modal.querySelector('#min-req-label-text'); if (span) span.textContent = vals.length ? vals.join(', ') : (field.id === 'min-req-container' ? '' : 'Selecione...'); }; }); });
+
+    if (tab === 'Arma') {
+      const empPills = modal.querySelectorAll('#emp-pills .pill');
+      const inputDanoPrincipal = modal.querySelector('#item-damage');
+      const inputDano1Mao = modal.querySelector('#item-damage-1hand');
+      const dmgWrapper = modal.querySelector('#dmg-field-wrapper');
+      const layoutStd = modal.querySelector('#layout-standard');
+      const layoutVer = modal.querySelector('#layout-versatile');
+      const containerStd = modal.querySelector('#dmg-type-container-std');
+      const containerVer = modal.querySelector('#dmg-type-container-ver');
+      const organizarLayoutDano = (isVersatil) => {
+        dmgWrapper.style.display = 'block';
+        if (isVersatil) { layoutStd.style.display = 'none'; layoutVer.style.display = 'contents'; if (containerVer) containerVer.appendChild(dmgWrapper); if (inputDanoPrincipal.value) inputDano1Mao.value = inputDanoPrincipal.value; }
+        else { layoutStd.style.display = 'contents'; layoutVer.style.display = 'none'; if (containerStd) containerStd.appendChild(dmgWrapper); if (inputDano1Mao.value) inputDanoPrincipal.value = inputDano1Mao.value; }
+      };
+      inputDano1Mao.oninput = () => { inputDanoPrincipal.value = inputDano1Mao.value; };
+      empPills.forEach(p => { p.addEventListener('click', () => { organizarLayoutDano(p.getAttribute('data-val') === 'Versátil'); }); });
+      const empInicial = modal.querySelector('#emp-pills .pill.active')?.getAttribute('data-val');
+      organizarLayoutDano(empInicial === 'Versátil');
+      const dmgField = dmgWrapper.querySelector('.multi-select-field'); const dmgDisplay = dmgField.querySelector('.display'); const dmgPanel = dmgField.querySelector('.panel');
+      dmgDisplay.onclick = (e) => { e.stopPropagation(); const isNowOpen = dmgPanel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); dmgPanel.style.display = isNowOpen ? 'none' : 'block'; };
+      dmgPanel.querySelectorAll('input').forEach(chk => { chk.onchange = () => { const vals = Array.from(dmgPanel.querySelectorAll('input:checked')).map(x => x.value); dmgDisplay.querySelector('span').textContent = vals.length ? vals.join(', ') : 'Selecione...'; }; });
+      const extraDmgContainer = modal.querySelector('#extra-dmg-list'); const btnAddExtra = modal.querySelector('#btn-add-dmg');
+      if (pre.moreDmgList?.length && extraDmgContainer.children.length === 0) { pre.moreDmgList.forEach(item => extraDmgContainer.appendChild(createDamageRow(item.dano, item.types))); }
+      btnAddExtra.onclick = (ev) => { ev.preventDefault(); extraDmgContainer.appendChild(createDamageRow()); };
+    }
   }
 
   renderBody(currentTab);
@@ -1026,45 +1026,45 @@ function openItemModal(existingItem = null) {
     };
 
     if (currentTab === 'Item') {
-       newItem.type = 'Geral'; newItem.isEquipable = true;
-       newItem.acertoBonus = modal.querySelector('#item-acerto').value;
-       newItem.damageBonus = modal.querySelector('#item-danobonus').value;
-       newItem.damageType = modal.querySelector('#item-dmgtype').value;
-       newItem.defenseBonus = modal.querySelector('#item-defense').value;
-       newItem.defenseType = modal.querySelector('#item-defensetype').value;
-       const disPanel = modal.querySelector('#disadv-field-item .panel'); newItem.disadvantageSkill = disPanel ? Array.from(disPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
-       const advPanel = modal.querySelector('#adv-field-item .panel'); newItem.advantageSkill = advPanel ? Array.from(advPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
-       newItem.attackAttribute = modal.querySelector('#item-attack-attr').value;
-       newItem.attackBonus = modal.querySelector('#item-attack-bonus').value;
+      newItem.type = 'Geral'; newItem.isEquipable = true;
+      newItem.acertoBonus = modal.querySelector('#item-acerto').value;
+      newItem.damageBonus = modal.querySelector('#item-danobonus').value;
+      newItem.damageType = modal.querySelector('#item-dmgtype').value;
+      newItem.defenseBonus = modal.querySelector('#item-defense').value;
+      newItem.defenseType = modal.querySelector('#item-defensetype').value;
+      const disPanel = modal.querySelector('#disadv-field-item .panel'); newItem.disadvantageSkill = disPanel ? Array.from(disPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
+      const advPanel = modal.querySelector('#adv-field-item .panel'); newItem.advantageSkill = advPanel ? Array.from(advPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
+      newItem.attackAttribute = modal.querySelector('#item-attack-attr').value;
+      newItem.attackBonus = modal.querySelector('#item-attack-bonus').value;
     }
     else if (currentTab === 'Arma') {
-       newItem.type = 'Arma'; newItem.isEquipable = true;
-       const profEl = modal.querySelector('#prof-pills .active'); newItem.proficiency = profEl ? profEl.getAttribute('data-val') : '';
-       const tipoEl = modal.querySelector('#tipo-pills .active'); newItem.tipoArma = tipoEl ? tipoEl.getAttribute('data-val') : '';
-       const empEl = modal.querySelector('#emp-pills .active'); newItem.empunhadura = empEl ? empEl.getAttribute('data-val') : '';
-       newItem.crit = modal.querySelector('#item-crit').value; 
-       newItem.multiplicador = modal.querySelector('#item-mult').value; 
-       newItem.alcance = modal.querySelector('#item-range').value;
-       const attuneEl = modal.querySelector('#item-attune-weapon'); newItem.attunement = attuneEl ? attuneEl.value : 'Não';
-       newItem.damage = modal.querySelector('#item-damage').value;
-       newItem.damage2Hands = modal.querySelector('#item-damage-2hands') ? modal.querySelector('#item-damage-2hands').value : '';
-       newItem.useTwoHands = existingItem ? !!existingItem.useTwoHands : false;
-       const carPanel = modal.querySelector('#car-panel'); if (carPanel) newItem.caracteristicas = Array.from(carPanel.querySelectorAll('input:checked')).map(x => x.value);
-       const dmgPanel = modal.querySelector('#dmg-panel'); if (dmgPanel) newItem.damageTypes = Array.from(dmgPanel.querySelectorAll('input:checked')).map(x => x.value);
-       const extraRows = modal.querySelectorAll('.extra-dmg-row'); newItem.moreDmgList = []; extraRows.forEach(row => { const d = row.querySelector('.extra-dmg-input').value; const p = row.querySelector('.panel'); const t = Array.from(p.querySelectorAll('input:checked')).map(x => x.value); if (d || t.length) newItem.moreDmgList.push({ dano: d, types: t }); });
+      newItem.type = 'Arma'; newItem.isEquipable = true;
+      const profEl = modal.querySelector('#prof-pills .active'); newItem.proficiency = profEl ? profEl.getAttribute('data-val') : '';
+      const tipoEl = modal.querySelector('#tipo-pills .active'); newItem.tipoArma = tipoEl ? tipoEl.getAttribute('data-val') : '';
+      const empEl = modal.querySelector('#emp-pills .active'); newItem.empunhadura = empEl ? empEl.getAttribute('data-val') : '';
+      newItem.crit = modal.querySelector('#item-crit').value;
+      newItem.multiplicador = modal.querySelector('#item-mult').value;
+      newItem.alcance = modal.querySelector('#item-range').value;
+      const attuneEl = modal.querySelector('#item-attune-weapon'); newItem.attunement = attuneEl ? attuneEl.value : 'Não';
+      newItem.damage = modal.querySelector('#item-damage').value;
+      newItem.damage2Hands = modal.querySelector('#item-damage-2hands') ? modal.querySelector('#item-damage-2hands').value : '';
+      newItem.useTwoHands = existingItem ? !!existingItem.useTwoHands : false;
+      const carPanel = modal.querySelector('#car-panel'); if (carPanel) newItem.caracteristicas = Array.from(carPanel.querySelectorAll('input:checked')).map(x => x.value);
+      const dmgPanel = modal.querySelector('#dmg-panel'); if (dmgPanel) newItem.damageTypes = Array.from(dmgPanel.querySelectorAll('input:checked')).map(x => x.value);
+      const extraRows = modal.querySelectorAll('.extra-dmg-row'); newItem.moreDmgList = []; extraRows.forEach(row => { const d = row.querySelector('.extra-dmg-input').value; const p = row.querySelector('.panel'); const t = Array.from(p.querySelectorAll('input:checked')).map(x => x.value); if (d || t.length) newItem.moreDmgList.push({ dano: d, types: t }); });
 
-       newItem.attackAttribute = modal.querySelector('#item-attack-attr').value;
-       newItem.attackBonus = modal.querySelector('#item-attack-bonus').value;
+      newItem.attackAttribute = modal.querySelector('#item-attack-attr').value;
+      newItem.attackBonus = modal.querySelector('#item-attack-bonus').value;
     }
     else if (currentTab === 'Armadura') {
-       newItem.type = 'Proteção'; newItem.isEquipable = true;
-       const profEl = modal.querySelector('#arm-prof-pills .active'); newItem.proficiency = profEl ? profEl.getAttribute('data-val') : '';
-       const tipoEl = modal.querySelector('#arm-tipo-pills .active'); newItem.tipoItem = tipoEl ? tipoEl.getAttribute('data-val') : 'Armadura';
-       newItem.minStrength = modal.querySelector('#item-minstr').value; newItem.attunement = modal.querySelector('#item-attune').value;
-       const minReqPanel = modal.querySelector('#min-req-panel'); newItem.minReqAttrs = Array.from(minReqPanel.querySelectorAll('input:checked')).map(x => x.value);
-       const disPanel = modal.querySelector('#disadv-field .panel'); newItem.disadvantageSkill = disPanel ? Array.from(disPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
-       const advPanel = modal.querySelector('#adv-field .panel'); newItem.advantageSkill = advPanel ? Array.from(advPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
-       newItem.defense = modal.querySelector('#item-defense').value;
+      newItem.type = 'Proteção'; newItem.isEquipable = true;
+      const profEl = modal.querySelector('#arm-prof-pills .active'); newItem.proficiency = profEl ? profEl.getAttribute('data-val') : '';
+      const tipoEl = modal.querySelector('#arm-tipo-pills .active'); newItem.tipoItem = tipoEl ? tipoEl.getAttribute('data-val') : 'Armadura';
+      newItem.minStrength = modal.querySelector('#item-minstr').value; newItem.attunement = modal.querySelector('#item-attune').value;
+      const minReqPanel = modal.querySelector('#min-req-panel'); newItem.minReqAttrs = Array.from(minReqPanel.querySelectorAll('input:checked')).map(x => x.value);
+      const disPanel = modal.querySelector('#disadv-field .panel'); newItem.disadvantageSkill = disPanel ? Array.from(disPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
+      const advPanel = modal.querySelector('#adv-field .panel'); newItem.advantageSkill = advPanel ? Array.from(advPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
+      newItem.defense = modal.querySelector('#item-defense').value;
     }
 
     if (existingItem) {
@@ -1094,43 +1094,43 @@ const LISTA_CLASSES_RPG = [
 
 /* ---------------- HABILIDADES (CORRIGIDO: NÃO FOCA SE ESTIVER VAZIO) ---------------- */
 function renderAbilities() {
-    const inputAntigo = document.getElementById('filterHabs');
-    const termoBusca = (inputAntigo?.value || '').toLowerCase();
+  const inputAntigo = document.getElementById('filterHabs');
+  const termoBusca = (inputAntigo?.value || '').toLowerCase();
 
-    // 1. Filtra
-    let habilidadesFiltradas = state.abilities.filter(a => {
-        const text = (a.title + (a.description || "")).toLowerCase();
-        return text.includes(termoBusca);
-    });
+  // 1. Filtra
+  let habilidadesFiltradas = state.abilities.filter(a => {
+    const text = (a.title + (a.description || "")).toLowerCase();
+    return text.includes(termoBusca);
+  });
 
-    // 2. Agrupamento
-    const grupos = { classes: {}, talentos: [], origem: [], outros: [] };
+  // 2. Agrupamento
+  const grupos = { classes: {}, talentos: [], origem: [], outros: [] };
 
-    habilidadesFiltradas.forEach(hab => {
-        const cat = (hab.category || "").toLowerCase().trim();
-        const classeOriginal = (hab.class || "").trim();
-        const classeLower = classeOriginal.toLowerCase();
+  habilidadesFiltradas.forEach(hab => {
+    const cat = (hab.category || "").toLowerCase().trim();
+    const classeOriginal = (hab.class || "").trim();
+    const classeLower = classeOriginal.toLowerCase();
 
-        if (cat === 'classe' || LISTA_CLASSES_RPG.includes(classeOriginal)) {
-            const nomeGrupo = classeOriginal || "Classe Indefinida";
-            if (!grupos.classes[nomeGrupo]) grupos.classes[nomeGrupo] = [];
-            grupos.classes[nomeGrupo].push(hab);
-        } else if (cat.includes('talento') || classeLower === 'talentos') {
-            grupos.talentos.push(hab);
-        } else if (cat.includes('antecedente') || cat.includes('raça')) {
-            grupos.origem.push(hab);
-        } else {
-            grupos.outros.push(hab);
-        }
-    });
+    if (cat === 'classe' || LISTA_CLASSES_RPG.includes(classeOriginal)) {
+      const nomeGrupo = classeOriginal || "Classe Indefinida";
+      if (!grupos.classes[nomeGrupo]) grupos.classes[nomeGrupo] = [];
+      grupos.classes[nomeGrupo].push(hab);
+    } else if (cat.includes('talento') || classeLower === 'talentos') {
+      grupos.talentos.push(hab);
+    } else if (cat.includes('antecedente') || cat.includes('raça')) {
+      grupos.origem.push(hab);
+    } else {
+      grupos.outros.push(hab);
+    }
+  });
 
-    const sortActiveFirst = (a, b) => {
-        if (a.active && !b.active) return -1;
-        if (!a.active && b.active) return 1;
-        return a.title.localeCompare(b.title);
-    };
+  const sortActiveFirst = (a, b) => {
+    if (a.active && !b.active) return -1;
+    if (!a.active && b.active) return 1;
+    return a.title.localeCompare(b.title);
+  };
 
-    let htmlFinal = `
+  let htmlFinal = `
         <div class="abilities-controls controls-row">
             <input id="filterHabs" placeholder="Filtrar habilidades..." value="${escapeHtml(termoBusca)}" />
             <div class="right-controls">
@@ -1140,43 +1140,43 @@ function renderAbilities() {
         <div class="abilities-list">
     `;
 
-    // Se tem busca, força expandir. Se não, força fechar.
-    const forceExpand = termoBusca.length > 0;
+  // Se tem busca, força expandir. Se não, força fechar.
+  const forceExpand = termoBusca.length > 0;
 
-    let temConteudo = false;
-    Object.keys(grupos.classes).sort().forEach(nomeClasse => {
-        const lista = grupos.classes[nomeClasse].sort(sortActiveFirst);
-        if (lista.length > 0) {
-            htmlFinal += renderAbilitySection(`Habilidades de ${nomeClasse}`, lista, `class-${nomeClasse}`, forceExpand);
-            temConteudo = true;
-        }
-    });
-
-    if (grupos.talentos.length > 0) { grupos.talentos.sort(sortActiveFirst); htmlFinal += renderAbilitySection("Talentos", grupos.talentos, "talentos", forceExpand); temConteudo = true; }
-    if (grupos.origem.length > 0) { grupos.origem.sort(sortActiveFirst); htmlFinal += renderAbilitySection("Raça & Antecedente", grupos.origem, "origem", forceExpand); temConteudo = true; }
-    if (grupos.outros.length > 0) { grupos.outros.sort(sortActiveFirst); htmlFinal += renderAbilitySection("Outras Habilidades", grupos.outros, "outros", forceExpand); temConteudo = true; }
-
-    if (!temConteudo) htmlFinal += `<div class="empty-tip">Nenhuma habilidade encontrada.</div>`;
-    htmlFinal += `</div>`;
-
-    conteudoEl.innerHTML = htmlFinal;
-
-    document.getElementById('botOpenCatalogHab').addEventListener('click', () => openAbilityCatalogOverlay());
-
-    bindAbilityEvents();
-    bindAbilitySectionEvents(); 
-
-    // --- CORREÇÃO DO FOCO AUTOMÁTICO ---
-    const novoInput = document.getElementById('filterHabs');
-    if (novoInput) {
-        // Só foca se o usuário já estiver digitando algo
-        if (novoInput.value.length > 0) {
-            novoInput.focus();
-            const len = novoInput.value.length;
-            novoInput.setSelectionRange(len, len);
-        }
-        novoInput.oninput = renderAbilities;
+  let temConteudo = false;
+  Object.keys(grupos.classes).sort().forEach(nomeClasse => {
+    const lista = grupos.classes[nomeClasse].sort(sortActiveFirst);
+    if (lista.length > 0) {
+      htmlFinal += renderAbilitySection(`Habilidades de ${nomeClasse}`, lista, `class-${nomeClasse}`, forceExpand);
+      temConteudo = true;
     }
+  });
+
+  if (grupos.talentos.length > 0) { grupos.talentos.sort(sortActiveFirst); htmlFinal += renderAbilitySection("Talentos", grupos.talentos, "talentos", forceExpand); temConteudo = true; }
+  if (grupos.origem.length > 0) { grupos.origem.sort(sortActiveFirst); htmlFinal += renderAbilitySection("Raça & Antecedente", grupos.origem, "origem", forceExpand); temConteudo = true; }
+  if (grupos.outros.length > 0) { grupos.outros.sort(sortActiveFirst); htmlFinal += renderAbilitySection("Outras Habilidades", grupos.outros, "outros", forceExpand); temConteudo = true; }
+
+  if (!temConteudo) htmlFinal += `<div class="empty-tip">Nenhuma habilidade encontrada.</div>`;
+  htmlFinal += `</div>`;
+
+  conteudoEl.innerHTML = htmlFinal;
+
+  document.getElementById('botOpenCatalogHab').addEventListener('click', () => openAbilityCatalogOverlay());
+
+  bindAbilityEvents();
+  bindAbilitySectionEvents();
+
+  // --- CORREÇÃO DO FOCO AUTOMÁTICO ---
+  const novoInput = document.getElementById('filterHabs');
+  if (novoInput) {
+    // Só foca se o usuário já estiver digitando algo
+    if (novoInput.value.length > 0) {
+      novoInput.focus();
+      const len = novoInput.value.length;
+      novoInput.setSelectionRange(len, len);
+    }
+    novoInput.oninput = renderAbilities;
+  }
 }
 
 function bindAbilitySectionEvents() {
@@ -1187,7 +1187,7 @@ function bindAbilitySectionEvents() {
       const key = header.getAttribute('data-key');
       const current = state.collapsedSections[key] !== undefined ? state.collapsedSections[key] : true;
       state.collapsedSections[key] = !current;
-      
+
       // REMOVIDO: saveStateToServer(); <-- NÃO SALVAR NO SERVER
 
       // Atualiza DOM direto
@@ -1196,11 +1196,11 @@ function bindAbilitySectionEvents() {
 
       if (contentDiv) {
         if (state.collapsedSections[key]) {
-             contentDiv.style.display = 'none';
-             if (arrowSpan) arrowSpan.textContent = '▸';
+          contentDiv.style.display = 'none';
+          if (arrowSpan) arrowSpan.textContent = '▸';
         } else {
-             contentDiv.style.display = 'block';
-             if (arrowSpan) arrowSpan.textContent = '▾';
+          contentDiv.style.display = 'block';
+          if (arrowSpan) arrowSpan.textContent = '▾';
         }
       }
     });
@@ -1286,47 +1286,47 @@ function bindAbilityEvents() {
   });
 
   // 2. Expandir Card
-document.querySelectorAll('.hab-card .left').forEach(leftDiv => {
-  leftDiv.onclick = () => {
-    const id = Number(leftDiv.getAttribute('data-id'));
-    const hab = state.abilities.find(h => h.id === id);
-    const card = leftDiv.closest('.hab-card');
-    if (hab) {
-      hab.expanded = !hab.expanded;
-      const body = card.querySelector('.card-body');
-      const caret = card.querySelector('.caret');
-      
-      body.style.display = hab.expanded ? 'block' : 'none';
-      caret.textContent = hab.expanded ? '▾' : '▸';
-      card.classList.toggle('expanded', hab.expanded);
-      
-      // saveStateToServer(); <--- REMOVA ESTA LINHA
-    }
-  };
-});
+  document.querySelectorAll('.hab-card .left').forEach(leftDiv => {
+    leftDiv.onclick = () => {
+      const id = Number(leftDiv.getAttribute('data-id'));
+      const hab = state.abilities.find(h => h.id === id);
+      const card = leftDiv.closest('.hab-card');
+      if (hab) {
+        hab.expanded = !hab.expanded;
+        const body = card.querySelector('.card-body');
+        const caret = card.querySelector('.caret');
+
+        body.style.display = hab.expanded ? 'block' : 'none';
+        caret.textContent = hab.expanded ? '▾' : '▸';
+        card.classList.toggle('expanded', hab.expanded);
+
+        // saveStateToServer(); <--- REMOVA ESTA LINHA
+      }
+    };
+  });
 
   // 3. REMOVER (CONFIRMAÇÃO REMOVIDA)
   document.querySelectorAll('.remover-hab').forEach(btn => {
-      btn.onclick = (e) => {
-          e.preventDefault();
-          const id = Number(btn.getAttribute('data-id'));
-          
-          // REMOVIDO O IF(CONFIRM(...))
-          state.abilities = state.abilities.filter(h => h.id !== id);
-          renderActiveTab();
-          saveStateToServer();
-          window.dispatchEvent(new CustomEvent('sheet-updated'));
-      }
+    btn.onclick = (e) => {
+      e.preventDefault();
+      const id = Number(btn.getAttribute('data-id'));
+
+      // REMOVIDO O IF(CONFIRM(...))
+      state.abilities = state.abilities.filter(h => h.id !== id);
+      renderActiveTab();
+      saveStateToServer();
+      window.dispatchEvent(new CustomEvent('sheet-updated'));
+    }
   });
 
   // 4. EDITAR
   document.querySelectorAll('.editar-hab').forEach(btn => {
-      btn.onclick = (e) => {
-          e.preventDefault();
-          const id = Number(btn.getAttribute('data-id'));
-          const hab = state.abilities.find(h => h.id === id);
-          if (hab) openNewAbilityModal(hab);
-      }
+    btn.onclick = (e) => {
+      e.preventDefault();
+      const id = Number(btn.getAttribute('data-id'));
+      const hab = state.abilities.find(h => h.id === id);
+      if (hab) openNewAbilityModal(hab);
+    }
   });
 }
 
@@ -1455,15 +1455,44 @@ function openAbilityCatalogOverlay() {
   renderCatalogList();
 }
 
-/* ---------------- MAGIAS (LAYOUT CORRIGIDO - ALINHADO À ESQUERDA + NEGRITO) ---------------- */
+/* ---------------- FORMATAR CARD DE MAGIA (COM UPCAST) ---------------- */
 function formatMySpellCard(s) {
-  // Ajuste visual da Escola (Pill)
+  // ... (código anterior de schoolPill, classDisplay mantém igual) ...
   const schoolPill = `<div class="pill" style="margin:0;">${s.school || '—'}${s.levelNumber !== undefined ? ` <span class="pill-level">${s.levelNumber}</span>` : ''}</div>`;
-
-  // Ajuste visual da Classe
   const classDisplay = `<div class="class-box-display" style="margin:0; min-height:0; padding:6px 10px;">${s.spellClass || '—'}</div>`;
-
   const caretSymbol = s.expanded ? '▾' : '▸';
+
+  // --- LÓGICA DE UPCAST ---
+  let levelOptions = '';
+  const baseLevel = s.levelNumber || 0;
+
+  if (baseLevel > 0) {
+    for (let i = baseLevel; i <= 9; i++) {
+      const label = i === baseLevel ? `${i}º (Base)` : `${i}º Círculo`;
+      levelOptions += `<option value="${i}">${label}</option>`;
+    }
+  }
+
+  // Se tiver scaling, salvamos no dataset para usar no JS
+  const scalingAttr = s.scaling ? `data-scaling="${s.scaling}"` : '';
+  const baseDmgAttr = `data-base-dmg="${s.damage || ''}"`;
+  const baseLvlAttr = `data-base-lvl="${baseLevel}"`;
+
+  const castControlsHTML = baseLevel > 0 ? `
+      <div class="cast-controls">
+          <span class="cast-label">Círculo:</span>
+          <select class="slot-select spell-slot-selector" 
+                  data-id="${s.id}" 
+                  ${scalingAttr} ${baseDmgAttr} ${baseLvlAttr}>
+              ${levelOptions}
+          </select>
+          <button class="btn-cast btn-cast-action" data-id="${s.id}" data-name="${escapeHtml(s.name)}">GASTAR</button>
+      </div>
+  ` : `<div class="cast-controls" style="justify-content:center; color:#777; font-size:12px;">Truques (Evoluem por Nível de Personagem)</div>`;
+
+  // --- ONDE O DANO APARECE (Adicionamos uma classe alvo 'dynamic-damage') ---
+  // Note o id ou classe específica para podermos mudar o texto via JS
+  const damageDisplay = `<span class="dynamic-damage-text">${s.damage || '-'}</span>`;
 
   return `
       <div class="card spell-card ${s.expanded ? 'expanded' : ''}" data-id="${s.id}">
@@ -1475,49 +1504,42 @@ function formatMySpellCard(s) {
             </div>
           </div>
           <div class="spell-right">
-            <div class="card-meta spell-damage">${s.damage || '-'} <img class="dice-img" src="img/imagem-no-site/dado.png" alt="dado" /></div>
+            <div class="card-meta spell-damage">
+                ${damageDisplay} 
+                <img class="dice-img" src="img/imagem-no-site/dado.png" alt="dado" />
+            </div>
             <label class="check-ativar"><input class="spell-activate" type="checkbox" data-id="${s.id}" ${s.active ? 'checked' : ''}/><span class="square-check"></span></label>
           </div>
         </div>
         
         <div class="card-body" style="${s.expanded ? '' : 'display:none;'}">
-          
-          <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-start; width:100%;">
-            
-            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-                ${schoolPill}
-                ${classDisplay}
-            </div>
-
-            <div style="display:flex; gap:10px; align-items:center;">
-                <span class="comp-title" style="margin:0; font-size:13px; color:#ccc; font-weight:800;">Componentes:</span>
-                <div class="comp-letters">
-                  <span class="comp-letter ${s.components && s.components.V ? 'on' : ''}">V</span>
-                  <span class="comp-letter ${s.components && s.components.S ? 'on' : ''}">S</span>
-                  <span class="comp-letter ${s.components && s.components.M ? 'on' : ''}">M</span>
+           <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-start; width:100%;">
+                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                    ${schoolPill} ${classDisplay}
                 </div>
-            </div>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <span class="comp-title" style="margin:0; font-size:13px; color:#ccc; font-weight:800;">Componentes:</span>
+                    <div class="comp-letters">
+                      <span class="comp-letter ${s.components && s.components.V ? 'on' : ''}">V</span>
+                      <span class="comp-letter ${s.components && s.components.S ? 'on' : ''}">S</span>
+                      <span class="comp-letter ${s.components && s.components.M ? 'on' : ''}">M</span>
+                    </div>
+                </div>
+           </div>
 
-            ${s.material ? `<div class="comp-material" style="text-align:left; color:#aaa; font-size:13px;"><strong style="color:#ccc; font-weight:800;">Material:</strong> ${s.material}</div>` : ''}
+           <div style="margin-top:10px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:10px;">
+                ${s.description}
+           </div>
 
-          </div>
+           ${castControlsHTML}
 
-          <div class="spell-attrs" style="margin-top:12px;">
-            <div><span class="purple">Execução:</span> ${s.attrs.execucao}</div>
-            <div><span class="purple">Alcance:</span> ${s.attrs.alcance}</div>
-            <div><span class="purple">Área:</span> ${s.attrs.area}</div>
-            <div><span class="purple">Alvo:</span> ${s.attrs.alvo}</div>
-            <div><span class="purple">Duração:</span> ${s.attrs.duracao}</div>
-            <div><span class="purple">Resistência:</span> ${s.attrs.resistencia}</div>
-          </div>
-          <p style="margin-top:10px;">${s.description}</p>
-          <div style="margin-top:8px;">
-            <a href="#" class="remover-spell" data-id="${s.id}">Remover</a>
-            <a href="#" class="editar-spell" data-id="${s.id}" style="float:right;color:#2e7d32">Editar</a>
-          </div>
+           <div style="margin-top:8px;">
+                <a href="#" class="remover-spell" data-id="${s.id}">Remover</a>
+                <a href="#" class="editar-spell" data-id="${s.id}" style="float:right;color:#2e7d32">Editar</a>
+           </div>
         </div>
       </div>
-    `;
+  `;
 }
 
 /* ---------------- PARTE 1: RENDERIZAR LISTA DE MAGIAS ---------------- */
@@ -1591,7 +1613,7 @@ window.addEventListener('sheet-updated', () => {
   // 3. ATUALIZAÇÃO AUTOMÁTICA DA DIREITA
   // --- CORREÇÃO AQUI: Adicionei 'Inventário' e 'Descrição' na lista ---
   if (['Magias', 'Mag. Preparadas', 'Habilidades', 'Combate', 'Inventário', 'Descrição'].includes(state.activeTab)) {
-    
+
     // Salva estado de scroll e foco
     const scrollContainer = document.querySelector('.lado-direito .conteudo') || document.querySelector('.lado-direito');
     const savedScroll = scrollContainer ? scrollContainer.scrollTop : 0;
@@ -1758,9 +1780,9 @@ function bindSlotEvents() {
 
       state.isSlotsCollapsed = !state.isSlotsCollapsed;
       saveStateToServer();
-      
+
       // ATUALIZADO: Renderiza a aba ativa atual, não apenas renderSpells()
-      renderActiveTab(); 
+      renderActiveTab();
     });
   }
 
@@ -1783,7 +1805,7 @@ function bindSlotEvents() {
         state.spellSlots[key].status = [];
       }
       saveStateToServer();
-      
+
       // ATUALIZADO: Renderiza a aba ativa atual
       renderActiveTab();
     };
@@ -1933,7 +1955,7 @@ window.changeResource = (key, delta, max) => {
 
   state.spellSlots[key].used = newUsed;
   saveStateToServer();
-  
+
   // ATUALIZADO: Renderiza a aba atual
   renderActiveTab();
 };
@@ -2027,78 +2049,198 @@ function openSlotConfigModal() {
     checkScrollLock();
   };
 }
+function calculateNewDamage(baseDamage, scalingDamage, baseLevel, targetLevel) {
+  if (!scalingDamage || targetLevel <= baseLevel) return baseDamage;
 
-// --- FUNÇÃO AUXILIAR PARA RELIGAR OS EVENTOS DE MAGIAS (SEPARADA PARA ORGANIZAÇÃO) ---
-function bindSpellEvents() {
-  // 1. Re-conectar botões do topo
-  const botAdd = document.getElementById('botAddSpell');
-  const btnDT = document.getElementById('btnOpenDTConfig');
+  // Regex para separar "5" de "d8" ou "2" de "d6 + 3"
+  // Aceita formatos: "5d8", "1d6+2", "10"
+  const regex = /^(\d+)d(\d+)(.*)$/i;
 
-  if (botAdd) botAdd.addEventListener('click', () => openSpellCatalogOverlay());
-  if (btnDT) btnDT.addEventListener('click', openDTConfigModal);
+  const baseMatch = baseDamage.match(regex);
+  const scaleMatch = scalingDamage.match(regex);
 
-  // 2. Filtro de busca
-  const filtro = document.getElementById('filterMagias');
-  if (filtro) filtro.addEventListener('input', (e) => {
-    const q = e.target.value.toLowerCase();
-    document.querySelectorAll('.spell-card').forEach(card => {
-      const title = card.querySelector('.spell-title').textContent.toLowerCase();
-      card.style.display = title.includes(q) ? '' : 'none';
-    });
-  });
+  // Se não conseguir ler os dados (ex: dano é texto puro), retorna o original
+  if (!baseMatch || !scaleMatch) return baseDamage;
 
-  // 3. Listeners dos Cards
-  document.querySelectorAll('.spell-card').forEach(card => {
-    const id = Number(card.getAttribute('data-id'));
-    const header = card.querySelector('.card-header');
+  const baseQtd = parseInt(baseMatch[1]); // Ex: 5
+  const dieType = baseMatch[2];           // Ex: 8 (d8)
+  const extraStr = baseMatch[3] || "";    // Ex: +3 (se houver)
 
-    // Expandir
-    // A. Expandir
-header.addEventListener('click', (ev) => {
-  if (ev.target.closest('.spell-right') || ev.target.closest('.check-ativar')) return;
-  const s = state.spells.find(x => x.id === id);
-  if (s) {
-    s.expanded = !s.expanded;
-    renderSpells(); 
-    // saveStateToServer(); <--- REMOVA ESTA LINHA
-  }
-});
+  const scaleQtd = parseInt(scaleMatch[1]); // Ex: 2 (de 2d8)
+  // Nota: Assumimos que o tipo do dado de scaling é igual ao base geralmente, 
+  // ou apenas somamos a quantidade se os dados forem iguais.
 
-    // Preparar
-    const ch = card.querySelector('.spell-activate');
-    if (ch) {
-      ch.addEventListener('change', (ev) => {
-        const s = state.spells.find(x => x.id === id);
-        if (s) {
-          s.active = ev.target.checked;
-          saveStateToServer();
-        }
-      });
-      ch.addEventListener('click', ev => ev.stopPropagation());
-    }
-  });
+  // Diferença de níveis
+  const levelsAdded = targetLevel - baseLevel;
 
-  // Remover
-  document.querySelectorAll('.remover-spell').forEach(a => {
-    a.addEventListener('click', (ev) => {
-      ev.preventDefault();
-      const id = Number(a.getAttribute('data-id'));
-      state.spells = state.spells.filter(s => s.id !== id);
-      renderSpells();
-      saveStateToServer();
-    });
-  });
+  // Novo total de dados
+  const newQtd = baseQtd + (scaleQtd * levelsAdded);
 
-  // Editar
-  document.querySelectorAll('.editar-spell').forEach(a => {
-    a.addEventListener('click', (ev) => {
-      ev.preventDefault();
-      const id = Number(a.getAttribute('data-id'));
-      const s = state.spells.find(x => x.id === id);
-      if (s) openSpellModal(s);
-    });
-  });
+  return `${newQtd}d${dieType}${extraStr}`;
 }
+/* ---------------- EVENTOS DAS MAGIAS (COM UPCAST) ---------------- */
+function bindSpellEvents() {
+    // 1. Re-conectar botões do topo (Adicionar / Configurar DT)
+    const botAdd = document.getElementById('botAddSpell');
+    const btnDT = document.getElementById('btnOpenDTConfig');
+
+    if (botAdd) botAdd.addEventListener('click', () => openSpellCatalogOverlay());
+    if (btnDT) btnDT.addEventListener('click', openDTConfigModal);
+
+    // 2. Filtro de busca
+    const filtro = document.getElementById('filterMagias');
+    if (filtro) filtro.addEventListener('input', (e) => {
+        const q = e.target.value.toLowerCase();
+        document.querySelectorAll('.spell-card').forEach(card => {
+            const title = card.querySelector('.spell-title').textContent.toLowerCase();
+            card.style.display = title.includes(q) ? '' : 'none';
+        });
+    });
+
+    // 3. EVENTO DE MUDANÇA NO DROPDOWN (UPCAST VISUAL)
+    // Isso faz o texto roxo mudar de "5d8" para "7d8" na hora
+    document.querySelectorAll('.spell-slot-selector').forEach(sel => {
+        sel.addEventListener('change', (ev) => {
+            ev.stopPropagation(); // Evita fechar o card
+            
+            const targetLvl = parseInt(ev.target.value);
+            const scaling = ev.target.dataset.scaling;
+            const baseDmg = ev.target.dataset.baseDmg;
+            const baseLvl = parseInt(ev.target.dataset.baseLvl);
+            
+            // Acha o elemento de texto de dano neste card específico
+            const card = ev.target.closest('.spell-card');
+            const damageTextEl = card.querySelector('.dynamic-damage-text');
+            
+            if (damageTextEl && scaling && baseDmg) {
+                // Calcula o novo dano usando a função auxiliar
+                const newDmg = calculateNewDamage(baseDmg, scaling, baseLvl, targetLvl);
+                
+                // Atualiza o texto visualmente
+                damageTextEl.textContent = newDmg;
+                
+                // Efeito visual (piscar cor rosa) para mostrar que mudou
+                damageTextEl.style.color = '#e040fb';
+                setTimeout(() => damageTextEl.style.color = '#9c27b0', 500);
+            } else if (damageTextEl) {
+                // Se não tiver scaling, mantém o base
+                damageTextEl.textContent = baseDmg;
+            }
+        });
+    });
+
+    // 4. EVENTO DO BOTÃO "GASTAR" (CONSUMIR SLOT)
+    document.querySelectorAll('.btn-cast-action').forEach(btn => {
+        btn.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+
+            // Pega o select vizinho para saber qual nível foi escolhido
+            const select = btn.parentElement.querySelector('.slot-select');
+            const levelToCast = select.value; // ex: "3"
+            const spellName = btn.dataset.name;
+            
+            // Verifica se o slot existe na estrutura de dados
+            if (!state.spellSlots[levelToCast]) {
+                alert(`Erro: Slot de nível ${levelToCast} não existe ou não configurado.`);
+                return;
+            }
+
+            const slotData = state.spellSlots[levelToCast];
+            
+            // Inicializa array se não existir
+            if (!Array.isArray(slotData.status)) slotData.status = [];
+            
+            // Garante que o array tem o tamanho certo (preenche com false se precisar)
+            const max = parseInt(slotData.max) || 0;
+            while (slotData.status.length < max) slotData.status.push(false);
+
+            // Procura o primeiro slot NÃO usado (false)
+            const firstAvailableIndex = slotData.status.findIndex(used => used === false);
+
+            if (firstAvailableIndex === -1) {
+                // Se não achou nenhum false, estão todos gastos
+                if (typeof showCombatResults === 'function') {
+                    showCombatResults("SEM RECURSO", { text: "Falha", detail: `Sem slots de ${levelToCast}º`, isCrit: false, isFumble: true }, null);
+                } else {
+                    alert(`Sem espaços de ${levelToCast}º Círculo disponíveis!`);
+                }
+                return;
+            }
+
+            // CONSOME O SLOT (Marca como true)
+            slotData.status[firstAvailableIndex] = true;
+            
+            // Salva no servidor
+            saveStateToServer();
+
+            // Feedback Visual Bonito
+            if (typeof showCombatResults === 'function') {
+                showCombatResults("CONJUROU", { text: "Sucesso", detail: `${spellName} (${levelToCast}º Círculo)`, isCrit: true }, null);
+            } else {
+                alert(`Magia ${spellName} conjurada usando slot de ${levelToCast}º nível.`);
+            }
+
+            // Atualiza a tela inteira (isso atualiza as bolinhas lá em cima)
+            renderActiveTab();
+        });
+    });
+
+    // 5. Listeners Padrão dos Cards (Expandir, Remover, Editar)
+    document.querySelectorAll('.spell-card').forEach(card => {
+        const id = Number(card.getAttribute('data-id'));
+        const header = card.querySelector('.card-header');
+
+        // A. Expandir Card
+        header.addEventListener('click', (ev) => {
+            // Ignora se clicou nos controles novos ou no checkbox
+            if (ev.target.closest('.spell-right') || 
+                ev.target.closest('.check-ativar') || 
+                ev.target.closest('.cast-controls')) return;
+                
+            const s = state.spells.find(x => x.id === id);
+            if (s) {
+                s.expanded = !s.expanded;
+                renderSpells(); 
+            }
+        });
+
+        // B. Checkbox Preparar
+        const ch = card.querySelector('.spell-activate');
+        if (ch) {
+            ch.addEventListener('change', (ev) => {
+                const s = state.spells.find(x => x.id === id);
+                if (s) {
+                    s.active = ev.target.checked;
+                    saveStateToServer();
+                }
+            });
+            ch.addEventListener('click', ev => ev.stopPropagation());
+        }
+    });
+
+    // C. Remover Magia
+    document.querySelectorAll('.remover-spell').forEach(a => {
+        a.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            const id = Number(a.getAttribute('data-id'));
+            state.spells = state.spells.filter(s => s.id !== id);
+            renderSpells();
+            saveStateToServer();
+        });
+    });
+
+    // D. Editar Magia
+    document.querySelectorAll('.editar-spell').forEach(a => {
+        a.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            const id = Number(a.getAttribute('data-id'));
+            const s = state.spells.find(x => x.id === id);
+            if (s) openSpellModal(s);
+        });
+    });
+}
+
 
 function openDTConfigModal() {
   const existing = document.querySelector('.dt-modal-overlay');
@@ -2306,10 +2448,10 @@ function openSpellModal(existingSpell = null) {
         name: modal.querySelector('#modal-name').value.trim() || 'Sem nome',
         levelNumber: Number(modal.querySelector('#modal-level').value) || 0,
         damage: modal.querySelector('#modal-damage').value.trim() || '-',
-        
+
         // ALTERADO: Se for nova (existingSpell null), expanded é false. Se for edição, mantém o que estava.
-        expanded: existingSpell ? existingSpell.expanded : false, 
-        
+        expanded: existingSpell ? existingSpell.expanded : false,
+
         active: existingSpell ? existingSpell.active : false,
         components: {
           V: modal.querySelector('#comp-v').checked,
@@ -2484,16 +2626,16 @@ function openSpellCatalogOverlay(parentModal = null) {
     };
   });
 
-function adicionarMagiaAoState(c, classeFinal) {
+  function adicionarMagiaAoState(c, classeFinal) {
     // Agora active: true faz ela aparecer imediatamente na lista de preparadas
     state.spells.unshift({ ...c, id: uid(), expanded: false, active: true, spellClass: classeFinal });
-    
+
     renderSpells();
     saveStateToServer();
-    
+
     // Recomendado: Adicionar isso para forçar atualização de contadores/DT se houver listeners
     window.dispatchEvent(new CustomEvent('sheet-updated'));
-}
+  }
 
   // LÓGICA DE EXPANDIR
   overlay.querySelectorAll('.catalog-card-header').forEach(header => {
@@ -2568,25 +2710,25 @@ function formatCatalogSpellCard(c) {
 
 /* --- FUNÇÃO CORRIGIDA: MAGIAS PREPARADAS --- */
 function renderPreparedSpells() {
-    state.dtMagias = calculateSpellDC();
-    const slotsHTML = renderSpellSlotsHTML();
+  state.dtMagias = calculateSpellDC();
+  const slotsHTML = renderSpellSlotsHTML();
 
-    const habilidadesPreparadas = state.abilities.filter(h => h.active);
-    const magiasPreparadas = state.spells.filter(s => s.active);
+  const habilidadesPreparadas = state.abilities.filter(h => h.active);
+  const magiasPreparadas = state.spells.filter(s => s.active);
 
-    // Estados iniciais (Minimizar seções)
-    const isMagiasMin = !!state.minimizedPreparedSpells;
-    const isHabsMin = !!state.minimizedPreparedAbilities;
+  // Estados iniciais (Minimizar seções)
+  const isMagiasMin = !!state.minimizedPreparedSpells;
+  const isHabsMin = !!state.minimizedPreparedAbilities;
 
-    const arrowMagias = isMagiasMin ? '▸' : '▾';
-    const arrowHabs = isHabsMin ? '▸' : '▾';
-    const styleMagias = isMagiasMin ? 'display:none;' : '';
-    const styleHabs = isHabsMin ? 'display:none;' : '';
+  const arrowMagias = isMagiasMin ? '▸' : '▾';
+  const arrowHabs = isHabsMin ? '▸' : '▾';
+  const styleMagias = isMagiasMin ? 'display:none;' : '';
+  const styleHabs = isHabsMin ? 'display:none;' : '';
 
-    // HTML Magias (Usa o formatador padrão que já tem os botões)
-    let magiasHTML = '';
-    if (magiasPreparadas.length > 0) {
-        magiasHTML = `
+  // HTML Magias (Usa o formatador padrão que já tem os botões)
+  let magiasHTML = '';
+  if (magiasPreparadas.length > 0) {
+    magiasHTML = `
             <div id="toggle-magias" class="toggle-section-header" style="margin: 10px 0 6px 4px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; cursor:pointer; display:flex; align-items:center;">
                 <span style="font-size:16px; color:#9c27b0; width:15px;">${arrowMagias}</span> 
                 <span style="color: #ddd; text-transform: uppercase; font-size: 14px; font-weight:700;">Magias Preparadas</span>
@@ -2600,12 +2742,12 @@ function renderPreparedSpells() {
                 ${magiasPreparadas.map(formatMySpellCard).join('')}
             </div>
         `;
-    }
+  }
 
-    // HTML Habilidades
-    let habilidadesHTML = '';
-    if (habilidadesPreparadas.length > 0) {
-        habilidadesHTML = `
+  // HTML Habilidades
+  let habilidadesHTML = '';
+  if (habilidadesPreparadas.length > 0) {
+    habilidadesHTML = `
             <h4 id="toggle-habs" class="toggle-section-header" style="margin: 20px 0 6px 4px; color: #b39cff; text-transform: uppercase; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px; cursor:pointer;">
                 <span style="font-size:14px; color:#9c27b0; width:12px;">${arrowHabs}</span> Habilidades Ativas
             </h4>
@@ -2635,14 +2777,14 @@ function renderPreparedSpells() {
                 `).join('')}
             </div>
         `;
-    }
+  }
 
-    let listaContent = `${magiasHTML}${habilidadesHTML}`;
-    if (!habilidadesPreparadas.length && !magiasPreparadas.length) {
-        listaContent = `<div class="empty-tip">Nenhuma habilidade ou magia preparada/ativa.</div>`;
-    }
+  let listaContent = `${magiasHTML}${habilidadesHTML}`;
+  if (!habilidadesPreparadas.length && !magiasPreparadas.length) {
+    listaContent = `<div class="empty-tip">Nenhuma habilidade ou magia preparada/ativa.</div>`;
+  }
 
-    conteudoEl.innerHTML = `
+  conteudoEl.innerHTML = `
         <div class="spells-wrapper">
             ${slotsHTML}
             ${slotsHTML ? '<hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 15px 0;">' : ''}
@@ -2664,152 +2806,152 @@ function renderPreparedSpells() {
         </div>
     `;
 
-    // --- EVENTOS DA PÁGINA ---
+  // --- EVENTOS DA PÁGINA ---
 
-    // 1. Configurar DT e Slots
-    const btnDTPrep = document.getElementById('btnOpenDTConfig_Prep');
-    if (btnDTPrep) btnDTPrep.addEventListener('click', openDTConfigModal);
-    bindSlotEvents();
-    
-    // REMOVIDO: bindSpellAttackEvents(); -> Essa função não existe e estava travando o código.
+  // 1. Configurar DT e Slots
+  const btnDTPrep = document.getElementById('btnOpenDTConfig_Prep');
+  if (btnDTPrep) btnDTPrep.addEventListener('click', openDTConfigModal);
+  bindSlotEvents();
 
-    // 2. Filtro Rápido
-    const filterInput = document.getElementById('filterPrepared');
-    if(filterInput) {
-        filterInput.addEventListener('input', (e) => {
-            const val = e.target.value.toLowerCase();
-            conteudoEl.querySelectorAll('.card').forEach(c => {
-                const txt = c.textContent.toLowerCase();
-                c.style.display = txt.includes(val) ? '' : 'none';
-            });
-        });
-    }
+  // REMOVIDO: bindSpellAttackEvents(); -> Essa função não existe e estava travando o código.
 
-   // 3. Toggles de Seção
-const btnToggleMagias = document.getElementById('toggle-magias');
-if (btnToggleMagias) {
+  // 2. Filtro Rápido
+  const filterInput = document.getElementById('filterPrepared');
+  if (filterInput) {
+    filterInput.addEventListener('input', (e) => {
+      const val = e.target.value.toLowerCase();
+      conteudoEl.querySelectorAll('.card').forEach(c => {
+        const txt = c.textContent.toLowerCase();
+        c.style.display = txt.includes(val) ? '' : 'none';
+      });
+    });
+  }
+
+  // 3. Toggles de Seção
+  const btnToggleMagias = document.getElementById('toggle-magias');
+  if (btnToggleMagias) {
     btnToggleMagias.addEventListener('click', (e) => {
-        if(e.target.closest('#btnRollSpellAttack_PrepHeader')) return;
-        state.minimizedPreparedSpells = !state.minimizedPreparedSpells;
-        // saveStateToServer(); <--- REMOVA ISSO
-        renderActiveTab();
+      if (e.target.closest('#btnRollSpellAttack_PrepHeader')) return;
+      state.minimizedPreparedSpells = !state.minimizedPreparedSpells;
+      // saveStateToServer(); <--- REMOVA ISSO
+      renderActiveTab();
     });
-}
-const btnToggleHabs = document.getElementById('toggle-habs');
-if (btnToggleHabs) {
+  }
+  const btnToggleHabs = document.getElementById('toggle-habs');
+  if (btnToggleHabs) {
     btnToggleHabs.addEventListener('click', () => {
-        state.minimizedPreparedAbilities = !state.minimizedPreparedAbilities;
-        // saveStateToServer(); <--- REMOVA ISSO
-        renderActiveTab();
+      state.minimizedPreparedAbilities = !state.minimizedPreparedAbilities;
+      // saveStateToServer(); <--- REMOVA ISSO
+      renderActiveTab();
     });
-}
+  }
 
-    // =================================================================
-    // 4. EVENTOS DE CARDS (CORRIGIDOS)
-    // =================================================================
+  // =================================================================
+  // 4. EVENTOS DE CARDS (CORRIGIDOS)
+  // =================================================================
 
-    // --- MAGIAS ---
-    
-    // A. Expandir (Magias)
-conteudoEl.querySelectorAll('.spell-card .card-header').forEach(h => {
-     h.addEventListener('click', (ev) => {
-         if(ev.target.closest('.check-ativar') || ev.target.closest('.spell-right')) return;
-         const id = Number(h.closest('.card').dataset.id);
-         const s = state.spells.find(x => x.id === id);
-         if(s) { 
-             s.expanded = !s.expanded; 
-             // saveStateToServer();  <--- REMOVA OU COMENTE ISSO
-             renderActiveTab(); 
-         }
-     });
-});
+  // --- MAGIAS ---
 
-    // B. Checkbox (Despreparar)
-    conteudoEl.querySelectorAll('.spell-activate').forEach(ch => {
-         ch.addEventListener('change', (ev) => {
-            const id = Number(ev.target.dataset.id);
-            const s = state.spells.find(x => x.id === id);
-            if(s) { 
-                s.active = ev.target.checked; 
-                saveStateToServer(); 
-                renderActiveTab(); 
-            }
-         });
-         ch.addEventListener('click', e => e.stopPropagation());
-    });
-
-    // C. REMOVER Magia
-    conteudoEl.querySelectorAll('.remover-spell').forEach(btn => {
-        btn.addEventListener('click', (ev) => {
-            ev.preventDefault();
-            const id = Number(btn.dataset.id);
-            state.spells = state.spells.filter(s => s.id !== id);
-            saveStateToServer();
-            renderActiveTab();
-        });
-    });
-
-    // D. EDITAR Magia
-    conteudoEl.querySelectorAll('.editar-spell').forEach(btn => {
-        btn.addEventListener('click', (ev) => {
-            ev.preventDefault();
-            const id = Number(btn.dataset.id);
-            const s = state.spells.find(x => x.id === id);
-            if(s) openSpellModal(s);
-        });
-    });
-
-
-    // --- HABILIDADES ---
-
-    // A. Expandir (Habilidades)
-conteudoEl.querySelectorAll('.hab-card .card-header').forEach(h => {
+  // A. Expandir (Magias)
+  conteudoEl.querySelectorAll('.spell-card .card-header').forEach(h => {
     h.addEventListener('click', (ev) => {
-        if(ev.target.closest('.check-ativar')) return;
-        const id = Number(h.closest('.card').dataset.id);
-        const hab = state.abilities.find(a => a.id === id);
-        if(hab) {
-            hab.expanded = !hab.expanded;
-            // saveStateToServer(); <--- REMOVA OU COMENTE ISSO
-            renderActiveTab();
-        }
+      if (ev.target.closest('.check-ativar') || ev.target.closest('.spell-right')) return;
+      const id = Number(h.closest('.card').dataset.id);
+      const s = state.spells.find(x => x.id === id);
+      if (s) {
+        s.expanded = !s.expanded;
+        // saveStateToServer();  <--- REMOVA OU COMENTE ISSO
+        renderActiveTab();
+      }
     });
-});
+  });
 
-    // B. Checkbox (Desativar)
-    conteudoEl.querySelectorAll('.hab-activate').forEach(ch => {
-        ch.addEventListener('change', (ev) => {
-           const id = Number(ev.target.dataset.id);
-           const hab = state.abilities.find(a => a.id === id);
-           if(hab) { 
-               hab.active = ev.target.checked; 
-               saveStateToServer(); 
-               renderActiveTab(); 
-           }
-        });
-        ch.addEventListener('click', e => e.stopPropagation());
-   });
+  // B. Checkbox (Despreparar)
+  conteudoEl.querySelectorAll('.spell-activate').forEach(ch => {
+    ch.addEventListener('change', (ev) => {
+      const id = Number(ev.target.dataset.id);
+      const s = state.spells.find(x => x.id === id);
+      if (s) {
+        s.active = ev.target.checked;
+        saveStateToServer();
+        renderActiveTab();
+      }
+    });
+    ch.addEventListener('click', e => e.stopPropagation());
+  });
 
-   // C. REMOVER Habilidade
-   conteudoEl.querySelectorAll('.remover-hab').forEach(btn => {
-       btn.addEventListener('click', (ev) => {
-           ev.preventDefault();
-           const id = Number(btn.dataset.id);
-           state.abilities = state.abilities.filter(a => a.id !== id);
-           saveStateToServer();
-           renderActiveTab();
-       });
-   });
+  // C. REMOVER Magia
+  conteudoEl.querySelectorAll('.remover-spell').forEach(btn => {
+    btn.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      const id = Number(btn.dataset.id);
+      state.spells = state.spells.filter(s => s.id !== id);
+      saveStateToServer();
+      renderActiveTab();
+    });
+  });
 
-   // D. EDITAR Habilidade
-   conteudoEl.querySelectorAll('.editar-hab').forEach(btn => {
-       btn.addEventListener('click', (ev) => {
-           ev.preventDefault();
-           const id = Number(btn.dataset.id);
-           const hab = state.abilities.find(a => a.id === id);
-           if(hab) openNewAbilityModal(hab);
-       });
-   });
+  // D. EDITAR Magia
+  conteudoEl.querySelectorAll('.editar-spell').forEach(btn => {
+    btn.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      const id = Number(btn.dataset.id);
+      const s = state.spells.find(x => x.id === id);
+      if (s) openSpellModal(s);
+    });
+  });
+
+
+  // --- HABILIDADES ---
+
+  // A. Expandir (Habilidades)
+  conteudoEl.querySelectorAll('.hab-card .card-header').forEach(h => {
+    h.addEventListener('click', (ev) => {
+      if (ev.target.closest('.check-ativar')) return;
+      const id = Number(h.closest('.card').dataset.id);
+      const hab = state.abilities.find(a => a.id === id);
+      if (hab) {
+        hab.expanded = !hab.expanded;
+        // saveStateToServer(); <--- REMOVA OU COMENTE ISSO
+        renderActiveTab();
+      }
+    });
+  });
+
+  // B. Checkbox (Desativar)
+  conteudoEl.querySelectorAll('.hab-activate').forEach(ch => {
+    ch.addEventListener('change', (ev) => {
+      const id = Number(ev.target.dataset.id);
+      const hab = state.abilities.find(a => a.id === id);
+      if (hab) {
+        hab.active = ev.target.checked;
+        saveStateToServer();
+        renderActiveTab();
+      }
+    });
+    ch.addEventListener('click', e => e.stopPropagation());
+  });
+
+  // C. REMOVER Habilidade
+  conteudoEl.querySelectorAll('.remover-hab').forEach(btn => {
+    btn.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      const id = Number(btn.dataset.id);
+      state.abilities = state.abilities.filter(a => a.id !== id);
+      saveStateToServer();
+      renderActiveTab();
+    });
+  });
+
+  // D. EDITAR Habilidade
+  conteudoEl.querySelectorAll('.editar-hab').forEach(btn => {
+    btn.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      const id = Number(btn.dataset.id);
+      const hab = state.abilities.find(a => a.id === id);
+      if (hab) openNewAbilityModal(hab);
+    });
+  });
 }
 
 /* ---------------- CATALOGO DE ITENS (DESIGN UNIFICADO) ---------------- */
@@ -2868,10 +3010,10 @@ window.openItemCatalogOverlay = () => {
   const btnManual = overlay.querySelector('#btnCriarManual');
   btnManual.onmouseover = () => { btnManual.style.borderColor = '#9c27b0'; btnManual.style.color = '#fff'; };
   btnManual.onmouseout = () => { btnManual.style.borderColor = '#444'; btnManual.style.color = '#ccc'; };
-  
+
   btnManual.onclick = () => {
-      overlay.remove(); // Fecha o catálogo
-      openItemModal(null); // Abre o modal manual (função existente)
+    overlay.remove(); // Fecha o catálogo
+    openItemModal(null); // Abre o modal manual (função existente)
   };
   // ------------------------------------
 
@@ -3036,7 +3178,7 @@ window.adicionarItemDoCatalogo = (id) => {
     type: i.type || 'Arma',
     isEquipable: true,
     proficiency: i.proficiency || 'Armas Simples',
-    
+
     // --- CORREÇÃO AQUI ---
     defense: i.defense || '',         // Copia o valor da CA (ex: "11")
     tipoItem: i.tipoItem || '',       // Importante para saber se é "Armadura" ou "Escudo"
@@ -3050,7 +3192,7 @@ window.adicionarItemDoCatalogo = (id) => {
     alcance: i.alcance || '1.5m',
     attunement: i.attunement || 'Não',
     damage: i.damage || '1d4',
-    damage2Hands: i.damage2Hands || '', 
+    damage2Hands: i.damage2Hands || '',
     useTwoHands: false,
     damageTypes: Array.isArray(i.damageTypes) ? [...i.damageTypes] : (i.damageType ? [i.damageType] : []),
     moreDmgList: i.moreDmgList || [],
@@ -3060,9 +3202,9 @@ window.adicionarItemDoCatalogo = (id) => {
   state.inventory.unshift(novoItem);
   renderInventory();
   saveStateToServer();
-  
+
   // Força atualização da CA visualmente
-  if(typeof atualizarAC === 'function') atualizarAC();
+  if (typeof atualizarAC === 'function') atualizarAC();
   window.dispatchEvent(new CustomEvent('sheet-updated'));
 };
 
@@ -3144,7 +3286,7 @@ function openAbilityCatalogOverlay() {
       btn.classList.add('active');
       activeClass = btn.dataset.class;
 
-    
+
       activeClassHabilitySelected = true;
       activeSubclass = null;
 
@@ -3286,9 +3428,9 @@ function openAbilityCatalogOverlay() {
           id: uid(),
           title: c.name,
           description: c.description || '',
-          
+
           expanded: false, // ALTERADO: Começa fechado
-          
+
           class: c.class || '',
           subclass: c.subclass || '',
           category: c.category || 'Geral',
@@ -3607,9 +3749,9 @@ function openNewAbilityModal(existingAbility = null) {
         id: uid(),
         title: nome,
         description: desc,
-        
+
         expanded: false, // ALTERADO: Começa fechado
-        
+
         active: false,
         category: selectedCategory,
         class: finalClass,
@@ -3704,18 +3846,18 @@ function renderItemGroup(titulo, listaItens, chaveUnica, forceExpand = false) {
   if (!listaItens || listaItens.length === 0) return '';
 
   if (!state.collapsedSections) state.collapsedSections = {};
-  
+
   // Lógica: 
   // Se forceExpand (busca ativa) -> Não colapsado (false)
   // Se não tem state salvo -> Colapsado (true) por padrão (antes era false)
   // Se tem state salvo -> Usa o state
   let isCollapsed;
-  
+
   if (forceExpand) {
-      isCollapsed = false;
+    isCollapsed = false;
   } else {
-      // Se undefined, assume TRUE (fechado por padrão). Se definido, usa o valor.
-      isCollapsed = state.collapsedSections[chaveUnica] !== undefined ? state.collapsedSections[chaveUnica] : true;
+    // Se undefined, assume TRUE (fechado por padrão). Se definido, usa o valor.
+    isCollapsed = state.collapsedSections[chaveUnica] !== undefined ? state.collapsedSections[chaveUnica] : true;
   }
 
   const arrow = isCollapsed ? '▸' : '▾';
@@ -3740,13 +3882,13 @@ function renderItemGroup(titulo, listaItens, chaveUnica, forceExpand = false) {
 /* --- ATUALIZADO: RENDERIZA GRUPO DE HABILIDADES (FECHADO POR PADRÃO) --- */
 function renderAbilitySection(titulo, listaCards, chaveUnica, forceExpand = false) {
   if (!state.collapsedSections) state.collapsedSections = {};
-  
+
   let isCollapsed;
   if (forceExpand) {
-      isCollapsed = false;
+    isCollapsed = false;
   } else {
-      // Fechado por padrão (true) se não tiver salvo
-      isCollapsed = state.collapsedSections[chaveUnica] !== undefined ? state.collapsedSections[chaveUnica] : true;
+    // Fechado por padrão (true) se não tiver salvo
+    isCollapsed = state.collapsedSections[chaveUnica] !== undefined ? state.collapsedSections[chaveUnica] : true;
   }
 
   const arrow = isCollapsed ? '▸' : '▾';
@@ -3831,26 +3973,26 @@ function escapeHtml(str) {
 
 /* ---------------- POPUP DE SELEÇÃO DE CLASSE (CORRIGIDO + BOTÃO X) ---------------- */
 function abrirPopupSelecaoClasse(classes, callback) {
-    // 1. Cria o Overlay (Fundo Escuro)
-    const overlay = document.createElement('div');
-    overlay.className = 'class-selection-overlay';
-    overlay.style = `
+  // 1. Cria o Overlay (Fundo Escuro)
+  const overlay = document.createElement('div');
+  overlay.className = 'class-selection-overlay';
+  overlay.style = `
         position: fixed; inset: 0; background: rgba(0,0,0,0.85); 
         display: flex; align-items: center; justify-content: center; 
         z-index: 20000; font-family: sans-serif;
     `;
 
-    // 2. Cria a Caixa de Conteúdo
-    const content = document.createElement('div');
-    content.style = `
+  // 2. Cria a Caixa de Conteúdo
+  const content = document.createElement('div');
+  content.style = `
         background: #1a1a1a; padding: 25px; border-radius: 8px; 
         border: 2px solid #9c27b0; text-align: center; width: 300px;
         box-shadow: 0 0 20px rgba(156,39,176,0.4);
         position: relative; /* Necessário para posicionar o X */
     `;
 
-    // 3. HTML Interno (Com o botão de fechar X)
-    content.innerHTML = `
+  // 3. HTML Interno (Com o botão de fechar X)
+  content.innerHTML = `
         <button id="btn-close-popup" title="Fechar" style="
             position: absolute; top: 8px; right: 10px;
             background: transparent; border: none; color: #888;
@@ -3863,54 +4005,54 @@ function abrirPopupSelecaoClasse(classes, callback) {
         <div id="class-buttons-container" style="display: flex; flex-direction: column; gap: 10px;"></div>
     `;
 
-    overlay.appendChild(content);
-    document.body.appendChild(overlay);
+  overlay.appendChild(content);
+  document.body.appendChild(overlay);
 
-    // 4. Lógica para fechar o Popup (Remove do DOM)
-    const fecharPopup = () => {
-        if (overlay && overlay.parentElement) {
-            overlay.remove();
-        }
-    };
+  // 4. Lógica para fechar o Popup (Remove do DOM)
+  const fecharPopup = () => {
+    if (overlay && overlay.parentElement) {
+      overlay.remove();
+    }
+  };
 
-    // Ação do Botão X
-    const btnClose = content.querySelector('#btn-close-popup');
-    btnClose.onmouseover = () => btnClose.style.color = '#fff';
-    btnClose.onmouseout = () => btnClose.style.color = '#888';
-    btnClose.onclick = fecharPopup;
+  // Ação do Botão X
+  const btnClose = content.querySelector('#btn-close-popup');
+  btnClose.onmouseover = () => btnClose.style.color = '#fff';
+  btnClose.onmouseout = () => btnClose.style.color = '#888';
+  btnClose.onclick = fecharPopup;
 
-    // Também fecha se clicar fora da caixa (no fundo escuro) - Opcional, melhora usabilidade
-    overlay.onclick = (e) => {
-        if (e.target === overlay) fecharPopup();
-    };
+  // Também fecha se clicar fora da caixa (no fundo escuro) - Opcional, melhora usabilidade
+  overlay.onclick = (e) => {
+    if (e.target === overlay) fecharPopup();
+  };
 
-    // 5. Gera os botões das Classes
-    const container = content.querySelector('#class-buttons-container');
+  // 5. Gera os botões das Classes
+  const container = content.querySelector('#class-buttons-container');
 
-    classes.forEach(cls => {
-        const btn = document.createElement('button');
-        btn.textContent = cls;
-        btn.style = `
+  classes.forEach(cls => {
+    const btn = document.createElement('button');
+    btn.textContent = cls;
+    btn.style = `
             background: #222; color: #fff; border: 1px solid #444; 
             padding: 10px; border-radius: 4px; cursor: pointer; 
             font-weight: bold; transition: 0.2s;
         `;
-        
-        btn.onmouseover = () => btn.style.borderColor = '#9c27b0';
-        btn.onmouseout = () => btn.style.borderColor = '#444';
 
-        btn.onclick = () => {
-            // Executa a ação de adicionar a magia
-            try {
-                callback(cls);
-            } catch (error) {
-                console.error("Erro ao adicionar magia:", error);
-            }
-            // Fecha o popup DEPOIS de tentar adicionar (mesmo se der erro no callback, ele fecha)
-            fecharPopup();
-        };
-        container.appendChild(btn);
-    });
+    btn.onmouseover = () => btn.style.borderColor = '#9c27b0';
+    btn.onmouseout = () => btn.style.borderColor = '#444';
+
+    btn.onclick = () => {
+      // Executa a ação de adicionar a magia
+      try {
+        callback(cls);
+      } catch (error) {
+        console.error("Erro ao adicionar magia:", error);
+      }
+      // Fecha o popup DEPOIS de tentar adicionar (mesmo se der erro no callback, ele fecha)
+      fecharPopup();
+    };
+    container.appendChild(btn);
+  });
 }
 /* =============================================================
    OBSERVADORES: Atualiza a DT assim que a Esquerda muda
@@ -4156,28 +4298,28 @@ let diceTimer = null;
 
 // Adicionado parametro 'isRemote' no final
 function showCombatResults(title, attackResult, damageResult, isRemote = false) {
-    
-    // 1. Criação/Busca do Container Visual
-    let container = document.getElementById('dice-results-container');
-    if (!container) { 
-        container = document.createElement('div'); 
-        container.id = 'dice-results-container'; 
-        document.body.appendChild(container); 
-    }
 
-    // 2. Limpa timer anterior
-    if (diceTimer) clearTimeout(diceTimer);
+  // 1. Criação/Busca do Container Visual
+  let container = document.getElementById('dice-results-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'dice-results-container';
+    document.body.appendChild(container);
+  }
 
-    // --- MONTAGEM DO HTML (Igual ao seu original) ---
-    let contentHtml = `<div class="dice-content-wrapper">`;
-    contentHtml += `<div class="dice-header">${title}</div>`;
+  // 2. Limpa timer anterior
+  if (diceTimer) clearTimeout(diceTimer);
 
-    if (attackResult) {
-        let totalClass = "";
-        if (attackResult.isCrit) totalClass = "crit-total";
-        else if (attackResult.isFumble) totalClass = "fumble-total";
+  // --- MONTAGEM DO HTML (Igual ao seu original) ---
+  let contentHtml = `<div class="dice-content-wrapper">`;
+  contentHtml += `<div class="dice-header">${title}</div>`;
 
-        contentHtml += `
+  if (attackResult) {
+    let totalClass = "";
+    if (attackResult.isCrit) totalClass = "crit-total";
+    else if (attackResult.isFumble) totalClass = "fumble-total";
+
+    contentHtml += `
             <div class="dice-row">
                 <div class="dice-label">ACERTO</div>
                 <div class="dice-value-wrapper">
@@ -4186,11 +4328,11 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
                 </div>
             </div>
         `;
-    }
+  }
 
-    if (damageResult) {
-        let totalClass = damageResult.isCrit ? "crit-total" : "";
-        contentHtml += `
+  if (damageResult) {
+    let totalClass = damageResult.isCrit ? "crit-total" : "";
+    contentHtml += `
             <div class="dice-row">
                 <div class="dice-label">DANO</div>
                 <div class="dice-value-wrapper">
@@ -4199,344 +4341,344 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
                 </div>
             </div>
         `;
-    }
-    contentHtml += `</div>`; 
+  }
+  contentHtml += `</div>`;
 
-    // --- HTML INSPIRAÇÃO ---
-    let inspirationHtml = '';
-    // Se for remoto, usamos o dado que veio no payload, se for local, usamos o state
-    const isInspirado = isRemote ? (attackResult?.inspiracao || damageResult?.inspiracao) : (typeof state !== 'undefined' && state.inspiration);
+  // --- HTML INSPIRAÇÃO ---
+  let inspirationHtml = '';
+  // Se for remoto, usamos o dado que veio no payload, se for local, usamos o state
+  const isInspirado = isRemote ? (attackResult?.inspiracao || damageResult?.inspiracao) : (typeof state !== 'undefined' && state.inspiration);
 
-    if (isInspirado) {
-        inspirationHtml = `
+  if (isInspirado) {
+    inspirationHtml = `
             <div class="inspiration-container">
                 <div class="inspiration-icon" title="Personagem Inspirado!">⭐</div>
             </div>
         `;
+  }
+
+  container.innerHTML = inspirationHtml + contentHtml;
+
+  requestAnimationFrame(() => { container.classList.add('active'); });
+
+  diceTimer = setTimeout(() => { container.classList.remove('active'); }, 4000);
+
+  // ---------------------------------------------------------
+  // LÓGICA DE SOCKET (SÓ ENVIA SE NÃO FOR REMOTO)
+  // ---------------------------------------------------------
+  if (!isRemote && typeof socket !== 'undefined') {
+    const payload = {
+      socketId: socket.id, // Importante: Envia quem rolou
+      personagem: state.nome || "Desconhecido", // Nome da ficha para filtrar
+      titulo: title,
+      ataque: null,
+      dano: null,
+      inspiracao: state.inspiration || false
+    };
+
+    if (attackResult) {
+      payload.ataque = {
+        total: attackResult.total,
+        text: attackResult.text,
+        detail: attackResult.detail, // Envia o detalhe da conta
+        isCrit: attackResult.isCrit,
+        isFumble: attackResult.isFumble,
+        inspiracao: state.inspiration
+      };
     }
 
-    container.innerHTML = inspirationHtml + contentHtml;
-    
-    requestAnimationFrame(() => { container.classList.add('active'); });
-
-    diceTimer = setTimeout(() => { container.classList.remove('active'); }, 4000);
-
-    // ---------------------------------------------------------
-    // LÓGICA DE SOCKET (SÓ ENVIA SE NÃO FOR REMOTO)
-    // ---------------------------------------------------------
-    if (!isRemote && typeof socket !== 'undefined') {
-        const payload = {
-            socketId: socket.id, // Importante: Envia quem rolou
-            personagem: state.nome || "Desconhecido", // Nome da ficha para filtrar
-            titulo: title,
-            ataque: null,
-            dano: null,
-            inspiracao: state.inspiration || false
-        };
-
-        if (attackResult) {
-            payload.ataque = {
-                total: attackResult.total,
-                text: attackResult.text,
-                detail: attackResult.detail, // Envia o detalhe da conta
-                isCrit: attackResult.isCrit,
-                isFumble: attackResult.isFumble,
-                inspiracao: state.inspiration
-            };
-        }
-
-        if (damageResult) {
-            payload.dano = {
-                total: damageResult.total,
-                text: damageResult.text,
-                detail: damageResult.detail, // Envia o detalhe da conta
-                isCrit: damageResult.isCrit,
-                inspiracao: state.inspiration
-            };
-        }
-
-        socket.emit('dados_rolados', payload);
+    if (damageResult) {
+      payload.dano = {
+        total: damageResult.total,
+        text: damageResult.text,
+        detail: damageResult.detail, // Envia o detalhe da conta
+        isCrit: damageResult.isCrit,
+        inspiracao: state.inspiration
+      };
     }
+
+    socket.emit('dados_rolados', payload);
+  }
 }
 
 /* 2. FUNÇÕES DE CÁLCULO E EXIBIÇÃO */
 
 // Usada principalmente para rolar DANO
 function rollDiceExpression(expression) {
-    const cleanExpr = expression.toLowerCase().trim();
-    const regex = /^(\d*)d(\d+)\s*([+-]?\s*\d+)?$/i;
-    const match = cleanExpr.match(regex);
-    let total = 0, parts = [], modifier = 0;
-    let isMaxRoll = false;
+  const cleanExpr = expression.toLowerCase().trim();
+  const regex = /^(\d*)d(\d+)\s*([+-]?\s*\d+)?$/i;
+  const match = cleanExpr.match(regex);
+  let total = 0, parts = [], modifier = 0;
+  let isMaxRoll = false;
 
-    if (match) {
-        const count = match[1] === "" ? 1 : parseInt(match[1]) || 1;
-        const sides = parseInt(match[2]);
-        const modStr = match[3];
+  if (match) {
+    const count = match[1] === "" ? 1 : parseInt(match[1]) || 1;
+    const sides = parseInt(match[2]);
+    const modStr = match[3];
 
-        for (let i = 0; i < count; i++) {
-            const roll = Math.floor(Math.random() * sides) + 1;
-            total += roll;
-            
-            // Destaque apenas para CRÍTICO no dano (Roxo)
-            // Removemos o destaque vermelho para o número 1 no dano conforme solicitado
-            if (roll === sides) { 
-                isMaxRoll = true; 
-                parts.push(`<span class="dice-roll-max">${roll}</span>`);
-            } else {
-                parts.push(roll); // 1 agora fica normal no dano
-            }
-        }
+    for (let i = 0; i < count; i++) {
+      const roll = Math.floor(Math.random() * sides) + 1;
+      total += roll;
 
-        if (modStr) {
-            modifier = parseInt(modStr.replace(/\s/g, ''));
-            total += modifier;
-            if (modifier !== 0) parts.push(`${modifier >= 0 ? '+' : ''}${modifier}`);
-        }
-    } else {
-        const num = parseInt(cleanExpr);
-        if (!isNaN(num)) { total = num; parts.push(num); } 
-        else return { total: 0, text: "Erro", detail: "Erro" };
+      // Destaque apenas para CRÍTICO no dano (Roxo)
+      // Removemos o destaque vermelho para o número 1 no dano conforme solicitado
+      if (roll === sides) {
+        isMaxRoll = true;
+        parts.push(`<span class="dice-roll-max">${roll}</span>`);
+      } else {
+        parts.push(roll); // 1 agora fica normal no dano
+      }
     }
 
-    let detailText = parts.join(' + ').replace(/\+ \+/g, '+ ').replace(/\+ -/g, '- ');
+    if (modStr) {
+      modifier = parseInt(modStr.replace(/\s/g, ''));
+      total += modifier;
+      if (modifier !== 0) parts.push(`${modifier >= 0 ? '+' : ''}${modifier}`);
+    }
+  } else {
+    const num = parseInt(cleanExpr);
+    if (!isNaN(num)) { total = num; parts.push(num); }
+    else return { total: 0, text: "Erro", detail: "Erro" };
+  }
 
-    return { 
-        total: total, 
-        text: total.toString(), 
-        detail: detailText, 
-        isCrit: isMaxRoll,
-        isFumble: false // Dano nunca gera falha crítica visual no total
-    };
+  let detailText = parts.join(' + ').replace(/\+ \+/g, '+ ').replace(/\+ -/g, '- ');
+
+  return {
+    total: total,
+    text: total.toString(),
+    detail: detailText,
+    isCrit: isMaxRoll,
+    isFumble: false // Dano nunca gera falha crítica visual no total
+  };
 }
 
 
 
 /* 3. AUXILIARES */
 function getAttributeMod(attrKey) {
-    const sel = DOM_SELECTORS[attrKey]; if(!sel) return 0;
-    const el = document.querySelector(sel); if(!el) return 0;
-    const val = parseInt(el.dataset.attrValue || el.textContent);
-    return isNaN(val) ? 0 : Math.floor((val - 10) / 2);
+  const sel = DOM_SELECTORS[attrKey]; if (!sel) return 0;
+  const el = document.querySelector(sel); if (!el) return 0;
+  const val = parseInt(el.dataset.attrValue || el.textContent);
+  return isNaN(val) ? 0 : Math.floor((val - 10) / 2);
 }
 
 function getItemAttackValues(item) {
-    let modAttr = 0;
-    let attrName = item.attackAttribute;
-    
-    if (!attrName || attrName === 'Nenhum' || attrName === '') {
-        const tipo = (item.tipoArma || '').toLowerCase();
-        attrName = (tipo.includes('distancia') || tipo.includes('distância')) ? 'Destreza' : 'Força';
-    }
-    
-    const attrMap = { 'Força': 'for', 'Destreza': 'dex', 'Constituição': 'con', 'Inteligência': 'int', 'Sabedoria': 'sab', 'Carisma': 'car' };
-    const key = attrMap[attrName];
-    if (key) modAttr = getAttributeMod(key);
+  let modAttr = 0;
+  let attrName = item.attackAttribute;
 
-    let profBonus = 0;
-    if (item.proficiency && item.proficiency !== 'Nenhuma') {
-        const profEl = document.getElementById('proficienciaValor');
-        if (profEl) profBonus = parseInt(profEl.textContent) || 2;
-    }
-    const itemBonus = parseInt(item.attackBonus) || 0;
-    return { modAttr, profBonus, itemBonus };
+  if (!attrName || attrName === 'Nenhum' || attrName === '') {
+    const tipo = (item.tipoArma || '').toLowerCase();
+    attrName = (tipo.includes('distancia') || tipo.includes('distância')) ? 'Destreza' : 'Força';
+  }
+
+  const attrMap = { 'Força': 'for', 'Destreza': 'dex', 'Constituição': 'con', 'Inteligência': 'int', 'Sabedoria': 'sab', 'Carisma': 'car' };
+  const key = attrMap[attrName];
+  if (key) modAttr = getAttributeMod(key);
+
+  let profBonus = 0;
+  if (item.proficiency && item.proficiency !== 'Nenhuma') {
+    const profEl = document.getElementById('proficienciaValor');
+    if (profEl) profBonus = parseInt(profEl.textContent) || 2;
+  }
+  const itemBonus = parseInt(item.attackBonus) || 0;
+  return { modAttr, profBonus, itemBonus };
 }
 
 function getSpellAttackValues() {
-    let prof = 2; const pe = document.getElementById('proficienciaValor'); if(pe) prof = parseInt(pe.textContent)||2;
-    const key = state.spellDCConfig.selectedAttr; if(!key || key==='none') return null;
-    let mod = getAttributeMod(key);
-    const extra = parseInt(state.spellDCConfig.extraMod)||0;
-    return { prof, mod, extra };
+  let prof = 2; const pe = document.getElementById('proficienciaValor'); if (pe) prof = parseInt(pe.textContent) || 2;
+  const key = state.spellDCConfig.selectedAttr; if (!key || key === 'none') return null;
+  let mod = getAttributeMod(key);
+  const extra = parseInt(state.spellDCConfig.extraMod) || 0;
+  return { prof, mod, extra };
 }
 
 /* 4. ESCUTADOR GLOBAL DE CLIQUES */
-document.addEventListener('click', function(e) {
-    
-    // --- CASO 1: ITEM DE INVENTÁRIO ---
-    if (e.target.classList.contains('dice-img')) {
-        const itemCard = e.target.closest('.item-card');
-        
-        if (itemCard) {
-            e.preventDefault(); e.stopPropagation();
-            const itemId = itemCard.getAttribute('data-id');
-            const item = state.inventory.find(i => String(i.id) === String(itemId));
+document.addEventListener('click', function (e) {
 
-            if (item) {
-                let attackRes = null;
-                // LÓGICA DE ATAQUE (ONDE APLICA O VERMELHO)
-                if (item.type === 'Arma' || (item.attackAttribute && item.attackAttribute !== 'Nenhum')) {
-                    const { modAttr, profBonus, itemBonus } = getItemAttackValues(item);
-                    
-                    const d20 = Math.floor(Math.random() * 20) + 1;
-                    const totalAttack = d20 + modAttr + profBonus + itemBonus;
-                    const isCrit = (d20 === 20); 
-                    const isFumble = (d20 === 1); // <--- Detecta Falha Crítica
-                    
-                    // Monta o Tooltip: 20=Roxo, 1=Vermelho
-                    const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
-                    
-                    const detailParts = [d20Html];
-                    if (modAttr !== 0) detailParts.push(modAttr); 
-                    if (profBonus !== 0) detailParts.push(profBonus); 
-                    if (itemBonus !== 0) detailParts.push(itemBonus);
-                    
-                    attackRes = { 
-                        total: totalAttack, 
-                        text: totalAttack.toString(), 
-                        detail: detailParts.join(' + '),
-                        isCrit: isCrit,
-                        isFumble: isFumble // Envia flag para o prompt
-                    };
-                }
+  // --- CASO 1: ITEM DE INVENTÁRIO ---
+  if (e.target.classList.contains('dice-img')) {
+    const itemCard = e.target.closest('.item-card');
 
-                // LÓGICA DE DANO
-                let damageRes = null;
-                let damageText = '';
-                const spellDamageDiv = e.target.closest('.spell-damage');
-                if (spellDamageDiv) {
-                    damageText = Array.from(spellDamageDiv.childNodes)
-                        .filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent.trim()).join('');
-                }
-                if (!damageText || damageText === '-') damageText = item.damage || '0';
+    if (itemCard) {
+      e.preventDefault(); e.stopPropagation();
+      const itemId = itemCard.getAttribute('data-id');
+      const item = state.inventory.find(i => String(i.id) === String(itemId));
 
-                if (damageText && damageText !== '-' && damageText !== '0') {
-                    damageRes = rollDiceExpression(damageText);
-                }
+      if (item) {
+        let attackRes = null;
+        // LÓGICA DE ATAQUE (ONDE APLICA O VERMELHO)
+        if (item.type === 'Arma' || (item.attackAttribute && item.attackAttribute !== 'Nenhum')) {
+          const { modAttr, profBonus, itemBonus } = getItemAttackValues(item);
 
-                if (attackRes || damageRes) showCombatResults(item.name, attackRes, damageRes);
-            }
-            return;
-        }
+          const d20 = Math.floor(Math.random() * 20) + 1;
+          const totalAttack = d20 + modAttr + profBonus + itemBonus;
+          const isCrit = (d20 === 20);
+          const isFumble = (d20 === 1); // <--- Detecta Falha Crítica
 
-        // DANO DE MAGIA (CARD)
-        const spellCard = e.target.closest('.spell-card');
-        if (spellCard) {
-            e.preventDefault(); e.stopPropagation();
-            let damageText = '';
-            const parent = e.target.closest('.spell-damage');
-            if (parent) {
-                 damageText = Array.from(parent.childNodes).filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent.trim()).join('');
-            }
-            if (damageText && damageText !== '-') {
-                const res = rollDiceExpression(damageText);
-                const title = spellCard.querySelector('.spell-title')?.textContent || "Magia";
-                showCombatResults(title, null, res);
-            }
-            return;
-        }
-    }
+          // Monta o Tooltip: 20=Roxo, 1=Vermelho
+          const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
 
-    // --- CASO 2: ATAQUE MÁGICO (CABEÇALHO) ---
-    const btnHeader = e.target.closest('#btnRollSpellAttack_Header');
-    const btnPrep   = e.target.closest('#btnRollSpellAttack_PrepHeader');
+          const detailParts = [d20Html];
+          if (modAttr !== 0) detailParts.push(modAttr);
+          if (profBonus !== 0) detailParts.push(profBonus);
+          if (itemBonus !== 0) detailParts.push(itemBonus);
 
-    if (btnHeader || btnPrep) {
-        e.preventDefault(); e.stopPropagation();
-        
-        const vals = getSpellAttackValues(); 
-        if (vals === null) { alert("⚠️ Configure a DT de Magia primeiro (ícone ⚙️)!"); return; }
-        
-        const d20 = Math.floor(Math.random() * 20) + 1;
-        const total = d20 + vals.prof + vals.mod + vals.extra;
-        const isCrit = (d20 === 20);
-        const isFumble = (d20 === 1); // <--- Detecta Falha Crítica
-
-        const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
-        const parts = [d20Html];
-        if (vals.mod !== 0) parts.push(vals.mod);   
-        if (vals.prof !== 0) parts.push(vals.prof); 
-        if (vals.extra !== 0) parts.push(vals.extra); 
-
-        const res = { 
-            total: total, 
-            text: total.toString(), 
-            detail: parts.join(' + '),
+          attackRes = {
+            total: totalAttack,
+            text: totalAttack.toString(),
+            detail: detailParts.join(' + '),
             isCrit: isCrit,
             isFumble: isFumble // Envia flag para o prompt
-        };
-        
-        showCombatResults("Ataque Mágico", res, null);
-    }
-    
-    // --- CASO 3: PERÍCIAS ---
-    if (e.target.classList.contains('col-icon') && e.target.closest('.pericia-item')) {
-        e.preventDefault(); e.stopPropagation();
-        const itemLi = e.target.closest('.pericia-item');
-        const nome = itemLi.querySelector('.col-nome').textContent.trim();
-        const bonus = parseInt(itemLi.querySelector('.bonus-span').textContent.replace(/[()]/g, '')) || 0;
-        
-        const d20 = Math.floor(Math.random() * 20) + 1;
-        const total = d20 + bonus;
-        const isCrit = (d20 === 20);
-        const isFumble = (d20 === 1); // <--- Detecta Falha Crítica
+          };
+        }
 
-        const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
-        
-        const res = { 
-            total: total, 
-            text: total.toString(), 
-            detail: `${d20Html} + ${bonus}`, 
-            isCrit: isCrit,
-            isFumble: isFumble // Envia flag para o prompt
-        };
-        showCombatResults(nome, res, null);
+        // LÓGICA DE DANO
+        let damageRes = null;
+        let damageText = '';
+        const spellDamageDiv = e.target.closest('.spell-damage');
+        if (spellDamageDiv) {
+          damageText = Array.from(spellDamageDiv.childNodes)
+            .filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent.trim()).join('');
+        }
+        if (!damageText || damageText === '-') damageText = item.damage || '0';
+
+        if (damageText && damageText !== '-' && damageText !== '0') {
+          damageRes = rollDiceExpression(damageText);
+        }
+
+        if (attackRes || damageRes) showCombatResults(item.name, attackRes, damageRes);
+      }
+      return;
     }
+
+    // DANO DE MAGIA (CARD)
+    const spellCard = e.target.closest('.spell-card');
+    if (spellCard) {
+      e.preventDefault(); e.stopPropagation();
+      let damageText = '';
+      const parent = e.target.closest('.spell-damage');
+      if (parent) {
+        damageText = Array.from(parent.childNodes).filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent.trim()).join('');
+      }
+      if (damageText && damageText !== '-') {
+        const res = rollDiceExpression(damageText);
+        const title = spellCard.querySelector('.spell-title')?.textContent || "Magia";
+        showCombatResults(title, null, res);
+      }
+      return;
+    }
+  }
+
+  // --- CASO 2: ATAQUE MÁGICO (CABEÇALHO) ---
+  const btnHeader = e.target.closest('#btnRollSpellAttack_Header');
+  const btnPrep = e.target.closest('#btnRollSpellAttack_PrepHeader');
+
+  if (btnHeader || btnPrep) {
+    e.preventDefault(); e.stopPropagation();
+
+    const vals = getSpellAttackValues();
+    if (vals === null) { alert("⚠️ Configure a DT de Magia primeiro (ícone ⚙️)!"); return; }
+
+    const d20 = Math.floor(Math.random() * 20) + 1;
+    const total = d20 + vals.prof + vals.mod + vals.extra;
+    const isCrit = (d20 === 20);
+    const isFumble = (d20 === 1); // <--- Detecta Falha Crítica
+
+    const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
+    const parts = [d20Html];
+    if (vals.mod !== 0) parts.push(vals.mod);
+    if (vals.prof !== 0) parts.push(vals.prof);
+    if (vals.extra !== 0) parts.push(vals.extra);
+
+    const res = {
+      total: total,
+      text: total.toString(),
+      detail: parts.join(' + '),
+      isCrit: isCrit,
+      isFumble: isFumble // Envia flag para o prompt
+    };
+
+    showCombatResults("Ataque Mágico", res, null);
+  }
+
+  // --- CASO 3: PERÍCIAS ---
+  if (e.target.classList.contains('col-icon') && e.target.closest('.pericia-item')) {
+    e.preventDefault(); e.stopPropagation();
+    const itemLi = e.target.closest('.pericia-item');
+    const nome = itemLi.querySelector('.col-nome').textContent.trim();
+    const bonus = parseInt(itemLi.querySelector('.bonus-span').textContent.replace(/[()]/g, '')) || 0;
+
+    const d20 = Math.floor(Math.random() * 20) + 1;
+    const total = d20 + bonus;
+    const isCrit = (d20 === 20);
+    const isFumble = (d20 === 1); // <--- Detecta Falha Crítica
+
+    const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
+
+    const res = {
+      total: total,
+      text: total.toString(),
+      detail: `${d20Html} + ${bonus}`,
+      isCrit: isCrit,
+      isFumble: isFumble // Envia flag para o prompt
+    };
+    showCombatResults(nome, res, null);
+  }
 });
 
 /* =============================================================
    NOVA FUNÇÃO: MESCLAR DADOS SEM PERDER O VISUAL
    Coloque no final do DireitaJS.js
 ============================================================= */
-window.mesclarEstadoVisual = function(estadoAntigo, estadoNovo) {
-    // 1. Preserva Aba Ativa (Prioridade: LocalStorage > Memória atual)
-    if(state.nome) {
-        const savedTab = localStorage.getItem(`activeTab_${state.nome}`);
-        if(savedTab) estadoNovo.activeTab = savedTab;
-        else if (estadoAntigo.activeTab) estadoNovo.activeTab = estadoAntigo.activeTab;
-    }
+window.mesclarEstadoVisual = function (estadoAntigo, estadoNovo) {
+  // 1. Preserva Aba Ativa (Prioridade: LocalStorage > Memória atual)
+  if (state.nome) {
+    const savedTab = localStorage.getItem(`activeTab_${state.nome}`);
+    if (savedTab) estadoNovo.activeTab = savedTab;
+    else if (estadoAntigo.activeTab) estadoNovo.activeTab = estadoAntigo.activeTab;
+  }
 
-    // 2. Preserva Seções Colapsadas (Habilidades/Inventário)
-    if (estadoAntigo.collapsedSections) {
-        estadoNovo.collapsedSections = { ...estadoAntigo.collapsedSections };
-    }
+  // 2. Preserva Seções Colapsadas (Habilidades/Inventário)
+  if (estadoAntigo.collapsedSections) {
+    estadoNovo.collapsedSections = { ...estadoAntigo.collapsedSections };
+  }
 
-    // 3. Preserva Itens Expandidos (Inventário)
-    if (estadoAntigo.inventory && estadoNovo.inventory) {
-        estadoNovo.inventory.forEach(newItem => {
-            // Busca o item correspondente no estado antigo pelo ID
-            const oldItem = estadoAntigo.inventory.find(old => String(old.id) === String(newItem.id));
-            if (oldItem) {
-                newItem.expanded = oldItem.expanded; // Mantém o estado visual local
-            } else {
-                newItem.expanded = false; // Se é novo, começa fechado
-            }
-        });
-    }
+  // 3. Preserva Itens Expandidos (Inventário)
+  if (estadoAntigo.inventory && estadoNovo.inventory) {
+    estadoNovo.inventory.forEach(newItem => {
+      // Busca o item correspondente no estado antigo pelo ID
+      const oldItem = estadoAntigo.inventory.find(old => String(old.id) === String(newItem.id));
+      if (oldItem) {
+        newItem.expanded = oldItem.expanded; // Mantém o estado visual local
+      } else {
+        newItem.expanded = false; // Se é novo, começa fechado
+      }
+    });
+  }
 
-    // 4. Preserva Magias Expandidas
-    if (estadoAntigo.spells && estadoNovo.spells) {
-        estadoNovo.spells.forEach(newSpell => {
-            const oldSpell = estadoAntigo.spells.find(old => String(old.id) === String(newSpell.id));
-            if (oldSpell) {
-                newSpell.expanded = oldSpell.expanded;
-            } else {
-                newSpell.expanded = false;
-            }
-        });
-    }
+  // 4. Preserva Magias Expandidas
+  if (estadoAntigo.spells && estadoNovo.spells) {
+    estadoNovo.spells.forEach(newSpell => {
+      const oldSpell = estadoAntigo.spells.find(old => String(old.id) === String(newSpell.id));
+      if (oldSpell) {
+        newSpell.expanded = oldSpell.expanded;
+      } else {
+        newSpell.expanded = false;
+      }
+    });
+  }
 
-    // 5. Preserva Habilidades Expandidas
-    if (estadoAntigo.abilities && estadoNovo.abilities) {
-        estadoNovo.abilities.forEach(newHab => {
-            const oldHab = estadoAntigo.abilities.find(old => String(old.id) === String(newHab.id));
-            if (oldHab) {
-                newHab.expanded = oldHab.expanded;
-            } else {
-                newHab.expanded = false;
-            }
-        });
-    }
+  // 5. Preserva Habilidades Expandidas
+  if (estadoAntigo.abilities && estadoNovo.abilities) {
+    estadoNovo.abilities.forEach(newHab => {
+      const oldHab = estadoAntigo.abilities.find(old => String(old.id) === String(newHab.id));
+      if (oldHab) {
+        newHab.expanded = oldHab.expanded;
+      } else {
+        newHab.expanded = false;
+      }
+    });
+  }
 
-    return estadoNovo;
+  return estadoNovo;
 }

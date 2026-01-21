@@ -1955,3 +1955,63 @@ a.editar-spell {
   min-height: 150px;
 }
 
+
+
+/* --- Área de Conjuração (Upcast) --- */
+.cast-controls {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.cast-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #bbb;
+}
+
+.slot-select {
+    background: #111;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-weight: bold;
+    cursor: pointer;
+    flex: 1;
+}
+
+.slot-select:focus {
+    border-color: #9c27b0;
+    outline: none;
+}
+
+.btn-cast {
+    background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-weight: 800;
+    font-size: 12px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    transition: transform 0.1s;
+}
+
+.btn-cast:active {
+    transform: scale(0.96);
+}
+
+.btn-cast:disabled {
+    background: #333;
+    color: #777;
+    cursor: not-allowed;
+}

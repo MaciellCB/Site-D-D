@@ -1243,6 +1243,11 @@ function openClassSelectionModal() {
 
         const traitsHtml = cls.features ? cls.features.map(t => `<div class="race-trait-item"><div class="race-trait-name">${t.name}</div><div class="race-trait-desc">${t.description}</div></div>`).join('') : '';
 
+        /* =============================================================
+   SUBSTITUA ESTE TRECHO DENTRO DE renderClassDetails
+   NO ARQUIVO HeaderJS.js
+============================================================= */
+
         let subclassesHtml = '';
         if (cls.subclasses && cls.subclasses.length > 0) {
             let lockMessage = '';
@@ -1250,24 +1255,49 @@ function openClassSelectionModal() {
             const hasSaved = state.subclasses && state.subclasses[classKey];
             const isExactSelectionLevel = simulatedLevel === subclassReqLevel;
 
+            // MENSAGENS DE STATUS (Topo da lista)
             if (!canPickSubclass) {
                 lockMessage = `<div style="background:#330000; border:1px solid #d32f2f; color:#ff9999; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">🔒 Subclasses disponíveis para escolha no nível ${subclassReqLevel}.</div>`;
-            } else if (isExactSelectionLevel) {
+            } else if (isExactSelectionLevel && !hasSaved) {
                 lockMessage = `<div style="background:#332a00; border:1px solid #ffeb3b; color:#ffeb3b; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">⚠ Nível ${subclassReqLevel}: Selecione sua Subclasse AGORA.</div>`;
             } else if (hasSaved) {
-                lockMessage = `<div style="background:#1a3300; border:1px solid #4caf50; color:#a5d6a7; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">✔ Subclasse Atual: <strong>${hasSaved}</strong></div>`;
+                lockMessage = `<div style="background:#1a3300; border:1px solid #4caf50; color:#a5d6a7; padding:8px; margin-bottom:10px; border-radius:4px; font-size:12px; text-align:center;">✔ Subclasse Definida: <strong>${hasSaved}</strong></div>`;
             }
 
             subclassesHtml = `
                     <div class="race-traits-title" style="margin-top:25px; color:#ffeb3b; border-top:1px solid #333; padding-top:15px;">Subclasses (Arquétipos/Juramentos)</div>
                     ${lockMessage}
                     <div class="variations-list" style="${!canPickSubclass ? 'opacity:0.8;' : ''}"> 
-                        ${cls.subclasses.map((sub, idx) => `
-                            <div class="variation-card-wrapper">
-                                <div class="variation-header" data-idx="${idx}" style="cursor:pointer;">
+                        ${cls.subclasses.map((sub, idx) => {
+                            // --- LÓGICA DA TRAVA (LOCK) ---
+                            // 1. Verifica se esta é a opção salva atualmente
+                            const isSelected = hasSaved === sub.name;
+                            
+                            // 2. Deve desabilitar se:
+                            //    a) O nível for baixo (!canPickSubclass)
+                            //    b) JÁ existe algo salvo E esta opção NÃO é a salva (Bloqueia as outras)
+                            const shouldDisable = !canPickSubclass || (hasSaved && !isSelected);
+
+                            // 3. Estilo visual para itens bloqueados (mais escuro e sem clique)
+                            const styleBlocked = shouldDisable && hasSaved 
+                                ? "opacity: 0.3; pointer-events: none; filter: grayscale(1);" 
+                                : "cursor:pointer;";
+
+                            return `
+                            <div class="variation-card-wrapper ${isSelected ? 'open' : ''}" style="${styleBlocked}">
+                                <div class="variation-header" data-idx="${idx}">
                                     <div style="display:flex; align-items:center; gap:10px; flex:1;">
-                                        <input type="radio" name="class_subclass" value="${idx}" id="sub_${idx}" data-checked="false" ${!canPickSubclass ? 'disabled' : ''}>
-                                        <span class="variation-name">${sub.name}</span>
+                                        <input type="radio" 
+                                            name="class_subclass" 
+                                            value="${idx}" 
+                                            id="sub_${idx}" 
+                                            data-checked="${isSelected}" 
+                                            ${isSelected ? 'checked' : ''} 
+                                            ${shouldDisable ? 'disabled' : ''}
+                                        >
+                                        <span class="variation-name" style="${isSelected ? 'color:#a5d6a7;' : ''}">
+                                            ${sub.name} ${isSelected ? '(Selecionado)' : ''}
+                                        </span>
                                     </div>
                                     <span class="variation-arrow">▼</span>
                                 </div>
@@ -1276,7 +1306,7 @@ function openClassSelectionModal() {
                                     ${sub.features ? sub.features.map(feat => `<div class="variation-feature-box"><div class="variation-feature-title">★ ${feat.name}</div><div class="variation-feature-content">${feat.description}</div></div>`).join('') : ''}
                                 </div>
                             </div>
-                        `).join('')}
+                        `}).join('')}
                     </div>
                 `;
         }
