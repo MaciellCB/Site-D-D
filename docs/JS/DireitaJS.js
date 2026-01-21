@@ -2579,7 +2579,7 @@ function renderPreparedSpells() {
     const habilidadesPreparadas = state.abilities.filter(h => h.active);
     const magiasPreparadas = state.spells.filter(s => s.active);
 
-    // Estados iniciais
+    // Estados iniciais (Minimizar seções)
     const isMagiasMin = !!state.minimizedPreparedSpells;
     const isHabsMin = !!state.minimizedPreparedAbilities;
 
@@ -2588,7 +2588,7 @@ function renderPreparedSpells() {
     const styleMagias = isMagiasMin ? 'display:none;' : '';
     const styleHabs = isHabsMin ? 'display:none;' : '';
 
-    // HTML Magias
+    // HTML Magias (Usa o formatador padrão que já tem os botões)
     let magiasHTML = '';
     if (magiasPreparadas.length > 0) {
         magiasHTML = `
@@ -2607,7 +2607,7 @@ function renderPreparedSpells() {
         `;
     }
 
-    // HTML Habilidades
+    // HTML Habilidades (ADICIONADO OS BOTÕES QUE FALTAVAM)
     let habilidadesHTML = '';
     if (habilidadesPreparadas.length > 0) {
         habilidadesHTML = `
@@ -2631,6 +2631,10 @@ function renderPreparedSpells() {
                         </div>
                         <div class="card-body" style="${a.expanded ? '' : 'display:none;'}">
                             <div>${a.description || 'Sem descrição.'}</div>
+                            <div style="margin-top:8px;">
+                                <a href="#" class="remover-hab" data-id="${a.id}">Remover</a>
+                                <a href="#" class="editar-hab" data-id="${a.id}" style="float:right;color:#2e7d32">Editar</a>
+                            </div>
                         </div>
                     </div>
                 `).join('')}
@@ -2665,13 +2669,15 @@ function renderPreparedSpells() {
         </div>
     `;
 
-    // --- EVENTOS ---
+    // --- EVENTOS DA PÁGINA ---
 
-    // 1. Configurar DT
+    // 1. Configurar DT e Slots
     const btnDTPrep = document.getElementById('btnOpenDTConfig_Prep');
     if (btnDTPrep) btnDTPrep.addEventListener('click', openDTConfigModal);
+    bindSlotEvents();
+    bindSpellAttackEvents(); 
 
-    // 2. Filtro Rápido (Opcional, busca simples visual)
+    // 2. Filtro Rápido
     const filterInput = document.getElementById('filterPrepared');
     if(filterInput) {
         filterInput.addEventListener('input', (e) => {
@@ -2683,9 +2689,6 @@ function renderPreparedSpells() {
         });
     }
 
-    bindSlotEvents();
-    bindSpellAttackEvents(); 
-    
     // 3. Toggles de Seção (Minimizar grupos)
     const btnToggleMagias = document.getElementById('toggle-magias');
     if (btnToggleMagias) {
@@ -2704,15 +2707,15 @@ function renderPreparedSpells() {
     }
 
     // =================================================================
-    // 4. EVENTOS DE CARDS (CORRIGIDOS E UNIFICADOS)
+    // 4. EVENTOS DE CARDS (CORRIGIDOS: AGORA INCLUEM EDITAR E REMOVER)
     // =================================================================
 
-    // A. MAGIAS - EXPANDIR
+    // --- MAGIAS ---
+    
+    // A. Expandir
     conteudoEl.querySelectorAll('.spell-card .card-header').forEach(h => {
          h.addEventListener('click', (ev) => {
-             // Ignora clique no checkbox ou na área direita (dados)
              if(ev.target.closest('.check-ativar') || ev.target.closest('.spell-right')) return;
-             
              const id = Number(h.closest('.card').dataset.id);
              const s = state.spells.find(x => x.id === id);
              if(s) { 
@@ -2723,7 +2726,7 @@ function renderPreparedSpells() {
          });
     });
 
-    // B. MAGIAS - CHECKBOX (Despreparar)
+    // B. Checkbox (Despreparar)
     conteudoEl.querySelectorAll('.spell-activate').forEach(ch => {
          ch.addEventListener('change', (ev) => {
             const id = Number(ev.target.dataset.id);
@@ -2737,11 +2740,34 @@ function renderPreparedSpells() {
          ch.addEventListener('click', e => e.stopPropagation());
     });
 
-    // C. HABILIDADES - EXPANDIR (ESTE ERA O QUE FALTAVA)
+    // C. REMOVER Magia (NOVO)
+    conteudoEl.querySelectorAll('.remover-spell').forEach(btn => {
+        btn.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            const id = Number(btn.dataset.id);
+            state.spells = state.spells.filter(s => s.id !== id);
+            saveStateToServer();
+            renderActiveTab();
+        });
+    });
+
+    // D. EDITAR Magia (NOVO)
+    conteudoEl.querySelectorAll('.editar-spell').forEach(btn => {
+        btn.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            const id = Number(btn.dataset.id);
+            const s = state.spells.find(x => x.id === id);
+            if(s) openSpellModal(s);
+        });
+    });
+
+
+    // --- HABILIDADES ---
+
+    // A. Expandir
     conteudoEl.querySelectorAll('.hab-card .card-header').forEach(h => {
         h.addEventListener('click', (ev) => {
             if(ev.target.closest('.check-ativar')) return;
-
             const id = Number(h.closest('.card').dataset.id);
             const hab = state.abilities.find(a => a.id === id);
             if(hab) {
@@ -2752,7 +2778,7 @@ function renderPreparedSpells() {
         });
     });
 
-    // D. HABILIDADES - CHECKBOX (Desativar) (TAMBÉM FALTAVA)
+    // B. Checkbox (Desativar)
     conteudoEl.querySelectorAll('.hab-activate').forEach(ch => {
         ch.addEventListener('change', (ev) => {
            const id = Number(ev.target.dataset.id);
@@ -2764,6 +2790,27 @@ function renderPreparedSpells() {
            }
         });
         ch.addEventListener('click', e => e.stopPropagation());
+   });
+
+   // C. REMOVER Habilidade (NOVO)
+   conteudoEl.querySelectorAll('.remover-hab').forEach(btn => {
+       btn.addEventListener('click', (ev) => {
+           ev.preventDefault();
+           const id = Number(btn.dataset.id);
+           state.abilities = state.abilities.filter(a => a.id !== id);
+           saveStateToServer();
+           renderActiveTab();
+       });
+   });
+
+   // D. EDITAR Habilidade (NOVO)
+   conteudoEl.querySelectorAll('.editar-hab').forEach(btn => {
+       btn.addEventListener('click', (ev) => {
+           ev.preventDefault();
+           const id = Number(btn.dataset.id);
+           const hab = state.abilities.find(a => a.id === id);
+           if(hab) openNewAbilityModal(hab);
+       });
    });
 }
 
