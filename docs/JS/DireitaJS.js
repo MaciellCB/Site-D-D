@@ -193,7 +193,7 @@ const CLASSES_WITH_SUBCLASSES = {
   'Artífice': ['Alquimista', 'Armeiro', 'Artilheiro', 'Ferreiro de Batalha', 'Arquivista', 'Infusão'],
   'Bárbaro': ['Caminho do Berserker', 'Caminho do Guerreiro Totêmico', 'Caminho do Guardião Ancestral', 'Caminho da Alma Selvagem', 'Caminho do Arauto da Tempestade', 'Caminho do Fanático', 'Caminho da Besta', 'Caminho da Magia Selvagem'],
   'Bardo': ['Colégio do Conhecimento', 'Colégio da Criação', 'Colégio da Bravura', 'Colégio do Glamour', 'Colégio das Espadas', 'Colégio dos Sussurros', 'Colégio da Criação', 'Colégio da Eloquência', 'Colégio dos Espíritos'],
-  'Bruxo': ['O Arquifada', 'O Corruptor', 'O Grande Antigo', 'O Celestial', 'Hexblade', 'O Insondável', 'O Gênio', 'A Luz Imortal', 'O Morto-Vivo', 'Shinigami', 'Fantasma do Maquinario', 'O Buscador'],
+  'Bruxo': ['O Arquifada', 'O Corruptor', 'O Grande Antigo', 'O Celestial', 'Hexblade', 'O Insondável', 'O Gênio', 'A Luz Imortal', 'O Morto-Vivo', 'Shinigami', 'Fantasma do Maquinario', 'O Buscador', 'Invocações Místicas'],
   'Blood Hunter': ['Ordem do Caça-Fantasmas', 'Ordem do Licantropo', 'Ordem do Mutante', 'Ordem da Alma Profana', 'Maldições de Sangue'],
   'Clérigo': ['Domínio do Conhecimento', 'Domínio da Vida', 'Domínio da Luz', 'Domínio do Zelo', 'Domínio da Natureza', 'Domínio do Destino', 'Domínio da Solidariedade', 'Domínio da Tempestade', 'Domínio da Cidade ', 'Domínio da Força', 'Domínio da Unidade', 'Domínio da Ambição', 'Domínio da Enganação', 'Domínio de Proteção', 'Domínio da Guerra', 'Domínio do Crepúsculo', 'Domínio da Forja', 'Domínio da Sepultura', 'Domínio da Ordem', 'Domínio da Paz', 'Domínio do Crepúsculo', 'Domínio Arcano', 'Domínio da Morte'],
   'Druida': ['Círculo da Terra', 'Círculo da Lua', 'Círculo dos Sonhos', 'Círculo do Pastor', 'Círculo dos Esporos', 'Círculo das Estrelas', 'Círculo do Fogo Selvagem', 'Círculo do Primordial', 'Círculo do Crepúsculo'],
@@ -202,7 +202,7 @@ const CLASSES_WITH_SUBCLASSES = {
   'Ladino': ['Ladrão', 'Assassino', 'Trapaceiro Arcano', 'Inquisitivo', 'Mestre do Crime', 'Espadachim', 'Batedor', 'Revivido', 'Fantasma', 'Lâmina da Alma'],
   'Mago': ['Abjuração', 'Conjuração', 'Adivinhação', 'Encantamento', 'Evocação', 'Ilusão', 'Cronurgia', 'Necromancia', 'Criador de Runas', 'Tecnomancia', 'Teurgia', 'Transmutação', 'Graviturgia', 'Mago de Guerra', 'Cantor da Lâmina', 'Ordem dos Escribas'],
   'Monge': ['Caminho da Mão Aberta', 'Caminho das Sombras', , 'Caminho da Tranquilidade', 'Caminho dos Quatro Elementos', 'Longa Morte', 'Kensei', 'Mestre Bêbado', 'Alma Solar', 'Misericórdia', 'Forma Astral', 'Dragão Ascendente'],
-  'Paladino': ['Juramento dos Anciões', 'Juramento da Conquista', 'Juramento da Coroa', 'Juramento de Devoção', 'Juramento de Glória', 'Juramento de Redenção', 'Juramento de Vingança', 'Juramento dos Observadores', 'Quebrador de Juramento', 'Juramento da Traição', 'Juramento de Heroísmo', ''],
+  'Paladino': ['Juramento dos Anciões', 'Juramento da Conquista', 'Juramento da Coroa', 'Juramento de Devoção', 'Juramento de Glória', 'Juramento de Redenção', 'Juramento de Vingança', 'Juramento dos Observadores', 'Quebrador de Juramento', 'Juramento da Traição', 'Juramento de Heroísmo',],
   'Patrulheiro': ['Conclave da Fera', 'Conclave do Caçador', 'Espreitador das Profundezas', 'Conclave do Guardião Primordial', 'Conclave do Horizonte', 'Conclave do Matador', 'Conclave Feérico', 'Conclave do Enxame', 'Guardião do Draco'],
 
   'Talentos': []
