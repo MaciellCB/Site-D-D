@@ -339,7 +339,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <input type="text" id="input-vazio" class="sanidade-input" value="0" />
             </div>
 
-            <img src="img/imagem-no-site/sanidade.png" id="btn-close-sanidade" class="btn-sanidade1-img" alt="Fechar" style="margin-top: 10px; width: 300px;" />
+            <img src="img/imagem-no-site/sanidade.png" id="btn-close-sanidade" class="btn-sanidade1-img" alt="Fechar" style="margin-top: 10px; width: 500px;" />
         </div>
     `;
         containerCentro.appendChild(wrap);
