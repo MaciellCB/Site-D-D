@@ -3510,7 +3510,7 @@ function formatCatalogAbilityCard(c) {
   `;
 }
 
-/* ---------------- MODAL NOVA HABILIDADE (COM STATUS E DANO) ---------------- */
+/* ---------------- MODAL NOVA HABILIDADE (ATUALIZADO COM ACERTO PADRÃO) ---------------- */
 function openNewAbilityModal(existingAbility = null) {
   const modal = document.createElement('div');
   modal.className = 'spell-modal-overlay';
@@ -3519,12 +3519,15 @@ function openNewAbilityModal(existingAbility = null) {
   const descContent = existingAbility ? existingAbility.description : '';
   const editorHTML = createRichEditorHTML(descContent, 'hab-editor-content');
 
-  // Valores iniciais ou vazios
+  // Valores iniciais (com fallback seguro para antigos)
   const vals = {
       title: existingAbility ? existingAbility.title : '',
       damage: existingAbility ? existingAbility.damage : '',
       damageType: existingAbility ? existingAbility.damageType : '',
-      attackBonus: existingAbility ? existingAbility.attackBonus : '',
+      attackBonus: existingAbility ? existingAbility.attackBonus : '', // Agora serve como Bônus Extra se for padrão
+      useStandardAttack: existingAbility ? !!existingAbility.useStandardAttack : false, // Checkbox
+      attackAttribute: existingAbility ? existingAbility.attackAttribute : 'Força', // Dropdown
+      
       defenseBonus: existingAbility ? existingAbility.defenseBonus : '',
       speedBonus: existingAbility ? existingAbility.speedBonus : '',
       saveDC: existingAbility ? existingAbility.saveDC : '',
@@ -3541,13 +3544,17 @@ function openNewAbilityModal(existingAbility = null) {
       </label>
   `).join('');
 
+  // Opções de Atributo
+  const ATTRS = ['Força', 'Destreza', 'Constituição', 'Inteligência', 'Sabedoria', 'Carisma'];
+  const attrOptions = ATTRS.map(a => `<option value="${a}" ${vals.attackAttribute === a ? 'selected' : ''}>${a}</option>`).join('');
+
   const classDropdownStyle = vals.category === 'Classe' ? 'display:block;' : 'display:none;';
   const classOptionsHTML = CLASSES_AVAILABLE.map(c => 
     `<option value="${c}" ${vals.class === c ? 'selected' : ''}>${c}</option>`
   ).join('');
 
   modal.innerHTML = `
-      <div class="spell-modal" style="width:760px; max-width:calc(100% - 40px);">
+      <div class="spell-modal" style="width:800px; max-width:calc(100% - 40px);">
         <div class="modal-header">
           <h3>${existingAbility ? 'Editar Habilidade' : 'Nova Habilidade'}</h3>
           <button class="modal-close">✖</button>
@@ -3556,10 +3563,11 @@ function openNewAbilityModal(existingAbility = null) {
         <div class="modal-body">
           <div>
               <label>Nome da Habilidade <span style="color:#ff5555">*</span></label>
-              <input id="hab-name" type="text" value="${escapeHtml(vals.title)}" placeholder="Ex: Fúria, Ataque Furtivo..." />
+              <input id="hab-name" type="text" value="${escapeHtml(vals.title)}" placeholder="Ex: Ataque Furtivo, Sopro do Dragão..." />
           </div>
 
           <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; margin-top:5px; background:#151515; padding:10px; border-radius:6px; border:1px solid rgba(255,255,255,0.05);">
+              
               <div>
                   <label>Dano / Cura</label>
                   <input id="hab-damage" type="text" value="${escapeHtml(vals.damage)}" placeholder="Ex: 2d6" />
@@ -3568,10 +3576,22 @@ function openNewAbilityModal(existingAbility = null) {
                   <label>Tipo de Dano</label>
                   <input id="hab-dmg-type" type="text" value="${escapeHtml(vals.damageType)}" placeholder="Ex: Fogo" />
               </div>
-              <div>
-                  <label>Bônus de Ataque</label>
-                  <input id="hab-attack" type="text" value="${escapeHtml(vals.attackBonus)}" placeholder="Ex: +5" />
+
+              <div style="background:#222; padding:5px; border-radius:4px; border:1px solid #333;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                    <label style="margin:0; font-size:12px;">Acerto / Ataque</label>
+                    <label style="font-size:11px; cursor:pointer; display:flex; align-items:center; gap:4px; color:#e0aaff;">
+                        <input type="checkbox" id="hab-std-attack" ${vals.useStandardAttack ? 'checked' : ''}> Padrão?
+                    </label>
+                  </div>
+                  
+                  <select id="hab-attack-attr" class="dark-select" style="margin-bottom:4px; padding:4px; font-size:12px; height:28px; display:${vals.useStandardAttack ? 'block' : 'none'};">
+                      ${attrOptions}
+                  </select>
+
+                  <input id="hab-attack" type="text" value="${escapeHtml(vals.attackBonus)}" placeholder="${vals.useStandardAttack ? 'Bônus Extra (ex: +1)' : 'Bônus Fixo (ex: +5)'}" style="font-size:12px;" />
               </div>
+
               <div>
                   <label>Bônus de CA</label>
                   <input id="hab-defense" type="text" value="${escapeHtml(vals.defenseBonus)}" placeholder="Ex: +1" />
@@ -3628,6 +3648,21 @@ function openNewAbilityModal(existingAbility = null) {
 
   if (!existingAbility) document.getElementById('hab-name').focus();
 
+  // --- LOGICA VISUAL DO CHECKBOX ATAQUE PADRÃO ---
+  const chkStd = modal.querySelector('#hab-std-attack');
+  const selAttr = modal.querySelector('#hab-attack-attr');
+  const inpBonus = modal.querySelector('#hab-attack');
+
+  chkStd.addEventListener('change', () => {
+      if (chkStd.checked) {
+          selAttr.style.display = 'block';
+          inpBonus.placeholder = 'Bônus Extra (ex: +1)';
+      } else {
+          selAttr.style.display = 'none';
+          inpBonus.placeholder = 'Bônus Fixo (ex: +5)';
+      }
+  });
+
   // Eventos de Categoria
   const radios = modal.querySelectorAll('input[name="hab-type"]');
   const classSelectorDiv = modal.querySelector('#hab-class-selector');
@@ -3651,10 +3686,7 @@ function openNewAbilityModal(existingAbility = null) {
   modal.querySelector('.btn-save-hab').addEventListener('click', (ev) => {
     ev.preventDefault();
     const nome = modal.querySelector('#hab-name').value.trim();
-    if (!nome) {
-      alert("O nome da habilidade é obrigatório!");
-      return;
-    }
+    if (!nome) { alert("O nome é obrigatório!"); return; }
 
     const desc = document.getElementById('hab-editor-content').innerHTML;
     const selectedCategory = modal.querySelector('input[name="hab-type"]:checked')?.value || 'Geral';
@@ -3668,17 +3700,23 @@ function openNewAbilityModal(existingAbility = null) {
       finalClass = 'Antecedente';
     }
 
-    // Objeto base
+    // Objeto salvo
     const abilityData = {
         title: nome,
         description: desc,
         category: selectedCategory,
         class: finalClass,
         subclass: finalSubclass,
+        
         // Novos Campos
         damage: modal.querySelector('#hab-damage').value.trim(),
         damageType: modal.querySelector('#hab-dmg-type').value.trim(),
-        attackBonus: modal.querySelector('#hab-attack').value.trim(),
+        
+        // Lógica de Ataque
+        useStandardAttack: chkStd.checked,
+        attackAttribute: modal.querySelector('#hab-attack-attr').value,
+        attackBonus: inpBonus.value.trim(), // Se for padrão, isso é "Extra". Se não, é "Total".
+
         defenseBonus: modal.querySelector('#hab-defense').value.trim(),
         speedBonus: modal.querySelector('#hab-speed').value.trim(),
         saveDC: modal.querySelector('#hab-dc').value.trim()
@@ -3687,12 +3725,7 @@ function openNewAbilityModal(existingAbility = null) {
     if (existingAbility) {
       state.abilities = state.abilities.map(h => h.id === existingAbility.id ? { ...h, ...abilityData } : h);
     } else {
-      state.abilities.unshift({
-        id: uid(),
-        ...abilityData,
-        expanded: false,
-        active: false
-      });
+      state.abilities.unshift({ id: uid(), ...abilityData, expanded: false, active: false });
     }
 
     closeAll();
@@ -3701,6 +3734,9 @@ function openNewAbilityModal(existingAbility = null) {
     window.dispatchEvent(new CustomEvent('sheet-updated'));
   });
 }
+
+
+
 /* ---------------- DESCRIÇÃO ---------------- */
 /* =============================================================
    CORREÇÃO 1: renderDescription com "Debounce"
@@ -4524,7 +4560,7 @@ function getSpellAttackValues() {
   return { prof, mod, extra };
 }
 
-/* 4. ESCUTADOR GLOBAL DE CLIQUES (ATUALIZADO COM HABILIDADES) */
+/* 4. ESCUTADOR GLOBAL DE CLIQUES (COMPLETO E ATUALIZADO) */
 document.addEventListener('click', function(e) {
     
     // =================================================================
@@ -4541,29 +4577,17 @@ document.addEventListener('click', function(e) {
         if (spellCard) {
             const spellTitle = spellCard.querySelector('.spell-title')?.textContent || "Magia";
             
-            // 1. CONSUMO DE SLOT (SE HOUVER SELETOR)
+            // 1. CONSUMO DE SLOT
             const selectSlot = spellCard.querySelector('.spell-slot-selector');
             if (selectSlot) {
                 const levelToCast = selectSlot.value; 
-                
-                if (!state.spellSlots[levelToCast]) {
-                    alert(`Erro: Slot nível ${levelToCast} não configurado.`); return; 
-                }
-
+                if (!state.spellSlots[levelToCast]) { alert(`Erro: Slot nível ${levelToCast} não configurado.`); return; }
                 const slotData = state.spellSlots[levelToCast];
                 const max = parseInt(slotData.max) || 0;
-                
                 if (!Array.isArray(slotData.status)) slotData.status = [];
                 while (slotData.status.length < max) slotData.status.push(false);
-
                 const firstAvailableIndex = slotData.status.findIndex(used => used === false);
-
-                if (firstAvailableIndex === -1) {
-                    alert(`Sem espaços de ${levelToCast}º Círculo disponíveis!`);
-                    return; // BLOQUEIA SE NÃO TIVER SLOT
-                }
-
-                // Consome e Salva
+                if (firstAvailableIndex === -1) { alert(`Sem espaços de ${levelToCast}º Círculo disponíveis!`); return; }
                 slotData.status[firstAvailableIndex] = true;
                 saveStateToServer();
                 setTimeout(() => renderActiveTab(), 100); 
@@ -4577,47 +4601,31 @@ document.addEventListener('click', function(e) {
             } else {
                 const parent = e.target.closest('.spell-damage');
                 if (parent) {
-                     damageText = Array.from(parent.childNodes)
-                        .filter(n => n.nodeType === Node.TEXT_NODE)
-                        .map(n => n.textContent.trim()).join('');
+                     damageText = Array.from(parent.childNodes).filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent.trim()).join('');
                 }
             }
 
-            // 3. CÁLCULO DO DANO
+            // 3. CÁLCULO
             let damageRes = null;
-            if (damageText && damageText !== '-' && damageText !== '0') {
-                damageRes = rollDiceExpression(damageText);
-            }
+            if (damageText && damageText !== '-' && damageText !== '0') { damageRes = rollDiceExpression(damageText); }
 
-            // 4. CÁLCULO DO ACERTO (OPCIONAL: ROLA D20 + BÔNUS MÁGICO)
             let attackRes = null;
-            const vals = getSpellAttackValues(); // Pega Inteligência/Carisma + Proficiência
-            
+            const vals = getSpellAttackValues(); 
             if (vals) {
                 const d20 = Math.floor(Math.random() * 20) + 1;
                 const totalAttack = d20 + vals.prof + vals.mod + vals.extra;
                 const isCrit = (d20 === 20);
                 const isFumble = (d20 === 1);
-
                 const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
                 const parts = [d20Html];
                 if (vals.mod !== 0) parts.push(vals.mod);
                 if (vals.prof !== 0) parts.push(vals.prof);
                 if (vals.extra !== 0) parts.push(vals.extra);
 
-                attackRes = {
-                    total: totalAttack,
-                    text: totalAttack.toString(),
-                    detail: parts.join(' + '),
-                    isCrit: isCrit,
-                    isFumble: isFumble
-                };
+                attackRes = { total: totalAttack, text: totalAttack.toString(), detail: parts.join(' + '), isCrit: isCrit, isFumble: isFumble };
             }
 
-            // EXIBE RESULTADOS
-            if (attackRes || damageRes) {
-                showCombatResults(spellTitle, attackRes, damageRes);
-            }
+            if (attackRes || damageRes) showCombatResults(spellTitle, attackRes, damageRes);
             return;
         }
 
@@ -4631,42 +4639,29 @@ document.addEventListener('click', function(e) {
 
             if (item) {
                 let attackRes = null;
-                // ATAQUE
                 if (item.type === 'Arma' || (item.attackAttribute && item.attackAttribute !== 'Nenhum')) {
                     const { modAttr, profBonus, itemBonus } = getItemAttackValues(item);
                     const d20 = Math.floor(Math.random() * 20) + 1;
                     const totalAttack = d20 + modAttr + profBonus + itemBonus;
                     const isCrit = (d20 === 20); 
                     const isFumble = (d20 === 1);
-                    
                     const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
                     const detailParts = [d20Html];
                     if (modAttr !== 0) detailParts.push(modAttr); 
                     if (profBonus !== 0) detailParts.push(profBonus); 
                     if (itemBonus !== 0) detailParts.push(itemBonus);
                     
-                    attackRes = { 
-                        total: totalAttack, 
-                        text: totalAttack.toString(), 
-                        detail: detailParts.join(' + '),
-                        isCrit: isCrit,
-                        isFumble: isFumble
-                    };
+                    attackRes = { total: totalAttack, text: totalAttack.toString(), detail: detailParts.join(' + '), isCrit: isCrit, isFumble: isFumble };
                 }
 
-                // DANO
                 let damageRes = null;
                 let damageText = '';
-                const spellDamageDiv = e.target.closest('.spell-damage'); // Reutiliza classe CSS
+                const spellDamageDiv = e.target.closest('.spell-damage');
                 if (spellDamageDiv) {
-                    damageText = Array.from(spellDamageDiv.childNodes)
-                        .filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent.trim()).join('');
+                    damageText = Array.from(spellDamageDiv.childNodes).filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent.trim()).join('');
                 }
                 if (!damageText || damageText === '-') damageText = item.damage || '0';
-
-                if (damageText && damageText !== '-' && damageText !== '0') {
-                    damageRes = rollDiceExpression(damageText);
-                }
+                if (damageText && damageText !== '-' && damageText !== '0') { damageRes = rollDiceExpression(damageText); }
 
                 if (attackRes || damageRes) showCombatResults(item.name, attackRes, damageRes);
             }
@@ -4674,7 +4669,7 @@ document.addEventListener('click', function(e) {
         }
 
         // -------------------------------------------------------------
-        // C. VERIFICA SE É HABILIDADE (NOVA LÓGICA)
+        // C. VERIFICA SE É HABILIDADE (NOVO: LÓGICA DE ACERTO PADRÃO)
         // -------------------------------------------------------------
         const habCard = e.target.closest('.hab-card');
         if (habCard) {
@@ -4688,9 +4683,48 @@ document.addEventListener('click', function(e) {
                     damageRes = rollDiceExpression(hab.damage);
                 }
 
-                // 2. Rola o Ataque (se houver bônus definido, ex: "+5" ou "5")
+                // 2. Rola o Ataque
                 let attackRes = null;
-                if (hab.attackBonus && hab.attackBonus.trim() !== '') {
+                
+                // --- CAMINHO A: ACERTO PADRÃO (Proficiência + Atributo + Extra) ---
+                if (hab.useStandardAttack) {
+                    // Pega Proficiência
+                    let prof = 2;
+                    const profEl = document.getElementById('proficienciaValor');
+                    if (profEl) prof = parseInt(profEl.textContent) || 2;
+
+                    // Pega Modificador do Atributo Selecionado
+                    const attrKeyMap = { 'Força': 'for', 'Destreza': 'dex', 'Constituição': 'con', 'Inteligência': 'int', 'Sabedoria': 'sab', 'Carisma': 'car' };
+                    const attrKey = attrKeyMap[hab.attackAttribute || 'Força'];
+                    const mod = getAttributeMod(attrKey);
+
+                    // Pega Bônus Extra (Input manual)
+                    const extraBonus = parseInt(hab.attackBonus) || 0;
+
+                    // Rola
+                    const d20 = Math.floor(Math.random() * 20) + 1;
+                    const total = d20 + prof + mod + extraBonus;
+                    
+                    const isCrit = (d20 === 20);
+                    const isFumble = (d20 === 1);
+                    const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
+
+                    // Monta detalhes: "15 + 2 + 3 + 1"
+                    const detailParts = [d20Html];
+                    if (prof !== 0) detailParts.push(`${prof} (Prof)`);
+                    if (mod !== 0) detailParts.push(`${mod} (${hab.attackAttribute.substr(0,3)})`);
+                    if (extraBonus !== 0) detailParts.push(extraBonus);
+
+                    attackRes = {
+                        total: total,
+                        text: total.toString(),
+                        detail: detailParts.join(' + '),
+                        isCrit: isCrit,
+                        isFumble: isFumble
+                    };
+                }
+                // --- CAMINHO B: BÔNUS SIMPLES (Legado ou Fixo) ---
+                else if (hab.attackBonus && hab.attackBonus.trim() !== '') {
                     const bonusStr = hab.attackBonus.replace('+', '').trim();
                     const bonus = parseInt(bonusStr) || 0;
                     
@@ -4710,7 +4744,7 @@ document.addEventListener('click', function(e) {
                     };
                 }
 
-                // Exibe se tiver algum resultado
+                // Se não tem dano, mas tem ataque, ou vice-versa, exibe o que tiver
                 if (damageRes || attackRes) {
                     showCombatResults(hab.title, attackRes, damageRes);
                 }
@@ -4754,7 +4788,7 @@ document.addEventListener('click', function(e) {
     }
     
     // =================================================================
-    // CASO 3: PERÍCIAS (CLIQUE NO DADO DA ESQUERDA - Se estiver aqui)
+    // CASO 3: PERÍCIAS (CLIQUE NO DADO DA ESQUERDA)
     // =================================================================
     if (e.target.classList.contains('col-icon') && e.target.closest('.pericia-item')) {
         e.preventDefault(); e.stopPropagation();
