@@ -3759,8 +3759,7 @@ function renderDescription() {
         <textarea id="desc-personalidade" placeholder="Traços marcantes, opiniões, ideais...">${d.personalidade}</textarea>
       </div>
       <div>
-        <label>Objetivo</label>
-        <textarea id="desc-objetivo" placeholder="Objetivos...">${d.objetivo}</textarea>
+        
       </div>
       <div>
         <label>Ideais</label>
