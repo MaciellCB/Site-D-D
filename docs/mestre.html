@@ -70,11 +70,10 @@
     }
     .plus-icon { font-size: 50px; line-height: 50px; margin-bottom: 10px; }
 
-    /* --- BOTÃO DE DELETAR (X) --- */
-    .btn-delete {
+    /* --- BOTÕES DE AÇÃO (X e EDITAR) --- */
+    .btn-action {
         position: absolute;
         top: 5px;
-        right: 5px;
         background: transparent;
         border: none;
         color: #555;
@@ -84,18 +83,33 @@
         z-index: 10;
         padding: 5px 8px;
         border-radius: 4px;
+        transition: 0.2s;
+    }
+
+    /* Botão Deletar (X) */
+    .btn-delete {
+        right: 5px;
     }
     .btn-delete:hover {
         background: #ff0000;
         color: white;
     }
 
+    /* Botão Editar (Lápis) - NOVO */
+    .btn-edit {
+        right: 40px; /* Posicionado ao lado do X */
+    }
+    .btn-edit:hover {
+        background: #2196f3;
+        color: white;
+    }
+
     .img-loading { opacity: 0.5; filter: grayscale(100%); }
     .img-loaded { opacity: 1; filter: none; transition: opacity 0.5s ease; }
 
-    /* --- NOVOS MODAIS (Estilo Dark) --- */
+    /* --- MODAIS (Estilo Dark) --- */
     .modal-overlay {
-        display: none; /* Escondido por padrão */
+        display: none;
         position: fixed;
         top: 0; left: 0;
         width: 100%; height: 100%;
@@ -140,7 +154,7 @@
         color: white;
         border-radius: 5px;
         font-size: 16px;
-        box-sizing: border-box; /* Garante que padding não estoure a largura */
+        box-sizing: border-box;
     }
 
     .modal-input:focus {
@@ -168,13 +182,16 @@
     .btn-confirmar { background: #9c27b0; color: white; }
     .btn-confirmar:hover { background: #7b1fa2; }
 
+    .btn-azul { background: #2196f3; color: white; }
+    .btn-azul:hover { background: #1976d2; }
+
     .btn-cancelar { background: #333; color: white; }
     .btn-cancelar:hover { background: #555; }
 
     .btn-perigo { background: #d32f2f; color: white; }
     .btn-perigo:hover { background: #b71c1c; }
 
-    /* --- TOAST CUSTOMIZADO (Aviso) --- */
+    /* --- TOAST CUSTOMIZADO --- */
     .custom-toast {
         position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
         background-color: #1a1a1a; color: #fff; border: 1px solid #9c27b0;
@@ -207,7 +224,7 @@
   <div id="modal-criar" class="modal-overlay">
       <div class="modal-box">
           <h3 class="modal-titulo">Nova Ficha</h3>
-          <p style="color:#aaa; font-size:0.9em; margin-bottom:15px;">Crie um novo herói para a aventura.</p>
+          <p style="color:#aaa; font-size:0.9em; margin-bottom:15px;">Crie um novo herói.</p>
           
           <input type="text" id="novo-nome" class="modal-input" placeholder="Nome do Personagem" autocomplete="off">
           <input type="password" id="novo-senha" class="modal-input" placeholder="Senha do Jogador" autocomplete="off">
@@ -215,6 +232,21 @@
           <div class="modal-buttons">
               <button class="btn-modal btn-cancelar" onclick="fecharModalCriar()">Cancelar</button>
               <button class="btn-modal btn-confirmar" onclick="confirmarCriacao()">Criar Ficha</button>
+          </div>
+      </div>
+  </div>
+
+  <div id="modal-editar" class="modal-overlay">
+      <div class="modal-box" style="border-color: #2196f3;">
+          <h3 class="modal-titulo" style="color: #2196f3;">Editar Conta</h3>
+          <p style="color:#aaa; font-size:0.9em; margin-bottom:15px;">Altere o nome ou a senha.</p>
+          
+          <input type="text" id="edit-nome" class="modal-input" placeholder="Novo Nome" autocomplete="off">
+          <input type="password" id="edit-senha" class="modal-input" placeholder="Nova Senha (deixe vazio p/ manter)" autocomplete="off">
+          
+          <div class="modal-buttons">
+              <button class="btn-modal btn-cancelar" onclick="fecharModalEditar()">Cancelar</button>
+              <button class="btn-modal btn-azul" onclick="confirmarEdicao()">Salvar</button>
           </div>
       </div>
   </div>
@@ -237,9 +269,9 @@
 
   <script>
     const API_URL = 'https://dandd-chan.onrender.com/api'; 
-    // const API_URL = 'https://dandd-chan.onrender.com/api'; // Use para testes locais
-
-    let nomeDelecaoPendente = ''; // Variável para guardar quem vamos deletar
+    
+    let nomeDelecaoPendente = ''; 
+    let nomeEdicaoAtual = ''; // Variável para saber quem estamos editando
 
     window.onload = carregarLista;
 
@@ -257,7 +289,7 @@
             // Botão Criar Novo
             const cardNovo = document.createElement('div');
             cardNovo.className = 'card-personagem card-novo';
-            cardNovo.onclick = abrirModalCriar; // Agora chama o Modal
+            cardNovo.onclick = abrirModalCriar;
             cardNovo.innerHTML = `
                 <div class="plus-icon">+</div>
                 <div>Nova Ficha</div>
@@ -271,14 +303,17 @@
                     card.className = 'card-personagem';
                     const imgId = `img-card-${nome.replace(/\s+/g, '-')}`;
 
+                    // Adicionei o botão de Editar (btn-edit) antes do btn-delete
                     card.innerHTML = `
-                        <button class="btn-delete" title="Apagar Ficha" onclick="abrirModalDeletar(event, '${nome}')">✕</button>
+                        <button class="btn-action btn-edit" title="Editar Ficha" onclick="abrirModalEditar(event, '${nome}')">✎</button>
+                        <button class="btn-action btn-delete" title="Apagar Ficha" onclick="abrirModalDeletar(event, '${nome}')">✕</button>
                         <img id="${imgId}" src="img/imagem-no-site/personagem.png" class="card-img img-loading" alt="${nome}">
                         <div class="card-name">${nome}</div>
                     `;
 
                     card.onclick = (e) => {
-                        if(e.target.classList.contains('btn-delete')) return;
+                        // Se clicar no botão de delete OU edit, não abre a ficha
+                        if(e.target.classList.contains('btn-action')) return;
                         abrirFichaDoJogador(nome);
                     };
 
@@ -292,26 +327,20 @@
         }
     };
 
-    // --- LÓGICA DO MODAL DE CRIAÇÃO ---
+    // --- MODAL DE CRIAÇÃO ---
     function abrirModalCriar() {
         document.getElementById('novo-nome').value = '';
         document.getElementById('novo-senha').value = '';
         document.getElementById('modal-criar').style.display = 'flex';
         document.getElementById('novo-nome').focus();
     }
-
     function fecharModalCriar() {
         document.getElementById('modal-criar').style.display = 'none';
     }
-
     async function confirmarCriacao() {
         const nome = document.getElementById('novo-nome').value;
         const senha = document.getElementById('novo-senha').value;
-
-        if(!nome || !senha) {
-            mostrarAviso("Preencha nome e senha!");
-            return;
-        }
+        if(!nome || !senha) { mostrarAviso("Preencha nome e senha!"); return; }
 
         try {
             const res = await fetch(`${API_URL}/criar-ficha`, {
@@ -320,52 +349,93 @@
                 body: JSON.stringify({ nome, senha })
             });
             const data = await res.json();
-
             if(res.ok) {
-                mostrarAviso("Personagem criado com sucesso!");
+                mostrarAviso("Personagem criado!");
                 fecharModalCriar();
                 carregarLista();
+            } else { mostrarAviso("Erro: " + data.error); }
+        } catch(e) { mostrarAviso("Erro de conexão."); }
+    }
+
+    // --- MODAL DE EDIÇÃO (NOVA LÓGICA) ---
+    function abrirModalEditar(event, nomeAtual) {
+        event.stopPropagation(); // Impede de abrir a ficha ao clicar no lápis
+        nomeEdicaoAtual = nomeAtual;
+        
+        // Preenche o campo de nome com o nome atual
+        document.getElementById('edit-nome').value = nomeAtual;
+        document.getElementById('edit-senha').value = ''; // Senha começa vazia
+        
+        document.getElementById('modal-editar').style.display = 'flex';
+        document.getElementById('edit-nome').focus();
+    }
+
+    function fecharModalEditar() {
+        nomeEdicaoAtual = '';
+        document.getElementById('modal-editar').style.display = 'none';
+    }
+
+    async function confirmarEdicao() {
+        const novoNome = document.getElementById('edit-nome').value;
+        const novaSenha = document.getElementById('edit-senha').value;
+
+        if(!novoNome) {
+            mostrarAviso("O nome não pode ficar vazio.");
+            return;
+        }
+
+        try {
+            // NOTA: Certifique-se que o backend possui a rota '/editar-ficha'
+            const res = await fetch(`${API_URL}/editar-ficha`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ 
+                    nomeAntigo: nomeEdicaoAtual, 
+                    novoNome: novoNome, 
+                    novaSenha: novaSenha 
+                })
+            });
+
+            const data = await res.json();
+
+            if(res.ok) {
+                mostrarAviso("Dados atualizados com sucesso!");
+                fecharModalEditar();
+                carregarLista();
             } else {
-                mostrarAviso("Erro: " + data.error);
+                mostrarAviso("Erro: " + (data.error || "Falha ao editar"));
             }
         } catch(e) {
-            mostrarAviso("Erro de conexão.");
+            console.error(e);
+            mostrarAviso("Erro ao conectar com o servidor.");
         }
     }
 
-    // --- LÓGICA DO MODAL DE DELEÇÃO ---
+    // --- MODAL DE DELEÇÃO ---
     function abrirModalDeletar(event, nome) {
-        event.stopPropagation(); // Não abre a ficha
+        event.stopPropagation();
         nomeDelecaoPendente = nome;
         document.getElementById('nome-para-deletar').innerText = nome;
         document.getElementById('modal-deletar').style.display = 'flex';
     }
-
     function fecharModalDeletar() {
         nomeDelecaoPendente = '';
         document.getElementById('modal-deletar').style.display = 'none';
     }
-
     async function confirmarDelecao() {
         if(!nomeDelecaoPendente) return;
-
         try {
             const res = await fetch(`${API_URL}/deletar-ficha`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ nome: nomeDelecaoPendente })
             });
-
             if(res.ok) {
                 mostrarAviso("Ficha deletada.");
                 fecharModalDeletar();
                 carregarLista();
-            } else {
-                mostrarAviso("Erro ao deletar.");
-            }
-        } catch(e) {
-            mostrarAviso("Erro de conexão.");
-        }
+            } else { mostrarAviso("Erro ao deletar."); }
+        } catch(e) { mostrarAviso("Erro de conexão."); }
     }
 
     // --- UTILITÁRIOS ---
