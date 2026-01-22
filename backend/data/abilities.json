@@ -2023,6 +2023,471 @@
   },
 
 
+  {
+    "id": "invoca-andar-nao-visto",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Andar Não-Visto",
+    "description": "<p>Você aprende a fundir-se com sombras e penumbras como se fosse parte delas. Sempre que estiver em área de luz baixa ou escuridão, você pode tornar-se invisível até se mover ou realizar uma ação ou reação; a invisibilidade termina automaticamente nesses eventos. Use esta habilidade para infiltração, emboscadas e retiradas silenciosas.</p><p>Pré-Requisitos: Nível mínimo 5.</p>"
+  },
+  {
+    "id": "invoca-aperto-de-hadar",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Aperto de Hadar",
+    "description": "<p>Ao tocar a essência do vazio, você aprende a puxar inimigos com a força da Rajada Mística. Uma vez por turno, quando acertar uma criatura com sua Rajada Mística, você pode fazê-la ser deslocada até 3 metros em direção a você. Útil para controlar o posicionamento do combate e trazer alvos para armadilhas ou ataques corpo a corpo.</p><p>Pré-Requisitos: habilidade Rajada Mística.</p>"
+  },
+  {
+    "id": "invoca-arma-pacto-aprimorada",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Arma de Pacto Aprimorada",
+    "description": "<p>Seu vínculo com sua arma de pacto torna-a mais versátil e afiada. Você pode usar sua arma de pacto como foco arcano para magias de bruxo; armas invocadas por você que não sejam mágicas recebem +1 em jogadas de ataque e dano; além disso, você passa a poder invocar arcos curtos, arcos longos, bestas leves e bestas pesadas como opções válidas de arma de pacto. Ideal para bruxos que querem variar alcance sem perder identidade de pacto.</p><p>Pré-Requisitos: Pacto da Lâmina.</p>"
+  },
+  {
+    "id": "invoca-armadura-das-sombras",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Armadura das Sombras",
+    "description": "<p>Você aprende a envolver seu corpo em uma proteção arcana etérea. Pode conjurar Armadura Arcana em si mesmo sem gastar espaço de magia; a armadura se manifesta como tecido escuro que se molda ao seu corpo. Excelente para bruxos que buscam defesa constante sem depender de equipamentos.</p><p>Pré-Requisitos: nenhum.</p>"
+  },
+  {
+    "id": "invoca-aspecto-da-lua",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Aspecto da Lua",
+    "description": "<p>A bênção da lua altera seu ciclo de sono. Você não precisa dormir e não pode ser forçado a dormir; para contar como um Descanso Longo, você deve passar as oito horas realizando apenas atividades leves (vigilância reduzida, leitura, manutenção leve). Perfeito para vigílias prolongadas, viagens e guardar segredos sem perder descanso.</p><p>Pré-Requisitos: Pacto do Tomo.</p>"
+  },
+  {
+    "id": "invoca-bebedor-de-vida",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Bebedor de Vida",
+    "description": "<p>Seu vínculo com forças sombrias transforma parte do poder de seu Carisma em fome vital. Adiciona seu modificador de Carisma como dano necrótico a ataques feitos com sua Lâmina de Pacto. Essa energia se manifesta como sombras que lambem a vítima, drenando vigor. Excelente para bruxos que querem conversão direta de carisma em dano.</p><p>Pré-Requisitos: Nível mínimo 12, Pacto da Lâmina.</p>"
+  },
+  {
+    "id": "invoca-cetro-do-cacador-mitico",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Cetro do Caçador Mítico",
+    "description": "<p>Seu cajado ou arma de pacto carrega vingança residual. Quando você erra com uma Rajada Mística, a energia ainda pulsa e causa metade do dano que causaria em um acerto. A invocação reflete o controle refinado sobre a energia do pacto, garantindo que até falhas causem impacto.</p><p>Pré-Requisitos: habilidade Rajada Mística.</p>"
+  },
+  {
+    "id": "invoca-correntes-de-carceri",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Correntes de Carceri",
+    "description": "<p>Você aprende a invocar vínculos etéreos que prendem seres extraplanares. Uma vez por uso, você pode conjurar <em>Imobilizar Monstro</em>, mas esta versão só funciona contra celestiais, infernais e elementais — uma ferramenta poderosa para controlar seres de origem extraplanar que desafiam a ordem mundana.</p><p>Pré-Requisitos: Pacto da Corrente; Nível mínimo 15.</p>"
+  },
+  {
+    "id": "invoca-destruicao-mistica",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Destruição Mística",
+    "description": "<p>Você canaliza seus feitiços através da lâmina para desferir golpes devastadores. Uma vez por turno, quando acertar uma criatura com sua arma de pacto, você pode gastar um espaço de magia de bruxo para causar dano de energia adicional igual a 1d8 + 1d8 por nível do espaço mágico usado (por exemplo, 1d8 + 1d8 para 1º nível, etc.). Além disso, se o alvo for do tamanho Enorme ou menor, ele pode ser derrubado como efeito secundário. Esta invocação converte recursos arcanos em impacto físico direto.</p><p>Pré-Requisitos: Nível mínimo 5, Pacto da Lâmina.</p>"
+  },
+  {
+    "id": "invoca-esculpir-carne",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Esculpir Carne",
+    "description": "<p>Você obteve conhecimento arcaico para remodelar formas vivas. Pode usar <em>Polimorfia</em> uma vez por dia. Use com criatividade: transformar inimigos, criar disfarces ou salvar aliados ao alterar sua forma. A versão concedida tem as limitações normais do feitiço, mas é um recurso poderoso de utilidade e controle.</p><p>Pré-Requisitos: Nível mínimo 7.</p>"
+  },
+  {
+    "id": "invoca-fala-da-fera",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Fala da Fera",
+    "description": "<p>Você sussurra segredos de natureza e recebe respostas. Pode conjurar <em>Falar com Animais</em> à vontade. Essa habilidade permite negociação, coleta de informações e uso criativo de animais como espiões ou guias sem gastar seus recursos mágicos.</p><p>Pré-Requisitos: nenhum.</p>"
+  },
+  {
+    "id": "invoca-fuga-do-trapaceiro",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Fuga do Trapaceiro",
+    "description": "<p>Você domina formas de escapar de restrições. Uma vez por dia, como ação bônus, pode lançar <em>Movimento Livre</em> em si mesmo, libertando-se de imobilizações, restrições e penalidades de movimento por um curto período — ideal para retiradas rápidas ou virar o jogo em combates onde o posicionamento é vital.</p><p>Pré-Requisitos: Nível mínimo 7.</p>"
+  },
+  {
+    "id": "invoca-influencia-enganadora",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Influência Enganadora",
+    "description": "<p>Você torna sua presença mais persuasiva e enganosa. Ganha proficiência nas perícias Enganação e Persuasão. Se já for proficiente, recebe proficiência dupla (expertise) nessas perícias. Use para manipular, negociar e comandar situações sociais com mais segurança.</p><p>Pré-Requisitos: nenhum.</p>"
+  },
+  {
+    "id": "invoca-lamina-sedenta",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Lâmina Sedenta",
+    "description": "<p>Sua arma de pacto busca mais sangue. Você recebe um ataque adicional com sua arma de pacto quando realiza a ação de Ataque (ou quando a situação de ataque exigir), representando a sede do vínculo. Essa investida extra aumenta suas opções ofensivas em combates prolongados.</p><p>Pré-Requisitos: Nível mínimo 5, Pacto da Lâmina.</p>"
+  },
+  {
+    "id": "invoca-lanca-da-letargia",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Lança da Letargia",
+    "description": "<p>Cada rajada que você dispara carrega um fio de torpor. Uma vez por turno, quando acertar um alvo com sua Rajada Mística, você pode reduzir o deslocamento dele em 3 metros até o fim do próximo turno. Excelente para controlar inimigos móveis e manter alvos dentro do alcance de aliados.</p><p>Pré-Requisitos: habilidade Rajada Mística.</p>"
+  },
+  {
+    "id": "invoca-lanca-mistica",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Lança Mística",
+    "description": "<p>Sua Rajada Mística torna-se uma flecha de alcance quase sobrenatural. O alcance da sua Rajada Mística passa a ser 90 metros, permitindo engajar ameaças distantes com segurança e controlar o campo de batalha à distância.</p><p>Pré-Requisitos: habilidade Rajada Mística.</p>"
+  },
+  {
+    "id": "invoca-livro-de-segredos-antigos",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Livro de Segredos Antigos",
+    "description": "<p>Seu tomo sagrado converte-se em um repositório ritualístico. Seu Livro de Segredos funciona como um Livro de Rituais: escolha duas magias de 1º nível com a tag Ritual (de qualquer classe); essas magias são adicionadas gratuitamente ao seu tomo e você pode conjurá-las como rituais. Ao longo da campanha, você pode inscrever outros rituais que encontrar, mas só poderá lançá-los como rituais. Ideal para utilidades e suporte sem gastar espaços de magia.</p><p>Pré-Requisitos: Pacto do Tomo.</p>"
+  },
+  {
+    "id": "invoca-maldição-implacavel",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Maldição Implacável",
+    "description": "<p>Você aprende a perseguir suas maldições com ferocidade. Como ação bônus, você pode se teletransportar para um espaço adjacente à criatura afetada por alguma maldição sua (o alvo deve estar visível e a até 9 metros). Use para capitalizar em ataques, proteger aliados ou encurtar distâncias para desferir efeitos de maldição adicionais.</p><p>Pré-Requisitos: Nível mínimo 7 e possuir ao menos um feitiço ou habilidade que amaldiçoa.</p>"
+  },
+  {
+    "id": "invoca-maldiva-da-loucura",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Maldição da Loucura",
+    "description": "<p>Você transforma uma maldição em um estilhaço de insanidade. Como ação bônus, você pode ativar um efeito sobre uma criatura que esteja sob sua maldição (ou efeito similar), que você possa ver e que esteja a até 9 metros: o alvo e qualquer criatura adjacente sofrem dano psíquico igual ao seu modificador de Carisma (como onda de tormento mental). Use para punir agrupamentos e causar caos tático.</p><p>Pré-Requisitos: Nível mínimo 5 e algum feitiço ou habilidade que amaldiçoe.</p>"
+  },
+  {
+    "id": "invoca-manto-de-moscas",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Manto de Moscas",
+    "description": "<p>Você convoca um manto inquietante de insetos que confere benefícios — e um preço social. Uma vez por descanso curto, como ação bônus, você se cobre com um manto de moscas que ocupa um raio de 1,5 metro até que você fique inconsciente ou escolha remover com ação bônus. Enquanto ativo, você tem vantagem em testes de Intimidação, mas desvantagem em outros testes de Carisma; criaturas que comecem seu turno na área sofrem dano venenoso igual ao seu modificador de Carisma. Ótimo para controle de área e presença intimidadora.</p><p>Pré-Requisitos: Nível mínimo 5.</p>"
+  },
+  {
+    "id": "invoca-mascara-de-muitas-faces",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Máscara de Muitas Faces",
+    "description": "<p>Você domina as máscaras do engano. Pode lançar <em>Disfarçar-se</em> à vontade, sem consumir espaços de magia. A invocação permite assumir aparências convincentes para infiltração, fuga ou manipulação social.</p><p>Pré-Requisitos: nenhum.</p>"
+  },
+  {
+    "id": "invoca-mente-mistica-ua",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Mente Mística (UA)",
+    "description": "<p>Sua mente se torna um véu resistente às interrupções. Você tem vantagem em testes de resistência para manter concentração em magias (Concentração). Essa invocação é ideal para bruxos que dependem de efeitos mantidos e não querem perder magias em combates caóticos.</p><p>Pré-Requisitos: Pacto do Tomo.</p>"
+  },
+  {
+    "id": "invoca-mortalha-de-sombras",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Mortalha de Sombras",
+    "description": "<p>Você domina camadas profundas de invisibilidade. Pode lançar <em>Invisibilidade</em> à vontade. A habilidade permite atuações furtivas prolongadas e manobras táticas sem gastar recursos.</p><p>Pré-Requisitos: Nível mínimo 15.</p>"
+  },
+  {
+    "id": "invoca-olhar-de-duas-mentes",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Olhar de Duas Mentes",
+    "description": "<p>Você pode dividir por um breve instante sua percepção. Com uma ação, toca um humanoide e passa a perceber o mundo pelos seus sentidos até o fim do seu próximo turno. Em turnos subsequentes, você pode usar sua ação para estender o efeito. Útil para espionagem, observação remota e coordenar emboscadas sem se expor.</p><p>Pré-Requisitos: nenhum.</p>"
+  },
+  {
+    "id": "invoca-olhar-fantasmagorico",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Olhar Fantasmagórico",
+    "description": "<p>Você abre um olho espectral para ver através do oculto. Uma vez por descanso curto, como ação, você pode ver através de objetos sólidos a até 9 metros e ganha Visão no Escuro por até 1 minuto (ou até sua concentração terminar). Perfeito para descobrir passagens secretas, ver por detrás de portas e planear ações furtivas.</p><p>Pré-Requisitos: Nível mínimo 7.</p>"
+  },
+  {
+    "id": "invoca-olhos-do-guardiao-runico",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Olhos do Guardião Rúnico",
+    "description": "<p>Runas antigas abrem portas ao conhecimento escrito. Você pode ler qualquer idioma escrito, como se possuísse compreensão universal. Isso inclui línguas mortas e inscripciones arcanas básicas, tornando-o um decodificador valioso em ruínas e bibliotecas.</p><p>Pré-Requisitos: nenhum.</p>"
+  },
+  {
+    "id": "invoca-palavra-terrivel",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Palavra Terrível",
+    "description": "<p>Você aprendeu palavras que semeiam confusão. Uma vez por dia, pode conjurar <em>Confusão</em>. Use para quebrar formações inimigas, criar caos e obter vantagem tática em confrontos com múltiplos oponentes.</p><p>Pré-Requisitos: Nível mínimo 7.</p>"
+  },
+  {
+    "id": "invoca-passo-ascendente",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Passo Ascendente",
+    "description": "<p>Você aprende a desafiar a gravidade por curtos instantes. Pode conjurar <em>Levitação</em> sobre si mesmo. Útil para alcançar locais altos, evitar armadilhas de chão e criar vantagem de posicionamento em combate.</p><p>Pré-Requisitos: Nível mínimo 9.</p>"
+  },
+  {
+    "id": "invoca-prender-a-mente",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Prender a Mente",
+    "description": "<p>Você aprende a enredar o pensamento de adversários. Uma vez por dia, pode conjurar <em>Lentidão</em>. A magia desacelera alvos selecionados, fornecendo controle de campo e abrindo janelas para ataques coordenados.</p><p>Pré-Requisitos: Nível mínimo 5.</p>"
+  },
+  {
+    "id": "invoca-presente-das-profundezas",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Presente das Profundezas",
+    "description": "<p>Você recebe a bênção das águas profundas. Pode respirar debaixo d'água e ganha deslocamento de nado igual ao seu deslocamento terrestre. Além disso, pode conjurar <em>Respirar na Água</em> uma vez por dia sem gastar espaços de magia. Excelente para exploração subaquática e combates em ambientes alagados.</p><p>Pré-Requisitos: Nível mínimo 5.</p>"
+  },
+  {
+    "id": "invoca-presente-dos-imorredouros",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Presente dos Imorredouros",
+    "description": "<p>Seu vínculo com criaturas espectrais fortalece suas recuperações. Sempre que você recuperar pontos de vida enquanto seu familiar estiver a até 27 metros, trate cada dado de cura como se tivesse sido maximizado (por exemplo, um d6 cura 6 em vez de variar). Isso transforma pequenas recuperações em recuperações confiáveis em momentos críticos.</p><p>Pré-Requisitos: Pacto da Corrente.</p>"
+  },
+  {
+    "id": "invoca-rajada-agonizante",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Rajada Agonizante",
+    "description": "<p>Seu vínculo canaliza dor em cada projétil. Adiciona seu modificador de Carisma ao dano causado por sua Rajada Mística, tornando-a mais letal e escalonável com seus atributos. Essencial para bruxos que investem pesado em Carisma.</p><p>Pré-Requisitos: habilidade Rajada Mística.</p>"
+  },
+  {
+    "id": "invoca-rajada-repelente",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Rajada Repelente",
+    "description": "<p>Sua Rajada Mística carrega empuxo concussivo. Quando acerta com a Rajada Mística, você pode empurrar o alvo 3 metros para longe. Útil para separar inimigos, proteger aliados ou controlar o terreno durante o combate.</p><p>Pré-Requisitos: habilidade Rajada Mística.</p>"
+  },
+  {
+    "id": "invoca-revelador-de-segredos",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Revelador de Segredos",
+    "description": "<p>Você entende símbolos e encantamentos com facilidade. Pode conjurar <em>Identificar</em> sem gastar espaços de magia, permitindo reconhecer itens mágicos, armadilhas e efeitos arcanos rapidamente — essencial para exploradores e saqueadores de ruínas.</p><p>Pré-Requisitos: nenhum.</p>"
+  },
+  {
+    "id": "invoca-salto-sobrenatural",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Salto Sobrenatural",
+    "description": "<p>Você aprende a canalizar energia para impulsionar seu corpo. Pode conjurar <em>Pular</em> em si mesmo sem gastar espaço de magia, multiplicando sua mobilidade vertical e permitindo manobras acrobáticas ou fugir de perigos no campo de batalha.</p><p>Pré-Requisitos: Nível mínimo 9.</p>"
+  },
+  {
+    "id": "invoca-servos-do-caos",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Servos do Caos",
+    "description": "<p>Você aprende a convocar manifestações elementais do caos. Uma vez por dia, pode conjurar <em>Conjurar Elemental</em>. Use para reforço em confronto, tarefas perigosas ou controlar o campo por meio de um aliado elemental temporário.</p><p>Pré-Requisitos: Nível mínimo 9.</p>"
+  },
+  {
+    "id": "invoca-simbolo-de-mau-agouro",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Símbolo de Mau Agouro",
+    "description": "<p>Você aprendeu rituais de infelicidade. Pode usar <em>Rogar Maldição</em> uma vez por dia, impondo penalidades e condições ao alvo que atraem infortúnios — ótimo para neutralizar inimigos-chave ou definir emboscadas.</p><p>Pré-Requisitos: Nível mínimo 5.</p>"
+  },
+  {
+    "id": "invoca-sussurros-enfeiticantes",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Sussurros Enfeitiçantes",
+    "description": "<p>Você domina artimanhas de persuasão mágica. Uma vez por dia, pode conjurar <em>Compulsão</em>, forçando multidões ou grupos a se moverem de maneira favorável a seus planos — uma poderosa ferramenta de controle não letal.</p><p>Pré-Requisitos: Nível mínimo 7.</p>"
+  },
+  {
+    "id": "invoca-sussurros-da-tumba",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Sussurros da Tumba",
+    "description": "<p>Os segredos dos mortos sussurram para você. Pode conjurar <em>Falar com os Mortos</em>, permitindo extrair informações de cadáveres — útil para investigações, histórias antigas e descobrir lore perdido.</p><p>Pré-Requisitos: Nível mínimo 9.</p>"
+  },
+  {
+    "id": "invoca-tumba-de-levistus",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Tumba de Levistus",
+    "description": "<p>Você aprende a se envolver em um gelo protetor que troca mobilidade por resistência. Uma vez por Descanso Curto, como reação ao sofrer um ataque, você pode envolver-se em gelo: recebe Pontos de Vida Temporários iguais a seu nível x 10 imediatamente; logo após o dano, você fica incapacitado, com deslocamento 0 e vulnerabilidade ao fogo até o fim do próximo turno. Use como último recurso para absorver um golpe mortal e talvez virar o jogo — mas cuidado com fogo e imobilidade temporária.</p><p>Pré-Requisitos: Nível mínimo 5.</p>"
+  },
+  {
+    "id": "invoca-um-com-as-sombras",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Um com as Sombras",
+    "description": "<p>Você se torna um com a escuridão. Sempre que estiver em escuridão ou luz baixa, pode usar uma ação para tornar-se invisível até que faça uma ação ou reação. É uma ferramenta discreta que favorece furtividade e movimentação sorrateira no cenário apropriado.</p><p>Pré-Requisitos: Nível mínimo 5.</p>"
+  },
+  {
+    "id": "invoca-vigor-infernal",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Vigor Infernal",
+    "description": "<p>Você chama a chama vital do inferno para sustentar seu corpo. Pode lançar <em>Vida Falsa</em> em si mesmo, proporcionando um buffer temporário de resistência e sobrevivência, ideal para incursões arriscadas ou quando recursos de cura são escassos.</p><p>Pré-Requisitos: nenhum.</p>"
+  },
+  {
+    "id": "invoca-visao-da-bruxa",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Visão da Bruxa",
+    "description": "<p>Você corta ilusões e formas enganosas com clareza sobrenatural. Pode ver a forma verdadeira de metamorfo ou criatura escondida por ilusão ou transmutação até 9 metros. Excelente para detectar disfarces, identidades falsas e truques de transformação.</p><p>Pré-Requisitos: Nível mínimo 15.</p>"
+  },
+  {
+    "id": "invoca-visao-de-reinos-distantes",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Visão de Reinos Distantes",
+    "description": "<p>Seu olhar alcança lugares distantes. Pode conjurar <em>Olho Arcano</em>, permitindo vigilância remota e reconhecimento de locais perigosos sem se expor — valioso para planejamento e espionagem arcana.</p><p>Pré-Requisitos: Nível mínimo 14.</p>"
+  },
+  {
+    "id": "invoca-visao-do-diabo",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Visão do Diabo",
+    "description": "<p>Você vê na escuridão como olhos demoníacos. Ganha visão no escuro (normal ou mágica) até 36 metros. Essa visão aumenta sua capacidade de operar em cenários noturnos e cavernosos sem auxílio de tochas.</p><p>Pré-Requisitos: nenhum.</p>"
+  },
+  {
+    "id": "invoca-visao-mistica",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Visão Mística",
+    "description": "<p>Você sintoniza seus sentidos com a trama do arcanismo. Pode usar <em>Detectar Magia</em>, concedendo percepção imediata de auras mágicas próximas — útil para identificar armadilhas, itens mágicos e feitiços ativos.</p><p>Pré-Requisitos: nenhum.</p>"
+  },
+  {
+    "id": "invoca-visoes-da-neblina",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Visões da Neblina",
+    "description": "<p>Você modela imagens ilusórias com facilidade. Pode conjurar <em>Imagem Silenciosa</em>, criando simulações visuais para distração, engano ou encobrimento sem gastar espaços de magia.</p><p>Pré-Requisitos: nenhum.</p>"
+  },
+  {
+    "id": "invoca-voz-do-mestre-da-corrente",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Voz do Mestre da Corrente",
+    "description": "<p>Seu vínculo com seu familiar se aprofunda. Pode comunicar-se telepaticamente com seu familiar e perceber através de seus sentidos enquanto estiver no mesmo plano; enquanto percebe através dele, pode falar através do familiar como se fosse sua própria voz. Excelente para reconhecimento furtivo, mensagens seguras e comando a distância.</p><p>Pré-Requisitos: Pacto da Corrente.</p>"
+  },
+  {
+    "id": "invoca-armadura-mistica",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Armadura Mística",
+    "description": "<p>Você pode vestir proteção arcana com um toque. Com uma ação, toca uma armadura solta (não vestida) e ela se ajusta a você imediatamente; você é considerado proficiente com ela enquanto a usa. Útil para se equipar rapidamente com armadura mágica ou recuperada em campo.</p><p>Pré-Requisitos: Pacto da Lâmina.</p>"
+  },
+  {
+    "id": "invoca-bencao-dos-protetores",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Bênção dos Protetores",
+    "description": "<p>Seu tomo abriga nomes protegidos. Você pode inscrever até um número de criaturas igual ao seu modificador de Carisma no seu tomo; cada criatura com o nome inscrito pode ser restaurada de 0 a 1 ponto de vida uma vez por dia quando cair a 0 mas não morrer (um efeito estilo \"salvamento\" que impede a queda imediata). Use para proteger aliados-chave em grupos pequenos.</p><p>Pré-Requisitos: Nível mínimo 9, Pacto do Tomo.</p>"
+  },
+  {
+    "id": "invoca-caminho-da-descoberta",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Caminho da Descoberta",
+    "description": "<p>Você aprende a superar obstáculos físicos e mágicos com destreza. Ignora penalidades de terreno difícil; tem vantagem em testes para escapar de amarras e em testes de resistência para evitar ser paralisado. Excelente para bruxos que atuam como exploradores e solucionadores de problemas em ambientes hostis.</p><p>Pré-Requisitos: Pacto da Corrente de Estrelas.</p>"
+  },
+  {
+    "id": "invoca-escriba-longinquo",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Escriba Longínquo",
+    "description": "<p>Seu tomo pode estabelecer ligações por mensagem. Você pode inscrever até um número de criaturas igual ao seu modificador de Carisma no seu tomo; ao escolher uma delas, pode usar <em>Enviar Mensagem</em> sem componentes nem custo de uso. Quando usado, o nome desaparece do tomo após 1 minuto. Útil para comunicações discretas e coordenação durante operações temporárias.</p><p>Pré-Requisitos: Nível mínimo 5, Pacto do Tomo.</p>"
+  },
+  {
+    "id": "invoca-furia-do-mestre-das-correntes",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Fúria do Mestre das Correntes",
+    "description": "<p>Você comanda seu familiar com ferocidade sobrenatural. Como ação bônus, pode ordenar que seu familiar realize um ataque. Isso aumenta o potencial ofensivo tático do familiar, permitindo combos e distrações eficientes no mesmo turno.</p><p>Pré-Requisitos: Nível mínimo 9, Pacto da Corrente.</p>"
+  },
+  {
+    "id": "invoca-investidura-do-mestre",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Investidura do Mestre",
+    "description": "<p>Seu familiar torna-se uma extensão poderosa do seu pacto. O familiar invocado recebe benefícios: deslocamento de nado ou voo de 18 metros (se aplicável), não precisa respirar, seus ataques são tratados como mágicos para propósitos de resistências/imunidades, e quando exigir um teste de resistência, o familiar pode usar sua CD de feitiço. Transforme o familiar em companheiro tático confiável em ambientes hostis.</p><p>Pré-Requisitos: Pacto da Corrente.</p>"
+  },
+  {
+    "id": "invoca-protecao-do-talismã",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Proteção do Talismã",
+    "description": "<p>Seu talismã concede resistência prática a quem o usa. Enquanto estiver usando um talismã concedido por você, o usuário adiciona um dado d4 a testes de resistência nos quais não seja proficiente. Um suporte simples que torna aliados mais confiantes em testes importantes.</p><p>Pré-Requisitos: Nível mínimo 9, Pacto do Talismã.</p>"
+  },
+  {
+    "id": "invoca-retribuicao-do-talismã",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Retribuição do Talismã",
+    "description": "<p>O talismã que você imbuí protege e pune. Quando o usuário do talismã sofre um ataque enquanto estiver a até 9 metros de você, você pode usar sua reação para infligir dano psíquico igual ao seu modificador de Carisma ao atacante e empurrá-lo até 3 metros para longe. Ótimo para defender aliados frágeis e controlar agressões adversárias.</p><p>Pré-Requisitos: Nível mínimo 9, Pacto do Talismã.</p>"
+  },
+  {
+    "id": "invoca-vinculo-do-talismã",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Vínculo do Talismã",
+    "description": "<p>O talismã cria um atalho entre portadores. Enquanto outra pessoa estiver usando seu talismã, ambos podem usar uma ação para se teletransportar instantaneamente um para o lado do outro. Excelente para evacuações rápidas, resgates e coordenação tática entre aliados selecionados.</p><p>Pré-Requisitos: Nível mínimo 9, Pacto do Talismã.</p>"
+  },
+  {
+    "id": "invoca-voz-da-descoberta",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Voz da Descoberta",
+    "description": "<p>Seu tomo amplia seu conhecimento linguístico. Ao fim de um Descanso Longo, escolha dois idiomas escritos que você passa a saber ler e escrever. Ideal para decifrar textos antigos, negociar com culturas estrangeiras e lidar com documentos misteriosos.</p><p>Pré-Requisitos: Pacto da Corrente de Estrelas.</p>"
+  },
+
 
 
 
