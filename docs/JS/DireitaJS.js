@@ -753,7 +753,7 @@ const PERICIAS_LISTA = [
 ];
 
 
-/* ---------------- MODAL UNIFICADO (COM CORREÇÕES DE DEFAULT E SALVAMENTO) ---------------- */
+/* ---------------- MODAL UNIFICADO (COM CORREÇÕES: ACERTO VAZIO + CORREÇÕES ANTERIORES) ---------------- */
 function openItemModal(existingItem = null) {
   const existingOverlay = document.querySelector('.spell-modal-overlay');
   if (existingOverlay) existingOverlay.remove();
@@ -773,11 +773,13 @@ function openItemModal(existingItem = null) {
 
   const pre = existingItem || {};
 
-  // --- CORREÇÃO 1: ATRIBUTO PADRÃO "NENHUM" ---
-  // Se já tiver algo salvo, usa. Se não, começa como "Nenhum".
+  // CORREÇÃO 1: Atributo padrão 'Nenhum'
   let defaultAttackAttr = pre.attackAttribute || 'Nenhum';
 
-  const defaultAttackBonus = pre.attackBonus || '0';
+  // --- CORREÇÃO 2: BÔNUS DE ACERTO VAZIO POR PADRÃO ---
+  // Se for edição, mantém o valor. Se for novo, começa vazio string vazia ('') para mostrar o placeholder
+  const defaultAttackBonus = pre.attackBonus || ''; 
+
   const ATTR_OPTIONS = ['Força', 'Destreza', 'Constituição', 'Inteligência', 'Sabedoria', 'Carisma', 'Nenhum'];
   const renderAttrOptions = (selected) => ATTR_OPTIONS.map(a => `<option value="${a}" ${a === selected ? 'selected' : ''}>${a}</option>`).join('');
 
@@ -850,8 +852,7 @@ function openItemModal(existingItem = null) {
       const disadv = Array.isArray(pre.disadvantageSkill) ? pre.disadvantageSkill : (pre.disadvantageSkill ? [pre.disadvantageSkill] : []);
       const adv = Array.isArray(pre.advantageSkill) ? pre.advantageSkill : (pre.advantageSkill ? [pre.advantageSkill] : []);
       
-      // --- CORREÇÃO 2: TIPO DE DEFESA VAZIO POR PADRÃO ---
-      // Antes: pre.defenseType || 'Geral' -> Agora: pre.defenseType || ''
+      // CORREÇÃO 3: Tipo de Defesa começa vazio
       html = `
          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; align-items:end;">
             ${nameInput}
@@ -1043,9 +1044,7 @@ function openItemModal(existingItem = null) {
 
     if (currentTab === 'Item') {
       newItem.type = 'Geral'; newItem.isEquipable = true;
-      // --- CORREÇÃO 3: ID DO INPUT ---
-      // Antes: modal.querySelector('#item-acerto').value (que não existe e quebrava)
-      // Agora: modal.querySelector('#item-attack-bonus').value
+      // CORREÇÃO 4: ID DO INPUT CORRIGIDO
       newItem.acertoBonus = modal.querySelector('#item-attack-bonus').value;
       newItem.damageBonus = modal.querySelector('#item-danobonus').value;
       newItem.damageType = modal.querySelector('#item-dmgtype').value;
