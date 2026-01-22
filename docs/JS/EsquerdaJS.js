@@ -1291,10 +1291,17 @@ function atualizarTudoVisual() {
     if (elNivel) elNivel.textContent = nivelTotal;
 }
 
+/* =============================================================
+   CORREÇÃO 1: vincularEventosInputs (AC Outros e Iniciativa)
+============================================================= */
 function vincularEventosInputs() {
     const addEnterBlur = (el, stateKey) => {
         if (!el) return;
-        el.value = state[stateKey] || "";
+        // Só define o valor se o elemento não estiver focado para evitar pular cursor
+        if (document.activeElement !== el) {
+            el.value = state[stateKey] || "";
+        }
+        
         el.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') { e.preventDefault(); state[stateKey] = el.value; saveStateToServer(); el.blur(); }
         });
@@ -1307,9 +1314,6 @@ function vincularEventosInputs() {
     addEnterBlur(document.getElementById('input-classesHeader'), 'classesHeader');
     addEnterBlur(document.getElementById('input-raca'), 'raca');
 
-    // Removemos os antigos text inputs para Fraquezas/Resistências, pois agora são selects.
-    // Mas mantemos os inputs de números que ainda são usados.
-
     const xpInput = document.getElementById('xpAtual');
     if (xpInput) {
         xpInput.oninput = (e) => { state.xp = e.target.value; atualizarMarcosEXP(); saveStateToServer(); };
@@ -1320,6 +1324,8 @@ function vincularEventosInputs() {
         marcoInput.oninput = (e) => { state.marco = parseInt(e.target.value) || 0; atualizarMarcosEXP(); saveStateToServer(); };
         marcoInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') marcoInput.blur(); });
     }
+    
+    // Deslocamento
     const metrosInput = document.getElementById('metros');
     const quadradosInput = document.getElementById('quadrados');
     if (metrosInput && quadradosInput) {
@@ -1329,24 +1335,36 @@ function vincularEventosInputs() {
         quadradosInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') quadradosInput.blur(); });
     }
 
-    // Iniciativa Bônus - Listener corrigido
+    // Iniciativa Bônus
     const iniBonus = document.getElementById('iniciativaBonus');
     if (iniBonus) {
         iniBonus.oninput = (e) => {
             state.iniciativaBonus = parseInt(e.target.value) || 0;
             atualizarIniciativaTotal();
-            saveStateToServer();
+            // saveStateToServer(); // Opcional: Salvar no blur para melhor performance
         };
+        iniBonus.onblur = () => saveStateToServer();
         iniBonus.addEventListener('keydown', (e) => { if (e.key === 'Enter') iniBonus.blur(); });
     }
 
+    // --- CORREÇÃO AQUI: AC Outros (Armadura Bônus) ---
+    // Usava textContent (errado para input), agora usa .value
     const outrosInput = document.getElementById('ac-outros');
     if (outrosInput) {
-        outrosInput.oninput = () => { state.acOutros = parseInt(outrosInput.textContent) || 0; atualizarAC(); };
-        outrosInput.onblur = () => { state.acOutros = parseInt(outrosInput.textContent) || 0; saveStateToServer(); };
+        outrosInput.value = state.acOutros || 0; // Garante valor inicial
+        
+        outrosInput.oninput = () => { 
+            state.acOutros = parseInt(outrosInput.value) || 0; 
+            atualizarAC(); 
+        };
+        outrosInput.onblur = () => { 
+            state.acOutros = parseInt(outrosInput.value) || 0; 
+            saveStateToServer(); 
+        };
         outrosInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); outrosInput.blur(); } });
     }
 
+    // Inputs de Vida (Digitação direta)
     ['vida-atual', 'vida-temp-atual', 'dano-necro-atual'].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
@@ -1362,13 +1380,23 @@ function vincularEventosInputs() {
     });
 }
 
+/* =============================================================
+   CORREÇÃO 2: Botões de Vida (Sem limitar a 100)
+============================================================= */
 document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
     if (!btn.closest('.vida-bar') && !btn.closest('.barra-secundaria')) return;
+    
     btn.onclick = () => {
         let key = btn.closest('.vida-container') ? "vidaAtual" : (btn.closest('.barra-secundaria:nth-child(1)') ? "vidaTempAtual" : "danoNecroAtual");
+        
         let step = btn.classList.contains('menos5') ? -5 : (btn.classList.contains('menos1') ? -1 : (btn.classList.contains('mais1') ? 1 : 5));
-        let max = key === 'vidaAtual' ? parseInt(document.getElementById('vida-total').textContent) : 100;
+        
+        // CORREÇÃO: Se for vida normal, usa o máximo calculado.
+        // Se for Vida Temp ou Necrótico, usa 9999 (infinito prático) para não travar em 100.
+        let max = key === 'vidaAtual' ? parseInt(document.getElementById('vida-total').textContent) : 9999;
+        
         state[key] = Math.max(0, Math.min(max, (parseInt(state[key]) || 0) + step));
+        
         atualizarVidaCalculada();
         saveStateToServer();
     };
@@ -1376,6 +1404,5 @@ document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
 
 document.getElementById('inspiraLeft').onclick = () => { state.inspiracao = Math.max(0, (parseInt(state.inspiracao) || 0) - 1); document.getElementById('inspiraValor').textContent = state.inspiracao; saveStateToServer(); };
 document.getElementById('inspiraRight').onclick = () => { state.inspiracao = (parseInt(state.inspiracao) || 0) + 1; document.getElementById('inspiraValor').textContent = state.inspiracao; saveStateToServer(); };
-
 
 

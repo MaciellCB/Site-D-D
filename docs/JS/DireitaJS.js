@@ -1592,6 +1592,10 @@ function renderSpells() {
    por este bloco completo:
 ============================================================= */
 
+/* =============================================================
+   CORREÇÃO 2: Atualização que respeita o cursor
+============================================================= */
+
 window.addEventListener('sheet-updated', () => {
   // 1. Atualiza DT Magias
   state.dtMagias = calculateSpellDC();
@@ -1607,24 +1611,34 @@ window.addEventListener('sheet-updated', () => {
   }
 
   // 3. ATUALIZAÇÃO AUTOMÁTICA DA DIREITA
-  // --- CORREÇÃO AQUI: Adicionei 'Inventário' e 'Descrição' na lista ---
   if (['Magias', 'Mag. Preparadas', 'Habilidades', 'Combate', 'Inventário', 'Descrição'].includes(state.activeTab)) {
 
-    // Salva estado de scroll e foco
+    // Salva estado de scroll
     const scrollContainer = document.querySelector('.lado-direito .conteudo') || document.querySelector('.lado-direito');
     const savedScroll = scrollContainer ? scrollContainer.scrollTop : 0;
 
+    // --- CORREÇÃO: SALVA O FOCO E A POSIÇÃO DO CURSOR ---
     const activeElement = document.activeElement;
     const activeId = activeElement ? activeElement.id : null;
+    const cursorStart = activeElement ? activeElement.selectionStart : null;
+    const cursorEnd = activeElement ? activeElement.selectionEnd : null;
 
     // FORÇA O REDESENHO DA ABA ATIVA
     renderActiveTab();
 
-    // Restaura Scroll e Foco
+    // Restaura Scroll
     if (scrollContainer) scrollContainer.scrollTop = savedScroll;
+
+    // --- CORREÇÃO: RESTAURA O FOCO E A POSIÇÃO DO CURSOR ---
     if (activeId) {
       const el = document.getElementById(activeId);
-      if (el) el.focus();
+      if (el) {
+        el.focus();
+        // Se for um campo de texto, restaura a posição exata do cursor
+        if (cursorStart !== null && cursorEnd !== null && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) {
+             try { el.setSelectionRange(cursorStart, cursorEnd); } catch(e){}
+        }
+      }
     }
   }
 });
@@ -3696,6 +3710,13 @@ function openNewAbilityModal(existingAbility = null) {
 }
 
 /* ---------------- DESCRIÇÃO ---------------- */
+/* =============================================================
+   CORREÇÃO 1: renderDescription com "Debounce"
+   (Evita salvar e recarregar a tela a cada letra)
+============================================================= */
+
+let descSaveTimer = null; // Variável para controlar o tempo de salvamento
+
 function renderDescription() {
   const d = state.description;
 
@@ -3737,14 +3758,12 @@ function renderDescription() {
     </div>
   `;
 
-  // Lógica de Auto-Resize e Auto-Save
+  // Lógica de Auto-Resize e Auto-Save INTELIGENTE
   const textareas = conteudoEl.querySelectorAll('textarea');
 
   textareas.forEach(tx => {
     // Função que ajusta altura baseada no conteúdo
     const autoResize = () => {
-      // Pequeno truque: reseta altura para calcular o scrollHeight corretamente
-      // mas verificamos se o usuário está diminuindo manualmente através do evento
       tx.style.height = 'auto';
       tx.style.height = (tx.scrollHeight + 2) + 'px';
     };
@@ -3756,16 +3775,20 @@ function renderDescription() {
     tx.addEventListener('input', () => {
       autoResize();
 
-      // Salvar automático no state
+      // 1. Atualiza o estado LOCAL imediatamente (visual)
       const key = tx.id.replace('desc-', '');
       if (state.description.hasOwnProperty(key)) {
         state.description[key] = tx.value;
-        saveStateToServer(); // <--- SALVAR AO DIGITAR
+        
+        // 2. CORREÇÃO: Limpa o timer anterior se você ainda estiver digitando
+        if (descSaveTimer) clearTimeout(descSaveTimer);
+
+        // 3. Só salva no servidor se você parar de digitar por 1 segundo (1000ms)
+        descSaveTimer = setTimeout(() => {
+            saveStateToServer();
+        }, 1000);
       }
     });
-
-    // O navegador lida com o redimensionamento manual via CSS (resize: vertical).
-    // O overflow-y: auto garante o scroll se o usuário forçar um tamanho pequeno.
   });
 }
 
