@@ -1381,3 +1381,27 @@ input[type=number] {
 }
 
 
+/* No arquivo EsquerdaCS.css */
+
+.status-row {
+  display: flex;
+  /* Reduzimos o gap original de 30px para 15px para caberem os 3 itens sem quebrar */
+  gap: 15px; 
+  align-items: flex-end;
+  justify-content: center; /* Centraliza o grupo todo */
+  width: 100%; /* Garante que use o espaço disponível */
+}
+
+/* Garante que o input da passiva tenha o mesmo estilo */
+.caixa-valor-fixo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f0f0f;
+  border: 1px solid #444;
+  border-radius: 6px;
+  height: 42px;
+  min-width: 70px; /* Levemente menor para caber 3 lado a lado */
+  padding: 0 8px;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+}

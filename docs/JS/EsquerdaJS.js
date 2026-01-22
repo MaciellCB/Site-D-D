@@ -810,7 +810,42 @@ function atualizarVidaCalculada() {
     atualizarBarraUI('vida-temp', state.vidaTempAtual, 100);
     atualizarBarraUI('dano-necro', state.danoNecroAtual, 100);
 }
+function atualizarPassiva() {
+    // 1. Verifica se as perícias existem no estado
+    if (!state.pericias || !state.pericias["Percepção"]) {
+        const el = document.getElementById('passivaValor');
+        if (el) el.textContent = 10; // Valor base padrão sem nada
+        return;
+    }
 
+    const dados = state.pericias["Percepção"];
+
+    // 2. Descobre qual atributo a Percepção está usando (Geralmente Sabedoria/n3)
+    // Mapeamento simples reverso baseada no seu sistema
+    const mapAtributos = { "FOR": "n6", "DEX": "n2", "CON": "n1", "INT": "n5", "SAB": "n3", "CAR": "n4" };
+    const attrKey = mapAtributos[dados.atributo] || "n3"; // Padrão n3 (Sabedoria)
+    
+    // 3. Calcula o Modificador do Atributo
+    const atributoValor = parseInt(state.atributos[attrKey] || 10);
+    const modAtributo = Math.floor((atributoValor - 10) / 2);
+
+    // 4. Calcula Bônus de Proficiência (se treinado)
+    let bonusProf = 0;
+    if (dados.treinado) {
+        const nivelTotal = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0) || 1;
+        bonusProf = Math.floor((nivelTotal - 1) / 4) + 2;
+    }
+
+    // 5. Soma 'Outros' bônus manuais da perícia
+    const outros = parseInt(dados.outros) || 0;
+
+    // 6. Fórmula Final: 10 + Mod + Prof + Outros
+    const valorPassiva = 10 + modAtributo + bonusProf + outros;
+
+    // 7. Atualiza na tela
+    const el = document.getElementById('passivaValor');
+    if (el) el.textContent = valorPassiva;
+}
 // --- ADICIONE esta nova função em qualquer lugar do EsquerdaJS.js (pode ser no final) ---
 
 window.abrirPortraitOBS = function() {
@@ -1014,7 +1049,9 @@ function atualizarTudoVisual() {
     atualizarProficiencia();
     atualizarIniciativaTotal();
     atualizarAC();
-
+    
+    atualizarPassiva(); // <--- ADICIONE ESTA LINHA
+    
     const nivelTotal = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0);
     const elNivel = document.getElementById('nivelFoco');
     if (elNivel) elNivel.textContent = nivelTotal;
