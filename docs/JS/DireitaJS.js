@@ -43,16 +43,39 @@ carregarCatalogosDireita();
 
 // --- FUNÇÕES DE LOGIN E SALVAMENTO ---
 
+let saveTimer = null; // Variável global para controlar o cronômetro
+
 async function saveStateToServer() {
+  // Se não tiver nome, nem tenta salvar
   if (!state.nome) return;
-  try {
-    await fetch(`${API_URL}/save-ficha`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(state)
-    });
-  } catch (e) { console.error("Erro ao salvar:", e); }
+
+  // 1. Se já existe um salvamento agendado, CANCELA ele.
+  // Isso faz o cronômetro reiniciar toda vez que você clica ou digita.
+  if (saveTimer) {
+    clearTimeout(saveTimer);
+  }
+
+  // 2. Agenda o salvamento para daqui a 1 segundo (1000ms)
+  saveTimer = setTimeout(async () => {
+    try {
+      // Envia os dados para o servidor
+      await fetch(`${API_URL}/save-ficha`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(state)
+      });
+
+      // SUCESSO SILENCIOSO: Não faz nada visualmente.
+      // O dado foi salvo no banco, mas o usuário não é interrompido.
+
+    } catch (e) {
+      // Apenas erros graves aparecem no console (para debug), sem travar a tela
+      console.error("Erro silencioso de conexão:", e);
+    }
+  }, 1000); // <-- Tempo de espera: 1 segundo
 }
+
+
 
 async function carregarDadosIniciais(nome, senha) {
   try {
