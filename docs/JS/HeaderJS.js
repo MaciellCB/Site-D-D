@@ -25,11 +25,23 @@ function syncOrdemClasses() {
         }
     });
 }
+
 // Tipos de Criatura e Tamanhos
 const CREATURE_TYPES = ['Humanoide', 'Construto', 'Fada', 'Dragão', 'Monstruosidade', 'Morto-vivo', 'Celestial', 'Corruptor', 'Elemental', 'Besta', 'Planta', 'Gigante', 'Limo', 'Aberração', 'Gosma'];
 const CREATURE_SIZES = ['Minúsculo', 'Pequeno', 'Médio', 'Grande', 'Enorme', 'Imenso'];
 const RACES_REQUIRED_SUBRACE = ['Eladrin', 'Anões', 'Elfos', 'Gnomos', 'Meio-Elfo', 'Pequeninos'];
 
+const ALIGNMENT_DATA = [
+    { id: "LG", title: "Ordeiro e Bom", sigla: "OB" },
+    { id: "NG", title: "Neutro e Bom", sigla: "NB" },
+    { id: "CG", title: "Caótico e Bom", sigla: "CB" },
+    { id: "LN", title: "Ordeiro e Neutro", sigla: "ON" },
+    { id: "TN", title: "Neutro", sigla: "N" },
+    { id: "CN", title: "Caótico e Neutro", sigla: "CN" },
+    { id: "LE", title: "Ordeiro e Mau", sigla: "OM" },
+    { id: "NE", title: "Neutro e Mau", sigla: "NM" },
+    { id: "CE", title: "Caótico e Mau", sigla: "CM" }
+];
 // Perícias
 const ALL_SKILLS_LIST = [
     "Acrobacia", "Lidar com animais", "Arcanismo", "Atletismo", "Atuação",
@@ -461,6 +473,9 @@ function atualizarHeader() {
     const btnAntecedente = document.getElementById('btn-antecedente');
     if (btnAntecedente) btnAntecedente.textContent = state.antecedente || "Escolher...";
 
+const btnAlign = document.getElementById('btn-alinhamento');
+    if (btnAlign) btnAlign.textContent = state.alinhamento || "Escolher...";
+
     const inputRaca = document.getElementById('input-raca');
     if (inputRaca) {
         let displayRace = state.raca || "";
@@ -545,7 +560,10 @@ document.addEventListener('DOMContentLoaded', () => {
         elClasses.style.cursor = 'pointer';
         elClasses.addEventListener('click', openClassSelectionModal);
     }
+    const btnAlign = document.getElementById('btn-alinhamento');
+    if (btnAlign) btnAlign.addEventListener('click', openAlignmentModal);
 });
+
 
 
 /* =============================================================
@@ -2480,3 +2498,67 @@ window.openImageLightbox = function (imgSrc) {
     overlay.onclick = function (e) { if (e.target.classList.contains('lightbox-overlay') || e.target.classList.contains('lightbox-close')) overlay.remove(); };
     document.body.appendChild(overlay);
 };
+
+
+
+// ... (todo o código anterior do HeaderJS.js)
+
+/* =============================================================
+   SISTEMA DE ALINHAMENTO (GRID 3x3)
+   Cole isso no final do arquivo HeaderJS.js
+============================================================= */
+function openAlignmentModal() {
+    const overlay = document.createElement('div');
+    overlay.className = 'spell-modal-overlay race-modal-overlay';
+    overlay.style.zIndex = '55000';
+
+    // Gera os 9 cards do grid
+    const gridHtml = ALIGNMENT_DATA.map(align => {
+        // Verifica se é o selecionado atual
+        const isActive = state.alinhamento === align.title ? 'active' : '';
+        return `
+            <div class="alignment-option-card ${isActive}" onclick="selectAlignment('${align.title}')">
+                <div class="alignment-sigla">${align.sigla}</div>
+                <div class="alignment-title" style="z-index:1;">${align.title.replace(' e ', '<br><span style="font-size:10px; color:#888;">E</span><br>')}</div>
+            </div>
+        `;
+    }).join('');
+
+    overlay.innerHTML = `
+        <div class="spell-modal" style="width: 500px; height: 500px;">
+            <div class="modal-header">
+                <h3>Definir Alinhamento</h3>
+                <button class="modal-close">✖</button>
+            </div>
+            <div class="modal-body" style="padding: 0; overflow: hidden;">
+                <div class="alignment-grid-container">
+                    ${gridHtml}
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+    if (typeof checkScrollLock === 'function') checkScrollLock();
+
+    // Evento de fechar
+    overlay.querySelector('.modal-close').onclick = () => { overlay.remove(); checkScrollLock(); };
+
+    // Função de seleção
+    window.selectAlignment = (valor) => {
+        state.alinhamento = valor;
+        
+        // Atualiza visual
+        const btnAlign = document.getElementById('btn-alinhamento');
+        if(btnAlign) btnAlign.textContent = valor;
+
+        // Salva
+        if (typeof saveStateToServer === 'function') saveStateToServer();
+        window.dispatchEvent(new CustomEvent('sheet-updated'));
+
+        // Fecha modal
+        overlay.remove();
+        checkScrollLock();
+        delete window.selectAlignment; // Limpa função global
+    };
+}
