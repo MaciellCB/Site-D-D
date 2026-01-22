@@ -1405,3 +1405,100 @@ input[type=number] {
   padding: 0 8px;
   box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
 }
+
+
+/* =============================================================
+   BOTÃO DE DADOS DE VIDA (ENTRE METROS E QUADRADOS)
+============================================================= */
+.dv-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60px; /* Tamanho compacto */
+    justify-content: flex-end;
+}
+
+.dv-box label {
+    color: #e0aaff; /* Roxo claro para destaque */
+    font-size: 11px;
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+.btn-dv-trigger {
+    background: linear-gradient(180deg, #1a1a1a, #000);
+    border: 1px solid #9c27b0;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-dv-trigger img {
+    width: 18px;
+    height: 18px;
+    opacity: 0.9;
+}
+
+.btn-dv-trigger:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(156, 39, 176, 0.4);
+}
+
+/* Estilo dos itens dentro do Painel de Dados de Vida */
+.item-dv {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #101010;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    margin-bottom: 6px;
+}
+
+.btn-rolar-dv {
+    background: #2a1a2a;
+    border: 1px solid #9c27b0;
+    color: #fff;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: 0.2s;
+}
+
+.btn-rolar-dv:hover:not(:disabled) {
+    background: #9c27b0;
+}
+
+.btn-rolar-dv:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    border-color: #444;
+    filter: grayscale(1);
+}
+
+.dv-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.dv-class-name {
+    font-weight: bold;
+    font-size: 13px;
+    color: #ddd;
+}
+
+.dv-count {
+    font-size: 11px;
+    color: #aaa;
+}
