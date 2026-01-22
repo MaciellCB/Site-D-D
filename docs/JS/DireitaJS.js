@@ -753,7 +753,7 @@ const PERICIAS_LISTA = [
 ];
 
 
-/* ---------------- MODAL UNIFICADO (COM INTELIGÊNCIA DE ATRIBUTO) ---------------- */
+/* ---------------- MODAL UNIFICADO (COM CORREÇÕES DE DEFAULT E SALVAMENTO) ---------------- */
 function openItemModal(existingItem = null) {
   const existingOverlay = document.querySelector('.spell-modal-overlay');
   if (existingOverlay) existingOverlay.remove();
@@ -773,19 +773,9 @@ function openItemModal(existingItem = null) {
 
   const pre = existingItem || {};
 
-  // --- LÓGICA DE ATRIBUTO PADRÃO INTELIGENTE ---
-  let defaultAttackAttr = pre.attackAttribute;
-
-  if (!defaultAttackAttr) {
-    // Se não tem nada salvo, adivinha pelo tipo
-    const tipo = (pre.tipoArma || '').toLowerCase();
-    if (tipo.includes('distancia') || tipo.includes('distância')) {
-      defaultAttackAttr = 'Destreza';
-    } else {
-      defaultAttackAttr = 'Força';
-    }
-  }
-  // ---------------------------------------------
+  // --- CORREÇÃO 1: ATRIBUTO PADRÃO "NENHUM" ---
+  // Se já tiver algo salvo, usa. Se não, começa como "Nenhum".
+  let defaultAttackAttr = pre.attackAttribute || 'Nenhum';
 
   const defaultAttackBonus = pre.attackBonus || '0';
   const ATTR_OPTIONS = ['Força', 'Destreza', 'Constituição', 'Inteligência', 'Sabedoria', 'Carisma', 'Nenhum'];
@@ -859,6 +849,9 @@ function openItemModal(existingItem = null) {
     if (tab === 'Item') {
       const disadv = Array.isArray(pre.disadvantageSkill) ? pre.disadvantageSkill : (pre.disadvantageSkill ? [pre.disadvantageSkill] : []);
       const adv = Array.isArray(pre.advantageSkill) ? pre.advantageSkill : (pre.advantageSkill ? [pre.advantageSkill] : []);
+      
+      // --- CORREÇÃO 2: TIPO DE DEFESA VAZIO POR PADRÃO ---
+      // Antes: pre.defenseType || 'Geral' -> Agora: pre.defenseType || ''
       html = `
          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; align-items:end;">
             ${nameInput}
@@ -867,7 +860,7 @@ function openItemModal(existingItem = null) {
             <div><label>Dano Bônus</label><input id="item-danobonus" type="text" value="${escapeHtml(pre.damageBonus || '')}" /></div>
             <div><label>Tipo de Dano</label><input id="item-dmgtype" type="text" value="${escapeHtml(pre.damageType || '')}" /></div>
             <div style="grid-column: 1 / span 1;"><label>Defesa(CA) Bonus</label><input id="item-defense" type="text" value="${escapeHtml(pre.defenseBonus || '')}" /></div>
-            <div style="grid-column: 2 / span 2;"><label>Tipo de Defesa</label><input id="item-defensetype" type="text" value="${escapeHtml(pre.defenseType || 'Geral')}" /></div>
+            <div style="grid-column: 2 / span 2;"><label>Tipo de Defesa</label><input id="item-defensetype" type="text" value="${escapeHtml(pre.defenseType || '')}" placeholder="Ex: Mágico, Escudo..." /></div>
             <div style="grid-column: 1 / span 1.5;"><label>Desvantagem</label>${renderPericiaMulti('disadv-field-item', disadv)}</div>
             <div style="grid-column: 2.5 / span 1.5;"><label>Vantagem</label>${renderPericiaMulti('adv-field-item', adv)}</div>
             ${descLabel}
@@ -1050,7 +1043,10 @@ function openItemModal(existingItem = null) {
 
     if (currentTab === 'Item') {
       newItem.type = 'Geral'; newItem.isEquipable = true;
-      newItem.acertoBonus = modal.querySelector('#item-acerto').value;
+      // --- CORREÇÃO 3: ID DO INPUT ---
+      // Antes: modal.querySelector('#item-acerto').value (que não existe e quebrava)
+      // Agora: modal.querySelector('#item-attack-bonus').value
+      newItem.acertoBonus = modal.querySelector('#item-attack-bonus').value;
       newItem.damageBonus = modal.querySelector('#item-danobonus').value;
       newItem.damageType = modal.querySelector('#item-dmgtype').value;
       newItem.defenseBonus = modal.querySelector('#item-defense').value;
@@ -1102,6 +1098,8 @@ function openItemModal(existingItem = null) {
     window.dispatchEvent(new CustomEvent('sheet-updated'));
   });
 }
+
+
 /* ---------------- HABILIDADES (DIREITA) - ATUALIZADO COM EXCLUSIVIDADE ---------------- */
 /* =============================================================
    LÓGICA DE HABILIDADES (RENDERIZAÇÃO, EVENTOS E CATÁLOGO)
