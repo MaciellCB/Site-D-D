@@ -1229,51 +1229,7 @@ function bindAbilitySectionEvents() {
 
 
 
-// --- HTML DA SEÇÃO (Design Preservado) ---
-function renderAbilitySection(titulo, listaCards, chaveUnica) {
-  if (!state.collapsedSections) state.collapsedSections = {};
-  const isCollapsed = !!state.collapsedSections[chaveUnica];
-  const arrow = isCollapsed ? '▸' : '▾';
-  const displayStyle = isCollapsed ? 'display:none;' : '';
 
-  // HTML DOS CARDS (Seu design original)
-  const cardsHtml = listaCards.map(a => `
-        <div class="card hab-card ${a.expanded ? 'expanded' : ''}" data-id="${a.id}">
-          <div class="card-header">
-            <div class="left" data-id="${a.id}">
-              <span class="caret">${a.expanded ? '▾' : '▸'}</span>
-              <div class="card-title">${a.title}</div>
-            </div>
-            <div class="right">
-               <label class="check-ativar" title="Preparar/Ativar Habilidade">
-                  <input class="hab-activate" type="checkbox" data-id="${a.id}" ${a.active ? 'checked' : ''}/>
-                  <span class="square-check"></span>
-               </label>
-            </div>
-          </div>
-          <div class="card-body" style="${a.expanded ? '' : 'display:none;'}">
-            <div>${a.description || 'Sem descrição.'}</div>
-            <div style="margin-top:8px;">
-              <a href="#" class="remover-hab" data-id="${a.id}">Remover</a>
-              <a href="#" class="editar-hab" data-id="${a.id}" style="float:right;color:#2e7d32">Editar</a>
-            </div>
-          </div>
-        </div>
-    `).join('');
-
-  return `
-        <div class="hab-section-group" style="margin-bottom:12px;">
-            <div class="toggle-section-header" data-key="${chaveUnica}" style="cursor:pointer; display:flex; align-items:center; background:rgba(255,255,255,0.03); padding:8px; border-radius:4px; margin-bottom:5px; border: 1px solid rgba(255,255,255,0.05);">
-                <span style="font-size:14px; color:#9c27b0; width:15px;">${arrow}</span> 
-                <span style="font-weight:700; font-size:12px; color:#ccc; text-transform:uppercase;">${titulo}</span>
-                <span style="margin-left:auto; font-size:10px; color:#666; background:#111; padding:2px 6px; border-radius:4px;">${listaCards.length}</span>
-            </div>
-            <div class="section-content" style="${displayStyle}">
-                ${cardsHtml}
-            </div>
-        </div>
-    `;
-}
 
 // --- EVENTOS ---
 // --- EVENTOS DE HABILIDADES ---
@@ -3554,36 +3510,40 @@ function formatCatalogAbilityCard(c) {
   `;
 }
 
-/* ---------------- MODAL NOVA HABILIDADE (COM VALIDAÇÃO E PLACEHOLDER) ---------------- */
+/* ---------------- MODAL NOVA HABILIDADE (COM STATUS E DANO) ---------------- */
 function openNewAbilityModal(existingAbility = null) {
   const modal = document.createElement('div');
   modal.className = 'spell-modal-overlay';
   modal.style.zIndex = '11000';
 
-  // Se for edição, mantém a descrição. Se for novo, começa vazio.
   const descContent = existingAbility ? existingAbility.description : '';
   const editorHTML = createRichEditorHTML(descContent, 'hab-editor-content');
 
-  // Valores iniciais
-  let currentCategory = existingAbility ? existingAbility.category : 'Geral';
-  let currentClass = existingAbility ? existingAbility.class : '';
-  let currentSubclass = existingAbility ? existingAbility.subclass : '';
+  // Valores iniciais ou vazios
+  const vals = {
+      title: existingAbility ? existingAbility.title : '',
+      damage: existingAbility ? existingAbility.damage : '',
+      damageType: existingAbility ? existingAbility.damageType : '',
+      attackBonus: existingAbility ? existingAbility.attackBonus : '',
+      defenseBonus: existingAbility ? existingAbility.defenseBonus : '',
+      speedBonus: existingAbility ? existingAbility.speedBonus : '',
+      saveDC: existingAbility ? existingAbility.saveDC : '',
+      category: existingAbility ? existingAbility.category : 'Geral',
+      class: existingAbility ? existingAbility.class : '',
+      subclass: existingAbility ? existingAbility.subclass : ''
+  };
 
-  // Lista de Categorias
   const CATEGORIAS = ['Geral', 'Raça', 'Talento', 'Antecedente', 'Classe'];
-
-  // Gera HTML dos Checkboxes de Tipo
   const typeCheckboxesHTML = CATEGORIAS.map(cat => `
       <label class="radio-box">
-          <input type="radio" name="hab-type" value="${cat}" ${currentCategory === cat ? 'checked' : ''}>
+          <input type="radio" name="hab-type" value="${cat}" ${vals.category === cat ? 'checked' : ''}>
           <span class="radio-label">${cat}</span>
       </label>
   `).join('');
 
-  // Dropdown de Classes (só aparece se "Classe" estiver selecionado)
-  const classDropdownStyle = currentCategory === 'Classe' ? 'display:block;' : 'display:none;';
-  const classOptionsHTML = CLASSES_AVAILABLE.map(c =>
-    `<option value="${c}" ${currentClass === c ? 'selected' : ''}>${c}</option>`
+  const classDropdownStyle = vals.category === 'Classe' ? 'display:block;' : 'display:none;';
+  const classOptionsHTML = CLASSES_AVAILABLE.map(c => 
+    `<option value="${c}" ${vals.class === c ? 'selected' : ''}>${c}</option>`
   ).join('');
 
   modal.innerHTML = `
@@ -3596,7 +3556,34 @@ function openNewAbilityModal(existingAbility = null) {
         <div class="modal-body">
           <div>
               <label>Nome da Habilidade <span style="color:#ff5555">*</span></label>
-              <input id="hab-name" type="text" value="${existingAbility ? escapeHtml(existingAbility.title) : ''}" placeholder="Ex: Fúria, Visão no Escuro (Obrigatório)..." />
+              <input id="hab-name" type="text" value="${escapeHtml(vals.title)}" placeholder="Ex: Fúria, Ataque Furtivo..." />
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; margin-top:5px; background:#151515; padding:10px; border-radius:6px; border:1px solid rgba(255,255,255,0.05);">
+              <div>
+                  <label>Dano / Cura</label>
+                  <input id="hab-damage" type="text" value="${escapeHtml(vals.damage)}" placeholder="Ex: 2d6" />
+              </div>
+              <div>
+                  <label>Tipo de Dano</label>
+                  <input id="hab-dmg-type" type="text" value="${escapeHtml(vals.damageType)}" placeholder="Ex: Fogo" />
+              </div>
+              <div>
+                  <label>Bônus de Ataque</label>
+                  <input id="hab-attack" type="text" value="${escapeHtml(vals.attackBonus)}" placeholder="Ex: +5" />
+              </div>
+              <div>
+                  <label>Bônus de CA</label>
+                  <input id="hab-defense" type="text" value="${escapeHtml(vals.defenseBonus)}" placeholder="Ex: +1" />
+              </div>
+              <div>
+                  <label>Deslocamento</label>
+                  <input id="hab-speed" type="text" value="${escapeHtml(vals.speedBonus)}" placeholder="Ex: +3m" />
+              </div>
+              <div>
+                  <label>CD (Salva)</label>
+                  <input id="hab-dc" type="text" value="${escapeHtml(vals.saveDC)}" placeholder="Ex: Con 15" />
+              </div>
           </div>
 
           <div style="margin-top:10px;">
@@ -3617,7 +3604,7 @@ function openNewAbilityModal(existingAbility = null) {
                   </div>
                   <div style="flex:1;">
                       <label>Subclasse (Opcional)</label>
-                      <input id="hab-subclass-input" type="text" value="${currentSubclass}" placeholder="Ex: Berserker, Evocação..." />
+                      <input id="hab-subclass-input" type="text" value="${escapeHtml(vals.subclass)}" placeholder="Ex: Berserker..." />
                   </div>
               </div>
           </div>
@@ -3639,16 +3626,11 @@ function openNewAbilityModal(existingAbility = null) {
   checkScrollLock();
   initRichEditorEvents('hab-editor-content');
 
-  // Foca no nome se for novo
-  if (!existingAbility) {
-    document.getElementById('hab-name').focus();
-  }
+  if (!existingAbility) document.getElementById('hab-name').focus();
 
-  // --- LÓGICA DE INTERFACE ---
-
+  // Eventos de Categoria
   const radios = modal.querySelectorAll('input[name="hab-type"]');
   const classSelectorDiv = modal.querySelector('#hab-class-selector');
-
   radios.forEach(radio => {
     radio.addEventListener('change', (e) => {
       if (e.target.value === 'Classe') {
@@ -3661,35 +3643,24 @@ function openNewAbilityModal(existingAbility = null) {
     });
   });
 
-  // Fechar Modal
-  const closeAll = () => {
-    modal.remove();
-    checkScrollLock();
-  };
+  const closeAll = () => { modal.remove(); checkScrollLock(); };
   modal.querySelector('.modal-close').addEventListener('click', closeAll);
   modal.querySelector('.btn-cancel-hab').addEventListener('click', (ev) => { ev.preventDefault(); closeAll(); });
 
-  // Salvar
+  // SALVAR
   modal.querySelector('.btn-save-hab').addEventListener('click', (ev) => {
     ev.preventDefault();
-    const nomeInput = modal.querySelector('#hab-name');
-    const nome = nomeInput.value.trim();
-
-    // --- VALIDAÇÃO OBRIGATÓRIA ---
+    const nome = modal.querySelector('#hab-name').value.trim();
     if (!nome) {
       alert("O nome da habilidade é obrigatório!");
-      nomeInput.style.borderColor = "#ff5555"; // Destaca erro
-      nomeInput.focus();
-      return; // Para a execução aqui
+      return;
     }
 
     const desc = document.getElementById('hab-editor-content').innerHTML;
-
     const selectedCategory = modal.querySelector('input[name="hab-type"]:checked')?.value || 'Geral';
-
+    
     let finalClass = "";
     let finalSubclass = "";
-
     if (selectedCategory === 'Classe') {
       finalClass = modal.querySelector('#hab-class-select').value;
       finalSubclass = modal.querySelector('#hab-subclass-input').value.trim();
@@ -3697,38 +3668,39 @@ function openNewAbilityModal(existingAbility = null) {
       finalClass = 'Antecedente';
     }
 
-    if (existingAbility) {
-      state.abilities = state.abilities.map(h => h.id === existingAbility.id ? {
-        ...h,
+    // Objeto base
+    const abilityData = {
         title: nome,
         description: desc,
         category: selectedCategory,
         class: finalClass,
-        subclass: finalSubclass
-      } : h);
+        subclass: finalSubclass,
+        // Novos Campos
+        damage: modal.querySelector('#hab-damage').value.trim(),
+        damageType: modal.querySelector('#hab-dmg-type').value.trim(),
+        attackBonus: modal.querySelector('#hab-attack').value.trim(),
+        defenseBonus: modal.querySelector('#hab-defense').value.trim(),
+        speedBonus: modal.querySelector('#hab-speed').value.trim(),
+        saveDC: modal.querySelector('#hab-dc').value.trim()
+    };
+
+    if (existingAbility) {
+      state.abilities = state.abilities.map(h => h.id === existingAbility.id ? { ...h, ...abilityData } : h);
     } else {
       state.abilities.unshift({
         id: uid(),
-        title: nome,
-        description: desc,
-
-        expanded: false, // ALTERADO: Começa fechado
-
-        active: false,
-        category: selectedCategory,
-        class: finalClass,
-        subclass: finalSubclass
+        ...abilityData,
+        expanded: false,
+        active: false
       });
     }
 
     closeAll();
     renderAbilities();
     saveStateToServer();
-
     window.dispatchEvent(new CustomEvent('sheet-updated'));
   });
 }
-
 /* ---------------- DESCRIÇÃO ---------------- */
 /* =============================================================
    CORREÇÃO 1: renderDescription com "Debounce"
@@ -3849,7 +3821,7 @@ function renderItemGroup(titulo, listaItens, chaveUnica, forceExpand = false) {
     `;
 }
 
-/* --- ATUALIZADO: RENDERIZA GRUPO DE HABILIDADES (FECHADO POR PADRÃO) --- */
+/* --- ATUALIZADO: RENDERIZA GRUPO DE HABILIDADES (COM DANO E STATUS) --- */
 function renderAbilitySection(titulo, listaCards, chaveUnica, forceExpand = false) {
   if (!state.collapsedSections) state.collapsedSections = {};
 
@@ -3857,36 +3829,73 @@ function renderAbilitySection(titulo, listaCards, chaveUnica, forceExpand = fals
   if (forceExpand) {
     isCollapsed = false;
   } else {
-    // Fechado por padrão (true) se não tiver salvo
     isCollapsed = state.collapsedSections[chaveUnica] !== undefined ? state.collapsedSections[chaveUnica] : true;
   }
 
   const arrow = isCollapsed ? '▸' : '▾';
   const displayStyle = isCollapsed ? 'display:none;' : '';
 
-  const cardsHtml = listaCards.map(a => `
+  const cardsHtml = listaCards.map(a => {
+    // --- LÓGICA DE DANO NO HEADER ---
+    let rightHeaderHtml = '';
+    if (a.damage && a.damage !== '-' && a.damage.trim() !== '') {
+        rightHeaderHtml = `
+            <div class="card-meta spell-damage" style="display: flex; align-items: center; gap: 6px; margin-right: 10px;">
+                <span style="font-weight: 800; color: #9c27b0; font-size: 16px;">${a.damage}</span>
+                <img class="dice-img" src="img/imagem-no-site/dado.png" alt="dado" style="width: 20px; height: 20px; cursor:pointer;" title="Rolar Dano" />
+            </div>
+        `;
+    }
+
+    // --- LÓGICA DE DETALHES NO CORPO ---
+    let statsHtml = '';
+    const parts = [];
+
+    if (a.attackBonus) parts.push(`<span class="purple">Ataque:</span> <span class="white-val">${a.attackBonus}</span>`);
+    if (a.defenseBonus) parts.push(`<span class="purple">CA/Defesa:</span> <span class="white-val">${a.defenseBonus}</span>`);
+    if (a.speedBonus) parts.push(`<span class="purple">Deslocamento:</span> <span class="white-val">${a.speedBonus}</span>`);
+    if (a.damageType) parts.push(`<span class="purple">Tipo:</span> <span class="white-val">${a.damageType}</span>`);
+    
+    // Se tiver CD/DT (Dificuldade)
+    if (a.saveDC) parts.push(`<span class="purple">CD:</span> <span class="white-val">${a.saveDC}</span>`);
+
+    if (parts.length > 0) {
+        statsHtml = `
+            <div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; display: flex; flex-wrap: wrap; gap: 12px;">
+                ${parts.join('<span class="separator"></span>')}
+            </div>
+        `;
+    }
+
+    return `
         <div class="card hab-card ${a.expanded ? 'expanded' : ''}" data-id="${a.id}">
-          <div class="card-header">
-            <div class="left" data-id="${a.id}">
+          <div class="card-header" style="padding: 10px;">
+            <div class="left" data-id="${a.id}" style="flex: 1; min-width: 0; margin-right: 5px;">
               <span class="caret">${a.expanded ? '▾' : '▸'}</span>
               <div class="card-title">${a.title}</div>
             </div>
-            <div class="right">
+            
+            <div class="right" style="display: flex; align-items: center;">
+               ${rightHeaderHtml}
                <label class="check-ativar" title="Preparar/Ativar Habilidade">
                   <input class="hab-activate" type="checkbox" data-id="${a.id}" ${a.active ? 'checked' : ''}/>
                   <span class="square-check"></span>
                </label>
             </div>
           </div>
+
           <div class="card-body" style="${a.expanded ? '' : 'display:none;'}">
-            <div>${a.description || 'Sem descrição.'}</div>
-            <div style="margin-top:8px;">
+            ${statsHtml}
+            <div class="hab-desc-text">${a.description || 'Sem descrição.'}</div>
+            
+            <div style="margin-top:12px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.05); display:flex; justify-content:space-between;">
               <a href="#" class="remover-hab" data-id="${a.id}">Remover</a>
-              <a href="#" class="editar-hab" data-id="${a.id}" style="float:right;color:#2e7d32">Editar</a>
+              <a href="#" class="editar-hab" data-id="${a.id}" style="color:#2e7d32">Editar</a>
             </div>
           </div>
         </div>
-    `).join('');
+    `;
+  }).join('');
 
   return `
         <div class="hab-section-group" style="margin-bottom:12px;">
@@ -4515,17 +4524,19 @@ function getSpellAttackValues() {
   return { prof, mod, extra };
 }
 
-/* 4. ESCUTADOR GLOBAL DE CLIQUES (CORRIGIDO E OTIMIZADO) */
+/* 4. ESCUTADOR GLOBAL DE CLIQUES (ATUALIZADO COM HABILIDADES) */
 document.addEventListener('click', function(e) {
     
-    // --- CASO 1: CLIQUE NO DADO (ITEM OU MAGIA) ---
+    // =================================================================
+    // CASO 1: CLIQUE NO ÍCONE DE DADO (IMAGEM)
+    // =================================================================
     if (e.target.classList.contains('dice-img')) {
         e.preventDefault(); 
         e.stopPropagation();
 
-        // =================================================================
+        // -------------------------------------------------------------
         // A. VERIFICA SE É MAGIA (SPELL CARD)
-        // =================================================================
+        // -------------------------------------------------------------
         const spellCard = e.target.closest('.spell-card');
         if (spellCard) {
             const spellTitle = spellCard.querySelector('.spell-title')?.textContent || "Magia";
@@ -4558,15 +4569,12 @@ document.addEventListener('click', function(e) {
                 setTimeout(() => renderActiveTab(), 100); 
             }
 
-            // 2. EXTRAÇÃO DO TEXTO DO DANO (CORREÇÃO AQUI)
+            // 2. EXTRAÇÃO DO TEXTO DO DANO
             let damageText = '';
-            
-            // Tenta pegar do span dinâmico (novo formato)
             const dynamicSpan = spellCard.querySelector('.dynamic-damage-text');
             if (dynamicSpan) {
                 damageText = dynamicSpan.textContent.trim();
             } else {
-                // Fallback para formato antigo (texto solto na div)
                 const parent = e.target.closest('.spell-damage');
                 if (parent) {
                      damageText = Array.from(parent.childNodes)
@@ -4581,9 +4589,7 @@ document.addEventListener('click', function(e) {
                 damageRes = rollDiceExpression(damageText);
             }
 
-            // 4. CÁLCULO DO ACERTO (NOVO: ROLA D20 + BÔNUS MÁGICO)
-            // Se você quiser que TODA magia role ataque, mantenha assim. 
-            // Se quiser só dano, remova este bloco.
+            // 4. CÁLCULO DO ACERTO (OPCIONAL: ROLA D20 + BÔNUS MÁGICO)
             let attackRes = null;
             const vals = getSpellAttackValues(); // Pega Inteligência/Carisma + Proficiência
             
@@ -4609,16 +4615,15 @@ document.addEventListener('click', function(e) {
             }
 
             // EXIBE RESULTADOS
-            // Se não tiver dano nem ataque, não mostra nada
             if (attackRes || damageRes) {
                 showCombatResults(spellTitle, attackRes, damageRes);
             }
             return;
         }
 
-        // =================================================================
-        // B. VERIFICA SE É ITEM (ARMA/INVENTÁRIO) - (Código Original Mantido)
-        // =================================================================
+        // -------------------------------------------------------------
+        // B. VERIFICA SE É ITEM (ARMA/INVENTÁRIO)
+        // -------------------------------------------------------------
         const itemCard = e.target.closest('.item-card');
         if (itemCard) {
             const itemId = itemCard.getAttribute('data-id');
@@ -4652,9 +4657,8 @@ document.addEventListener('click', function(e) {
                 // DANO
                 let damageRes = null;
                 let damageText = '';
-                const spellDamageDiv = e.target.closest('.spell-damage');
+                const spellDamageDiv = e.target.closest('.spell-damage'); // Reutiliza classe CSS
                 if (spellDamageDiv) {
-                    // Itens ainda usam a estrutura antiga, então essa busca funciona
                     damageText = Array.from(spellDamageDiv.childNodes)
                         .filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent.trim()).join('');
                 }
@@ -4668,9 +4672,56 @@ document.addEventListener('click', function(e) {
             }
             return;
         }
+
+        // -------------------------------------------------------------
+        // C. VERIFICA SE É HABILIDADE (NOVA LÓGICA)
+        // -------------------------------------------------------------
+        const habCard = e.target.closest('.hab-card');
+        if (habCard) {
+            const habId = Number(habCard.getAttribute('data-id'));
+            const hab = state.abilities.find(h => h.id === habId);
+            
+            if (hab) {
+                // 1. Rola o Dano (se houver)
+                let damageRes = null;
+                if (hab.damage && hab.damage !== '-' && hab.damage.trim() !== '') {
+                    damageRes = rollDiceExpression(hab.damage);
+                }
+
+                // 2. Rola o Ataque (se houver bônus definido, ex: "+5" ou "5")
+                let attackRes = null;
+                if (hab.attackBonus && hab.attackBonus.trim() !== '') {
+                    const bonusStr = hab.attackBonus.replace('+', '').trim();
+                    const bonus = parseInt(bonusStr) || 0;
+                    
+                    const d20 = Math.floor(Math.random() * 20) + 1;
+                    const total = d20 + bonus;
+                    
+                    const isCrit = (d20 === 20);
+                    const isFumble = (d20 === 1);
+                    const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
+
+                    attackRes = {
+                        total: total,
+                        text: total.toString(),
+                        detail: `${d20Html} + ${bonus}`,
+                        isCrit: isCrit,
+                        isFumble: isFumble
+                    };
+                }
+
+                // Exibe se tiver algum resultado
+                if (damageRes || attackRes) {
+                    showCombatResults(hab.title, attackRes, damageRes);
+                }
+            }
+            return;
+        }
     }
 
-    // --- CASO 2: ATAQUE MÁGICO (BOTÃO CABEÇALHO) ---
+    // =================================================================
+    // CASO 2: ATAQUE MÁGICO (BOTÃO CABEÇALHO)
+    // =================================================================
     const btnHeader = e.target.closest('#btnRollSpellAttack_Header');
     const btnPrep   = e.target.closest('#btnRollSpellAttack_PrepHeader');
 
@@ -4687,7 +4738,7 @@ document.addEventListener('click', function(e) {
 
         const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
         const parts = [d20Html];
-        if (vals.mod !== 0) parts.push(vals.mod);    
+        if (vals.mod !== 0) parts.push(vals.mod);     
         if (vals.prof !== 0) parts.push(vals.prof);  
         if (vals.extra !== 0) parts.push(vals.extra); 
 
@@ -4695,14 +4746,16 @@ document.addEventListener('click', function(e) {
             total: total, 
             text: total.toString(), 
             detail: parts.join(' + '),
-            isCrit: isCrit,
+            isCrit: isCrit, 
             isFumble: isFumble 
         };
         
         showCombatResults("Ataque Mágico", res, null);
     }
     
-    // --- CASO 3: PERÍCIAS ---
+    // =================================================================
+    // CASO 3: PERÍCIAS (CLIQUE NO DADO DA ESQUERDA - Se estiver aqui)
+    // =================================================================
     if (e.target.classList.contains('col-icon') && e.target.closest('.pericia-item')) {
         e.preventDefault(); e.stopPropagation();
         const itemLi = e.target.closest('.pericia-item');
@@ -4721,8 +4774,7 @@ document.addEventListener('click', function(e) {
             text: total.toString(), 
             detail: `${d20Html} + ${bonus}`, 
             isCrit: isCrit, 
-            isFumble: isFumble,
-            label: "RESULTADO" // <--- ADICIONEI ISSO AQUI
+            isFumble: isFumble 
         };
         showCombatResults(nome, res, null);
     }
