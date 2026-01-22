@@ -250,33 +250,218 @@ function inicializarDadosEsquerda() {
     });
 }
 // Listener para abrir o painel de Dados de Vida
+/* =============================================================
+   TORNA O PAINEL ARRASTÁVEL (GLOBAL)
+   Coloque isso no início ou meio do arquivo, fora de outros blocos
+============================================================= */
+window.tornarPainelArrastavel = function(elemento) {
+    const header = elemento.querySelector('.painel-header');
+    if (!header) return;
+
+    let isDragging = false;
+    let startX, startY, initialLeft, initialTop;
+
+    header.onmousedown = (e) => {
+        if (e.target.tagName === 'BUTTON') return; // Ignora clique no X
+        e.preventDefault();
+
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+
+        const rect = elemento.getBoundingClientRect();
+        
+        // Converte para pixels absolutos para evitar bugs de %
+        elemento.style.left = rect.left + 'px';
+        elemento.style.top = rect.top + 'px';
+        elemento.style.transform = 'none'; // Remove transformações para não somar coordenadas
+        
+        header.style.cursor = 'grabbing';
+    };
+
+    document.onmousemove = (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        elemento.style.left = `${parseFloat(elemento.style.left) + dx}px`;
+        elemento.style.top = `${parseFloat(elemento.style.top) + dy}px`;
+
+        startX = e.clientX;
+        startY = e.clientY;
+    };
+
+    document.onmouseup = () => {
+        if (isDragging) {
+            isDragging = false;
+            header.style.cursor = 'move';
+        }
+    };
+};
+
+/* =============================================================
+   SISTEMA DE DADOS DE VIDA (DESCANSOS) - CORRIGIDO
+============================================================= */
+
+// Listener para abrir o painel
 const btnAbrirDV = document.getElementById('btn-abrir-dv');
 if (btnAbrirDV) {
     btnAbrirDV.addEventListener('click', (e) => {
-        // Usa a mesma lógica de posicionamento do painel de classes
         const painel = document.getElementById('painelDadosVida');
         const lista = document.getElementById('listaDadosVida');
         
-        // 1. Renderiza o conteúdo
         renderizarPainelDadosVida(lista);
         
-        // 2. Posiciona e exibe
         painel.style.display = 'block';
         
-        // Posiciona perto do botão
-        const rect = e.currentTarget.getBoundingClientRect();
-        let leftPos = rect.left;
-        if (leftPos + 300 > window.innerWidth) leftPos = window.innerWidth - 310;
-        
-        painel.style.left = `${leftPos}px`;
-        painel.style.top = `${rect.bottom + 10}px`;
-        
-        // Torna arrastável (reaproveitando sua função existente)
-        if(typeof tornarPainelArrastavel === 'function') {
-            tornarPainelArrastavel(painel);
+        // Posicionamento inicial (se ainda não foi movido)
+        if (!painel.style.left) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            let leftPos = rect.left;
+            if (leftPos + 300 > window.innerWidth) leftPos = window.innerWidth - 310;
+            
+            painel.style.left = `${leftPos}px`;
+            painel.style.top = `${rect.bottom + 10}px`;
         }
+        
+        // Aplica o arrastar
+        tornarPainelArrastavel(painel);
     });
 }
+
+function renderizarPainelDadosVida(container) {
+    container.innerHTML = '';
+    if (typeof syncOrdemClasses === 'function') syncOrdemClasses();
+    const ordem = state.ordemClasses || Object.keys(state.niveisClasses);
+    let totalClasses = 0;
+
+    ordem.forEach(key => {
+        const nivel = parseInt(state.niveisClasses[key]) || 0;
+        if (nivel <= 0) return;
+        totalClasses++;
+
+        const classeRef = classesPadrao.find(c => c.key === key);
+        if (!classeRef) return;
+
+        const gastos = state.dadosVidaGastos[key] || 0;
+        const restantes = Math.max(0, nivel - gastos);
+        const dadoTipo = classeRef.dado; 
+
+        const div = document.createElement('div');
+        div.className = 'item-dv';
+        
+        const disabledAttr = restantes <= 0 ? 'disabled' : '';
+        const textoBotao = restantes <= 0 ? 'Esgotado' : `Rolar ${dadoTipo}`;
+
+        div.innerHTML = `
+            <div class="dv-info">
+                <span class="dv-class-name">${classeRef.nome}</span>
+                <span class="dv-count">Disponível: <strong style="color:${restantes > 0 ? '#fff' : '#d32f2f'}">${restantes}</strong> / ${nivel}</span>
+            </div>
+            <button class="btn-rolar-dv" ${disabledAttr} onclick="usarDadoVida('${key}', '${dadoTipo}')">
+                <img src="img/imagem-no-site/dado.png" style="width:14px;"> ${textoBotao}
+            </button>
+        `;
+        container.appendChild(div);
+    });
+
+    if (totalClasses === 0) {
+        container.innerHTML = '<div style="color:#888; text-align:center; padding:10px;">Nenhuma classe definida.</div>';
+    }
+    
+    // Botão de Descanso Longo (Sem confirmação agora)
+    const divReset = document.createElement('div');
+    divReset.style.marginTop = '10px';
+    divReset.style.paddingTop = '10px';
+    divReset.style.borderTop = '1px solid #333';
+    divReset.innerHTML = `
+        <button onclick="realizarDescansoLongo()" style="width:100%; background:#111; color:#aaa; border:1px solid #444; padding:8px; border-radius:4px; cursor:pointer; font-size:12px;">
+            💤 Realizar Descanso Longo (Recuperar DV e Vida)
+        </button>
+    `;
+    container.appendChild(divReset);
+}
+
+/* --- FUNÇÃO CORRIGIDA: USAR DADO DE VIDA --- */
+window.usarDadoVida = function(classKey, dadoTipo) {
+    const nivel = parseInt(state.niveisClasses[classKey]) || 0;
+    const gastos = state.dadosVidaGastos[classKey] || 0;
+    
+    if (gastos >= nivel) return;
+
+    const faces = parseInt(dadoTipo.replace('d', ''));
+    const resultadoDado = Math.floor(Math.random() * faces) + 1;
+    
+    const conScore = state.atributos?.n1 || 10;
+    const modCon = Math.floor((parseInt(conScore) - 10) / 2);
+    
+    const curaTotal = Math.max(0, resultadoDado + modCon);
+
+    const vidaAtual = parseInt(state.vidaAtual) || 0;
+    const vidaMax = state.vidaTotalCalculada || 100;
+    const novaVida = Math.min(vidaMax, vidaAtual + curaTotal);
+    
+    state.vidaAtual = novaVida;
+    state.dadosVidaGastos[classKey] = gastos + 1;
+
+    saveStateToServer();
+    atualizarTudoVisual(); 
+    
+    const container = document.getElementById('listaDadosVida');
+    if(container) renderizarPainelDadosVida(container);
+
+    // --- NOVA CHAMADA: Usa o visual da Direita (showCombatResults) ---
+    if (typeof showCombatResults === 'function') {
+        const nomeClasse = classesPadrao.find(c => c.key === classKey)?.nome || classKey;
+        
+        // Formata o objeto como a função espera
+        const resultadoObj = {
+            total: curaTotal,
+            text: curaTotal.toString(),
+            detail: `${resultadoDado} (d${faces}) + ${modCon} (CON)`,
+            isCrit: resultadoDado === faces, // Destaque se tirou máximo no dado
+            isFumble: resultadoDado === 1
+        };
+
+        showCombatResults(`Cura (${nomeClasse})`, null, resultadoObj);
+    } else {
+        // Fallback caso a direita não tenha carregado
+        alert(`Rolou ${resultadoDado} + ${modCon} = ${curaTotal} de cura.`);
+    }
+};
+
+/* --- FUNÇÃO CORRIGIDA: DESCANSO LONGO --- */
+window.realizarDescansoLongo = function() {
+    // 1. Recupera Vida Total
+    state.vidaAtual = state.vidaTotalCalculada;
+
+    // 2. Recupera Dados de Vida (Metade do total, ARREDONDADO PARA CIMA)
+    const ordem = state.ordemClasses || Object.keys(state.niveisClasses);
+    
+    ordem.forEach(key => {
+        const nivel = parseInt(state.niveisClasses[key]) || 0;
+        const gastos = state.dadosVidaGastos[key] || 0;
+        
+        if (nivel > 0 && gastos > 0) {
+            // Math.ceil para arredondar para cima
+            const recuperar = Math.max(1, Math.ceil(nivel / 2));
+            state.dadosVidaGastos[key] = Math.max(0, gastos - recuperar);
+        }
+    });
+
+    saveStateToServer();
+    atualizarTudoVisual();
+    
+    const container = document.getElementById('listaDadosVida');
+    if(container) renderizarPainelDadosVida(container);
+    
+    // Aviso discreto que descansou
+    if (typeof exibirAvisoTemporario === 'function') {
+        exibirAvisoTemporario("Descanso Longo Concluído.");
+    }
+};
 // ======================================
 // 3. Sistema de Multi-Select (Dropdowns)
 // ======================================
@@ -1178,142 +1363,3 @@ document.getElementById('inspiraRight').onclick = () => { state.inspiracao = (pa
 
 
 
-/* =============================================================
-   SISTEMA DE DADOS DE VIDA (DESCANSOS)
-============================================================= */
-
-function renderizarPainelDadosVida(container) {
-    container.innerHTML = '';
-    
-    // Garante ordem e dados
-    if (typeof syncOrdemClasses === 'function') syncOrdemClasses();
-    const ordem = state.ordemClasses || Object.keys(state.niveisClasses);
-    
-    let totalClasses = 0;
-
-    ordem.forEach(key => {
-        const nivel = parseInt(state.niveisClasses[key]) || 0;
-        if (nivel <= 0) return;
-        totalClasses++;
-
-        const classeRef = classesPadrao.find(c => c.key === key);
-        if (!classeRef) return;
-
-        // Calcula quantos restam
-        const gastos = state.dadosVidaGastos[key] || 0;
-        const restantes = Math.max(0, nivel - gastos);
-        const dadoTipo = classeRef.dado; // ex: "d8"
-
-        const div = document.createElement('div');
-        div.className = 'item-dv';
-        
-        // Botão desabilitado se não tiver dados restantes
-        const disabledAttr = restantes <= 0 ? 'disabled' : '';
-        const textoBotao = restantes <= 0 ? 'Esgotado' : `Rolar ${dadoTipo}`;
-
-        div.innerHTML = `
-            <div class="dv-info">
-                <span class="dv-class-name">${classeRef.nome}</span>
-                <span class="dv-count">Disponível: <strong style="color:${restantes > 0 ? '#fff' : '#d32f2f'}">${restantes}</strong> / ${nivel}</span>
-            </div>
-            <button class="btn-rolar-dv" ${disabledAttr} onclick="usarDadoVida('${key}', '${dadoTipo}')">
-                <img src="img/imagem-no-site/dado.png" style="width:14px;"> ${textoBotao}
-            </button>
-        `;
-        
-        container.appendChild(div);
-    });
-
-    if (totalClasses === 0) {
-        container.innerHTML = '<div style="color:#888; text-align:center; padding:10px;">Nenhuma classe definida.</div>';
-    }
-    
-    // Botão de Descanso Longo (Reset)
-    const divReset = document.createElement('div');
-    divReset.style.marginTop = '10px';
-    divReset.style.paddingTop = '10px';
-    divReset.style.borderTop = '1px solid #333';
-    divReset.innerHTML = `
-        <button onclick="realizarDescansoLongo()" style="width:100%; background:#111; color:#aaa; border:1px solid #444; padding:8px; border-radius:4px; cursor:pointer; font-size:12px;">
-            💤 Realizar Descanso Longo (Recuperar DV e Vida)
-        </button>
-    `;
-    container.appendChild(divReset);
-}
-
-window.usarDadoVida = function(classKey, dadoTipo) {
-    // 1. Verifica disponibilidade
-    const nivel = parseInt(state.niveisClasses[classKey]) || 0;
-    const gastos = state.dadosVidaGastos[classKey] || 0;
-    
-    if (gastos >= nivel) return; // Segurança extra
-
-    // 2. Rola o dado
-    const faces = parseInt(dadoTipo.replace('d', ''));
-    const resultadoDado = Math.floor(Math.random() * faces) + 1;
-    
-    // 3. Pega Modificador de CON
-    const conScore = state.atributos?.n1 || 10;
-    const modCon = Math.floor((parseInt(conScore) - 10) / 2);
-    
-    // 4. Calcula total (Mínimo 0 no total, embora regra D&D diga mínimo 1 na cura, o mod negativo pode reduzir)
-    const curaTotal = Math.max(0, resultadoDado + modCon);
-
-    // 5. Atualiza Vida Atual
-    const vidaAtual = parseInt(state.vidaAtual) || 0;
-    const vidaMax = state.vidaTotalCalculada || 100;
-    
-    const novaVida = Math.min(vidaMax, vidaAtual + curaTotal);
-    state.vidaAtual = novaVida;
-
-    // 6. Consome o Dado
-    state.dadosVidaGastos[classKey] = gastos + 1;
-
-    // 7. Salva e Atualiza Visual
-    saveStateToServer();
-    atualizarTudoVisual(); // Atualiza barra de vida
-    
-    // Re-renderiza o painel para atualizar a contagem
-    const container = document.getElementById('listaDadosVida');
-    if(container) renderizarPainelDadosVida(container);
-
-    // 8. Feedback (Toast)
-    if(typeof exibirAvisoTemporario === 'function') {
-        exibirAvisoTemporario(`
-            <div style="font-size:16px; margin-bottom:5px;">🎲 Dado de Vida Rolado!</div>
-            <div style="color:#e0aaff;">${resultadoDado} (Dado) + ${modCon} (CON) = <b>${curaTotal}</b> Vida</div>
-            <div style="font-size:12px; color:#aaa;">Dados restantes de ${classKey}: ${nivel - (gastos + 1)}</div>
-        `);
-    }
-};
-
-window.realizarDescansoLongo = function() {
-    if(!confirm("Realizar Descanso Longo?\n\n- Recupera toda a Vida.\n- Recupera metade dos Dados de Vida totais.")) return;
-
-    // 1. Recupera Vida
-    state.vidaAtual = state.vidaTotalCalculada;
-
-    // 2. Recupera Dados de Vida (Regra D&D 5e: Recupera metade do total, mínimo 1)
-    // A lógica aqui é um pouco complexa para multiclasse, vamos simplificar:
-    // Reduz o contador de 'gastos' pela metade do nível total daquela classe.
-    
-    const ordem = state.ordemClasses || Object.keys(state.niveisClasses);
-    
-    ordem.forEach(key => {
-        const nivel = parseInt(state.niveisClasses[key]) || 0;
-        const gastos = state.dadosVidaGastos[key] || 0;
-        
-        if (nivel > 0 && gastos > 0) {
-            const recuperar = Math.max(1, Math.floor(nivel / 2));
-            state.dadosVidaGastos[key] = Math.max(0, gastos - recuperar);
-        }
-    });
-
-    saveStateToServer();
-    atualizarTudoVisual();
-    
-    const container = document.getElementById('listaDadosVida');
-    if(container) renderizarPainelDadosVida(container);
-    
-    if(typeof exibirAvisoTemporario === 'function') exibirAvisoTemporario("Descanso Longo Concluído! Vida e Dados recuperados.");
-};
