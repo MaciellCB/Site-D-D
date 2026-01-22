@@ -40,7 +40,6 @@ const Ficha = mongoose.model('Ficha', FichaSchema);
 io.on('connection', (socket) => {
     console.log('Cliente conectado:', socket.id);
 
-    // ADICIONE ISSO AQUI:
     socket.on('dados_rolados', (data) => {
         io.emit('dados_rolados', data); // Isso repassa o dado para todos os portraits
     });
@@ -260,6 +259,41 @@ app.post('/api/deletar-ficha', async (req, res) => {
         res.json({ ok: true });
     } catch (error) {
         res.status(500).json({ error: "Erro ao deletar" });
+    }
+});
+
+// 7. EDITAR CREDENCIAIS (NOVO!)
+app.post('/api/editar-credenciais', async (req, res) => {
+    try {
+        const { nomeAntigo, novoNome, novaSenha } = req.body;
+
+        if (!nomeAntigo || !novoNome || !novaSenha) {
+            return res.status(400).json({ error: "Dados incompletos." });
+        }
+
+        // Se o nome mudou, verificar se o novo nome já existe
+        if (nomeAntigo.toLowerCase() !== novoNome.toLowerCase()) {
+            const existe = await Ficha.findOne({ nome: { $regex: new RegExp(`^${novoNome}$`, 'i') } });
+            if (existe) {
+                return res.status(400).json({ error: "Já existe um personagem com esse nome!" });
+            }
+        }
+
+        // Atualiza nome e senha
+        await Ficha.findOneAndUpdate(
+            { nome: { $regex: new RegExp(`^${nomeAntigo}$`, 'i') } },
+            { 
+                $set: { 
+                    nome: novoNome, 
+                    senha: novaSenha 
+                } 
+            }
+        );
+
+        res.json({ ok: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erro ao editar credenciais." });
     }
 });
 
