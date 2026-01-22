@@ -251,54 +251,70 @@ function inicializarDadosEsquerda() {
 }
 // Listener para abrir o painel de Dados de Vida
 /* =============================================================
-   TORNA O PAINEL ARRASTÁVEL (GLOBAL)
-   Coloque isso no início ou meio do arquivo, fora de outros blocos
+   TORNA O PAINEL ARRASTÁVEL (GLOBAL - CORRIGIDO)
 ============================================================= */
 window.tornarPainelArrastavel = function(elemento) {
     const header = elemento.querySelector('.painel-header');
     if (!header) return;
 
     let isDragging = false;
-    let startX, startY, initialLeft, initialTop;
+    let startX, startY, startLeft, startTop;
 
-    header.onmousedown = (e) => {
-        if (e.target.tagName === 'BUTTON') return; // Ignora clique no X
+    // Função iniciadora
+    const onMouseDown = (e) => {
+        if (e.target.tagName === 'BUTTON') return; 
         e.preventDefault();
 
         isDragging = true;
         startX = e.clientX;
         startY = e.clientY;
 
-        const rect = elemento.getBoundingClientRect();
-        
-        // Converte para pixels absolutos para evitar bugs de %
-        elemento.style.left = rect.left + 'px';
-        elemento.style.top = rect.top + 'px';
-        elemento.style.transform = 'none'; // Remove transformações para não somar coordenadas
-        
+        // Obtém a posição computada atual
+        const style = window.getComputedStyle(elemento);
+        startLeft = parseInt(style.left) || 0; // Se for 'auto', assume 0 ou ajusta na abertura
+        startTop = parseInt(style.top) || 0;
+
+        // Se a posição for baseada em transform translate (centralizado), precisamos resetar para absolute
+        if (style.transform !== 'none') {
+            const rect = elemento.getBoundingClientRect();
+            elemento.style.transform = 'none';
+            elemento.style.left = rect.left + 'px';
+            elemento.style.top = rect.top + 'px';
+            startLeft = rect.left;
+            startTop = rect.top;
+        }
+
         header.style.cursor = 'grabbing';
+        
+        // Adiciona listeners no document para seguir o mouse fora do elemento
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
     };
 
-    document.onmousemove = (e) => {
+    const onMouseMove = (e) => {
         if (!isDragging) return;
         e.preventDefault();
 
         const dx = e.clientX - startX;
         const dy = e.clientY - startY;
 
-        elemento.style.left = `${parseFloat(elemento.style.left) + dx}px`;
-        elemento.style.top = `${parseFloat(elemento.style.top) + dy}px`;
-
-        startX = e.clientX;
-        startY = e.clientY;
+        elemento.style.left = `${startLeft + dx}px`;
+        elemento.style.top = `${startTop + dy}px`;
     };
 
-    document.onmouseup = () => {
+    const onMouseUp = () => {
         if (isDragging) {
             isDragging = false;
             header.style.cursor = 'move';
+            // Remove listeners globais para limpar memória
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
         }
     };
+
+    // Remove event listener antigo se existir para evitar duplicação (opcional mas bom)
+    header.removeEventListener('mousedown', onMouseDown); 
+    header.addEventListener('mousedown', onMouseDown);
 };
 
 /* =============================================================
@@ -378,7 +394,7 @@ function renderizarPainelDadosVida(container) {
     divReset.style.borderTop = '1px solid #333';
     divReset.innerHTML = `
         <button onclick="realizarDescansoLongo()" style="width:100%; background:#111; color:#aaa; border:1px solid #444; padding:8px; border-radius:4px; cursor:pointer; font-size:12px;">
-            💤 Realizar Descanso Longo (Recuperar DV e Vida)
+            Realizar Descanso Longo (Recuperar DV/2 e Vida)
         </button>
     `;
     container.appendChild(divReset);
@@ -397,6 +413,7 @@ window.usarDadoVida = function(classKey, dadoTipo) {
     const conScore = state.atributos?.n1 || 10;
     const modCon = Math.floor((parseInt(conScore) - 10) / 2);
     
+    // Mínimo de 0 na cura total
     const curaTotal = Math.max(0, resultadoDado + modCon);
 
     const vidaAtual = parseInt(state.vidaAtual) || 0;
@@ -412,22 +429,21 @@ window.usarDadoVida = function(classKey, dadoTipo) {
     const container = document.getElementById('listaDadosVida');
     if(container) renderizarPainelDadosVida(container);
 
-    // --- NOVA CHAMADA: Usa o visual da Direita (showCombatResults) ---
+    // --- VISUAL CORRIGIDO COM LABEL 'CURA' ---
     if (typeof showCombatResults === 'function') {
         const nomeClasse = classesPadrao.find(c => c.key === classKey)?.nome || classKey;
         
-        // Formata o objeto como a função espera
         const resultadoObj = {
             total: curaTotal,
             text: curaTotal.toString(),
             detail: `${resultadoDado} (d${faces}) + ${modCon} (CON)`,
-            isCrit: resultadoDado === faces, // Destaque se tirou máximo no dado
-            isFumble: resultadoDado === 1
+            isCrit: resultadoDado === faces, 
+            isFumble: resultadoDado === 1,
+            label: "CURA" // <--- AQUI ESTÁ A CORREÇÃO DO NOME
         };
 
         showCombatResults(`Cura (${nomeClasse})`, null, resultadoObj);
     } else {
-        // Fallback caso a direita não tenha carregado
         alert(`Rolou ${resultadoDado} + ${modCon} = ${curaTotal} de cura.`);
     }
 };

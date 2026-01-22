@@ -4252,6 +4252,9 @@ closeBtnStyle.textContent = `
 document.head.appendChild(closeBtnStyle);
 
 
+/* =============================================================
+   ATUALIZAÇÃO: showCombatResults (ACEITA LABELS PERSONALIZADOS)
+============================================================= */
 function showCombatResults(title, attackResult, damageResult, isRemote = false) {
 
   // 1. Criação/Busca do Container Visual
@@ -4266,7 +4269,6 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
   if (diceTimer) clearTimeout(diceTimer);
 
   // --- MONTAGEM DO HTML ---
-  // Adicionei o botão de fechar aqui
   let contentHtml = `
       <div class="dice-close" onclick="fecharDiceResult()">✖</div>
       <div class="dice-content-wrapper">
@@ -4279,9 +4281,12 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
     if (attackResult.isCrit) totalClass = "crit-total";
     else if (attackResult.isFumble) totalClass = "fumble-total";
 
+    // AQUI ESTÁ A MUDANÇA: Usa attackResult.label ou o padrão "ACERTO"
+    const labelTexto = attackResult.label || "ACERTO";
+
     contentHtml += `
             <div class="dice-row">
-                <div class="dice-label">ACERTO</div>
+                <div class="dice-label">${labelTexto}</div>
                 <div class="dice-value-wrapper">
                     <div class="dice-value ${totalClass}">${attackResult.text}</div>
                     <div class="dice-tooltip">${attackResult.detail || ''}</div>
@@ -4292,9 +4297,13 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
 
   if (damageResult) {
     let totalClass = damageResult.isCrit ? "crit-total" : "";
+    
+    // AQUI ESTÁ A MUDANÇA: Usa damageResult.label ou o padrão "DANO"
+    const labelTexto = damageResult.label || "DANO";
+
     contentHtml += `
             <div class="dice-row">
-                <div class="dice-label">DANO</div>
+                <div class="dice-label">${labelTexto}</div>
                 <div class="dice-value-wrapper">
                     <div class="dice-value ${totalClass}">${damageResult.text}</div>
                     <div class="dice-tooltip">${damageResult.detail || ''}</div>
@@ -4321,12 +4330,12 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
   // Mostra o container
   requestAnimationFrame(() => { container.classList.add('active'); });
 
-  // --- TEMPO DE DURAÇÃO (10 Segundos) ---
+  // --- TEMPO DE DURAÇÃO (15 Segundos) ---
   diceTimer = setTimeout(() => { 
       container.classList.remove('active'); 
-  }, 15000); // 10000 ms = 15 segundos
+  }, 15000);
 
-  // --- LÓGICA DE SOCKET (SÓ ENVIA SE NÃO FOR REMOTO) ---
+  // --- LÓGICA DE SOCKET ---
   if (!isRemote && typeof socket !== 'undefined') {
     const payload = {
       socketId: socket.id,
@@ -4344,6 +4353,7 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
         detail: attackResult.detail,
         isCrit: attackResult.isCrit,
         isFumble: attackResult.isFumble,
+        label: attackResult.label, // Envia o label customizado
         inspiracao: state.inspiration
       };
     }
@@ -4354,6 +4364,7 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
         text: damageResult.text,
         detail: damageResult.detail,
         isCrit: damageResult.isCrit,
+        label: damageResult.label, // Envia o label customizado
         inspiracao: state.inspiration
       };
     }
@@ -4668,7 +4679,8 @@ document.addEventListener('click', function(e) {
             text: total.toString(), 
             detail: `${d20Html} + ${bonus}`, 
             isCrit: isCrit, 
-            isFumble: isFumble 
+            isFumble: isFumble,
+            label: "RESULTADO" // <--- ADICIONEI ISSO AQUI
         };
         showCombatResults(nome, res, null);
     }
