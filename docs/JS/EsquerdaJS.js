@@ -1160,117 +1160,126 @@ function atualizarIniciativaTotal() {
 }
 
 /* =============================================================
-   CORREÇÃO DA LÓGICA DE CA - EsquerdaJS.js
-   ============================================================= */
+   ATUALIZAÇÃO DE CA (INCLUI HABILIDADES E ITENS)
+============================================================= */
 function atualizarAC() {
-    // 1. Pega os modificadores dos atributos
+    // 1. Modificadores Base
     const getMod = (n) => Math.floor((parseInt(state.atributos?.[n] || 10) - 10) / 2);
     const modDex = getMod('n2');
     const modCon = getMod('n1');
     const modSab = getMod('n3');
 
-    // 2. Localiza itens de proteção equipados
-    const armadura = state.inventory.find(i => 
-        i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'armadura'
-    );
-    const escudo = state.inventory.find(i => 
-        i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'escudo'
-    );
+    // 2. Itens Equipados
+    const armadura = state.inventory.find(i => i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'armadura');
+    const escudo = state.inventory.find(i => i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'escudo');
 
-    // 3. Verifica habilidades de Defesa sem Armadura
-    const barbDef = state.abilities.some(a => a.active && a.title.includes("Bárbaro"));
-    const monkDef = state.abilities.some(a => a.active && a.title.includes("Monge"));
+    // 3. Habilidades de Classe (Defesa sem Armadura)
+    const barbDef = state.abilities.some(a => a.active && a.title.toLowerCase().includes("bárbaro") && a.title.toLowerCase().includes("defesa"));
+    const monkDef = state.abilities.some(a => a.active && a.title.toLowerCase().includes("monge") && a.title.toLowerCase().includes("defesa"));
 
-    let acTotal = 10;
-    let visualEquip = 0; // Valor que vai para o slot "Equip"
-    let visualDex = modDex;
-    let visualDexText = "DEX";
-    let tipoTag = "SEM ARMADURA";
-    let usaBase10 = true; // Controla se o "10" da fórmula aparece
+    let ac = 10;
+    let bonusTotal = 0;
 
-    let bonusEscudo = escudo ? (parseInt(escudo.defense) || 2) : 0;
-    let bonusOutros = parseInt(state.acOutros) || 0;
-
-    // Soma bônus de itens gerais (anéis, etc)
-    state.inventory.filter(i => i.equip && i.type === 'Geral' && i.defenseBonus).forEach(item => {
-        bonusOutros += (parseInt(item.defenseBonus) || 0);
-    });
-
+    // --- CÁLCULO BASE ---
     if (armadura) {
-        // --- CASO COM ARMADURA ---
-        usaBase10 = false; // Armadura substitui o 10 base
-        let valBase = parseInt(armadura.defense) || 10;
-        if (valBase <= 10) valBase += 10; // Caso o usuário digite apenas o bônus (ex: 2 ao invés de 12)
+        let baseArmor = parseInt(armadura.defense) || 10;
+        if (baseArmor < 10) baseArmor += 10; // Corrige se o user colocou só o bônus (+1) na defesa base
 
         const prof = (armadura.proficiency || '').toLowerCase();
-        
-        // O "Equip" agora é o valor da Armadura + Escudo
-        visualEquip = valBase + bonusEscudo;
-        tipoTag = armadura.proficiency?.toUpperCase() || "ARMADURA";
-
         if (prof.includes('pesada')) {
-            visualDex = 0;
-            visualDexText = "-";
-            acTotal = visualEquip + bonusOutros;
+            ac = baseArmor;
         } else if (prof.includes('media') || prof.includes('média')) {
-            visualDex = Math.min(modDex, 2);
-            visualDexText = "DEX (Máx 2)";
-            acTotal = visualEquip + visualDex + bonusOutros;
+            ac = baseArmor + Math.min(modDex, 2);
         } else {
-            visualDex = modDex;
-            acTotal = visualEquip + visualDex + bonusOutros;
+            ac = baseArmor + modDex;
         }
     } else {
-        // --- CASO SEM ARMADURA ---
-        visualEquip = bonusEscudo;
+        // Sem armadura
+        if (barbDef) ac = 10 + modDex + modCon;
+        else if (monkDef && !escudo) ac = 10 + modDex + modSab;
+        else ac = 10 + modDex;
+    }
 
-        if (barbDef) {
-            tipoTag = "DEF. BÁRBARO";
-            visualDex = modDex + modCon;
-            visualDexText = "DEX + CON";
-            acTotal = 10 + visualDex + bonusEscudo + bonusOutros;
-        } else if (monkDef && !escudo) {
-            tipoTag = "DEF. MONGE";
-            visualDex = modDex + modSab;
-            visualDexText = "DEX + SAB";
-            acTotal = 10 + visualDex + bonusOutros;
-        } else {
-            acTotal = 10 + modDex + bonusEscudo + bonusOutros;
+    // --- BÔNUS DE ESCUDO ---
+    if (escudo) bonusTotal += (parseInt(escudo.defense) || 2);
+
+    // --- BÔNUS DE ITENS GERAIS (Anéis, Capas) ---
+    state.inventory.forEach(i => {
+        if (i.equip && i.type === 'Geral' && i.defenseBonus) {
+            bonusTotal += parseInt(i.defenseBonus) || 0;
         }
-    }
+    });
 
-    // --- ATUALIZAÇÃO VISUAL ---
-    
-    // 1. Valor total da CA
+    // --- BÔNUS DE OUTROS (Input manual na esquerda) ---
+    bonusTotal += parseInt(state.acOutros) || 0;
+
+    // --- NOVO: BÔNUS DE HABILIDADES ATIVAS (O QUE VOCÊ PEDIU) ---
+    state.abilities.forEach(hab => {
+        if (hab.active && hab.defenseBonus) {
+            // Remove '+' e espaços para converter " +1 " em 1
+            const val = parseInt(hab.defenseBonus.replace(/[^0-9-]/g, '')) || 0;
+            bonusTotal += val;
+        }
+    });
+
+    // Atualiza Visual
+    const finalAC = ac + bonusTotal;
     const elValor = document.getElementById('armaduraValor');
-    if (elValor) elValor.textContent = acTotal;
+    if (elValor) elValor.textContent = finalAC;
 
-    // 2. Slots da fórmula (Equip e Outros)
+    // Atualiza os numerozinhos da fórmula visual (Opcional, mantém o estilo do seu CSS)
     const zeroNums = document.querySelectorAll('.zero-pair .zero-num');
-    if (zeroNums[0]) zeroNums[0].textContent = visualEquip;
-    if (zeroNums[1]) zeroNums[1].textContent = bonusOutros;
-
-    // 3. Texto do Atributo (DEX, DEX+CON, etc)
-    const elFormulaAttr = document.querySelector('.formula-attr');
-    if (elFormulaAttr) {
-        elFormulaAttr.textContent = visualDexText;
-        elFormulaAttr.style.visibility = (visualDexText === "-") ? "hidden" : "visible";
-    }
-
-    // 4. Lógica para esconder/mostrar o "10" na fórmula visual
-    const baseTen = document.querySelector('.formula-text');
-    if (baseTen) {
-        // Se estiver usando armadura, adicionamos uma classe para "apagar" o 10 visualmente
-        if (!usaBase10) baseTen.classList.add('heavy-armor-mode'); 
-        else baseTen.classList.remove('heavy-armor-mode');
-    }
-
-    const elTag = document.querySelector('.armadura-tag');
-    if (elTag) elTag.textContent = tipoTag;
+    if (zeroNums[1]) zeroNums[1].textContent = bonusTotal; // Coloca a soma de bônus no segundo slot
 }
 
 
+/* =============================================================
+   ATUALIZAÇÃO DE DESLOCAMENTO (SOMA HABILIDADES)
+============================================================= */
+function atualizarDeslocamento() {
+    // 1. Pega o valor base (digitado no input)
+    // Nota: Assumimos que o valor no input 'metros' é a base racial + ajustes manuais
+    // Se quiser somar automático, precisamos pegar o valor 'cru' do state e somar os bônus visualmente.
+    
+    let baseMetros = parseFloat(state.metros) || 0; 
+    let bonusMetros = 0;
 
+    // 2. Itera Habilidades Ativas
+    if (state.abilities) {
+        state.abilities.forEach(hab => {
+            if (hab.active && hab.speedBonus) {
+                // Tenta limpar strings como "+3m" ou "1.5"
+                // Substitui virgula por ponto para float
+                let clean = hab.speedBonus.replace(',', '.').replace(/[^0-9.-]/g, '');
+                let val = parseFloat(clean);
+                
+                // Se o valor for muito pequeno (ex: 1.5), é metros. Se for 5 ou 10, pode ser pés? 
+                // Vamos assumir que o usuário digita em METROS conforme o padrão da ficha.
+                if (!isNaN(val)) {
+                    bonusMetros += val;
+                }
+            }
+        });
+    }
+
+    // 3. Atualiza o Input VISUALMENTE (sem salvar no state para não somar infinitamente)
+    const elMetros = document.getElementById('metros');
+    const elQuadrados = document.getElementById('quadrados');
+
+    const totalMetros = baseMetros + bonusMetros;
+    const totalQuadrados = totalMetros / 1.5;
+
+    if (elMetros) {
+        // Mostra o total. Se tiver bônus, muda a cor para indicar buff
+        elMetros.value = totalMetros; 
+        if (bonusMetros > 0) elMetros.style.color = "#4fc3f7"; // Azul claro para indicar buff
+        else elMetros.style.color = "#fff";
+    }
+    
+    if (elQuadrados) {
+        elQuadrados.value = totalQuadrados.toFixed(1);
+    }
+}
 
 // ======================================
 // 8. Função Mestre e Listeners
@@ -1282,9 +1291,9 @@ function atualizarTudoVisual() {
     atualizarVidaCalculada();
     atualizarProficiencia();
     atualizarIniciativaTotal();
-    atualizarAC();
-    
-    atualizarPassiva(); // <--- ADICIONE ESTA LINHA
+    atualizarAC(); 
+    atualizarPassiva();
+    atualizarDeslocamento(); 
     
     const nivelTotal = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0);
     const elNivel = document.getElementById('nivelFoco');
