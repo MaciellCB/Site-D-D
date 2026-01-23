@@ -262,47 +262,25 @@ function setActiveTab(tabName) {
   // REMOVIDO: saveStateToServer(); <--- O ERRO ESTAVA AQUI
 }
 
-/* ---------------- INVENTÁRIO (ORGANIZADO EM GRID/GRUPOS) ---------------- */
+/* ---------------- INVENTÁRIO (VISUAL LIMPO: APENAS DADO BASE) ---------------- */
 function formatInventoryItem(item) {
   let subTitle = '';
   let rightSideHtml = '';
   const caretSymbol = item.expanded ? '▾' : '▸';
 
-  // Mapeamento para pegar o modificador correto
-  const attrMap = { 
-      'Força': 'for', 'Destreza': 'dex', 'Constituição': 'con', 
-      'Inteligência': 'int', 'Sabedoria': 'sab', 'Carisma': 'car' 
-  };
-
   // --- CABEÇALHO (Lado Direito) ---
   if (item.type === 'Arma') {
     subTitle = [item.proficiency, item.tipoArma].filter(Boolean).join(' • ');
 
-    // Lógica Versátil e Dano
+    // Lógica Versátil
     let baseDamage = item.damage;
     if (item.empunhadura === 'Versátil' && item.useTwoHands && item.damage2Hands) {
       baseDamage = item.damage2Hands;
     }
 
-    // --- CÁLCULO DE DANO SOMADO ---
-    let finalDamageString = baseDamage;
-    
-    // Verifica se tem Atributo de Dano selecionado
-    if (item.damageAttribute && item.damageAttribute !== 'Nenhum' && attrMap[item.damageAttribute]) {
-        // Usa a função getAttributeMod que já existe globalmente
-        const mod = typeof getAttributeMod === 'function' ? getAttributeMod(attrMap[item.damageAttribute]) : 0;
-        
-        // Pega bônus fixo também (Item Mágico +1, etc)
-        const fixo = parseInt(item.damageBonus) || 0;
-        const totalBonus = mod + fixo;
-
-        if (totalBonus !== 0) {
-            const sinal = totalBonus > 0 ? '+' : '';
-            finalDamageString = `${baseDamage} ${sinal} ${totalBonus}`;
-        }
-    }
-
-    let dmgParts = [finalDamageString];
+    // --- VISUAL: MOSTRA APENAS O DADO BASE (SEM SOMAR ATRIBUTO) ---
+    // O modificador será calculado apenas na hora de rolar (clique)
+    let dmgParts = [baseDamage];
     if (item.moreDmgList) {
       item.moreDmgList.forEach(m => { if (m.dano) dmgParts.push(m.dano); });
     }
@@ -318,7 +296,7 @@ function formatInventoryItem(item) {
          <span style="font-weight: 800; color: #9c27b0; font-size: ${dmgFontSize}px; white-space: nowrap; transition: font-size 0.2s;">
             ${finalDamageDisplay}
          </span>
-         <img class="dice-img" src="img/imagem-no-site/dado.png" alt="dado" style="width: 20px; height: 20px;" />
+         <img class="dice-img" src="img/imagem-no-site/dado.png" alt="dado" style="width: 20px; height: 20px;" title="Rolar Dano" />
        </div>
     `;
 
@@ -410,7 +388,7 @@ function formatInventoryItem(item) {
   if (item.attackAttribute && item.attackAttribute !== 'Nenhum') offenseGroup += createSimpleStat('Attr Acerto', item.attackAttribute.substring(0,3));
   if (item.damageAttribute && item.damageAttribute !== 'Nenhum') offenseGroup += createSimpleStat('Attr Dano', item.damageAttribute.substring(0,3));
   
-  offenseGroup += createSimpleStat('Acerto Bônus', item.acertoBonus || item.attackBonus); // Exibe qualquer um dos dois
+  offenseGroup += createSimpleStat('Acerto Bônus', item.acertoBonus || item.attackBonus); 
   offenseGroup += createSimpleStat('Dano Bônus', item.damageBonus);
   offenseGroup += createSimpleStat('Tipo Dano', item.damageType);
 
@@ -3634,7 +3612,7 @@ function openNewAbilityModal(existingAbility = null) {
                   <input id="hab-damage" type="text" value="${escapeHtml(vals.damage)}" placeholder="Ex: 2d6" />
               </div>
               <div>
-                  <label>Add Status Dano</label>
+                  <label>add Status ao Dano?</label>
                   <select id="hab-damage-attr" class="dark-select" style="height:38px;">
                       ${damageAttrOptions}
                   </select>
