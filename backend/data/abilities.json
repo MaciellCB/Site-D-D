@@ -1005,8 +1005,7 @@
     "damage": "1d6",
     "damageType": "Cura",
     "description": "<p>Você usa música suave para revitalizar seus aliados. Se você ou quaisquer criaturas amigáveis que possam ouvir sua performance recuperarem pontos de vida no final de um <strong>Descanso Curto</strong> gastando Dados de Vida, cada uma recupera pontos de vida extras.</p><strong style='display:block; margin-bottom:8px; color:#fff;'>Cura Extra (Escalonamento):</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 2º Nível:</strong> 1d6</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 9º Nível:</strong> 1d8</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 13º Nível:</strong> 1d10</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 17º Nível:</strong> 1d12</li></ul>"
-  }
- 
+  },
   {
     "id": "bar_base_3_especializa",
     "category": "Classe",
@@ -1023,7 +1022,6 @@
     "name": "Aumento no Valor de Atributo",
     "description": "<p>Você pode aumentar um valor de atributo à sua escolha em 2, ou dois valores em 1. Como padrão, você não pode elevar um atributo acima de 20.</p><p style='color:#bbb; font-size:13px;'>Níveis: 4, 8, 12, 16 e 19.</p>"
   },
-
   {
     "id": "bar_base_5_fonte",
     "category": "Classe",
@@ -1126,6 +1124,7 @@
     "class": "Bardo",
     "subclass": "Colégio da Criação",
     "name": "(Criação, 3º nível) Partícula de Potencial",
+    "damageType": "Trovejante",
     "description": "<p>Sempre que você der um dado de Inspiração Bárdica a uma criatura, você pode pronunciar uma nota de potencial. O dado ganha um efeito adicional quando usado:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Teste de Habilidade:</strong> Role o dado de Inspiração duas vezes e escolha o melhor resultado.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque:</strong> O alvo e cada criatura à escolha dele a até 1,5m sofrem dano trovejante igual ao valor rolado no dado de inspiração.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Teste de Resistência:</strong> A criatura ganha PV Temporários iguais ao valor rolado no dado + seu Modificador de Carisma.</li></ul>"
   },
   {
@@ -1142,6 +1141,8 @@
     "class": "Bardo",
     "subclass": "Colégio da Criação",
     "name": "(Criação, 6º nível) Animação de Performance",
+    "damage": "1d10",
+    "damageType": "Energia",
     "description": "<p><strong>Ação:</strong> Ação Padrão<br><strong>Alcance:</strong> 9 metros (30 pés)</p><p>Você anima um item não mágico Grande ou menor. Ele se torna uma criatura (Item Dançante) sob seu controle por 1 hora.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Combate:</strong> Ele age imediatamente após você na iniciativa. Como <strong>Ação Bônus</strong>, você pode comandá-lo a se mover e atacar.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque:</strong> Usa seu ataque mágico. Causa 1d10 + Proficiência de <strong>dano de energia</strong>.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Recarga:</strong> Uma vez por Descanso Longo (ou gastando um espaço de magia de 3º nível ou superior).</li></ul>"
   },
   {
@@ -1198,6 +1199,8 @@
     "class": "Bardo",
     "subclass": "Colégio do Glamour",
     "name": "(Glamour, 3º nível) Manto de Inspiração",
+    "damage": "5",
+    "damageType": "Temporário",
     "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Alcance:</strong> 18 metros (60 pés)</p><p>Gaste um uso de Inspiração Bárdica para conceder uma aparência maravilhosa. Escolha um número de criaturas igual ao seu Modificador de Carisma.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ PV Temporários:</strong> Cada criatura ganha 5 PV Temp. (Aumenta para 8 no 5º nível, 11 no 10º nível e 14 no 15º nível).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Movimento Tático:</strong> As criaturas podem usar sua <strong>Reação</strong> imediatamente para se moverem até seu deslocamento total, sem provocar ataques de oportunidade.</li></ul>"
   },
   {
@@ -1270,6 +1273,8 @@
     "class": "Bardo",
     "subclass": "Colégio dos Sussurros",
     "name": "(Sussurros, 3º nível) Lâminas Psíquicas",
+    "damage": "2d6",
+    "damageType": "Psíquico",
     "description": "<p>Quando acertar uma criatura com um ataque com arma, você pode gastar um uso de Inspiração Bárdica para causar dano psíquico extra ao alvo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> 2d6 (3º nível), 3d6 (5º nível), 5d6 (10º nível) e 8d6 (15º nível).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Limite:</strong> Você pode fazer isso apenas uma vez por rodada.</li></ul>"
   },
   {
@@ -1350,6 +1355,7 @@
     "class": "Bardo",
     "subclass": "Colégio de Lorehold",
     "name": "(Lorehold, 1º nível) Companheiro Ancestral",
+    "damageType": "Energia",
     "description": "<p>Ao terminar um descanso longo, você invoca um espírito em uma estátua Média. Ele obedece seus comandos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Curandeiro:</strong> Suas ações focam em curar PV e conceder PV Temporários.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Sábio:</strong> Possui bônus em Inteligência/Sabedoria e ataca com <strong>dano de energia</strong>.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Guerreiro:</strong> Possui ataque extra e pode usar reação para proteger aliados.</li></ul>"
   },
   {
@@ -1398,6 +1404,8 @@
     "class": "Bardo",
     "subclass": "Colégio da Pena de Prata",
     "name": "(Pena de Prata, 6º nível) Manto de Tinta",
+    "damage": "2d10",
+    "damageType": "Psíquico",
     "description": "<p>Você aprende a magia <em>Escuridão</em> e pode conjurá-la sem gastar espaço de magia uma vez por descanso longo. Quando a conjura desta forma:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Visão:</strong> Você pode ver através dessa escuridão mágica.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> Se uma criatura começar o turno na área, sofre 2d10 de dano psíquico.</li></ul>"
   },
   {
@@ -1456,12 +1464,14 @@
 
 
 
+
   
 
 
 
   
    
+
   {
     "id": "bru_base_1_pacto",
     "category": "Classe",
@@ -1612,6 +1622,8 @@
     "class": "Bruxo",
     "subclass": "O Corruptor",
     "name": "(Corruptor, 14º nível) Arremessado através do Inferno",
+    "damage": "10d10",
+    "damageType": "Psíquico",
     "description": "<p><strong>Ação:</strong> Gatilho de Ataque</p><p>Ao acertar uma criatura com um ataque, você pode banir o alvo para os planos inferiores.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Efeito:</strong> O alvo desaparece e fica incapacitado até o final do seu próximo turno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> Ao retornar para o espaço que ocupava, o alvo sofre <strong>10d10</strong> de dano psíquico (se não for um corruptor/demônio).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Recarga:</strong> Descanso Longo.</li></ul>"
   },
   {
@@ -1676,6 +1688,8 @@
     "class": "Bruxo",
     "subclass": "O Celestial",
     "name": "(Celestial, 1º nível) Luz de Cura",
+    "damage": "1d6",
+    "damageType": "Cura",
     "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Alcance:</strong> 18 metros (60 pés)</p><p>Você possui uma reserva de energia curativa representada por dados d6. O número de dados é igual a 1 + seu nível de Bruxo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Uso:</strong> Você pode gastar um número de dados igual ao seu Modificador de Carisma (máximo) para curar uma criatura que possa ver. Role os dados gastos e some os resultados para determinar os PV restaurados.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Recuperação:</strong> Você recupera todos os dados gastos após um Descanso Longo.</li></ul>"
   },
   {
@@ -1700,6 +1714,8 @@
     "class": "Bruxo",
     "subclass": "O Celestial",
     "name": "(Celestial, 14º nível) Vingança Ardente",
+    "damage": "2d8",
+    "damageType": "Radiante",
     "description": "<p><strong>Gatilho:</strong> Ao fazer um teste de resistência contra a morte.</p><p>Você pode canalizar energia radiante para resistir à morte. Se fizer isso, você se levanta imediatamente (ação livre).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Cura:</strong> Você recupera metade do seu máximo de pontos de vida.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Explosão:</strong> Cada criatura hostil a até 9m de você sofre 2d8 + Mod. Carisma de dano radiante e fica <strong>Cega</strong> até o final do turno atual.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Recarga:</strong> Descanso Longo.</li></ul>"
   },
   {
@@ -1764,6 +1780,8 @@
     "class": "Bruxo",
     "subclass": "O Insondável",
     "name": "(Insondável, 1º nível) Tentáculo das Profundezas",
+    "damage": "1d8",
+    "damageType": "Frio",
     "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Alcance:</strong> 18 metros (60 pés)<br><strong>Duração:</strong> 1 minuto</p><p>Você conjura um tentáculo espectral. Ao conjurar, e como ação bônus em turnos subsequentes, você pode atacar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque:</strong> Ataque mágico corpo a corpo (alcance 3m do tentáculo).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Efeito:</strong> Causa 1d8 de dano de frio (aumenta para 2d8 no 10º nível) e reduz o deslocamento do alvo em 3m.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Recarga:</strong> Usos iguais ao Bônus de Proficiência (Descanso Longo).</li></ul>"
   },
   {
@@ -1772,6 +1790,8 @@
     "class": "Bruxo",
     "subclass": "O Insondável",
     "name": "(Insondável, 6º nível) Alma Oceânica",
+    "damage": "1d8",
+    "damageType": "Redução",
     "description": "<p>Você ganha resistência a dano de frio, pode respirar debaixo d'água e ganha deslocamento de natação igual ao de caminhada.</p><hr style='border:0; border-top:1px solid rgba(255,255,255,0.1); margin:10px 0;'><p><strong>Bobina Guardiã (Reação):</strong> Quando você ou uma criatura a até 3m do seu tentáculo sofrer dano, você pode usar sua reação para reduzir esse dano em 1d8 (2d8 no 10º nível).</p>"
   },
   {
@@ -1844,6 +1864,8 @@
     "class": "Bruxo",
     "subclass": "O Morto-Vivo",
     "name": "(Morto-Vivo, 1º nível) Forma de Pavor",
+    "damage": "1d10",
+    "damageType": "Temporário",
     "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Duração:</strong> 1 minuto</p><p>Você manifesta um aspecto do seu patrono. Usos iguais ao Bônus de Proficiência.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Vitalidade:</strong> Ganha 1d10 + Nível de Bruxo em PV Temporários.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Imunidade:</strong> Imune à condição <strong>Amedrontado</strong>.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Terror:</strong> Uma vez por turno, ao acertar um ataque, force o alvo a um Salvaguarda de Sabedoria. Se falhar, fica <strong>Amedrontado</strong> até o final do próximo turno dele.</li></ul>"
   },
   {
@@ -1860,6 +1882,8 @@
     "class": "Bruxo",
     "subclass": "O Morto-Vivo",
     "name": "(Morto-Vivo, 10º nível) Casca Necrótica",
+    "damage": "2d10",
+    "damageType": "Necrótico",
     "description": "<p>Você ganha resistência a dano necrótico (ou imunidade enquanto estiver na Forma de Pavor).</p><p><strong>(Reação)</strong> Quando reduzido a 0 PV, você pode cair a 1 PV e explodir. Cada criatura a até 9m sofre 2d10 + Nível de Bruxo de dano necrótico. Você sofre 1 nível de exaustão. (Recarga: 1d4 dias longos).</p>"
   },
   {
@@ -1892,6 +1916,8 @@
     "class": "Bruxo",
     "subclass": "O Imortal",
     "name": "(Imortal, 6º nível) Desafie a Morte",
+    "damage": "1d8",
+    "damageType": "Cura",
     "description": "<p>Quando você estabilizar uma criatura com <em>Salvar os Moribundos</em> ou passar em um teste de resistência contra a morte, você pode recuperar <strong>1d8 + Mod. Constituição</strong> Pontos de Vida. Você pode usar isso uma vez por Descanso Longo.</p>"
   },
   {
@@ -1908,6 +1934,8 @@
     "class": "Bruxo",
     "subclass": "O Imortal",
     "name": "(Imortal, 14º nível) Vida Indestrutível",
+    "damage": "1d8",
+    "damageType": "Cura",
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Você pode recuperar Pontos de Vida iguais a <strong>1d8 + seu Nível de Bruxo</strong>. Além disso, se você tiver partes do corpo decepadas, elas se reconectam ou regeneram. Recarga: Descanso Curto ou Longo.</p>"
   },
   {
@@ -1932,6 +1960,8 @@
     "class": "Bruxo",
     "subclass": "A Luz Imortal",
     "name": "(Luz Imortal, 6º nível) Vingança Ardente",
+    "damage": "10",
+    "damageType": "Radiante",
     "description": "<p><strong>Gatilho:</strong> Ao falhar num teste contra a morte ou cair inconsciente.</p><p>Você pode explodir em luz. Você se levanta com metade dos seus PV máximos. Todas as criaturas hostis a 9m sofrem 10 + Mod. CAR de dano radiante e ficam <strong>Cegas</strong>. Recarga: 1x por Descanso Longo.</p>"
   },
   {
@@ -1940,6 +1970,8 @@
     "class": "Bruxo",
     "subclass": "A Luz Imortal",
     "name": "(Luz Imortal, 14º nível) Luz de Cura",
+    "damage": "5d6",
+    "damageType": "Cura",
     "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Alcance:</strong> Toque</p><p>Você pode curar a si mesmo ou um aliado. Você tem um reservatório de 15d6 de cura. Você pode gastar até 5d6 por uso. O reservatório recarrega após um Descanso Longo.</p>"
   },
   {
@@ -2020,6 +2052,8 @@
     "class": "Bruxo",
     "subclass": "Fantasma do Maquinario",
     "name": "(Maquinario, 14º nível) Tecnovírus",
+    "damage": "8d10",
+    "damageType": "Psíquico",
     "description": "<p><strong>Ação:</strong> Ação Padrão<br><strong>Alcance:</strong> Toque</p><p>Você infecta a mente de uma criatura com um vírus psíquico. Faça um ataque mágico corpo a corpo. Se acertar, causa <strong>8d10</strong> de dano psíquico. O alvo deve passar num teste de Constituição ou será infectado. Enquanto infectado, você pode emitir um comando (como na magia <em>Comando</em>) que a criatura tem desvantagem para resistir.</p>"
   },
   {
@@ -2062,8 +2096,6 @@
     "name": "(Buscador, 14º nível) Sequestro Astral",
     "description": "<p><strong>Tempo:</strong> Ritual de 5 minutos</p><p>Você pode transportar a si mesmo e até 10 criaturas voluntárias para o Plano Astral. Enquanto estiverem lá, o tempo flui de forma diferente. Vocês ganham os benefícios de um <strong>Descanso Curto</strong> instantaneamente e então retornam ao plano original.</p>"
   },
-
-
   {
     "id": "invoca-andar-nao-visto",
     "category": "Classe",
@@ -2086,6 +2118,7 @@
     "class": "Bruxo",
     "subclass": "Invocações Místicas",
     "name": "Arma de Pacto Aprimorada",
+    "attackBonus": "+1",
     "description": "<p>Seu vínculo com sua arma de pacto torna-a mais versátil e afiada. Você pode usar sua arma de pacto como foco arcano para magias de bruxo; armas invocadas por você que não sejam mágicas recebem +1 em jogadas de ataque e dano; além disso, você passa a poder invocar arcos curtos, arcos longos, bestas leves e bestas pesadas como opções válidas de arma de pacto. Ideal para bruxos que querem variar alcance sem perder identidade de pacto.</p><p>Pré-Requisitos: Pacto da Lâmina.</p>"
   },
   {
@@ -2134,6 +2167,8 @@
     "class": "Bruxo",
     "subclass": "Invocações Místicas",
     "name": "Destruição Mística",
+    "damage": "1d8",
+    "damageType": "Energia",
     "description": "<p>Você canaliza seus feitiços através da lâmina para desferir golpes devastadores. Uma vez por turno, quando acertar uma criatura com sua arma de pacto, você pode gastar um espaço de magia de bruxo para causar dano de energia adicional igual a 1d8 + 1d8 por nível do espaço mágico usado (por exemplo, 1d8 + 1d8 para 1º nível, etc.). Além disso, se o alvo for do tamanho Enorme ou menor, ele pode ser derrubado como efeito secundário. Esta invocação converte recursos arcanos em impacto físico direto.</p><p>Pré-Requisitos: Nível mínimo 5, Pacto da Lâmina.</p>"
   },
   {
@@ -2398,6 +2433,8 @@
     "class": "Bruxo",
     "subclass": "Invocações Místicas",
     "name": "Vigor Infernal",
+    "damage": "1d4+4",
+    "damageType": "Temporário",
     "description": "<p>Você chama a chama vital do inferno para sustentar seu corpo. Pode lançar <em>Vida Falsa</em> em si mesmo, proporcionando um buffer temporário de resistência e sobrevivência, ideal para incursões arriscadas ou quando recursos de cura são escassos.</p><p>Pré-Requisitos: nenhum.</p>"
   },
   {
@@ -2528,6 +2565,35 @@
     "name": "Voz da Descoberta",
     "description": "<p>Seu tomo amplia seu conhecimento linguístico. Ao fim de um Descanso Longo, escolha dois idiomas escritos que você passa a saber ler e escrever. Ideal para decifrar textos antigos, negociar com culturas estrangeiras e lidar com documentos misteriosos.</p><p>Pré-Requisitos: Pacto da Corrente de Estrelas.</p>"
   },
+  {
+    "id": "invoca-arma-pacto-aprimorada",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Arma de Pacto Aprimorada",
+    "attackBonus": "+1",
+    "description": "<p>Seu vínculo com sua arma de pacto torna-a mais versátil e afiada. Você pode usar sua arma de pacto como foco arcano para magias de bruxo; armas invocadas por você que não sejam mágicas recebem +1 em jogadas de ataque e dano; além disso, você passa a poder invocar arcos curtos, arcos longos, bestas leves e bestas pesadas como opções válidas de arma de pacto. Ideal para bruxos que querem variar alcance sem perder identidade de pacto.</p><p>Pré-Requisitos: Pacto da Lâmina.</p>"
+  },
+  {
+    "id": "invoca-destruicao-mistica",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Destruição Mística",
+    "damage": "1d8",
+    "damageType": "Energia",
+    "description": "<p>Você canaliza seus feitiços através da lâmina para desferir golpes devastadores. Uma vez por turno, quando acertar uma criatura com sua arma de pacto, você pode gastar um espaço de magia de bruxo para causar dano de energia adicional igual a 1d8 + 1d8 por nível do espaço mágico usado (por exemplo, 1d8 + 1d8 para 1º nível, etc.). Além disso, se o alvo for do tamanho Enorme ou menor, ele pode ser derrubado como efeito secundário. Esta invocação converte recursos arcanos em impacto físico direto.</p><p>Pré-Requisitos: Nível mínimo 5, Pacto da Lâmina.</p>"
+  },
+  {
+    "id": "invoca-vigor-infernal",
+    "category": "Classe",
+    "class": "Bruxo",
+    "subclass": "Invocações Místicas",
+    "name": "Vigor Infernal",
+    "damage": "1d4+4",
+    "damageType": "Temporário",
+    "description": "<p>Você chama a chama vital do inferno para sustentar seu corpo. Pode lançar <em>Vida Falsa</em> em si mesmo, proporcionando um buffer temporário de resistência e sobrevivência, ideal para incursões arriscadas ou quando recursos de cura são escassos.</p><p>Pré-Requisitos: nenhum.</p>"
+  },
 
 
 
@@ -2556,6 +2622,7 @@
   
   
     
+  
   {
     "id": "csa_base_1_flagelo",
     "category": "Classe",
@@ -2634,6 +2701,8 @@
     "class": "Blood Hunter",
     "subclass": "",
     "name": "(13º nível) Marca de Amarração",
+    "damage": "4d6",
+    "damageType": "Psíquico",
     "description": "<p>Sua <em>Marca de Castigo</em> se torna mais poderosa:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> O dano psíquico causado pela marca dobra (2x Mod. Hemomancia).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Contenção:</strong> Uma criatura marcada não pode realizar a ação Disparada (Dash).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Anti-Fuga:</strong> Se o alvo tentar se teleportar ou mudar de plano, ele sofre 4d6 de dano psíquico e deve passar em uma Salvaguarda de Sabedoria. Se falhar, a tentativa de teleporte é desperdiçada.</li></ul>"
   },
   {
@@ -2674,6 +2743,8 @@
     "class": "Blood Hunter",
     "subclass": "Ordem do Caça-Fantasmas",
     "name": "(Caça-Fantasmas, 7º nível) Caminhada Etérea",
+    "damage": "1d10",
+    "damageType": "Energia",
     "description": "<p><strong>Ação:</strong> Nenhuma (Início do Turno)</p><p>Você pode entrar no plano etéreo. A duração é igual a um número de rodadas igual ao seu Modificador de Hemomancia.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Fantasma:</strong> Você pode atravessar criaturas e objetos (conta como terreno difícil).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Transição:</strong> Se você terminar seu turno dentro de um objeto, você é expelido para o espaço desocupado mais próximo e sofre <strong>1d10 de dano de energia</strong> para cada 1,5m movido.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Recarga:</strong> Descanso Curto ou Longo.</li></ul>"
   },
   {
@@ -2706,6 +2777,9 @@
     "class": "Blood Hunter",
     "subclass": "Ordem do Licantropo",
     "name": "(Licantropo, 3º nível) Transformação Híbrida",
+    "damage": "1d6",
+    "damageType": "Cortante",
+    "defenseBonus": "+1",
     "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Duração:</strong> 1 hora</p><p>Você assume uma forma híbrida feral. Você pode falar, usar equipamentos e manter a transformação durante descansos curtos. Recarga em Descanso Curto/Longo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Poder Feral:</strong> Vantagem em testes e salvaguardas de Força. +1 no dano corpo a corpo (+2 no 11º, +3 no 18º nível).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Resiliência:</strong> Resistência a dano contundente, cortante e perfurante não-mágico/não-prateado. +1 na CA (se não usar armadura pesada).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Garras Predatórias:</strong> Seus ataques desarmados causam 1d6 cortante (1d8 no 11º). Ao usar a ação Atacar com garras, pode fazer 1 ataque extra de garra como <strong>Ação Bônus</strong>.</li></ul><p style='color:#bbb; font-size:13px; margin-top:6px;'><strong>Sede de Sangue:</strong> Se iniciar o turno com menos de 50% de PV, faça Salvaguarda de Sabedoria (CD 8). Se falhar, deve se mover e atacar a criatura mais próxima (amigo ou inimigo).</p>"
   },
   {
@@ -2714,6 +2788,7 @@
     "class": "Blood Hunter",
     "subclass": "Ordem do Licantropo",
     "name": "(Licantropo, 7º nível) Habilidade do Perseguidor",
+    "attackBonus": "+1",
     "description": "<p>Sua velocidade aumenta em 3 metros. Você adiciona 3m ao salto em distância e 1m ao salto em altura.</p><p>Em forma híbrida, seus ataques desarmados recebem +1 de bônus nas jogadas de ataque e são considerados mágicos. Se tiver um Rito ativo, eles causam o dano elemental extra.</p>"
   },
   {
@@ -2722,6 +2797,7 @@
     "class": "Blood Hunter",
     "subclass": "Ordem do Licantropo",
     "name": "(Licantropo, 11º nível) Regeneração Licantropa",
+    "damageType": "Cura",
     "description": "<p>Você pode usar a Transformação Híbrida duas vezes entre descansos.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Regeneração:</strong> Enquanto estiver na forma híbrida, se você tiver mais de 0 PV e menos de 50% dos seus PV máximos, você recupera 1 + Mod. Constituição PV no início do seu turno.</li></ul>"
   },
   {
@@ -2842,6 +2918,8 @@
     "class": "Blood Hunter",
     "subclass": "Maldições de Sangue",
     "name": "(Maldição) Maldição de Sangue da Agonia Inchada",
+    "damage": "1d8",
+    "damageType": "Necrótico",
     "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Alcance:</strong> 9 metros</p><p>Você faz o corpo de uma criatura inchar dolorosamente.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Efeito:</strong> Até o fim do turno dela, ela tem desvantagem em testes de Força e Destreza. Se fizer mais de um ataque, sofre 1d8 necrótico.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Amplificar:</strong> Dura 1 minuto (Salvaguarda de CON ao final de cada turno encerra).</li></ul>"
   },
   {
@@ -2850,6 +2928,8 @@
     "class": "Blood Hunter",
     "subclass": "Maldições de Sangue",
     "name": "(Maldição, 15º nív, Mutante) Corrosão",
+    "damage": "4d6",
+    "damageType": "Necrótico",
     "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Alcance:</strong> 9 metros</p><p>Você faz o sangue de uma criatura se tornar corrosivo. Ela fica <strong>Envenenada</strong>. Ela pode fazer uma Salvaguarda de Constituição no fim de cada turno para encerrar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Amplificar:</strong> O alvo sofre 4d6 de dano necrótico imediatamente, e sofre esse dano novamente sempre que falhar na salvaguarda para encerrar o efeito.</li></ul>"
   },
   {
@@ -2858,6 +2938,8 @@
     "class": "Blood Hunter",
     "subclass": "Maldições de Sangue",
     "name": "(Maldição, 15º nív, Caça-Fantasmas) Exorcista",
+    "damage": "3d6",
+    "damageType": "Psíquico",
     "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Alcance:</strong> 9 metros</p><p>Você purifica a mente de uma criatura, encerrando imediatamente as condições <strong>Enfeitiçado</strong>, <strong>Amedrontado</strong> ou a possessão da criatura.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Amplificar:</strong> A criatura que causou a condição sofre 3d6 de dano psíquico e deve fazer uma Salvaguarda de Sabedoria ou ficar <strong>Atordoada</strong> até o final do seu próximo turno.</li></ul>"
   },
   {
@@ -2943,6 +3025,7 @@
     
     
     
+  
   {
     "id": "cle_base_1_conjura",
     "category": "Classe",
@@ -2967,7 +3050,6 @@
     "name": "(2º nível) Canalizar Divindade: Expulsar Mortos-Vivos",
     "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Você apresenta seu símbolo sagrado e profere uma oração repreendendo os mortos-vivos. Cada morto-vivo que puder ver ou ouvir você a até 9 metros (30 pés) deve fazer um teste de resistência de Sabedoria.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Falha:</strong> A criatura é <strong>Expulsa</strong> por 1 minuto ou até sofrer dano.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Condição (Expulso):</strong> A criatura deve usar seus turnos para fugir de você da melhor forma possível. Ela não pode se aproximar a menos de 9m de você e não pode usar Reações. A única ação que pode realizar é a Disparada (ou Esquivar se não puder se mover).</li></ul>"
   },
-
   {
     "id": "cle_base_asi",
     "category": "Classe",
@@ -2984,7 +3066,6 @@
     "name": "(5º nível) Destruir Mortos-Vivos",
     "description": "<p>Quando um morto-vivo falha no teste de resistência contra sua característica <em>Expulsar Mortos-Vivos</em>, ele é instantaneamente destruído se seu Nível de Desafio (ND) for igual ou inferior ao limite da tabela:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 5º Nível:</strong> ND 1/2 ou menor.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 8º Nível:</strong> ND 1 ou menor.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 11º Nível:</strong> ND 2 ou menor.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 14º Nível:</strong> ND 3 ou menor.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 17º Nível:</strong> ND 4 ou menor.</li></ul>"
   },
- 
   {
     "id": "cle_base_10_intervencao",
     "category": "Classe",
@@ -3023,6 +3104,7 @@
     "class": "Clérigo",
     "subclass": "Domínio da Solidariedade",
     "name": "(Solidariedade, 6º nível) Bênção de Oketra",
+    "attackBonus": "+10",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Quando uma criatura a até 9m de você faz uma jogada de ataque, você pode usar sua reação e gastar um uso de Canalizar Divindade para conceder um bônus de <strong>+10</strong> na jogada. Você pode fazer isso depois de ver a rolagem, mas antes do Mestre declarar se acertou ou errou.</p>"
   },
   {
@@ -3031,6 +3113,7 @@
     "class": "Clérigo",
     "subclass": "Domínio da Solidariedade",
     "name": "(Solidariedade, 8º nível) Golpe Divino",
+    "damage": "1d8",
     "description": "<p>Uma vez em cada um de seus turnos, quando você acertar uma criatura com um ataque com arma, você pode fazer o ataque causar <strong>1d8</strong> de dano extra do mesmo tipo da arma. No 14º nível, o dano extra aumenta para <strong>2d8</strong>.</p>"
   },
   {
@@ -3063,6 +3146,7 @@
     "class": "Clérigo",
     "subclass": "Domínio da Força",
     "name": "(Força, 2º nível) Canalizar Divindade: Proeza de Força",
+    "attackBonus": "+10",
     "description": "<p><strong>Ação:</strong> Livre (Gatilho)</p><p>Quando você fizer uma jogada de ataque, um teste de habilidade ou um teste de resistência usando Força, você pode usar seu Canalizar Divindade para ganhar um bônus de <strong>+10</strong> na rolagem. Você pode fazer isso depois de ver o d20, mas antes do resultado.</p>"
   },
   {
@@ -3071,6 +3155,7 @@
     "class": "Clérigo",
     "subclass": "Domínio da Força",
     "name": "(Força, 6º nível) Bênção de Rhonas",
+    "attackBonus": "+10",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Quando uma criatura a até 9m de você fizer uma jogada de ataque, teste de habilidade ou teste de resistência usando Força, você pode usar sua reação e gastar um uso de Canalizar Divindade para conceder um bônus de <strong>+10</strong> à rolagem.</p>"
   },
   {
@@ -3079,6 +3164,7 @@
     "class": "Clérigo",
     "subclass": "Domínio da Força",
     "name": "(Força, 8º nível) Golpe Divino",
+    "damage": "1d8",
     "description": "<p>Uma vez em cada um de seus turnos, quando você acertar uma criatura com um ataque com arma, você pode fazer o ataque causar <strong>1d8</strong> de dano extra do mesmo tipo da arma. No 14º nível, o dano extra aumenta para <strong>2d8</strong>.</p>"
   },
   {
@@ -3175,6 +3261,7 @@
     "class": "Clérigo",
     "subclass": "Domínio do Zelo",
     "name": "(Zelo, 8º nível) Golpe Divino",
+    "damage": "1d8",
     "description": "<p>Uma vez em cada um de seus turnos, quando você acertar uma criatura com um ataque com arma, você pode fazer o ataque causar <strong>1d8</strong> de dano extra do mesmo tipo da arma. No 14º nível, o dano extra aumenta para <strong>2d8</strong>.</p>"
   },
   {
@@ -3183,6 +3270,8 @@
     "class": "Clérigo",
     "subclass": "Domínio do Zelo",
     "name": "(Zelo, 17º nível) Chama da Glória",
+    "damage": "5d10",
+    "damageType": "Fogo",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Quando você for reduzido a 0 PV por um atacante que você possa ver, mesmo que morra, você pode usar sua reação para se mover até seu deslocamento em direção ao atacante e fazer um ataque corpo a corpo com arma contra ele com <strong>Vantagem</strong>.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano Extra:</strong> Se acertar, causa <strong>5d10</strong> de fogo + <strong>5d10</strong> de dano da arma extra.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Consequência:</strong> Após o ataque, você sofre o efeito do dano original (cai inconsciente ou morre). Recarga: Descanso Longo.</li></ul>"
   },
   {
@@ -3207,6 +3296,7 @@
     "class": "Clérigo",
     "subclass": "Domínio do Destino",
     "name": "(Destino, 1º nível) Laços que Unem",
+    "damage": "1d6",
     "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Você pode criar um vínculo mágico entre você e outra criatura ou objeto por 1 hora. Enquanto estiverem no mesmo plano, você sabe a direção e distância do alvo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Potência:</strong> Se você conjurar uma magia com espaço de magia que cause dano ou cure o alvo vinculado, a magia é aprimorada em <strong>1d6</strong>.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Usos:</strong> Igual ao seu Bônus de Proficiência (Recupera em Descanso Longo).</li></ul>"
   },
   {
@@ -3223,6 +3313,8 @@
     "class": "Clérigo",
     "subclass": "Domínio do Destino",
     "name": "(Destino, 6º nível) Perspicaz e Impactante",
+    "damage": "1d6",
+    "damageType": "Psíquico",
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Escolha uma criatura a até 9m. Até o final do seu próximo turno, escolha um efeito:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ofensivo:</strong> Na próxima vez que você acertar a criatura com um ataque, ela sofre <strong>1d6</strong> de dano psíquico extra.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Defensivo:</strong> Na próxima vez que a criatura fizer um teste de resistência contra uma magia sua, ela deve subtrair <strong>1d6</strong> da rolagem.</li></ul><p style='color:#bbb; font-size:13px;'>Usos iguais ao Bônus de Proficiência (Recupera em Descanso Longo).</p>"
   },
   {
@@ -3287,6 +3379,8 @@
     "class": "Clérigo",
     "subclass": "Domínio da Cidade",
     "name": "(Cidade, 8º nível) Golpe Divino",
+    "damage": "1d8",
+    "damageType": "Psíquico",
     "description": "<p>Uma vez por turno ao acertar ataque com arma, cause <strong>1d8</strong> extra de dano psíquico. No 14º nível, o dano extra aumenta para <strong>2d8</strong>.</p>"
   },
   {
@@ -3319,6 +3413,8 @@
     "class": "Clérigo",
     "subclass": "Domínio de Proteção",
     "name": "(Proteção, 2º nível) Canalizar Divindade: Defesa Radiante",
+    "damage": "2d10",
+    "damageType": "Radiante",
     "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Você canaliza energia abençoada em um aliado a até 9m. A primeira vez que esse aliado for atingido por um ataque no próximo minuto, o atacante sofre dano radiante igual a <strong>2d10 + seu Nível de Clérigo</strong>.</p>"
   },
   {
@@ -3335,6 +3431,8 @@
     "class": "Clérigo",
     "subclass": "Domínio de Proteção",
     "name": "(Proteção, 8º nível) Golpe Divino",
+    "damage": "1d8",
+    "damageType": "Radiante",
     "description": "<p>Uma vez por turno ao acertar ataque com arma, cause <strong>1d8</strong> extra de dano radiante. No 14º nível, o dano extra aumenta para <strong>2d8</strong>.</p>"
   },
   {
@@ -3375,6 +3473,8 @@
     "class": "Clérigo",
     "subclass": "Domínio do Crepúsculo",
     "name": "(Crepúsculo, 2º nível) Canalizar Divindade: Santuário do Crepúsculo",
+    "damage": "1d6",
+    "damageType": "Temporário",
     "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Você cria uma esfera de crepúsculo de 9m ao seu redor por 1 minuto. A área é de iluminação fraca. Sempre que uma criatura (incluindo você) terminar o turno na esfera, você pode conceder um benefício:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Proteção:</strong> Ganha PV Temporários iguais a 1d6 + seu Nível de Clérigo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Purificação:</strong> Encerra um efeito de Encantado (Charmed) ou Amedrontado (Frightened).</li></ul>"
   },
   {
@@ -3391,6 +3491,8 @@
     "class": "Clérigo",
     "subclass": "Domínio do Crepúsculo",
     "name": "(Crepúsculo, 8º nível) Golpe Divino",
+    "damage": "1d8",
+    "damageType": "Radiante",
     "description": "<p>Uma vez por turno ao acertar ataque com arma, cause <strong>1d8</strong> extra de dano radiante. No 14º nível, o dano extra aumenta para <strong>2d8</strong>.</p>"
   },
   {
@@ -3399,6 +3501,7 @@
     "class": "Clérigo",
     "subclass": "Domínio do Crepúsculo",
     "name": "(Crepúsculo, 17º nível) Manto do Crepúsculo",
+    "defenseBonus": "+2",
     "description": "<p>Enquanto estiverem dentro do seu <em>Santuário do Crepúsculo</em>, você e seus aliados possuem cobertura parcial (+2 na CA e Salvaguardas de DEX).</p>"
   },
   {
@@ -3519,6 +3622,7 @@
     "class": "Clérigo",
     "subclass": "Domínio da Morte",
     "name": "(Morte, 2º nível) Canalizar Divindade: Toque da Morte",
+    "damageType": "Necrótico",
     "description": "<p><strong>Ação:</strong> Livre (Gatilho)</p><p>Quando você acertar uma criatura com um ataque corpo a corpo, você pode usar seu Canalizar Divindade para causar dano necrótico extra. O dano é igual a <strong>5 + duas vezes seu nível de clérigo</strong>.</p>"
   },
   {
@@ -3535,6 +3639,8 @@
     "class": "Clérigo",
     "subclass": "Domínio da Morte",
     "name": "(Morte, 8º nível) Golpe Divino",
+    "damage": "1d8",
+    "damageType": "Necrótico",
     "description": "<p>Uma vez por turno ao acertar ataque com arma, cause <strong>1d8</strong> extra de dano necrótico. No 14º nível, o dano extra aumenta para <strong>2d8</strong>.</p>"
   },
   {
@@ -3575,6 +3681,7 @@
     "class": "Clérigo",
     "subclass": "Domínio da Forja",
     "name": "(Forja, 6º nível) Alma da Forja",
+    "defenseBonus": "+1",
     "description": "<p>Você ganha resistência a dano de fogo. Além disso, enquanto estiver usando armadura pesada, você ganha +1 na sua Classe de Armadura.</p>"
   },
   {
@@ -3583,6 +3690,8 @@
     "class": "Clérigo",
     "subclass": "Domínio da Forja",
     "name": "(Forja, 8º nível) Golpe Divino",
+    "damage": "1d8",
+    "damageType": "Fogo",
     "description": "<p>Uma vez por turno ao acertar ataque com arma, cause <strong>1d8</strong> extra de dano de fogo. No 14º nível, o dano extra aumenta para <strong>2d8</strong>.</p>"
   },
   {
@@ -3727,6 +3836,8 @@
     "class": "Clérigo",
     "subclass": "Domínio da Vida",
     "name": "(Vida, 8º nível) Golpe Divino",
+    "damage": "1d8",
+    "damageType": "Radiante",
     "description": "<p>Uma vez por turno ao acertar ataque com arma, cause <strong>1d8</strong> extra de dano radiante. No 14º nível, o dano extra aumenta para <strong>2d8</strong>.</p>"
   },
   {
@@ -3759,6 +3870,8 @@
     "class": "Clérigo",
     "subclass": "Domínio da Luz",
     "name": "(Luz, 2º nível) Canalizar Divindade: Radiância da Aurora",
+    "damage": "2d10",
+    "damageType": "Radiante",
     "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Você dissipa qualquer escuridão mágica a até 9m. Além disso, cada criatura hostil na área sofre <strong>2d10 + Nível de Clérigo</strong> de dano radiante (Salvaguarda de Constituição reduz à metade).</p>"
   },
   {
@@ -3823,6 +3936,8 @@
     "class": "Clérigo",
     "subclass": "Domínio da Natureza",
     "name": "(Natureza, 8º nível) Golpe Divino",
+    "damage": "1d8",
+    "damageType": "Frio/Fogo/Elétrico",
     "description": "<p>Uma vez por turno ao acertar ataque com arma, cause <strong>1d8</strong> extra de dano de frio, fogo ou relâmpago (sua escolha). No 14º nível, o dano extra aumenta para <strong>2d8</strong>.</p>"
   },
   {
@@ -3871,6 +3986,8 @@
     "class": "Clérigo",
     "subclass": "Domínio da Ordem",
     "name": "(Ordem, 8º nível) Golpe Divino",
+    "damage": "1d8",
+    "damageType": "Psíquico",
     "description": "<p>Uma vez por turno ao acertar ataque com arma, cause <strong>1d8</strong> extra de dano psíquico. No 14º nível, o dano extra aumenta para <strong>2d8</strong>.</p>"
   },
   {
@@ -3879,6 +3996,8 @@
     "class": "Clérigo",
     "subclass": "Domínio da Ordem",
     "name": "(Ordem, 17º nível) Ira da Ordem",
+    "damage": "2d8",
+    "damageType": "Psíquico",
     "description": "<p>Se você causar seu dano de Golpe Divino a uma criatura, ela é amaldiçoada até o início do seu próximo turno. A próxima vez que um de seus aliados acertar essa criatura com um ataque, ela sofre <strong>2d8</strong> de dano psíquico extra.</p>"
   },
   {
@@ -3903,6 +4022,8 @@
     "class": "Clérigo",
     "subclass": "Domínio da Paz",
     "name": "(Paz, 2º nível) Canalizar Divindade: Bálsamo da Paz",
+    "damage": "2d6",
+    "damageType": "Cura",
     "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Você pode se mover até o seu deslocamento sem provocar ataques de oportunidade. Quando você passa a até 1,5m de qualquer outra criatura durante esse movimento, você pode curá-la em <strong>2d6 + Mod. Sabedoria</strong>.</p>"
   },
   {
@@ -3943,6 +4064,8 @@
     "class": "Clérigo",
     "subclass": "Domínio da Tempestade",
     "name": "(Tempestade, 1º nível) Ira da Tempestade",
+    "damage": "2d8",
+    "damageType": "Elétrico/Trovejante",
     "description": "<p>Você ganha proficiência com armas marciais e armaduras pesadas.</p><p><strong>Ação:</strong> Reação</p><p>Quando uma criatura a até 1,5m acertar você com um ataque, você pode forçá-la a uma Salvaguarda de Destreza. Se falhar, sofre <strong>2d8</strong> de dano elétrico ou trovejante (metade no sucesso).</p>"
   },
   {
@@ -3967,6 +4090,8 @@
     "class": "Clérigo",
     "subclass": "Domínio da Tempestade",
     "name": "(Tempestade, 8º nível) Golpe Divino",
+    "damage": "1d8",
+    "damageType": "Trovejante",
     "description": "<p>Uma vez por turno ao acertar ataque com arma, cause <strong>1d8</strong> extra de dano trovejante. No 14º nível, o dano extra aumenta para <strong>2d8</strong>.</p>"
   },
   {
@@ -4015,6 +4140,8 @@
     "class": "Clérigo",
     "subclass": "Domínio da Trapaça",
     "name": "(Trapaça, 8º nível) Golpe Divino",
+    "damage": "1d8",
+    "damageType": "Veneno",
     "description": "<p>Uma vez por turno ao acertar ataque com arma, cause <strong>1d8</strong> extra de dano de veneno. No 14º nível, o dano extra aumenta para <strong>2d8</strong>.</p>"
   },
   {
@@ -4047,6 +4174,7 @@
     "class": "Clérigo",
     "subclass": "Domínio da Guerra",
     "name": "(Guerra, 2º nível) Canalizar Divindade: Golpe Guiado",
+    "attackBonus": "+10",
     "description": "<p><strong>Ação:</strong> Livre (Gatilho)</p><p>Quando você faz uma jogada de ataque, você pode usar seu Canalizar Divindade para ganhar um bônus de <strong>+10</strong> na rolagem. Você pode decidir usar isso depois de ver a rolagem do d20, mas antes do Mestre dizer se acertou ou errou.</p>"
   },
   {
@@ -4055,6 +4183,7 @@
     "class": "Clérigo",
     "subclass": "Domínio da Guerra",
     "name": "(Guerra, 6º nível) Canalizar Divindade: Bênção da Guerra",
+    "attackBonus": "+10",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Quando uma criatura a até 9m de você faz uma jogada de ataque, você pode usar sua reação e gastar um uso de Canalizar Divindade para conceder um bônus de <strong>+10</strong> à rolagem.</p>"
   },
   {
@@ -4063,6 +4192,7 @@
     "class": "Clérigo",
     "subclass": "Domínio da Guerra",
     "name": "(Guerra, 8º nível) Golpe Divino",
+    "damage": "1d8",
     "description": "<p>Uma vez por turno ao acertar ataque com arma, cause <strong>1d8</strong> extra de dano do mesmo tipo da arma. No 14º nível, o dano extra aumenta para <strong>2d8</strong>.</p>"
   },
   {
@@ -4089,6 +4219,7 @@
 
     
  
+  
   {
     "id": "dru_base_1_druidico",
     "category": "Classe",
@@ -4113,7 +4244,6 @@
     "name": "(2º nível) Forma Selvagem",
     "description": "<p><strong>Ação:</strong> Ação Padrão<br><strong>Duração:</strong> Horas iguais a metade do seu nível de druida (arredondado para baixo)</p><p>Você pode assumir a forma de uma besta que você já tenha visto. Você pode usar essa característica 2 vezes por descanso curto ou longo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Nível 2:</strong> Max ND 1/4 (Sem deslocamento de voo ou natação).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Nível 4:</strong> Max ND 1/2 (Sem deslocamento de voo).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Nível 8:</strong> Max ND 1.</li></ul><p style='color:#bbb; font-size:13px; margin-top:6px;'><strong>Regras:</strong> Você assume as estatísticas da besta, mas mantém seu alinhamento e atributos mentais (INT, SAB, CAR). Você ganha os PV da besta. Quando reduzido a 0 PV, você volta à forma normal e qualquer dano excedente é aplicado aos seus PV reais.</p>"
   },
-
   {
     "id": "dru_base_asi",
     "category": "Classe",
@@ -4152,6 +4282,8 @@
     "class": "Druida",
     "subclass": "Círculo dos Sonhos",
     "name": "(Sonhos, 2º nível) Bálsamo da Corte de Verão",
+    "damage": "1d6",
+    "damageType": "Cura",
     "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Alcance:</strong> 36 metros (120 pés)</p><p>Você possui uma reserva de energia feérica representada por dados d6. O número de dados é igual ao seu nível de druida.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Uso:</strong> Você pode escolher uma criatura visível e gastar um número de dados igual a até metade do seu nível de druida. Role os dados gastos e adicione o total aos PV da criatura.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Bônus:</strong> O alvo também ganha 1 PV temporário por cada dado gasto.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Recuperação:</strong> Você recupera todos os dados gastos ao terminar um Descanso Longo.</li></ul>"
   },
   {
@@ -4232,6 +4364,8 @@
     "class": "Druida",
     "subclass": "Círculo da Lua",
     "name": "(Lua, 2º nível) Forma Selvagem de Combate",
+    "damage": "1d8",
+    "damageType": "Cura",
     "description": "<p>Você ganha a habilidade de usar a <em>Forma Selvagem</em> como uma <strong>Ação Bônus</strong>, em vez de uma ação.</p><p>Além disso, enquanto estiver transformado, você pode usar uma Ação Bônus para gastar um espaço de magia e recuperar <strong>1d8 pontos de vida</strong> por nível do espaço de magia gasto.</p>"
   },
   {
@@ -4320,6 +4454,8 @@
     "class": "Druida",
     "subclass": "Círculo dos Esporos",
     "name": "(Esporos, 2º nível) Halo de Esporos",
+    "damage": "1d4",
+    "damageType": "Necrótico",
     "description": "<p><strong>Ação:</strong> Reação<br><strong>Alcance:</strong> 3 metros (10 pés)</p><p>Quando uma criatura se move para um espaço a até 3m de você ou começa o turno lá, você pode usar sua reação para causar dano necrótico a ela, a menos que ela passe em um teste de resistência de Constituição.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> 1d4 (2º nível), 1d6 (6º nível), 1d8 (10º nível), 1d10 (14º nível).</li></ul>"
   },
   {
@@ -4328,6 +4464,8 @@
     "class": "Druida",
     "subclass": "Círculo dos Esporos",
     "name": "(Esporos, 2º nível) Entidade Simbiótica",
+    "damage": "1d6",
+    "damageType": "Necrótico",
     "description": "<p><strong>Ação:</strong> Ação Padrão<br><strong>Duração:</strong> 10 minutos</p><p>Você pode gastar um uso de <em>Forma Selvagem</em> para despertar os esporos, em vez de se transformar em besta.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Vida:</strong> Você ganha 4 PV temporários por nível de druida.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Halo:</strong> O dano do seu <em>Halo de Esporos</em> é dobrado.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque:</strong> Seus ataques corpo a corpo com arma causam <strong>1d6 de dano necrótico</strong> extra a qualquer alvo que atingirem.</li></ul>"
   },
   {
@@ -4368,6 +4506,8 @@
     "class": "Druida",
     "subclass": "Círculo das Estrelas",
     "name": "(Estrelas, 2º nível) Forma Estrelada",
+    "damage": "1d8",
+    "damageType": "Radiante/Cura",
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Você pode gastar um uso de <em>Forma Selvagem</em> para assumir uma forma luminosa por 10 minutos. Escolha uma constelação:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Arqueiro:</strong> Como Ação Bônus, faça um ataque à distância (18m). Dano: 1d8 + Mod. SAB radiante.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Cálice:</strong> Ao conjurar uma magia de cura usando um slot, você ou outra criatura a 9m recupera 1d8 + Mod. SAB PV extras.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dragão:</strong> Ao fazer um teste de Inteligência, Sabedoria ou teste de Constituição para manter concentração, você pode tratar rolagens de 9 ou menos como um 10.</li></ul>"
   },
   {
@@ -4376,6 +4516,7 @@
     "class": "Druida",
     "subclass": "Círculo das Estrelas",
     "name": "(Estrelas, 6º nível) Presságio Cósmico",
+    "damage": "1d6",
     "description": "<p>Ao terminar um descanso longo, role um d6. Você ganha uma reação especial baseada no resultado (Par ou Ímpar) que pode usar um número de vezes igual ao seu Bônus de Proficiência.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Par (Bem):</strong> Quando uma criatura a 9m faz uma jogada de ataque, teste ou salvaguarda, use reação para adicionar 1d6 ao resultado.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ímpar (Ai):</strong> Quando uma criatura a 9m faz uma jogada de ataque, teste ou salvaguarda, use reação para subtrair 1d6 do resultado.</li></ul>"
   },
   {
@@ -4384,6 +4525,8 @@
     "class": "Druida",
     "subclass": "Círculo das Estrelas",
     "name": "(Estrelas, 10º nível) Constelações Cintilantes",
+    "damage": "2d8",
+    "damageType": "Radiante/Cura",
     "description": "<p>As constelações da sua <em>Forma Estrelada</em> melhoram. O dano do <strong>Arqueiro</strong> e a cura do <strong>Cálice</strong> aumentam para 2d8. O <strong>Dragão</strong> concede uma velocidade de voo de 6m e a capacidade de pairar. Além disso, no início de cada um dos seus turnos, você pode mudar a constelação ativa.</p>"
   },
   {
@@ -4408,6 +4551,8 @@
     "class": "Druida",
     "subclass": "Círculo do Fogo Selvagem",
     "name": "(Fogo, 2º nível) Invocar Espírito de Fogo Selvagem",
+    "damage": "2d6",
+    "damageType": "Fogo",
     "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Você pode gastar um uso de <em>Forma Selvagem</em> para invocar um espírito de fogo selvagem. Ele aparece em um espaço a até 9m. Cada criatura a 3m de onde ele aparece (exceto você) deve fazer uma Salvaguarda de Destreza ou sofrer 2d6 de fogo. O espírito dura 1 hora.</p><strong style='display:block; margin:8px 0; color:#fff;'>Ações do Espírito (Sua Ação Bônus):</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Semente de Fogo:</strong> Ataque à distância (18m). Dano: 1d6 + PB de fogo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Teleporte Ardente:</strong> O espírito e cada criatura voluntária a 1,5m dele se teleportam até 4,5m. Criaturas deixadas para trás no espaço original sofrem 1d6 + PB de fogo.</li></ul>"
   },
   {
@@ -4416,6 +4561,8 @@
     "class": "Druida",
     "subclass": "Círculo do Fogo Selvagem",
     "name": "(Fogo, 6º nível) Vínculo Reforçado",
+    "damage": "1d8",
+    "damageType": "Fogo/Cura",
     "description": "<p>Enquanto seu espírito estiver ativo, sempre que você conjurar uma magia que cause dano de fogo ou restaure pontos de vida, você pode adicionar <strong>1d8</strong> a uma rolagem da magia. Além disso, você pode conjurar magias a partir do espaço do espírito.</p>"
   },
   {
@@ -4424,6 +4571,8 @@
     "class": "Druida",
     "subclass": "Círculo do Fogo Selvagem",
     "name": "(Fogo, 10º nível) Chamas Cauterizantes",
+    "damage": "2d10",
+    "damageType": "Fogo/Cura",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Quando uma criatura morre a até 9m de você ou do seu espírito, você pode fazer com que chamas espectrais surjam no espaço da criatura morta. A criatura de sua escolha no espaço ou a 1,5m dele recupera PV ou sofre dano de fogo igual a <strong>2d10 + seu Modificador de Sabedoria</strong>. Usos iguais ao Bônus de Proficiência.</p>"
   },
   {
@@ -4448,6 +4597,8 @@
     "class": "Druida",
     "subclass": "Círculo do Primordial",
     "name": "(Primordial, 2º nível) Companheiro Primordial",
+    "damage": "1d8",
+    "damageType": "Contundente",
     "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Você pode gastar um uso de <em>Forma Selvagem</em> para invocar um Companheiro Primordial (estatísticas de dinossauro/besta antiga, tamanho Médio). Ele age no seu turno.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ação (Sua Ação Bônus):</strong> Ele pode realizar a ação de Ataque (Golpe: 1d8 + PB + FOR).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Reação (Interceptar):</strong> Quando uma criatura a 1,5m dele é atingida, ele pode reduzir o dano sofrido pela criatura pela metade (ele não sofre o dano, apenas reduz).</li></ul>"
   },
   {
@@ -4472,6 +4623,7 @@
     "class": "Druida",
     "subclass": "Círculo do Primordial",
     "name": "(Primordial, 14º nível) Flagelo dos Antigos",
+    "damage": "1d8",
     "description": "<p>Como ação bônus, você pode gastar um espaço de magia para fortalecer seu companheiro por 1 hora. Ele se torna <strong>Enorme</strong>.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Benefícios:</strong> Ele ganha PV Temporários (10 x nível da magia), o dano de ataque aumenta em 1d8 por nível da magia e sua velocidade aumenta em 1,5m por nível da magia.</li></ul>"
   },
   {
@@ -4480,6 +4632,8 @@
     "class": "Druida",
     "subclass": "Círculo do Crepúsculo",
     "name": "(Crepúsculo, 2º nível) Foice da Colheita",
+    "damage": "1d10",
+    "damageType": "Necrótico",
     "description": "<p>Você tem uma reserva de dados de energia necrótica (d10s) igual ao seu nível de druida.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> Ao conjurar uma magia que cause dano, você pode gastar dados para adicionar dano necrótico.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Cura:</strong> Se você reduzir uma criatura a 0 PV com esse dano, você ou um aliado a 9m recupera 2 PV por dado gasto (ou 5 PV se o alvo for morto-vivo).</li></ul>"
   },
   {
@@ -4521,6 +4675,7 @@
 
 
    
+  
   {
     "id": "sor_base_1_conjura",
     "category": "Classe",
@@ -4553,7 +4708,6 @@
     "name": "Aumento no Valor de Atributo",
     "description": "<p>Você pode aumentar um valor de atributo à sua escolha em 2, ou dois valores em 1. Como padrão, você não pode elevar um atributo acima de 20.</p><p style='color:#bbb; font-size:13px;'>Níveis: 4, 8, 12, 16 e 19.</p>"
   },
- 
   {
     "id": "sor_base_20_restauracao",
     "category": "Classe",
@@ -4608,6 +4762,8 @@
     "class": "Feiticeiro",
     "subclass": "Mente Aberrante",
     "name": "(Aberrante, 18º nível) Implosão de Deformação",
+    "damage": "3d10",
+    "damageType": "Energia",
     "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Você se teleporta para um espaço a até 36m. Imediatamente após desaparecer, cada criatura a até 9m do espaço que você deixou deve fazer uma Salvaguarda de Força.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Falha:</strong> Sofre 3d10 de <strong>dano de energia</strong> e é puxada em linha reta para o espaço que você ocupava.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Recarga:</strong> 1 vez por Descanso Longo (ou gastando 5 Pontos de Feitiçaria).</li></ul>"
   },
   {
@@ -4648,6 +4804,8 @@
     "class": "Feiticeiro",
     "subclass": "Alma Mecânica",
     "name": "(Mecânica, 18º nível) Cavalcade Mecânica",
+    "damage": "100",
+    "damageType": "Cura",
     "description": "<p><strong>Ação:</strong> Ação Padrão<br><strong>Área:</strong> Cubo de 9m</p><p>Você invoca espíritos da ordem para restaurar o equilíbrio na área. Os espíritos concedem os seguintes efeitos:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Cura:</strong> Restaura até 100 PV, divididos como quiser entre criaturas na área.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Reparo:</strong> Qualquer objeto danificado é reparado instantaneamente.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dissipar:</strong> Qualquer magia de 6º nível ou inferior ativa em criaturas ou objetos na área termina.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Custo:</strong> 1 vez por Descanso Longo (ou gastando 7 Pontos de Feitiçaria).</li></ul>"
   },
   {
@@ -4840,6 +4998,7 @@
     "class": "Feiticeiro",
     "subclass": "Feitiçaria da Tempestade",
     "name": "(Tempestade, 14º nível) Fúria da Tempestade",
+    "damageType": "Elétrico",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Quando você for atingido por um ataque corpo a corpo, você pode causar dano elétrico ao atacante igual ao seu nível de feiticeiro. O atacante também deve fazer um teste de resistência de Força ou ser empurrado até 6 metros em linha reta para longe de você.</p>"
   },
   {
@@ -4896,6 +5055,7 @@
     "class": "Feiticeiro",
     "subclass": "Alma Piromantica",
     "name": "(Piromancia, 1º nível) Coração de Fogo",
+    "damageType": "Fogo",
     "description": "<p>Sempre que você conjurar uma magia de 1º nível ou superior que cause dano de fogo, criaturas à sua escolha a até 3m de você sofrem dano de fogo igual à metade do seu nível de feiticeiro.</p>"
   },
   {
@@ -4912,6 +5072,7 @@
     "class": "Feiticeiro",
     "subclass": "Alma Piromantica",
     "name": "(Piromancia, 14º nível) Fúria do Piromante",
+    "damageType": "Fogo",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Quando você for atingido por um ataque corpo a corpo, você pode causar dano de fogo ao atacante igual ao seu nível de feiticeiro. Esse dano ignora resistência a dano de fogo.</p>"
   },
   {
@@ -4928,6 +5089,7 @@
     "class": "Feiticeiro",
     "subclass": "Alma Favorecida",
     "name": "(Favorecida, 1º nível) Magia Divina e Resiliência",
+    "damage": "2d4",
     "description": "<p>Você ganha acesso à lista de magias de Clérigo. Você ganha +1 Ponto de Vida por nível de feiticeiro.</p><p><strong>Favorecido pelos Deuses:</strong> Se falhar em um teste de resistência ou ataque, adicione 2d4 ao resultado (Recupera em descanso curto/longo).</p>"
   },
   {
@@ -4952,6 +5114,7 @@
     "class": "Feiticeiro",
     "subclass": "Alma Favorecida",
     "name": "(Favorecida, 18º nível) Recuperação Sobrenatural",
+    "damageType": "Cura",
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Se você tiver menos da metade de seus pontos de vida, você pode recuperar um número de pontos de vida igual a metade do seu máximo. Recarga: Descanso Longo.</p>"
   },
   {
@@ -4992,6 +5155,7 @@
     "class": "Feiticeiro",
     "subclass": "Feitiçaria da Fênix",
     "name": "(Fênix, 1º nível) Manto de Chamas",
+    "damageType": "Fogo",
     "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Duração:</strong> 1 minuto</p><p>Você se envolve em fogo. Você emite luz, qualquer criatura que te tocar sofre dano de fogo e você adiciona seu Modificador de Carisma ao dano de suas magias de fogo. Recarga: Descanso Longo.</p>"
   },
   {
@@ -5000,6 +5164,8 @@
     "class": "Feiticeiro",
     "subclass": "Feitiçaria da Fênix",
     "name": "(Fênix, 6º nível) Faísca de Fênix",
+    "damage": "10",
+    "damageType": "Fogo",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Se você for reduzido a 0 PV, você pode cair a 1 PV. Cada criatura a até 3m de você sofre dano de fogo igual a 10 + Nível de Feiticeiro. Recarga: Descanso Longo.</p>"
   },
   {
@@ -5008,6 +5174,7 @@
     "class": "Feiticeiro",
     "subclass": "Feitiçaria da Fênix",
     "name": "(Fênix, 14º nível) Fogo Nutritivo",
+    "damageType": "Cura",
     "description": "<p>Quando você conjura uma magia que causa dano de fogo, você recupera pontos de vida iguais ao nível do espaço de magia + seu Modificador de Carisma.</p>"
   },
   {
@@ -5032,6 +5199,7 @@
     "class": "Feiticeiro",
     "subclass": "Alma Psiônica",
     "name": "(Psiônica, 6º nível) Golpe Psíquico",
+    "damageType": "Psíquico",
     "description": "<p>Quando você causa dano com uma magia de feiticeiro, você pode gastar seu Dado Psiônico para causar dano psíquico extra e empurrar o alvo.</p>"
   },
   {
@@ -5048,6 +5216,7 @@
     "class": "Feiticeiro",
     "subclass": "Alma Psiônica",
     "name": "(Psiônica, 18º nível) Aura Psíquica",
+    "damageType": "Psíquico",
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Você projeta uma aura de 9m. Criaturas hostis nela sofrem dano psíquico no início dos turnos delas e têm seu deslocamento reduzido pela metade.</p>"
   },
   {
@@ -5136,6 +5305,7 @@
     "class": "Feiticeiro",
     "subclass": "Feitiçaria de Pedra",
     "name": "(Pedra, 6º nível) Égide de Pedra",
+    "damageType": "Energia",
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Você protege um aliado, reduzindo o dano que ele sofre. Se o aliado for atacado, você pode usar sua <strong>Reação</strong> para se teleportar para perto do atacante e fazer um ataque corpo a corpo que causa dano extra de <strong>dano de energia</strong>.</p>"
   },
   {
@@ -5144,6 +5314,7 @@
     "class": "Feiticeiro",
     "subclass": "Feitiçaria de Pedra",
     "name": "(Pedra, 14º nível) Borda de Pedra",
+    "damageType": "Energia",
     "description": "<p>Quando você conjura uma magia que causa dano, você causa <strong>dano de energia</strong> adicional igual à metade do seu nível de feiticeiro a um dos alvos.</p>"
   },
   {
@@ -5168,7 +5339,7 @@
 
 
 
-
+ 
   {
     "id": "gue_base_1_estilo",
     "category": "Classe",
@@ -5183,6 +5354,8 @@
     "class": "Guerreiro",
     "subclass": "",
     "name": "(1º nível) Segundo Fôlego",
+    "damage": "1d10",
+    "damageType": "Cura",
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Você possui uma reserva de vitalidade limitada. Você pode recuperar pontos de vida iguais a <strong>1d10 + seu nível de guerreiro</strong>. Uma vez que você use essa característica, você deve terminar um descanso curto ou longo para usá-la novamente.</p>"
   },
   {
@@ -5247,6 +5420,7 @@
     "class": "Guerreiro",
     "subclass": "Arqueiro Arcano",
     "name": "(Arqueiro, 7º nível) Tiro Curvo",
+    "useStandardAttack": true,
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Quando você errar uma jogada de ataque com uma flecha, você pode redirecionar o tiro. Faça outra jogada de ataque contra um alvo diferente que esteja a até 18 metros (60 pés) do alvo original.</p>"
   },
   {
@@ -5263,6 +5437,7 @@
     "class": "Guerreiro",
     "subclass": "Arqueiro Arcano",
     "name": "(Arqueiro, 18º nível) Tiros Aprimorados",
+    "damage": "4d6",
     "description": "<p>O poder dos seus Tiros Arcanos aumenta:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano 2d6 -> 4d6:</strong> Flecha Explosiva, Flecha Sedutora, Flecha Debilitante, Flecha Agarradora, Flecha Sombria.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano 1d6 -> 2d6:</strong> Flecha de Banimento, Flecha Perfurante, Flecha Perseguidora.</li></ul>"
   },
   {
@@ -5271,6 +5446,7 @@
     "class": "Guerreiro",
     "subclass": "Porta-Estandarte",
     "name": "(Estandarte, 3º nível) Grito de Guerra",
+    "damageType": "Cura",
     "description": "<p>Quando você usa seu <em>Segundo Fôlego</em>, você pode escolher até 3 criaturas aliadas a até 18 metros que possam ver ou ouvir você. Cada uma recupera pontos de vida iguais ao seu nível de guerreiro.</p>"
   },
   {
@@ -5303,6 +5479,7 @@
     "class": "Guerreiro",
     "subclass": "Mestre de Batalha",
     "name": "(Mestre, 3º nível) Superioridade em Combate",
+    "damage": "1d8",
     "description": "<p>Você aprende manobras táticas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Manobras:</strong> Você aprende 3 manobras (ex: Desarmar, Derrubar, Contra-ataque).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dados de Superioridade:</strong> Você tem 4 dados (d8). Um dado é gasto ao usar uma manobra.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Recuperação:</strong> Descanso Curto ou Longo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ CD de Manobra:</strong> 8 + Proficiência + Força ou Destreza.</li></ul>"
   },
   {
@@ -5327,6 +5504,7 @@
     "class": "Guerreiro",
     "subclass": "Mestre de Batalha",
     "name": "(Mestre, 10º nível) Superioridade Aprimorada",
+    "damage": "1d10",
     "description": "<p>Seus dados de superioridade transformam-se em <strong>d10</strong>. Você aprende mais 2 manobras.</p>"
   },
   {
@@ -5343,6 +5521,7 @@
     "class": "Guerreiro",
     "subclass": "Mestre de Batalha",
     "name": "(Mestre, 18º nível) Superioridade Suprema",
+    "damage": "1d12",
     "description": "<p>Seus dados de superioridade transformam-se em <strong>d12</strong>.</p>"
   },
   {
@@ -5359,6 +5538,7 @@
     "class": "Guerreiro",
     "subclass": "Cavaleiro",
     "name": "(Cavaleiro, 3º nível) Marca Inabalável",
+    "useStandardAttack": true,
     "description": "<p>Sempre que acertar uma criatura com um ataque corpo a corpo, você pode marcá-la até o final do seu próximo turno.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Efeito:</strong> A criatura marcada tem Desvantagem em ataques contra qualquer alvo que não seja você.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Retaliação:</strong> Se a criatura marcada causar dano a alguém que não seja você, você pode fazer um ataque especial com arma corpo a corpo contra ela no seu próximo turno (Ação Bônus). Esse ataque tem Vantagem e causa dano extra igual à metade do seu nível de guerreiro.</li></ul>"
   },
   {
@@ -5367,6 +5547,7 @@
     "class": "Guerreiro",
     "subclass": "Cavaleiro",
     "name": "(Cavaleiro, 7º nível) Manobra de Proteção",
+    "defenseBonus": "+1d8",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Quando você ou uma criatura a até 1,5m de você for atingida por um ataque, você pode usar sua reação para adicionar <strong>1d8</strong> à CA do alvo contra aquele ataque. Se o ataque ainda acertar, o alvo tem resistência ao dano. Usos iguais ao Modificador de Constituição (recupera em descanso longo).</p>"
   },
   {
@@ -5399,6 +5580,7 @@
     "class": "Guerreiro",
     "subclass": "Cavaleiro do Eco",
     "name": "(Eco, 3º nível) Eco Manifesto",
+    "useStandardAttack": true,
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Você invoca um Eco mágico de si mesmo em um espaço a até 4,5m (15 pés). O eco tem CA 14 + Proficiência, 1 PV e imunidade a todas as condições.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque:</strong> Quando você realiza a ação Atacar, qualquer ataque pode se originar do seu espaço ou do espaço do Eco.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Teleporte:</strong> Como Ação Bônus, você pode trocar de lugar com o Eco (custa 4,5m de movimento).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Reação:</strong> Você pode fazer ataques de oportunidade a partir do espaço do Eco.</li></ul>"
   },
   {
@@ -5431,6 +5613,8 @@
     "class": "Guerreiro",
     "subclass": "Cavaleiro do Eco",
     "name": "(Eco, 15º nível) Recuperar o Potencial",
+    "damage": "2d6",
+    "damageType": "Temporário",
     "description": "<p>Quando um Eco seu é destruído por dano, você pode ganhar Pontos de Vida Temporários iguais a <strong>2d6 + seu Modificador de Constituição</strong>. Você pode usar isso um número de vezes igual ao seu Mod. de Constituição (recupera em descanso longo).</p>"
   },
   {
@@ -5463,6 +5647,7 @@
     "class": "Guerreiro",
     "subclass": "Cavaleiro Arcano",
     "name": "(Arcano, 7º nível) Mago de Guerra",
+    "useStandardAttack": true,
     "description": "<p>Quando você usa sua ação para conjurar um <strong>Truque</strong>, você pode realizar um ataque com arma como uma <strong>Ação Bônus</strong>.</p>"
   },
   {
@@ -5487,6 +5672,7 @@
     "class": "Guerreiro",
     "subclass": "Cavaleiro Arcano",
     "name": "(Arcano, 18º nível) Mago de Guerra Aprimorada",
+    "useStandardAttack": true,
     "description": "<p>Quando você usa sua ação para conjurar uma <strong>Magia</strong> (de qualquer nível), você pode realizar um ataque com arma como uma <strong>Ação Bônus</strong>.</p>"
   },
   {
@@ -5495,6 +5681,8 @@
     "class": "Guerreiro",
     "subclass": "Guerreiro Psiônico",
     "name": "(Psiônico, 3º nível) Poder Psiônico",
+    "damage": "1d6",
+    "damageType": "Energia",
     "description": "<p>Você abriga uma fonte de energia psiônica. Você tem Dados de Energia Psiônica (d6, qtde = 2x Proficiência). Eles aumentam para d8 (5º), d10 (11º) e d12 (17º).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Campo Protetor (Reação):</strong> Reduza o dano sofrido por você ou aliado a 9m em 1d6 + INT.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Golpe Psiônico:</strong> Cause 1d6 + INT de <strong>dano de energia</strong> extra ao acertar um ataque com arma.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Movimento Telecinético (Ação):</strong> Mova um objeto ou criatura disposta (Grande ou menor) a até 9m por 9m.</li></ul>"
   },
   {
@@ -5519,6 +5707,7 @@
     "class": "Guerreiro",
     "subclass": "Guerreiro Psiônico",
     "name": "(Psiônico, 15º nível) Baluarte da Força",
+    "defenseBonus": "+2",
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Você pode gastar 1 dado psiônico para proteger um número de criaturas a até 9m igual ao seu Modificador de Inteligência. Por 1 minuto, elas ganham Meia Cobertura (+2 na CA e Salvaguardas de Destreza).</p>"
   },
   {
@@ -5527,6 +5716,7 @@
     "class": "Guerreiro",
     "subclass": "Guerreiro Psiônico",
     "name": "(Psiônico, 18º nível) Mestre Telecinético",
+    "useStandardAttack": true,
     "description": "<p>Você pode conjurar a magia <em>Telecinese</em> sem componentes. Enquanto mantém a concentração nela, você pode fazer um ataque com arma como Ação Bônus.</p>"
   },
   {
@@ -5543,6 +5733,7 @@
     "class": "Guerreiro",
     "subclass": "Cavaleiro Rúnico",
     "name": "(Rúnico, 3º nível) Poder do Gigante",
+    "damage": "1d6",
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Você se imbui com o poder dos gigantes por 1 minuto. Você se torna Grande (junto com o que veste). Você tem vantagem em testes e salvaguardas de Força. Uma vez por turno, seus ataques com arma ou desarmados causam <strong>1d6</strong> de dano extra.</p>"
   },
   {
@@ -5559,6 +5750,7 @@
     "class": "Guerreiro",
     "subclass": "Cavaleiro Rúnico",
     "name": "(Rúnico, 10º nível) Grande Estatura",
+    "damage": "1d8",
     "description": "<p>Você cresce permanentemente 3d4 polegadas. Além disso, o dano extra do seu <em>Poder do Gigante</em> aumenta para <strong>1d8</strong>.</p>"
   },
   {
@@ -5575,6 +5767,7 @@
     "class": "Guerreiro",
     "subclass": "Cavaleiro Rúnico",
     "name": "(Rúnico, 18º nível) Juggernaut Rúnico",
+    "damage": "1d10",
     "description": "<p>O dano extra do <em>Poder do Gigante</em> aumenta para <strong>1d10</strong>. Além disso, quando usar essa característica, você pode se tornar Enorme e seu alcance aumenta em 1,5m.</p>"
   },
   {
@@ -5583,6 +5776,8 @@
     "class": "Guerreiro",
     "subclass": "Samurai",
     "name": "(Samurai, 3º nível) Espírito de Luta",
+    "damage": "5",
+    "damageType": "Temporário",
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Você concede a si mesmo Vantagem em todas as jogadas de ataque com arma até o final do turno atual. Você também ganha 5 PV temporários (aumenta para 10 no 10º e 15 no 15º nível). 3 usos por descanso longo.</p>"
   },
   {
@@ -5607,6 +5802,7 @@
     "class": "Guerreiro",
     "subclass": "Samurai",
     "name": "(Samurai, 15º nível) Ataque Rápido",
+    "useStandardAttack": true,
     "description": "<p>Se você tiver Vantagem em uma jogada de ataque contra um alvo no seu turno, você pode abrir mão dessa vantagem para fazer um ataque adicional com arma contra o mesmo alvo como parte da mesma ação (1x por turno).</p>"
   },
   {
@@ -5623,6 +5819,7 @@
     "class": "Guerreiro",
     "subclass": "Brutamontes",
     "name": "(Bruto, 3º nível) Força Bruta",
+    "damage": "1d4",
     "description": "<p>Sempre que você acertar um ataque com uma arma na qual você tenha proficiência, o dano aumenta em <strong>1d4</strong>. O dado aumenta conforme você sobe de nível (1d6 no 10º, 1d8 no 16º, 1d10 no 20º).</p>"
   },
   {
@@ -5655,6 +5852,8 @@
     "class": "Guerreiro",
     "subclass": "Brutamontes",
     "name": "(Bruto, 18º nível) Sobrevivente",
+    "damage": "5",
+    "damageType": "Cura",
     "description": "<p>No início de cada um dos seus turnos, se você tiver menos da metade dos seus PV e mais de 0 PV, você recupera <strong>5 + Modificador de Constituição</strong> pontos de vida.</p>"
   },
   {
@@ -5695,6 +5894,8 @@
     "class": "Guerreiro",
     "subclass": "Campeão",
     "name": "(Campeão, 18º nível) Sobrevivente",
+    "damage": "5",
+    "damageType": "Cura",
     "description": "<p>No início de cada um dos seus turnos, se você tiver menos da metade dos seus PV e mais de 0 PV, você recupera <strong>5 + Modificador de Constituição</strong> pontos de vida.</p>"
   },
   {
@@ -5703,6 +5904,7 @@
     "class": "Guerreiro",
     "subclass": "Atirador de Elite",
     "name": "(Atirador, 3º nível) Mira Firme",
+    "damage": "2",
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Você mira em um alvo a até 18m. Até o final deste turno, seus ataques à distância contra esse alvo ignoram meia e três quartos de cobertura. Em cada acerto, você causa dano adicional igual a <strong>2 + metade do seu nível de guerreiro</strong>. Você tem 3 usos por descanso curto/longo.</p>"
   },
   {
@@ -5727,6 +5929,7 @@
     "class": "Guerreiro",
     "subclass": "Atirador de Elite",
     "name": "(Atirador, 15º nível) Ataque Rápido",
+    "useStandardAttack": true,
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Se você tiver a ação Atacar disponível e tiver vantagem contra um alvo, você pode abrir mão da vantagem para fazer um ataque à distância adicional contra esse alvo.</p>"
   },
   {
@@ -5735,6 +5938,7 @@
     "class": "Guerreiro",
     "subclass": "Atirador de Elite",
     "name": "(Atirador, 18º nível) Instantâneo",
+    "useStandardAttack": true,
     "description": "<p>Se você usar a ação Atacar no seu primeiro turno de combate, você pode fazer um ataque à distância adicional como parte dessa ação.</p>"
   },
 
@@ -5745,12 +5949,14 @@
 
   
   
+  
   {
     "id": "ran_rev_base_1_inimigo",
     "category": "Classe",
     "class": "Patrulheiro (Revisado)",
     "subclass": "",
     "name": "(1º nível) Inimigo Favorito",
+    "damage": "+2",
     "description": "<p>Você estuda e caça um tipo específico de criatura.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Tipos:</strong> Escolha um entre: Feras, Feéricos, Humanoides, Monstruosidades ou Mortos-vivos.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Bônus de Dano:</strong> Você ganha <strong>+2 de bônus</strong> nas jogadas de dano com arma contra criaturas do tipo escolhido.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Conhecimento:</strong> Você tem <strong>Vantagem</strong> em testes de Sabedoria (Sobrevivência) para rastrear esses inimigos e em testes de Inteligência para recordar informações sobre eles.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Idioma:</strong> Você aprende um idioma associado ao inimigo (ou qualquer um à sua escolha).</li></ul>"
   },
   {
@@ -5799,6 +6005,7 @@
     "class": "Patrulheiro (Revisado)",
     "subclass": "",
     "name": "(6º nível) Inimigo Favorito Maior",
+    "damage": "+4",
     "description": "<p>Você aprimora suas técnicas de caça.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Novo Tipo:</strong> Escolha um: Aberrações, Celestiais, Constructos, Dragões, Elementais, Demônios (Corruptores) ou Gigantes.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Bônus Aprimorado:</strong> Seu bônus de dano contra <strong>TODOS</strong> os seus inimigos favoritos (o do nível 1 e o Maior) aumenta para <strong>+4</strong>.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Defesa:</strong> Você tem vantagem em testes de resistência contra magias e habilidades usadas por um Inimigo Favorito Maior.</li></ul>"
   },
   {
@@ -6039,6 +6246,8 @@
     "class": "Patrulheiro (Revisado)",
     "subclass": "Conclave do Horizonte",
     "name": "(Horizonte, 3º nível) Guerreiro Planar",
+    "damage": "1d8",
+    "damageType": "Energia",
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Escolha uma criatura a até 9m. No seu próximo acerto com arma contra ela neste turno, todo o dano se torna <strong>dano de energia</strong> e você causa <strong>1d8</strong> extra (2d8 no 11º nível).</p>"
   },
   {
@@ -6095,6 +6304,7 @@
     "class": "Patrulheiro (Revisado)",
     "subclass": "Conclave do Matador",
     "name": "(Matador, 3º nível) Presa do Matador",
+    "damage": "1d6",
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Designa uma criatura a 18m. A primeira vez que acertá-la em cada turno, causa <strong>1d6</strong> de dano extra.</p>"
   },
   {
@@ -6111,6 +6321,7 @@
     "class": "Patrulheiro (Revisado)",
     "subclass": "Conclave do Matador",
     "name": "(Matador, 7º nível) Defesa Sobrenatural",
+    "defenseBonus": "+1d6",
     "description": "<p>Se o alvo da sua <em>Presa do Matador</em> forçar você a fazer um teste de resistência ou tentar agarrá-lo, você pode usar 1d6 e somar ao resultado.</p>"
   },
   {
@@ -6143,6 +6354,8 @@
     "class": "Patrulheiro (Revisado)",
     "subclass": "Conclave Feérico",
     "name": "(Feérico, 3º nível) Golpes Medonhos",
+    "damage": "1d4",
+    "damageType": "Psíquico",
     "description": "<p>Quando acerta uma criatura com arma, causa <strong>1d4 psíquico extra</strong>. Pode aplicar isso a cada criatura diferente que acertar no turno. O dado aumenta para d6 no 11º nível.</p>"
   },
   {
@@ -6199,6 +6412,8 @@
     "class": "Patrulheiro (Revisado)",
     "subclass": "Conclave do Enxame",
     "name": "(Enxame, 3º nível) Enxame Reunido",
+    "damage": "1d6",
+    "damageType": "Perfurante",
     "description": "<p>Ao acertar ataque, escolha um efeito (1x por turno):</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> +1d6 perfurante.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Mover Alvo:</strong> Força a salvaguarda de FOR ou move 4,5m horizontalmente.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Mover Você:</strong> Você pode se mover 1,5m e desengajar.</li></ul>"
   },
   {
@@ -6223,6 +6438,7 @@
     "class": "Patrulheiro (Revisado)",
     "subclass": "Conclave do Enxame",
     "name": "(Enxame, 11º nível) Enxame Poderoso",
+    "damage": "1d8",
     "description": "<p>Dano extra do enxame aumenta para 1d8. Se mover criatura, pode derrubá-la (prone). Se mover a si mesmo, ganha meia cobertura até o próximo turno.</p>"
   },
   {
@@ -6247,6 +6463,7 @@
     "class": "Patrulheiro (Revisado)",
     "subclass": "Guardião do Draco",
     "name": "(Draco, 3º nível) Companheiro Draco",
+    "damage": "1d6",
     "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Invoca um dragão pequeno. Ele age logo após você. Só esquiva, a não ser que você use <strong>Ação Bônus</strong> para comandar ataque/outra ação.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Reação:</strong> Quando criatura a 9m ataca, Draco usa reação para dar 1d6 dano extra do tipo dele.</li></ul>"
   },
   {
@@ -6271,6 +6488,7 @@
     "class": "Patrulheiro (Revisado)",
     "subclass": "Guardião do Draco",
     "name": "(Draco, 11º nível) Sopro do Draco",
+    "damage": "8d6",
     "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Cone de 9m. 8d6 dano (tipo do draco), DEX metade. Você ou o Draco podem exalar. 1x/descanso longo ou slot 3º nível.</p>"
   },
   {
@@ -6279,6 +6497,7 @@
     "class": "Patrulheiro (Revisado)",
     "subclass": "Guardião do Draco",
     "name": "(Draco, 15º nível) Vínculo Perfeito",
+    "damage": "10d6",
     "description": "<p>Draco vira Grande. Dano da reação aumenta para 2d6. Sopro aumenta para 10d6.</p>"
   },
 
@@ -6291,8 +6510,8 @@
 
 
 
-
    
+  
   {
     "id": "lad_base_1_especializacao",
     "category": "Classe",
@@ -6307,6 +6526,7 @@
     "class": "Ladino",
     "subclass": "",
     "name": "(1º nível) Ataque Furtivo",
+    "damage": "1d6",
     "description": "<p>Uma vez por turno, você pode causar dano extra a uma criatura que você atingir com um ataque se tiver vantagem na jogada de ataque. O ataque deve usar uma arma de acuidade ou uma arma de ataque à distância.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Sem Vantagem:</strong> Você não precisa de vantagem na jogada de ataque se outro inimigo do alvo estiver a até 1,5 metro dele, esse inimigo não estiver incapacitado e você não tiver desvantagem na jogada de ataque.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> O dano extra é 1d6 no 1º nível e aumenta conforme você ganha níveis de ladino.</li></ul>"
   },
   {
@@ -6325,7 +6545,6 @@
     "name": "(2º nível) Ação Astuta",
     "description": "<p>Seu raciocínio rápido e agilidade permitem que você se mova e aja rapidamente. Você pode realizar uma <strong>Ação Bônus</strong> em cada um dos seus turnos em combate. Esta ação pode ser usada apenas para realizar as ações de:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Disparada (Dash)</strong></li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Desengajar (Disengage)</strong></li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Esconder-se (Hide)</strong></li></ul>"
   },
- 
   {
     "id": "lad_base_asi",
     "category": "Classe",
@@ -6340,6 +6559,7 @@
     "class": "Ladino",
     "subclass": "",
     "name": "(5º nível) Esquiva Incomum",
+    "damageType": "Redução",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Quando um atacante que você pode ver atinge você com um ataque, você pode usar sua reação para reduzir à metade o dano causado por aquele ataque.</p>"
   },
   {
@@ -6516,6 +6736,7 @@
     "class": "Ladino",
     "subclass": "Inquisitivo",
     "name": "(Inquisitivo, 17º nível) Olho para Fraqueza",
+    "damage": "3d6",
     "description": "<p>Enquanto seu <em>Combate Perspicaz</em> se aplicar a uma criatura, seu dano de <em>Ataque Furtivo</em> contra essa criatura aumenta em <strong>3d6</strong>.</p>"
   },
   {
@@ -6572,6 +6793,7 @@
     "class": "Ladino",
     "subclass": "Fantasma",
     "name": "(Fantasma, 3º nível) Lamentos do Túmulo",
+    "damageType": "Necrótico",
     "description": "<p>Imediatamente após causar seu dano de <em>Ataque Furtivo</em> a uma criatura, você pode alvejar uma segunda criatura que você possa ver a até 9 metros da primeira. Role metade do número de dados de Ataque Furtivo (arredondado para cima). A segunda criatura sofre dano necrótico igual ao total. Usos iguais ao Bônus de Proficiência.</p>"
   },
   {
@@ -6636,6 +6858,7 @@
     "class": "Ladino",
     "subclass": "Batedor",
     "name": "(Batedor, 17º nível) Ataque Repentino",
+    "useStandardAttack": true,
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Se você realizar a ação de Ataque no seu turno, você pode fazer um ataque adicional como uma ação bônus. Este ataque pode se beneficiar do seu <em>Ataque Furtivo</em> mesmo se você já o tiver usado neste turno, mas você não pode usar o <em>Ataque Furtivo</em> contra o mesmo alvo mais de uma vez por turno.</p>"
   },
   {
@@ -6644,6 +6867,8 @@
     "class": "Ladino",
     "subclass": "Lâmina da Alma",
     "name": "(Lâmina da Alma, 3º nível) Poder Psiônico",
+    "damage": "1d6",
+    "damageType": "Energia",
     "description": "<p>Você abriga uma fonte de poder psiônico. Você tem um número de Dados de Energia Psiônica igual ao dobro do seu bônus de proficiência. O dado começa como <strong>d6</strong> e aumenta para d8 (5º), d10 (11º) e d12 (17º).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Talento Psiônico:</strong> Se falhar em um teste de habilidade, role um dado e adicione ao total (o dado só é gasto se transformar em sucesso).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Sussurros Psíquicos:</strong> Estabeleça telepatia com o grupo.</li></ul>"
   },
   {
@@ -6652,6 +6877,8 @@
     "class": "Ladino",
     "subclass": "Lâmina da Alma",
     "name": "(Lâmina da Alma, 3º nível) Lâminas Psíquicas",
+    "damage": "1d6",
+    "damageType": "Psíquico",
     "description": "<p>Você pode manifestar lâminas brilhantes de energia psíquica. Sempre que você realizar a ação de Ataque, você pode manifestar uma lâmina psíquica em sua mão livre e fazer o ataque com ela.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> 1d6 + DES de dano psíquico. Propriedades Acuidade e Arremesso (18m).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque Extra:</strong> Após atacar com a lâmina, você pode fazer um segundo ataque com uma lâmina menor como <strong>Ação Bônus</strong> (1d4 de dano).</li></ul>"
   },
   {
@@ -6660,6 +6887,8 @@
     "class": "Ladino",
     "subclass": "Lâmina da Alma",
     "name": "(Lâmina da Alma, 9º nível) Lâminas da Alma",
+    "damage": "1d8",
+    "damageType": "Energia",
     "description": "<p>Seus dados psiônicos aumentam para <strong>d8</strong>.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Golpes Teleguiados:</strong> Se errar um ataque com lâmina psíquica, role um dado psiônico e adicione ao total (gasta só se acertar).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Teleporte:</strong> Arremesse uma lâmina para um espaço vazio a até 18m e teleporte-se para lá (gasta 1 dado).</li></ul>"
   },
   {
@@ -6676,6 +6905,8 @@
     "class": "Ladino",
     "subclass": "Lâmina da Alma",
     "name": "(Lâmina da Alma, 17º nível) Rasgar Mente",
+    "damage": "1d12",
+    "damageType": "Energia",
     "description": "<p>Quando você usa suas <em>Lâminas Psíquicas</em> para causar dano de Ataque Furtivo, você pode forçar o alvo a fazer uma Salvaguarda de Sabedoria. Se falhar, o alvo fica <strong>Atordoado</strong> por 1 minuto (pode repetir o teste a cada turno). Recarga: Descanso Longo ou 3 dados psiônicos. Seus dados aumentam para <strong>d12</strong>.</p>"
   },
   {
@@ -6780,6 +7011,8 @@
     "class": "Ladino",
     "subclass": "Revivido",
     "name": "(Revivido, 3º nível) Parafusos da Tumba",
+    "damageType": "Necrótico",
+    "useStandardAttack": true,
     "description": "<p>Imediatamente após usar sua <em>Ação Astuta</em>, você pode fazer um ataque mágico à distância contra uma criatura a até 9m (30 pés). Você usa seu modificador de Destreza para ataque e dano. Se acertar, causa dano necrótico igual ao seu dado de <em>Ataque Furtivo</em>.</p>"
   },
   {
@@ -6804,6 +7037,8 @@
     "class": "Ladino",
     "subclass": "Revivido",
     "name": "(Revivido, 17º nível) Passeio Etéreo",
+    "damage": "2d10",
+    "damageType": "Energia",
     "description": "<p><strong>Ação:</strong> Ação Bônus (via Ação Astuta)</p><p>Você pode se teleportar até 9 metros para um espaço desocupado. Você não precisa ver o espaço. Se você teleportar para um espaço ocupado, você sofre <strong>2d10 de dano de energia</strong> e é repelido para o espaço livre mais próximo.</p>"
   },
 
@@ -6824,6 +7059,7 @@
 
 
     
+  
   {
     "id": "mag_base_1_conjura",
     "category": "Classe",
@@ -6840,7 +7076,6 @@
     "name": "(1º nível) Recuperação Arcana",
     "description": "<p>Você aprendeu a recuperar energia mágica estudando seu grimório. Uma vez por dia, ao terminar um <strong>Descanso Curto</strong>, você pode escolher espaços de magia gastos para recuperar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Valor:</strong> A soma dos níveis dos espaços deve ser igual ou menor que metade do seu nível de mago (arredondado para cima).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Limite:</strong> Nenhum dos espaços pode ser de 6º nível ou superior.</li></ul>"
   },
-
   {
     "id": "mag_base_asi",
     "category": "Classe",
@@ -7191,6 +7426,7 @@
     "class": "Mago",
     "subclass": "Mago de Guerra",
     "name": "(Guerra, 2º nível) Deflexão Arcana",
+    "defenseBonus": "+2",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Quando você é atingido por um ataque ou falha em um teste de resistência, você pode usar sua reação para ganhar um bônus de <strong>+2 na CA</strong> contra aquele ataque ou um bônus de <strong>+4 no teste de resistência</strong>.</p><p>Ao usar essa característica, você não pode conjurar magias que não sejam truques até o final do seu próximo turno.</p>"
   },
   {
@@ -7215,6 +7451,7 @@
     "class": "Mago",
     "subclass": "Mago de Guerra",
     "name": "(Guerra, 10º nível) Magia Durável",
+    "defenseBonus": "+2",
     "description": "<p>Enquanto você mantém a concentração em uma magia, você tem um bônus de +2 na CA e em todos os testes de resistência.</p>"
   },
   {
@@ -7247,6 +7484,7 @@
     "class": "Mago",
     "subclass": "Cantor da Lâmina",
     "name": "(Lâmina, 6º nível) Ataque Extra",
+    "useStandardAttack": true,
     "description": "<p>Você pode atacar duas vezes, em vez de uma, sempre que usar a ação Atacar. Além disso, você pode conjurar um de seus truques no lugar de um desses ataques.</p>"
   },
   {
@@ -7255,6 +7493,7 @@
     "class": "Mago",
     "subclass": "Cantor da Lâmina",
     "name": "(Lâmina, 10º nível) Canção de Defesa",
+    "damageType": "Redução",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Quando você sofrer dano enquanto sua <em>Canção das Lâminas</em> estiver ativa, você pode gastar um espaço de magia e usar sua reação para reduzir esse dano em uma quantidade igual a <strong>5 vezes o nível do espaço de magia gasto</strong>.</p>"
   },
   {
@@ -7263,6 +7502,7 @@
     "class": "Mago",
     "subclass": "Cantor da Lâmina",
     "name": "(Lâmina, 14º nível) Canção da Vitória",
+    "damage": "5",
     "description": "<p>Enquanto sua <em>Canção das Lâminas</em> estiver ativa, você adiciona seu Modificador de Inteligência (mínimo +1) ao dano de seus ataques corpo a corpo com arma.</p>"
   },
   {
@@ -7367,6 +7607,7 @@
     "class": "Mago",
     "subclass": "Graviturgia",
     "name": "(Graviturgia, 10º nível) Atração Violenta",
+    "damage": "1d10",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Quando outra criatura a até 18m de você atinge um alvo com um ataque com arma, você pode usar sua reação para aumentar a velocidade do ataque, causando <strong>1d10</strong> de dano extra. Se uma criatura sofrer dano de queda, você pode aumentar o dano em <strong>2d10</strong>. Usos iguais ao Mod. Inteligência.</p>"
   },
   {
@@ -7375,6 +7616,8 @@
     "class": "Mago",
     "subclass": "Graviturgia",
     "name": "(Graviturgia, 14º nível) Horizonte de Eventos",
+    "damage": "2d10",
+    "damageType": "Energia",
     "description": "<p><strong>Ação:</strong> Ação Padrão<br><strong>Duração:</strong> 1 minuto (Concentração)</p><p>Você cria um campo de gravidade poderosa de 9m. Criaturas hostis na área têm seu deslocamento reduzido a 0. Se uma criatura hostil começar o turno na área, deve fazer uma Salvaguarda de Força ou sofrer <strong>2d10 de dano de energia</strong>.</p>"
   },
   {
@@ -7391,6 +7634,7 @@
     "class": "Mago",
     "subclass": "Criador de Runas",
     "name": "(Runas, 2º nível) Empoderamento Rúnico",
+    "damageType": "Temporário",
     "description": "<p>Quando você gasta um espaço de magia, pode ativar uma runa desenhada em um objeto:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Vida:</strong> Você ou uma criatura ganha PV temporários.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Guerra:</strong> Uma criatura ganha bônus na jogada de ataque.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Vento:</strong> Uma criatura ganha bônus de velocidade.</li></ul>"
   },
   {
@@ -7493,6 +7737,7 @@
 
 
    
+ 
   {
     "id": "mon_base_1_defesa",
     "category": "Classe",
@@ -7507,6 +7752,7 @@
     "class": "Monge",
     "subclass": "",
     "name": "(1º nível) Artes Marciais",
+    "damage": "1d4",
     "description": "<p>Sua prática de artes marciais lhe dá domínio sobre estilos de combate que usam ataques desarmados e armas de monge (espadas curtas e qualquer arma simples corpo a corpo que não tenha as propriedades duas mãos ou pesada).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Atributo:</strong> Você pode usar Destreza em vez de Força para as jogadas de ataque e dano dos seus ataques desarmados e armas de monge.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> Você pode rolar um d4 no lugar do dano normal do seu ataque desarmado ou arma de monge. Esse dado muda à medida que você ganha níveis de monge (d6 no 5º, d8 no 11º, d10 no 17º).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque Extra:</strong> Quando você usa a ação Atacar com um ataque desarmado ou uma arma de monge no seu turno, você pode realizar um ataque desarmado como uma <strong>Ação Bônus</strong>.</li></ul>"
   },
   {
@@ -7525,16 +7771,16 @@
     "name": "(2º nível) Movimento sem Armadura",
     "description": "<p>Sua velocidade aumenta em 3 metros enquanto você não estiver usando armadura nem empunhando um escudo. Esse bônus aumenta para 4,5m no 6º nível, 6m no 10º nível, 7,5m no 14º nível e 9m no 18º nível.</p><p style='color:#bbb; font-size:13px;'>No 9º nível, você ganha a habilidade de se mover ao longo de superfícies verticais e sobre líquidos no seu turno sem cair durante o movimento.</p>"
   },
-
   {
     "id": "mon_base_3_misseis",
     "category": "Classe",
     "class": "Monge",
     "subclass": "",
     "name": "(3º nível) Desviar Mísseis",
+    "damage": "1d10",
+    "damageType": "Redução",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Você pode usar sua reação para desviar ou pegar o projétil quando for atingido por um ataque de arma à distância. Quando o fizer, o dano que você sofre do ataque é reduzido em <strong>1d10 + seu modificador de Destreza + seu nível de monge</strong>.</p><p>Se você reduzir o dano a 0, você pode pegar o projétil. Se pegar, pode gastar 1 ponto de Ki para fazer um ataque à distância com a arma ou munição que acabou de pegar, como parte da mesma reação.</p>"
   },
- 
   {
     "id": "mon_base_asi",
     "category": "Classe",
@@ -7549,9 +7795,9 @@
     "class": "Monge",
     "subclass": "",
     "name": "(4º nível) Queda Lenta",
+    "damageType": "Redução",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Você pode usar sua reação quando cair para reduzir qualquer dano de queda que sofreria em uma quantidade igual a <strong>5 vezes o seu nível de monge</strong>.</p>"
   },
-
   {
     "id": "mon_base_5_ataque",
     "category": "Classe",
@@ -7568,7 +7814,6 @@
     "name": "(5º nível) Golpe Atordoante",
     "description": "<p>Quando você atingir outra criatura com um ataque de arma corpo a corpo, você pode gastar 1 ponto de Ki para tentar um ataque atordoante. O alvo deve ter sucesso em um teste de resistência de Constituição ou ficará <strong>Atordoado</strong> até o final do seu próximo turno.</p>"
   },
- 
   {
     "id": "mon_base_6_potencializados",
     "category": "Classe",
@@ -7671,6 +7916,8 @@
     "class": "Monge",
     "subclass": "Caminho da Mão Aberta",
     "name": "(Mão Aberta, 17º nível) Palma Trêmula",
+    "damage": "10d10",
+    "damageType": "Necrótico",
     "description": "<p><strong>Ação:</strong> Ação Padrão (para ativar)</p><p>Quando você atingir uma criatura com um ataque desarmado, você pode gastar 3 pontos de Ki para iniciar vibrações imperceptíveis no corpo dela. A qualquer momento dentro de um número de dias igual ao seu nível de monge, você pode usar sua ação para encerrar as vibrações.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Efeito:</strong> A criatura deve fazer uma Salvaguarda de Constituição. Se falhar, é reduzida a 0 PV. Se passar, sofre <strong>10d10</strong> de dano necrótico.</li></ul>"
   },
   {
@@ -7711,6 +7958,7 @@
     "class": "Monge",
     "subclass": "Caminho do Eu Astral",
     "name": "(Astral, 3º nível) Braços do Eu Astral",
+    "damageType": "Energia",
     "description": "<p><strong>Ação:</strong> Ação Bônus (1 Ki)</p><p>Você invoca braços astrais por 10 minutos. Ao invocar, cada criatura a 3m faz salvaguarda de DES ou sofre 2d dados marciais de <strong>dano de energia</strong>.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Atributo:</strong> Pode usar Sabedoria em vez de Força para testes e salvaguardas de Força.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Alcance:</strong> Seus ataques desarmados têm +1,5m de alcance.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> Seus ataques desarmados causam <strong>dano de energia</strong> e podem usar Sabedoria.</li></ul>"
   },
   {
@@ -7727,6 +7975,7 @@
     "class": "Monge",
     "subclass": "Caminho do Eu Astral",
     "name": "(Astral, 11º nível) Corpo do Eu Astral",
+    "damageType": "Redução",
     "description": "<p>Quando você tem seus Braços e Aparência ativos, o corpo astral cobre você.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Defesa (Reação):</strong> Quando sofre dano ácido, frio, fogo, força, elétrico ou trovão, reduza o dano em 1d10 + Mod. SAB.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque:</strong> Uma vez por turno, ao acertar um ataque com os Braços Astrais, cause dano extra igual a um dado de artes marciais.</li></ul>"
   },
   {
@@ -7735,6 +7984,7 @@
     "class": "Monge",
     "subclass": "Caminho do Eu Astral",
     "name": "(Astral, 17º nível) Eu Astral Desperto",
+    "defenseBonus": "+2",
     "description": "<p><strong>Ação:</strong> Ação Bônus (5 Ki)</p><p>Você invoca Braços, Aparência e Corpo simultaneamente por 10 minutos. Enquanto ativo, você ganha +2 na CA. Além disso, quando usa a ação Atacar, você pode fazer três ataques com seus Braços Astrais, em vez de dois.</p>"
   },
   {
@@ -7743,6 +7993,8 @@
     "class": "Monge",
     "subclass": "Caminho do Dragão Ascendente",
     "name": "(Dragão, 3º nível) Discípulo Dracônico e Sopro",
+    "damage": "2d4",
+    "damageType": "Elemental",
     "description": "<p>Você pode mudar o dano de seus ataques desarmados para ácido, frio, fogo, raio ou veneno. Você pode rerolar um teste de Intimidação ou Persuasão falho (1x/descanso).</p><p><strong>Ação:</strong> Ação Padrão</p><p>Você exala energia destrutiva (Cone de 6m ou Linha de 9m). Criaturas fazem salvaguarda de DES ou CON. Dano: 2 dados de artes marciais (metade no sucesso). Usos = Proficiência (ou 2 Ki).</p>"
   },
   {
@@ -7767,6 +8019,8 @@
     "class": "Monge",
     "subclass": "Caminho do Dragão Ascendente",
     "name": "(Dragão, 17º nível) Aspecto Ascendente",
+    "damage": "3d10",
+    "damageType": "Elemental",
     "description": "<p>Seu Sopro aumenta (Cone 18m ou Linha 27m) e o dano passa a ser 4 dados. Você ganha Visão Cega de 3m. Quando ativa o Aspecto do Verme, causa 3d10 de dano a criaturas na aura.</p>"
   },
   {
@@ -7839,6 +8093,8 @@
     "class": "Monge",
     "subclass": "Caminho do Kensei",
     "name": "(Kensei, 3º nível) Caminho do Kensei",
+    "damage": "1d4",
+    "defenseBonus": "+2",
     "description": "<p>Você escolhe duas armas como suas armas de Kensei. Você ganha proficiência com ferramentas de pintor ou calígrafo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Defesa Ágil:</strong> Se você fizer um ataque desarmado como parte da ação Atacar enquanto segura uma arma de Kensei, ganha +2 na CA.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Tiro Kensei (Ação Bônus):</strong> Seus ataques à distância com armas Kensei causam 1d4 de dano extra no turno.</li></ul>"
   },
   {
@@ -7847,6 +8103,7 @@
     "class": "Monge",
     "subclass": "Caminho do Kensei",
     "name": "(Kensei, 6º nível) Aquele com a Lâmina",
+    "damage": "1d6",
     "description": "<p>Suas armas de Kensei contam como mágicas. <strong>Golpe Hábil:</strong> Quando você acerta um alvo com uma arma Kensei, pode gastar 1 ponto de Ki para causar dano extra igual ao seu dado de Artes Marciais.</p>"
   },
   {
@@ -7855,6 +8112,8 @@
     "class": "Monge",
     "subclass": "Caminho do Kensei",
     "name": "(Kensei, 11º nível) Afie a Lâmina",
+    "attackBonus": "+3",
+    "damage": "+3",
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Você pode gastar até 3 pontos de Ki para conceder um bônus de ataque e dano a uma arma Kensei igual ao número de pontos gastos. O bônus dura 1 minuto.</p>"
   },
   {
@@ -7871,6 +8130,7 @@
     "class": "Monge",
     "subclass": "Caminho da Longa Morte",
     "name": "(Longa Morte, 3º nível) Toque da Morte",
+    "damageType": "Temporário",
     "description": "<p>Quando você reduz uma criatura a 0 PV a até 1,5m de você, você ganha PV temporários iguais ao seu modificador de Sabedoria + seu nível de monge.</p>"
   },
   {
@@ -7895,6 +8155,8 @@
     "class": "Monge",
     "subclass": "Caminho da Longa Morte",
     "name": "(Longa Morte, 17º nível) Toque da Longa Morte",
+    "damage": "2d10",
+    "damageType": "Necrótico",
     "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Você pode tocar uma criatura e gastar de 1 a 10 pontos de Ki. A criatura deve fazer uma Salvaguarda de Constituição. Ela sofre <strong>2d10 de dano necrótico</strong> por ponto de Ki gasto em uma falha, ou metade do dano em um sucesso.</p>"
   },
   {
@@ -7911,6 +8173,8 @@
     "class": "Monge",
     "subclass": "Caminho da Misericórdia",
     "name": "(Misericórdia, 3º nível) Mãos de Cura e Dor",
+    "damage": "1d4",
+    "damageType": "Necrótico/Cura",
     "description": "<p><strong>Mãos de Cura (1 Ki):</strong> Como ação, ou substituindo um ataque da Rajada de Golpes, cure uma criatura (dado marcial + SAB).</p><p><strong>Mãos de Dor (1 Ki):</strong> Ao acertar um ataque desarmado, cause dano necrótico extra (dado marcial + SAB).</p>"
   },
   {
@@ -7935,6 +8199,8 @@
     "class": "Monge",
     "subclass": "Caminho da Misericórdia",
     "name": "(Misericórdia, 17º nível) Mão da Misericórdia Suprema",
+    "damage": "4d10",
+    "damageType": "Cura",
     "description": "<p><strong>Ação:</strong> Ação Padrão (5 Ki)</p><p>Você toca o cadáver de uma criatura que morreu há não mais de 24 horas e a traz de volta à vida. A criatura retorna com 4d10 + SAB PV e livre de condições.</p>"
   },
   {
@@ -7943,6 +8209,9 @@
     "class": "Monge",
     "subclass": "Caminho da Alma Solar",
     "name": "(Alma Solar, 3º nível) Raio Solar Radiante",
+    "damage": "1d4",
+    "damageType": "Radiante",
+    "useStandardAttack": true,
     "description": "<p>Você pode lançar raios de energia. É um ataque mágico à distância (9m) que causa dano radiante (dado marcial). Quando você usa a ação Atacar com esse raio, pode gastar 1 Ki para fazer dois ataques adicionais com ele como ação bônus.</p>"
   },
   {
@@ -7959,6 +8228,8 @@
     "class": "Monge",
     "subclass": "Caminho da Alma Solar",
     "name": "(Alma Solar, 11º nível) Explosão Solar",
+    "damage": "2d6",
+    "damageType": "Radiante",
     "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Você cria uma esfera de luz em um ponto a até 45m. Criaturas em um raio de 6m fazem Salvaguarda de Constituição. Dano: 2d6 radiante (pode aumentar gastando Ki). Falha não causa dano mas cega por 1 minuto.</p>"
   },
   {
@@ -7967,6 +8238,8 @@
     "class": "Monge",
     "subclass": "Caminho da Alma Solar",
     "name": "(Alma Solar, 17º nível) Protetor Solar",
+    "damage": "5",
+    "damageType": "Radiante",
     "description": "<p>Você emite luz brilhante. Se uma criatura te acertar com um ataque corpo a corpo enquanto estiver na luz, você pode usar sua reação para causar <strong>5 + Mod. Sabedoria</strong> de dano radiante a ela.</p>"
   },
   {
@@ -7975,6 +8248,7 @@
     "class": "Monge",
     "subclass": "Caminho da Tranquilidade",
     "name": "(Tranquilidade, 3º nível) Caminho da Tranquilidade",
+    "damageType": "Cura",
     "description": "<p>Você pode conjurar <em>Santuário</em> em si mesmo (duração 8h, CD Ki). Você tem uma reserva de cura (Nível x 10 PV). Como ação, cure com toque. Você pode substituir um ataque da Rajada de Golpes para curar.</p>"
   },
   {
@@ -8017,6 +8291,8 @@
 
 
 
+
+  
   {
     "id": "pal_base_1_sentido",
     "category": "Classe",
@@ -8031,6 +8307,7 @@
     "class": "Paladino",
     "subclass": "",
     "name": "(1º nível) Imposição de Mãos",
+    "damageType": "Cura",
     "description": "<p><strong>Ação:</strong> Ação Padrão<br><strong>Alcance:</strong> Toque</p><p>Você possui uma reserva de poder curativo que se recupera quando você faz um descanso longo. Com essa reserva, você pode restaurar um número total de pontos de vida igual a <strong>seu nível de paladino x 5</strong>.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Cura:</strong> Você pode tocar uma criatura e extrair poder da reserva para restaurar um número de pontos de vida àquela criatura, até o máximo restante em sua reserva.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Purificação:</strong> Você pode gastar 5 pontos de cura da sua reserva para curar o alvo de uma doença ou neutralizar um veneno que o esteja afetando.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Restrição:</strong> Esta característica não afeta mortos-vivos e constructos.</li></ul>"
   },
   {
@@ -8055,6 +8332,8 @@
     "class": "Paladino",
     "subclass": "",
     "name": "(2º nível) Golpe Divino (Divine Smite)",
+    "damage": "2d8",
+    "damageType": "Radiante",
     "description": "<p><strong>Ação:</strong> Livre (ao acertar um ataque)</p><p>Quando você atinge uma criatura com um ataque corpo a corpo com arma, você pode gastar um espaço de magia de paladino para causar dano radiante extra ao alvo, além do dano da arma.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> 2d8 para um espaço de magia de 1º nível, mais 1d8 para cada nível de espaço de magia superior ao 1º, até um máximo de 5d8.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Bônus:</strong> O dano aumenta em 1d8 se o alvo for um morto-vivo ou um corruptor (fiend), até um máximo de 6d8.</li></ul>"
   },
   {
@@ -8103,6 +8382,7 @@
     "class": "Paladino",
     "subclass": "",
     "name": "(6º nível) Aura de Proteção",
+    "defenseBonus": "+CAR",
     "description": "<p>Sempre que você ou uma criatura amiga a até 3 metros de você tiver que fazer um teste de resistência, a criatura ganha um bônus no teste de resistência igual ao seu <strong>Modificador de Carisma</strong> (com um bônus mínimo de +1). Você deve estar consciente para conceder este bônus.</p><p>No 18º nível, o alcance desta aura aumenta para 9 metros.</p>"
   },
   {
@@ -8119,6 +8399,8 @@
     "class": "Paladino",
     "subclass": "",
     "name": "(11º nível) Golpe Divino Aprimorado",
+    "damage": "1d8",
+    "damageType": "Radiante",
     "description": "<p>Você está tão imerso na justiça que todos os seus ataques corpo a corpo com armas carregam poder divino. Sempre que você atingir uma criatura com um ataque corpo a corpo com arma, a criatura sofre <strong>1d8 de dano radiante extra</strong>. Se você também usar seu <em>Golpe Divino</em> com um espaço de magia, você adiciona este dano ao dano extra do seu golpe.</p>"
   },
   {
@@ -8175,6 +8457,7 @@
     "class": "Paladino",
     "subclass": "Juramento dos Anciões",
     "name": "(Anciões, 20º nível) Campeão Ancião",
+    "damageType": "Cura",
     "description": "<p><strong>Ação:</strong> Ação Padrão<br><strong>Duração:</strong> 1 minuto</p><p>Você pode assumir a forma de uma força antiga da natureza. Você ganha os seguintes benefícios:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Regeneração:</strong> No início de cada um dos seus turnos, você recupera 10 PV.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Magia Rápida:</strong> Você pode conjurar magias de paladino que tenham tempo de execução de 1 ação como uma <strong>Ação Bônus</strong>.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Presença:</strong> Criaturas inimigas a até 3m de você têm Desvantagem em testes de resistência contra suas magias de paladino e Canalizar Divindade.</li></ul>"
   },
   {
@@ -8199,6 +8482,7 @@
     "class": "Paladino",
     "subclass": "Juramento da Conquista",
     "name": "(Conquista, 3º nível) Canalizar Divindade: Golpe Guiado",
+    "attackBonus": "+10",
     "description": "<p><strong>Ação:</strong> Livre (Gatilho)</p><p>Quando você faz uma jogada de ataque, você pode usar sua Canalizar Divindade para ganhar um bônus de <strong>+10</strong> na rolagem. Você faz essa escolha depois de ver a rolagem, mas antes do Mestre dizer se o ataque atingiu ou errou.</p>"
   },
   {
@@ -8207,6 +8491,7 @@
     "class": "Paladino",
     "subclass": "Juramento da Conquista",
     "name": "(Conquista, 7º nível) Aura da Conquista",
+    "damageType": "Psíquico",
     "description": "<p>Você emana uma aura ameaçadora enquanto não estiver incapacitado. A aura se estende por 3 metros (10 pés) a partir de você em todas as direções, mas não através de cobertura total.</p><p>Se uma criatura estiver <strong>Amedrontada</strong> de você, sua velocidade é reduzida a 0 enquanto estiver na aura, e essa criatura sofre dano psíquico igual à metade do seu nível de paladino se começar o turno dela lá. No 18º nível, o alcance aumenta para 9 metros.</p>"
   },
   {
@@ -8215,6 +8500,7 @@
     "class": "Paladino",
     "subclass": "Juramento da Conquista",
     "name": "(Conquista, 15º nível) Repreensão Desdenhosa",
+    "damageType": "Psíquico",
     "description": "<p>Sempre que uma criatura atingir você com um ataque, essa criatura sofre dano psíquico igual ao seu Modificador de Carisma (mínimo de 1) se você não estiver incapacitado.</p>"
   },
   {
@@ -8223,6 +8509,7 @@
     "class": "Paladino",
     "subclass": "Juramento da Conquista",
     "name": "(Conquista, 20º nível) Conquistador Invencível",
+    "useStandardAttack": true,
     "description": "<p><strong>Ação:</strong> Ação Padrão<br><strong>Duração:</strong> 1 minuto</p><p>Você se torna um avatar da conquista. Você ganha os seguintes benefícios:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Resistência:</strong> Você tem resistência a todo dano.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque:</strong> Quando você realiza a ação de Ataque no seu turno, você pode fazer um ataque adicional como parte dessa ação.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Crítico:</strong> Seus ataques corpo a corpo com arma conseguem um acerto crítico numa rolagem de 19 ou 20 no d20.</li></ul>"
   },
   {
@@ -8247,6 +8534,8 @@
     "class": "Paladino",
     "subclass": "Juramento da Coroa",
     "name": "(Coroa, 3º nível) Canalizar Divindade: Virar o Jogo",
+    "damage": "1d6",
+    "damageType": "Cura",
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Você pode curar criaturas feridas. Você pode escolher criaturas a até 9m que tenham menos da metade de seus pontos de vida máximos. Essas criaturas recuperam <strong>1d6 + seu Modificador de Carisma</strong> PV.</p>"
   },
   {
@@ -8287,6 +8576,7 @@
     "class": "Paladino",
     "subclass": "Juramento de Devoção",
     "name": "(Devoção, 3º nível) Canalizar Divindade: Arma Sagrada",
+    "attackBonus": "+CAR",
     "description": "<p><strong>Ação:</strong> Ação Padrão<br><strong>Duração:</strong> 1 minuto</p><p>Você imbui uma arma que esteja segurando com energia positiva. Você adiciona seu modificador de Carisma às jogadas de ataque feitas com essa arma (com um bônus mínimo de +1). A arma também emite luz plena num raio de 6 metros e se torna mágica.</p>"
   },
   {
@@ -8319,6 +8609,8 @@
     "class": "Paladino",
     "subclass": "Juramento de Devoção",
     "name": "(Devoção, 20º nível) Nimbo Sagrado",
+    "damage": "10",
+    "damageType": "Radiante",
     "description": "<p><strong>Ação:</strong> Ação Padrão<br><strong>Duração:</strong> 1 minuto</p><p>Você emana uma aura de luz solar. Luz plena em 9m.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> Sempre que uma criatura inimiga começa seu turno na luz, ela sofre 10 de dano radiante.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Defesa:</strong> Você tem vantagem em testes de resistência contra magias conjuradas por demônios ou mortos-vivos.</li></ul>"
   },
   {
@@ -8343,6 +8635,8 @@
     "class": "Paladino",
     "subclass": "Juramento de Glória",
     "name": "(Glória, 3º nível) Canalizar Divindade: Golpe Inspirador",
+    "damage": "2d8",
+    "damageType": "Temporário",
     "description": "<p><strong>Ação:</strong> Ação Bônus (após causar dano com Golpe Divino)</p><p>Imediatamente após causar dano a uma criatura com seu <em>Golpe Divino</em>, você pode usar seu Canalizar Divindade para distribuir PV Temporários a criaturas de sua escolha a até 9m de você. O total de PV é igual a <strong>2d8 + seu nível de paladino</strong>.</p>"
   },
   {
@@ -8359,6 +8653,7 @@
     "class": "Paladino",
     "subclass": "Juramento de Glória",
     "name": "(Glória, 15º nível) Defesa Gloriosa",
+    "defenseBonus": "+CAR",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Quando você ou uma criatura que você possa ver a até 3m de você for atingida por uma jogada de ataque, você pode adicionar seu modificador de Carisma à CA do alvo para aquele ataque. Se o ataque errar, você pode fazer um ataque com arma contra o atacante como parte desta reação.</p>"
   },
   {
@@ -8391,6 +8686,7 @@
     "class": "Paladino",
     "subclass": "Juramento de Redenção",
     "name": "(Redenção, 3º nível) Canalizar Divindade: Repreenda os Violentos",
+    "damageType": "Radiante",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Quando um atacante a até 9m de você causar dano com um ataque a uma criatura que não seja você, você pode forçar o atacante a fazer um teste de resistência de Sabedoria. Se falhar, o atacante sofre dano radiante igual ao dano que acabou de causar. Se passar, sofre metade do dano.</p>"
   },
   {
@@ -8407,6 +8703,8 @@
     "class": "Paladino",
     "subclass": "Juramento de Redenção",
     "name": "(Redenção, 15º nível) Espírito Protetor",
+    "damage": "1d6",
+    "damageType": "Cura",
     "description": "<p>Você recupera 1d6 + metade do seu nível de paladino em PV no final de cada um dos seus turnos, desde que tenha menos da metade de seus pontos de vida e não esteja incapacitado.</p>"
   },
   {
@@ -8415,6 +8713,7 @@
     "class": "Paladino",
     "subclass": "Juramento de Redenção",
     "name": "(Redenção, 20º nível) Emissário da Redenção",
+    "damageType": "Radiante",
     "description": "<p>Você tem resistência a todo dano causado por outras criaturas. Sempre que uma criatura atacar você ou causar dano a você, ela sofre dano radiante igual à metade do dano que você sofreu. Se você atacar uma criatura ou lançar uma magia nela, esses benefícios não funcionam contra essa criatura até que você termine um descanso longo.</p>"
   },
   {
@@ -8503,6 +8802,8 @@
     "class": "Paladino",
     "subclass": "Juramento dos Observadores",
     "name": "(Observadores, 15º nível) Repreensão Vigilante",
+    "damage": "2d8",
+    "damageType": "Energia",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Quando você ou uma criatura a até 9m de você tiver sucesso em um teste de resistência de Inteligência, Sabedoria ou Carisma, você pode causar <strong>2d8 + Mod. Carisma de dano de energia</strong> à criatura que forçou o teste de resistência.</p>"
   },
   {
@@ -8543,6 +8844,7 @@
     "class": "Paladino",
     "subclass": "Quebrador de Juramento",
     "name": "(Quebrador, 7º nível) Aura de Ódio",
+    "damage": "+CAR",
     "description": "<p>Você e quaisquer demônios (fiends) e mortos-vivos a até 3m de você ganham um bônus nas jogadas de dano corpo a corpo igual ao seu Modificador de Carisma. No nível 18, o alcance aumenta para 9m.</p>"
   },
   {
@@ -8559,6 +8861,8 @@
     "class": "Paladino",
     "subclass": "Quebrador de Juramento",
     "name": "(Quebrador, 20º nível) Senhor do Medo",
+    "damage": "4d10",
+    "damageType": "Psíquico",
     "description": "<p><strong>Ação:</strong> Ação Padrão<br><strong>Duração:</strong> 1 minuto</p><p>Uma aura de penumbra de 9m o rodeia. Criaturas amedrontadas na aura sofrem <strong>4d10 de dano psíquico</strong> no início de seus turnos. Além disso, você e criaturas escolhidas na aura estão envoltas em sombras profundas (ataques contra vocês têm desvantagem). Você pode fazer um ataque corpo a corpo como ação bônus que causa <strong>3d10 + Mod. CAR</strong> de dano necrótico extra.</p>"
   },
   {
@@ -8583,6 +8887,8 @@
     "class": "Paladino",
     "subclass": "Juramento da Traição",
     "name": "(Traição, 3º nível) Canalizar Divindade: Golpe Venenoso",
+    "damage": "2d10",
+    "damageType": "Veneno",
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Você imbui sua arma com veneno. A próxima vez que acertar um ataque (neste turno), o alvo sofre <strong>2d10 + seu nível de paladino</strong> de dano de veneno extra. Se você tiver Vantagem no ataque, o dano muda para <strong>20 + seu nível de paladino</strong>.</p>"
   },
   {
@@ -8639,6 +8945,8 @@
     "class": "Paladino",
     "subclass": "Juramento de Heroísmo",
     "name": "(Heroísmo, 7º nível) Grande Feito",
+    "damage": "1d6",
+    "damageType": "Temporário",
     "description": "<p>Sempre que você obtiver um acerto crítico ou reduzir uma criatura a 0 PV, você pode escolher uma das opções: dar PV temporários a aliados (1d6 + CAR) ou forçar inimigos a até 9m a fazer um teste de Sabedoria ou ficarem Amedrontados.</p>"
   },
   {
@@ -8647,6 +8955,7 @@
     "class": "Paladino",
     "subclass": "Juramento de Heroísmo",
     "name": "(Heroísmo, 15º nível) Defesa Gloriosa",
+    "defenseBonus": "+CAR",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Quando uma criatura ataca você, você pode ganhar um bônus na CA igual ao seu modificador de Carisma contra aquele ataque. Se o ataque errar, você pode fazer um ataque corpo a corpo contra o atacante como parte da reação.</p>"
   },
   {
@@ -8680,6 +8989,7 @@
     
 
     
+  
   
   {
     "id": "feat_adepto_elemental",
@@ -8735,6 +9045,7 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Ambidestria",
+    "defenseBonus": "+1",
     "description": "<p>Você domina o combate com duas armas:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Defesa:</strong> Você ganha +1 na CA enquanto estiver empunhando uma arma corpo a corpo separada em cada mão.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Versatilidade:</strong> Você pode usar o combate com duas armas mesmo se as armas não tiverem a propriedade <em>Leve</em>.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Saque:</strong> Você pode sacar ou guardar duas armas de uma vez.</li></ul>"
   },
   {
@@ -8775,6 +9086,7 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Briga de Taverna",
+    "damage": "1d4",
     "description": "<p>Aumente seu valor de Força ou Constituição em 1 (máximo 20).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Proficiência:</strong> Você é proficiente com armas improvisadas.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> Seu ataque desarmado usa um d4 para o dano.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Agarrar:</strong> Quando você atinge uma criatura com um ataque desarmado ou arma improvisada no seu turno, você pode usar uma <strong>Ação Bônus</strong> para tentar agarrar o alvo.</li></ul>"
   },
   {
@@ -8783,6 +9095,8 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Chef",
+    "damage": "1d8",
+    "damageType": "Cura",
     "description": "<p>Aumente sua Constituição ou Sabedoria em 1 (máx 20). Ganha proficiência com utensílios de cozinha.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Refeição:</strong> Em um descanso curto, você pode cozinhar comida especial. Quem gastar Dados de Vida recupera 1d8 extra.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Petiscos:</strong> Em um descanso longo, crie petiscos (qtd = Proficiência). Uma criatura pode usar Ação Bônus para comer e ganhar PV Temporários iguais ao seu Bônus de Proficiência.</li></ul>"
   },
   {
@@ -8815,6 +9129,8 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Curandeiro",
+    "damage": "1d6+4",
+    "damageType": "Cura",
     "description": "<p>Você é um médico capaz.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Estabilizar:</strong> Quando usa um kit de curandeiro para estabilizar uma criatura morrendo, ela também recupera 1 PV.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Cura:</strong> Como uma ação, você pode gastar um uso do kit de curandeiro para restaurar <strong>1d6 + 4 + Nível da criatura</strong> em pontos de vida. Uma criatura não pode receber essa cura novamente até terminar um descanso curto ou longo.</li></ul>"
   },
   {
@@ -8823,6 +9139,7 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Duelista Defensivo",
+    "defenseBonus": "+Prof",
     "description": "<p><strong>Pré-requisito:</strong> Destreza 13 ou superior.</p><p>Enquanto estiver empunhando uma arma de <em>Acuidade</em> com a qual seja proficiente, quando outra criatura o atingir com um ataque corpo a corpo, você pode usar sua <strong>Reação</strong> para adicionar seu bônus de proficiência à sua CA contra aquele ataque, potencialmente fazendo-o errar.</p>"
   },
   {
@@ -8847,6 +9164,8 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Envenenador",
+    "damage": "2d8",
+    "damageType": "Veneno",
     "description": "<p>Você pode preparar e aplicar venenos letais.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Potência:</strong> Quando você causa dano de veneno, ele ignora resistência a veneno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Aplicação:</strong> Você pode aplicar veneno em uma arma ou munição como uma <strong>Ação Bônus</strong>.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Criação:</strong> Com 1 hora e 50 po de materiais, você cria doses de veneno potente (CD 14, 2d8 dano de veneno e condição envenenado).</li></ul>"
   },
   {
@@ -8927,6 +9246,7 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Investida",
+    "damage": "+5",
     "description": "<p>Quando você usa sua ação para <strong>Correr</strong> (Dash), você pode usar uma ação bônus para fazer um ataque corpo a corpo com arma ou empurrar uma criatura.</p><p>Se você se mover pelo menos 3 metros em linha reta antes do ataque, você ganha +5 de bônus no dano (se atacar) ou empurra o alvo 3 metros (se empurrar).</p>"
   },
   {
@@ -8935,6 +9255,7 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Líder Inspirador",
+    "damageType": "Temporário",
     "description": "<p><strong>Pré-requisito:</strong> Carisma 13 ou superior.</p><p>Você pode passar 10 minutos inspirando seus companheiros. Escolha até 6 criaturas (incluindo você) a até 9m. Cada uma ganha Pontos de Vida Temporários iguais ao seu <strong>Nível + Modificador de Carisma</strong>. Uma criatura não pode receber esse benefício novamente até terminar um descanso curto ou longo.</p>"
   },
   {
@@ -8991,6 +9312,8 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Mestre de Armadura Pesada",
+    "damage": "3",
+    "damageType": "Redução",
     "description": "<p><strong>Pré-requisito:</strong> Proficiência com armadura pesada.</p><p>Aumente sua Força em +1. Enquanto estiver usando armadura pesada, o dano de concussão, perfuração e corte que você sofre de ataques não mágicos é reduzido em 3.</p>"
   },
   {
@@ -9015,6 +9338,8 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Mestre de Haste",
+    "damage": "1d4",
+    "damageType": "Contundente",
     "description": "<p>Quando atacar com glaive, alabarda, lança ou bordão:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque Extra:</strong> Você pode usar uma ação bônus para fazer um ataque corpo a corpo com a outra ponta da arma. Dano: 1d4 de concussão.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Oportunidade:</strong> Enquanto empunhar essas armas, criaturas provocam ataques de oportunidade ao entrarem no seu alcance.</li></ul>"
   },
   {
@@ -9167,6 +9492,8 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Chamas de Phlegethos (Tiefling)",
+    "damage": "1d4",
+    "damageType": "Fogo",
     "description": "<p>+1 em Inteligência ou Carisma. Quando você rola dano de fogo para uma magia, pode rolar novamente qualquer 1. Sempre que conjurar uma magia de fogo, você pode se envolver em chamas que causam 1d4 de dano a quem te atacar corpo a corpo.</p>"
   },
   {
@@ -9183,6 +9510,9 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Couro Dracônico (Draconato)",
+    "damage": "1d4",
+    "damageType": "Cortante",
+    "useStandardAttack": true,
     "description": "<p>+1 em Força, Constituição ou Carisma. Sua CA sem armadura torna-se 13 + Mod. Destreza. Você ganha garras naturais retráteis que causam 1d4 + FOR de dano cortante.</p>"
   },
   {
@@ -9191,6 +9521,8 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Fortitude Enânica (Anão)",
+    "damage": "1d8",
+    "damageType": "Cura",
     "description": "<p>+1 em Constituição. Sempre que usar a ação de Esquivar em combate, você pode gastar um Dado de Vida para se curar (1d8 + Mod. CON).</p>"
   },
   {
@@ -9207,6 +9539,7 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Lâmina Revenante (Elfo)",
+    "defenseBonus": "+1",
     "description": "<p>+1 em Força ou Destreza. Ao empunhar uma espada de lâmina dupla, você ganha +1 na CA e a arma ganha a propriedade <em>Acuidade</em> (Finesse).</p>"
   },
   {
@@ -9367,6 +9700,8 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Couro Espinhento (Tiefling)",
+    "damage": "1d6",
+    "damageType": "Perfurante",
     "description": "<p>+1 em Constituição ou Carisma. Você ganha proficiência em Intimidação (se já tiver, dobre o bônus). Como ação bônus, você pode fazer crescer espinhos. Quem te agarrar ou te acertar corpo a corpo sofre 1d6 de dano perfurante.</p>"
   },
   {
@@ -9479,6 +9814,7 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Mestre de Lança",
+    "attackBonus": "+1",
     "description": "<p>+1 nas jogadas de ataque com lança. O dado de dano aumenta (d8/d10). Como ação bônus, aumenta o alcance em 1,5m. Inimigos provocam oportunidade ao entrar no alcance. Pode usar ação bônus para preparar contra investida (dano extra).</p>"
   },
   {
@@ -9487,6 +9823,7 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Mestre de Mangual",
+    "attackBonus": "+1",
     "description": "<p>Ignora bônus de escudo na CA do inimigo. +1 nas jogadas de ataque com mangual. Ao acertar um ataque de oportunidade, pode derrubar o alvo (teste de Força).</p>"
   },
   {
@@ -9495,6 +9832,8 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Mestre de Lâminas",
+    "defenseBonus": "+1",
+    "attackBonus": "+1",
     "description": "<p>+1 nas jogadas de ataque com espadas. Como reação, ganha +1 na CA ao ser atacado. Vantagem em ataques de oportunidade com espadas.</p>"
   },
   {
