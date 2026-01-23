@@ -22,6 +22,7 @@
         "name": "Garras",
         "damage": "1d6 + FOR",
         "damageType": "Cortante",
+        "damageAttribute": "Força",
         "useStandardAttack": true,
         "desc": "Suas garras são armas naturais. Seus ataques desarmados causam <b>1d6 + Força</b> de dano cortante."
       },
@@ -62,6 +63,7 @@
       {
         "name": "Mãos Curativas",
         "damageType": "Cura",
+        "damageAttribute": "Proficiência",
         "desc": "Como uma <b>ação</b>, você pode tocar uma criatura e curá-la em um número de d4s igual ao seu <b>Bônus de Proficiência</b>. Você recupera o uso desta habilidade após um <b>descanso longo</b>."
       },
       {
@@ -291,6 +293,7 @@
         "name": "Cascos",
         "damage": "1d6 + FOR",
         "damageType": "Contundente",
+        "damageAttribute": "Força",
         "useStandardAttack": true,
         "desc": "Seus cascos são armas naturais. Seus ataques desarmados causam <b>1d6 + Força</b> de dano contundente."
       },
@@ -324,6 +327,7 @@
         "name": "Ataque de Sopro",
         "damage": "2d6",
         "damageType": "Elemental",
+        "damageAttribute": "Constituição",
         "desc": "Como uma <b>ação</b>, você pode exalar energia destrutiva. O tamanho, forma e tipo de dano dependem da sua herança. O dano é <b>2d6</b> (aumenta para 3d6 no 6º nível, 4d6 no 11º, 5d6 no 16º). CD de Destreza ou Constituição para metade do dano. Recupera com <b>descanso curto ou longo</b>."
       },
       {
@@ -391,6 +395,7 @@
         "name": "Sopro de Dragão (Cromático)",
         "damage": "1d10",
         "damageType": "Elemental",
+        "damageAttribute": "Constituição",
         "desc": "Você pode substituir um de seus ataques na ação de Ataque para exalar energia em uma <b>linha de 1,5m x 9m</b>. Dano <b>1d10</b> (aumenta nos níveis 5, 11, 17). Usos igual ao seu Bônus de Proficiência por descanso longo."
       },
       {
@@ -431,6 +436,7 @@
         "name": "Sopro de Dragão (Gema)",
         "damage": "1d10",
         "damageType": "Elemental",
+        "damageAttribute": "Constituição",
         "desc": "Substitui um ataque. Exala energia em um <b>cone de 4,5m</b>. Dano <b>1d10</b> do tipo escolhido. Usos igual ao Bônus de Proficiência por descanso longo."
       },
       {
@@ -475,6 +481,7 @@
         "name": "Sopro de Dragão (Metálico)",
         "damage": "1d10",
         "damageType": "Elemental",
+        "damageAttribute": "Constituição",
         "desc": "Substitui um ataque. Exala energia em um <b>cone de 4,5m</b>. Dano <b>1d10</b> do tipo escolhido. Usos igual ao Bônus de Proficiência por descanso longo."
       },
       {
@@ -1172,7 +1179,6 @@
     ],
     "variations": []
   },
-
   {
     "name": "Gnomos",
     "type": "Humanoide",
@@ -1687,6 +1693,7 @@
         "name": "Garras",
         "damage": "1d6 + FOR",
         "damageType": "Cortante",
+        "damageAttribute": "Força",
         "useStandardAttack": true,
         "desc": "Ataques desarmados causam <b>1d6 + Força</b> de dano cortante."
       },
@@ -1936,6 +1943,7 @@
         "name": "Chifres",
         "damage": "1d6 + FOR",
         "damageType": "Perfurante",
+        "damageAttribute": "Força",
         "useStandardAttack": true,
         "desc": "Ataques desarmados causam <b>1d6 + Força</b> de dano perfurante."
       },
@@ -2156,6 +2164,7 @@
         "name": "Mordida",
         "damage": "1d6 + FOR",
         "damageType": "Cortante",
+        "damageAttribute": "Força",
         "useStandardAttack": true,
         "desc": "Ataque desarmado causa <b>1d6 + Força</b> de dano cortante."
       },
@@ -2202,6 +2211,7 @@
         "name": "Investida",
         "damage": "1d6",
         "damageType": "Contundente",
+        "damageAttribute": "Força",
         "useStandardAttack": true,
         "desc": "Seus chifres são armas naturais (1d6 dano contundente)."
       },
@@ -2270,6 +2280,7 @@
         "name": "Garras de Gato",
         "damage": "1d6 + FOR",
         "damageType": "Cortante",
+        "damageAttribute": "Força",
         "useStandardAttack": true,
         "desc": "Dano desarmado de 1d6 + Força. Deslocamento de escalada igual ao de caminhada."
       }
@@ -2511,6 +2522,7 @@
         "name": "Garras",
         "damage": "1d6 + FOR",
         "damageType": "Cortante",
+        "damageAttribute": "Força",
         "useStandardAttack": true,
         "desc": "Ataques desarmados causam <b>1d6 + Força</b> de dano cortante."
       },
@@ -2690,6 +2702,7 @@
         "name": "Mordida Vampírica",
         "damage": "1d4 + CON",
         "damageType": "Perfurante",
+        "damageAttribute": "Constituição",
         "useStandardAttack": true,
         "desc": "Sua mordida é uma arma natural (1d4 + Con). Se estiver com metade dos PV ou menos, tem vantagem no ataque. Ao acertar, pode se curar ou ganhar bônus no próximo teste igual ao dano causado (Prof/longo)."
       }

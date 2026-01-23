@@ -104,6 +104,7 @@
     "damage": "1d8",
     "damageType": "Energia",
     "useStandardAttack": true,
+    "speedBonus": "+1.5",
     "description": "<p><strong>Item:</strong> Uma armadura (Requer Sintonização)</p><p>O usuário desta armadura ganha os seguintes benefícios:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Velocidade:</strong> O deslocamento de caminhada aumenta em 1,5m (5 pés).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Manoplas de Força:</strong> As manoplas da armadura contam como armas mágicas simples de corpo a corpo. Elas causam 1d8 de <strong>dano de energia</strong>.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Foguete (Ação):</strong> As manoplas podem ser disparadas contra alvos a até 6m (normal) ou 18m (desvantagem). Elas retornam imediatamente após o ataque.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Prótese:</strong> A armadura substitui quaisquer membros perdidos (mãos/pés) e não pode ser removida contra vontade do usuário.</li></ul>"
   },
   {
@@ -327,6 +328,8 @@
     "damage": "1d8",
     "damageType": "Trovão",
     "useStandardAttack": true,
+    "damageAttribute": "Inteligência",
+    "speedBonus": "+1.5",
     "description": "<p>Você pode personalizar sua armadura. Ao terminar um descanso, escolha um modelo (Guardião ou Infiltrador). As armas da armadura usam seu Mod. INT para ataque e dano.</p><hr style='border:0; border-top:1px solid rgba(255,255,255,0.1); margin:10px 0;'><strong style='display:block; margin-bottom:8px; color:#fff;'>Guardião (Tanque)</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Manoplas Trovejantes:</strong> Armas simples de corpo a corpo. Dano: 1d8 Trovão.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Distração:</strong> Criatura atingida pelas manoplas tem <strong>Desvantagem</strong> em ataques contra qualquer alvo que não seja você até o início do seu próximo turno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Campo Defensivo (Ação Bônus):</strong> Ganha PV Temporários iguais ao seu nível de Artífice. (Usos = Bônus Proficiência/dia).</li></ul><hr style='border:0; border-top:1px solid rgba(255,255,255,0.1); margin:10px 0;'><strong style='display:block; margin-bottom:8px; color:#fff;'>Infiltrador (Furtivo)</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Lançador de Raios:</strong> Arma simples à distância (Alcance 27m/90m). Dano: 1d6 Elétrico. Uma vez por turno, causa +1d6 extra ao acertar.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Passos Rápidos:</strong> Deslocamento base aumenta em 1,5m. Vantagem em testes de Furtividade (Stealth).</li></ul>"
   },
   {
@@ -580,6 +583,7 @@
     "class": "Bárbaro",
     "subclass": "",
     "name": "(5º nível) Movimento Rápido",
+    "speedBonus": "+3",
     "description": "<p>Sua velocidade de deslocamento aumenta em <strong>3 metros (10 pés)</strong> enquanto você não estiver usando armadura pesada.</p>"
   },
   {
@@ -686,6 +690,7 @@
     "class": "Bárbaro",
     "subclass": "Caminho do Guerreiro Totêmico",
     "name": "(Totêmico, 3º nível) Espírito Totêmico",
+    "speedBonus": "+4.5",
     "description": "<p>Escolha um espírito animal. Você ganha o benefício enquanto estiver em Fúria:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Urso:</strong> Resistência a todos os tipos de dano (exceto psíquico).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Águia:</strong> Pode usar a ação Disparada como <strong>Ação Bônus</strong>. Ataques de oportunidade contra você têm Desvantagem.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Lobo:</strong> Aliados têm <strong>Vantagem</strong> em ataques corpo a corpo contra criaturas a até 1,5m de você.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Alce:</strong> Seu deslocamento aumenta em 4,5m.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Tigre:</strong> Adiciona 3m à distância de salto em distância e 1m à altura de salto em altura.</li></ul>"
   },
   {
@@ -833,6 +838,7 @@
     "damage": "1d8",
     "damageType": "Perfurante",
     "useStandardAttack": true,
+    "damageAttribute": "Força",
     "description": "<p>Ao entrar em Fúria, você manifesta uma arma natural. Ela conta como arma simples de corpo a corpo para você e usa Força.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Mordida (1d8 Perfurante):</strong> Uma vez por turno, se acertar e estiver com menos da metade dos PV, recupera PV igual ao seu Bônus de Proficiência.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Garras (1d6 Cortante):</strong> Uma vez por turno, ao usar a ação Atacar com a garra, você pode fazer um ataque adicional com a garra como parte da mesma ação.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Cauda (1d8 Perfurante):</strong> Alcance 3m. <strong>Reação:</strong> Se uma criatura a até 3m acertar você, role 1d8 e adicione à sua CA, podendo fazer o ataque errar.</li></ul>"
   },
   {
@@ -1249,6 +1255,7 @@
     "class": "Bardo",
     "subclass": "Colégio das Espadas",
     "name": "(Espadas, 3º nível) Floreio de Lâmina",
+    "speedBonus": "+3",
     "description": "<p>Sempre que você realizar a ação <strong>Atacar</strong> no seu turno, seu deslocamento aumenta em 3m. Se acertar um ataque, você pode usar uma opção de Floreio (gastando um dado de Inspiração Bárdica):</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Defensivo:</strong> Adiciona o valor do dado ao dano E à sua Classe de Armadura (CA) até o início do seu próximo turno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Cortante:</strong> Adiciona o valor do dado ao dano. Você causa dano igual ao valor rolado a outra criatura a 1,5m de você.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Desdobrável:</strong> Adiciona o valor do dado ao dano. Você empurra o alvo 1,5m + (valor do dado arredondado p/ 1,5m mais próximo). Você pode então usar sua reação para se mover para um espaço adjacente ao alvo.</li></ul>"
   },
   {
@@ -2137,12 +2144,13 @@
     "name": "Aspecto da Lua",
     "description": "<p>A bênção da lua altera seu ciclo de sono. Você não precisa dormir e não pode ser forçado a dormir; para contar como um Descanso Longo, você deve passar as oito horas realizando apenas atividades leves (vigilância reduzida, leitura, manutenção leve). Perfeito para vigílias prolongadas, viagens e guardar segredos sem perder descanso.</p><p>Pré-Requisitos: Pacto do Tomo.</p>"
   },
-  {
+ {
     "id": "invoca-bebedor-de-vida",
     "category": "Classe",
     "class": "Bruxo",
     "subclass": "Invocações Místicas",
     "name": "Bebedor de Vida",
+    "damageAttribute": "Carisma",
     "description": "<p>Seu vínculo com forças sombrias transforma parte do poder de seu Carisma em fome vital. Adiciona seu modificador de Carisma como dano necrótico a ataques feitos com sua Lâmina de Pacto. Essa energia se manifesta como sombras que lambem a vítima, drenando vigor. Excelente para bruxos que querem conversão direta de carisma em dano.</p><p>Pré-Requisitos: Nível mínimo 12, Pacto da Lâmina.</p>"
   },
   {
@@ -2353,6 +2361,7 @@
     "class": "Bruxo",
     "subclass": "Invocações Místicas",
     "name": "Rajada Agonizante",
+    "damageAttribute": "Carisma",
     "description": "<p>Seu vínculo canaliza dor em cada projétil. Adiciona seu modificador de Carisma ao dano causado por sua Rajada Mística, tornando-a mais letal e escalonável com seus atributos. Essencial para bruxos que investem pesado em Carisma.</p><p>Pré-Requisitos: habilidade Rajada Mística.</p>"
   },
   {
@@ -2693,6 +2702,7 @@
     "class": "Blood Hunter",
     "subclass": "",
     "name": "(10º nível) Aumento da Escuridão",
+    "speedBonus": "+1.5",
     "description": "<p>A magia de sangue permeia seu corpo permanentemente.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Velocidade:</strong> Seu deslocamento aumenta em 1,5 metro (5 pés).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Resistência:</strong> Você adiciona seu Modificador de Hemomancia aos seus testes de resistência de Força, Destreza e Constituição.</li></ul>"
   },
   {
@@ -2780,15 +2790,17 @@
     "damage": "1d6",
     "damageType": "Cortante",
     "defenseBonus": "+1",
+    "damageAttribute": "Força",
     "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Duração:</strong> 1 hora</p><p>Você assume uma forma híbrida feral. Você pode falar, usar equipamentos e manter a transformação durante descansos curtos. Recarga em Descanso Curto/Longo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Poder Feral:</strong> Vantagem em testes e salvaguardas de Força. +1 no dano corpo a corpo (+2 no 11º, +3 no 18º nível).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Resiliência:</strong> Resistência a dano contundente, cortante e perfurante não-mágico/não-prateado. +1 na CA (se não usar armadura pesada).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Garras Predatórias:</strong> Seus ataques desarmados causam 1d6 cortante (1d8 no 11º). Ao usar a ação Atacar com garras, pode fazer 1 ataque extra de garra como <strong>Ação Bônus</strong>.</li></ul><p style='color:#bbb; font-size:13px; margin-top:6px;'><strong>Sede de Sangue:</strong> Se iniciar o turno com menos de 50% de PV, faça Salvaguarda de Sabedoria (CD 8). Se falhar, deve se mover e atacar a criatura mais próxima (amigo ou inimigo).</p>"
   },
-  {
+ {
     "id": "csa_lic_7_perseguidor",
     "category": "Classe",
     "class": "Blood Hunter",
     "subclass": "Ordem do Licantropo",
     "name": "(Licantropo, 7º nível) Habilidade do Perseguidor",
     "attackBonus": "+1",
+    "speedBonus": "+3",
     "description": "<p>Sua velocidade aumenta em 3 metros. Você adiciona 3m ao salto em distância e 1m ao salto em altura.</p><p>Em forma híbrida, seus ataques desarmados recebem +1 de bônus nas jogadas de ataque e são considerados mágicos. Se tiver um Rito ativo, eles causam o dano elemental extra.</p>"
   },
   {
@@ -3213,6 +3225,7 @@
     "class": "Clérigo",
     "subclass": "Domínio da Ambição",
     "name": "(Ambição, 8º nível) Magia Poderosa",
+    "damageAttribute": "Sabedoria",
     "description": "<p>Você adiciona seu Modificador de Sabedoria ao dano que você causa com qualquer truque de clérigo.</p>"
   },
   {
@@ -3323,6 +3336,7 @@
     "class": "Clérigo",
     "subclass": "Domínio do Destino",
     "name": "(Destino, 8º nível) Magia Poderosa",
+    "damageAttribute": "Sabedoria",
     "description": "<p>Você adiciona seu Modificador de Sabedoria ao dano que você causa com qualquer truque de clérigo.</p>"
   },
   {
@@ -3536,12 +3550,13 @@
     "name": "(Unidade, 6º nível) Laço Protetor",
     "description": "<p>Criaturas vinculadas pelo seu <em>Laço de Fortalecimento</em> podem usar sua <strong>Reação</strong> para conceder resistência a todo dano a outro membro do vínculo que sofra dano, desde que estejam a até 9m.</p>"
   },
-  {
+ {
     "id": "cle_uni_8_magia",
     "category": "Classe",
     "class": "Clérigo",
     "subclass": "Domínio da Unidade",
     "name": "(Unidade, 8º nível) Magia Poderosa",
+    "damageAttribute": "Sabedoria",
     "description": "<p>Você adiciona seu Modificador de Sabedoria ao dano que você causa com qualquer truque de clérigo.</p>"
   },
   {
@@ -3590,6 +3605,7 @@
     "class": "Clérigo",
     "subclass": "Domínio Arcano",
     "name": "(Arcano, 8º nível) Magia Poderosa",
+    "damageAttribute": "Sabedoria",
     "description": "<p>Você adiciona seu Modificador de Sabedoria ao dano que você causa com qualquer truque de clérigo.</p>"
   },
   {
@@ -3740,6 +3756,7 @@
     "class": "Clérigo",
     "subclass": "Domínio da Sepultura",
     "name": "(Sepultura, 8º nível) Magia Poderosa",
+    "damageAttribute": "Sabedoria",
     "description": "<p>Você adiciona seu Modificador de Sabedoria ao dano que você causa com qualquer truque de clérigo.</p>"
   },
   {
@@ -3788,6 +3805,7 @@
     "class": "Clérigo",
     "subclass": "Domínio do Conhecimento",
     "name": "(Conhecimento, 8º nível) Magia Poderosa",
+    "damageAttribute": "Sabedoria",
     "description": "<p>Você adiciona seu Modificador de Sabedoria ao dano que você causa com qualquer truque de clérigo.</p>"
   },
   {
@@ -3888,6 +3906,7 @@
     "class": "Clérigo",
     "subclass": "Domínio da Luz",
     "name": "(Luz, 8º nível) Magia Poderosa",
+    "damageAttribute": "Sabedoria",
     "description": "<p>Você adiciona seu Modificador de Sabedoria ao dano que você causa com qualquer truque de clérigo.</p>"
   },
   {
@@ -4024,6 +4043,7 @@
     "name": "(Paz, 2º nível) Canalizar Divindade: Bálsamo da Paz",
     "damage": "2d6",
     "damageType": "Cura",
+    "damageAttribute": "Sabedoria",
     "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Você pode se mover até o seu deslocamento sem provocar ataques de oportunidade. Quando você passa a até 1,5m de qualquer outra criatura durante esse movimento, você pode curá-la em <strong>2d6 + Mod. Sabedoria</strong>.</p>"
   },
   {
@@ -4034,12 +4054,13 @@
     "name": "(Paz, 6º nível) Laço Protetor",
     "description": "<p>Quando uma criatura afetada pelo seu <em>Laço de Fortalecimento</em> for sofrer dano, uma segunda criatura vinculada a até 9m pode usar a reação para teleportar para um espaço adjacente e sofrer todo o dano no lugar da primeira.</p>"
   },
-  {
+ {
     "id": "cle_paz_8_magia",
     "category": "Classe",
     "class": "Clérigo",
     "subclass": "Domínio da Paz",
     "name": "(Paz, 8º nível) Magia Poderosa",
+    "damageAttribute": "Sabedoria",
     "description": "<p>Você adiciona seu Modificador de Sabedoria ao dano que você causa com qualquer truque de clérigo.</p>"
   },
   {
@@ -4508,6 +4529,7 @@
     "name": "(Estrelas, 2º nível) Forma Estrelada",
     "damage": "1d8",
     "damageType": "Radiante/Cura",
+    "damageAttribute": "Sabedoria",
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Você pode gastar um uso de <em>Forma Selvagem</em> para assumir uma forma luminosa por 10 minutos. Escolha uma constelação:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Arqueiro:</strong> Como Ação Bônus, faça um ataque à distância (18m). Dano: 1d8 + Mod. SAB radiante.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Cálice:</strong> Ao conjurar uma magia de cura usando um slot, você ou outra criatura a 9m recupera 1d8 + Mod. SAB PV extras.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dragão:</strong> Ao fazer um teste de Inteligência, Sabedoria ou teste de Constituição para manter concentração, você pode tratar rolagens de 9 ou menos como um 10.</li></ul>"
   },
   {
@@ -4565,7 +4587,7 @@
     "damageType": "Fogo/Cura",
     "description": "<p>Enquanto seu espírito estiver ativo, sempre que você conjurar uma magia que cause dano de fogo ou restaure pontos de vida, você pode adicionar <strong>1d8</strong> a uma rolagem da magia. Além disso, você pode conjurar magias a partir do espaço do espírito.</p>"
   },
-  {
+ {
     "id": "dru_fog_10_cauterizar",
     "category": "Classe",
     "class": "Druida",
@@ -4573,6 +4595,7 @@
     "name": "(Fogo, 10º nível) Chamas Cauterizantes",
     "damage": "2d10",
     "damageType": "Fogo/Cura",
+    "damageAttribute": "Sabedoria",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Quando uma criatura morre a até 9m de você ou do seu espírito, você pode fazer com que chamas espectrais surjam no espaço da criatura morta. A criatura de sua escolha no espaço ou a 1,5m dele recupera PV ou sofre dano de fogo igual a <strong>2d10 + seu Modificador de Sabedoria</strong>. Usos iguais ao Bônus de Proficiência.</p>"
   },
   {
@@ -4824,12 +4847,13 @@
     "name": "(Dracônica, 1º nível) Resiliência Dracônica",
     "description": "<p>Sua pele é coberta por escamas finas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Vida:</strong> Seus pontos de vida máximos aumentam em 1 a cada nível de feiticeiro.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ CA:</strong> Quando você não estiver usando armadura, sua CA é igual a 13 + seu modificador de Destreza.</li></ul>"
   },
-  {
+ {
     "id": "sor_dra_6_afinidade",
     "category": "Classe",
     "class": "Feiticeiro",
     "subclass": "Linhagem Dracônica",
     "name": "(Dracônica, 6º nível) Afinidade Elemental",
+    "damageAttribute": "Carisma",
     "description": "<p>Quando você conjura uma magia que causa dano do tipo associado ao seu ancestral dracônico, você pode adicionar seu Modificador de Carisma a uma rolagem de dano.</p><p>Além disso, você pode gastar 1 Ponto de Feitiçaria para ganhar resistência a esse tipo de dano por 1 hora.</p>"
   },
   {
@@ -5156,6 +5180,7 @@
     "subclass": "Feitiçaria da Fênix",
     "name": "(Fênix, 1º nível) Manto de Chamas",
     "damageType": "Fogo",
+    "damageAttribute": "Carisma",
     "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Duração:</strong> 1 minuto</p><p>Você se envolve em fogo. Você emite luz, qualquer criatura que te tocar sofre dano de fogo e você adiciona seu Modificador de Carisma ao dano de suas magias de fogo. Recarga: Descanso Longo.</p>"
   },
   {
@@ -5168,13 +5193,14 @@
     "damageType": "Fogo",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Se você for reduzido a 0 PV, você pode cair a 1 PV. Cada criatura a até 3m de você sofre dano de fogo igual a 10 + Nível de Feiticeiro. Recarga: Descanso Longo.</p>"
   },
-  {
+ {
     "id": "sor_fen_14_nutritivo",
     "category": "Classe",
     "class": "Feiticeiro",
     "subclass": "Feitiçaria da Fênix",
     "name": "(Fênix, 14º nível) Fogo Nutritivo",
     "damageType": "Cura",
+    "damageAttribute": "Carisma",
     "description": "<p>Quando você conjura uma magia que causa dano de fogo, você recupera pontos de vida iguais ao nível do espaço de magia + seu Modificador de Carisma.</p>"
   },
   {
@@ -6836,12 +6862,13 @@
     "name": "(Batedor, 3º nível) Sobrevivencialista",
     "description": "<p>Você ganha proficiência nas perícias Natureza e Sobrevivência. Seu bônus de proficiência é dobrado para qualquer teste de habilidade que você fizer usando qualquer uma dessas perícias.</p>"
   },
-  {
+ {
     "id": "lad_esc_9_mobilidade",
     "category": "Classe",
     "class": "Ladino",
     "subclass": "Batedor",
     "name": "(Batedor, 9º nível) Mobilidade Superior",
+    "speedBonus": "+3",
     "description": "<p>Sua velocidade de caminhada aumenta em 3 metros. Se você tiver velocidade de escalada ou natação, elas também aumentam em 3 metros.</p>"
   },
   {
@@ -6879,6 +6906,7 @@
     "name": "(Lâmina da Alma, 3º nível) Lâminas Psíquicas",
     "damage": "1d6",
     "damageType": "Psíquico",
+    "damageAttribute": "Destreza",
     "description": "<p>Você pode manifestar lâminas brilhantes de energia psíquica. Sempre que você realizar a ação de Ataque, você pode manifestar uma lâmina psíquica em sua mão livre e fazer o ataque com ela.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> 1d6 + DES de dano psíquico. Propriedades Acuidade e Arremesso (18m).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque Extra:</strong> Após atacar com a lâmina, você pode fazer um segundo ataque com uma lâmina menor como <strong>Ação Bônus</strong> (1d4 de dano).</li></ul>"
   },
   {
@@ -7013,6 +7041,7 @@
     "name": "(Revivido, 3º nível) Parafusos da Tumba",
     "damageType": "Necrótico",
     "useStandardAttack": true,
+    "damageAttribute": "Destreza",
     "description": "<p>Imediatamente após usar sua <em>Ação Astuta</em>, você pode fazer um ataque mágico à distância contra uma criatura a até 9m (30 pés). Você usa seu modificador de Destreza para ataque e dano. Se acertar, causa dano necrótico igual ao seu dado de <em>Ataque Furtivo</em>.</p>"
   },
   {
@@ -7753,6 +7782,7 @@
     "subclass": "",
     "name": "(1º nível) Artes Marciais",
     "damage": "1d4",
+    "damageAttribute": "Destreza",
     "description": "<p>Sua prática de artes marciais lhe dá domínio sobre estilos de combate que usam ataques desarmados e armas de monge (espadas curtas e qualquer arma simples corpo a corpo que não tenha as propriedades duas mãos ou pesada).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Atributo:</strong> Você pode usar Destreza em vez de Força para as jogadas de ataque e dano dos seus ataques desarmados e armas de monge.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> Você pode rolar um d4 no lugar do dano normal do seu ataque desarmado ou arma de monge. Esse dado muda à medida que você ganha níveis de monge (d6 no 5º, d8 no 11º, d10 no 17º).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque Extra:</strong> Quando você usa a ação Atacar com um ataque desarmado ou uma arma de monge no seu turno, você pode realizar um ataque desarmado como uma <strong>Ação Bônus</strong>.</li></ul>"
   },
   {
@@ -7763,12 +7793,13 @@
     "name": "(2º nível) Ki",
     "description": "<p>Você ganha acesso a uma energia mística chamada Ki. Você tem um número de pontos de Ki igual ao seu nível de monge. Você recupera todos os pontos gastos ao terminar um descanso curto ou longo (requer 30 min de meditação). CD de Ki = 8 + bônus de proficiência + modificador de Sabedoria.</p><strong style='display:block; margin-bottom:8px; color:#fff;'>Usos Iniciais:</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Rajada de Golpes (1 Ki):</strong> Imediatamente após realizar a ação Atacar no seu turno, você pode fazer dois ataques desarmados como uma Ação Bônus.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Defesa Paciente (1 Ki):</strong> Você pode usar a ação Esquivar como uma Ação Bônus no seu turno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Passo do Vento (1 Ki):</strong> Você pode usar a ação Desengajar ou Disparada como uma Ação Bônus no seu turno, e sua distância de salto é dobrada neste turno.</li></ul>"
   },
-  {
+ {
     "id": "mon_base_2_movimento",
     "category": "Classe",
     "class": "Monge",
     "subclass": "",
     "name": "(2º nível) Movimento sem Armadura",
+    "speedBonus": "+3",
     "description": "<p>Sua velocidade aumenta em 3 metros enquanto você não estiver usando armadura nem empunhando um escudo. Esse bônus aumenta para 4,5m no 6º nível, 6m no 10º nível, 7,5m no 14º nível e 9m no 18º nível.</p><p style='color:#bbb; font-size:13px;'>No 9º nível, você ganha a habilidade de se mover ao longo de superfícies verticais e sobre líquidos no seu turno sem cair durante o movimento.</p>"
   },
   {
@@ -7959,6 +7990,7 @@
     "subclass": "Caminho do Eu Astral",
     "name": "(Astral, 3º nível) Braços do Eu Astral",
     "damageType": "Energia",
+    "damageAttribute": "Sabedoria",
     "description": "<p><strong>Ação:</strong> Ação Bônus (1 Ki)</p><p>Você invoca braços astrais por 10 minutos. Ao invocar, cada criatura a 3m faz salvaguarda de DES ou sofre 2d dados marciais de <strong>dano de energia</strong>.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Atributo:</strong> Pode usar Sabedoria em vez de Força para testes e salvaguardas de Força.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Alcance:</strong> Seus ataques desarmados têm +1,5m de alcance.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> Seus ataques desarmados causam <strong>dano de energia</strong> e podem usar Sabedoria.</li></ul>"
   },
   {
@@ -8232,7 +8264,7 @@
     "damageType": "Radiante",
     "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Você cria uma esfera de luz em um ponto a até 45m. Criaturas em um raio de 6m fazem Salvaguarda de Constituição. Dano: 2d6 radiante (pode aumentar gastando Ki). Falha não causa dano mas cega por 1 minuto.</p>"
   },
-  {
+ {
     "id": "mon_sol_17_protetor",
     "category": "Classe",
     "class": "Monge",
@@ -8240,6 +8272,7 @@
     "name": "(Alma Solar, 17º nível) Protetor Solar",
     "damage": "5",
     "damageType": "Radiante",
+    "damageAttribute": "Sabedoria",
     "description": "<p>Você emite luz brilhante. Se uma criatura te acertar com um ataque corpo a corpo enquanto estiver na luz, você pode usar sua reação para causar <strong>5 + Mod. Sabedoria</strong> de dano radiante a ela.</p>"
   },
   {
@@ -8845,6 +8878,7 @@
     "subclass": "Quebrador de Juramento",
     "name": "(Quebrador, 7º nível) Aura de Ódio",
     "damage": "+CAR",
+    "damageAttribute": "Carisma",
     "description": "<p>Você e quaisquer demônios (fiends) e mortos-vivos a até 3m de você ganham um bônus nas jogadas de dano corpo a corpo igual ao seu Modificador de Carisma. No nível 18, o alcance aumenta para 9m.</p>"
   },
   {
@@ -9080,13 +9114,14 @@
     "name": "Ator",
     "description": "<p>Aumente seu valor de Carisma em 1 (máximo 20).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Atuação:</strong> Você tem vantagem em testes de Atuação e Enganação quando tenta se passar por outra pessoa.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Mímica:</strong> Você pode imitar a fala de outra pessoa ou os sons de uma criatura se tiver ouvido por pelo menos 1 minuto. Um teste bem-sucedido de Intuição contra seu teste de Enganação detecta a farsa.</li></ul>"
   },
-  {
+ {
     "id": "feat_briga_taverna",
     "category": "Talentos",
     "class": "Talentos",
     "subclass": "",
     "name": "Briga de Taverna",
     "damage": "1d4",
+    "damageAttribute": "Força",
     "description": "<p>Aumente seu valor de Força ou Constituição em 1 (máximo 20).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Proficiência:</strong> Você é proficiente com armas improvisadas.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> Seu ataque desarmado usa um d4 para o dano.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Agarrar:</strong> Quando você atinge uma criatura com um ataque desarmado ou arma improvisada no seu turno, você pode usar uma <strong>Ação Bônus</strong> para tentar agarrar o alvo.</li></ul>"
   },
   {
@@ -9340,6 +9375,7 @@
     "name": "Mestre de Haste",
     "damage": "1d4",
     "damageType": "Contundente",
+    "damageAttribute": "Força",
     "description": "<p>Quando atacar com glaive, alabarda, lança ou bordão:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque Extra:</strong> Você pode usar uma ação bônus para fazer um ataque corpo a corpo com a outra ponta da arma. Dano: 1d4 de concussão.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Oportunidade:</strong> Enquanto empunhar essas armas, criaturas provocam ataques de oportunidade ao entrarem no seu alcance.</li></ul>"
   },
   {
@@ -9348,6 +9384,7 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Mobilidade",
+    "speedBonus": "+3",
     "description": "<p>Seu deslocamento aumenta em 3 metros. Quando você usa a ação de Disparada, terreno difícil não custa movimento extra. Quando você faz um ataque corpo a corpo contra uma criatura, você não provoca ataques de oportunidade dessa criatura pelo resto do turno, quer acerte ou não.</p>"
   },
   {
@@ -9470,12 +9507,13 @@
     "name": "Usar Armadura Pesada",
     "description": "<p><strong>Pré-requisito:</strong> Proficiência em Armadura Média.</p><p>Aumente seu valor de Força em 1. Você ganha proficiência com armaduras pesadas.</p>"
   },
-  {
+ {
     "id": "feat_rac_agilidade",
     "category": "Talentos",
     "class": "Talentos",
     "subclass": "",
     "name": "Agilidade Baixa (Anão/Pequeno)",
+    "speedBonus": "+1.5",
     "description": "<p>+1 em Força ou Destreza. Seu deslocamento aumenta em 1,5m. Você ganha proficiência em Atletismo ou Acrobacia. Você tem vantagem em testes para escapar de agarrões.</p>"
   },
   {
@@ -9513,9 +9551,10 @@
     "damage": "1d4",
     "damageType": "Cortante",
     "useStandardAttack": true,
+    "damageAttribute": "Força",
     "description": "<p>+1 em Força, Constituição ou Carisma. Sua CA sem armadura torna-se 13 + Mod. Destreza. Você ganha garras naturais retráteis que causam 1d4 + FOR de dano cortante.</p>"
   },
-  {
+ {
     "id": "feat_rac_fortitude",
     "category": "Talentos",
     "class": "Talentos",
@@ -9523,6 +9562,7 @@
     "name": "Fortitude Enânica (Anão)",
     "damage": "1d8",
     "damageType": "Cura",
+    "damageAttribute": "Constituição",
     "description": "<p>+1 em Constituição. Sempre que usar a ação de Esquivar em combate, você pode gastar um Dado de Vida para se curar (1d8 + Mod. CON).</p>"
   },
   {

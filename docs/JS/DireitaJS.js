@@ -737,7 +737,7 @@ const PERICIAS_LISTA = [
 ];
 
 
-/* ---------------- MODAL UNIFICADO (COM ATRIBUTO DE DANO E AUTO-SELEÇÃO) ---------------- */
+/* ---------------- MODAL UNIFICADO (COM CORREÇÃO DE ATRIBUTO PARA DISTÂNCIA) ---------------- */
 function openItemModal(existingItem = null) {
   const existingOverlay = document.querySelector('.spell-modal-overlay');
   if (existingOverlay) existingOverlay.remove();
@@ -757,16 +757,12 @@ function openItemModal(existingItem = null) {
 
   const pre = existingItem || {};
 
-  // --- CONFIGURAÇÃO DE PADRÕES ---
-  // Se for novo item, assume Força. Se já existir, usa o salvo ou 'Nenhum'.
+  // Padrões
   let defaultAttackAttr = pre.attackAttribute || 'Força'; 
-  let defaultDamageAttr = pre.damageAttribute || 'Força'; // Novo campo
-
+  let defaultDamageAttr = pre.damageAttribute || 'Força'; 
   const defaultAttackBonus = pre.attackBonus || ''; 
 
   const ATTR_OPTIONS = ['Força', 'Destreza', 'Constituição', 'Inteligência', 'Sabedoria', 'Carisma', 'Nenhum'];
-  
-  // Função para renderizar as opções do Select
   const renderAttrOptions = (selected) => ATTR_OPTIONS.map(a => `<option value="${a}" ${a === selected ? 'selected' : ''}>${a}</option>`).join('');
 
   let headerContentHTML = '';
@@ -801,7 +797,6 @@ function openItemModal(existingItem = null) {
 
   document.body.appendChild(modal);
   
-  // Evento botão lista padrão
   const btnLista = modal.querySelector('#btnListaPadrao');
   if (btnLista) {
     btnLista.addEventListener('click', (ev) => {
@@ -845,7 +840,6 @@ function openItemModal(existingItem = null) {
             ${nameInput}
             <div><label>Atributo Acerto</label><select id="item-attack-attr" class="dark-select">${renderAttrOptions(defaultAttackAttr)}</select></div>
             <div><label>Atributo Dano</label><select id="item-damage-attr" class="dark-select">${renderAttrOptions(defaultDamageAttr)}</select></div>
-            
             <div><label>Bônus de Acerto</label><input id="item-attack-bonus" type="number" value="${defaultAttackBonus}" placeholder="+1, +2..." /></div>
             <div><label>Dano Bônus (Fixo)</label><input id="item-danobonus" type="text" value="${escapeHtml(pre.damageBonus || '')}" /></div>
             <div><label>Tipo de Dano</label><input id="item-dmgtype" type="text" value="${escapeHtml(pre.damageType || '')}" /></div>
@@ -863,7 +857,6 @@ function openItemModal(existingItem = null) {
       const dmgTypesSelected = pre.damageTypes || [];
       const nameInputArma = `<div style="grid-column: 1 / span 4;"><label>Nome <span style="color:#ff5555">*</span></label><input id="item-name" type="text" value="${escapeHtml(pre.name || '')}" placeholder="Nome da Arma (Obrigatório)" /></div>`;
 
-      // Layout Grid ajustado para caber o novo select
       html = `
         <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:12px; align-items:start;">
           ${nameInputArma}
@@ -925,9 +918,6 @@ function openItemModal(existingItem = null) {
         </div>
       `;
     } else if (tab === 'Armadura') {
-        // (Código da Armadura mantido igual, mas omitido aqui para economizar espaço na resposta)
-        // ... Copie o bloco else if (tab === 'Armadura') do código original se precisar ...
-        // Vou apenas replicar o mínimo para não quebrar:
         const profSelected = pre.proficiency || '';
         const tipoSelected = pre.tipoItem || 'Armadura';
         const minReqAttrs = pre.minReqAttrs || ['Força'];
@@ -970,7 +960,6 @@ function openItemModal(existingItem = null) {
     if (iName) iName.focus();
   }
 
-  // (Função createDamageRow mantida igual)
   function createDamageRow(danoVal = '', typesVal = []) {
     const row = document.createElement('div');
     row.className = 'extra-dmg-row';
@@ -993,8 +982,7 @@ function openItemModal(existingItem = null) {
             p.parentElement.querySelectorAll('.pill').forEach(x => x.classList.remove('active')); 
             p.classList.add('active'); 
             
-            // === LÓGICA DE AUTO-SELEÇÃO DE ATRIBUTOS ===
-            // Se clicou em uma pílula do grupo de Tipo de Arma
+            // === LÓGICA DE AUTO-SELEÇÃO DE ATRIBUTOS (CORRIGIDO) ===
             if (p.parentElement.id === 'tipo-pills') {
                 const val = p.getAttribute('data-val');
                 const attackSelect = document.getElementById('item-attack-attr');
@@ -1004,7 +992,8 @@ function openItemModal(existingItem = null) {
                     if (val === 'Corpo a Corpo') {
                         attackSelect.value = 'Força';
                         damageSelect.value = 'Força';
-                    } else if (val === 'A Distancia') { // Verifica se é exatamente 'A Distancia' ou 'A Distância' conforme seu array
+                    } else if (val === 'A Distancia') { 
+                        // AGORA MUDA OS DOIS PARA DESTREZA
                         attackSelect.value = 'Destreza';
                         damageSelect.value = 'Destreza';
                     }
@@ -1013,7 +1002,6 @@ function openItemModal(existingItem = null) {
         }); 
     });
     
-    // (Restante dos binds mantidos iguais...)
     modal.querySelectorAll('.multi-select-field').forEach(field => { if (field.id === 'dmg-field' || field.closest('.extra-dmg-row')) return; let trigger = field.querySelector('.label-dropdown-trigger') || field.querySelector('.display'); const panel = field.querySelector('.panel'); trigger.onclick = (e) => { e.stopPropagation(); const isOpen = panel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); panel.style.display = isOpen ? 'none' : 'block'; }; panel.querySelectorAll('input[type="checkbox"]').forEach(chk => { chk.onchange = () => { const vals = Array.from(panel.querySelectorAll('input:checked')).map(x => x.value); const span = trigger.querySelector('span:first-child') || modal.querySelector('#min-req-label-text'); if (span) span.textContent = vals.length ? vals.join(', ') : (field.id === 'min-req-container' ? '' : 'Selecione...'); }; }); });
 
     if (tab === 'Arma') {
@@ -1076,9 +1064,9 @@ function openItemModal(existingItem = null) {
       const disPanel = modal.querySelector('#disadv-field-item .panel'); newItem.disadvantageSkill = disPanel ? Array.from(disPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
       const advPanel = modal.querySelector('#adv-field-item .panel'); newItem.advantageSkill = advPanel ? Array.from(advPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
       
-      // SALVANDO NOVOS CAMPOS
+      // SALVA ATRIBUTOS (INCLUI DANO)
       newItem.attackAttribute = modal.querySelector('#item-attack-attr').value;
-      newItem.damageAttribute = modal.querySelector('#item-damage-attr').value; // <--- SALVA DANO ATTR
+      newItem.damageAttribute = modal.querySelector('#item-damage-attr').value;
       newItem.attackBonus = modal.querySelector('#item-attack-bonus').value;
     }
     else if (currentTab === 'Arma') {
@@ -1097,14 +1085,13 @@ function openItemModal(existingItem = null) {
       const dmgPanel = modal.querySelector('#dmg-panel'); if (dmgPanel) newItem.damageTypes = Array.from(dmgPanel.querySelectorAll('input:checked')).map(x => x.value);
       const extraRows = modal.querySelectorAll('.extra-dmg-row'); newItem.moreDmgList = []; extraRows.forEach(row => { const d = row.querySelector('.extra-dmg-input').value; const p = row.querySelector('.panel'); const t = Array.from(p.querySelectorAll('input:checked')).map(x => x.value); if (d || t.length) newItem.moreDmgList.push({ dano: d, types: t }); });
 
-      // SALVANDO NOVOS CAMPOS
+      // SALVA ATRIBUTOS (INCLUI DANO)
       newItem.attackAttribute = modal.querySelector('#item-attack-attr').value;
-      newItem.damageAttribute = modal.querySelector('#item-damage-attr').value; // <--- SALVA DANO ATTR
-      newItem.damageBonus = modal.querySelector('#item-danobonus').value; // Salva Bonus Dano Fixo
+      newItem.damageAttribute = modal.querySelector('#item-damage-attr').value;
+      newItem.damageBonus = modal.querySelector('#item-danobonus').value;
       newItem.attackBonus = modal.querySelector('#item-attack-bonus').value;
     }
     else if (currentTab === 'Armadura') {
-      // (Código da Armadura mantido igual)
       newItem.type = 'Proteção'; newItem.isEquipable = true;
       const profEl = modal.querySelector('#arm-prof-pills .active'); newItem.proficiency = profEl ? profEl.getAttribute('data-val') : '';
       const tipoEl = modal.querySelector('#arm-tipo-pills .active'); newItem.tipoItem = tipoEl ? tipoEl.getAttribute('data-val') : 'Armadura';
