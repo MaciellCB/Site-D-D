@@ -1766,19 +1766,39 @@ function addProficiencias(profObj) {
     pushUnique(profObj.tools, true); 
 }
 
+/* =============================================================
+   CORREÇÃO: IMPORTAR STATUS DA CLASSE (HeaderJS.js)
+   Substitua a função addFeatureToState inteira:
+============================================================= */
 function addFeatureToState(feat, category, clsName, subName) {
     if (!state.abilities) state.abilities = [];
+    
+    // Evita duplicatas pelo nome
     const exists = state.abilities.find(a => a.title === feat.name);
+    
     if (!exists) {
         state.abilities.unshift({
             id: Date.now() + Math.floor(Math.random() * 100000),
             title: feat.name,
             description: feat.description,
             expanded: false,
-            active: true,
+            active: true, // Já entra ativa para aplicar os bônus
             category: category,
             class: clsName,
-            subclass: subName
+            subclass: subName,
+
+            // --- CORREÇÃO: Puxar os dados matemáticos do JSON ---
+            damage: feat.damage || "",
+            damageType: feat.damageType || "",
+            damageAttribute: feat.damageAttribute || "",
+            
+            attackBonus: feat.attackBonus || "",
+            attackAttribute: feat.attackAttribute || "",
+            useStandardAttack: !!feat.useStandardAttack,
+            
+            defenseBonus: feat.defenseBonus || "", // Importante para CA
+            speedBonus: feat.speedBonus || "",     // Importante para Deslocamento
+            saveDC: feat.saveDC || ""
         });
     }
 }

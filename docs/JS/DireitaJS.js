@@ -740,7 +740,7 @@ const PERICIAS_LISTA = [
 ];
 
 
-/* ---------------- MODAL UNIFICADO (COM CORREÇÃO DE ATRIBUTO PARA DISTÂNCIA) ---------------- */
+/* ---------------- MODAL UNIFICADO (COM CORREÇÃO DE ATRIBUTO PADRÃO) ---------------- */
 function openItemModal(existingItem = null) {
   const existingOverlay = document.querySelector('.spell-modal-overlay');
   if (existingOverlay) existingOverlay.remove();
@@ -760,12 +760,13 @@ function openItemModal(existingItem = null) {
 
   const pre = existingItem || {};
 
-  // Padrões
-  let defaultAttackAttr = pre.attackAttribute || 'Força'; 
-  let defaultDamageAttr = pre.damageAttribute || 'Força'; 
-  const defaultAttackBonus = pre.attackBonus || ''; 
+  // --- CORREÇÃO: Padrão agora é 'Nenhum' para itens gerais ---
+  let defaultAttackAttr = pre.attackAttribute || 'Nenhum';
+  let defaultDamageAttr = pre.damageAttribute || 'Nenhum';
+  const defaultAttackBonus = pre.attackBonus || '';
 
-  const ATTR_OPTIONS = ['Força', 'Destreza', 'Constituição', 'Inteligência', 'Sabedoria', 'Carisma', 'Nenhum'];
+  // Colocamos 'Nenhum' no início da lista
+  const ATTR_OPTIONS = ['Nenhum', 'Força', 'Destreza', 'Constituição', 'Inteligência', 'Sabedoria', 'Carisma'];
   const renderAttrOptions = (selected) => ATTR_OPTIONS.map(a => `<option value="${a}" ${a === selected ? 'selected' : ''}>${a}</option>`).join('');
 
   let headerContentHTML = '';
@@ -828,6 +829,17 @@ function openItemModal(existingItem = null) {
     currentTab = tab;
     if (btns.length > 0) btns.forEach(b => b.classList.toggle('active', b.getAttribute('data-tab') === tab));
 
+    // --- CORREÇÃO: Se mudar para ARMA e for novo, sugere Força. Se for ITEM, sugere Nenhum. ---
+    if (!existingItem) {
+        if (tab === 'Arma') {
+            defaultAttackAttr = 'Força';
+            defaultDamageAttr = 'Força';
+        } else if (tab === 'Item') {
+            defaultAttackAttr = 'Nenhum';
+            defaultDamageAttr = 'Nenhum';
+        }
+    }
+
     const descContent = pre.description || '';
     const editorHTML = createRichEditorHTML(descContent, 'item-editor-content');
     const nameInput = `<div style="grid-column: 1 / -1;"><label>Nome <span style="color:#ff5555">*</span></label><input id="item-name" type="text" value="${escapeHtml(pre.name || '')}" placeholder="Nome do item (Obrigatório)" /></div>`;
@@ -839,7 +851,7 @@ function openItemModal(existingItem = null) {
       const adv = Array.isArray(pre.advantageSkill) ? pre.advantageSkill : (pre.advantageSkill ? [pre.advantageSkill] : []);
       
       html = `
-         <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; align-items:end;">
+          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; align-items:end;">
             ${nameInput}
             <div><label>Atributo Acerto</label><select id="item-attack-attr" class="dark-select">${renderAttrOptions(defaultAttackAttr)}</select></div>
             <div><label>Atributo Dano</label><select id="item-damage-attr" class="dark-select">${renderAttrOptions(defaultDamageAttr)}</select></div>
@@ -851,7 +863,7 @@ function openItemModal(existingItem = null) {
             <div style="grid-column: 1 / span 1.5;"><label>Desvantagem</label>${renderPericiaMulti('disadv-field-item', disadv)}</div>
             <div style="grid-column: 2.5 / span 1.5;"><label>Vantagem</label>${renderPericiaMulti('adv-field-item', adv)}</div>
             ${descLabel}
-         </div>`;
+          </div>`;
     } else if (tab === 'Arma') {
       const profSelected = pre.proficiency || '';
       const tipoSelected = pre.tipoArma || '';
@@ -996,7 +1008,6 @@ function openItemModal(existingItem = null) {
                         attackSelect.value = 'Força';
                         damageSelect.value = 'Força';
                     } else if (val === 'A Distancia') { 
-                        // AGORA MUDA OS DOIS PARA DESTREZA
                         attackSelect.value = 'Destreza';
                         damageSelect.value = 'Destreza';
                     }
@@ -1114,6 +1125,11 @@ function openItemModal(existingItem = null) {
     closeMe();
     renderInventory();
     saveStateToServer();
+    
+    // ATUALIZAÇÃO DA ESQUERDA (CA/Status)
+    if (typeof atualizarAC === 'function') atualizarAC();
+    if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
+    
     window.dispatchEvent(new CustomEvent('sheet-updated'));
   });
 }
@@ -3319,7 +3335,10 @@ function openAbilityCatalogOverlay() {
     });
   }
 
-  /* SUBSTITUA A FUNÇÃO renderCatalogList POR ESTA */
+  /* =============================================================
+   CORREÇÃO: IMPORTAR STATUS DO CATÁLOGO (DireitaJS.js)
+   Substitua a função renderCatalogList DENTRO de openAbilityCatalogOverlay:
+============================================================= */
   function renderCatalogList() {
     const container = overlay.querySelector('.abilities-list-large');
     const searchInput = overlay.querySelector('#catalogAbilitySearch').value.toLowerCase();
@@ -3360,7 +3379,7 @@ function openAbilityCatalogOverlay() {
       });
     });
 
-    // Adicionar Habilidade
+    // --- CORREÇÃO AQUI: Adicionar Habilidade com Status ---
     container.querySelectorAll('.catalog-add-ability-btn').forEach(btn => {
       btn.onclick = (e) => {
         e.stopPropagation();
@@ -3372,20 +3391,32 @@ function openAbilityCatalogOverlay() {
           id: uid(),
           title: c.name,
           description: c.description || '',
-
-          expanded: false, // ALTERADO: Começa fechado
-
+          expanded: false,
+          
           class: c.class || '',
           subclass: c.subclass || '',
           category: c.category || 'Geral',
-          active: false
+          active: false, // Do catálogo vem desativada por padrão
+
+          // --- DADOS MATEMÁTICOS ---
+          damage: c.damage || '',
+          damageType: c.damageType || '',
+          damageAttribute: c.damageAttribute || '',
+          
+          attackBonus: c.attackBonus || '',
+          attackAttribute: c.attackAttribute || '',
+          useStandardAttack: !!c.useStandardAttack,
+          
+          defenseBonus: c.defenseBonus || '',
+          speedBonus: c.speedBonus || '',
+          saveDC: c.saveDC || ''
         };
 
         state.abilities.unshift(novo);
         renderAbilities();
         saveStateToServer();
 
-        // --- ESTA LINHA É OBRIGATÓRIA PARA O HEADER MUDAR O NOME DA CLASSE ---
+        // Força a Esquerda a recalcular (caso a habilidade dê bônus passivo e você a ative depois)
         window.dispatchEvent(new CustomEvent('sheet-updated'));
 
         btn.textContent = '✓';
@@ -4571,24 +4602,42 @@ function getAttributeMod(attrKey) {
   return isNaN(val) ? 0 : Math.floor((val - 10) / 2);
 }
 
+/* ---------------- FUNÇÃO CORRIGIDA: CÁLCULO DE ATAQUE DE ITEM ---------------- */
 function getItemAttackValues(item) {
   let modAttr = 0;
   let attrName = item.attackAttribute;
 
-  if (!attrName || attrName === 'Nenhum' || attrName === '') {
+  // CORREÇÃO: Se for 'Nenhum', o modificador é 0 e não tenta adivinhar.
+  if (attrName === 'Nenhum') {
+      modAttr = 0;
+  }
+  else if (!attrName || attrName === '') {
+    // Se estiver vazio, tenta deduzir (apenas para Armas antigas/sem config)
     const tipo = (item.tipoArma || '').toLowerCase();
-    attrName = (tipo.includes('distancia') || tipo.includes('distância')) ? 'Destreza' : 'Força';
+    
+    // Se for Arma, assume Força/Destreza padrão
+    if (item.type === 'Arma') {
+        attrName = (tipo.includes('distancia') || tipo.includes('distância')) ? 'Destreza' : 'Força';
+        const key = { 'Força': 'for', 'Destreza': 'dex' }[attrName];
+        if (key) modAttr = getAttributeMod(key);
+    } else {
+        // Se for Item Geral sem atributo, é 0.
+        modAttr = 0;
+    }
+  } else {
+      // Caso normal (tem atributo definido, ex: Inteligência, Força)
+      const attrMap = { 'Força': 'for', 'Destreza': 'dex', 'Constituição': 'con', 'Inteligência': 'int', 'Sabedoria': 'sab', 'Carisma': 'car' };
+      const key = attrMap[attrName];
+      if (key) modAttr = getAttributeMod(key);
   }
 
-  const attrMap = { 'Força': 'for', 'Destreza': 'dex', 'Constituição': 'con', 'Inteligência': 'int', 'Sabedoria': 'sab', 'Carisma': 'car' };
-  const key = attrMap[attrName];
-  if (key) modAttr = getAttributeMod(key);
-
   let profBonus = 0;
+  // Só aplica proficiência se tiver algo definido diferente de 'Nenhuma'
   if (item.proficiency && item.proficiency !== 'Nenhuma') {
     const profEl = document.getElementById('proficienciaValor');
     if (profEl) profBonus = parseInt(profEl.textContent) || 2;
   }
+  
   const itemBonus = parseInt(item.attackBonus) || 0;
   return { modAttr, profBonus, itemBonus };
 }
