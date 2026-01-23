@@ -516,8 +516,8 @@ function renderInventory() {
 
 
 /* =============================================================
-   CORREÇÃO 2: INVENTÁRIO LOCAL
-   (Substitua bindInventoryCardEvents)
+   CORREÇÃO: Eventos de Inventário (Com gatilho para CA)
+   Substitua a função bindInventoryCardEvents inteira por esta:
 ============================================================= */
 function bindInventoryCardEvents() {
   const findItemById = (rawId) => state.inventory.find(x => String(x.id) === String(rawId));
@@ -528,7 +528,6 @@ function bindInventoryCardEvents() {
     const header = card.querySelector('.card-header');
 
     header.onclick = (ev) => {
-      // Ignora cliques em botões interativos
       if (ev.target.closest('.header-equip') ||
         ev.target.closest('.item-actions-footer') ||
         ev.target.closest('.dice-img') ||
@@ -539,8 +538,7 @@ function bindInventoryCardEvents() {
       const it = findItemById(rawId);
       if (!it) return;
 
-      // Altera o estado SOMENTE NA MEMÓRIA LOCAL
-      it.expanded = !it.expanded;
+      it.expanded = !it.expanded; // Altera memória local
 
       const body = card.querySelector('.card-body');
       const caret = card.querySelector('.caret');
@@ -557,7 +555,7 @@ function bindInventoryCardEvents() {
     };
   });
 
-  // --- 2. CHECKBOX EQUIPAR (GLOBAL - ISSO PRECISA SALVAR) ---
+  // --- 2. CHECKBOX EQUIPAR (GLOBAL - GATILHO CA) ---
   document.querySelectorAll('.item-equip-checkbox').forEach(ch => {
     ch.onchange = (ev) => {
       const rawId = ev.target.getAttribute('data-id');
@@ -573,7 +571,6 @@ function bindInventoryCardEvents() {
               const otherIsEscudo = other.tipoItem?.toLowerCase() === 'escudo' || other.proficiency?.toLowerCase() === 'escudo';
               if (isEscudo === otherIsEscudo) {
                 other.equip = false; // Desmarca no dado
-                // Atualiza visualmente se existir na tela
                 const otherChk = document.querySelector(`.item-equip-checkbox[data-id="${other.id}"]`);
                 if (otherChk) otherChk.checked = false;
               }
@@ -584,15 +581,18 @@ function bindInventoryCardEvents() {
 
       if (item) item.equip = isChecked;
 
-      // AQUI SIM SALVAMOS, POIS EQUIPAR AFETA A CA DE TODOS
       saveStateToServer();
 
-      if (state.activeTab === 'Combate') {
+      // Renderiza aba atual (Combate ou Inventário) para refletir mudanças visuais
+      if (state.activeTab === 'Combate' || state.activeTab === 'Inventário') {
         const scrollY = window.scrollY;
         renderActiveTab();
         window.scrollTo(0, scrollY);
       }
+      
+      // >>> GATILHO PARA A ESQUERDA ATUALIZAR A CA <<<
       if (typeof atualizarAC === 'function') atualizarAC();
+      if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
     };
   });
 
@@ -603,7 +603,7 @@ function bindInventoryCardEvents() {
       const item = findItemById(rawId);
       if (item) {
         item.useTwoHands = ev.target.checked;
-        saveStateToServer(); // Salva pois afeta dano
+        saveStateToServer();
         const scrollY = window.scrollY;
         renderActiveTab();
         window.scrollTo(0, scrollY);
@@ -620,7 +620,10 @@ function bindInventoryCardEvents() {
       state.inventory = state.inventory.filter(i => String(i.id) !== String(rawId));
       renderActiveTab();
       window.scrollTo(0, scrollY);
-      saveStateToServer(); // Remover afeta todos
+      saveStateToServer();
+      
+      // Se removeu armadura, atualiza CA
+      if (typeof atualizarAC === 'function') atualizarAC();
       window.dispatchEvent(new CustomEvent('sheet-updated'));
     };
   });
@@ -1248,10 +1251,12 @@ function bindAbilitySectionEvents() {
 
 
 
-// --- EVENTOS ---
-// --- EVENTOS DE HABILIDADES ---
+/* =============================================================
+   CORREÇÃO: Eventos de Habilidades (Com gatilho para CA)
+   Substitua a função bindAbilityEvents inteira por esta:
+============================================================= */
 function bindAbilityEvents() {
-  // 1. Checkbox Ativar (DOM DIRETO - SEM PULO)
+  // 1. Checkbox Ativar (DOM DIRETO)
   document.querySelectorAll('.hab-activate').forEach(ch => {
     ch.onchange = (ev) => {
       const id = Number(ch.getAttribute('data-id'));
@@ -1260,7 +1265,7 @@ function bindAbilityEvents() {
         hab.active = ev.target.checked;
         saveStateToServer();
 
-        // Exclusividade Monge/Bárbaro
+        // Exclusividade Monge/Bárbaro (Defesa sem Armadura não acumula)
         if (hab.active) {
           if (hab.title.includes("Bárbaro")) {
             const m = state.abilities.find(a => a.title.includes("Monge"));
@@ -1272,8 +1277,9 @@ function bindAbilityEvents() {
           }
         }
 
-        // Apenas atualiza a esquerda (CA/Status)
+        // >>> GATILHO PARA A ESQUERDA ATUALIZAR A CA/STATUS <<<
         if (typeof atualizarAC === 'function') atualizarAC();
+        if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
       }
     };
   });
@@ -1292,22 +1298,21 @@ function bindAbilityEvents() {
         body.style.display = hab.expanded ? 'block' : 'none';
         caret.textContent = hab.expanded ? '▾' : '▸';
         card.classList.toggle('expanded', hab.expanded);
-
-        // saveStateToServer(); <--- REMOVA ESTA LINHA
       }
     };
   });
 
-  // 3. REMOVER (CONFIRMAÇÃO REMOVIDA)
+  // 3. REMOVER
   document.querySelectorAll('.remover-hab').forEach(btn => {
     btn.onclick = (e) => {
       e.preventDefault();
       const id = Number(btn.getAttribute('data-id'));
-
-      // REMOVIDO O IF(CONFIRM(...))
       state.abilities = state.abilities.filter(h => h.id !== id);
       renderActiveTab();
       saveStateToServer();
+      
+      // Atualiza CA caso a habilidade removida desse bônus
+      if (typeof atualizarAC === 'function') atualizarAC();
       window.dispatchEvent(new CustomEvent('sheet-updated'));
     }
   });
@@ -1586,48 +1591,52 @@ function renderSpells() {
 ============================================================= */
 
 /* =============================================================
-   CORREÇÃO 2: Atualização que respeita o cursor
+   CORREÇÃO 2: Atualização que respeita o cursor e Sincroniza Esquerda
 ============================================================= */
 
+/* =============================================================
+   CORREÇÃO: Atualização Global (Sincroniza Esquerda e Direita)
+   Substitua o listener 'sheet-updated' antigo por este:
+============================================================= */
 window.addEventListener('sheet-updated', () => {
-  // 1. Atualiza DT Magias
-  state.dtMagias = calculateSpellDC();
-  const inputDT = document.getElementById('dtMagiasInput');
-  if (inputDT) inputDT.value = state.dtMagias;
-
-  // 2. Atualiza Classe de Armadura
-  const armorClass = calculateArmorClass();
-  const inputCA = document.getElementById('caTotal') || document.querySelector('.hexagrama-ca .valor');
-  if (inputCA) {
-    if (inputCA.tagName === 'INPUT') inputCA.value = armorClass;
-    else inputCA.textContent = armorClass;
+  // 1. Atualiza DT Magias (Logica Local da Direita)
+  if (typeof calculateSpellDC === 'function') {
+      state.dtMagias = calculateSpellDC();
+      const inputDT = document.getElementById('dtMagiasInput');
+      if (inputDT) inputDT.value = state.dtMagias;
+      
+      const inputDTPrep = document.getElementById('dtMagiasInput_Prep');
+      if (inputDTPrep) inputDTPrep.value = state.dtMagias;
   }
 
-  // 3. ATUALIZAÇÃO AUTOMÁTICA DA DIREITA
+  // 2. FORÇA A ATUALIZAÇÃO DA ESQUERDA (CA, Vida, Status, etc)
+  // Isso é crucial: chama as funções do EsquerdaJS.js
+  if (typeof atualizarAC === 'function') atualizarAC();
+  if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
+
+  // 3. ATUALIZAÇÃO AUTOMÁTICA DA DIREITA (Mantém cursor e scroll)
   if (['Magias', 'Mag. Preparadas', 'Habilidades', 'Combate', 'Inventário', 'Descrição'].includes(state.activeTab)) {
 
-    // Salva estado de scroll
     const scrollContainer = document.querySelector('.lado-direito .conteudo') || document.querySelector('.lado-direito');
     const savedScroll = scrollContainer ? scrollContainer.scrollTop : 0;
 
-    // --- CORREÇÃO: SALVA O FOCO E A POSIÇÃO DO CURSOR ---
+    // Salva o foco e cursor
     const activeElement = document.activeElement;
     const activeId = activeElement ? activeElement.id : null;
     const cursorStart = activeElement ? activeElement.selectionStart : null;
     const cursorEnd = activeElement ? activeElement.selectionEnd : null;
 
-    // FORÇA O REDESENHO DA ABA ATIVA
+    // Redesenha a aba
     renderActiveTab();
 
     // Restaura Scroll
     if (scrollContainer) scrollContainer.scrollTop = savedScroll;
 
-    // --- CORREÇÃO: RESTAURA O FOCO E A POSIÇÃO DO CURSOR ---
+    // Restaura Foco
     if (activeId) {
       const el = document.getElementById(activeId);
       if (el) {
         el.focus();
-        // Se for um campo de texto, restaura a posição exata do cursor
         if (cursorStart !== null && cursorEnd !== null && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) {
              try { el.setSelectionRange(cursorStart, cursorEnd); } catch(e){}
         }
