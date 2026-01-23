@@ -101,6 +101,9 @@
     "class": "Artífice",
     "subclass": "Infusão",
     "name": "(Infusão, 14º nível) Armadura de Propulsão Arcana",
+    "damage": "1d8",
+    "damageType": "Energia",
+    "useStandardAttack": true,
     "description": "<p><strong>Item:</strong> Uma armadura (Requer Sintonização)</p><p>O usuário desta armadura ganha os seguintes benefícios:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Velocidade:</strong> O deslocamento de caminhada aumenta em 1,5m (5 pés).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Manoplas de Força:</strong> As manoplas da armadura contam como armas mágicas simples de corpo a corpo. Elas causam 1d8 de <strong>dano de energia</strong>.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Foguete (Ação):</strong> As manoplas podem ser disparadas contra alvos a até 6m (normal) ou 18m (desvantagem). Elas retornam imediatamente após o ataque.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Prótese:</strong> A armadura substitui quaisquer membros perdidos (mãos/pés) e não pode ser removida contra vontade do usuário.</li></ul>"
   },
   {
@@ -133,6 +136,7 @@
     "class": "Artífice",
     "subclass": "Infusão",
     "name": "(Infusão) Foco Arcano Aprimorado",
+    "attackBonus": "+1",
     "description": "<p><strong>Item:</strong> Varinha, Cajado ou Bastão (Requer Sintonização)</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Precisão Mágica:</strong> Concede +1 nas jogadas de ataque com magia. O portador ignora meia cobertura ao realizar ataques mágicos.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Escalonamento:</strong> O bônus aumenta para +2 quando você atinge o 10º nível.</li></ul>"
   },
   {
@@ -141,6 +145,7 @@
     "class": "Artífice",
     "subclass": "Infusão",
     "name": "(Infusão) Defesa Aprimorada",
+    "defenseBonus": "+1",
     "description": "<p><strong>Item:</strong> Armadura ou Escudo</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Bônus na CA:</strong> A criatura usando este item ganha +1 na Classe de Armadura.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Escalonamento:</strong> O bônus aumenta para +2 quando você atinge o 10º nível.</li></ul>"
   },
   {
@@ -149,6 +154,7 @@
     "class": "Artífice",
     "subclass": "Infusão",
     "name": "(Infusão) Arma Aprimorada",
+    "attackBonus": "+1",
     "description": "<p><strong>Item:</strong> Arma simples ou marcial</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Bônus Mágico:</strong> A arma se torna mágica e concede +1 nas jogadas de ataque e dano.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Escalonamento:</strong> O bônus aumenta para +2 quando você atinge o 10º nível.</li></ul>"
   },
   {
@@ -165,6 +171,8 @@
     "class": "Artífice",
     "subclass": "Infusão",
     "name": "(Infusão) Servo Homúnculo",
+    "damage": "1d4",
+    "damageType": "Energia",
     "description": "<p><strong>Item:</strong> Gema ou cristal (valor mín. 100 po)</p><p>Você aprende o ritual para criar um homúnculo mecânico. Ele possui CA 13, PV igual a 1 + seu Mod. INT + seu Nível de Artífice.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Turno:</strong> Ele age imediatamente após você na iniciativa. Ele pode se mover e usar reações sozinho, mas só realiza a ação Esquivar (Dodge) a menos que você use sua <strong>Ação Bônus</strong> para comandá-lo a fazer outra ação.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque (Força):</strong> Ataque de magia à distância. Dano: 1d4 + Proficiência (Força).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Canalizar Magia (Reação):</strong> O homúnculo pode entregar uma magia sua com alcance de 'Toque', desde que esteja a até 36m de você.</li></ul>"
   },
   {
@@ -181,14 +189,16 @@
     "class": "Artífice",
     "subclass": "Infusão",
     "name": "(Infusão, 6º nível) Arma Radiante",
+    "attackBonus": "+1",
     "description": "<p><strong>Item:</strong> Arma simples ou marcial (Requer Sintonização)</p><p>A arma possui 4 cargas e recupera 1d4 cargas diariamente ao amanhecer.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Bônus:</strong> +1 nas jogadas de ataque e dano.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Iluminação (Ação Bônus):</strong> Emite luz plena em 9m e penumbra em mais 9m.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Clarão Cegante (Reação):</strong> Imediatamente após ser atingido por um ataque corpo a corpo, gaste 1 carga. O atacante deve passar num teste de resistência de <strong>Constituição</strong> (contra sua CD de magia) ou ficará <strong>Cego</strong> até o final do próximo turno dele.</li></ul>"
   },
-  {
+ {
     "id": "art_inf_repetido",
     "category": "Classe",
     "class": "Artífice",
     "subclass": "Infusão",
     "name": "(Infusão) Tiro Repetido",
+    "attackBonus": "+1",
     "description": "<p><strong>Item:</strong> Arma simples ou marcial com a propriedade munição (Requer Sintonização)</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Bônus:</strong> +1 nas jogadas de ataque e dano à distância.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Auto-Carregamento:</strong> A arma ignora a propriedade <em>Recarga</em> (Loading) se a tiver. Se não houver munição, a arma cria magicamente uma munição para cada ataque (que desaparece logo após atingir ou errar).</li></ul>"
   },
   {
@@ -199,12 +209,13 @@
     "name": "(Infusão) Replicar Item Mágico",
     "description": "<p>Você aprende a fabricar uma cópia exata de um item mágico comum. Escolha um item da tabela 'Itens Replicáveis' disponível para o seu nível.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Exemplos (Nível 2+):</strong> Jarra de Alquimia, Bolsa de Carga, Óculos de Visão Noturna, Varinha de Detectar Magia.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Exemplos (Nível 6+):</strong> Botas de Elvenkind, Manto de Elvenkind, Luvas de Ladinagem.</li></ul>"
   },
-  {
+ {
     "id": "art_inf_repulsao",
     "category": "Classe",
     "class": "Artífice",
     "subclass": "Infusão",
     "name": "(Infusão, 6º nível) Escudo de Repulsão",
+    "defenseBonus": "+1",
     "description": "<p><strong>Item:</strong> Um escudo (Requer Sintonização)</p><p>O escudo possui 4 cargas e recupera 1d4 cargas diariamente ao amanhecer.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Defesa:</strong> Concede +1 na CA (acumulando com o +2 padrão do escudo).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Repulsão (Reação):</strong> Imediatamente após ser atingido por um ataque corpo a corpo, você pode gastar 1 carga para empurrar o atacante <strong>4,5 metros (15 pés)</strong> para longe de você (sem teste de resistência).</li></ul>"
   },
   {
@@ -215,12 +226,13 @@
     "name": "(Infusão, 6º nível) Armadura Resistente",
     "description": "<p><strong>Item:</strong> Uma armadura (Requer Sintonização)</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Adaptação:</strong> Ao realizar esta infusão, escolha um tipo de dano: ácido, frio, fogo, <strong>energia</strong>, elétrico, necrótico, veneno, psíquico, radiante ou trovão.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Proteção:</strong> O usuário possui <strong>Resistência</strong> ao tipo de dano escolhido (recebe metade do dano).</li></ul>"
   },
-  {
+ {
     "id": "art_inf_retorna",
     "category": "Classe",
     "class": "Artífice",
     "subclass": "Infusão",
     "name": "(Infusão) Arma que Retorna",
+    "attackBonus": "+1",
     "description": "<p><strong>Item:</strong> Arma simples ou marcial com a propriedade arremesso</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Bônus:</strong> +1 nas jogadas de ataque e dano.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Bumerangue:</strong> A arma retorna magicamente para a mão do portador imediatamente após ser usada para um ataque à distância.</li></ul>"
   },
   {
@@ -247,12 +259,15 @@
     "name": "Feitiços de Alquimista",
     "description": "<p>Você sempre tem preparadas as seguintes magias (não contam no limite de preparação):</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 3º Nível:</strong> Palavra de Cura (Healing Word), Raio da Doença (Ray of Sickness)</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 5º Nível:</strong> Esfera Flamejante, Flecha Ácida de Melf</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 9º Nível:</strong> Forma Gasosa, Palavra de Cura em Massa</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 13º Nível:</strong> Praga (Blight), Guarda da Morte (Death Ward)</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 17º Nível:</strong> Nuvem Assassina, Ressuscitar Mortos (Raise Dead)</li></ul>"
   },
-  {
+ {
     "id": "art_alq_3_elixir",
     "category": "Classe",
     "class": "Artífice",
     "subclass": "Alquimista",
     "name": "(Alquimista, 3º nível) Elixir Experimental",
+    "damage": "2d4",
+    "damageType": "Cura",
+    "defenseBonus": "+1",
     "description": "<p>Ao final de um descanso longo, você produz magicamente um elixir experimental em um frasco vazio. Role um d6 para determinar o efeito.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Ativação (Ação):</strong> Uma criatura pode beber o elixir ou administrá-lo a uma criatura incapacitada usando uma Ação.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Criação Extra:</strong> Você pode gastar um espaço de magia de 1º nível ou superior para criar um elixir adicional (escolhendo o efeito em vez de rolar).</li></ul><strong style='display:block; margin:8px 0; color:#fff;'>Efeitos (d6):</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>1. Cura:</strong> Recupera 2d4 + Mod. INT PV.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>2. Velocidade:</strong> Deslocamento +3m por 1 hora.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>3. Resiliência:</strong> +1 na CA por 10 minutos.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>4. Audácia:</strong> Adiciona 1d4 a ataques e testes de resistência por 1 minuto.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>5. Voo:</strong> Deslocamento de voo de 3m por 10 minutos.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>6. Transformação:</strong> Efeito da magia <em>Alterar-se</em> por 10 minutos.</li></ul>"
   },
   {
@@ -309,6 +324,9 @@
     "class": "Artífice",
     "subclass": "Armeiro",
     "name": "(Armeiro, 3º nível) Modelo de Armadura",
+    "damage": "1d8",
+    "damageType": "Trovão",
+    "useStandardAttack": true,
     "description": "<p>Você pode personalizar sua armadura. Ao terminar um descanso, escolha um modelo (Guardião ou Infiltrador). As armas da armadura usam seu Mod. INT para ataque e dano.</p><hr style='border:0; border-top:1px solid rgba(255,255,255,0.1); margin:10px 0;'><strong style='display:block; margin-bottom:8px; color:#fff;'>Guardião (Tanque)</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Manoplas Trovejantes:</strong> Armas simples de corpo a corpo. Dano: 1d8 Trovão.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Distração:</strong> Criatura atingida pelas manoplas tem <strong>Desvantagem</strong> em ataques contra qualquer alvo que não seja você até o início do seu próximo turno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Campo Defensivo (Ação Bônus):</strong> Ganha PV Temporários iguais ao seu nível de Artífice. (Usos = Bônus Proficiência/dia).</li></ul><hr style='border:0; border-top:1px solid rgba(255,255,255,0.1); margin:10px 0;'><strong style='display:block; margin-bottom:8px; color:#fff;'>Infiltrador (Furtivo)</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Lançador de Raios:</strong> Arma simples à distância (Alcance 27m/90m). Dano: 1d6 Elétrico. Uma vez por turno, causa +1d6 extra ao acertar.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Passos Rápidos:</strong> Deslocamento base aumenta em 1,5m. Vantagem em testes de Furtividade (Stealth).</li></ul>"
   },
   {
@@ -351,12 +369,14 @@
     "name": "Feitiços de Artilheiro",
     "description": "<p>Você sempre tem preparadas as seguintes magias:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 3º Nível:</strong> Escudo (Shield), Onda Trovejante</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 5º Nível:</strong> Raio Incandescente, Estilhaçar</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 9º Nível:</strong> Bola de Fogo, Parede de Vento</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 13º Nível:</strong> Tempestade de Gelo, Muralha de Fogo</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 17º Nível:</strong> Cone de Frio, Muralha de Força</li></ul>"
   },
-  {
+ {
     "id": "art_art_3_canhao",
     "category": "Classe",
     "class": "Artífice",
     "subclass": "Artilheiro",
     "name": "(Artilheiro, 3º nível) Canhão Eldritch",
+    "damage": "2d8",
+    "damageType": "Fogo",
     "description": "<p><strong>Ação:</strong> Ação Padrão (Criar)<br><strong>Duração:</strong> 1 hora</p><p>Você cria um canhão mágico (Pequeno ou Minúsculo). Ele tem CA 18 e PV igual a 5x seu nível de Artífice. Imune a dano psíquico e veneno.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ativação (Ação Bônus):</strong> Você comanda o canhão a se mover 4,5m e/ou disparar (se estiver a até 18m dele).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Lança-chamas:</strong> Cone de 4,5m. Todos na área fazem Salvaguarda de DEX. Dano: 2d8 Fogo (metade se passar).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Balista de Energia:</strong> Ataque mágico à distância (36m). Dano: 2d8 <strong>Energia</strong> + empurrão de 1,5m.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Protetor:</strong> Emanação de 3m. O canhão emite energia positiva. Criaturas à escolha ganham 1d8 + Mod. INT em PV temporários.</li></ul>"
   },
   {
@@ -367,20 +387,23 @@
     "name": "(Artilheiro, 5º nível) Arma Arcana",
     "description": "<p>Você sabe como canalizar energia destrutiva.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Potência:</strong> Ao terminar um descanso longo, desenhe sigilos em uma varinha, cajado ou bastão para torná-lo sua Arma Arcana.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Bônus:</strong> Quando você conjura uma magia de artífice através da Arma Arcana, adicione 1d8 a uma das rolagens de dano da magia.</li></ul>"
   },
-  {
+ {
     "id": "art_art_9_explosivo",
     "category": "Classe",
     "class": "Artífice",
     "subclass": "Artilheiro",
     "name": "(Artilheiro, 9º nível) Canhão Explosivo",
+    "damage": "3d8",
+    "damageType": "Energia",
     "description": "<p>A energia destrutiva dos seus canhões aumenta.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Dano Extra:</strong> Todas as rolagens de dano do Canhão Eldritch aumentam em 1d8.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Detonação (Ação):</strong> Você pode comandar o canhão a autodestruir-se se estiver a até 18m. Criaturas em raio de 6m fazem Salvaguarda de DEX. Dano: 3d8 <strong>Energia</strong> (metade se passar).</li></ul>"
   },
-  {
+ {
     "id": "art_art_15_fortificada",
     "category": "Classe",
     "class": "Artífice",
     "subclass": "Artilheiro",
     "name": "(Artilheiro, 15º nível) Posição Fortificada",
+    "defenseBonus": "+2",
     "description": "<p>Você se torna um mestre da guerra posicional.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Cobertura:</strong> Você e seus aliados têm <strong>meia cobertura</strong> (+2 CA/Dex Saves) enquanto estiverem a até 3m de um canhão criado por você.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Barragem Dupla:</strong> Você pode criar dois canhões ao mesmo tempo. Com uma única <strong>Ação Bônus</strong>, você pode ativar ambos.</li></ul>"
   },
   {
@@ -413,6 +436,8 @@
     "class": "Artífice",
     "subclass": "Ferreiro de Batalha",
     "name": "(Ferreiro de Batalha, 3º nível) Defensor de Aço",
+    "damage": "1d8",
+    "damageType": "Contundente",
     "description": "<p>Você cria um constructo leal (aço e magia). Ele tem CA 15 (natural), PV igual a 2 + Mod. INT + 5x Nível de Artífice.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Iniciativa:</strong> Age imediatamente após você. Ele pode se mover e usar reações livremente.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ação (Ação Bônus):</strong> Ele só realiza a ação Esquivar (Dodge) a não ser que você use sua <strong>Ação Bônus</strong> para comandá-lo a fazer outra ação (Ataque, Disparada, etc).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque do Defensor:</strong> Ataque corpo a corpo com magia. Usa seu Mod. de Magia para acertar. Dano: 1d8 + Bônus Prof. (Força).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Deflexão Defensiva (Reação):</strong> O Defensor impõe <strong>Desvantagem</strong> na jogada de ataque de uma criatura que ele possa ver e que esteja a até 1,5m dele, desde que o ataque seja contra outra pessoa que não o Defensor.</li></ul>"
   },
   {
@@ -429,14 +454,19 @@
     "class": "Artífice",
     "subclass": "Ferreiro de Batalha",
     "name": "(Ferreiro de Batalha, 9º nível) Choque Arcano",
+    "damage": "2d6",
+    "damageType": "Energia",
     "description": "<p>Você aprende a canalizar energia mágica através de seus golpes.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Gatilho:</strong> Ao acertar um ataque com arma mágica ou quando seu Defensor de Aço acerta um ataque.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Efeito:</strong> Escolha um: causar 2d6 de <strong>dano de energia</strong> extra ao alvo, OU curar 2d6 PV de uma criatura ou objeto a até 9m do alvo atingido.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Usos:</strong> Igual ao Mod. INT (recupera em descanso longo).</li></ul>"
   },
-  {
+ {
     "id": "art_fer_15_aprimorado",
     "category": "Classe",
     "class": "Artífice",
     "subclass": "Ferreiro de Batalha",
     "name": "(Ferreiro de Batalha, 15º nível) Defensor Aprimorado",
+    "damage": "4d6",
+    "damageType": "Energia",
+    "defenseBonus": "+2",
     "description": "<p>Seu constructo e sua magia de combate atingem o nível máximo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Choque Arcano:</strong> O dano e a cura aumentam para 4d6.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Defensor de Aço:</strong> Ganha +2 na CA (Total 17). Sempre que usar a reação de *Deflexão Defensiva*, o atacante sofre automaticamente 1d4 + Mod. INT de <strong>dano de energia</strong>.</li></ul>"
   },
   {
@@ -453,6 +483,8 @@
     "class": "Artífice",
     "subclass": "Arquivista",
     "name": "(Arquivista, 3º nível) Mente Artificial",
+    "damage": "1d8",
+    "damageType": "Psíquico",
     "description": "<p>Você desperta uma consciência artificial dentro de um objeto (Minúsculo). Enquanto estiver com você, o objeto concede proficiência em 2 perícias (baseadas no material, ex: Pergaminho = História/Arcanismo).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Manifestar (Ação Bônus):</strong> A mente se projeta espectralmente a até 9m, com deslocamento de voo de 9m. Ela é intangível e invulnerável. Você pode conjurar magias de artífice como se estivesse no espaço dela (usando os sentidos dela).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Sobrecarga de Informação (Ação):</strong> Como uma ação, a mente ataca uma criatura a até 1,5m dela. O alvo faz Salvaguarda de INT. Falha: Sofre 1d8 psíquico e o próximo ataque contra ele tem <strong>Vantagem</strong> (até o final do seu próximo turno). O dano escala nos níveis 5 (2d8), 11 (3d8) e 17 (4d8).</li></ul>"
   },
   {
@@ -612,6 +644,7 @@
     "class": "Bárbaro",
     "subclass": "Caminho do Berserker",
     "name": "(Berserker, 3º nível) Frenesi",
+    "useStandardAttack": true,
     "description": "<p>Você pode entrar em um frenesi ao enfurecer-se.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Benefício:</strong> Pela duração da Fúria, você pode fazer um único ataque corpo a corpo como <strong>Ação Bônus</strong> em cada um dos seus turnos.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Custo:</strong> Quando sua Fúria termina, você sofre um nível de <strong>Exaustão</strong>.</li></ul>"
   },
   {
@@ -630,12 +663,13 @@
     "name": "(Berserker, 10º nível) Presença Intimidadora",
     "description": "<p><strong>Ação:</strong> Ação Padrão<br><strong>Alcance:</strong> 9m (30 pés)</p><p>Escolha uma criatura que possa ver ou ouvir você.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Efeito:</strong> O alvo deve passar em um teste de resistência de Sabedoria (CD 8 + Prof + Carisma) ou ficará <strong>Amedrontado</strong> até o final do seu próximo turno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Manutenção:</strong> Em turnos subsequentes, você pode usar sua ação para estender a duração do efeito na criatura amedrontada até o final do seu próximo turno.</li></ul>"
   },
-  {
+ {
     "id": "bar_ber_14_retalia",
     "category": "Classe",
     "class": "Bárbaro",
     "subclass": "Caminho do Berserker",
     "name": "(Berserker, 14º nível) Retaliação",
+    "useStandardAttack": true,
     "description": "<p><strong>Ação:</strong> Reação</p><p>Quando você sofrer dano de uma criatura que esteja a até 1,5m de você, você pode usar sua reação para realizar um ataque corpo a corpo com arma contra essa criatura.</p>"
   },
   {
@@ -676,6 +710,8 @@
     "class": "Bárbaro",
     "subclass": "Caminho do Guerreiro Totêmico",
     "name": "(Totêmico, 14º nível) Sintonização Totêmica",
+    "damage": "1d12",
+    "damageType": "Contundente",
     "description": "<p>Você ganha um benefício enquanto estiver em Fúria:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Urso:</strong> Criaturas a até 1,5m de você têm <strong>Desvantagem</strong> em jogadas de ataque contra alvos que não sejam você.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Águia:</strong> Você ganha deslocamento de voo igual ao seu deslocamento de caminhada. Você cai se terminar o turno no ar.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Lobo (Ação Bônus):</strong> Ao acertar um ataque corpo a corpo, você pode derrubar (prone) uma criatura Grande ou menor.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Alce (Ação Bônus):</strong> Ao se mover através do espaço de uma criatura Grande ou menor, você causa 1d12 + Força de dano contundente e a derruba (prone). (Salvaguarda FOR CD 8+Prof+For nega).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Tigre (Ação Bônus):</strong> Se você se mover pelo menos 6m em linha reta em direção a um alvo e atacá-lo, pode fazer um ataque corpo a corpo adicional.</li></ul>"
   },
   {
@@ -692,6 +728,8 @@
     "class": "Bárbaro",
     "subclass": "Caminho do Guardião Ancestral",
     "name": "(Guardião, 6º nível) Escudo Espiritual",
+    "damage": "2d6",
+    "damageType": "Redução",
     "description": "<p><strong>Ação:</strong> Reação<br><strong>Alcance:</strong> 9m (30 pés)</p><p>Se você estiver em Fúria e uma criatura que você possa ver a até 9m sofrer dano, você pode usar sua reação para reduzir esse dano em <strong>2d6</strong>.</p><p style='color:#bbb; font-size:13px;'>A redução aumenta para 3d6 no 10º nível e 4d6 no 14º nível.</p>"
   },
   {
@@ -716,6 +754,8 @@
     "class": "Bárbaro",
     "subclass": "Caminho do Arauto da Tempestade",
     "name": "(Arauto, 3º nível) Aura da Tempestade",
+    "damage": "1d6",
+    "damageType": "Elétrico",
     "description": "<p>Ao entrar em Fúria, você emana uma aura mágica de 3m. Você pode ativar o efeito novamente a cada turno como uma <strong>Ação Bônus</strong>.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Deserto:</strong> Todas as outras criaturas na aura sofrem 2 de dano de fogo (escala com nível).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Mar:</strong> Uma criatura na aura sofre 1d6 de dano elétrico (escala com nível). Salvaguarda de DEX para metade.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Tundra:</strong> Criaturas de sua escolha na aura ganham 2 PV temporários (escala com nível).</li></ul>"
   },
   {
@@ -748,6 +788,8 @@
     "class": "Bárbaro",
     "subclass": "Caminho do Fanático",
     "name": "(Fanático, 3º nível) Fúria Divina",
+    "damage": "1d6",
+    "damageType": "Radiante",
     "description": "<p>Enquanto estiver em Fúria, a primeira criatura que você atingir no seu turno com um ataque com arma sofre dano extra.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano:</strong> 1d6 + metade do seu nível de Bárbaro.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Tipo:</strong> Necrótico ou Radiante (escolhido permanentemente ao ganhar a habilidade).</li></ul>"
   },
   {
@@ -788,6 +830,9 @@
     "class": "Bárbaro",
     "subclass": "Caminho da Besta",
     "name": "(Besta, 3º nível) Forma da Besta",
+    "damage": "1d8",
+    "damageType": "Perfurante",
+    "useStandardAttack": true,
     "description": "<p>Ao entrar em Fúria, você manifesta uma arma natural. Ela conta como arma simples de corpo a corpo para você e usa Força.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Mordida (1d8 Perfurante):</strong> Uma vez por turno, se acertar e estiver com menos da metade dos PV, recupera PV igual ao seu Bônus de Proficiência.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Garras (1d6 Cortante):</strong> Uma vez por turno, ao usar a ação Atacar com a garra, você pode fazer um ataque adicional com a garra como parte da mesma ação.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Cauda (1d8 Perfurante):</strong> Alcance 3m. <strong>Reação:</strong> Se uma criatura a até 3m acertar você, role 1d8 e adicione à sua CA, podendo fazer o ataque errar.</li></ul>"
   },
   {
@@ -804,6 +849,8 @@
     "class": "Bárbaro",
     "subclass": "Caminho da Besta",
     "name": "(Besta, 10º nível) Fúria Infecciosa",
+    "damage": "2d12",
+    "damageType": "Psíquico",
     "description": "<p>Ao acertar uma criatura com sua arma natural em Fúria, force uma Salvaguarda de Sabedoria (CD 8 + Prof + Con). Em falha, escolha um:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Fúria Cega:</strong> O alvo usa sua reação para fazer um ataque corpo a corpo contra outra criatura à sua escolha que você possa ver.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Medo Psíquico:</strong> O alvo sofre 2d12 de dano psíquico.</li></ul><p style='color:#bbb; font-size:13px;'>Usos iguais ao Bônus de Proficiência por descanso longo.</p>"
   },
   {
@@ -828,6 +875,8 @@
     "class": "Bárbaro",
     "subclass": "Caminho da Magia Selvagem",
     "name": "(Magia Selvagem, 3º nível) Onda Selvagem",
+    "damage": "1d12",
+    "damageType": "Necrótico",
     "description": "<p>Ao entrar em Fúria, role 1d8 na tabela de Magia Selvagem. Se o efeito exigir teste de resistência, a CD é 8 + Prof + Mod. CON.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 1:</strong> Tentáculos sombrios. Criaturas a 9m fazem salvaguarda de CON ou sofrem 1d12 necrótico. Você ganha 1d12 PV temp.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 2:</strong> Teleporte. Você se teleporta 9m para espaço livre.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 3:</strong> Espíritos explosivos. Uma criatura a 9m sofre 1d6 de <strong>dano de energia</strong>.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 4:</strong> Arma infundida. Seus ataques causam +1d6 de <strong>dano de energia</strong> e a arma ganha propriedade Retorno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 5:</strong> Retaliação. Criatura que te acertar sofre 1d6 de <strong>dano de energia</strong>.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 6:</strong> Aura Protetora. Você e aliados a 3m ganham +1 na CA.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 7:</strong> Vinhas. Terreno difícil num raio de 4,5m ao seu redor.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 8:</strong> Luz Cegante. Criatura a 9m faz salvaguarda de CON ou fica Cega. Você emite luz.</li></ul>"
   },
   {
@@ -884,6 +933,8 @@
     "class": "Bárbaro",
     "subclass": "Caminho da Alma Selvagem",
     "name": "(Alma Selvagem, 10º nível) Repreensão Arcana",
+    "damage": "3d6",
+    "damageType": "Energia",
     "description": "<p><strong>Ação:</strong> Reação</p><p>Quando uma criatura força você a fazer um teste de resistência enquanto você está em Fúria, você pode usar sua reação para causar 3d6 de <strong>dano de energia</strong> a essa criatura.</p>"
   },
   {
@@ -933,6 +984,8 @@
     "class": "Bardo",
     "subclass": "",
     "name": "(1º nível) Inspiração Bárdica",
+    "damage": "1d6",
+    "damageType": "Inspiração",
     "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Alcance:</strong> 18 metros (60 pés)<br><strong>Duração:</strong> 10 minutos</p><p>Você pode inspirar os outros através de palavras ou música. Escolha uma criatura (exceto você mesmo) que possa ouvi-lo.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ O Dado:</strong> A criatura ganha um dado de Inspiração Bárdica (d6). O dado escala para d8 (5º nível), d10 (10º nível) e d12 (15º nível).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Uso:</strong> Uma vez dentro dos 10 minutos, a criatura pode rolar o dado e adicionar o número obtido a uma <strong>jogada de ataque</strong>, <strong>teste de habilidade</strong> ou <strong>teste de resistência</strong> que ela fizer. Ela pode esperar a rolagem do d20 antes de decidir usar o dado, mas deve decidir antes de saber o resultado.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Limite:</strong> Uma criatura só pode ter um dado de inspiração por vez. Você tem usos iguais ao seu Mod. Carisma (recupera em Descanso Longo).</li></ul>"
   },
   {
@@ -949,8 +1002,10 @@
     "class": "Bardo",
     "subclass": "",
     "name": "(2º nível) Cântico de Descanso",
+    "damage": "1d6",
+    "damageType": "Cura",
     "description": "<p>Você usa música suave para revitalizar seus aliados. Se você ou quaisquer criaturas amigáveis que possam ouvir sua performance recuperarem pontos de vida no final de um <strong>Descanso Curto</strong> gastando Dados de Vida, cada uma recupera pontos de vida extras.</p><strong style='display:block; margin-bottom:8px; color:#fff;'>Cura Extra (Escalonamento):</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 2º Nível:</strong> 1d6</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 9º Nível:</strong> 1d8</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 13º Nível:</strong> 1d10</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 17º Nível:</strong> 1d12</li></ul>"
-  },
+  }
  
   {
     "id": "bar_base_3_especializa",
