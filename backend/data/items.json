@@ -2435,12 +2435,20 @@
     "description": "<p>Barco de um mastro, rápido e manobrável. Ideal para transporte rápido ou pesca em alto mar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pl</li></ul>"
   },
   {
-    "id": "i_municao_flechas",
-    "name": "Flechas (20)",
+    "id": "i_municao_flecha",
+    "name": "combo de Flecha (20)",
     "category": "Armas",
     "subcategory": "Munição",
     "type": "Item",
-    "description": "<p>Hastes de madeira com penas de ganso e pontas de ferro. Essenciais para qualquer arqueiro.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+    "description": "<p>Hastes de madeira com penas de ganso e pontas de ferro. Essenciais para qualquer arqueiro.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 90 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+  },
+   {
+    "id": "i_municao_flechas",
+    "name": "Flechas",
+    "category": "Armas",
+    "subcategory": "Munição",
+    "type": "Item",
+    "description": "<p>Hastes de madeira com penas de ganso e pontas de ferro. Essenciais para qualquer arqueiro.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
   },
   {
     "id": "i_granada_desintegracao",
@@ -2624,12 +2632,20 @@
     "description": "<p>Uma miscelânea de ferramentas pequenas, cola, retalhos, arames e lentes. Permite consertar quase qualquer coisa mundana temporariamente. </p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 5 kg</li></ul>"
   },
   {
-    "id": "i_balas_funda",
-    "name": "Balas de Funda (20)",
+    "id": "i_bala_funda",
+    "name": "combo de Balas de Funda (20)",
     "category": "Armas",
     "subcategory": "Munição",
     "type": "Item",
     "description": "<p>Esferas de chumbo fundido. Mais precisas e letais que pedras comuns.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,75 kg</li></ul>"
+  },
+  {
+    "id": "i_balas_funda",
+    "name": "Balas de Funda",
+    "category": "Armas",
+    "subcategory": "Munição",
+    "type": "Item",
+    "description": "<p>Esferas de chumbo fundido. Mais precisas e letais que pedras comuns.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 3 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,75 kg</li></ul>"
   },
   {
     "id": "i_kit_charamela",
@@ -2778,20 +2794,36 @@
     "description": "<p>Um barril cheio de pólvora negra refinada. Instável e devastador. Se incendiado, explode em raio de 6m. CD 12 Destreza para metade.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 pl</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 25 kg</li></ul>"
   },
   {
-    "id": "i_municao_virotes",
-    "name": "Virotes (20)",
+    "id": "i_municao_virote",
+    "name": "combo de Virotes (20)",
     "category": "Armas",
     "subcategory": "Munição",
     "type": "Item",
-    "description": "<p>Munição padrão para bestas. Hastes curtas e pesadas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,75 kg</li></ul>"
+    "description": "<p>Munição padrão para bestas. Hastes curtas e pesadas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 90 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,75 kg</li></ul>"
+  },
+  {
+    "id": "i_municao_virotes",
+    "name": "Virotes",
+    "category": "Armas",
+    "subcategory": "Munição",
+    "type": "Item",
+    "description": "<p>Munição padrão para bestas. Hastes curtas e pesadas.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 5 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,75 kg</li></ul>"
+  },
+  {
+    "id": "i_muniçao_zarabatana",
+    "name": "combo de Agulhas de Zarabatana (50)",
+    "category": "Armas",
+    "subcategory": "Munição",
+    "type": "Item",
+    "description": "<p>Pequenas agulhas com ponta oca para veneno.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 45 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
   },
   {
     "id": "i_municao_zarabatana",
-    "name": "Agulhas de Zarabatana (50)",
+    "name": "Agulhas de Zarabatana",
     "category": "Armas",
     "subcategory": "Munição",
     "type": "Item",
-    "description": "<p>Pequenas agulhas com ponta oca para veneno.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+    "description": "<p>Pequenas agulhas com ponta oca para veneno.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 1 pp</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
   },
   {
     "id": "i_municao_balas_polvora",
