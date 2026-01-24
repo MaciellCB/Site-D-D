@@ -4748,7 +4748,7 @@ document.addEventListener('click', function(e) {
         }
 
         // -------------------------------------------------------------
-        // B. VERIFICA SE É ITEM (ARMA/INVENTÁRIO)
+        // B. VERIFICA SE É ITEM (ARMA/INVENTÁRIO) - CORRIGIDO V3
         // -------------------------------------------------------------
         const itemCard = e.target.closest('.item-card');
         if (itemCard) {
@@ -4756,30 +4756,80 @@ document.addEventListener('click', function(e) {
             const item = state.inventory.find(i => String(i.id) === String(itemId));
 
             if (item) {
+                // 1. ROLA ATAQUE
                 let attackRes = null;
-                if (item.type === 'Arma' || (item.attackAttribute && item.attackAttribute !== 'Nenhum')) {
-                    const { modAttr, profBonus, itemBonus } = getItemAttackValues(item);
+                const temAtributoDefinido = item.attackAttribute && item.attackAttribute !== 'Nenhum';
+                
+                if (item.type === 'Arma' || temAtributoDefinido) {
+                    const { modAttr, profBonus, itemBonus, attrUsed } = getItemAttackValues(item);
+                    
                     const d20 = Math.floor(Math.random() * 20) + 1;
                     const totalAttack = d20 + modAttr + profBonus + itemBonus;
+                    
                     const isCrit = (d20 === 20); 
                     const isFumble = (d20 === 1);
                     const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
-                    const detailParts = [d20Html];
-                    if (modAttr !== 0) detailParts.push(modAttr); 
-                    if (profBonus !== 0) detailParts.push(profBonus); 
-                    if (itemBonus !== 0) detailParts.push(itemBonus);
                     
-                    attackRes = { total: totalAttack, text: totalAttack.toString(), detail: detailParts.join(' + '), isCrit: isCrit, isFumble: isFumble };
+                    // Monta o detalhe (Tooltip)
+                    const detailParts = [d20Html];
+                    // Nome do atributo usado (pega do retorno ou tenta deduzir para exibição)
+                    const nomeAttr = attrUsed || (item.type === 'Arma' ? ((item.tipoArma||'').includes('istancia') ? 'Destreza' : 'Força') : '');
+                    
+                    if (modAttr !== 0) detailParts.push(`${modAttr} (${nomeAttr.substring(0,3)})`); 
+                    if (profBonus !== 0) detailParts.push(`${profBonus} (Prof)`); 
+                    if (itemBonus !== 0) detailParts.push(`${itemBonus} (Item)`);
+                    
+                    attackRes = { 
+                        total: totalAttack, 
+                        text: totalAttack.toString(), 
+                        detail: detailParts.join(' + '), 
+                        isCrit: isCrit, 
+                        isFumble: isFumble 
+                    };
                 }
 
+                // 2. ROLA DANO (CALCULADO SEMPRE)
                 let damageRes = null;
-                let damageText = '';
-                const spellDamageDiv = e.target.closest('.spell-damage');
-                if (spellDamageDiv) {
-                    damageText = Array.from(spellDamageDiv.childNodes).filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent.trim()).join('');
+                let expressionDano = "";
+
+                // a) Pega o Dano Base (Considera Versátil)
+                let baseDano = item.damage || '0';
+                if (item.empunhadura === 'Versátil' && item.useTwoHands && item.damage2Hands) {
+                    baseDano = item.damage2Hands;
                 }
-                if (!damageText || damageText === '-') damageText = item.damage || '0';
-                if (damageText && damageText !== '-' && damageText !== '0') { damageRes = rollDiceExpression(damageText); }
+
+                // b) Calcula o Modificador de Atributo para o Dano
+                let modDano = 0;
+                
+                // Se o usuário escolheu um atributo específico para o dano
+                if (item.damageAttribute && item.damageAttribute !== 'Nenhum') {
+                    modDano = getAttributeMod(item.damageAttribute);
+                } 
+                // Se não escolheu, mas é arma, usa o mesmo modificador que usou no ataque (Força/Destreza)
+                else if (item.type === 'Arma') {
+                    const { modAttr } = getItemAttackValues(item);
+                    modDano = modAttr;
+                }
+
+                // c) Soma Bônus Fixo de Dano (Item mágico +1, etc)
+                const bonusDano = parseInt(item.damageBonus) || 0;
+                
+                // d) Total a somar
+                const totalModDano = modDano + bonusDano;
+
+                // e) Monta a string final para o rolador (Ex: "1d8+3")
+                // Se o dado base já tiver + (ex: "1d6+2"), o código apenas anexa o resto
+                if (totalModDano !== 0) {
+                    const sinal = totalModDano >= 0 ? '+' : ''; // Adiciona + se for positivo, - se for negativo
+                    expressionDano = `${baseDano}${sinal}${totalModDano}`;
+                } else {
+                    expressionDano = baseDano;
+                }
+                
+                // Rola
+                if (expressionDano && expressionDano !== '-' && expressionDano !== '0') { 
+                    damageRes = rollDiceExpression(expressionDano); 
+                }
 
                 if (attackRes || damageRes) showCombatResults(item.name, attackRes, damageRes);
             }
