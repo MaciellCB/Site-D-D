@@ -1502,3 +1502,48 @@ input[type=number] {
     font-size: 11px;
     color: #aaa;
 }
+
+
+/* =============================================================
+   ESTILOS DOS TIPOS DE ARMADURA (COM CONTORNO)
+============================================================= */
+
+/* Estilo base da tag */
+.armadura-tag {
+    font-weight: 900;
+    font-size: 14px; /* Aumentei um pouco para caber no contorno */
+    text-align: center;
+    padding: 4px 10px; /* Espaço interno para o contorno não colar no texto */
+    border-radius: 6px;
+    border: 2px solid transparent; /* Prepara a borda */
+    background-color: transparent; /* Fundo transparente ou sutil */
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    transition: all 0.3s ease;
+    width: auto;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+/* --- TIPO: PESADA (Vermelho/Laranja) --- */
+.armadura-tag.pesado {
+    color: #ff5252;
+    border-color: #ff5252;
+    background: rgba(255, 82, 82, 0.1);
+    box-shadow: 0 0 10px rgba(255, 82, 82, 0.2);
+}
+
+/* --- TIPO: MÉDIA / DEFESAS ESPECIAIS (Amarelo/Dourado) --- */
+.armadura-tag.media {
+    color: #ffca28;
+    border-color: #ffca28;
+    background: rgba(255, 202, 40, 0.1);
+    box-shadow: 0 0 10px rgba(255, 202, 40, 0.2);
+}
+
+/* --- TIPO: LEVE / SEM ARMADURA (Verde/Ciano) --- */
+.armadura-tag.leve {
+    color: #69f0ae;
+    border-color: #69f0ae;
+    background: rgba(105, 240, 174, 0.1);
+    box-shadow: 0 0 10px rgba(105, 240, 174, 0.2);
+}

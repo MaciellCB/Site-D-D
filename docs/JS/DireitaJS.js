@@ -3433,25 +3433,6 @@ function openAbilityCatalogOverlay() {
 }
 
 
-
-/* =============================================================
-   CÁLCULO DA CLASSE DE ARMADURA (CA) - LÓGICA CORRIGIDA
-============================================================= */
-
-// Função auxiliar para pegar modificadores do DOM (segurança contra valores nulos)
-function getAttributeMod(attrKey) {
-  const selector = DOM_SELECTORS[attrKey];
-  const hexEl = document.querySelector(selector);
-  if (hexEl) {
-    let rawVal = hexEl.dataset.attrValue || hexEl.textContent;
-    const score = parseInt(rawVal, 10);
-    if (!isNaN(score)) {
-      return Math.floor((score - 10) / 2);
-    }
-  }
-  return 0;
-}
-
 function calculateArmorClass() {
   // 1. Pega os Modificadores necessários
   const modDex = getAttributeMod('dex');
@@ -4592,15 +4573,72 @@ function rollDiceExpression(expression) {
   };
 }
 
+// -------------------------------------------------------------
+        // B. VERIFICA SE É ITEM (ARMA/INVENTÁRIO) - CORRIGIDO
+        // -------------------------------------------------------------
+        const itemCard = e.target.closest('.item-card');
+        if (itemCard) {
+            const itemId = itemCard.getAttribute('data-id');
+            const item = state.inventory.find(i => String(i.id) === String(itemId));
 
+            if (item) {
+                let attackRes = null;
+                
+                // Rola ataque se for Arma OU se tiver um atributo de ataque definido
+                const temAtributoDefinido = item.attackAttribute && item.attackAttribute !== 'Nenhum';
+                
+                if (item.type === 'Arma' || temAtributoDefinido) {
+                    const { modAttr, profBonus, itemBonus, attrUsed } = getItemAttackValues(item);
+                    
+                    const d20 = Math.floor(Math.random() * 20) + 1;
+                    const totalAttack = d20 + modAttr + profBonus + itemBonus;
+                    
+                    const isCrit = (d20 === 20); 
+                    const isFumble = (d20 === 1);
+                    const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
+                    
+                    // Monta o detalhe (Tooltip)
+                    const detailParts = [d20Html];
+                    if (modAttr !== 0) detailParts.push(`${modAttr} (${attrUsed.substring(0,3)})`); 
+                    if (profBonus !== 0) detailParts.push(`${profBonus} (Prof)`); 
+                    if (itemBonus !== 0) detailParts.push(`${itemBonus} (Item)`);
+                    
+                    attackRes = { 
+                        total: totalAttack, 
+                        text: totalAttack.toString(), 
+                        detail: detailParts.join(' + '), 
+                        isCrit: isCrit, 
+                        isFumble: isFumble 
+                    };
+                }
 
-/* 3. AUXILIARES */
-function getAttributeMod(attrKey) {
-  const sel = DOM_SELECTORS[attrKey]; if (!sel) return 0;
-  const el = document.querySelector(sel); if (!el) return 0;
-  const val = parseInt(el.dataset.attrValue || el.textContent);
-  return isNaN(val) ? 0 : Math.floor((val - 10) / 2);
-}
+                // Rola Dano
+                let damageRes = null;
+                let damageText = '';
+                const spellDamageDiv = e.target.closest('.spell-damage'); // Tenta pegar do visual primeiro
+                if (spellDamageDiv) {
+                    damageText = Array.from(spellDamageDiv.childNodes)
+                        .filter(n => n.nodeType === Node.TEXT_NODE)
+                        .map(n => n.textContent.trim()).join('');
+                }
+                // Se falhar, pega do dado bruto
+                if (!damageText || damageText === '-' || damageText === '') {
+                    // Lógica Versátil para Dano
+                    if (item.empunhadura === 'Versátil' && item.useTwoHands && item.damage2Hands) {
+                        damageText = item.damage2Hands;
+                    } else {
+                        damageText = item.damage || '0';
+                    }
+                }
+                
+                if (damageText && damageText !== '-' && damageText !== '0') { 
+                    damageRes = rollDiceExpression(damageText); 
+                }
+
+                if (attackRes || damageRes) showCombatResults(item.name, attackRes, damageRes);
+            }
+            return;
+        }
 
 /* ---------------- FUNÇÃO CORRIGIDA: CÁLCULO DE ATAQUE DE ITEM ---------------- */
 function getItemAttackValues(item) {

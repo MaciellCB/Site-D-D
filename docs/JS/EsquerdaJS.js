@@ -1240,7 +1240,7 @@ function atualizarAC() {
     
     if (elTextoTipo) {
         let textoExibicao = "SEM ARMADURA";
-        let classeCss = "leve"; // Define a cor (leve=verde/azul, pesado=vermelho, etc)
+        let classeCss = "leve"; // Define a cor padrão
 
         if (armadura) {
             const prof = (armadura.proficiency || "").toLowerCase();
@@ -1250,7 +1250,7 @@ function atualizarAC() {
                 classeCss = "pesado";
             } else if (prof.includes('media') || prof.includes('média')) {
                 textoExibicao = "MÉDIA";
-                classeCss = "media"; // Garante que seu CSS tenha .media { color: ... }
+                classeCss = "media"; 
             } else {
                 textoExibicao = "LEVE";
                 classeCss = "leve";
@@ -1259,10 +1259,9 @@ function atualizarAC() {
             // Lógica de Prioridade de Texto para Sem Armadura
             if (barbDef) {
                 textoExibicao = "DEF. BÁRBARO";
-                classeCss = "media"; // Usa cor de média para destacar habilidade
+                classeCss = "media"; 
             } else if (monkDef) {
                 if (escudo) {
-                    // Monge perde benefício com escudo
                     textoExibicao = "SEM ARMADURA"; 
                     classeCss = "leve";
                 } else {
@@ -1275,8 +1274,10 @@ function atualizarAC() {
         // Aplica o texto
         elTextoTipo.textContent = textoExibicao;
         
-        // Aplica as classes (mantém a base 'armadura-tag' e troca a segunda)
-        elTextoTipo.className = `armadura-tag ${classeCss}`;
+        // CORREÇÃO: Remove todas as classes antigas e adiciona a nova + a base
+        elTextoTipo.className = ''; // Limpa tudo
+        elTextoTipo.classList.add('armadura-tag'); // Adiciona a base
+        elTextoTipo.classList.add(classeCss); // Adiciona a variação (leve, media, pesado)
     }
 }
 

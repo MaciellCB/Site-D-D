@@ -130,6 +130,17 @@ const DRACONIC_ANCESTRIES = {
     ]
 };
 
+
+/* =============================================================
+   CONSTANTE: DADOS DE PACTO (BRUXO)
+============================================================= */
+const DADIVAS_BRUXO_DB = {
+    "Pacto da Corrente": "Você aprende a magia *encontrar familiar* e pode conjurá-la como um ritual. A magia não conta no número de magias conhecidas.",
+    "Pacto da Lâmina": "Você pode usar sua ação para criar uma arma de pacto em sua mão vazia. Você é proficiente com ela enquanto a empunhar.",
+    "Pacto do Tomo": "Seu patrono lhe dá um grimório chamado Livro das Sombras. Você escolhe 3 truques de qualquer lista de classe.",
+    "Pacto do Talismã": "Seu patrono lhe dá um amuleto que pode ajudar o usuário quando ele falha em um teste de habilidade (d4)."
+};
+
 // Variáveis Globais
 let RACES_DB = [];
 let BACKGROUNDS_DB = [];
@@ -1476,7 +1487,7 @@ function exibirAvisoTemporario(mensagem) {
 
 
 /* =============================================================
-   CORREÇÃO: APLICAR CLASSE NA FICHA (BLINDADA)
+   CORREÇÃO: APLICAR CLASSE NA FICHA (COM SELETOR DE PACTO)
 ============================================================= */
 function aplicarClasseNaFicha(cls, subCls) {
     // 1. Garantia de State Global
@@ -1492,7 +1503,7 @@ function aplicarClasseNaFicha(cls, subCls) {
 
     // 2. Inicialização de Objetos Segura
     if (!state.niveisClasses) state.niveisClasses = {};
-    if (!state.atributos) state.atributos = { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 }; // Previne erro em calculos
+    if (!state.atributos) state.atributos = { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 };
     if (!state.pericias) state.pericias = {};
     if (!state.proficienciasList) state.proficienciasList = [];
     if (!state.inventory) state.inventory = [];
@@ -1512,8 +1523,7 @@ function aplicarClasseNaFicha(cls, subCls) {
     const isMulticlassing = (totalCharacterLevel > 0 && currentLevelInClass === 0);
     const requiredLevel = cls.subclass_level || 3;
 
-    // --- VALIDAÇÕES ---
-    // Impede pegar subclasse antes da hora
+    // --- VALIDAÇÕES DE SUBCLASSE ---
     if (subCls && newLevelInClass < requiredLevel) {
         if(typeof exibirAvisoTemporario === 'function') 
             exibirAvisoTemporario(`Nível insuficiente (${newLevelInClass}) para subclasse ${subCls.name}.<br>Requer nível ${requiredLevel}.`);
@@ -1521,16 +1531,12 @@ function aplicarClasseNaFicha(cls, subCls) {
         return false; 
     }
 
-    // Exige subclasse no nível exato
-    if (newLevelInClass === requiredLevel) {
-        if (!subCls) {
-            if(typeof exibirAvisoTemporario === 'function')
-                exibirAvisoTemporario(`Você atingiu o nível ${requiredLevel} de ${cls.name}!<br>Selecione uma Subclasse.`);
-            else alert("Selecione uma Subclasse!");
-            return false;
-        }
+    if (newLevelInClass === requiredLevel && !subCls) {
+        if(typeof exibirAvisoTemporario === 'function')
+            exibirAvisoTemporario(`Você atingiu o nível ${requiredLevel} de ${cls.name}!<br>Selecione uma Subclasse.`);
+        else alert("Selecione uma Subclasse!");
+        return false;
     }
-    // Verifica se já tem subclasse salva para níveis posteriores
     else if (newLevelInClass > requiredLevel && !subCls) {
         const hasSaved = state.subclasses && state.subclasses[classKey];
         if (!hasSaved) {
@@ -1542,30 +1548,31 @@ function aplicarClasseNaFicha(cls, subCls) {
     }
 
     // --- APLICAÇÃO ---
-    // ... (código anterior da função aplicarClasseNaFicha) ...
-
-    // --- APLICAÇÃO ---
     state.niveisClasses[classKey] = newLevelInClass;
     
-    // NOVO: Adiciona à ordem se for o primeiro nível dessa classe
     if (!state.ordemClasses) state.ordemClasses = [];
     if (!state.ordemClasses.includes(classKey)) {
         state.ordemClasses.push(classKey);
     }
 
     if (isFirstLevelCharacter) {
-    // ... (resto do código igual) ...
         state.hitDie = `d${cls.hit_die}`;
-        // Define vida inicial cheia se for nível 1 total
         if(!state.vidaDadosSalvos) state.vidaDadosSalvos = {};
-        // Se ainda não tem vida salva pra esse nível, seta o máximo
         if(!state.vidaDadosSalvos['v1']) state.vidaDadosSalvos['v1'] = cls.hit_die; 
     }
 
-    // Adiciona Features da Classe Base
+    // --- ADICIONAR FEATURES DA CLASSE (COM FILTRO PARA PACTOS) ---
     if (cls.features) {
         cls.features.forEach(feat => {
             const fLvl = feat.level || 1;
+            
+            // >>> CORREÇÃO AQUI: <<<
+            // Se for Bruxo e a feature for um Pacto, IGNORA a adição automática.
+            // Vamos adicionar manualmente via seletor depois.
+            if (classKey === 'bruxo' && feat.name.toLowerCase().includes('pacto d')) {
+                return; 
+            }
+
             if (fLvl <= newLevelInClass) addFeatureToState(feat, 'Classe', cls.name, '');
         });
     }
@@ -1589,6 +1596,23 @@ function aplicarClasseNaFicha(cls, subCls) {
     // --- MONTAGEM DA FILA DE ESCOLHAS (TASKS) ---
     const tasks = [];
 
+    // >>> NOVA TASK: ESCOLHA DE PACTO (BRUXO NÍVEL 3) <<<
+    if (classKey === 'bruxo' && newLevelInClass === 3) {
+        tasks.push((next) => {
+            openGenericSelector("Escolha a Dádiva do Pacto", 1, Object.keys(DADIVAS_BRUXO_DB), (selected) => {
+                const nomePacto = selected[0];
+                if (nomePacto && DADIVAS_BRUXO_DB[nomePacto]) {
+                    addFeatureToState({
+                        name: nomePacto,
+                        description: DADIVAS_BRUXO_DB[nomePacto],
+                        level: 3
+                    }, 'Classe', 'Bruxo', '');
+                }
+                next();
+            });
+        });
+    }
+
     // CASO 1: PERSONAGEM NÍVEL 1 (CRIAÇÃO)
     if (isFirstLevelCharacter) {
         // Salvaguardas
@@ -1609,7 +1633,6 @@ function aplicarClasseNaFicha(cls, subCls) {
                 lista = ALL_SKILLS_LIST;
                 titulo = `Perícias de ${cls.name} (Escolha Livre)`;
             }
-            // Z-INDEX ALTO: Passamos style inline ou classe para garantir que abra por cima
             tasks.push((next) => openSkillSelector(cls.skills_count, titulo, lista, next));
         }
 
@@ -1621,36 +1644,29 @@ function aplicarClasseNaFicha(cls, subCls) {
         // Proficiências Fixas
         addProficiencias(cls.proficiencies);
 
-        // Escolhas de Ferramentas (Instrumentos, Artesão, etc)
-        // Escolhas de Ferramentas (Instrumentos, Artesão, etc)
+        // Escolhas de Ferramentas
         if (cls.proficiencies && cls.proficiencies.tools) {
             cls.proficiencies.tools.forEach(toolStr => {
                 const tLower = toolStr.toLowerCase();
-
-                // 1. Bardo: 3 Instrumentos
                 if (tLower.includes("três instrumentos") || tLower.includes("tres instrumentos")) {
                     tasks.push((next) => openGenericSelector("Escolha 3 Instrumentos", 3, LISTA_INSTRUMENTOS, (sel) => {
                         sel.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
                         next();
                     }));
                 }
-                // 2. Monge: 1 Artesão OU 1 Instrumento (CORREÇÃO AQUI)
                 else if ((tLower.includes("artesão") || tLower.includes("artesao")) && tLower.includes("instrumento")) {
-                    // Cria uma lista combinada
                     const listaMista = [...LISTA_FERRAMENTAS_ARTESAO, ...LISTA_INSTRUMENTOS].sort();
                     tasks.push((next) => openGenericSelector("Escolha: Ferramenta ou Instrumento", 1, listaMista, (sel) => {
                         sel.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
                         next();
                     }));
                 }
-                // 3. Ferramenta de Artesão Genérica
                 else if (tLower.includes("ferramenta de artesão") && (tLower.includes("uma") || tLower.includes("escolha") || tLower.includes("qualquer"))) {
                     tasks.push((next) => openGenericSelector("Escolha 1 Ferramenta", 1, LISTA_FERRAMENTAS_ARTESAO, (sel) => {
                         sel.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
                         next();
                     }));
                 }
-                // 4. Instrumento Musical Genérico
                 else if (tLower.includes("instrumento musical") && (tLower.includes("um") || tLower.includes("escolha"))) {
                     tasks.push((next) => openGenericSelector("Escolha 1 Instrumento", 1, LISTA_INSTRUMENTOS, (sel) => {
                         sel.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
@@ -1660,10 +1676,10 @@ function aplicarClasseNaFicha(cls, subCls) {
             });
         }
     } 
-    // CASO 2: MULTICLASSE (GANHA ALGUMAS COISAS)
+    // CASO 2: MULTICLASSE
     else if (isMulticlassing) {
         let profsMC = { ...cls.proficiencies };
-        if (profsMC.armor) profsMC.armor = profsMC.armor.filter(a => !a.toLowerCase().includes('pesada')); // Regra geral MC
+        if (profsMC.armor) profsMC.armor = profsMC.armor.filter(a => !a.toLowerCase().includes('pesada')); 
         addProficiencias(profsMC);
 
         if (classKey === 'bardo') {
@@ -1681,21 +1697,17 @@ function aplicarClasseNaFicha(cls, subCls) {
         }
     }
 
-    // Salva o estado antes de iniciar as tarefas visuais
     if (typeof saveStateToServer === 'function') saveStateToServer();
-    
-    // Atualiza interface do header
     atualizarTextoClassesHeader();
     window.dispatchEvent(new CustomEvent('sheet-updated'));
 
-    // Executa a fila de prompts (Se houver)
     if (tasks.length > 0) {
         setTimeout(() => {
             executarFila(tasks);
-        }, 100); // Pequeno delay para garantir que o modal anterior fechou ou o DOM atualizou
+        }, 100); 
     }
 
-    return true; // Indica sucesso para fechar o modal principal
+    return true; 
 }
 
 
