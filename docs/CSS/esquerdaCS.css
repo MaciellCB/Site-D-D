@@ -1669,87 +1669,74 @@ input[type=number] {
 
 
 /* =============================================================
-   AJUSTE DE POSIÇÃO DA FÓRMULA DA CA
+   POSIÇÃO DA FÓRMULA DA CA (LAYOUT VERTICAL CORRIGIDO)
 ============================================================= */
 
-/* Container da fórmula */
+/* 1. Container da linha inteira (10 + 2 + 0...) */
 .inline-formula {
   display: flex;
-  align-items: flex-end;
-  gap: 10px;
-  flex-wrap: nowrap;
-  color: #e6e6e6;
-  font-weight: 800;
-  font-size: 14px;
-  
-  /* Garante que o container tenha altura para o conteúdo */
-  min-height: 50px; 
-  padding-top: 10px; /* Empurra um pouco para baixo em relação ao título */
+  align-items: flex-start; /* Alinha todos os blocos pelo topo */
+  justify-content: center; /* Centraliza na caixa */
+  gap: 8px; /* Espaço entre os grupos */
+  margin-top: 15px; /* Espaço do título "CLASSE DE ARMADURA" */
+  width: 100%;
 }
 
-/* Removemos o translateY negativo que estava jogando os números para cima */
-.inline-formula > :nth-child(-n+5) {
-  display: inline-block;
-  transform: translateY(0); /* Antes estava -30px */
-  transition: transform 120ms ease;
-  line-height: 1;
-}
-
-/* Ajuste específico para o texto (sinais de +) */
-.formula-text {
-  min-width: 18px;
-  text-align: center;
-  transition: all 0.3s ease;
-  display: inline-block;
-  vertical-align: middle;
-  transform: translateY(-15px); /* Ajuste leve para alinhar o + com os números */
-}
-
-/* Modo Armadura Pesada (quando some a destreza) */
-.formula-text.heavy-armor-mode {
-  font-weight: 900;
-  transform: translateY(-15px) scale(1.2);
-}
-
-/* Os pares de Número + Legenda (ex: 18 ARMADURA) */
+/* 2. O Bloco Individual (Número + Traço + Nome) */
 .zero-pair {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* GARANTE QUE FIQUE UM EM CIMA DO OUTRO */
   align-items: center;
-  gap: 2px; /* Espaço entre o número e o texto pequeno */
-  min-width: 48px;
+  justify-content: flex-start;
+  min-width: 40px; /* Largura mínima para o traço ficar bonito */
 }
 
-/* O número grande (18, 0, etc) */
+/* 3. O Número Grande (Valor) */
 .zero-num {
+  font-size: 26px; /* Tamanho grande igual da imagem */
   font-weight: 900;
-  font-size: 20px; /* Aumentei um pouco para legibilidade */
   color: #fff;
+  line-height: 1;
+  text-align: center;
   position: relative;
-  padding-bottom: 4px;
-  display: inline-block;
+  width: 100%;
 }
 
-/* A barrinha embaixo do número */
+/* 4. O Traço (Sublinhado) */
 .zero-num::after {
   content: "";
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 0;
+  display: block;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, #e6e6e6, #cfcfcf);
+  background: #555; /* Cor do traço */
+  margin-top: 2px;  /* Espaço entre número e traço */
+  margin-bottom: 4px; /* Espaço entre traço e nome */
   border-radius: 2px;
-  opacity: 0.6;
 }
 
-/* O texto pequeno (ARMADURA, EXTRA, DES) */
+/* 5. O Nome Pequeno (BASE, DES, SAB) */
 .zero-label {
   font-size: 10px;
-  color: #bfbfbf;
+  color: #aaa;
   font-weight: 700;
-  text-align: center;
   text-transform: uppercase;
-  margin-top: 2px;
+  line-height: 1;
+  text-align: center;
+}
+
+/* 6. O Sinal de Mais (+) */
+.formula-plus {
+  font-size: 20px;
+  font-weight: 900;
+  color: #888;
+  margin-top: 4px; /* Ajuste fino para alinhar com o centro dos números */
+}
+
+/* --- LIMPEZA DE CÓDIGOS ANTIGOS QUE CAUSAVAM BUG --- */
+/* Isso garante que configurações antigas não quebrem o layout novo */
+.inline-formula > :nth-child(-n+5), 
+.formula-text {
+  transform: none !important;
+  display: flex !important;
+  margin: 0 !important;
 }
