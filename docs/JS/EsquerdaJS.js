@@ -1160,22 +1160,29 @@ function atualizarIniciativaTotal() {
 }
 
 /* =============================================================
-   ATUALIZAÇÃO DE CA (CORRIGIDA: NÚMERO + TEXTO DO TIPO)
+   ATUALIZAÇÃO DE CA (BLINDADA CONTRA ERROS)
 ============================================================= */
 function atualizarAC() {
-    // 1. Modificadores Base
+    // 1. Segurança: Se o state ou atributos não existirem, para tudo.
+    if (!state || !state.atributos) return;
+
+    // 2. Modificadores Base (com verificação de segurança)
     const getMod = (n) => Math.floor((parseInt(state.atributos?.[n] || 10) - 10) / 2);
     const modDex = getMod('n2');
     const modCon = getMod('n1');
     const modSab = getMod('n3');
 
-    // 2. Itens Equipados (Busca no inventário)
-    const armadura = state.inventory.find(i => i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'armadura');
-    const escudo = state.inventory.find(i => i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'escudo');
+    // 3. Garante que as listas existam antes de buscar
+    const inventario = state.inventory || [];
+    const habilidades = state.abilities || [];
 
-    // 3. Habilidades de Classe (Defesa sem Armadura)
-    const barbDef = state.abilities.some(a => a.active && a.title.toLowerCase().includes("bárbaro") && a.title.toLowerCase().includes("defesa"));
-    const monkDef = state.abilities.some(a => a.active && a.title.toLowerCase().includes("monge") && a.title.toLowerCase().includes("defesa"));
+    // 4. Itens Equipados
+    const armadura = inventario.find(i => i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'armadura');
+    const escudo = inventario.find(i => i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'escudo');
+
+    // 5. Habilidades de Classe (Defesa sem Armadura)
+    const barbDef = habilidades.some(a => a.active && a.title.toLowerCase().includes("bárbaro") && a.title.toLowerCase().includes("defesa"));
+    const monkDef = habilidades.some(a => a.active && a.title.toLowerCase().includes("monge") && a.title.toLowerCase().includes("defesa"));
 
     let ac = 10;
     let bonusTotal = 0;
@@ -1183,17 +1190,16 @@ function atualizarAC() {
     // --- CÁLCULO NÚMERICO ---
     if (armadura) {
         let baseArmor = parseInt(armadura.defense) || 10;
-        // Correção de segurança caso o usuário tenha criado item errado
-        if (baseArmor < 5) baseArmor = 10 + baseArmor; 
+        if (baseArmor < 5) baseArmor = 10 + baseArmor; // Correção de segurança
 
         const prof = (armadura.proficiency || '').toLowerCase();
         
         if (prof.includes('pesada')) {
-            ac = baseArmor; // Pesada não usa DEX
+            ac = baseArmor; 
         } else if (prof.includes('media') || prof.includes('média')) {
-            ac = baseArmor + Math.min(modDex, 2); // Média limita DEX em +2
+            ac = baseArmor + Math.min(modDex, 2); 
         } else {
-            ac = baseArmor + modDex; // Leve usa DEX total
+            ac = baseArmor + modDex; 
         }
     } else {
         // Sem armadura
@@ -1205,18 +1211,18 @@ function atualizarAC() {
     // --- BÔNUS ---
     if (escudo) bonusTotal += (parseInt(escudo.defense) || 2);
 
-    // Itens Mágicos (Anéis, Capas)
-    state.inventory.forEach(i => {
+    // Itens Mágicos
+    inventario.forEach(i => {
         if (i.equip && i.type === 'Geral' && i.defenseBonus) {
             bonusTotal += parseInt(i.defenseBonus) || 0;
         }
     });
 
-    // Bônus Manual (Input da Esquerda)
+    // Bônus Manual
     bonusTotal += parseInt(state.acOutros) || 0;
 
-    // Bônus de Habilidades Ativas (ex: Estilo de Lutador: Defesa)
-    state.abilities.forEach(hab => {
+    // Bônus de Habilidades Ativas
+    habilidades.forEach(hab => {
         if (hab.active && hab.defenseBonus) {
             const val = parseInt(hab.defenseBonus.replace(/[^0-9-]/g, '')) || 0;
             bonusTotal += val;
@@ -1230,17 +1236,17 @@ function atualizarAC() {
 
     // Atualiza os numerozinhos da fórmula visual
     const zeroNums = document.querySelectorAll('.zero-pair .zero-num');
-    if (zeroNums[1]) zeroNums[1].textContent = bonusTotal;
+    if (zeroNums && zeroNums[1]) zeroNums[1].textContent = bonusTotal;
 
 
     // =================================================================
-    // --- NOVO: ATUALIZAÇÃO DO TEXTO E COR DO TIPO DE ARMADURA ---
+    // --- ATUALIZAÇÃO DO TEXTO E COR DO TIPO DE ARMADURA ---
     // =================================================================
     const elTextoTipo = document.querySelector('.armadura-tag');
     
     if (elTextoTipo) {
         let textoExibicao = "SEM ARMADURA";
-        let classeCss = "leve"; // Define a cor padrão
+        let classeCss = "leve"; 
 
         if (armadura) {
             const prof = (armadura.proficiency || "").toLowerCase();
@@ -1256,7 +1262,6 @@ function atualizarAC() {
                 classeCss = "leve";
             }
         } else {
-            // Lógica de Prioridade de Texto para Sem Armadura
             if (barbDef) {
                 textoExibicao = "DEF. BÁRBARO";
                 classeCss = "media"; 
@@ -1271,13 +1276,11 @@ function atualizarAC() {
             }
         }
 
-        // Aplica o texto
         elTextoTipo.textContent = textoExibicao;
         
-        // CORREÇÃO: Remove todas as classes antigas e adiciona a nova + a base
-        elTextoTipo.className = ''; // Limpa tudo
-        elTextoTipo.classList.add('armadura-tag'); // Adiciona a base
-        elTextoTipo.classList.add(classeCss); // Adiciona a variação (leve, media, pesado)
+        // Remove classes antigas e adiciona as novas
+        elTextoTipo.className = 'armadura-tag'; 
+        elTextoTipo.classList.add(classeCss); 
     }
 }
 
