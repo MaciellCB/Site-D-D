@@ -4573,72 +4573,109 @@ function rollDiceExpression(expression) {
   };
 }
 
-// -------------------------------------------------------------
-        // B. VERIFICA SE É ITEM (ARMA/INVENTÁRIO) - CORRIGIDO
-        // -------------------------------------------------------------
-        const itemCard = e.target.closest('.item-card');
-        if (itemCard) {
-            const itemId = itemCard.getAttribute('data-id');
-            const item = state.inventory.find(i => String(i.id) === String(itemId));
 
-            if (item) {
-                let attackRes = null;
-                
-                // Rola ataque se for Arma OU se tiver um atributo de ataque definido
-                const temAtributoDefinido = item.attackAttribute && item.attackAttribute !== 'Nenhum';
-                
-                if (item.type === 'Arma' || temAtributoDefinido) {
-                    const { modAttr, profBonus, itemBonus, attrUsed } = getItemAttackValues(item);
-                    
-                    const d20 = Math.floor(Math.random() * 20) + 1;
-                    const totalAttack = d20 + modAttr + profBonus + itemBonus;
-                    
-                    const isCrit = (d20 === 20); 
-                    const isFumble = (d20 === 1);
-                    const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
-                    
-                    // Monta o detalhe (Tooltip)
-                    const detailParts = [d20Html];
-                    if (modAttr !== 0) detailParts.push(`${modAttr} (${attrUsed.substring(0,3)})`); 
-                    if (profBonus !== 0) detailParts.push(`${profBonus} (Prof)`); 
-                    if (itemBonus !== 0) detailParts.push(`${itemBonus} (Item)`);
-                    
-                    attackRes = { 
-                        total: totalAttack, 
-                        text: totalAttack.toString(), 
-                        detail: detailParts.join(' + '), 
-                        isCrit: isCrit, 
-                        isFumble: isFumble 
-                    };
-                }
 
-                // Rola Dano
-                let damageRes = null;
-                let damageText = '';
-                const spellDamageDiv = e.target.closest('.spell-damage'); // Tenta pegar do visual primeiro
-                if (spellDamageDiv) {
-                    damageText = Array.from(spellDamageDiv.childNodes)
-                        .filter(n => n.nodeType === Node.TEXT_NODE)
-                        .map(n => n.textContent.trim()).join('');
-                }
-                // Se falhar, pega do dado bruto
-                if (!damageText || damageText === '-' || damageText === '') {
-                    // Lógica Versátil para Dano
-                    if (item.empunhadura === 'Versátil' && item.useTwoHands && item.damage2Hands) {
-                        damageText = item.damage2Hands;
-                    } else {
-                        damageText = item.damage || '0';
-                    }
-                }
-                
-                if (damageText && damageText !== '-' && damageText !== '0') { 
-                    damageRes = rollDiceExpression(damageText); 
-                }
+/* =============================================================
+   3. FUNÇÕES AUXILIARES DE CÁLCULO E MODIFICADORES
+   (Cole isso LOGO APÓS a função rollDiceExpression e ANTES do click listener)
+============================================================= */
 
-                if (attackRes || damageRes) showCombatResults(item.name, attackRes, damageRes);
-            }
-            return;
+// Função segura para pegar modificador do Hexagrama (Esquerda)
+function getAttributeMod(attrKey) {
+    if (!attrKey) return 0;
+    
+    // Mapeia nomes completos para as classes do DOM, se necessário
+    const mapKeys = {
+        'força': 'for', 'destreza': 'dex', 'constituição': 'con', 
+        'inteligência': 'int', 'sabedoria': 'sab', 'carisma': 'car',
+        'for': 'for', 'dex': 'dex', 'con': 'con', 'int': 'int', 'sab': 'sab', 'car': 'car'
+    };
+    
+    const cleanKey = attrKey.toLowerCase().trim();
+    const finalKey = mapKeys[cleanKey] || cleanKey;
+    
+    // Tenta pegar o seletor. Se DOM_SELECTORS não existir, usa fallback manual
+    const selector = (typeof DOM_SELECTORS !== 'undefined' && DOM_SELECTORS[finalKey]) 
+        ? DOM_SELECTORS[finalKey] 
+        : `.hexagrama .n${getFieldNum(finalKey)}`;
+
+    const el = document.querySelector(selector);
+    
+    if (el) {
+        let rawVal = el.dataset.attrValue;
+        if (rawVal === undefined || rawVal === null || rawVal === "") {
+            rawVal = el.textContent;
         }
+        const score = parseInt(rawVal);
+        if (!isNaN(score)) {
+            return Math.floor((score - 10) / 2);
+        }
+    }
+    return 0;
+}
+
+// Helper para descobrir o número da classe n1..n6 caso o mapa falhe
+function getFieldNum(k) {
+    if(k.includes('con')) return 1;
+    if(k.includes('dex')) return 2;
+    if(k.includes('sab')) return 3;
+    if(k.includes('car')) return 4;
+    if(k.includes('int')) return 5;
+    return 6; // for
+}
+
+// Calcula ataque do Item (Arma/Geral)
+function getItemAttackValues(item) {
+    let modAttr = 0;
+    let attrName = item.attackAttribute ? item.attackAttribute.trim() : '';
+
+    // 1. Se for "Nenhum", zera o mod
+    if (attrName === 'Nenhum') {
+        modAttr = 0;
+    } 
+    // 2. Se estiver vazio (item antigo), tenta deduzir
+    else if (!attrName || attrName === '') {
+        if (item.type === 'Arma') {
+            const tipo = (item.tipoArma || '').toLowerCase();
+            // Armas a distância usam DEX, o resto usa FOR
+            const key = (tipo.includes('distancia') || tipo.includes('distância')) ? 'dex' : 'for';
+            modAttr = getAttributeMod(key);
+        }
+    } 
+    // 3. Caso normal: tem atributo definido (ex: "Força", "Inteligência")
+    else {
+        modAttr = getAttributeMod(attrName);
+    }
+
+    // Lógica de Proficiência
+    let profBonus = 0;
+    // Se o item diz que tem proficiência (e não é "Nenhuma"), pega o valor da ficha
+    if (item.proficiency && item.proficiency !== 'Nenhuma' && item.proficiency !== 'Não') {
+        const profEl = document.getElementById('proficienciaValor');
+        if (profEl) profBonus = parseInt(profEl.textContent.replace('+','')) || 2;
+    }
+
+    // Bônus Mágico do Item
+    const itemBonus = parseInt(item.attackBonus) || 0;
+
+    return { modAttr, profBonus, itemBonus };
+}
+
+// Calcula ataque de Magia (Spell)
+function getSpellAttackValues() {
+    let prof = 2; 
+    const pe = document.getElementById('proficienciaValor'); 
+    if (pe) prof = parseInt(pe.textContent.replace('+','')) || 2;
+    
+    // Pega o atributo configurado na DT (ex: 'int', 'car')
+    const key = state.spellDCConfig.selectedAttr; 
+    if (!key || key === 'none') return null;
+    
+    let mod = getAttributeMod(key);
+    const extra = parseInt(state.spellDCConfig.extraMod) || 0;
+    
+    return { prof, mod, extra };
+}
 
 /* ---------------- FUNÇÃO CORRIGIDA: CÁLCULO DE ATAQUE DE ITEM ---------------- */
 function getItemAttackValues(item) {
