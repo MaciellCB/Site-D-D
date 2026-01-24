@@ -1731,7 +1731,7 @@
     "class": "Bruxo",
     "subclass": "Hexblade",
     "name": "Feitiços de Hexblade",
-    "description": "<p>Magias expandidas do patrono:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 1º:</strong> Escudo (Shield), Golpe Furioso</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 2º:</strong> Desfoque (Blur), Golpe de Marca</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 3º:</strong> Piscar (Blink), Arma Elemental</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 4º:</strong> Assassino Fantasmagórico, Golpe Estonteante</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 5º:</strong> Golpe Banidor, Cone de Frio</li></ul>"
+    "description": "<p>Magias expandidas do patrono:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 1º:</strong> Escudo (Shield), Golpe Constritor</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 2º:</strong> Desfoque (Blur), Golpe de Marca</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 3º:</strong> Piscar (Blink), Arma Elemental</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 4º:</strong> Assassino Fantasmagórico, Golpe Estonteante</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 5º:</strong> Golpe Banidor, Cone de Frio</li></ul>"
   },
   {
     "id": "bru_hex_1_maldicao",
