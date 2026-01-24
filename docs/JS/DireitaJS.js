@@ -4677,53 +4677,6 @@ function getSpellAttackValues() {
     return { prof, mod, extra };
 }
 
-/* ---------------- FUNÇÃO CORRIGIDA: CÁLCULO DE ATAQUE DE ITEM ---------------- */
-function getItemAttackValues(item) {
-  let modAttr = 0;
-  let attrName = item.attackAttribute;
-
-  // CORREÇÃO: Se for 'Nenhum', o modificador é 0 e não tenta adivinhar.
-  if (attrName === 'Nenhum') {
-      modAttr = 0;
-  }
-  else if (!attrName || attrName === '') {
-    // Se estiver vazio, tenta deduzir (apenas para Armas antigas/sem config)
-    const tipo = (item.tipoArma || '').toLowerCase();
-    
-    // Se for Arma, assume Força/Destreza padrão
-    if (item.type === 'Arma') {
-        attrName = (tipo.includes('distancia') || tipo.includes('distância')) ? 'Destreza' : 'Força';
-        const key = { 'Força': 'for', 'Destreza': 'dex' }[attrName];
-        if (key) modAttr = getAttributeMod(key);
-    } else {
-        // Se for Item Geral sem atributo, é 0.
-        modAttr = 0;
-    }
-  } else {
-      // Caso normal (tem atributo definido, ex: Inteligência, Força)
-      const attrMap = { 'Força': 'for', 'Destreza': 'dex', 'Constituição': 'con', 'Inteligência': 'int', 'Sabedoria': 'sab', 'Carisma': 'car' };
-      const key = attrMap[attrName];
-      if (key) modAttr = getAttributeMod(key);
-  }
-
-  let profBonus = 0;
-  // Só aplica proficiência se tiver algo definido diferente de 'Nenhuma'
-  if (item.proficiency && item.proficiency !== 'Nenhuma') {
-    const profEl = document.getElementById('proficienciaValor');
-    if (profEl) profBonus = parseInt(profEl.textContent) || 2;
-  }
-  
-  const itemBonus = parseInt(item.attackBonus) || 0;
-  return { modAttr, profBonus, itemBonus };
-}
-
-function getSpellAttackValues() {
-  let prof = 2; const pe = document.getElementById('proficienciaValor'); if (pe) prof = parseInt(pe.textContent) || 2;
-  const key = state.spellDCConfig.selectedAttr; if (!key || key === 'none') return null;
-  let mod = getAttributeMod(key);
-  const extra = parseInt(state.spellDCConfig.extraMod) || 0;
-  return { prof, mod, extra };
-}
 
 /* 4. ESCUTADOR GLOBAL DE CLIQUES (COMPLETO E ATUALIZADO) */
 document.addEventListener('click', function(e) {
