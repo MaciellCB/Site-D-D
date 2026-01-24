@@ -1666,3 +1666,90 @@ input[type=number] {
     background: rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
+
+
+/* =============================================================
+   AJUSTE DE POSIÇÃO DA FÓRMULA DA CA
+============================================================= */
+
+/* Container da fórmula */
+.inline-formula {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  flex-wrap: nowrap;
+  color: #e6e6e6;
+  font-weight: 800;
+  font-size: 14px;
+  
+  /* Garante que o container tenha altura para o conteúdo */
+  min-height: 50px; 
+  padding-top: 10px; /* Empurra um pouco para baixo em relação ao título */
+}
+
+/* Removemos o translateY negativo que estava jogando os números para cima */
+.inline-formula > :nth-child(-n+5) {
+  display: inline-block;
+  transform: translateY(0); /* Antes estava -30px */
+  transition: transform 120ms ease;
+  line-height: 1;
+}
+
+/* Ajuste específico para o texto (sinais de +) */
+.formula-text {
+  min-width: 18px;
+  text-align: center;
+  transition: all 0.3s ease;
+  display: inline-block;
+  vertical-align: middle;
+  transform: translateY(-15px); /* Ajuste leve para alinhar o + com os números */
+}
+
+/* Modo Armadura Pesada (quando some a destreza) */
+.formula-text.heavy-armor-mode {
+  font-weight: 900;
+  transform: translateY(-15px) scale(1.2);
+}
+
+/* Os pares de Número + Legenda (ex: 18 ARMADURA) */
+.zero-pair {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px; /* Espaço entre o número e o texto pequeno */
+  min-width: 48px;
+}
+
+/* O número grande (18, 0, etc) */
+.zero-num {
+  font-weight: 900;
+  font-size: 20px; /* Aumentei um pouco para legibilidade */
+  color: #fff;
+  position: relative;
+  padding-bottom: 4px;
+  display: inline-block;
+}
+
+/* A barrinha embaixo do número */
+.zero-num::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #e6e6e6, #cfcfcf);
+  border-radius: 2px;
+  opacity: 0.6;
+}
+
+/* O texto pequeno (ARMADURA, EXTRA, DES) */
+.zero-label {
+  font-size: 10px;
+  color: #bfbfbf;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
