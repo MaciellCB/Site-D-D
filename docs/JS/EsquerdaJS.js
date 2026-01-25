@@ -1160,178 +1160,72 @@ function atualizarIniciativaTotal() {
 }
 
 /* =============================================================
-   ATUALIZAÇÃO DE CA (COM EXTRA EDITÁVEL E BÔNUS AUTOMÁTICOS)
+   ATUALIZAÇÃO DE CA (COM ALINHAMENTO CORRIGIDO)
 ============================================================= */
 function atualizarAC() {
-    // 1. Segurança
+    // 1. Segurança e Configuração Inicial
     if (!state || !state.atributos) return;
-
-    // 2. Modificadores Base
     const getMod = (n) => Math.floor((parseInt(state.atributos?.[n] || 10) - 10) / 2);
-    const modDex = getMod('n2');
-    const modCon = getMod('n1');
-    const modSab = getMod('n3');
-
-    const inventario = state.inventory || [];
-    const habilidades = state.abilities || [];
-
-    // 3. Identifica Equipamento e Habilidades
+    const modDex = getMod('n2'); const modCon = getMod('n1'); const modSab = getMod('n3');
+    const inventario = state.inventory || []; const habilidades = state.abilities || [];
     const armadura = inventario.find(i => i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'armadura');
     const escudo = inventario.find(i => i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'escudo');
     const barbDef = habilidades.some(a => a.active && a.title.toLowerCase().includes("bárbaro") && a.title.toLowerCase().includes("defesa"));
     const monkDef = habilidades.some(a => a.active && a.title.toLowerCase().includes("monge") && a.title.toLowerCase().includes("defesa"));
 
-    // Variáveis de Cálculo
-    let valorBase = 10;
-    let valorAttr1 = modDex; 
-    let labelAttr1 = "DES";
-    let valorAttr2 = 0;      
-    let labelAttr2 = "";
-    let labelBase = "BASE";
-    
-    // Variáveis de Estado Visual
-    let tipoArmaduraVisual = "SEM ARMADURA";
-    let classeCss = "nenhuma"; 
+    let valorBase = 10, valorAttr1 = modDex, labelAttr1 = "DES", valorAttr2 = 0, labelAttr2 = "", labelBase = "BASE";
+    let tipoArmaduraVisual = "SEM ARMADURA", classeCss = "nenhuma";
 
-    // --- LÓGICA PRINCIPAL (BASE) ---
+    // --- LÓGICA PRINCIPAL ---
     if (armadura) {
-        let baseArmor = parseInt(armadura.defense) || 10;
-        if (baseArmor < 5) baseArmor = 10 + baseArmor; 
-        
-        const prof = (armadura.proficiency || '').toLowerCase();
-        
-        valorBase = baseArmor;
-        labelBase = "ARMADURA";
+        valorBase = (parseInt(armadura.defense) || 10); if (valorBase < 5) valorBase = 10 + valorBase;
+        labelBase = "ARMADURA"; const prof = (armadura.proficiency || '').toLowerCase();
+        if (prof.includes('pesada')) { valorAttr1 = null; tipoArmaduraVisual = "PESADA"; classeCss = "pesado"; }
+        else if (prof.includes('media') || prof.includes('média')) { valorAttr1 = Math.min(modDex, 2); tipoArmaduraVisual = "MÉDIA"; classeCss = "media"; }
+        else { tipoArmaduraVisual = "LEVE"; classeCss = "leve"; }
+    } else if (barbDef) { valorAttr2 = modCon; labelAttr2 = "CON"; tipoArmaduraVisual = "DEF. BÁRBARO"; classeCss = "barbaro";
+    } else if (monkDef && !escudo) { valorAttr2 = modSab; labelAttr2 = "SAB"; tipoArmaduraVisual = "DEF. MONGE"; classeCss = "monge"; }
 
-        if (prof.includes('pesada')) {
-            valorAttr1 = null; 
-            tipoArmaduraVisual = "PESADA";
-            classeCss = "pesado";
-        } 
-        else if (prof.includes('media') || prof.includes('média')) {
-            valorAttr1 = Math.min(modDex, 2);
-            tipoArmaduraVisual = "MÉDIA";
-            classeCss = "media";
-        } 
-        else {
-            tipoArmaduraVisual = "LEVE";
-            classeCss = "leve";
-        }
-    } 
-    else {
-        // Sem Armadura
-        if (barbDef) {
-            valorAttr2 = modCon;
-            labelAttr2 = "CON";
-            tipoArmaduraVisual = "DEF. BÁRBARO";
-            classeCss = "barbaro";
-        } 
-        else if (monkDef) {
-            if (escudo) {
-                tipoArmaduraVisual = "SEM ARMADURA";
-                classeCss = "nenhuma";
-            } else {
-                valorAttr2 = modSab;
-                labelAttr2 = "SAB";
-                tipoArmaduraVisual = "DEF. MONGE";
-                classeCss = "monge";
-            }
-        } 
-        else {
-            tipoArmaduraVisual = "SEM ARMADURA";
-            classeCss = "nenhuma";
-        }
-    }
-
-    // --- CÁLCULO DE BÔNUS SEPARADOS ---
-    
-    // 1. Automáticos (Escudo, Itens Mágicos, Habilidades Passivas)
-    let bonusAuto = 0;
-    if (escudo) bonusAuto += (parseInt(escudo.defense) || 2);
-    
-    inventario.forEach(i => {
-        if (i.equip && i.type === 'Geral' && i.defenseBonus) {
-            bonusAuto += parseInt(i.defenseBonus) || 0;
-        }
-    });
-    
-    habilidades.forEach(hab => {
-        if (hab.active && hab.defenseBonus) {
-            bonusAuto += (parseInt(hab.defenseBonus.replace(/[^0-9-]/g, '')) || 0);
-        }
-    });
-
-    // 2. Manual (O campo "Extra" editável)
-    // Garante que existe no state
+    // --- BÔNUS ---
+    let bonusAuto = (escudo ? (parseInt(escudo.defense) || 2) : 0);
+    inventario.forEach(i => { if (i.equip && i.type === 'Geral' && i.defenseBonus) bonusAuto += parseInt(i.defenseBonus) || 0; });
+    habilidades.forEach(h => { if (h.active && h.defenseBonus) bonusAuto += (parseInt(h.defenseBonus.replace(/[^0-9-]/g, '')) || 0); });
     if (state.acOutros === undefined) state.acOutros = 0;
     let bonusManual = parseInt(state.acOutros) || 0;
 
-    // --- CÁLCULO FINAL ---
+    // --- CÁLCULO FINAL E ATUALIZAÇÃO DE VALORES ---
     const acFinal = valorBase + (valorAttr1 !== null ? valorAttr1 : 0) + valorAttr2 + bonusAuto + bonusManual;
-
-    // --- ATUALIZAÇÃO DO DOM ---
-
-    // 1. Atualiza Número Grande
-    const elValor = document.getElementById('armaduraValor');
-    if (elValor) elValor.textContent = acFinal;
-
-    // 2. Atualiza Tag de Tipo
+    const elValor = document.getElementById('armaduraValor'); if (elValor) elValor.textContent = acFinal;
     const elTextoTipo = document.querySelector('.armadura-tag');
-    if (elTextoTipo) {
-        elTextoTipo.textContent = tipoArmaduraVisual;
-        elTextoTipo.className = 'armadura-tag';
-        elTextoTipo.classList.add(classeCss);
-    }
+    if (elTextoTipo) { elTextoTipo.textContent = tipoArmaduraVisual; elTextoTipo.className = 'armadura-tag ' + classeCss; }
 
-    // 3. MONTAGEM DA FÓRMULA VISUAL
+    // --- MONTAGEM DA FÓRMULA (COM NOVA ESTRUTURA DE DIVISOR) ---
     const formulaContainer = document.querySelector('.inline-formula');
-    
     if (formulaContainer) {
         // Função para bloco de texto estático
         const createBlock = (val, lbl) => `
             <div class="zero-pair">
                 <span class="zero-num">${val}</span>
+                <div class="zero-divider"></div>
                 <span class="zero-label">${lbl}</span>
-            </div>
-        `;
+            </div>`;
         
         // Função para bloco de INPUT (Extra)
         const createInputBlock = (val, lbl) => `
             <div class="zero-pair">
                 <input type="number" class="zero-input" value="${val}" onchange="window.updateACManual(this.value)" onclick="this.select()">
+                <div class="zero-divider"></div>
                 <span class="zero-label">${lbl}</span>
-            </div>
-        `;
+            </div>`;
 
         const plusSign = `<span class="formula-plus">+</span>`;
-        let htmlFormula = ``;
+        let html = createBlock(valorBase, labelBase);
+        if (valorAttr1 !== null) html += plusSign + createBlock(valorAttr1 >= 0 ? valorAttr1 : valorAttr1, labelAttr1);
+        if (valorAttr2 !== 0) html += plusSign + createBlock(valorAttr2, labelAttr2);
+        if (bonusAuto !== 0) html += plusSign + createBlock(bonusAuto, "ITENS");
+        html += plusSign + createInputBlock(bonusManual, "EXTRA"); // Extra sempre visível
 
-        // Bloco 1: Base
-        htmlFormula += createBlock(valorBase, labelBase);
-
-        // Bloco 2: Atributo 1 (DEX)
-        if (valorAttr1 !== null) {
-            htmlFormula += plusSign;
-            htmlFormula += createBlock(valorAttr1 >= 0 ? valorAttr1 : valorAttr1, labelAttr1);
-        }
-
-        // Bloco 3: Atributo 2 (CON/SAB)
-        if (valorAttr2 !== 0) {
-            htmlFormula += plusSign;
-            htmlFormula += createBlock(valorAttr2, labelAttr2);
-        }
-
-        // Bloco 4: Bônus Automáticos (Escudo/Itens) - Só mostra se existir
-        if (bonusAuto !== 0) {
-            htmlFormula += plusSign;
-            htmlFormula += createBlock(bonusAuto, "ITENS");
-        }
-
-        // Bloco 5: Bônus Manual (EXTRA) - SEMPRE VISÍVEL E EDITÁVEL
-        htmlFormula += plusSign;
-        htmlFormula += createInputBlock(bonusManual, "EXTRA");
-
-        formulaContainer.innerHTML = htmlFormula;
+        formulaContainer.innerHTML = html;
     }
 }
 
