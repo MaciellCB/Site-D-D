@@ -1567,93 +1567,76 @@ input[type=number] {
 
 
 
-/* --- FÓRMULA DE CA (Compacta, Ajustada e Alinhada) --- */
+/* --- FÓRMULA DE CA (Simples e Ajustada) --- */
 .inline-formula {
     display: flex;
-    align-items: flex-end; /* Alinha tudo por baixo */
+    align-items: flex-end; /* Alinha tudo pela base */
     justify-content: center;
-    gap: 2px; /* Bem compacto */
-    margin-top: 8px;
+    gap: 4px; 
+    margin-top: 10px;
     width: 100%;
-    color: #e6e6e6;
 }
 
 .zero-pair {
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 32px;
-    position: relative;
+    min-width: 35px;
 }
 
-/* Números Fixos */
+/* Números (Fontes menores e sem linha dupla) */
 .zero-num {
-    font-size: 20px; /* Fonte reduzida */
+    font-size: 20px;
     font-weight: 900;
     color: #fff;
     line-height: 1;
-    text-align: center;
-    width: 100%;
     margin: 0;
-    padding: 0;
-    position: relative;
     padding-bottom: 2px;
 }
-.zero-num::after { content: none; }
+.zero-num::after { content: none; } /* Remove linha extra */
 
-/* Input Editável */
+/* Input Extra */
 .zero-input {
     background: transparent;
     border: none;
     color: #fff;
     font-weight: 900;
-    font-size: 20px; /* Mesma fonte reduzida */
+    font-size: 20px;
     text-align: center;
-    width: 40px;
+    width: 45px;
     padding: 0;
-    margin: 0;
-    line-height: 1;
-    height: 22px; 
-    transform: translateY(-2px); /* Pequeno ajuste fino */
+    height: 20px;
 }
 .zero-input:focus { outline: none; color: #e0aaff; }
 
-/* Linha Divisória */
+/* Linha Baixa */
 .zero-divider {
     width: 100%;
     height: 1px;
     background-color: #555;
-    margin-top: 1px;
-    margin-bottom: 3px;
-    border-radius: 2px;
+    margin-top: 2px;
+    margin-bottom: 4px;
 }
-.zero-input:focus ~ .zero-divider { background-color: #9c27b0; height: 2px; }
 
-/* Etiquetas (BASE, DES...) */
+/* Texto Pequeno (BASE, DES...) */
 .zero-label {
     font-size: 9px;
     color: #bbb;
     font-weight: 800;
     text-transform: uppercase;
-    line-height: 1;
-    text-align: center;
 }
 
-/* --- CONFIGURAÇÃO DOS SINAIS DE + --- */
+/* --- A MÁGICA DOS SINAIS DE + --- */
 
-/* 1. Sinais Normais (Entre números fixos) - FICAM MAIS ALTOS */
+/* 1. Sobe TODOS os sinais de + */
 .formula-plus {
     font-size: 16px;
     font-weight: 900;
     color: #dcdcdc;
-    margin: 0 4px; /* Espaçamento lateral */
-    
-    /* Esta margem empurra o + para cima */
-    margin-bottom: 25px; 
+    margin-bottom: 26px; /* <-- ISSO SOBE OS SINAIS */
 }
 
-/* 2. Sinal do Extra (Gerado pelo novo JS) - FICA ONDE ESTAVA */
-.formula-plus.plus-extra {
-    /* Esta margem menor mantém ele alinhado com o input */
-    margin-bottom: 15px; 
+/* 2. O ÚLTIMO sinal de + (antes do Extra) volta para baixo */
+.formula-plus:last-of-type {
+    margin-bottom: 18px; /* <-- ESSE FICA NO LUGAR DO INPUT */
 }
