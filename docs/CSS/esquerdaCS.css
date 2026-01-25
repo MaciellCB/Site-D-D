@@ -1465,3 +1465,92 @@ input[type=number] {
   transition: background-color 0.2s;
   margin-top: 0px; /* Garante que não empurre para baixo */
 }
+
+
+/* --- FÓRMULA DE CA (Compacta e Ajustada) --- */
+.inline-formula {
+    display: flex;
+    align-items: flex-end; /* Alinha pela base */
+    justify-content: center;
+    gap: 6px; /* Espaço entre os blocos reduzido */
+    margin-top: 10px;
+    width: 100%;
+    color: #e6e6e6;
+}
+
+.zero-pair {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 35px; /* Largura mínima menor */
+    position: relative;
+}
+
+/* Números Fixos (10, Modificadores) */
+.zero-num {
+    font-size: 20px; /* Fonte menor (era 28px) */
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+    text-align: center;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    
+    /* Remove a linha duplicada antiga se existir */
+    position: relative;
+}
+.zero-num::after { content: none; }
+
+/* Input Editável (O número EXTRA) */
+.zero-input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-weight: 900;
+    font-size: 20px; /* Mesma fonte dos números fixos */
+    text-align: center;
+    width: 45px; /* Largura reduzida */
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+    height: 20px; /* Altura fixa para alinhar com a linha */
+}
+
+.zero-input:focus {
+    outline: none;
+    color: #e0aaff;
+}
+
+/* A Linha Divisória */
+.zero-divider {
+    width: 100%;
+    height: 1px; /* Linha mais fina */
+    background-color: #555;
+    margin-top: 2px; /* Distância do número pra linha (bem perto) */
+    margin-bottom: 4px; /* Distância da linha pro texto (BASE/DES) */
+    border-radius: 2px;
+}
+
+.zero-input:focus ~ .zero-divider {
+    background-color: #9c27b0;
+    height: 2px;
+}
+
+/* Etiquetas (BASE, DES, SAB, EXTRA) */
+.zero-label {
+    font-size: 9px; /* Fonte menor (era 11px) */
+    color: #bbb;
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 1;
+    text-align: center;
+}
+
+/* Sinais de + */
+.formula-plus {
+    font-size: 16px; /* Menor (era 24px) */
+    font-weight: 900;
+    color: #dcdcdc;
+    margin-bottom: 18px; /* Levanta o + para alinhar com os números */
+}
