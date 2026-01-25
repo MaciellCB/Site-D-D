@@ -1160,82 +1160,184 @@ function atualizarIniciativaTotal() {
 }
 
 /* =============================================================
-   ATUALIZAÇÃO DE CA (COM ALINHAMENTO CORRIGIDO)
+   ATUALIZAÇÃO DE CA (COM ESTRUTURA HTML ALINHADA)
 ============================================================= */
 function atualizarAC() {
-    // 1. Segurança e Configuração Inicial
+    // 1. Verificações de Segurança
     if (!state || !state.atributos) return;
+
     const getMod = (n) => Math.floor((parseInt(state.atributos?.[n] || 10) - 10) / 2);
-    const modDex = getMod('n2'); const modCon = getMod('n1'); const modSab = getMod('n3');
-    const inventario = state.inventory || []; const habilidades = state.abilities || [];
+    const modDex = getMod('n2');
+    const modCon = getMod('n1');
+    const modSab = getMod('n3');
+
+    const inventario = state.inventory || [];
+    const habilidades = state.abilities || [];
+
+    // 2. Identifica Equipamento
     const armadura = inventario.find(i => i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'armadura');
     const escudo = inventario.find(i => i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'escudo');
+    
+    // 3. Identifica Habilidades de Classe
     const barbDef = habilidades.some(a => a.active && a.title.toLowerCase().includes("bárbaro") && a.title.toLowerCase().includes("defesa"));
     const monkDef = habilidades.some(a => a.active && a.title.toLowerCase().includes("monge") && a.title.toLowerCase().includes("defesa"));
 
-    let valorBase = 10, valorAttr1 = modDex, labelAttr1 = "DES", valorAttr2 = 0, labelAttr2 = "", labelBase = "BASE";
-    let tipoArmaduraVisual = "SEM ARMADURA", classeCss = "nenhuma";
+    // Variáveis de Cálculo Padrão
+    let valorBase = 10;
+    let valorAttr1 = modDex; 
+    let labelAttr1 = "DES";
+    let valorAttr2 = 0;      
+    let labelAttr2 = "";
+    let labelBase = "BASE";
+    
+    // Variáveis Visuais
+    let tipoArmaduraVisual = "SEM ARMADURA";
+    let classeCss = "nenhuma"; 
 
-    // --- LÓGICA PRINCIPAL ---
+    // --- LÓGICA DE DECISÃO DA FÓRMULA ---
     if (armadura) {
-        valorBase = (parseInt(armadura.defense) || 10); if (valorBase < 5) valorBase = 10 + valorBase;
-        labelBase = "ARMADURA"; const prof = (armadura.proficiency || '').toLowerCase();
-        if (prof.includes('pesada')) { valorAttr1 = null; tipoArmaduraVisual = "PESADA"; classeCss = "pesado"; }
-        else if (prof.includes('media') || prof.includes('média')) { valorAttr1 = Math.min(modDex, 2); tipoArmaduraVisual = "MÉDIA"; classeCss = "media"; }
-        else { tipoArmaduraVisual = "LEVE"; classeCss = "leve"; }
-    } else if (barbDef) { valorAttr2 = modCon; labelAttr2 = "CON"; tipoArmaduraVisual = "DEF. BÁRBARO"; classeCss = "barbaro";
-    } else if (monkDef && !escudo) { valorAttr2 = modSab; labelAttr2 = "SAB"; tipoArmaduraVisual = "DEF. MONGE"; classeCss = "monge"; }
+        let baseArmor = parseInt(armadura.defense) || 10;
+        if (baseArmor < 5) baseArmor = 10 + baseArmor; 
+        
+        valorBase = baseArmor;
+        labelBase = "ARMADURA";
+        const prof = (armadura.proficiency || '').toLowerCase();
 
-    // --- BÔNUS ---
-    let bonusAuto = (escudo ? (parseInt(escudo.defense) || 2) : 0);
-    inventario.forEach(i => { if (i.equip && i.type === 'Geral' && i.defenseBonus) bonusAuto += parseInt(i.defenseBonus) || 0; });
-    habilidades.forEach(h => { if (h.active && h.defenseBonus) bonusAuto += (parseInt(h.defenseBonus.replace(/[^0-9-]/g, '')) || 0); });
+        if (prof.includes('pesada')) {
+            valorAttr1 = null; // Remove atributo 1
+            tipoArmaduraVisual = "PESADA";
+            classeCss = "pesado";
+        } 
+        else if (prof.includes('media') || prof.includes('média')) {
+            valorAttr1 = Math.min(modDex, 2);
+            tipoArmaduraVisual = "MÉDIA";
+            classeCss = "media";
+        } 
+        else {
+            tipoArmaduraVisual = "LEVE";
+            classeCss = "leve";
+        }
+    } 
+    else {
+        // Sem Armadura
+        if (barbDef) {
+            valorAttr2 = modCon;
+            labelAttr2 = "CON";
+            tipoArmaduraVisual = "DEF. BÁRBARO";
+            classeCss = "barbaro";
+        } 
+        else if (monkDef) {
+            if (escudo) {
+                tipoArmaduraVisual = "SEM ARMADURA";
+                classeCss = "nenhuma";
+            } else {
+                valorAttr2 = modSab;
+                labelAttr2 = "SAB";
+                tipoArmaduraVisual = "DEF. MONGE";
+                classeCss = "monge";
+            }
+        } 
+        else {
+            tipoArmaduraVisual = "SEM ARMADURA";
+            classeCss = "nenhuma";
+        }
+    }
+
+    // --- CÁLCULO DE BÔNUS ---
+    
+    // Automáticos (Escudo + Itens + Habilidades)
+    let bonusAuto = 0;
+    if (escudo) bonusAuto += (parseInt(escudo.defense) || 2);
+    
+    inventario.forEach(i => {
+        if (i.equip && i.type === 'Geral' && i.defenseBonus) {
+            bonusAuto += parseInt(i.defenseBonus) || 0;
+        }
+    });
+    
+    habilidades.forEach(hab => {
+        if (hab.active && hab.defenseBonus) {
+            bonusAuto += (parseInt(hab.defenseBonus.replace(/[^0-9-]/g, '')) || 0);
+        }
+    });
+
+    // Manual (Editável)
     if (state.acOutros === undefined) state.acOutros = 0;
     let bonusManual = parseInt(state.acOutros) || 0;
 
-    // --- CÁLCULO FINAL E ATUALIZAÇÃO DE VALORES ---
+    // Total
     const acFinal = valorBase + (valorAttr1 !== null ? valorAttr1 : 0) + valorAttr2 + bonusAuto + bonusManual;
-    const elValor = document.getElementById('armaduraValor'); if (elValor) elValor.textContent = acFinal;
-    const elTextoTipo = document.querySelector('.armadura-tag');
-    if (elTextoTipo) { elTextoTipo.textContent = tipoArmaduraVisual; elTextoTipo.className = 'armadura-tag ' + classeCss; }
 
-    // --- MONTAGEM DA FÓRMULA (COM NOVA ESTRUTURA DE DIVISOR) ---
+    // --- ATUALIZAÇÃO DO DOM ---
+    const elValor = document.getElementById('armaduraValor');
+    if (elValor) elValor.textContent = acFinal;
+
+    const elTextoTipo = document.querySelector('.armadura-tag');
+    if (elTextoTipo) {
+        elTextoTipo.textContent = tipoArmaduraVisual;
+        elTextoTipo.className = 'armadura-tag ' + classeCss;
+    }
+
+    // --- MONTAGEM DA FÓRMULA HTML ---
     const formulaContainer = document.querySelector('.inline-formula');
+    
     if (formulaContainer) {
-        // Função para bloco de texto estático
+        // Estrutura Padronizada: Número -> Divisor -> Texto
         const createBlock = (val, lbl) => `
             <div class="zero-pair">
                 <span class="zero-num">${val}</span>
                 <div class="zero-divider"></div>
                 <span class="zero-label">${lbl}</span>
-            </div>`;
+            </div>
+        `;
         
-        // Função para bloco de INPUT (Extra)
         const createInputBlock = (val, lbl) => `
             <div class="zero-pair">
                 <input type="number" class="zero-input" value="${val}" onchange="window.updateACManual(this.value)" onclick="this.select()">
                 <div class="zero-divider"></div>
                 <span class="zero-label">${lbl}</span>
-            </div>`;
+            </div>
+        `;
 
         const plusSign = `<span class="formula-plus">+</span>`;
-        let html = createBlock(valorBase, labelBase);
-        if (valorAttr1 !== null) html += plusSign + createBlock(valorAttr1 >= 0 ? valorAttr1 : valorAttr1, labelAttr1);
-        if (valorAttr2 !== 0) html += plusSign + createBlock(valorAttr2, labelAttr2);
-        if (bonusAuto !== 0) html += plusSign + createBlock(bonusAuto, "ITENS");
-        html += plusSign + createInputBlock(bonusManual, "EXTRA"); // Extra sempre visível
+        let htmlFormula = ``;
 
-        formulaContainer.innerHTML = html;
+        // 1. Base
+        htmlFormula += createBlock(valorBase, labelBase);
+
+        // 2. Atributo 1 (DEX)
+        if (valorAttr1 !== null) {
+            htmlFormula += plusSign;
+            htmlFormula += createBlock(valorAttr1 >= 0 ? valorAttr1 : valorAttr1, labelAttr1);
+        }
+
+        // 3. Atributo 2 (CON/SAB)
+        if (valorAttr2 !== 0) {
+            htmlFormula += plusSign;
+            htmlFormula += createBlock(valorAttr2, labelAttr2);
+        }
+
+        // 4. Bônus Automáticos (Escudo/Itens)
+        if (bonusAuto !== 0) {
+            htmlFormula += plusSign;
+            htmlFormula += createBlock(bonusAuto, "ITENS");
+        }
+
+        // 5. Bônus Manual (EXTRA)
+        htmlFormula += plusSign;
+        htmlFormula += createInputBlock(bonusManual, "EXTRA");
+
+        formulaContainer.innerHTML = htmlFormula;
     }
 }
 
 /* =============================================================
-   FUNÇÃO GLOBAL: SALVAR AC EXTRA (MANUAL)
+   FUNÇÃO AUXILIAR: SALVAR AC EXTRA (MANUAL)
 ============================================================= */
 window.updateACManual = function(val) {
     state.acOutros = parseInt(val) || 0;
-    saveStateToServer(); // Salva no banco
-    atualizarAC();       // Recalcula o total imediatamente
+    saveStateToServer(); 
+    atualizarAC();       
 }
 
 /* =============================================================
