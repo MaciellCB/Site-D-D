@@ -1554,3 +1554,105 @@ input[type=number] {
     color: #dcdcdc;
     margin-bottom: 18px; /* Levanta o + para alinhar com os números */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* --- FÓRMULA DE CA (Ajustada) --- */
+.inline-formula {
+    display: flex;
+    align-items: flex-end; /* Alinha itens pela base */
+    justify-content: center;
+    gap: 6px; 
+    margin-top: 10px;
+    width: 100%;
+    color: #e6e6e6;
+}
+
+.zero-pair {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 35px;
+    position: relative;
+}
+
+/* Números Fixos */
+.zero-num {
+    font-size: 20px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+    text-align: center;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+.zero-num::after { content: none; }
+
+/* Input Editável (EXTRA) */
+.zero-input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-weight: 900;
+    font-size: 20px;
+    text-align: center;
+    width: 45px;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+    height: 20px;
+}
+
+.zero-input:focus { outline: none; color: #e0aaff; }
+
+/* Linha Divisória */
+.zero-divider {
+    width: 100%;
+    height: 1px;
+    background-color: #555;
+    margin-top: 2px;
+    margin-bottom: 4px;
+    border-radius: 2px;
+}
+.zero-input:focus ~ .zero-divider { background-color: #9c27b0; height: 2px; }
+
+/* Etiquetas (BASE, DES, EXTRA...) */
+.zero-label {
+    font-size: 9px;
+    color: #bbb;
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 1;
+    text-align: center;
+}
+
+/* ==========================================================
+   CONFIGURAÇÃO DOS SINAIS DE +
+========================================================== */
+
+/* 1. Regra Geral: Sobe os + (Base, Des, Sab) */
+.formula-plus {
+    font-size: 16px;
+    font-weight: 900;
+    color: #dcdcdc;
+    /* Aumentamos a margem para empurrar o + para cima */
+    margin-bottom: 28px; 
+}
+
+/* 2. Regra Específica: O último + (antes do Extra) fica baixo */
+.formula-plus:last-of-type {
+    /* Mantém a margem menor para alinhar com o input do Extra */
+    margin-bottom: 18px; 
+}
