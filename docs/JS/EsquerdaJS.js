@@ -1159,19 +1159,8 @@ function atualizarIniciativaTotal() {
     if (elIni) elIni.textContent = `${sinal}${total}`;
 }
 
-
-
 /* =============================================================
-   FUNÇÃO AUXILIAR: SALVAR AC EXTRA (MANUAL)
-============================================================= */
-window.updateACManual = function(val) {
-    state.acOutros = parseInt(val) || 0;
-    saveStateToServer(); 
-    atualizarAC();       
-}
-
-/* =============================================================
-   ATUALIZAÇÃO DE CA (COM ESTRUTURA VERTICAL CORRIGIDA)
+   ATUALIZAÇÃO DE CA (COM ESTRUTURA HTML ALINHADA)
 ============================================================= */
 function atualizarAC() {
     // 1. Verificações de Segurança
@@ -1189,11 +1178,11 @@ function atualizarAC() {
     const armadura = inventario.find(i => i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'armadura');
     const escudo = inventario.find(i => i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'escudo');
     
-    // 3. Identifica Habilidades
+    // 3. Identifica Habilidades de Classe
     const barbDef = habilidades.some(a => a.active && a.title.toLowerCase().includes("bárbaro") && a.title.toLowerCase().includes("defesa"));
     const monkDef = habilidades.some(a => a.active && a.title.toLowerCase().includes("monge") && a.title.toLowerCase().includes("defesa"));
 
-    // Variáveis de Cálculo
+    // Variáveis de Cálculo Padrão
     let valorBase = 10;
     let valorAttr1 = modDex; 
     let labelAttr1 = "DES";
@@ -1205,17 +1194,17 @@ function atualizarAC() {
     let tipoArmaduraVisual = "SEM ARMADURA";
     let classeCss = "nenhuma"; 
 
-    // --- LÓGICA DE CÁLCULO ---
+    // --- LÓGICA DE DECISÃO DA FÓRMULA ---
     if (armadura) {
         let baseArmor = parseInt(armadura.defense) || 10;
         if (baseArmor < 5) baseArmor = 10 + baseArmor; 
         
         valorBase = baseArmor;
-        labelBase = "ARMADURA"; // Muda label se tiver armadura
+        labelBase = "ARMADURA";
         const prof = (armadura.proficiency || '').toLowerCase();
 
         if (prof.includes('pesada')) {
-            valorAttr1 = null; 
+            valorAttr1 = null; // Remove atributo 1
             tipoArmaduraVisual = "PESADA";
             classeCss = "pesado";
         } 
@@ -1230,6 +1219,7 @@ function atualizarAC() {
         }
     } 
     else {
+        // Sem Armadura
         if (barbDef) {
             valorAttr2 = modCon;
             labelAttr2 = "CON";
@@ -1247,9 +1237,15 @@ function atualizarAC() {
                 classeCss = "monge";
             }
         } 
+        else {
+            tipoArmaduraVisual = "SEM ARMADURA";
+            classeCss = "nenhuma";
+        }
     }
 
-    // --- BÔNUS ---
+    // --- CÁLCULO DE BÔNUS ---
+    
+    // Automáticos (Escudo + Itens + Habilidades)
     let bonusAuto = 0;
     if (escudo) bonusAuto += (parseInt(escudo.defense) || 2);
     
@@ -1265,12 +1261,14 @@ function atualizarAC() {
         }
     });
 
+    // Manual (Editável)
     if (state.acOutros === undefined) state.acOutros = 0;
     let bonusManual = parseInt(state.acOutros) || 0;
 
+    // Total
     const acFinal = valorBase + (valorAttr1 !== null ? valorAttr1 : 0) + valorAttr2 + bonusAuto + bonusManual;
 
-    // --- ATUALIZA DOM PRINCIPAL ---
+    // --- ATUALIZAÇÃO DO DOM ---
     const elValor = document.getElementById('armaduraValor');
     if (elValor) elValor.textContent = acFinal;
 
@@ -1280,13 +1278,11 @@ function atualizarAC() {
         elTextoTipo.className = 'armadura-tag ' + classeCss;
     }
 
-    // --- MONTAGEM DA FÓRMULA HTML (ESTRUTURA VERTICAL) ---
+    // --- MONTAGEM DA FÓRMULA HTML ---
     const formulaContainer = document.querySelector('.inline-formula');
     
     if (formulaContainer) {
-        const plusSign = `<span class="formula-plus">+</span>`;
-
-        // 1. Bloco Estático (Texto)
+        // Estrutura Padronizada: Número -> Divisor -> Texto
         const createBlock = (val, lbl) => `
             <div class="zero-pair">
                 <span class="zero-num">${val}</span>
@@ -1295,7 +1291,6 @@ function atualizarAC() {
             </div>
         `;
         
-        // 2. Bloco Editável (Input) - Note a ordem: Input -> Divider -> Label
         const createInputBlock = (val, lbl) => `
             <div class="zero-pair">
                 <input type="number" class="zero-input" value="${val}" onchange="window.updateACManual(this.value)" onclick="this.select()">
@@ -1304,25 +1299,45 @@ function atualizarAC() {
             </div>
         `;
 
-        let html = createBlock(valorBase, labelBase);
+        const plusSign = `<span class="formula-plus">+</span>`;
+        let htmlFormula = ``;
 
+        // 1. Base
+        htmlFormula += createBlock(valorBase, labelBase);
+
+        // 2. Atributo 1 (DEX)
         if (valorAttr1 !== null) {
-            html += plusSign + createBlock(valorAttr1 >= 0 ? valorAttr1 : valorAttr1, labelAttr1);
+            htmlFormula += plusSign;
+            htmlFormula += createBlock(valorAttr1 >= 0 ? valorAttr1 : valorAttr1, labelAttr1);
         }
 
+        // 3. Atributo 2 (CON/SAB)
         if (valorAttr2 !== 0) {
-            html += plusSign + createBlock(valorAttr2, labelAttr2);
+            htmlFormula += plusSign;
+            htmlFormula += createBlock(valorAttr2, labelAttr2);
         }
 
+        // 4. Bônus Automáticos (Escudo/Itens)
         if (bonusAuto !== 0) {
-            html += plusSign + createBlock(bonusAuto, "ITENS");
+            htmlFormula += plusSign;
+            htmlFormula += createBlock(bonusAuto, "ITENS");
         }
 
-        // Extra é sempre editável
-        html += plusSign + createInputBlock(bonusManual, "EXTRA");
+        // 5. Bônus Manual (EXTRA)
+        htmlFormula += plusSign;
+        htmlFormula += createInputBlock(bonusManual, "EXTRA");
 
-        formulaContainer.innerHTML = html;
+        formulaContainer.innerHTML = htmlFormula;
     }
+}
+
+/* =============================================================
+   FUNÇÃO AUXILIAR: SALVAR AC EXTRA (MANUAL)
+============================================================= */
+window.updateACManual = function(val) {
+    state.acOutros = parseInt(val) || 0;
+    saveStateToServer(); 
+    atualizarAC();       
 }
 
 /* =============================================================

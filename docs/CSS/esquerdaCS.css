@@ -1,5 +1,19 @@
 /* =============================================================
-   LAYOUT GERAL E ESQUERDA
+   RESET E GLOBAIS
+============================================================= */
+/* Remove setas dos inputs numéricos */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* =============================================================
+   LAYOUT GERAL E ESTRUTURA (ESQUERDA)
 ============================================================= */
 .container {
   display: flex;
@@ -14,19 +28,16 @@
   flex-direction: column;
   align-items: center;
   border-radius: 10px;
-
-  /* Fusão e prioridades recentes */
   width: 35%;
   align-self: stretch;
   background-color: #121212;
   margin-top: -8px;
-
-  /* Padding top sobrescreve o geral */
+  /* Padding consolidado (versão mais recente sobrescreve) */
   padding: 20px 15px 15px 15px;
 }
 
 /* =============================================================
-   IMAGEM E HEX (TOPO ESQUERDA)
+   IMAGEM, HEX E INFO BÁSICA (CABEÇALHO SUPERIOR)
 ============================================================= */
 .personagem-img {
   width: 100px;
@@ -53,9 +64,6 @@
   border-radius: 8px;
 }
 
-/* =============================================================
-   INFO DO PERSONAGEM (CABEÇALHO)
-============================================================= */
 .info-personagem {
   display: flex;
   align-items: center;
@@ -115,81 +123,130 @@
 }
 
 /* =============================================================
-   CONTROLES: INSPIRAÇÃO E PROFICIÊNCIA
-   (Versão consolidada e atualizada)
+   STATUS REDESIGN (NÍVEL, INSPIRAÇÃO, PROFICIÊNCIA)
+   Prioridade: Redesign Limpo + Ajustes Recentes
 ============================================================= */
-.controls-inline {
+/* Container Principal do Topo */
+.linha-top {
   display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin-bottom: 8px;
+  align-items: center;
+  gap: 25px;
+  margin-bottom: 15px;
+  width: 100%;
 }
 
-.control-group {
+/* --- BLOCO DE NÍVEL (Atualizado para versão grande) --- */
+.nivel-destaque {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 110px;
+  height: 95px;
+  background: linear-gradient(180deg, #161616, #1f1f1f);
+  border: 1px solid #333;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+  padding: 8px;
+}
+
+.nivel-titulo {
+  font-size: 11px;
+  color: #888;
+  letter-spacing: 1px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.nivel-valor {
+  font-size: 52px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  margin-top: 4px;
+}
+
+/* --- ÁREA DOS STATUS (DIREITA) --- */
+.status-row {
+  display: flex;
+  /* Gap reduzido conforme atualização recente para caber 3 itens */
+  gap: 15px;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+}
+
+.status-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 6px;
 }
 
-.control-label {
-  font-size: 12px;
-  color: #aaa;
-  text-align: center;
-}
-
-.profi-formula {
-  font-size: 11px;
-  color: #888;
-  margin-top: 4px;
-}
-
-.inspiracao-box,
-.proficiencia-box {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  background: #101010;
-  /* Prioridade recente */
-  padding: 4px 8px;
-  /* Prioridade recente */
-  border-radius: 6px;
-  border: 1px solid #222;
+.status-label-top {
   font-size: 13px;
-  min-width: 64px;
-  margin-bottom: 6px;
-  vertical-align: middle;
+  color: #bbb;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
-.inspiracao-box button,
-.proficiencia-box button {
-  background: #171717;
-  border: 1px solid #2b2b2b;
-  color: #ddd;
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  border-radius: 4px;
-  font-size: 12px;
-  display: inline-flex;
+/* Caixas (Quadrados em volta do valor) */
+.caixa-valor-controle,
+.caixa-valor-fixo {
+  display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  background: #0f0f0f;
+  border-radius: 6px;
+  height: 42px;
+  padding: 0 8px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-.inspiracao-box #inspiraValor,
-.proficiencia-box #proficienciaValor {
-  min-width: 18px;
-  text-align: center;
+.caixa-valor-controle {
+  border: 1px solid #333;
+  min-width: 85px;
+}
+
+/* Consolidado: Definição recente da caixa fixa */
+.caixa-valor-fixo {
+  border: 1px solid #444;
+  min-width: 70px;
+}
+
+/* Fonte dos Números dos Status */
+.valor-grande {
+  font-size: 22px;
   font-weight: 700;
   color: #fff;
-  font-size: 13px;
+  margin: 0 8px;
 }
 
-.proficiencia-box span {
-  font-weight: 700;
+/* Botões Pequenos (Setinhas) */
+.btn-mini {
+  background: transparent;
+  border: none;
+  color: #555;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s, transform 0.1s;
 }
+
+.btn-mini:hover {
+  color: #9c27b0;
+  transform: scale(1.1);
+}
+
+/* Estilos legados de controles (caso ainda sejam usados internamente) */
+.controls-inline { display: flex; gap: 12px; justify-content: center; margin-bottom: 8px; }
+.control-group { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.inspiracao-box, .proficiencia-box { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: #101010; padding: 4px 8px; border-radius: 6px; border: 1px solid #222; font-size: 13px; min-width: 64px; margin-bottom: 6px; vertical-align: middle; }
+.inspiracao-box button, .proficiencia-box button { background: #171717; border: 1px solid #2b2b2b; color: #ddd; width: 20px; height: 20px; padding: 0; border-radius: 4px; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.inspiracao-box #inspiraValor, .proficiencia-box #proficienciaValor { min-width: 18px; text-align: center; font-weight: 700; color: #fff; font-size: 13px; }
+.profi-formula { font-size: 11px; color: #888; margin-top: 4px; }
 
 /* =============================================================
    HEXAGRAMA E ATRIBUTOS
@@ -273,41 +330,12 @@
 }
 
 /* Posições do hexágono */
-.n1 {
-  top: 0;
-  left: 50%;
-  transform: translate(-48%, -37%);
-}
-
-.n2 {
-  top: 25%;
-  left: 90%;
-  transform: translate(-89%, -79%);
-}
-
-.n3 {
-  top: 75%;
-  left: 90%;
-  transform: translate(-89%, -126%);
-}
-
-.n4 {
-  bottom: 0;
-  left: 50%;
-  transform: translate(-48%, -49%);
-}
-
-.n5 {
-  top: 75%;
-  left: 10%;
-  transform: translate(-12%, -126%);
-}
-
-.n6 {
-  top: 25%;
-  left: 10%;
-  transform: translate(-6%, -78%);
-}
+.n1 { top: 0; left: 50%; transform: translate(-48%, -37%); }
+.n2 { top: 25%; left: 90%; transform: translate(-89%, -79%); }
+.n3 { top: 75%; left: 90%; transform: translate(-89%, -126%); }
+.n4 { bottom: 0; left: 50%; transform: translate(-48%, -49%); }
+.n5 { top: 75%; left: 10%; transform: translate(-12%, -126%); }
+.n6 { top: 25%; left: 10%; transform: translate(-6%, -78%); }
 
 .barras {
   margin-top: 15px;
@@ -317,8 +345,8 @@
 }
 
 /* =============================================================
-   ARMADURA E INICIATIVA (GRID CORRIGIDO)
-   (Layout baseado nas correções do final do arquivo: 2 colunas)
+   ARMADURA E INICIATIVA
+   Prioridade: Layout 2 Colunas + Fórmula Vertical Recente
 ============================================================= */
 .armadura-area {
   width: 100%;
@@ -356,7 +384,6 @@
   flex-direction: column;
   gap: 10px;
   align-items: center;
-  /* Centraliza na coluna */
 }
 
 .formula-col {
@@ -365,7 +392,6 @@
   flex-direction: column;
   gap: 8px;
   align-items: center;
-  /* Centraliza na área */
   width: 100%;
   padding-top: 5px;
 }
@@ -377,14 +403,13 @@
   gap: 5px;
   align-items: center;
   justify-content: flex-start;
-  /* CORREÇÃO: Margens e transform removidos */
   margin-left: 0;
   transform: none;
   margin-top: 5px;
   width: 100%;
 }
 
-/* Elementos Internos da Armadura */
+/* Elementos Gráficos (Escudo) */
 .escudo-wrap {
   position: relative;
   width: 92px;
@@ -422,6 +447,7 @@
   user-select: none;
 }
 
+/* Iniciativa */
 .iniciativa-block {
   width: 92px;
   height: 94px;
@@ -503,7 +529,7 @@
   border-bottom: 1px solid #9c27b0;
 }
 
-/* Fórmulas e Tipos */
+/* Títulos */
 .armadura-titulo,
 .tipo-titulo {
   font-weight: 800;
@@ -518,78 +544,53 @@
   text-align: left;
 }
 
+/* --- FÓRMULA DE CA (Layout Vertical - Definição Final) --- */
 .inline-formula {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start; /* Alinha pelo topo */
+  justify-content: center;
   gap: 10px;
+  margin-top: 15px;
+  width: 100%;
   flex-wrap: nowrap;
   color: #e6e6e6;
   font-weight: 800;
   font-size: 14px;
 }
 
-.inline-formula> :nth-child(-n+5) {
-  display: inline-block;
-  transform: translateY(-30px);
-  transition: transform 120ms ease;
+/* Limpeza de propriedades legadas que atrapalham o vertical */
+.inline-formula > :nth-child(-n+5),
+.formula-text {
+  transform: none !important;
+  display: block !important;
+  margin: 0 !important;
   line-height: 1;
 }
 
-.inline-formula .zero-pair {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-
-.formula-eq,
-.formula-plus {
-  margin-right: 6px;
-  color: #cfcfcf;
-  font-weight: 900;
-}
-
-.formula-plus {
-  color: #dcdcdc;
-}
-
-.formula-attr {
-  text-transform: uppercase;
-  color: #fff;
-  font-weight: 900;
-}
-
-.formula-text {
-  min-width: 18px;
-  text-align: center;
-  transition: all 0.3s ease;
-  display: inline-block;
-  vertical-align: middle;
-  transform: translateY(-30px);
-}
-
-.formula-text.heavy-armor-mode {
-  font-weight: 900;
-  transform: translateY(-30px) scale(1.2);
-}
-
+.inline-formula .zero-pair,
 .zero-pair {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Força vertical */
   align-items: center;
   gap: 6px;
-  min-width: 48px;
+  min-width: 50px;
+  position: relative;
 }
 
 .zero-num {
+  font-size: 28px;
   font-weight: 900;
-  font-size: 16px;
   color: #fff;
+  line-height: 1;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 2px;
   position: relative;
   padding-bottom: 8px;
   display: inline-block;
 }
 
+/* Linha decorativa abaixo do número */
 .zero-num::after {
   content: "";
   position: absolute;
@@ -603,25 +604,130 @@
   opacity: 0.95;
 }
 
-.zero-label {
-  font-size: 12px;
-  color: #bfbfbf;
-  font-weight: 700;
-  text-align: center;
-}
-
-.armadura-tag.pesado {
-  background: #131313;
-  border: 2px solid #efefef;
+/* Input numérico da fórmula */
+.zero-input {
+  background: transparent;
+  border: none;
   color: #fff;
-  padding: 8px 14px;
-  border-radius: 6px;
   font-weight: 900;
-  font-size: 16px;
+  font-size: 28px;
   text-align: center;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+  width: 60px;
+  padding: 0;
+  margin: 0 0 2px 0;
+  font-family: inherit;
+  line-height: 1;
 }
 
+.zero-input:focus {
+  outline: none;
+  color: #e0aaff;
+}
+
+.zero-divider {
+  width: 100%;
+  height: 2px;
+  background-color: #555;
+  margin-bottom: 4px;
+  border-radius: 2px;
+  transition: background-color 0.2s;
+}
+
+.zero-input:focus ~ .zero-divider {
+  background-color: #9c27b0;
+}
+
+.zero-label {
+  font-size: 11px;
+  color: #bbb;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1;
+  text-align: center;
+}
+
+.formula-plus {
+  font-size: 24px;
+  font-weight: 900;
+  color: #dcdcdc;
+  margin-top: 2px;
+  margin-right: 6px;
+}
+
+.formula-eq {
+  margin-right: 6px;
+  color: #cfcfcf;
+  font-weight: 900;
+}
+
+.formula-attr {
+  text-transform: uppercase;
+  color: #fff;
+  font-weight: 900;
+}
+
+/* --- TAGS DE TIPO DE ARMADURA (Consolidado: Contorno + Todas as Cores) --- */
+.armadura-tag {
+  font-weight: 900;
+  font-size: 14px;
+  text-align: center;
+  padding: 4px 10px;
+  border-radius: 6px;
+  /* Contorno Padrão */
+  border: 2px solid transparent;
+  background-color: transparent;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  transition: all 0.3s ease;
+  width: auto;
+  display: inline-block;
+  margin-top: 5px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35); /* Sombra base */
+}
+
+/* Cores e Variações */
+.armadura-tag.pesado {
+  color: #ff5252;
+  border-color: #ff5252;
+  background: rgba(255, 82, 82, 0.1);
+  box-shadow: 0 0 10px rgba(255, 82, 82, 0.2);
+}
+
+.armadura-tag.media {
+  color: #ffca28;
+  border-color: #ffca28;
+  background: rgba(255, 202, 40, 0.1);
+  box-shadow: 0 0 10px rgba(255, 202, 40, 0.2);
+}
+
+.armadura-tag.leve {
+  color: #69f0ae;
+  border-color: #69f0ae;
+  background: rgba(105, 240, 174, 0.1);
+  box-shadow: 0 0 10px rgba(105, 240, 174, 0.2);
+}
+
+.armadura-tag.barbaro {
+  color: #ff5722;
+  border-color: #ff5722;
+  background: rgba(255, 87, 34, 0.1);
+  box-shadow: 0 0 10px rgba(255, 87, 34, 0.2);
+}
+
+.armadura-tag.monge {
+  color: #29b6f6;
+  border-color: #29b6f6;
+  background: rgba(41, 182, 246, 0.1);
+  box-shadow: 0 0 10px rgba(41, 182, 246, 0.2);
+}
+
+.armadura-tag.nenhuma {
+  color: #eeeeee;
+  border-color: #eeeeee;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Detalhes Extras da Armadura */
 .armadura-details {
   margin-top: 18px;
   display: flex;
@@ -657,7 +763,7 @@
 }
 
 /* =============================================================
-   XP, NÍVEL E BARRA DE VIDA
+   XP, NÍVEL E CLASSE
 ============================================================= */
 .xp-container {
   margin-top: 20px;
@@ -709,37 +815,9 @@
   justify-content: space-between;
 }
 
-.linha-top,
 .linha-xp,
 .linha-metros {
   align-items: center;
-}
-
-.nivel-destaque {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 120px;
-  height: 92px;
-  background: linear-gradient(180deg, #161616, #1f1f1f);
-  border-radius: 10px;
-  border: 1px solid #333;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
-  padding: 8px;
-}
-
-.nivel-titulo {
-  font-size: 12px;
-  color: #aaa;
-  letter-spacing: 1px;
-}
-
-.nivel-valor {
-  font-size: 38px;
-  font-weight: 800;
-  color: #fff;
-  margin-top: 4px;
 }
 
 .classe-focus {
@@ -765,6 +843,7 @@
   font-size: 18px;
 }
 
+/* Barra de XP */
 .xp-box {
   flex: 1;
   display: flex;
@@ -821,16 +900,22 @@
   margin-left: 6px;
 }
 
-/* Marcos e Distâncias */
+/* =============================================================
+   MOVIMENTAÇÃO E DADOS DE VIDA (DV)
+============================================================= */
 .marco-box,
 .metros-box,
-.quadrados-box {
+.quadrados-box,
+.voo-box,
+.voo-quad-box {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.marco-box {
+.marco-box,
+.voo-box,
+.voo-quad-box {
   width: 100px;
 }
 
@@ -860,7 +945,9 @@
 }
 
 .marco-box input,
-.marco-input {
+.marco-input,
+.voo-box input,
+.voo-quad-box input {
   width: 38px;
   font-size: 14px;
 }
@@ -892,7 +979,122 @@
   border-radius: 6px;
 }
 
-/* Vida */
+/* Voo (Escondido por padrão) */
+.voo-box,
+.voo-quad-box {
+  display: none;
+}
+
+.voo-box input,
+.voo-quad-box input {
+  border: 1px solid #4fc3f7;
+  color: #4fc3f7;
+}
+
+.voo-box label,
+.voo-quad-box label {
+  color: #4fc3f7;
+  font-size: 11px;
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+/* Dados de Vida (DV) - Botão e Modal */
+.dv-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60px;
+  justify-content: flex-end;
+}
+
+.dv-box label {
+  color: #e0aaff;
+  font-size: 11px;
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+.btn-dv-trigger {
+  background: linear-gradient(180deg, #1a1a1a, #000);
+  border: 1px solid #9c27b0;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-dv-trigger img {
+  width: 18px;
+  height: 18px;
+  opacity: 0.9;
+}
+
+.btn-dv-trigger:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(156, 39, 176, 0.4);
+}
+
+.item-dv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #101010;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  margin-bottom: 6px;
+}
+
+.btn-rolar-dv {
+  background: #2a1a2a;
+  border: 1px solid #9c27b0;
+  color: #fff;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: 0.2s;
+}
+
+.btn-rolar-dv:hover:not(:disabled) {
+  background: #9c27b0;
+}
+
+.btn-rolar-dv:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: #444;
+  filter: grayscale(1);
+}
+
+.dv-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.dv-class-name {
+  font-weight: bold;
+  font-size: 13px;
+  color: #ddd;
+}
+
+.dv-count {
+  font-size: 11px;
+  color: #aaa;
+}
+
+/* =============================================================
+   VIDA (HP)
+============================================================= */
 .vida-container {
   text-align: center;
   color: #ccc;
@@ -993,18 +1195,6 @@
 /* =============================================================
    INPUTS ESPECIAIS E MULTI-SELECT
 ============================================================= */
-/* Remove setas dos inputs numéricos */
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-input[type=number] {
-  -moz-appearance: textfield;
-}
-
-/* Multi-Select */
 .input-detail .multi-select-box {
   width: 100%;
   position: relative;
@@ -1089,6 +1279,7 @@ input[type=number] {
 
 /* =============================================================
    MODAL DE CLASSES
+   Consolidação de regras e priorização do Z-Index
 ============================================================= */
 .painel-classes {
   position: fixed;
@@ -1097,10 +1288,11 @@ input[type=number] {
   background: #0c0c0c;
   border: 1px solid #272727;
   border-radius: 10px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
   display: none;
-  z-index: 9999;
   overflow: hidden;
+  /* Prioridade !important aplicada */
+  z-index: 20000 !important;
 }
 
 .painel-inner {
@@ -1112,6 +1304,16 @@ input[type=number] {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
+  /* Propriedades de arrastar consolidadas */
+  cursor: grab;
+  user-select: none;
+  padding: 5px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+}
+
+.painel-header:active {
+  cursor: grabbing;
 }
 
 .painel-header h4 {
@@ -1199,685 +1401,4 @@ input[type=number] {
   border: 1px solid #444;
   border-radius: 4px;
   padding: 2px 4px;
-}
-
-
-
-.painel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  
-  /* NOVAS PROPRIEDADES PARA ARRASTAR */
-  cursor: grab;       /* Mostra a mãozinha */
-  user-select: none;  /* Impede selecionar o texto "Classes" ao arrastar */
-  padding: 5px;       /* Área de clique um pouco maior */
-  background: rgba(255, 255, 255, 0.03); /* Leve destaque visual no header */
-  border-radius: 6px;
-}
-
-.painel-header:active {
-  cursor: grabbing;   /* Mãozinha fechada ao clicar */
-}
-
-/* Adicione isso ao final do seu EsquerdaCS.css */
-
-/* Garante que os boxes de voo tenham o mesmo estilo */
-.voo-box, .voo-quad-box {
-    display: none; /* Escondido por padrão, JS mostra se tiver voo */
-    flex-direction: column;
-    align-items: center;
-    width: 100px; /* Mesmo tamanho base do marco-box */
-}
-
-.voo-box input, .voo-quad-box input {
-    text-align: center;
-    background: transparent;
-    border: 1px solid #4fc3f7; /* Cor azulada para destacar que é voo */
-    color: #4fc3f7;
-    border-radius: 6px;
-    padding: 4px 0;
-    width: 38px;
-    font-size: 14px;
-}
-
-.voo-box label, .voo-quad-box label {
-    color: #4fc3f7;
-    font-size: 11px; /* Um pouco menor para caber "Voo (m)" */
-    margin-bottom: 4px;
-    font-weight: bold;
-}
-
-
-
-/* No arquivo EsquerdaCS.css */
-
-.painel-classes {
-    position: fixed;
-    width: 300px;
-    max-height: 65vh;
-    background: #0c0c0c;
-    border: 1px solid #272727;
-    border-radius: 10px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
-    display: none;
-    overflow: hidden;
-
-    /* AQUI ESTÁ A MUDANÇA IMPORTANTE */
-    z-index: 20000 !important; /* Maior que 12000 do modal de classes */
-}
-
-/* =============================================================
-   REDESIGN LIMPO: NÍVEL + STATUS (LADO A LADO) - VERSÃO AJUSTADA
-============================================================= */
-
-/* Container Principal do Topo */
-.linha-top {
-  display: flex;
-  align-items: center; /* Centraliza verticalmente */
-  gap: 25px; /* Espaço entre o Nível e o grupo de Status */
-  margin-bottom: 15px;
-  width: 100%;
-}
-
-/* --- BLOCO DE NÍVEL (MAIOR) --- */
-.nivel-destaque {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  /* Tamanhos aumentados */
-  width: 110px; 
-  height: 95px;
-  background: linear-gradient(180deg, #161616, #1f1f1f);
-  border: 1px solid #333;
-  border-radius: 10px; /* Borda um pouco mais arredondada */
-  box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-}
-
-.nivel-titulo {
-  font-size: 11px; /* Leve aumento */
-  color: #888;
-  letter-spacing: 1px;
-  font-weight: 700;
-  margin-bottom: 2px;
-}
-
-.nivel-valor {
-  font-size: 52px; /* Número bem grande */
-  font-weight: 800;
-  color: #fff;
-  line-height: 1;
-  text-shadow: 0 2px 5px rgba(0,0,0,0.5);
-}
-
-/* --- ÁREA DOS STATUS (DIREITA) --- */
-.status-row {
-  display: flex;
-  /* Espaço aumentado entre Inspiração e Proficiência (RESPIRO) */
-  gap: 30px; 
-  align-items: flex-end;
-}
-
-.status-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-
-.status-label-top {
-  /* Fonte aumentada para os títulos */
-  font-size: 13px; 
-  color: #bbb; /* Um pouco mais claro para leitura */
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-/* Caixas (Quadrados em volta do valor) */
-.caixa-valor-controle,
-.caixa-valor-fixo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #0f0f0f;
-  border: 1px solid #333;
-  border-radius: 6px;
-  height: 42px;
-  min-width: 85px; /* Um pouco mais largo */
-  padding: 0 8px;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
-}
-
-/* Destaque sutil na borda da Proficiência */
-.caixa-valor-fixo {
-  border-color: #444;
-}
-
-/* Fonte dos Números dos Status */
-.valor-grande {
-  font-size: 22px; /* Leve aumento */
-  font-weight: 700;
-  color: #fff;
-  margin: 0 8px;
-}
-
-/* Botões Pequenos (Setinhas) */
-.btn-mini {
-  background: transparent;
-  border: none;
-  color: #555;
-  font-size: 14px; /* Setas um pouco maiores para facilitar clique */
-  cursor: pointer;
-  padding: 4px;
-  transition: color 0.2s, transform 0.1s;
-}
-
-.btn-mini:hover {
-  color: #9c27b0;
-  transform: scale(1.1);
-}
-
-
-/* No arquivo EsquerdaCS.css */
-
-.status-row {
-  display: flex;
-  /* Reduzimos o gap original de 30px para 15px para caberem os 3 itens sem quebrar */
-  gap: 15px; 
-  align-items: flex-end;
-  justify-content: center; /* Centraliza o grupo todo */
-  width: 100%; /* Garante que use o espaço disponível */
-}
-
-/* Garante que o input da passiva tenha o mesmo estilo */
-.caixa-valor-fixo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #0f0f0f;
-  border: 1px solid #444;
-  border-radius: 6px;
-  height: 42px;
-  min-width: 70px; /* Levemente menor para caber 3 lado a lado */
-  padding: 0 8px;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
-}
-
-
-/* =============================================================
-   BOTÃO DE DADOS DE VIDA (ENTRE METROS E QUADRADOS)
-============================================================= */
-.dv-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 60px; /* Tamanho compacto */
-    justify-content: flex-end;
-}
-
-.dv-box label {
-    color: #e0aaff; /* Roxo claro para destaque */
-    font-size: 11px;
-    margin-bottom: 4px;
-    font-weight: bold;
-}
-
-.btn-dv-trigger {
-    background: linear-gradient(180deg, #1a1a1a, #000);
-    border: 1px solid #9c27b0;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.btn-dv-trigger img {
-    width: 18px;
-    height: 18px;
-    opacity: 0.9;
-}
-
-.btn-dv-trigger:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 10px rgba(156, 39, 176, 0.4);
-}
-
-/* Estilo dos itens dentro do Painel de Dados de Vida */
-.item-dv {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #101010;
-    padding: 8px 10px;
-    border-radius: 8px;
-    border: 1px solid #333;
-    margin-bottom: 6px;
-}
-
-.btn-rolar-dv {
-    background: #2a1a2a;
-    border: 1px solid #9c27b0;
-    color: #fff;
-    border-radius: 4px;
-    padding: 4px 8px;
-    font-size: 12px;
-    cursor: pointer;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: 0.2s;
-}
-
-.btn-rolar-dv:hover:not(:disabled) {
-    background: #9c27b0;
-}
-
-.btn-rolar-dv:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-    border-color: #444;
-    filter: grayscale(1);
-}
-
-.dv-info {
-    display: flex;
-    flex-direction: column;
-}
-
-.dv-class-name {
-    font-weight: bold;
-    font-size: 13px;
-    color: #ddd;
-}
-
-.dv-count {
-    font-size: 11px;
-    color: #aaa;
-}
-
-
-/* =============================================================
-   ESTILOS DOS TIPOS DE ARMADURA (COM CONTORNO)
-============================================================= */
-
-/* Estilo base da tag */
-.armadura-tag {
-    font-weight: 900;
-    font-size: 14px; /* Aumentei um pouco para caber no contorno */
-    text-align: center;
-    padding: 4px 10px; /* Espaço interno para o contorno não colar no texto */
-    border-radius: 6px;
-    border: 2px solid transparent; /* Prepara a borda */
-    background-color: transparent; /* Fundo transparente ou sutil */
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-    transition: all 0.3s ease;
-    width: auto;
-    display: inline-block;
-    margin-top: 5px;
-}
-
-/* --- TIPO: PESADA (Vermelho/Laranja) --- */
-.armadura-tag.pesado {
-    color: #ff5252;
-    border-color: #ff5252;
-    background: rgba(255, 82, 82, 0.1);
-    box-shadow: 0 0 10px rgba(255, 82, 82, 0.2);
-}
-
-/* --- TIPO: MÉDIA / DEFESAS ESPECIAIS (Amarelo/Dourado) --- */
-.armadura-tag.media {
-    color: #ffca28;
-    border-color: #ffca28;
-    background: rgba(255, 202, 40, 0.1);
-    box-shadow: 0 0 10px rgba(255, 202, 40, 0.2);
-}
-
-/* --- TIPO: LEVE / SEM ARMADURA (Verde/Ciano) --- */
-.armadura-tag.leve {
-    color: #69f0ae;
-    border-color: #69f0ae;
-    background: rgba(105, 240, 174, 0.1);
-    box-shadow: 0 0 10px rgba(105, 240, 174, 0.2);
-}
-
-
-/* =============================================================
-   ESTILOS DOS TIPOS DE ARMADURA (COM CONTORNO)
-============================================================= */
-
-/* Estilo base da tag */
-.armadura-tag {
-    font-weight: 900;
-    font-size: 14px; 
-    text-align: center;
-    padding: 4px 10px; 
-    border-radius: 6px;
-    
-    /* AQUI ESTÁ O CONTORNO */
-    border: 2px solid transparent; 
-    
-    background-color: transparent; 
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-    transition: all 0.3s ease;
-    width: auto;
-    display: inline-block;
-    margin-top: 5px;
-}
-
-/* --- TIPO: PESADA (Vermelho/Laranja) --- */
-.armadura-tag.pesado {
-    color: #ff5252;
-    border-color: #ff5252; /* Cor da Borda */
-    background: rgba(255, 82, 82, 0.1);
-    box-shadow: 0 0 10px rgba(255, 82, 82, 0.2);
-}
-
-/* --- TIPO: MÉDIA / DEFESAS ESPECIAIS (Amarelo/Dourado) --- */
-.armadura-tag.media {
-    color: #ffca28;
-    border-color: #ffca28; /* Cor da Borda */
-    background: rgba(255, 202, 40, 0.1);
-    box-shadow: 0 0 10px rgba(255, 202, 40, 0.2);
-}
-
-/* --- TIPO: LEVE / SEM ARMADURA (Verde/Ciano) --- */
-.armadura-tag.leve {
-    color: #69f0ae;
-    border-color: #69f0ae; /* Cor da Borda */
-    background: rgba(105, 240, 174, 0.1);
-    box-shadow: 0 0 10px rgba(105, 240, 174, 0.2);
-}
-
-/* =============================================================
-   ESTILOS DOS TIPOS DE ARMADURA (COM CONTORNO E NOVAS CORES)
-============================================================= */
-
-/* Estilo base da tag */
-.armadura-tag {
-    font-weight: 900;
-    font-size: 14px; 
-    text-align: center;
-    padding: 4px 10px; 
-    border-radius: 6px;
-    
-    /* CONTORNO PADRÃO */
-    border: 2px solid transparent; 
-    
-    background-color: transparent; 
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-    transition: all 0.3s ease;
-    width: auto;
-    display: inline-block;
-    margin-top: 5px;
-}
-
-/* --- TIPO: PESADA (Vermelho) --- */
-.armadura-tag.pesado {
-    color: #ff5252;
-    border-color: #ff5252;
-    background: rgba(255, 82, 82, 0.1);
-    box-shadow: 0 0 10px rgba(255, 82, 82, 0.2);
-}
-
-/* --- TIPO: MÉDIA (Amarelo/Dourado) --- */
-.armadura-tag.media {
-    color: #ffca28;
-    border-color: #ffca28;
-    background: rgba(255, 202, 40, 0.1);
-    box-shadow: 0 0 10px rgba(255, 202, 40, 0.2);
-}
-
-/* --- TIPO: LEVE (Verde/Ciano) --- */
-.armadura-tag.leve {
-    color: #69f0ae;
-    border-color: #69f0ae;
-    background: rgba(105, 240, 174, 0.1);
-    box-shadow: 0 0 10px rgba(105, 240, 174, 0.2);
-}
-
-/* --- NOVO: TIPO BÁRBARO (Laranja Forte) --- */
-.armadura-tag.barbaro {
-    color: #ff5722;
-    border-color: #ff5722;
-    background: rgba(255, 87, 34, 0.1);
-    box-shadow: 0 0 10px rgba(255, 87, 34, 0.2);
-}
-
-/* --- NOVO: TIPO MONGE (Azul Claro Espiritual) --- */
-.armadura-tag.monge {
-    color: #29b6f6;
-    border-color: #29b6f6;
-    background: rgba(41, 182, 246, 0.1);
-    box-shadow: 0 0 10px rgba(41, 182, 246, 0.2);
-}
-
-/* --- NOVO: SEM ARMADURA (Branco/Neutro) --- */
-.armadura-tag.nenhuma {
-    color: #eeeeee;
-    border-color: #eeeeee;
-    background: rgba(255, 255, 255, 0.05);
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-}
-
-/* =============================================================
-   FÓRMULA DA CA - LAYOUT VERTICAL (VALOR EM CIMA, NOME EMBAIXO)
-============================================================= */
-
-/* Container da Linha (alinha os blocos horizontalmente) */
-.inline-formula {
-  display: flex;
-  align-items: flex-start; /* Alinha pelo topo para os números baterem */
-  justify-content: center;
-  gap: 10px;
-  margin-top: 15px;
-  width: 100%;
-}
-
-/* O Bloco Individual (Pilha Vertical: Valor -> Linha -> Nome) */
-.zero-pair {
-  display: flex;
-  flex-direction: column; /* FORÇA FICAR UM EM CIMA DO OUTRO */
-  align-items: center;
-  min-width: 50px;
-  position: relative;
-}
-
-/* O Número (Texto Fixo) */
-.zero-num {
-  font-size: 28px; /* Tamanho grande */
-  font-weight: 900;
-  color: #fff;
-  line-height: 1;
-  text-align: center;
-  width: 100%;
-  margin-bottom: 2px;
-}
-
-/* O Input (Editável - EXTRA) - Estilizado para parecer texto */
-.zero-input {
-  background: transparent;
-  border: none;
-  color: #fff;
-  font-weight: 900;
-  font-size: 28px; /* Mesmo tamanho do zero-num */
-  text-align: center;
-  width: 60px; /* Largura suficiente para 2-3 dígitos */
-  padding: 0;
-  margin: 0;
-  margin-bottom: 2px;
-  font-family: inherit;
-  line-height: 1;
-  border-radius: 0;
-  -moz-appearance: textfield; /* Remove setas no Firefox */
-}
-
-/* Remove setas do input no Chrome/Safari */
-.zero-input::-webkit-outer-spin-button,
-.zero-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.zero-input:focus {
-  outline: none;
-  color: #e0aaff; /* Muda levemente a cor ao focar */
-}
-
-/* A Linha Separadora (Divisor) */
-.zero-divider {
-  width: 100%;
-  height: 2px;
-  background-color: #555;
-  margin-bottom: 4px;
-  border-radius: 2px;
-  transition: background-color 0.2s;
-}
-
-/* Se o input estiver focado, pinta a linha de roxo */
-.zero-input:focus ~ .zero-divider {
-  background-color: #9c27b0;
-}
-
-/* O Nome Pequeno (Embaixo da linha) */
-.zero-label {
-  font-size: 11px;
-  color: #bbb;
-  font-weight: 800;
-  text-transform: uppercase;
-  line-height: 1;
-  text-align: center;
-}
-
-/* O Sinal de Mais (+) - Ajustado para alinhar com os números */
-.formula-plus {
-  font-size: 24px;
-  font-weight: 900;
-  color: #666;
-  margin-top: 2px; /* Ajuste fino vertical */
-}
-
-/* Limpeza de segurança para evitar conflitos antigos */
-.inline-formula > :nth-child(-n+5), 
-.formula-text, 
-.zero-num::after {
-  transform: none !important;
-  display: block !important;
-  content: none !important;
-  margin: 0 !important;
-}
-
-
-/* =============================================================
-   FÓRMULA DA CA - LAYOUT VERTICAL (VALOR EM CIMA, NOME EMBAIXO)
-============================================================= */
-
-/* Container da Linha (alinha os blocos horizontalmente) */
-.inline-formula {
-  display: flex;
-  align-items: flex-start; /* Alinha pelo topo para os números baterem */
-  justify-content: center;
-  gap: 10px;
-  margin-top: 15px;
-  width: 100%;
-}
-
-/* O Bloco Individual (Pilha Vertical: Valor -> Linha -> Nome) */
-.zero-pair {
-  display: flex;
-  flex-direction: column; /* FORÇA FICAR UM EM CIMA DO OUTRO */
-  align-items: center;
-  min-width: 50px;
-  position: relative;
-}
-
-/* O Número (Texto Fixo) */
-.zero-num {
-  font-size: 28px; /* Tamanho grande */
-  font-weight: 900;
-  color: #fff;
-  line-height: 1;
-  text-align: center;
-  width: 100%;
-  margin-bottom: 2px;
-}
-
-/* O Input (Editável - EXTRA) - Estilizado para parecer texto */
-.zero-input {
-  background: transparent;
-  border: none;
-  color: #fff;
-  font-weight: 900;
-  font-size: 28px; /* Mesmo tamanho do zero-num */
-  text-align: center;
-  width: 60px; /* Largura suficiente para 2-3 dígitos */
-  padding: 0;
-  margin: 0;
-  margin-bottom: 2px;
-  font-family: inherit;
-  line-height: 1;
-  border-radius: 0;
-  -moz-appearance: textfield; /* Remove setas no Firefox */
-}
-
-/* Remove setas do input no Chrome/Safari */
-.zero-input::-webkit-outer-spin-button,
-.zero-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.zero-input:focus {
-  outline: none;
-  color: #e0aaff; /* Muda levemente a cor ao focar */
-}
-
-/* A Linha Separadora (Divisor) */
-.zero-divider {
-  width: 100%;
-  height: 2px;
-  background-color: #555;
-  margin-bottom: 4px;
-  border-radius: 2px;
-  transition: background-color 0.2s;
-}
-
-/* Se o input estiver focado, pinta a linha de roxo */
-.zero-input:focus ~ .zero-divider {
-  background-color: #9c27b0;
-}
-
-/* O Nome Pequeno (Embaixo da linha) */
-.zero-label {
-  font-size: 11px;
-  color: #bbb;
-  font-weight: 800;
-  text-transform: uppercase;
-  line-height: 1;
-  text-align: center;
-}
-
-/* O Sinal de Mais (+) - Ajustado para alinhar com os números */
-.formula-plus {
-  font-size: 24px;
-  font-weight: 900;
-  color: #666;
-  margin-top: 2px; /* Ajuste fino vertical */
-}
-
-/* Limpeza de segurança para evitar conflitos antigos */
-.inline-formula > :nth-child(-n+5), 
-.formula-text, 
-.zero-num::after {
-  transform: none !important;
-  display: block !important;
-  content: none !important;
-  margin: 0 !important;
 }
