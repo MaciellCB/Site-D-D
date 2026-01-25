@@ -1402,3 +1402,66 @@ input[type=number] {
   border-radius: 4px;
   padding: 2px 4px;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/* 1. Ajuste no Número Fixo (Aproximar da barra) */
+.zero-num {
+  font-size: 28px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+  text-align: center;
+  width: 100%;
+  
+  /* ALTERAÇÃO: Removemos margens e paddings grandes para colar na linha */
+  margin-bottom: 0px; 
+  padding-bottom: 2px; /* Era 8px */
+  
+  position: relative;
+  display: inline-block;
+}
+
+/* 2. REMOÇÃO DA DUPLA LINHA */
+.zero-num::after {
+  content: none; /* Isso remove a linha "extra" que ficava duplicada */
+}
+
+/* 3. Ajuste no Input "Extra" (Subir o número e colar na barra) */
+.zero-input {
+  background: transparent;
+  border: none;
+  color: #fff; /* Se quiser destacar que é editável, mude para #e0aaff */
+  font-weight: 900;
+  font-size: 28px;
+  text-align: center;
+  width: 60px;
+  padding: 0;
+  font-family: inherit;
+  line-height: 1;
+
+  /* ALTERAÇÕES AQUI: */
+  margin: 0;           /* Remove margens padrão */
+  margin-bottom: 0px;  /* Garante que a barra (zero-divider) fique colada */
+  transform: translateY(-3px); /* "Sobe um pouco o número" visualmente */
+}
+
+/* Garante que a linha divisória fique visível e posicionada corretamente */
+.zero-divider {
+  width: 100%;
+  height: 2px;
+  background-color: #555;
+  margin-bottom: 4px;
+  border-radius: 2px;
+  transition: background-color 0.2s;
+  margin-top: 0px; /* Garante que não empurre para baixo */
+}
