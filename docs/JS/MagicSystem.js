@@ -32,15 +32,27 @@ const BH_MALDICOES = {
     conhecidas: [1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5]
 };
 
-// Blood Hunter: Alma Profana (Pacto)
+// --- SUBSTITUA NO SEU CÓDIGO (Área: TABELAS ESPECÍFICAS) ---
+
+// Blood Hunter: Alma Profana (Slots de Pacto: Quantidade e Nível)
 const BH_ALMA_PROFANA = {
     3: { q: 1, n: 1 }, 4: { q: 1, n: 1 }, 5: { q: 1, n: 1 },
-    6: { q: 2, n: 1 }, 7: { q: 2, n: 2 }, 8: { q: 2, n: 2 }, 9: { q: 2, n: 2 }, 10: { q: 2, n: 2 }, 11: { q: 2, n: 2 }, 12: { q: 2, n: 2 },
+    6: { q: 2, n: 1 }, 
+    7: { q: 2, n: 2 }, 8: { q: 2, n: 2 }, 9: { q: 2, n: 2 }, 10: { q: 2, n: 2 }, 11: { q: 2, n: 2 }, 12: { q: 2, n: 2 },
     13: { q: 2, n: 3 }, 14: { q: 2, n: 3 }, 15: { q: 2, n: 3 }, 16: { q: 2, n: 3 }, 17: { q: 2, n: 3 }, 18: { q: 2, n: 3 },
     19: { q: 2, n: 4 }, 20: { q: 2, n: 4 }
 };
+
+// Blood Hunter: Alma Profana (Magias Conhecidas)
 const BH_ALMA_KNOWN = {
-    3: 2, 4: 2, 5: 3, 6: 3, 7: 4, 8: 4, 9: 5, 10: 5, 11: 6, 12: 6, 13: 7, 14: 7, 15: 8, 16: 8, 17: 9, 18: 9, 19: 10, 20: 11
+    3: 2, 4: 2, 5: 3, 6: 3, 7: 4, 8: 4, 9: 5, 10: 5, 
+    11: 6, 12: 6, 13: 7, 14: 7, 15: 8, 16: 8, 17: 9, 18: 9, 19: 10, 20: 11
+};
+
+// Blood Hunter: Alma Profana (Truques Conhecidos - NOVO)
+const BH_ALMA_TRUQUES = {
+    3: 2, 4: 2, 5: 2, 6: 2, 7: 2, 8: 2, 9: 2,
+    10: 3, 11: 3, 12: 3, 13: 3, 14: 3, 15: 3, 16: 3, 17: 3, 18: 3, 19: 3, 20: 3
 };
 
 // Blood Hunter: Mutante
@@ -164,17 +176,25 @@ function calcularRecursosTotais(niveisClasses, habilidades, atributos) {
                 recursos.infoConjuracao.push({ classe: 'BH (Mutante)', extra: `${formulas} Fórmulas Conhecidas`, tipo: 'especial' });
             }
 
-            // Alma Profana
+            // Alma Profana (Atualizado)
             if (habilidades.some(h => normalizeKey(h.title).includes("alma profana") || normalizeKey(h.title).includes("pacto"))) {
                 const p = BH_ALMA_PROFANA[nivel];
                 const known = BH_ALMA_KNOWN[nivel] || 0;
+                const cantrips = BH_ALMA_TRUQUES[nivel] || 0; // Pega os truques da nova tabela
 
+                // Adiciona slots de Pacto (Warlock style, mas 1/3 caster)
                 if (p) {
                     recursos.pact.qtd += p.q;
+                    // Garante que o nível do slot seja o maior disponível
                     if (p.n > recursos.pact.nivel) recursos.pact.nivel = p.n;
                 }
 
-                recursos.infoConjuracao.push({ classe: 'BH (Alma Profana)', conhecidas: known, tipo: 'conhecidas' });
+                recursos.infoConjuracao.push({ 
+                    classe: 'BH (Alma Profana)', 
+                    truques: cantrips,     // Adiciona Truques
+                    conhecidas: known,     // Adiciona Magias Conhecidas
+                    tipo: 'conhecidas' 
+                });
             }
 
             recursos.infoConjuracao.push({ classe: 'Blood Hunter', maldicoes: BH_MALDICOES.conhecidas[nivel - 1], tipo: 'especial' });
