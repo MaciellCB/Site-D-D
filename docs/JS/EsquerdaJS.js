@@ -1160,7 +1160,7 @@ function atualizarIniciativaTotal() {
 }
 
 /* =============================================================
-   ATUALIZAÇÃO DE CA (COM ESTRUTURA HTML ALINHADA)
+   ATUALIZAÇÃO DE CA (COM ESTRUTURA HTML ALINHADA E CLASSE EXTRA)
 ============================================================= */
 function atualizarAC() {
     // 1. Verificações de Segurança
@@ -1299,7 +1299,10 @@ function atualizarAC() {
             </div>
         `;
 
-        const plusSign = `<span class="formula-plus">+</span>`;
+        // Sinais de Soma
+        const plusSign = `<span class="formula-plus">+</span>`; // Normal
+        const plusSignExtra = `<span class="formula-plus plus-extra">+</span>`; // Especial para o Extra
+
         let htmlFormula = ``;
 
         // 1. Base
@@ -1323,8 +1326,8 @@ function atualizarAC() {
             htmlFormula += createBlock(bonusAuto, "ITENS");
         }
 
-        // 5. Bônus Manual (EXTRA)
-        htmlFormula += plusSign;
+        // 5. Bônus Manual (EXTRA) - AQUI USAMOS O SINAL ESPECIAL
+        htmlFormula += plusSignExtra;
         htmlFormula += createInputBlock(bonusManual, "EXTRA");
 
         formulaContainer.innerHTML = htmlFormula;

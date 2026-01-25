@@ -1567,13 +1567,13 @@ input[type=number] {
 
 
 
-/* --- FÓRMULA DE CA (Ajustada) --- */
+/* --- FÓRMULA DE CA (Compacta, Ajustada e Alinhada) --- */
 .inline-formula {
     display: flex;
-    align-items: flex-end; /* Alinha itens pela base */
+    align-items: flex-end; /* Alinha tudo por baixo */
     justify-content: center;
-    gap: 6px; 
-    margin-top: 10px;
+    gap: 2px; /* Bem compacto */
+    margin-top: 8px;
     width: 100%;
     color: #e6e6e6;
 }
@@ -1582,13 +1582,13 @@ input[type=number] {
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 35px;
+    min-width: 32px;
     position: relative;
 }
 
 /* Números Fixos */
 .zero-num {
-    font-size: 20px;
+    font-size: 20px; /* Fonte reduzida */
     font-weight: 900;
     color: #fff;
     line-height: 1;
@@ -1597,24 +1597,25 @@ input[type=number] {
     margin: 0;
     padding: 0;
     position: relative;
+    padding-bottom: 2px;
 }
 .zero-num::after { content: none; }
 
-/* Input Editável (EXTRA) */
+/* Input Editável */
 .zero-input {
     background: transparent;
     border: none;
     color: #fff;
     font-weight: 900;
-    font-size: 20px;
+    font-size: 20px; /* Mesma fonte reduzida */
     text-align: center;
-    width: 45px;
+    width: 40px;
     padding: 0;
     margin: 0;
     line-height: 1;
-    height: 20px;
+    height: 22px; 
+    transform: translateY(-2px); /* Pequeno ajuste fino */
 }
-
 .zero-input:focus { outline: none; color: #e0aaff; }
 
 /* Linha Divisória */
@@ -1622,13 +1623,13 @@ input[type=number] {
     width: 100%;
     height: 1px;
     background-color: #555;
-    margin-top: 2px;
-    margin-bottom: 4px;
+    margin-top: 1px;
+    margin-bottom: 3px;
     border-radius: 2px;
 }
 .zero-input:focus ~ .zero-divider { background-color: #9c27b0; height: 2px; }
 
-/* Etiquetas (BASE, DES, EXTRA...) */
+/* Etiquetas (BASE, DES...) */
 .zero-label {
     font-size: 9px;
     color: #bbb;
@@ -1638,21 +1639,21 @@ input[type=number] {
     text-align: center;
 }
 
-/* ==========================================================
-   CONFIGURAÇÃO DOS SINAIS DE +
-========================================================== */
+/* --- CONFIGURAÇÃO DOS SINAIS DE + --- */
 
-/* 1. Regra Geral: Sobe os + (Base, Des, Sab) */
+/* 1. Sinais Normais (Entre números fixos) - FICAM MAIS ALTOS */
 .formula-plus {
     font-size: 16px;
     font-weight: 900;
     color: #dcdcdc;
-    /* Aumentamos a margem para empurrar o + para cima */
-    margin-bottom: 28px; 
+    margin: 0 4px; /* Espaçamento lateral */
+    
+    /* Esta margem empurra o + para cima */
+    margin-bottom: 25px; 
 }
 
-/* 2. Regra Específica: O último + (antes do Extra) fica baixo */
-.formula-plus:last-of-type {
-    /* Mantém a margem menor para alinhar com o input do Extra */
-    margin-bottom: 18px; 
+/* 2. Sinal do Extra (Gerado pelo novo JS) - FICA ONDE ESTAVA */
+.formula-plus.plus-extra {
+    /* Esta margem menor mantém ele alinhado com o input */
+    margin-bottom: 15px; 
 }
