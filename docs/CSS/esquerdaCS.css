@@ -1740,3 +1740,42 @@ input[type=number] {
   display: flex !important;
   margin: 0 !important;
 }
+
+
+
+
+/* =============================================================
+   INPUT EDITÁVEL NA FÓRMULA (EXTRA)
+============================================================= */
+
+.zero-input {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #555; /* O traço embaixo */
+  color: #fff;
+  font-weight: 900;
+  font-size: 26px; /* Mesmo tamanho do zero-num */
+  text-align: center;
+  width: 50px; /* Largura fixa para caber números de 2 dígitos */
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+  border-radius: 0; /* Remove arredondamento padrão */
+  margin-bottom: 2px; /* Alinhamento fino com o label */
+}
+
+.zero-input:focus {
+  outline: none;
+  border-bottom-color: #9c27b0; /* Roxo ao focar */
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Remove as setinhas de aumentar/diminuir do input number */
+.zero-input::-webkit-outer-spin-button,
+.zero-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.zero-input {
+  -moz-appearance: textfield;
+}
