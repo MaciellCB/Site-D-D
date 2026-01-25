@@ -1425,7 +1425,7 @@ input[type=number] {
   
   /* ALTERAÇÃO: Removemos margens e paddings grandes para colar na linha */
   margin-bottom: 0px; 
-  padding-bottom: 2px; /* Era 8px */
+  padding-bottom: -5px; /* Era 8px */
   
   position: relative;
   display: inline-block;
