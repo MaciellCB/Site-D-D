@@ -1487,14 +1487,7 @@
     "name": "(1º nível) Magia do Pacto",
     "description": "<p>Você extrai magia de um pacto com uma entidade extraplanar.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Espaços de Magia:</strong> Diferente de outras classes, todos os seus espaços de magia são do <strong>mesmo nível</strong> (o nível mais alto disponível na tabela de Bruxo, até o 5º círculo).</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Recuperação:</strong> Você recupera <strong>todos</strong> os seus espaços de magia gastos ao terminar um <strong>Descanso Curto</strong> ou Longo.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Atributo de Conjuração:</strong> Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ CD de Resistência:</strong> 8 + Bônus de Proficiência + Modificador de Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Ataque Mágico:</strong> Bônus de Proficiência + Modificador de Carisma.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Foco:</strong> Foco Arcano.</li></ul>"
   },
-  {
-  "id": "bh_base_1_hemomancia",
-  "category": "Classe",
-  "class": "Caçador de Sangue",
-  "subclass": "",
-  "name": "(1º nível) Dado de Hemomancia",
-  "description": "<p>Você manipula seu próprio sangue como fonte de poder sobrenatural.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Dado Base:</strong> Seu Dado de Hemomancia começa como <strong>1d4</strong>.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Escalonamento:</strong> O dado aumenta conforme seu nível: <strong>1d6</strong> no nível 5, <strong>1d8</strong> no nível 11 e <strong>1d10</strong> no nível 17.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Uso:</strong> Sempre que uma habilidade exigir, você rola esse dado para determinar efeitos ou custos associados ao uso de sua hemomancia.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Restrição:</strong> O dano causado por esse dado não pode ser reduzido por resistências, imunidades ou redução de dano.</li></ul>"
-},
+ 
   {
     "id": "bru_base_2_invoca",
     "category": "Classe",
@@ -2656,6 +2649,14 @@
     "name": "(1º nível) Maldição de Sangue",
     "description": "<p>Você conhece a arte proibida das maldições de sangue.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Uso:</strong> Você conhece um número de maldições baseado no seu nível. Você pode usá-las um número de vezes igual a: 1 (nível 1), 2 (nível 6), 3 (nível 13) e 4 (nível 17). Recupera em Descanso Curto ou Longo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Amplificar:</strong> Ao usar uma maldição, você pode escolher sofrer dano necrótico igual a uma rolagem do seu <strong>Dado de Hemomancia</strong>. Esse dano não pode ser reduzido. Se fizer isso, a maldição ganha um efeito adicional.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Restrição:</strong> Criaturas sem sangue são imunes a maldições que não foram amplificadas.</li></ul>"
   },
+ {
+  "id": "bh_base_1_hemomancia",
+  "category": "Classe",
+  "class": "Blood Hunter",
+  "subclass": "",
+  "name": "(1º nível) Dado de Hemomancia",
+  "description": "<p>Você manipula seu próprio sangue como fonte de poder sobrenatural.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Dado Base:</strong> Seu Dado de Hemomancia começa como <strong>1d4</strong>.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Escalonamento:</strong> O dado aumenta conforme seu nível: <strong>1d6</strong> no nível 5, <strong>1d8</strong> no nível 11 e <strong>1d10</strong> no nível 17.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Uso:</strong> Sempre que uma habilidade exigir, você rola esse dado para determinar efeitos ou custos associados ao uso de sua hemomancia.</li><li style='margin-bottom:6px;'><strong style='color:#9c27b0;'>◈ Restrição:</strong> O dano causado por esse dado não pode ser reduzido por resistências, imunidades ou redução de dano.</li></ul>"
+},
   {
     "id": "csa_base_2_estilo",
     "category": "Classe",
