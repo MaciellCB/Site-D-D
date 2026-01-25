@@ -1668,111 +1668,216 @@ input[type=number] {
 }
 
 /* =============================================================
-   FÓRMULA DA CA (LAYOUT FINAL: VERTICAL E ALINHADO)
+   FÓRMULA DA CA - LAYOUT VERTICAL (VALOR EM CIMA, NOME EMBAIXO)
 ============================================================= */
 
-/* 1. Container Principal (A linha toda) */
+/* Container da Linha (alinha os blocos horizontalmente) */
 .inline-formula {
   display: flex;
-  align-items: flex-start; /* Alinha o topo de todos os elementos */
+  align-items: flex-start; /* Alinha pelo topo para os números baterem */
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
   margin-top: 15px;
   width: 100%;
 }
 
-/* 2. O Bloco Individual (Coluna: Valor -> Traço -> Nome) */
+/* O Bloco Individual (Pilha Vertical: Valor -> Linha -> Nome) */
 .zero-pair {
   display: flex;
-  flex-direction: column; /* ISSO GARANTE A PILHA VERTICAL */
+  flex-direction: column; /* FORÇA FICAR UM EM CIMA DO OUTRO */
   align-items: center;
-  justify-content: flex-start;
-  min-width: 42px; /* Largura mínima para o traço não sumir */
+  min-width: 50px;
+  position: relative;
 }
 
-/* 3. O Traço Divisor (Elemento separado agora) */
-.zero-divider {
-  display: block;
-  width: 100%;
-  height: 2px;
-  background-color: #555; /* Cor do traço */
-  margin-top: 2px;
-  margin-bottom: 4px;
-  border-radius: 2px;
-}
-
-/* 4. Número de Texto Fixo (BASE, DES...) */
+/* O Número (Texto Fixo) */
 .zero-num {
-  font-size: 26px;
+  font-size: 28px; /* Tamanho grande */
   font-weight: 900;
   color: #fff;
   line-height: 1;
   text-align: center;
   width: 100%;
-  padding: 0;
-  /* Removemos o ::after antigo */
+  margin-bottom: 2px;
 }
 
-/* 5. Input Editável (EXTRA) */
+/* O Input (Editável - EXTRA) - Estilizado para parecer texto */
 .zero-input {
   background: transparent;
   border: none;
   color: #fff;
   font-weight: 900;
-  font-size: 26px; /* Mesmo tamanho do texto fixo */
+  font-size: 28px; /* Mesmo tamanho do zero-num */
   text-align: center;
-  width: 50px;
+  width: 60px; /* Largura suficiente para 2-3 dígitos */
   padding: 0;
   margin: 0;
+  margin-bottom: 2px;
   font-family: inherit;
   line-height: 1;
   border-radius: 0;
+  -moz-appearance: textfield; /* Remove setas no Firefox */
 }
 
-.zero-input:focus {
-  outline: none;
-}
-
-/* Efeito: Muda a cor do traço quando clica no input */
-.zero-input:focus + .zero-divider {
-    background-color: #9c27b0; /* Roxo */
-}
-
-/* Remove setinhas do input number */
+/* Remove setas do input no Chrome/Safari */
 .zero-input::-webkit-outer-spin-button,
 .zero-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-.zero-input {
-  -moz-appearance: textfield;
+
+.zero-input:focus {
+  outline: none;
+  color: #e0aaff; /* Muda levemente a cor ao focar */
 }
 
-/* 6. O Nome Pequeno (Embaixo do traço) */
+/* A Linha Separadora (Divisor) */
+.zero-divider {
+  width: 100%;
+  height: 2px;
+  background-color: #555;
+  margin-bottom: 4px;
+  border-radius: 2px;
+  transition: background-color 0.2s;
+}
+
+/* Se o input estiver focado, pinta a linha de roxo */
+.zero-input:focus ~ .zero-divider {
+  background-color: #9c27b0;
+}
+
+/* O Nome Pequeno (Embaixo da linha) */
 .zero-label {
-  font-size: 10px;
-  color: #aaa;
-  font-weight: 700;
+  font-size: 11px;
+  color: #bbb;
+  font-weight: 800;
   text-transform: uppercase;
   line-height: 1;
   text-align: center;
-  white-space: nowrap;
 }
 
-/* 7. O Sinal de Mais (+) */
+/* O Sinal de Mais (+) - Ajustado para alinhar com os números */
 .formula-plus {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 900;
-  color: #888;
-  margin-top: 4px; /* Ajuste fino para alinhar com o centro dos números */
+  color: #666;
+  margin-top: 2px; /* Ajuste fino vertical */
 }
 
-/* Limpeza de segurança para remover hacks antigos */
+/* Limpeza de segurança para evitar conflitos antigos */
 .inline-formula > :nth-child(-n+5), 
-.formula-text,
+.formula-text, 
 .zero-num::after {
   transform: none !important;
   display: block !important;
+  content: none !important;
   margin: 0 !important;
-  content: none !important; /* Remove traços fantasmas */
+}
+
+
+/* =============================================================
+   FÓRMULA DA CA - LAYOUT VERTICAL (VALOR EM CIMA, NOME EMBAIXO)
+============================================================= */
+
+/* Container da Linha (alinha os blocos horizontalmente) */
+.inline-formula {
+  display: flex;
+  align-items: flex-start; /* Alinha pelo topo para os números baterem */
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+  width: 100%;
+}
+
+/* O Bloco Individual (Pilha Vertical: Valor -> Linha -> Nome) */
+.zero-pair {
+  display: flex;
+  flex-direction: column; /* FORÇA FICAR UM EM CIMA DO OUTRO */
+  align-items: center;
+  min-width: 50px;
+  position: relative;
+}
+
+/* O Número (Texto Fixo) */
+.zero-num {
+  font-size: 28px; /* Tamanho grande */
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+/* O Input (Editável - EXTRA) - Estilizado para parecer texto */
+.zero-input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-weight: 900;
+  font-size: 28px; /* Mesmo tamanho do zero-num */
+  text-align: center;
+  width: 60px; /* Largura suficiente para 2-3 dígitos */
+  padding: 0;
+  margin: 0;
+  margin-bottom: 2px;
+  font-family: inherit;
+  line-height: 1;
+  border-radius: 0;
+  -moz-appearance: textfield; /* Remove setas no Firefox */
+}
+
+/* Remove setas do input no Chrome/Safari */
+.zero-input::-webkit-outer-spin-button,
+.zero-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.zero-input:focus {
+  outline: none;
+  color: #e0aaff; /* Muda levemente a cor ao focar */
+}
+
+/* A Linha Separadora (Divisor) */
+.zero-divider {
+  width: 100%;
+  height: 2px;
+  background-color: #555;
+  margin-bottom: 4px;
+  border-radius: 2px;
+  transition: background-color 0.2s;
+}
+
+/* Se o input estiver focado, pinta a linha de roxo */
+.zero-input:focus ~ .zero-divider {
+  background-color: #9c27b0;
+}
+
+/* O Nome Pequeno (Embaixo da linha) */
+.zero-label {
+  font-size: 11px;
+  color: #bbb;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1;
+  text-align: center;
+}
+
+/* O Sinal de Mais (+) - Ajustado para alinhar com os números */
+.formula-plus {
+  font-size: 24px;
+  font-weight: 900;
+  color: #666;
+  margin-top: 2px; /* Ajuste fino vertical */
+}
+
+/* Limpeza de segurança para evitar conflitos antigos */
+.inline-formula > :nth-child(-n+5), 
+.formula-text, 
+.zero-num::after {
+  transform: none !important;
+  display: block !important;
+  content: none !important;
+  margin: 0 !important;
 }
