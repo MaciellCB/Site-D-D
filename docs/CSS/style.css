@@ -1,9 +1,8 @@
 /* =============================================================
-   RESET E CONFIGURAÇÕES GLOBAIS
+   1. RESET E CONFIGURAÇÕES GLOBAIS
 ============================================================= */
 * {
-  box-sizing: border-box;
-  /* Garante que padding não aumente a largura total */
+  box-sizing: border-box; /* Garante que padding não aumente a largura total */
 }
 
 body {
@@ -13,12 +12,11 @@ body {
   background-color: #0a0a0a;
   color: white;
   width: 100%;
-  overflow-x: hidden;
-  /* Evita rolagem lateral indesejada */
+  overflow-x: hidden; /* Evita rolagem lateral indesejada */
 }
 
 /* =============================================================
-   HEADER E NAVEGAÇÃO
+   2. HEADER E NAVEGAÇÃO
 ============================================================= */
 header {
   background-color: black;
@@ -50,423 +48,331 @@ header {
   border-radius: 50%;
 }
 
+/* Interação com a Imagem do Personagem */
+.foto-personagem {
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s, border 0.2s;
+}
+
+.foto-personagem:hover {
+  opacity: 0.8;
+  transform: scale(1.02);
+  border: 2px solid #9c27b0;
+}
+
 /* =============================================================
-   CONTAINER PRINCIPAL
+   3. LAYOUT PRINCIPAL (DESKTOP)
 ============================================================= */
 .container {
   display: flex;
   justify-content: center;
-  /* Centraliza os blocos na tela */
-  align-items: stretch;
-  /* Faz todas as colunas terem a mesma altura visual */
+  align-items: stretch; /* Colunas com mesma altura visual */
   min-height: calc(100vh - 60px);
-
-  /* Largura e Espaçamento */
-  width: 98% !important;
-  /* Ocupa quase toda a tela */
+  width: 98%;
   max-width: 1800px;
-  /* Limite para monitores ultra-wide */
-  margin: 0 auto !important;
-  padding: 15px 5px !important;
-  gap: 10px !important;
-  /* Gap fixo e pequeno para economizar espaço */
-
-  /* Comportamento de quebra */
-  flex-wrap: wrap;
-  /* Permite pular linha se a tela for muito pequena */
+  margin: 0 auto;
+  padding: 15px 5px;
+  gap: 10px;
+  flex-wrap: wrap; /* Permite quebra em telas menores */
 }
 
-/* =============================================================
-   COLUNAS (ESQUERDA, CENTRO, DIREITA)
-============================================================= */
+/* --- Colunas --- */
 
-/* LADO ESQUERDO 
-   (Atualizado com base na regra mais recente do final do arquivo) */
+/* Esquerda (Status e Info) */
 .lado-esquerdo {
-  flex: 2 1 420px !important;
+  flex: 2 1 420px;
   min-width: 400px;
   background-color: #121212;
   border-radius: 10px;
   padding: 15px;
-  margin: 0 !important;
+  margin: 0;
 }
 
-/* LADO CENTRO 
-   Prioridade: Flexível mas com limite para não "esmagar" nem "invadir" */
+/* Centro (Perícias e Hex) */
 .lado-centro {
-  flex: 1 1 250px !important;
-  /* Tenta ficar em 250px, mas cresce para ocupar o vazio */
+  flex: 1 1 250px;
   min-width: 240px;
-  /* Limite absoluto de encolhimento */
   background-color: #121212;
   border-radius: 10px;
   padding: 8px;
-  /* Padding reduzido para ganhar espaço interno */
-  overflow: hidden;
-  /* Corta conteúdo que tentar vazar */
-  margin: 0 !important;
+  overflow: hidden; /* Corta conteúdo vazado */
+  margin: 0;
 }
 
-/* LADO DIREITO
-   Prioridade: Ganha mais peso que o centro para caber cards de magia/inventário */
+/* Direita (Inventário e Magias) */
 .lado-direito {
-  flex: 1.5 1 auto !important;
-  /* Cresce mais (1.5) que o centro (1) */
+  flex: 1.5 1 auto; /* Peso maior que o centro */
   min-width: 350px;
   background-color: #121212;
   border-radius: 10px;
   padding: 15px;
-  margin: 0 !important;
+  margin: 0;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* Esconde navbar mobile no desktop */
+#mobile-navbar {
+  display: none;
+}
 
 /* =============================================================
-   MODO MOBILE (HOTBAR & VISIBILIDADE)
-   Só ativa em telas menores que 768px
+   4. MODO MOBILE (Telas < 768px)
 ============================================================= */
-
-/* Esconde a navbar mobile por padrão (Desktop) */
-#mobile-navbar {
-    display: none;
-}
-
 @media (max-width: 768px) {
 
-    /* =========================================================
-       1. CONFIGURAÇÕES GERAIS DE LAYOUT E NAVBAR
-       ========================================================= */
-    
-    body {
-        padding-bottom: 70px !important; /* Espaço para a barra e scroll */
-        overflow-y: auto;
-    }
+  /* --- Ajustes Gerais Mobile --- */
+  body {
+    padding-bottom: 70px; /* Espaço para a hotbar */
+    overflow-y: auto;
+  }
 
-    .container {
-        display: block !important; /* Desativa flexbox lateral */
-        height: auto !important;
-        min-height: auto !important;
-        padding: 5px !important;
-    }
+  .container {
+    display: block; /* Remove flexbox lateral */
+    height: auto;
+    min-height: auto;
+    padding: 5px;
+  }
 
-    /* --- Estilo da Hotbar --- */
-    #mobile-navbar {
-        display: flex;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 60px;
-        background-color: #000;
-        border-top: 1px solid #333;
-        z-index: 99999; /* Acima de tudo */
-        justify-content: space-around;
-        align-items: center;
-        box-shadow: 0 -2px 10px rgba(0,0,0,0.8);
-    }
+  /* --- Hotbar (Navegação Inferior) --- */
+  #mobile-navbar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #000;
+    border-top: 1px solid #333;
+    z-index: 99999;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.8);
+  }
 
-    .mobile-nav-btn {
-        background: none;
-        border: none;
-        color: #666;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 10px;
-        width: 100%;
-        height: 100%;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-
-    .mobile-nav-btn svg {
-        width: 24px;
-        height: 24px;
-        margin-bottom: 2px;
-    }
-
-    .mobile-nav-btn.active {
-        color: #9c27b0; /* Roxo do tema */
-        background-color: #111;
-        border-top: 2px solid #9c27b0;
-    }
-
-    /* Notificação de Dados */
-    #dice-results-container {
-        bottom: 80px !important; 
-        z-index: 200000 !important; 
-        max-width: 90% !important; 
-    }
-
-    /* =========================================================
-       2. LÓGICA DE VISIBILIDADE (VIEWS)
-       ========================================================= */
-
-    /* Por padrão, esconde TODAS as seções principais no mobile */
-    header, 
-    .info-personagem, 
-    .lado-esquerdo, 
-    .lado-centro, 
-    .lado-direito {
-        display: none !important;
-    }
-
-    /* --- VIEW: HEADER (Perfil) --- */
-    body[data-mobile-view="header"] header,
-    body[data-mobile-view="header"] .info-personagem {
-        display: flex !important;
-        flex-direction: column !important;
-        width: 100% !important;
-        padding: 10px;
-        height: auto;
-    }
-    
-    body[data-mobile-view="header"] .linha-info {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    /* --- VIEW: STATUS (Esquerda) --- */
-    body[data-mobile-view="status"] .lado-esquerdo {
-        display: flex !important;
-        flex-direction: column !important;
-        width: 100% !important;
-        min-width: 0 !important; /* Remove limite que causava corte */
-        max-width: none !important;
-        margin: 0 !important;
-        padding: 10px 5px !important;
-        align-items: center !important;
-        overflow-x: hidden !important;
-    }
-
-    /* --- VIEW: PERÍCIA (Centro) --- */
-    body[data-mobile-view="pericia"] .lado-centro {
-        display: block !important;
-        width: 100% !important;
-        flex: none !important;
-        max-width: none !important;
-        margin: 0 !important;
-    }
-
-    /* --- VIEW: INVENTÁRIO (Direita) --- */
-    body[data-mobile-view="inventario"] .lado-direito {
-        display: flex !important;
-        width: 100% !important;
-        flex: none !important;
-        max-width: none !important;
-        margin: 0 !important;
-        height: auto !important;
-        min-height: calc(100vh - 80px) !important;
-    }
-
-    /* Ajuste das abas no modo inventário */
-    .abas button {
-        font-size: 11px !important;
-        padding: 8px 2px !important;
-    }
-
-    /* =========================================================
-       3. ARMADURA, ESCUDO E FÓRMULA (LAYOUT GRID)
-       ========================================================= */
-
-    /* Card Principal */
-    .armadura-card {
-        height: auto !important;
-        min-height: 300px !important;
-        padding-bottom: 20px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: flex-start !important;
-    }
-
-    .armadura-grid {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        width: 100% !important;
-        gap: 20px !important;
-    }
-
-    /* --- Grade de Posicionamento (Topo) --- */
-    .escudo-col {
-        display: grid !important;
-        width: 100% !important;
-        grid-template-columns: 1fr 1fr !important;
-        /* Áreas: Iniciativa/Bônus em cima, Escudo ocupando tudo em baixo */
-        grid-template-areas: 
-            "ini bonus"
-            "shield shield" !important;
-        justify-items: center !important;
-        align-items: end !important;
-        gap: 15px !important;
-        margin-bottom: 10px !important;
-    }
-
-    /* 1. Iniciativa */
-    .iniciativa-block {
-        grid-area: ini !important;
-        margin: 0 !important;
-        justify-self: end !important; /* Cola no centro */
-    }
-
-    /* 2. Bônus de Iniciativa */
-    .bonus-iniciativa-block {
-        grid-area: bonus !important;
-        margin: 0 !important;
-        height: 94px !important;
-        flex-direction: column !important;
-        justify-content: center !important;
-        gap: 5px !important;
-        justify-self: start !important; /* Cola no centro */
-    }
-    
-    .bonus-iniciativa-block .bonus-valor {
-        font-size: 24px !important;
-        width: 100% !important;
-        border-bottom: none !important;
-    }
-
-    /* 3. Escudo */
-    .escudo-wrap {
-        grid-area: shield !important;
-        width: 92px !important; /* Tamanho fixo para não deformar */
-        margin-top: 10px !important;
-    }
-
-    /* --- Fórmula da Armadura (Baixo) --- */
-    
-    /* Título: Margem grande para evitar sobreposição */
-    .armadura-titulo {
-        font-size: 11px !important;
-        margin-bottom: 45px !important;
-        text-align: center !important;
-        width: 100% !important;
-        display: block !important;
-        position: relative !important;
-        white-space: nowrap;
-    }
-
-    /* Container da Fórmula */
-    .formula-col {
-        width: 100% !important;
-        margin-top: 10px !important;
-        padding: 0 !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        transform: scale(0.9) !important; /* Redução leve */
-        transform-origin: top center !important;
-    }
-
-    /* Linha dos Itens */
-    .inline-formula {
-        display: flex !important;
-        flex-wrap: nowrap !important;
-        align-items: flex-end !important;
-        justify-content: center !important;
-        gap: 6px !important;
-        width: 100% !important;
-        margin: 0 !important;
-    }
-
-    /* Reset de Transformações (Remove flutuação do desktop) */
-    .inline-formula > span, 
-    .inline-formula > div,
-    .formula-text, 
-    .formula-attr,
-    .zero-num,
-    .formula-text.heavy-armor-mode {
-        transform: none !important;
-        position: relative !important;
-        margin: 0 !important;
-        top: auto !important;
-        bottom: auto !important;
-        line-height: 1 !important;
-        white-space: nowrap !important;
-    }
-
-    /* Pares (Número + Label) */
-    .zero-pair {
-        display: flex !important;
-        flex-direction: column-reverse !important; /* Número em cima */
-        align-items: center !important;
-        gap: 2px !important;
-    }
-
-    .zero-num {
-        padding-bottom: 0 !important;
-    }
-
-    .zero-num::after, 
-    .iniciativa-valor::after {
-        display: none !important; /* Remove linhas decorativas */
-    }
-
-    .tipo-col {
-        margin-top: 15px !important;
-    }
-}
-/* Torna o cursor uma 'mãozinha' ao passar sobre a foto */
-.foto-personagem {
+  .mobile-nav-btn {
+    background: none;
+    border: none;
+    color: #666;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    width: 100%;
+    height: 100%;
     cursor: pointer;
-    transition: opacity 0.2s, transform 0.2s;
-}
+    transition: 0.2s;
+  }
 
-/* Efeito visual ao passar o mouse */
-.foto-personagem:hover {
-    opacity: 0.8;
-    transform: scale(1.02);
-    border: 2px solid #9c27b0; /* Borda roxa para indicar foco */
+  .mobile-nav-btn svg {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 2px;
+  }
+
+  .mobile-nav-btn.active {
+    color: #9c27b0;
+    background-color: #111;
+    border-top: 2px solid #9c27b0;
+  }
+
+  /* Ajuste de Notificação de Dados */
+  #dice-results-container {
+    bottom: 80px;
+    z-index: 200000;
+    max-width: 90%;
+  }
+
+  /* --- Sistema de Views (Abas) --- */
+
+  /* Oculta tudo por padrão no mobile */
+  header,
+  .info-personagem,
+  .lado-esquerdo,
+  .lado-centro,
+  .lado-direito {
+    display: none;
+  }
+
+  /* View: Header (Perfil) */
+  body[data-mobile-view="header"] header,
+  body[data-mobile-view="header"] .info-personagem {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px;
+    height: auto;
+  }
+
+  body[data-mobile-view="header"] .linha-info {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* View: Status (Esquerda) */
+  body[data-mobile-view="status"] .lado-esquerdo {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    margin: 0;
+    padding: 10px 5px;
+    align-items: center;
+    overflow-x: hidden;
+  }
+
+  /* View: Perícia (Centro) */
+  body[data-mobile-view="pericia"] .lado-centro {
+    display: block;
+    width: 100%;
+    flex: none;
+    max-width: none;
+    margin: 0;
+  }
+
+  /* View: Inventário (Direita) */
+  body[data-mobile-view="inventario"] .lado-direito {
+    display: flex;
+    width: 100%;
+    flex: none;
+    max-width: none;
+    margin: 0;
+    height: auto;
+    min-height: calc(100vh - 80px);
+  }
+
+  .abas button {
+    font-size: 11px;
+    padding: 8px 2px;
+  }
+
+  /* --- Ajustes Específicos de Componentes Mobile --- */
+
+  /* Grid de Armadura e Iniciativa */
+  .armadura-card {
+    height: auto;
+    min-height: 300px;
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .armadura-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+  }
+
+  .escudo-col {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "ini bonus"
+      "shield shield";
+    justify-items: center;
+    align-items: end;
+    gap: 15px;
+    margin-bottom: 10px;
+  }
+
+  .iniciativa-block {
+    grid-area: ini;
+    margin: 0;
+    justify-self: end;
+  }
+
+  .bonus-iniciativa-block {
+    grid-area: bonus;
+    margin: 0;
+    height: 94px;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    justify-self: start;
+  }
+
+  .bonus-iniciativa-block .bonus-valor {
+    font-size: 24px;
+    width: 100%;
+    border-bottom: none;
+  }
+
+  .escudo-wrap {
+    grid-area: shield;
+    width: 92px;
+    margin-top: 10px;
+  }
+
+  /* Fórmula de CA no Mobile */
+  .armadura-titulo {
+    font-size: 11px;
+    margin-bottom: 45px;
+    text-align: center;
+    width: 100%;
+    display: block;
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .formula-col {
+    width: 100%;
+    margin-top: 10px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: scale(0.9);
+    transform-origin: top center;
+  }
+
+  .inline-formula {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    margin: 0;
+  }
+
+  /* Reset de transformações e posições do desktop */
+  .inline-formula > span,
+  .inline-formula > div,
+  .formula-text,
+  .formula-attr,
+  .zero-num,
+  .formula-text.heavy-armor-mode {
+    transform: none;
+    position: relative;
+    margin: 0;
+    top: auto;
+    bottom: auto;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .zero-pair {
+    display: flex;
+    flex-direction: column-reverse; /* Número em cima no mobile */
+    align-items: center;
+    gap: 2px;
+  }
+
+  .zero-num {
+    padding-bottom: 0;
+  }
+
+  /* Remove decorações desnecessárias no mobile */
+  .zero-num::after,
+  .iniciativa-valor::after {
+    display: none;
+  }
+
+  .tipo-col {
+    margin-top: 15px;
+  }
 }

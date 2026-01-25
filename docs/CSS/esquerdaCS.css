@@ -1,5 +1,5 @@
 /* =============================================================
-   RESET E GLOBAIS
+   1. RESET E GLOBAIS
 ============================================================= */
 /* Remove setas dos inputs numéricos */
 input[type=number]::-webkit-inner-spin-button,
@@ -13,7 +13,7 @@ input[type=number] {
 }
 
 /* =============================================================
-   LAYOUT GERAL E ESTRUTURA (ESQUERDA)
+   2. LAYOUT GERAL E ESTRUTURA (ESQUERDA)
 ============================================================= */
 .container {
   display: flex;
@@ -32,12 +32,11 @@ input[type=number] {
   align-self: stretch;
   background-color: #121212;
   margin-top: -8px;
-  /* Padding consolidado (versão mais recente sobrescreve) */
   padding: 20px 15px 15px 15px;
 }
 
 /* =============================================================
-   IMAGEM, HEX E INFO BÁSICA (CABEÇALHO SUPERIOR)
+   3. CABEÇALHO (IMAGEM, HEX E INFO BÁSICA)
 ============================================================= */
 .personagem-img {
   width: 100px;
@@ -94,6 +93,9 @@ input[type=number] {
   gap: 20px;
 }
 
+/* =============================================================
+   4. INPUTS GERAIS E LABELS
+============================================================= */
 .campo {
   display: flex;
   flex-direction: column;
@@ -122,632 +124,7 @@ input[type=number] {
   border-color: #9c27b0;
 }
 
-/* =============================================================
-   STATUS REDESIGN (NÍVEL, INSPIRAÇÃO, PROFICIÊNCIA)
-   Prioridade: Redesign Limpo + Ajustes Recentes
-============================================================= */
-/* Container Principal do Topo */
-.linha-top {
-  display: flex;
-  align-items: center;
-  gap: 25px;
-  margin-bottom: 15px;
-  width: 100%;
-}
-
-/* --- BLOCO DE NÍVEL (Atualizado para versão grande) --- */
-.nivel-destaque {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 110px;
-  height: 95px;
-  background: linear-gradient(180deg, #161616, #1f1f1f);
-  border: 1px solid #333;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
-  padding: 8px;
-}
-
-.nivel-titulo {
-  font-size: 11px;
-  color: #888;
-  letter-spacing: 1px;
-  font-weight: 700;
-  margin-bottom: 2px;
-}
-
-.nivel-valor {
-  font-size: 52px;
-  font-weight: 800;
-  color: #fff;
-  line-height: 1;
-  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-  margin-top: 4px;
-}
-
-/* --- ÁREA DOS STATUS (DIREITA) --- */
-.status-row {
-  display: flex;
-  /* Gap reduzido conforme atualização recente para caber 3 itens */
-  gap: 15px;
-  align-items: flex-end;
-  justify-content: center;
-  width: 100%;
-}
-
-.status-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-
-.status-label-top {
-  font-size: 13px;
-  color: #bbb;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-/* Caixas (Quadrados em volta do valor) */
-.caixa-valor-controle,
-.caixa-valor-fixo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #0f0f0f;
-  border-radius: 6px;
-  height: 42px;
-  padding: 0 8px;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
-}
-
-.caixa-valor-controle {
-  border: 1px solid #333;
-  min-width: 85px;
-}
-
-/* Consolidado: Definição recente da caixa fixa */
-.caixa-valor-fixo {
-  border: 1px solid #444;
-  min-width: 70px;
-}
-
-/* Fonte dos Números dos Status */
-.valor-grande {
-  font-size: 22px;
-  font-weight: 700;
-  color: #fff;
-  margin: 0 8px;
-}
-
-/* Botões Pequenos (Setinhas) */
-.btn-mini {
-  background: transparent;
-  border: none;
-  color: #555;
-  font-size: 14px;
-  cursor: pointer;
-  padding: 4px;
-  transition: color 0.2s, transform 0.1s;
-}
-
-.btn-mini:hover {
-  color: #9c27b0;
-  transform: scale(1.1);
-}
-
-/* Estilos legados de controles (caso ainda sejam usados internamente) */
-.controls-inline { display: flex; gap: 12px; justify-content: center; margin-bottom: 8px; }
-.control-group { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-.inspiracao-box, .proficiencia-box { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: #101010; padding: 4px 8px; border-radius: 6px; border: 1px solid #222; font-size: 13px; min-width: 64px; margin-bottom: 6px; vertical-align: middle; }
-.inspiracao-box button, .proficiencia-box button { background: #171717; border: 1px solid #2b2b2b; color: #ddd; width: 20px; height: 20px; padding: 0; border-radius: 4px; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
-.inspiracao-box #inspiraValor, .proficiencia-box #proficienciaValor { min-width: 18px; text-align: center; font-weight: 700; color: #fff; font-size: 13px; }
-.profi-formula { font-size: 11px; color: #888; margin-top: 4px; }
-
-/* =============================================================
-   HEXAGRAMA E ATRIBUTOS
-============================================================= */
-.atributos {
-  background-color: #111;
-  border-radius: 10px;
-  padding: 15px;
-  width: 100%;
-  position: relative;
-}
-
-.atributos-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.atributos-header h3 {
-  margin: 0;
-  font-size: 14px;
-  color: #ccc;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.editar {
-  cursor: pointer;
-  font-size: 18px;
-}
-
-.hexagrama {
-  position: relative;
-  width: 300px;
-  height: 300px;
-  margin: 0 auto;
-}
-
-.hex-overlay {
-  position: absolute;
-  top: -35px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 270px;
-  z-index: 2;
-  cursor: pointer;
-}
-
-.editar-hex {
-  position: absolute;
-  top: -52px;
-  right: -12px;
-  font-size: 22px;
-  z-index: 6;
-  cursor: pointer;
-  background: transparent;
-}
-
-.num {
-  position: absolute;
-  background-color: transparent;
-  color: white;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 40px;
-  font-weight: bold;
-  z-index: 5;
-  cursor: pointer;
-  user-select: none;
-}
-
-.num[contenteditable="true"] {
-  outline: 2px dashed rgba(255, 255, 255, 0.12);
-  user-select: text;
-  cursor: text;
-}
-
-/* Posições do hexágono */
-.n1 { top: 0; left: 50%; transform: translate(-48%, -37%); }
-.n2 { top: 25%; left: 90%; transform: translate(-89%, -79%); }
-.n3 { top: 75%; left: 90%; transform: translate(-89%, -126%); }
-.n4 { bottom: 0; left: 50%; transform: translate(-48%, -49%); }
-.n5 { top: 75%; left: 10%; transform: translate(-12%, -126%); }
-.n6 { top: 25%; left: 10%; transform: translate(-6%, -78%); }
-
-.barras {
-  margin-top: 15px;
-  text-align: center;
-  font-size: 14px;
-  color: #aaa;
-}
-
-/* =============================================================
-   ARMADURA E INICIATIVA
-   Prioridade: Layout 2 Colunas + Fórmula Vertical Recente
-============================================================= */
-.armadura-area {
-  width: 100%;
-  margin-top: 14px;
-  display: flex;
-  justify-content: center;
-}
-
-.armadura-card {
-  width: 100%;
-  background: linear-gradient(180deg, #0f0f0f, #111);
-  border: 1px solid #232323;
-  padding: 16px;
-  border-radius: 10px;
-  color: #ddd;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
-  position: relative;
-}
-
-.armadura-grid {
-  display: grid;
-  /* CORREÇÃO: Usar 2 colunas */
-  grid-template-columns: 110px 1fr;
-  grid-template-rows: auto auto;
-  grid-template-areas:
-    "escudo formula"
-    "escudo tipo";
-  gap: 5px;
-  align-items: start;
-}
-
-.escudo-col {
-  grid-area: escudo;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: center;
-}
-
-.formula-col {
-  grid-area: formula;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: center;
-  width: 100%;
-  padding-top: 5px;
-}
-
-.tipo-col {
-  grid-area: tipo;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  align-items: center;
-  justify-content: flex-start;
-  margin-left: 0;
-  transform: none;
-  margin-top: 5px;
-  width: 100%;
-}
-
-/* Elementos Gráficos (Escudo) */
-.escudo-wrap {
-  position: relative;
-  width: 92px;
-  height: 92px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.escudo-img {
-  position: absolute;
-  width: 92px;
-  height: 92px;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.98;
-}
-
-.armadura-valor {
-  position: relative;
-  z-index: 3;
-  width: 68px;
-  height: 68px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  color: #fff;
-  font-weight: 900;
-  font-size: 30px;
-  border-radius: 50%;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
-  user-select: none;
-}
-
-/* Iniciativa */
-.iniciativa-block {
-  width: 92px;
-  height: 94px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #2a2a2a;
-  background: linear-gradient(180deg, #0f0f0f, #0c0c0c);
-  border-radius: 6px;
-  padding: 8px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
-}
-
-.iniciativa-label {
-  font-size: 12px;
-  color: #bfbfbf;
-  font-weight: 700;
-  letter-spacing: 1px;
-  margin-bottom: 6px;
-}
-
-.iniciativa-valor {
-  font-size: 36px;
-  font-weight: 900;
-  color: #fff;
-  line-height: 1;
-}
-
-.iniciativa-valor::after {
-  content: "";
-  display: block;
-  width: 56px;
-  height: 3px;
-  margin-top: 8px;
-  background: linear-gradient(90deg, #e6e6e6, #cfcfcf);
-  border-radius: 2px;
-  opacity: 0.95;
-  margin-left: -5px;
-}
-
-.bonus-iniciativa-block {
-  width: 92px;
-  height: 40px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  border: 1px solid #2a2a2a;
-  background: linear-gradient(180deg, #0f0f0f, #0c0c0c);
-  border-radius: 6px;
-  padding: 0 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35);
-  margin-top: 8px;
-}
-
-.bonus-label {
-  font-size: 10px;
-  color: #bfbfbf;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-.bonus-valor {
-  width: 30px;
-  text-align: center;
-  background: transparent;
-  border: none;
-  color: #fff;
-  font-weight: 900;
-  font-size: 16px;
-  border-bottom: 1px solid #444;
-  padding-bottom: 2px;
-}
-
-.bonus-valor:focus {
-  outline: none;
-  border-bottom: 1px solid #9c27b0;
-}
-
-/* Títulos */
-.armadura-titulo,
-.tipo-titulo {
-  font-weight: 800;
-  color: #cfcfcf;
-  font-size: 14px;
-  letter-spacing: 1px;
-}
-
-.tipo-titulo {
-  font-size: 16px;
-  margin-bottom: 6px;
-  text-align: left;
-}
-
-/* --- FÓRMULA DE CA (Layout Vertical - Definição Final) --- */
-.inline-formula {
-  display: flex;
-  align-items: flex-start; /* Alinha pelo topo */
-  justify-content: center;
-  gap: 10px;
-  margin-top: 15px;
-  width: 100%;
-  flex-wrap: nowrap;
-  color: #e6e6e6;
-  font-weight: 800;
-  font-size: 14px;
-}
-
-/* Limpeza de propriedades legadas que atrapalham o vertical */
-.inline-formula > :nth-child(-n+5),
-.formula-text {
-  transform: none !important;
-  display: block !important;
-  margin: 0 !important;
-  line-height: 1;
-}
-
-.inline-formula .zero-pair,
-.zero-pair {
-  display: flex;
-  flex-direction: column; /* Força vertical */
-  align-items: center;
-  gap: 6px;
-  min-width: 50px;
-  position: relative;
-}
-
-.zero-num {
-  font-size: 28px;
-  font-weight: 900;
-  color: #fff;
-  line-height: 1;
-  text-align: center;
-  width: 100%;
-  margin-bottom: 2px;
-  position: relative;
-  padding-bottom: 8px;
-  display: inline-block;
-}
-
-/* Linha decorativa abaixo do número */
-.zero-num::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 0;
-  width: 40px;
-  height: 3px;
-  background: linear-gradient(90deg, #e6e6e6, #cfcfcf);
-  border-radius: 2px;
-  opacity: 0.95;
-}
-
-/* Input numérico da fórmula */
-.zero-input {
-  background: transparent;
-  border: none;
-  color: #fff;
-  font-weight: 900;
-  font-size: 28px;
-  text-align: center;
-  width: 60px;
-  padding: 0;
-  margin: 0 0 2px 0;
-  font-family: inherit;
-  line-height: 1;
-}
-
-.zero-input:focus {
-  outline: none;
-  color: #e0aaff;
-}
-
-.zero-divider {
-  width: 100%;
-  height: 2px;
-  background-color: #555;
-  margin-bottom: 4px;
-  border-radius: 2px;
-  transition: background-color 0.2s;
-}
-
-.zero-input:focus ~ .zero-divider {
-  background-color: #9c27b0;
-}
-
-.zero-label {
-  font-size: 11px;
-  color: #bbb;
-  font-weight: 800;
-  text-transform: uppercase;
-  line-height: 1;
-  text-align: center;
-}
-
-.formula-plus {
-  font-size: 24px;
-  font-weight: 900;
-  color: #dcdcdc;
-  margin-top: 2px;
-  margin-right: 6px;
-}
-
-.formula-eq {
-  margin-right: 6px;
-  color: #cfcfcf;
-  font-weight: 900;
-}
-
-.formula-attr {
-  text-transform: uppercase;
-  color: #fff;
-  font-weight: 900;
-}
-
-/* --- TAGS DE TIPO DE ARMADURA (Consolidado: Contorno + Todas as Cores) --- */
-.armadura-tag {
-  font-weight: 900;
-  font-size: 14px;
-  text-align: center;
-  padding: 4px 10px;
-  border-radius: 6px;
-  /* Contorno Padrão */
-  border: 2px solid transparent;
-  background-color: transparent;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-  transition: all 0.3s ease;
-  width: auto;
-  display: inline-block;
-  margin-top: 5px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35); /* Sombra base */
-}
-
-/* Cores e Variações */
-.armadura-tag.pesado {
-  color: #ff5252;
-  border-color: #ff5252;
-  background: rgba(255, 82, 82, 0.1);
-  box-shadow: 0 0 10px rgba(255, 82, 82, 0.2);
-}
-
-.armadura-tag.media {
-  color: #ffca28;
-  border-color: #ffca28;
-  background: rgba(255, 202, 40, 0.1);
-  box-shadow: 0 0 10px rgba(255, 202, 40, 0.2);
-}
-
-.armadura-tag.leve {
-  color: #69f0ae;
-  border-color: #69f0ae;
-  background: rgba(105, 240, 174, 0.1);
-  box-shadow: 0 0 10px rgba(105, 240, 174, 0.2);
-}
-
-.armadura-tag.barbaro {
-  color: #ff5722;
-  border-color: #ff5722;
-  background: rgba(255, 87, 34, 0.1);
-  box-shadow: 0 0 10px rgba(255, 87, 34, 0.2);
-}
-
-.armadura-tag.monge {
-  color: #29b6f6;
-  border-color: #29b6f6;
-  background: rgba(41, 182, 246, 0.1);
-  box-shadow: 0 0 10px rgba(41, 182, 246, 0.2);
-}
-
-.armadura-tag.nenhuma {
-  color: #eeeeee;
-  border-color: #eeeeee;
-  background: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-}
-
-/* Detalhes Extras da Armadura */
-.armadura-details {
-  margin-top: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.linha-detail {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.label-detail {
-  min-width: 120px;
-  font-weight: 700;
-  color: #bfbfbf;
-  font-size: 13px;
-}
-
+/* Detalhes Extras (Input Detail) */
 .input-detail {
   flex: 1;
   background: transparent;
@@ -762,439 +139,7 @@ input[type=number] {
   color: #777;
 }
 
-/* =============================================================
-   XP, NÍVEL E CLASSE
-============================================================= */
-.xp-container {
-  margin-top: 20px;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.campo-xp {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.campo-xp label {
-  font-size: 12px;
-  color: #aaa;
-  margin-bottom: 3px;
-}
-
-.campo-xp input {
-  width: 60px;
-  text-align: center;
-  background-color: transparent;
-  border: 1px solid #555;
-  border-radius: 5px;
-  color: white;
-  padding: 3px 0;
-}
-
-.campo-xp input:focus {
-  outline: none;
-  border-color: #9c27b0;
-}
-
-.ficha-compacta {
-  width: 100%;
-  margin-top: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.linha {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.linha-xp,
-.linha-metros {
-  align-items: center;
-}
-
-.classe-focus {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: #0f0f0f;
-  border: 1px solid #2a2a2a;
-  padding: 10px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-  min-width: 160px;
-  justify-content: space-between;
-}
-
-.classe-nome {
-  font-weight: 700;
-  font-size: 16px;
-}
-
-.classe-nivel {
-  font-weight: 800;
-  font-size: 18px;
-}
-
-/* Barra de XP */
-.xp-box {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 40%;
-}
-
-.xp-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.xp-label {
-  font-size: 13px;
-  color: #aaa;
-}
-
-.xp-text {
-  font-weight: 700;
-}
-
-.xp-bar-outer {
-  width: 100%;
-  height: 12px;
-  background: #151515;
-  border-radius: 8px;
-  border: 1px solid #252525;
-  overflow: hidden;
-}
-
-.xp-bar-inner {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #7b3fc1, #b26cff);
-  border-radius: 8px;
-  transition: width 350ms ease;
-}
-
-.xp-atual-input {
-  width: 70px;
-  padding: 4px 6px;
-  background: transparent;
-  border: 1px solid #444;
-  color: white;
-  border-radius: 6px;
-  text-align: center;
-}
-
-.xp-total-text {
-  color: #bbb;
-  font-weight: 700;
-  margin-left: 6px;
-}
-
-/* =============================================================
-   MOVIMENTAÇÃO E DADOS DE VIDA (DV)
-============================================================= */
-.marco-box,
-.metros-box,
-.quadrados-box,
-.voo-box,
-.voo-quad-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.marco-box,
-.voo-box,
-.voo-quad-box {
-  width: 100px;
-}
-
-.metros-box,
-.quadrados-box {
-  width: 120px;
-}
-
-.marco-box label,
-.metros-box label,
-.quadrados-box label {
-  color: #aaa;
-  font-size: 12px;
-  margin-bottom: 4px;
-}
-
-.marco-box input,
-.marco-input,
-.metros-box input,
-.quadrados-box input {
-  text-align: center;
-  background: transparent;
-  border: 1px solid #444;
-  color: white;
-  border-radius: 6px;
-  padding: 4px 0;
-}
-
-.marco-box input,
-.marco-input,
-.voo-box input,
-.voo-quad-box input {
-  width: 38px;
-  font-size: 14px;
-}
-
-.metros-box input,
-.quadrados-box input {
-  width: 90px;
-}
-
-.marco-max {
-  opacity: 0.7;
-}
-
-.marco-bar-outer {
-  width: 100%;
-  height: 8px;
-  background: #121212;
-  border-radius: 6px;
-  margin-top: 6px;
-  border: 1px solid #222;
-  overflow: hidden;
-}
-
-.marco-bar-inner {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #6b9cff, #7bb6ff);
-  transition: width 300ms ease;
-  border-radius: 6px;
-}
-
-/* Voo (Escondido por padrão) */
-.voo-box,
-.voo-quad-box {
-  display: none;
-}
-
-.voo-box input,
-.voo-quad-box input {
-  border: 1px solid #4fc3f7;
-  color: #4fc3f7;
-}
-
-.voo-box label,
-.voo-quad-box label {
-  color: #4fc3f7;
-  font-size: 11px;
-  margin-bottom: 4px;
-  font-weight: bold;
-}
-
-/* Dados de Vida (DV) - Botão e Modal */
-.dv-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 60px;
-  justify-content: flex-end;
-}
-
-.dv-box label {
-  color: #e0aaff;
-  font-size: 11px;
-  margin-bottom: 4px;
-  font-weight: bold;
-}
-
-.btn-dv-trigger {
-  background: linear-gradient(180deg, #1a1a1a, #000);
-  border: 1px solid #9c27b0;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.btn-dv-trigger img {
-  width: 18px;
-  height: 18px;
-  opacity: 0.9;
-}
-
-.btn-dv-trigger:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 10px rgba(156, 39, 176, 0.4);
-}
-
-.item-dv {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #101010;
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 1px solid #333;
-  margin-bottom: 6px;
-}
-
-.btn-rolar-dv {
-  background: #2a1a2a;
-  border: 1px solid #9c27b0;
-  color: #fff;
-  border-radius: 4px;
-  padding: 4px 8px;
-  font-size: 12px;
-  cursor: pointer;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  transition: 0.2s;
-}
-
-.btn-rolar-dv:hover:not(:disabled) {
-  background: #9c27b0;
-}
-
-.btn-rolar-dv:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-  border-color: #444;
-  filter: grayscale(1);
-}
-
-.dv-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.dv-class-name {
-  font-weight: bold;
-  font-size: 13px;
-  color: #ddd;
-}
-
-.dv-count {
-  font-size: 11px;
-  color: #aaa;
-}
-
-/* =============================================================
-   VIDA (HP)
-============================================================= */
-.vida-container {
-  text-align: center;
-  color: #ccc;
-  width: 100%;
-  margin-top: 12px;
-}
-
-.vida-container h3 {
-  margin: 0 0 5px 0;
-  font-weight: bold;
-  color: #aaa;
-  text-transform: uppercase;
-  font-size: 0.9rem;
-}
-
-.vida-bar {
-  position: relative;
-  background-color: #444;
-  border: 1px solid #555;
-  border-radius: 6px;
-  height: 30px;
-  width: 100%;
-  overflow: hidden;
-}
-
-.vida-fill {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  background-color: #b22222;
-  width: 100%;
-  transition: width 0.2s ease;
-}
-
-.vida-text {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  z-index: 1;
-  color: white;
-  font-weight: bold;
-}
-
-.vida-text span[contenteditable="true"] {
-  min-width: 25px;
-  display: inline-block;
-  text-align: center;
-  cursor: text;
-  padding: 0 2px;
-  border-radius: 4px;
-}
-
-.vida-text span[contenteditable="true"]:focus {
-  outline: 1px dashed #fff;
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.vida-btn {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.2rem;
-  cursor: pointer;
-  padding: 0 5px;
-  transition: transform 0.1s ease;
-}
-
-.vida-btn:hover {
-  transform: scale(1.2);
-}
-
-.barras-secundarias {
-  display: flex;
-  gap: 12px;
-  margin-top: 12px;
-}
-
-.barra-secundaria {
-  flex: 1;
-  text-align: center;
-}
-
-.barra-secundaria h3 {
-  margin: 0 0 5px 0;
-  font-weight: bold;
-  color: #aaa;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-}
-
-.barra-secundaria .vida-bar {
-  height: 24px;
-}
-
-/* =============================================================
-   INPUTS ESPECIAIS E MULTI-SELECT
-============================================================= */
+/* Multi-Select Especial */
 .input-detail .multi-select-box {
   width: 100%;
   position: relative;
@@ -1278,8 +223,919 @@ input[type=number] {
 }
 
 /* =============================================================
-   MODAL DE CLASSES
-   Consolidação de regras e priorização do Z-Index
+   5. STATUS (NÍVEL, INSPIRAÇÃO, PROFICIÊNCIA)
+============================================================= */
+.linha-top {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+/* Bloco de Nível */
+.nivel-destaque {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 110px;
+  height: 95px;
+  background: linear-gradient(180deg, #161616, #1f1f1f);
+  border: 1px solid #333;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+  padding: 8px;
+}
+
+.nivel-titulo {
+  font-size: 11px;
+  color: #888;
+  letter-spacing: 1px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.nivel-valor {
+  font-size: 52px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  margin-top: 4px;
+}
+
+/* Área Direita (Status) */
+.status-row {
+  display: flex;
+  gap: 15px;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+}
+
+.status-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-label-top {
+  font-size: 13px;
+  color: #bbb;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Caixas de Valor */
+.caixa-valor-controle,
+.caixa-valor-fixo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f0f0f;
+  border-radius: 6px;
+  height: 42px;
+  padding: 0 8px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.caixa-valor-controle {
+  border: 1px solid #333;
+  min-width: 85px;
+}
+
+.caixa-valor-fixo {
+  border: 1px solid #444;
+  min-width: 70px;
+}
+
+.valor-grande {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 8px;
+}
+
+/* Botões Mini */
+.btn-mini {
+  background: transparent;
+  border: none;
+  color: #555;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s, transform 0.1s;
+}
+
+.btn-mini:hover {
+  color: #9c27b0;
+  transform: scale(1.1);
+}
+
+/* Legado/Fallback de controles */
+.controls-inline { display: flex; gap: 12px; justify-content: center; margin-bottom: 8px; }
+.control-group { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.inspiracao-box, .proficiencia-box { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: #101010; padding: 4px 8px; border-radius: 6px; border: 1px solid #222; font-size: 13px; min-width: 64px; margin-bottom: 6px; vertical-align: middle; }
+.inspiracao-box button, .proficiencia-box button { background: #171717; border: 1px solid #2b2b2b; color: #ddd; width: 20px; height: 20px; padding: 0; border-radius: 4px; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.inspiracao-box #inspiraValor, .proficiencia-box #proficienciaValor { min-width: 18px; text-align: center; font-weight: 700; color: #fff; font-size: 13px; }
+.profi-formula { font-size: 11px; color: #888; margin-top: 4px; }
+
+/* =============================================================
+   6. ATRIBUTOS (HEXAGRAMA)
+============================================================= */
+.atributos {
+  background-color: #111;
+  border-radius: 10px;
+  padding: 15px;
+  width: 100%;
+  position: relative;
+}
+
+.atributos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.atributos-header h3 {
+  margin: 0;
+  font-size: 14px;
+  color: #ccc;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.editar, .editar-hex {
+  cursor: pointer;
+}
+
+.editar {
+  font-size: 18px;
+}
+
+.editar-hex {
+  position: absolute;
+  top: -52px;
+  right: -12px;
+  font-size: 22px;
+  z-index: 6;
+  background: transparent;
+}
+
+.hexagrama {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+}
+
+.hex-overlay {
+  position: absolute;
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 270px;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.num {
+  position: absolute;
+  background-color: transparent;
+  color: white;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-weight: bold;
+  z-index: 5;
+  cursor: pointer;
+  user-select: none;
+}
+
+.num[contenteditable="true"] {
+  outline: 2px dashed rgba(255, 255, 255, 0.12);
+  user-select: text;
+  cursor: text;
+}
+
+/* Posições do hexágono */
+.n1 { top: 0; left: 50%; transform: translate(-48%, -37%); }
+.n2 { top: 25%; left: 90%; transform: translate(-89%, -79%); }
+.n3 { top: 75%; left: 90%; transform: translate(-89%, -126%); }
+.n4 { bottom: 0; left: 50%; transform: translate(-48%, -49%); }
+.n5 { top: 75%; left: 10%; transform: translate(-12%, -126%); }
+.n6 { top: 25%; left: 10%; transform: translate(-6%, -78%); }
+
+.barras {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 14px;
+  color: #aaa;
+}
+
+/* =============================================================
+   7. ARMADURA, INICIATIVA E FÓRMULAS
+============================================================= */
+.armadura-area {
+  width: 100%;
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+}
+
+.armadura-card {
+  width: 100%;
+  background: linear-gradient(180deg, #0f0f0f, #111);
+  border: 1px solid #232323;
+  padding: 16px;
+  border-radius: 10px;
+  color: #ddd;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+  position: relative;
+}
+
+.armadura-grid {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "escudo formula"
+    "escudo tipo";
+  gap: 5px;
+  align-items: start;
+}
+
+.escudo-col {
+  grid-area: escudo;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.formula-col {
+  grid-area: formula;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  padding-top: 5px;
+}
+
+.tipo-col {
+  grid-area: tipo;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 0;
+  transform: none;
+  margin-top: 5px;
+  width: 100%;
+}
+
+/* Elementos do Escudo */
+.escudo-wrap {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.escudo-img {
+  position: absolute;
+  width: 92px;
+  height: 92px;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.98;
+}
+
+.armadura-valor {
+  position: relative;
+  z-index: 3;
+  width: 68px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #fff;
+  font-weight: 900;
+  font-size: 30px;
+  border-radius: 50%;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+  user-select: none;
+}
+
+/* Bloco de Iniciativa */
+.iniciativa-block {
+  width: 92px;
+  height: 94px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #2a2a2a;
+  background: linear-gradient(180deg, #0f0f0f, #0c0c0c);
+  border-radius: 6px;
+  padding: 8px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+}
+
+.iniciativa-label {
+  font-size: 12px;
+  color: #bfbfbf;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.iniciativa-valor {
+  font-size: 36px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+}
+
+.iniciativa-valor::after {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 3px;
+  margin-top: 8px;
+  background: linear-gradient(90deg, #e6e6e6, #cfcfcf);
+  border-radius: 2px;
+  opacity: 0.95;
+  margin-left: -5px;
+}
+
+/* Bônus Iniciativa */
+.bonus-iniciativa-block {
+  width: 92px;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #2a2a2a;
+  background: linear-gradient(180deg, #0f0f0f, #0c0c0c);
+  border-radius: 6px;
+  padding: 0 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35);
+  margin-top: 8px;
+}
+
+.bonus-label {
+  font-size: 10px;
+  color: #bfbfbf;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.bonus-valor {
+  width: 30px;
+  text-align: center;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-weight: 900;
+  font-size: 16px;
+  border-bottom: 1px solid #444;
+  padding-bottom: 2px;
+}
+
+.bonus-valor:focus {
+  outline: none;
+  border-bottom: 1px solid #9c27b0;
+}
+
+.armadura-titulo, .tipo-titulo {
+  font-weight: 800;
+  color: #cfcfcf;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.tipo-titulo {
+  font-size: 16px;
+  margin-bottom: 6px;
+  text-align: left;
+}
+
+/* --- FÓRMULA DE CA (Layout Consolidado: Simples e Ajustada) --- */
+.inline-formula {
+  display: flex;
+  align-items: flex-end; /* Alinha tudo pela base */
+  justify-content: center;
+  gap: 4px; 
+  margin-top: 10px;
+  width: 100%;
+  color: #e6e6e6;
+}
+
+/* Limpeza de propriedades legadas (garantia sem !important) */
+.inline-formula > :nth-child(-n+5),
+.formula-text {
+  transform: none;
+  display: block;
+  margin: 0;
+  line-height: 1;
+}
+
+.zero-pair {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 35px;
+  position: relative;
+}
+
+/* Números Fixos (10, DES, etc) */
+.zero-num {
+  font-size: 20px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+  text-align: center;
+  width: 100%;
+  margin: 0;
+  padding-bottom: 2px;
+}
+
+.zero-num::after {
+  content: none;
+}
+
+/* Input Extra (Editável) */
+.zero-input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-weight: 900;
+  font-size: 20px;
+  text-align: center;
+  width: 45px;
+  padding: 0;
+  height: 20px;
+  margin: 0;
+  line-height: 1;
+  font-family: inherit;
+}
+
+.zero-input:focus {
+  outline: none;
+  color: #e0aaff;
+}
+
+/* Linha Divisória Fina */
+.zero-divider {
+  width: 100%;
+  height: 1px;
+  background-color: #555;
+  margin-top: 2px;
+  margin-bottom: 4px;
+  border-radius: 2px;
+  transition: background-color 0.2s;
+}
+
+.zero-input:focus ~ .zero-divider {
+  background-color: #9c27b0;
+  height: 2px;
+}
+
+/* Labels Pequenas (BASE, DES, EXTRA) */
+.zero-label {
+  font-size: 9px;
+  color: #bbb;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1;
+  text-align: center;
+}
+
+/* Operadores (+ e =) */
+.formula-eq {
+  margin-right: 6px;
+  color: #cfcfcf;
+  font-weight: 900;
+  margin-bottom: 18px; /* Alinhamento vertical básico */
+}
+
+/* Sinais de + (Ajuste Fino de Posição) */
+.formula-plus {
+  font-size: 16px;
+  font-weight: 900;
+  color: #dcdcdc;
+  margin-bottom: 26px; 
+  margin-right: 6px;
+  margin-top: 2px;
+}
+
+/* O ÚLTIMO sinal de + (antes do Extra) precisa ficar mais baixo */
+.formula-plus:last-of-type {
+  margin-bottom: 18px;
+}
+
+/* Tags de Tipo de Armadura */
+.armadura-tag {
+  font-weight: 900;
+  font-size: 14px;
+  text-align: center;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-color: transparent;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  transition: all 0.3s ease;
+  width: auto;
+  display: inline-block;
+  margin-top: 5px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+}
+
+/* Cores das Tags */
+.armadura-tag.pesado { color: #ff5252; border-color: #ff5252; background: rgba(255, 82, 82, 0.1); box-shadow: 0 0 10px rgba(255, 82, 82, 0.2); }
+.armadura-tag.media { color: #ffca28; border-color: #ffca28; background: rgba(255, 202, 40, 0.1); box-shadow: 0 0 10px rgba(255, 202, 40, 0.2); }
+.armadura-tag.leve { color: #69f0ae; border-color: #69f0ae; background: rgba(105, 240, 174, 0.1); box-shadow: 0 0 10px rgba(105, 240, 174, 0.2); }
+.armadura-tag.barbaro { color: #ff5722; border-color: #ff5722; background: rgba(255, 87, 34, 0.1); box-shadow: 0 0 10px rgba(255, 87, 34, 0.2); }
+.armadura-tag.monge { color: #29b6f6; border-color: #29b6f6; background: rgba(41, 182, 246, 0.1); box-shadow: 0 0 10px rgba(41, 182, 246, 0.2); }
+.armadura-tag.nenhuma { color: #eeeeee; border-color: #eeeeee; background: rgba(255, 255, 255, 0.05); box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); }
+
+/* Detalhes de Armadura */
+.armadura-details {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.linha-detail {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.label-detail {
+  min-width: 120px;
+  font-weight: 700;
+  color: #bfbfbf;
+  font-size: 13px;
+}
+
+/* =============================================================
+   8. XP E CLASSES
+============================================================= */
+.xp-container {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.campo-xp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.campo-xp label {
+  font-size: 12px;
+  color: #aaa;
+  margin-bottom: 3px;
+}
+
+.campo-xp input {
+  width: 60px;
+  text-align: center;
+  background-color: transparent;
+  border: 1px solid #555;
+  border-radius: 5px;
+  color: white;
+  padding: 3px 0;
+}
+
+.campo-xp input:focus {
+  outline: none;
+  border-color: #9c27b0;
+}
+
+.ficha-compacta {
+  width: 100%;
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.linha {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.linha-xp, .linha-metros {
+  align-items: center;
+}
+
+.classe-focus {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #0f0f0f;
+  border: 1px solid #2a2a2a;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  min-width: 160px;
+  justify-content: space-between;
+}
+
+.classe-nome { font-weight: 700; font-size: 16px; }
+.classe-nivel { font-weight: 800; font-size: 18px; }
+
+/* Barra de XP */
+.xp-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 40%;
+}
+
+.xp-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.xp-label { font-size: 13px; color: #aaa; }
+.xp-text { font-weight: 700; }
+
+.xp-bar-outer {
+  width: 100%;
+  height: 12px;
+  background: #151515;
+  border-radius: 8px;
+  border: 1px solid #252525;
+  overflow: hidden;
+}
+
+.xp-bar-inner {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #7b3fc1, #b26cff);
+  border-radius: 8px;
+  transition: width 350ms ease;
+}
+
+.xp-atual-input {
+  width: 70px;
+  padding: 4px 6px;
+  background: transparent;
+  border: 1px solid #444;
+  color: white;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.xp-total-text {
+  color: #bbb;
+  font-weight: 700;
+  margin-left: 6px;
+}
+
+/* =============================================================
+   9. MOVIMENTAÇÃO E DADOS DE VIDA (DV)
+============================================================= */
+.marco-box, .metros-box, .quadrados-box, .voo-box, .voo-quad-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.marco-box, .voo-box, .voo-quad-box { width: 100px; }
+.metros-box, .quadrados-box { width: 120px; }
+
+.marco-box label, .metros-box label, .quadrados-box label {
+  color: #aaa;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.marco-box input, .marco-input, .metros-box input, .quadrados-box input {
+  text-align: center;
+  background: transparent;
+  border: 1px solid #444;
+  color: white;
+  border-radius: 6px;
+  padding: 4px 0;
+}
+
+.marco-box input, .marco-input, .voo-box input, .voo-quad-box input {
+  width: 38px;
+  font-size: 14px;
+}
+
+.metros-box input, .quadrados-box input { width: 90px; }
+
+.marco-max { opacity: 0.7; }
+
+.marco-bar-outer {
+  width: 100%;
+  height: 8px;
+  background: #121212;
+  border-radius: 6px;
+  margin-top: 6px;
+  border: 1px solid #222;
+  overflow: hidden;
+}
+
+.marco-bar-inner {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #6b9cff, #7bb6ff);
+  transition: width 300ms ease;
+  border-radius: 6px;
+}
+
+/* Voo */
+.voo-box, .voo-quad-box { display: none; }
+.voo-box input, .voo-quad-box input { border: 1px solid #4fc3f7; color: #4fc3f7; }
+.voo-box label, .voo-quad-box label { color: #4fc3f7; font-size: 11px; margin-bottom: 4px; font-weight: bold; }
+
+/* Dados de Vida (DV) */
+.dv-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60px;
+  justify-content: flex-end;
+}
+
+.dv-box label {
+  color: #e0aaff;
+  font-size: 11px;
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+.btn-dv-trigger {
+  background: linear-gradient(180deg, #1a1a1a, #000);
+  border: 1px solid #9c27b0;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-dv-trigger img {
+  width: 18px;
+  height: 18px;
+  opacity: 0.9;
+}
+
+.btn-dv-trigger:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(156, 39, 176, 0.4);
+}
+
+.item-dv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #101010;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  margin-bottom: 6px;
+}
+
+.btn-rolar-dv {
+  background: #2a1a2a;
+  border: 1px solid #9c27b0;
+  color: #fff;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: 0.2s;
+}
+
+.btn-rolar-dv:hover:not(:disabled) { background: #9c27b0; }
+.btn-rolar-dv:disabled { opacity: 0.3; cursor: not-allowed; border-color: #444; filter: grayscale(1); }
+
+.dv-info { display: flex; flex-direction: column; }
+.dv-class-name { font-weight: bold; font-size: 13px; color: #ddd; }
+.dv-count { font-size: 11px; color: #aaa; }
+
+/* =============================================================
+   10. VIDA (HP)
+============================================================= */
+.vida-container {
+  text-align: center;
+  color: #ccc;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.vida-container h3 {
+  margin: 0 0 5px 0;
+  font-weight: bold;
+  color: #aaa;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.vida-bar {
+  position: relative;
+  background-color: #444;
+  border: 1px solid #555;
+  border-radius: 6px;
+  height: 30px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.vida-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background-color: #b22222;
+  width: 100%;
+  transition: width 0.2s ease;
+}
+
+.vida-text {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  z-index: 1;
+  color: white;
+  font-weight: bold;
+}
+
+.vida-text span[contenteditable="true"] {
+  min-width: 25px;
+  display: inline-block;
+  text-align: center;
+  cursor: text;
+  padding: 0 2px;
+  border-radius: 4px;
+}
+
+.vida-text span[contenteditable="true"]:focus {
+  outline: 1px dashed #fff;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.vida-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 5px;
+  transition: transform 0.1s ease;
+}
+
+.vida-btn:hover { transform: scale(1.2); }
+
+.barras-secundarias { display: flex; gap: 12px; margin-top: 12px; }
+.barra-secundaria { flex: 1; text-align: center; }
+.barra-secundaria h3 { margin: 0 0 5px 0; font-weight: bold; color: #aaa; text-transform: uppercase; font-size: 0.85rem; }
+.barra-secundaria .vida-bar { height: 24px; }
+
+/* =============================================================
+   11. MODAL DE CLASSES (Painel Flutuante)
 ============================================================= */
 .painel-classes {
   position: fixed;
@@ -1291,20 +1147,16 @@ input[type=number] {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
   display: none;
   overflow: hidden;
-  /* Prioridade !important aplicada */
-  z-index: 20000 !important;
+  z-index: 20000;
 }
 
-.painel-inner {
-  padding: 12px;
-}
+.painel-inner { padding: 12px; }
 
 .painel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
-  /* Propriedades de arrastar consolidadas */
   cursor: grab;
   user-select: none;
   padding: 5px;
@@ -1312,14 +1164,8 @@ input[type=number] {
   border-radius: 6px;
 }
 
-.painel-header:active {
-  cursor: grabbing;
-}
-
-.painel-header h4 {
-  margin: 0;
-  font-size: 16px;
-}
+.painel-header:active { cursor: grabbing; }
+.painel-header h4 { margin: 0; font-size: 16px; }
 
 .painel-header button {
   background: transparent;
@@ -1348,9 +1194,7 @@ input[type=number] {
   border: 1px solid #232323;
 }
 
-.item-classe .nome {
-  font-weight: 700;
-}
+.item-classe .nome { font-weight: 700; }
 
 .item-classe input[type="number"] {
   width: 70px;
@@ -1389,11 +1233,7 @@ input[type=number] {
   gap: 6px;
 }
 
-.classes-lista-container li img {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-}
+.classes-lista-container li img { width: 20px; height: 20px; cursor: pointer; }
 
 .classes-lista-container select {
   background: #121212;
@@ -1401,242 +1241,4 @@ input[type=number] {
   border: 1px solid #444;
   border-radius: 4px;
   padding: 2px 4px;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-/* 1. Ajuste no Número Fixo (Aproximar da barra) */
-.zero-num {
-  font-size: 28px;
-  font-weight: 900;
-  color: #fff;
-  line-height: 1;
-  text-align: center;
-  width: 100%;
-  
-  /* ALTERAÇÃO: Removemos margens e paddings grandes para colar na linha */
-  margin-bottom: 0px; 
-  padding-bottom: -5px; /* Era 8px */
-  
-  position: relative;
-  display: inline-block;
-}
-
-/* 2. REMOÇÃO DA DUPLA LINHA */
-.zero-num::after {
-  content: none; /* Isso remove a linha "extra" que ficava duplicada */
-}
-
-/* 3. Ajuste no Input "Extra" (Subir o número e colar na barra) */
-.zero-input {
-  background: transparent;
-  border: none;
-  color: #fff; /* Se quiser destacar que é editável, mude para #e0aaff */
-  font-weight: 900;
-  font-size: 28px;
-  text-align: center;
-  width: 60px;
-  padding: 0;
-  font-family: inherit;
-  line-height: 1;
-
-  /* ALTERAÇÕES AQUI: */
-  margin: 0;           /* Remove margens padrão */
-  margin-bottom: 0px;  /* Garante que a barra (zero-divider) fique colada */
-  transform: translateY(-3px); /* "Sobe um pouco o número" visualmente */
-}
-
-/* Garante que a linha divisória fique visível e posicionada corretamente */
-.zero-divider {
-  width: 100%;
-  height: 2px;
-  background-color: #555;
-  margin-bottom: 4px;
-  border-radius: 2px;
-  transition: background-color 0.2s;
-  margin-top: 0px; /* Garante que não empurre para baixo */
-}
-
-
-/* --- FÓRMULA DE CA (Compacta e Ajustada) --- */
-.inline-formula {
-    display: flex;
-    align-items: flex-end; /* Alinha pela base */
-    justify-content: center;
-    gap: 6px; /* Espaço entre os blocos reduzido */
-    margin-top: 10px;
-    width: 100%;
-    color: #e6e6e6;
-}
-
-.zero-pair {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 35px; /* Largura mínima menor */
-    position: relative;
-}
-
-/* Números Fixos (10, Modificadores) */
-.zero-num {
-    font-size: 20px; /* Fonte menor (era 28px) */
-    font-weight: 900;
-    color: #fff;
-    line-height: 1;
-    text-align: center;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    
-    /* Remove a linha duplicada antiga se existir */
-    position: relative;
-}
-.zero-num::after { content: none; }
-
-/* Input Editável (O número EXTRA) */
-.zero-input {
-    background: transparent;
-    border: none;
-    color: #fff;
-    font-weight: 900;
-    font-size: 20px; /* Mesma fonte dos números fixos */
-    text-align: center;
-    width: 45px; /* Largura reduzida */
-    padding: 0;
-    margin: 0;
-    line-height: 1;
-    height: 20px; /* Altura fixa para alinhar com a linha */
-}
-
-.zero-input:focus {
-    outline: none;
-    color: #e0aaff;
-}
-
-/* A Linha Divisória */
-.zero-divider {
-    width: 100%;
-    height: 1px; /* Linha mais fina */
-    background-color: #555;
-    margin-top: 2px; /* Distância do número pra linha (bem perto) */
-    margin-bottom: 4px; /* Distância da linha pro texto (BASE/DES) */
-    border-radius: 2px;
-}
-
-.zero-input:focus ~ .zero-divider {
-    background-color: #9c27b0;
-    height: 2px;
-}
-
-/* Etiquetas (BASE, DES, SAB, EXTRA) */
-.zero-label {
-    font-size: 9px; /* Fonte menor (era 11px) */
-    color: #bbb;
-    font-weight: 800;
-    text-transform: uppercase;
-    line-height: 1;
-    text-align: center;
-}
-
-/* Sinais de + */
-.formula-plus {
-    font-size: 16px; /* Menor (era 24px) */
-    font-weight: 900;
-    color: #dcdcdc;
-    margin-bottom: 18px; /* Levanta o + para alinhar com os números */
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* --- FÓRMULA DE CA (Simples e Ajustada) --- */
-.inline-formula {
-    display: flex;
-    align-items: flex-end; /* Alinha tudo pela base */
-    justify-content: center;
-    gap: 4px; 
-    margin-top: 10px;
-    width: 100%;
-}
-
-.zero-pair {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 35px;
-}
-
-/* Números (Fontes menores e sem linha dupla) */
-.zero-num {
-    font-size: 20px;
-    font-weight: 900;
-    color: #fff;
-    line-height: 1;
-    margin: 0;
-    padding-bottom: 2px;
-}
-.zero-num::after { content: none; } /* Remove linha extra */
-
-/* Input Extra */
-.zero-input {
-    background: transparent;
-    border: none;
-    color: #fff;
-    font-weight: 900;
-    font-size: 20px;
-    text-align: center;
-    width: 45px;
-    padding: 0;
-    height: 20px;
-}
-.zero-input:focus { outline: none; color: #e0aaff; }
-
-/* Linha Baixa */
-.zero-divider {
-    width: 100%;
-    height: 1px;
-    background-color: #555;
-    margin-top: 2px;
-    margin-bottom: 4px;
-}
-
-/* Texto Pequeno (BASE, DES...) */
-.zero-label {
-    font-size: 9px;
-    color: #bbb;
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
-/* --- A MÁGICA DOS SINAIS DE + --- */
-
-/* 1. Sobe TODOS os sinais de + */
-.formula-plus {
-    font-size: 16px;
-    font-weight: 900;
-    color: #dcdcdc;
-    margin-bottom: 26px; /* <-- ISSO SOBE OS SINAIS */
-}
-
-/* 2. O ÚLTIMO sinal de + (antes do Extra) volta para baixo */
-.formula-plus:last-of-type {
-    margin-bottom: 18px; /* <-- ESSE FICA NO LUGAR DO INPUT */
 }
