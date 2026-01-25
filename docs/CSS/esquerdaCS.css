@@ -1667,148 +1667,35 @@ input[type=number] {
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
-
 /* =============================================================
-   POSIÇÃO DA FÓRMULA DA CA (LAYOUT VERTICAL CORRIGIDO)
+   FÓRMULA DA CA (LAYOUT FINAL: VERTICAL E ALINHADO)
 ============================================================= */
 
-/* 1. Container da linha inteira (10 + 2 + 0...) */
+/* 1. Container Principal (A linha toda) */
 .inline-formula {
   display: flex;
-  align-items: flex-start; /* Alinha todos os blocos pelo topo */
-  justify-content: center; /* Centraliza na caixa */
-  gap: 8px; /* Espaço entre os grupos */
-  margin-top: 15px; /* Espaço do título "CLASSE DE ARMADURA" */
-  width: 100%;
-}
-
-/* 2. O Bloco Individual (Número + Traço + Nome) */
-.zero-pair {
-  display: flex;
-  flex-direction: column; /* GARANTE QUE FIQUE UM EM CIMA DO OUTRO */
-  align-items: center;
-  justify-content: flex-start;
-  min-width: 40px; /* Largura mínima para o traço ficar bonito */
-}
-
-/* 3. O Número Grande (Valor) */
-.zero-num {
-  font-size: 26px; /* Tamanho grande igual da imagem */
-  font-weight: 900;
-  color: #fff;
-  line-height: 1;
-  text-align: center;
-  position: relative;
-  width: 100%;
-}
-
-/* 4. O Traço (Sublinhado) */
-.zero-num::after {
-  content: "";
-  display: block;
-  width: 100%;
-  height: 2px;
-  background: #555; /* Cor do traço */
-  margin-top: 2px;  /* Espaço entre número e traço */
-  margin-bottom: 4px; /* Espaço entre traço e nome */
-  border-radius: 2px;
-}
-
-/* 5. O Nome Pequeno (BASE, DES, SAB) */
-.zero-label {
-  font-size: 10px;
-  color: #aaa;
-  font-weight: 700;
-  text-transform: uppercase;
-  line-height: 1;
-  text-align: center;
-}
-
-/* 6. O Sinal de Mais (+) */
-.formula-plus {
-  font-size: 20px;
-  font-weight: 900;
-  color: #888;
-  margin-top: 4px; /* Ajuste fino para alinhar com o centro dos números */
-}
-
-/* --- LIMPEZA DE CÓDIGOS ANTIGOS QUE CAUSAVAM BUG --- */
-/* Isso garante que configurações antigas não quebrem o layout novo */
-.inline-formula > :nth-child(-n+5), 
-.formula-text {
-  transform: none !important;
-  display: flex !important;
-  margin: 0 !important;
-}
-
-
-
-
-/* =============================================================
-   INPUT EDITÁVEL NA FÓRMULA (EXTRA)
-============================================================= */
-
-.zero-input {
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid #555; /* O traço embaixo */
-  color: #fff;
-  font-weight: 900;
-  font-size: 26px; /* Mesmo tamanho do zero-num */
-  text-align: center;
-  width: 50px; /* Largura fixa para caber números de 2 dígitos */
-  padding: 0;
-  margin: 0;
-  font-family: inherit;
-  border-radius: 0; /* Remove arredondamento padrão */
-  margin-bottom: 2px; /* Alinhamento fino com o label */
-}
-
-.zero-input:focus {
-  outline: none;
-  border-bottom-color: #9c27b0; /* Roxo ao focar */
-  background: rgba(255, 255, 255, 0.05);
-}
-
-/* Remove as setinhas de aumentar/diminuir do input number */
-.zero-input::-webkit-outer-spin-button,
-.zero-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-.zero-input {
-  -moz-appearance: textfield;
-}
-
-
-
-/* =============================================================
-   FÓRMULA DA CA (LAYOUT ALINHADO E PADRONIZADO)
-============================================================= */
-
-/* 1. Container Principal */
-.inline-formula {
-  display: flex;
-  align-items: flex-start; /* Alinha tudo pelo topo */
+  align-items: flex-start; /* Alinha o topo de todos os elementos */
   justify-content: center;
   gap: 8px;
   margin-top: 15px;
   width: 100%;
 }
 
-/* 2. Bloco Individual (Coluna: Valor -> Traço -> Nome) */
+/* 2. O Bloco Individual (Coluna: Valor -> Traço -> Nome) */
 .zero-pair {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* ISSO GARANTE A PILHA VERTICAL */
   align-items: center;
-  min-width: 40px;
+  justify-content: flex-start;
+  min-width: 42px; /* Largura mínima para o traço não sumir */
 }
 
-/* 3. O Novo Divisor Padronizado (O Traço) */
+/* 3. O Traço Divisor (Elemento separado agora) */
 .zero-divider {
+  display: block;
   width: 100%;
   height: 2px;
-  background: #555;
+  background-color: #555; /* Cor do traço */
   margin-top: 2px;
   margin-bottom: 4px;
   border-radius: 2px;
@@ -1822,16 +1709,17 @@ input[type=number] {
   line-height: 1;
   text-align: center;
   width: 100%;
-  /* O traço ::after foi removido daqui */
+  padding: 0;
+  /* Removemos o ::after antigo */
 }
 
 /* 5. Input Editável (EXTRA) */
 .zero-input {
   background: transparent;
-  border: none; /* Remove a borda que fazia o traço antigo */
+  border: none;
   color: #fff;
   font-weight: 900;
-  font-size: 26px; /* Mesmo tamanho do zero-num */
+  font-size: 26px; /* Mesmo tamanho do texto fixo */
   text-align: center;
   width: 50px;
   padding: 0;
@@ -1843,22 +1731,48 @@ input[type=number] {
 
 .zero-input:focus {
   outline: none;
-  /* O traço agora muda de cor pelo seletor abaixo */
 }
-/* Muda a cor do traço quando o input acima dele está focado */
+
+/* Efeito: Muda a cor do traço quando clica no input */
 .zero-input:focus + .zero-divider {
-    background: #9c27b0; /* Roxo ao focar */
+    background-color: #9c27b0; /* Roxo */
 }
 
 /* Remove setinhas do input number */
 .zero-input::-webkit-outer-spin-button,
-.zero-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-.zero-input { -moz-appearance: textfield; }
+.zero-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.zero-input {
+  -moz-appearance: textfield;
+}
 
-/* 6. Sinal de Mais (+) */
+/* 6. O Nome Pequeno (Embaixo do traço) */
+.zero-label {
+  font-size: 10px;
+  color: #aaa;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* 7. O Sinal de Mais (+) */
 .formula-plus {
   font-size: 20px;
   font-weight: 900;
   color: #888;
-  margin-top: 4px; /* Alinha visualmente com o centro dos números */
+  margin-top: 4px; /* Ajuste fino para alinhar com o centro dos números */
+}
+
+/* Limpeza de segurança para remover hacks antigos */
+.inline-formula > :nth-child(-n+5), 
+.formula-text,
+.zero-num::after {
+  transform: none !important;
+  display: block !important;
+  margin: 0 !important;
+  content: none !important; /* Remove traços fantasmas */
 }
