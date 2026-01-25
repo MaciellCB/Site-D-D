@@ -423,7 +423,7 @@
     "class": "Artífice",
     "subclass": "Ferreiro de Batalha",
     "name": "Feitiços de Ferreiro de Batalha",
-    "description": "<p>Você sempre tem preparadas as seguintes magias:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 3º Nível:</strong> Heroísmo, Escudo (Shield)</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 5º Nível:</strong> Golpe de Marca (Branding Smite), Vínculo Protetor (Warding Bond)</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 9º Nível:</strong> Aura de Vitalidade, Conjurar Barragem</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 13º Nível:</strong> Aura de Pureza, Escudo de Fogo</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 17º Nível:</strong> Golpe de Banimento, Cura em Massa (Mass Cure Wounds)</li></ul>"
+    "description": "<p>Você sempre tem preparadas as seguintes magias:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 3º Nível:</strong> Heroísmo, Escudo (Shield)</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 5º Nível:</strong> Marca da Punição (Branding Smite), Vínculo Protetor (Warding Bond)</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 9º Nível:</strong> Aura de Vitalidade, Conjurar Barragem</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 13º Nível:</strong> Aura de Pureza, Escudo de Fogo</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 17º Nível:</strong> Golpe de Banimento, Cura em Massa (Mass Cure Wounds)</li></ul>"
   },
   {
     "id": "art_fer_3_batalha",
@@ -1731,7 +1731,7 @@
     "class": "Bruxo",
     "subclass": "Hexblade",
     "name": "Feitiços de Hexblade",
-    "description": "<p>Magias expandidas do patrono:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 1º:</strong> Escudo (Shield), Golpe Constritor</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 2º:</strong> Desfoque (Blur), Golpe de Marca</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 3º:</strong> Piscar (Blink), Arma Elemental</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 4º:</strong> Assassino Fantasmagórico, Golpe Estonteante</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 5º:</strong> Golpe Banidor, Cone de Frio</li></ul>"
+    "description": "<p>Magias expandidas do patrono:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 1º:</strong> Escudo (Shield), Golpe Constritor</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 2º:</strong> Desfoque (Blur), Marca da Punição</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 3º:</strong> Piscar (Blink), Arma Elemental</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 4º:</strong> Assassino Fantasmagórico, Golpe Estonteante</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 5º:</strong> Golpe Banidor, Cone de Frio</li></ul>"
   },
   {
     "id": "bru_hex_1_maldicao",
@@ -2890,7 +2890,7 @@
     "class": "Blood Hunter",
     "subclass": "Ordem da Alma Profana",
     "name": "(Alma Profana, 7º nível) Arcanos Revelados",
-    "description": "<p>Seu patrono concede uma magia específica. Você pode conjurá-la uma vez por descanso longo usando um espaço de magia de pacto.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Arquifada:</strong> Desfocar (Blur)</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Celestial:</strong> Restauração Menor</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Demônio:</strong> Raio Incandescente</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Hexblade:</strong> Golpe de Marca (Branding Smite)</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Morto-Vivo:</strong> Cegueira/Surdez</li></ul>"
+    "description": "<p>Seu patrono concede uma magia específica. Você pode conjurá-la uma vez por descanso longo usando um espaço de magia de pacto.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Arquifada:</strong> Desfocar (Blur)</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Celestial:</strong> Restauração Menor</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Demônio:</strong> Raio Incandescente</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Hexblade:</strong> Marca da Punição (Branding Smite)</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Morto-Vivo:</strong> Cegueira/Surdez</li></ul>"
   },
   {
     "id": "csa_pro_11_cicatriz",

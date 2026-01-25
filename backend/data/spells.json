@@ -2470,8 +2470,8 @@
     "description": "<p>Você usa um animal Miúdo (como um esquilo, gaio ou morcego) para entregar uma mensagem. Você especifica um local e uma descrição do destinatário.</p><p>A mensagem pode ter até 25 palavras. O animal viaja até 75 km para entregar a mensagem, imitando sua voz.</p><p><strong>Níveis Superiores:</strong> A duração aumenta em 48 horas para cada nível de slot acima do 2º.</p>"
   },
   {
-    "id": "s_nublar",
-    "name": "Nublar",
+    "id": "s_Desfoque",
+    "name": "Desfoque",
     "levelNumber": 2,
     "school": "Ilusão",
     "spellClass": "Artífice, Feiticeiro, Mago",
