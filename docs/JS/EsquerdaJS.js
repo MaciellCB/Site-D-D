@@ -108,6 +108,9 @@ window.addEventListener('sheet-updated', () => {
    ATUALIZAÇÃO: inicializarDadosEsquerda (COMPLETA)
 ============================================================= */
 
+/* =============================================================
+   1. INICIALIZAÇÃO (COM CONVERSÃO AUTOMÁTICA PARA ARRAY)
+============================================================= */
 function inicializarDadosEsquerda() {
     // Inicializa objetos principais
     if (!state.atributos) state.atributos = { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 };
@@ -115,12 +118,11 @@ function inicializarDadosEsquerda() {
     if (!state.vidaDadosSalvos) state.vidaDadosSalvos = {};
     if (!state.dadosVidaGastos) state.dadosVidaGastos = {};
 
-    // --- CONVERSÃO DE FORMATO DEATH SAVES (NÚMERO -> ARRAY) ---
-    // Isso garante que fichas antigas funcionem com o novo sistema independente
+    // --- CORREÇÃO: CONVERTER DEATH SAVES PARA ARRAY INDEPENDENTE ---
     if (!state.deathSaves) {
         state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
     } else {
-        // Se estiver salvo como número (sistema antigo), converte para array de booleanos
+        // Se for ficha antiga (número), converte para [true, true, false]
         if (typeof state.deathSaves.successes === 'number') {
             const num = state.deathSaves.successes;
             state.deathSaves.successes = [false, false, false].map((_, i) => i < num);
@@ -129,12 +131,12 @@ function inicializarDadosEsquerda() {
             const num = state.deathSaves.failures;
             state.deathSaves.failures = [false, false, false].map((_, i) => i < num);
         }
-        // Garante que sejam arrays se estiverem indefinidos ou nulos
+        // Garante integridade se for nulo
         if (!Array.isArray(state.deathSaves.successes)) state.deathSaves.successes = [false, false, false];
         if (!Array.isArray(state.deathSaves.failures)) state.deathSaves.failures = [false, false, false];
     }
 
-    // Inicializa Arrays e Listas
+    // Inicializa Arrays e Listas restantes
     if (!state.fraquezasList) state.fraquezasList = [];
     if (!state.resistenciasList) state.resistenciasList = [];
     if (!state.imunidadesList) state.imunidadesList = [];
@@ -161,52 +163,42 @@ function inicializarDadosEsquerda() {
     setVal('marcoAtual', state.marco);
     setText('inspiraValor', state.inspiracao);
     
-    // --- LÓGICA DE DESLOCAMENTO (TERRA E VOO) ---
+    // Lógica de Deslocamento
     const elMetros = document.getElementById('metros');
     const elQuadrados = document.getElementById('quadrados');
     
     if (elMetros && elQuadrados) {
-        // 1. Preenche valores de terra (padrão)
         elMetros.value = state.metros; 
         elQuadrados.value = (state.metros / 1.5).toFixed(1);
 
-        // Remove label antigo se existir
         const oldLabel = document.getElementById('voo-label-display');
         if (oldLabel) oldLabel.remove();
         
-        // 2. Verifica/Cria os Blocos de Voo Dinâmicos
         let containerVooM = document.getElementById('container-voo-m');
         let containerVooQ = document.getElementById('container-voo-q');
         
         if (!containerVooM) {
             const linhaPai = elQuadrados.parentNode.parentNode; 
-
-            // Cria bloco Voo Metros (EDITÁVEL)
             containerVooM = document.createElement('div');
             containerVooM.id = 'container-voo-m';
             containerVooM.className = 'metros-box'; 
             containerVooM.innerHTML = `<label style="color:#4fc3f7;">Voo (m)</label><input id="voo-metros" type="number" style="border-color:#4fc3f7; color:#4fc3f7;">`;
             
-            // Cria bloco Voo Quadrados (AGORA EDITÁVEL - removido readonly disabled)
             containerVooQ = document.createElement('div');
             containerVooQ.id = 'container-voo-q';
             containerVooQ.className = 'quadrados-box'; 
             containerVooQ.innerHTML = `<label style="color:#4fc3f7;">Voo (q)</label><input id="voo-quadrados" type="number" style="border-color:#4fc3f7; color:#4fc3f7;">`;
 
-            // Insere na tela
             linhaPai.appendChild(containerVooM);
             linhaPai.appendChild(containerVooQ);
         }
 
-        // 3. Atualiza Valores e Visibilidade
         const inputVooM = document.getElementById('voo-metros');
         const inputVooQ = document.getElementById('voo-quadrados');
 
-        // Define valor inicial vindo do Estado
         if (state.deslocamentoVoo > 0) {
             inputVooM.value = state.deslocamentoVoo;
             inputVooQ.value = (state.deslocamentoVoo / 1.5).toFixed(1);
-            
             containerVooM.style.display = 'flex';
             containerVooQ.style.display = 'flex';
         } else {
@@ -214,26 +206,17 @@ function inicializarDadosEsquerda() {
             containerVooQ.style.display = 'none';
         }
 
-        // 4. EVENTOS DE EDIÇÃO DO VOO (BIDIRECIONAL)
-        
-        // Editou Metros -> Calcula Quadrados
         inputVooM.oninput = (e) => {
             const novoVoo = parseFloat(e.target.value) || 0;
             state.deslocamentoVoo = novoVoo;
-            
-            // Atualiza visualmente os quadrados
             inputVooQ.value = (novoVoo / 1.5).toFixed(1);
             saveStateToServer();
         };
 
-        // Editou Quadrados -> Calcula Metros
         inputVooQ.oninput = (e) => {
             const novosQuadrados = parseFloat(e.target.value) || 0;
             const novoVooMetros = novosQuadrados * 1.5;
-            
             state.deslocamentoVoo = novoVooMetros;
-            
-            // Atualiza visualmente os metros
             inputVooM.value = novoVooMetros; 
             saveStateToServer();
         };
@@ -241,14 +224,12 @@ function inicializarDadosEsquerda() {
 
     setVal('iniciativaBonus', state.iniciativaBonus);
 
-    // Renderiza Multi-Selects
     renderMultiSelect('sel-fraquezas', TIPOS_DANO_LISTA, state.fraquezasList, 'fraquezasList');
     renderMultiSelect('sel-resistencias', TIPOS_DANO_LISTA, state.resistenciasList, 'resistenciasList');
     renderMultiSelect('sel-imunidades', TIPOS_DANO_LISTA, state.imunidadesList, 'imunidadesList');
     renderMultiSelect('sel-proficiencias', PROFICIENCIAS_LISTA_ESQUERDA, state.proficienciasList, 'proficienciasList');
     renderMultiSelect('sel-idiomas', IDIOMAS_LISTA, state.idiomasList, 'idiomasList');
 
-    // Hexagrama
     numerosHex.forEach(n => {
         const id = n.classList[1];
         const val = state.atributos[id] || 10;
@@ -264,25 +245,83 @@ function inicializarDadosEsquerda() {
     });
 }
 
-// --- LÓGICA DE CLIQUE INDEPENDENTE ---
+
+
+/* =============================================================
+   4. BOTÃO REVIVER (CORRIGIDO: CANCELA DELAY ANTERIOR)
+============================================================= */
+window.voltarVidaUm = function() {
+    // 1. Cancela qualquer salvamento de bolinhas que esteja "na fila"
+    // Isso impede que um clique anterior sobrescreva o 1 de vida
+    if (dsSaveTimer) {
+        clearTimeout(dsSaveTimer);
+        dsSaveTimer = null;
+    }
+
+    // 2. Reseta o estado local
+    state.vidaAtual = 1;
+    state.deathSaves = { 
+        successes: [false, false, false], 
+        failures: [false, false, false] 
+    };
+    
+    // 3. Atualiza tela
+    atualizarVidaCalculada();
+    
+    // 4. Salva imediatamente
+    saveStateToServer();
+};
+
+/* =============================================================
+   5. ATUALIZAÇÃO VISUAL (INDEPENDENTE)
+============================================================= */
+function atualizarBolinhasVisualmente() {
+    if (!state.deathSaves) return;
+
+    // Garante que sejam arrays (segurança)
+    const sArr = Array.isArray(state.deathSaves.successes) ? state.deathSaves.successes : [false,false,false];
+    const fArr = Array.isArray(state.deathSaves.failures) ? state.deathSaves.failures : [false,false,false];
+
+    // Varre cada bolinha pelo seu ID único e pinta se estiver TRUE
+    for(let i=0; i<3; i++) {
+        const elS = document.getElementById(`btn-ds-s-${i}`);
+        const elF = document.getElementById(`btn-ds-f-${i}`);
+
+        if (elS) {
+            if (sArr[i]) elS.classList.add('active');
+            else elS.classList.remove('active');
+        }
+        if (elF) {
+            if (fArr[i]) elF.classList.add('active');
+            else elF.classList.remove('active');
+        }
+    }
+}
+
+/* =============================================================
+   6. CLIQUE INDEPENDENTE + DEBOUNCE (SEM BUG DE VOLTAR NO TEMPO)
+============================================================= */
 window.toggleDeathSave = function(type, idx) {
-    // Garante a estrutura se não existir
     if (!state.deathSaves) state.deathSaves = { successes: [false,false,false], failures: [false,false,false] };
     if (!Array.isArray(state.deathSaves[type])) state.deathSaves[type] = [false, false, false];
 
-    // MÁGICA AQUI: Inverte apenas o índice clicado (0, 1 ou 2)
-    // Se estava true vira false, se estava false vira true
+    // Lógica Independente: Apenas inverte o índice clicado
+    // Não importa a ordem, cada bolinha é um switch
     state.deathSaves[type][idx] = !state.deathSaves[type][idx];
 
-    // Atualiza visual instantâneo
+    // Atualiza o visual NA HORA (feedback instantâneo)
     atualizarBolinhasVisualmente();
 
-    // Debounce para rede (aguarda você parar de clicar para salvar)
+    // DEBOUNCE: Espera 500ms sem cliques para enviar ao servidor
+    // Isso resolve o problema de enviar muitos requests e bugar o portrait
     if (dsSaveTimer) clearTimeout(dsSaveTimer);
+    
     dsSaveTimer = setTimeout(() => {
-        saveStateToServer();
+        saveStateToServer(); // Envia o estado completo final
     }, 500);
 };
+
+
 
 
 // Listener para abrir o painel de Dados de Vida
@@ -1210,48 +1249,8 @@ function atualizarBarraUI(prefixo, atual, total) {
     }
 }
 
-// --- FUNÇÃO CORRIGIDA: BOTÃO REVIVER ---
-window.voltarVidaUm = function() {
-    // 1. MATA qualquer salvamento de bolinha pendente para evitar conflito
-    if (dsSaveTimer) {
-        clearTimeout(dsSaveTimer);
-        dsSaveTimer = null;
-    }
 
-    // 2. Reseta tudo na memória local imediatamente
-    state.vidaAtual = 1;
-    state.deathSaves = { successes: 0, failures: 0 };
-    
-    // 3. Atualiza a tela (some com as bolinhas, volta a barra)
-    atualizarVidaCalculada();
-    
-    // 4. Salva no servidor imediatamente
-    saveStateToServer();
-};
 
-// --- VISUALIZADOR INDEPENDENTE ---
-function atualizarBolinhasVisualmente() {
-    if (!state.deathSaves) return;
-
-    // Garante arrays
-    const sArr = Array.isArray(state.deathSaves.successes) ? state.deathSaves.successes : [false,false,false];
-    const fArr = Array.isArray(state.deathSaves.failures) ? state.deathSaves.failures : [false,false,false];
-
-    // Varre de 0 a 2 e pinta quem estiver TRUE
-    for(let i=0; i<3; i++) {
-        const elS = document.getElementById(`btn-ds-s-${i}`);
-        const elF = document.getElementById(`btn-ds-f-${i}`);
-
-        if (elS) {
-            if (sArr[i]) elS.classList.add('active');
-            else elS.classList.remove('active');
-        }
-        if (elF) {
-            if (fArr[i]) elF.classList.add('active');
-            else elF.classList.remove('active');
-        }
-    }
-}
 // --- LÓGICA INTELIGENTE DE CLIQUE (SEM ORDEM E SEM BUG) ---
 window.toggleDeathSave = function(type, btnIndex) {
     if (!state.deathSaves) state.deathSaves = { successes: 0, failures: 0 };

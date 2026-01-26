@@ -1245,7 +1245,7 @@ input[type=number] {
 
 
 /* =============================================================
-   12. DEATH SAVES (DESIGN CENTRALIZADO E GRANDE)
+   12. DEATH SAVES (DESIGN NOVO E GRANDE)
 ============================================================= */
 .death-saves-container {
     display: none; /* Oculto por padrão */
@@ -1259,15 +1259,6 @@ input[type=number] {
     gap: 12px;
     margin-top: 5px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.8);
-}
-
-.ds-header {
-    text-align: center;
-    font-size: 10px;
-    color: #555;
-    font-weight: 800;
-    letter-spacing: 2px;
-    margin-bottom: -4px;
 }
 
 .ds-content {
@@ -1310,29 +1301,28 @@ input[type=number] {
     width: 26px;  /* Bem grande */
     height: 26px; 
     border-radius: 50%;
-    border: 3px solid #333; /* Borda grossa */
+    border: 3px solid #444; /* Borda grossa */
     cursor: pointer;
-    background: #111;
+    background: #151515;
     transition: all 0.1s ease-in-out;
 }
 
 .ds-circle:hover {
     transform: scale(1.1);
-    border-color: #777;
-    background: #222;
+    border-color: #888;
 }
 
-/* ATIVAS */
+/* ATIVAS - BRILHO FORTE */
 .ds-circle.success.active {
     background-color: #00e676;
     border-color: #00e676;
-    box-shadow: 0 0 10px #00e676;
+    box-shadow: 0 0 12px #00e676;
 }
 
 .ds-circle.failure.active {
     background-color: #d50000;
     border-color: #d50000;
-    box-shadow: 0 0 10px #d50000;
+    box-shadow: 0 0 12px #d50000;
 }
 
 /* Botão Reviver */
