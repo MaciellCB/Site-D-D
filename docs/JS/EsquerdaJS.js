@@ -105,28 +105,41 @@ window.addEventListener('sheet-updated', () => {
 });
 
 /* =============================================================
-   ATUALIZAÇÃO: inicializarDadosEsquerda (VOO TOTALMENTE EDITÁVEL)
+   ATUALIZAÇÃO: inicializarDadosEsquerda (COMPLETA)
 ============================================================= */
 
 function inicializarDadosEsquerda() {
-    // Inicializa objetos
+    // Inicializa objetos principais
     if (!state.atributos) state.atributos = { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 };
     if (!state.niveisClasses) state.niveisClasses = {};
     if (!state.vidaDadosSalvos) state.vidaDadosSalvos = {};
-    if (!state.deathSaves) state.deathSaves = { successes: 0, failures: 0 };
+    if (!state.dadosVidaGastos) state.dadosVidaGastos = {};
 
-    // Arrays e Listas
+    // --- CONVERSÃO DE FORMATO DEATH SAVES (NÚMERO -> ARRAY) ---
+    // Isso garante que fichas antigas funcionem com o novo sistema independente
+    if (!state.deathSaves) {
+        state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
+    } else {
+        // Se estiver salvo como número (sistema antigo), converte para array de booleanos
+        if (typeof state.deathSaves.successes === 'number') {
+            const num = state.deathSaves.successes;
+            state.deathSaves.successes = [false, false, false].map((_, i) => i < num);
+        }
+        if (typeof state.deathSaves.failures === 'number') {
+            const num = state.deathSaves.failures;
+            state.deathSaves.failures = [false, false, false].map((_, i) => i < num);
+        }
+        // Garante que sejam arrays se estiverem indefinidos ou nulos
+        if (!Array.isArray(state.deathSaves.successes)) state.deathSaves.successes = [false, false, false];
+        if (!Array.isArray(state.deathSaves.failures)) state.deathSaves.failures = [false, false, false];
+    }
+
+    // Inicializa Arrays e Listas
     if (!state.fraquezasList) state.fraquezasList = [];
     if (!state.resistenciasList) state.resistenciasList = [];
     if (!state.imunidadesList) state.imunidadesList = [];
     if (!state.proficienciasList) state.proficienciasList = [];
     if (!state.idiomasList) state.idiomasList = [];
-
-    if (!state.niveisClasses) state.niveisClasses = {};
-    if (!state.vidaDadosSalvos) state.vidaDadosSalvos = {};
-    
-    // NOVO: Inicializa controle de dados gastos
-    if (!state.dadosVidaGastos) state.dadosVidaGastos = {};
 
     // Números seguros
     state.acOutros = parseInt(state.acOutros) || 0;
@@ -221,7 +234,7 @@ function inicializarDadosEsquerda() {
             state.deslocamentoVoo = novoVooMetros;
             
             // Atualiza visualmente os metros
-            inputVooM.value = novoVooMetros; // Pode usar .toFixed(1) se quiser arredondar visualmente
+            inputVooM.value = novoVooMetros; 
             saveStateToServer();
         };
     }
@@ -250,6 +263,28 @@ function inicializarDadosEsquerda() {
         });
     });
 }
+
+// --- LÓGICA DE CLIQUE INDEPENDENTE ---
+window.toggleDeathSave = function(type, idx) {
+    // Garante a estrutura se não existir
+    if (!state.deathSaves) state.deathSaves = { successes: [false,false,false], failures: [false,false,false] };
+    if (!Array.isArray(state.deathSaves[type])) state.deathSaves[type] = [false, false, false];
+
+    // MÁGICA AQUI: Inverte apenas o índice clicado (0, 1 ou 2)
+    // Se estava true vira false, se estava false vira true
+    state.deathSaves[type][idx] = !state.deathSaves[type][idx];
+
+    // Atualiza visual instantâneo
+    atualizarBolinhasVisualmente();
+
+    // Debounce para rede (aguarda você parar de clicar para salvar)
+    if (dsSaveTimer) clearTimeout(dsSaveTimer);
+    dsSaveTimer = setTimeout(() => {
+        saveStateToServer();
+    }, 500);
+};
+
+
 // Listener para abrir o painel de Dados de Vida
 /* =============================================================
    TORNA O PAINEL ARRASTÁVEL (GLOBAL - CORRIGIDO)
@@ -1100,8 +1135,10 @@ window.abrirPortraitOBS = function() {
 let dsSaveTimer = null;
 
 // --- ATUALIZAR BARRA UI ---
+// --- ATUALIZAR BARRA UI (GERA O HTML) ---
 function atualizarBarraUI(prefixo, atual, total) {
     if (prefixo !== 'vida') {
+        // ... (código das outras barras mantém igual) ...
         const fill = document.getElementById(`${prefixo}-fill`);
         const texto = document.getElementById(`${prefixo}-atual`);
         if (fill && texto) {
@@ -1113,35 +1150,32 @@ function atualizarBarraUI(prefixo, atual, total) {
         return;
     }
 
-    // --- LÓGICA DE VIDA / MORTE ---
+    // Lógica Vida/Morte
     const valAtual = parseInt(atual) || 0;
-    const valTotal = parseInt(total) || 1;
-    
     const containerBarra = document.querySelector('.vida-bar'); 
     let containerDS = document.getElementById('death-saves-ui'); 
 
-    // Cria o HTML do Death Saves (DESIGN CORRIGIDO)
+    // Cria HTML se não existir
     if (!containerDS && containerBarra) {
         containerDS = document.createElement('div');
         containerDS.id = 'death-saves-ui';
         containerDS.className = 'death-saves-container';
         containerDS.innerHTML = `
-            <div class="ds-header">SALVAGUARDA DE MORTE</div>
             <div class="ds-content">
-                <div class="ds-row success-row">
-                    <span class="ds-label">Sucesso</span>
+                <div class="ds-row">
+                    <span class="ds-label" style="color:#69f0ae;">Sucesso</span>
                     <div class="ds-group">
-                        <div class="ds-circle success" onclick="toggleDeathSave('success', 1)"></div>
-                        <div class="ds-circle success" onclick="toggleDeathSave('success', 2)"></div>
-                        <div class="ds-circle success" onclick="toggleDeathSave('success', 3)"></div>
+                        <div class="ds-circle success" id="btn-ds-s-0" onclick="toggleDeathSave('success', 0)"></div>
+                        <div class="ds-circle success" id="btn-ds-s-1" onclick="toggleDeathSave('success', 1)"></div>
+                        <div class="ds-circle success" id="btn-ds-s-2" onclick="toggleDeathSave('success', 2)"></div>
                     </div>
                 </div>
-                <div class="ds-row failure-row">
-                    <span class="ds-label">Falha</span>
+                <div class="ds-row">
+                    <span class="ds-label" style="color:#ff5252;">Falha</span>
                     <div class="ds-group">
-                        <div class="ds-circle failure" onclick="toggleDeathSave('failure', 1)"></div>
-                        <div class="ds-circle failure" onclick="toggleDeathSave('failure', 2)"></div>
-                        <div class="ds-circle failure" onclick="toggleDeathSave('failure', 3)"></div>
+                        <div class="ds-circle failure" id="btn-ds-f-0" onclick="toggleDeathSave('failure', 0)"></div>
+                        <div class="ds-circle failure" id="btn-ds-f-1" onclick="toggleDeathSave('failure', 1)"></div>
+                        <div class="ds-circle failure" id="btn-ds-f-2" onclick="toggleDeathSave('failure', 2)"></div>
                     </div>
                 </div>
             </div>
@@ -1152,7 +1186,7 @@ function atualizarBarraUI(prefixo, atual, total) {
         containerBarra.parentNode.insertBefore(containerDS, containerBarra.nextSibling);
     }
 
-    // Alterna Visibilidade
+    // Visibilidade
     if (valAtual <= 0) {
         if (containerBarra) containerBarra.style.display = 'none';
         if (containerDS) {
@@ -1162,13 +1196,16 @@ function atualizarBarraUI(prefixo, atual, total) {
     } else {
         if (containerBarra) containerBarra.style.display = 'block';
         if (containerDS) containerDS.style.display = 'none';
-
-        // Atualiza a barra normal
+        
+        // Atualiza barra normal
         const fill = document.getElementById(`vida-fill`);
         const texto = document.getElementById(`vida-atual`);
         if (fill && texto) {
-            fill.style.width = Math.min(100, (valAtual / valTotal) * 100) + "%";
-            texto.textContent = valAtual;
+            // Correção para evitar divisão por zero ou string
+            const v = parseInt(atual) || 0;
+            const t = parseInt(total) || 1;
+            fill.style.width = Math.min(100, (v / t) * 100) + "%";
+            texto.textContent = v;
         }
     }
 }
@@ -1192,24 +1229,29 @@ window.voltarVidaUm = function() {
     saveStateToServer();
 };
 
-// --- ATUALIZAÇÃO VISUAL DAS BOLINHAS (SEM SALVAR) ---
+// --- VISUALIZADOR INDEPENDENTE ---
 function atualizarBolinhasVisualmente() {
     if (!state.deathSaves) return;
-    const s = state.deathSaves.successes || 0;
-    const f = state.deathSaves.failures || 0;
 
-    // Pinta da esquerda para a direita baseado na quantidade total
-    document.querySelectorAll('.ds-circle.success').forEach((el, index) => {
-        if (index < s) el.classList.add('active');
-        else el.classList.remove('active');
-    });
+    // Garante arrays
+    const sArr = Array.isArray(state.deathSaves.successes) ? state.deathSaves.successes : [false,false,false];
+    const fArr = Array.isArray(state.deathSaves.failures) ? state.deathSaves.failures : [false,false,false];
 
-    document.querySelectorAll('.ds-circle.failure').forEach((el, index) => {
-        if (index < f) el.classList.add('active');
-        else el.classList.remove('active');
-    });
+    // Varre de 0 a 2 e pinta quem estiver TRUE
+    for(let i=0; i<3; i++) {
+        const elS = document.getElementById(`btn-ds-s-${i}`);
+        const elF = document.getElementById(`btn-ds-f-${i}`);
+
+        if (elS) {
+            if (sArr[i]) elS.classList.add('active');
+            else elS.classList.remove('active');
+        }
+        if (elF) {
+            if (fArr[i]) elF.classList.add('active');
+            else elF.classList.remove('active');
+        }
+    }
 }
-
 // --- LÓGICA INTELIGENTE DE CLIQUE (SEM ORDEM E SEM BUG) ---
 window.toggleDeathSave = function(type, btnIndex) {
     if (!state.deathSaves) state.deathSaves = { successes: 0, failures: 0 };
