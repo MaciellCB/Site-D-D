@@ -1095,6 +1095,9 @@ window.abrirPortraitOBS = function() {
     // Abre em nova guia ou janela independente
     window.open(url, windowId);
 };
+// --- Variável Global para controlar o Delay do Salvamento (Evita bugs de clique rápido) ---
+let deathSaveTimeout = null;
+
 function atualizarBarraUI(prefixo, atual, total) {
     // Se não for a barra de vida principal, comportamento padrão
     if (prefixo !== 'vida') {
@@ -1116,24 +1119,33 @@ function atualizarBarraUI(prefixo, atual, total) {
     const containerBarra = document.querySelector('.vida-bar'); // A barra vermelha
     let containerDS = document.getElementById('death-saves-ui'); // O novo container
 
-    // Cria o HTML do Death Saves se não existir
+    // Cria o HTML do Death Saves se não existir (AGORA COM BOTÃO REVIVER)
     if (!containerDS && containerBarra) {
         containerDS = document.createElement('div');
         containerDS.id = 'death-saves-ui';
         containerDS.className = 'death-saves-container';
         containerDS.innerHTML = `
-            <div class="ds-group">
-                <span class="ds-label">Sucesso</span>
-                <div class="ds-circle success" onclick="toggleDeathSave('success', 1)"></div>
-                <div class="ds-circle success" onclick="toggleDeathSave('success', 2)"></div>
-                <div class="ds-circle success" onclick="toggleDeathSave('success', 3)"></div>
+            <div class="ds-content">
+                <div class="ds-row">
+                    <span class="ds-label">Sucesso</span>
+                    <div class="ds-group">
+                        <div class="ds-circle success" onclick="toggleDeathSave('success', 1)"></div>
+                        <div class="ds-circle success" onclick="toggleDeathSave('success', 2)"></div>
+                        <div class="ds-circle success" onclick="toggleDeathSave('success', 3)"></div>
+                    </div>
+                </div>
+                <div class="ds-row">
+                    <span class="ds-label">Falha</span>
+                    <div class="ds-group">
+                        <div class="ds-circle failure" onclick="toggleDeathSave('failure', 1)"></div>
+                        <div class="ds-circle failure" onclick="toggleDeathSave('failure', 2)"></div>
+                        <div class="ds-circle failure" onclick="toggleDeathSave('failure', 3)"></div>
+                    </div>
+                </div>
             </div>
-            <div class="ds-group">
-                <span class="ds-label">Falha</span>
-                <div class="ds-circle failure" onclick="toggleDeathSave('failure', 1)"></div>
-                <div class="ds-circle failure" onclick="toggleDeathSave('failure', 2)"></div>
-                <div class="ds-circle failure" onclick="toggleDeathSave('failure', 3)"></div>
-            </div>
+            <button class="btn-reviver" onclick="voltarVidaUm()" title="Voltar com 1 PV">
+                <img src="img/imagem-no-site/coracao.png" style="width:14px; filter: invert(1);"> 1 PV
+            </button>
         `;
         // Insere logo após a barra de vida
         containerBarra.parentNode.insertBefore(containerDS, containerBarra.nextSibling);
@@ -1154,7 +1166,8 @@ function atualizarBarraUI(prefixo, atual, total) {
             // Reseta Death Saves ao curar (Opcional - regra de D&D)
             if (state.deathSaves.successes > 0 || state.deathSaves.failures > 0) {
                 state.deathSaves = { successes: 0, failures: 0 };
-                saveStateToServer(); // Salva o reset
+                // Salva silenciosamente sem travar a UI
+                if (typeof saveStateToServer === 'function') saveStateToServer(); 
             }
         }
         if (containerDS) containerDS.style.display = 'none';
@@ -1169,8 +1182,22 @@ function atualizarBarraUI(prefixo, atual, total) {
     }
 }
 
+// --- FUNÇÃO PARA O BOTÃO DE REVIVER (1 PV) ---
+window.voltarVidaUm = function() {
+    // Define vida como 1
+    state.vidaAtual = 1;
+    // Reseta as falhas/sucessos
+    state.deathSaves = { successes: 0, failures: 0 };
+    
+    // Atualiza a interface (Isso vai esconder o painel de morte e mostrar a barra)
+    atualizarVidaCalculada();
+    
+    // Salva imediatamente
+    saveStateToServer();
+};
 
-// --- LÓGICA DE DEATH SAVES ---
+
+// --- LÓGICA DE DEATH SAVES (COM DEBOUNCE PARA NÃO TRAVAR O PORTRAIT) ---
 
 function atualizarBolinhasDS() {
     const s = state.deathSaves.successes || 0;
@@ -1188,6 +1215,31 @@ function atualizarBolinhasDS() {
         else el.classList.remove('active');
     });
 }
+
+window.toggleDeathSave = function(type, index) {
+    if (!state.deathSaves) state.deathSaves = { successes: 0, failures: 0 };
+
+    // 1. Atualiza o ESTADO LOCAL imediatamente (Lógica Instantânea)
+    const currentVal = type === 'success' ? state.deathSaves.successes : state.deathSaves.failures;
+    
+    let newVal = index;
+    // Se clicar na bolinha que já está ativa (ex: tem 2 sucessos e clica na 2), remove ela (vira 1)
+    if (currentVal === index) newVal = index - 1;
+
+    if (type === 'success') state.deathSaves.successes = newVal;
+    else state.deathSaves.failures = newVal;
+
+    // 2. Atualiza o VISUAL LOCAL imediatamente (Sem esperar servidor)
+    atualizarBolinhasDS();
+
+    // 3. DEBOUNCE: Espera o usuário parar de clicar antes de enviar pro Servidor/Portrait
+    // Isso resolve o bug de clicar rápido e o delay no OBS
+    if (deathSaveTimeout) clearTimeout(deathSaveTimeout);
+
+    deathSaveTimeout = setTimeout(() => {
+        saveStateToServer();
+    }, 500); // Espera 500ms após o último clique para salvar
+};
 
 window.toggleDeathSave = function(type, index) {
     if (!state.deathSaves) state.deathSaves = { successes: 0, failures: 0 };

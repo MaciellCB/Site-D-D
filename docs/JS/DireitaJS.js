@@ -555,7 +555,7 @@ function bindInventoryCardEvents() {
     };
   });
 
-  // --- 2. CHECKBOX EQUIPAR (GLOBAL - GATILHO CA) ---
+ // --- 2. CHECKBOX EQUIPAR (OTIMIZADO) ---
   document.querySelectorAll('.item-equip-checkbox').forEach(ch => {
     ch.onchange = (ev) => {
       const rawId = ev.target.getAttribute('data-id');
@@ -566,11 +566,16 @@ function bindInventoryCardEvents() {
         // Lógica de Exclusividade (Só 1 Armadura / Só 1 Escudo)
         if (item.type === 'Proteção' || item.type === 'protecao') {
           const isEscudo = item.tipoItem?.toLowerCase() === 'escudo' || item.proficiency?.toLowerCase() === 'escudo';
+          
           state.inventory.forEach(other => {
+            // Se for outro item de proteção diferente deste
             if (String(other.id) !== String(rawId) && (other.type === 'Proteção' || other.type === 'protecao')) {
               const otherIsEscudo = other.tipoItem?.toLowerCase() === 'escudo' || other.proficiency?.toLowerCase() === 'escudo';
+              
+              // Se ambos forem escudos OU ambos forem armaduras, desmarca o outro
               if (isEscudo === otherIsEscudo) {
-                other.equip = false; // Desmarca no dado
+                other.equip = false; 
+                // Atualiza visualmente o checkbox do outro item sem recarregar tudo
                 const otherChk = document.querySelector(`.item-equip-checkbox[data-id="${other.id}"]`);
                 if (otherChk) otherChk.checked = false;
               }
@@ -579,18 +584,14 @@ function bindInventoryCardEvents() {
         }
       }
 
+      // Atualiza o estado do item atual
       if (item) item.equip = isChecked;
 
+      // Salva no servidor (com debounce interno se houver, ou direto)
       saveStateToServer();
 
-      // Renderiza aba atual (Combate ou Inventário) para refletir mudanças visuais
-      if (state.activeTab === 'Combate' || state.activeTab === 'Inventário') {
-        const scrollY = window.scrollY;
-        renderActiveTab();
-        window.scrollTo(0, scrollY);
-      }
-      
       // >>> GATILHO PARA A ESQUERDA ATUALIZAR A CA <<<
+      // Importante: Isso atualiza o número da CA na esquerda sem travar a direita
       if (typeof atualizarAC === 'function') atualizarAC();
       if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
     };
@@ -611,20 +612,46 @@ function bindInventoryCardEvents() {
     };
   });
 
-  // --- 4. REMOVER e EDITAR (GLOBAL) ---
+ // --- 4. REMOVER ITEM (OTIMIZADO COM ANIMAÇÃO) ---
   document.querySelectorAll('.remover-item').forEach(el => {
     el.onclick = (ev) => {
       ev.preventDefault();
       const rawId = el.getAttribute('data-id');
-      const scrollY = window.scrollY;
+      
+      // 1. Remove do estado (memória)
       state.inventory = state.inventory.filter(i => String(i.id) !== String(rawId));
-      renderActiveTab();
-      window.scrollTo(0, scrollY);
+      
+      // 2. Salva no servidor
       saveStateToServer();
       
-      // Se removeu armadura, atualiza CA
+      // 3. Remove visualmente com animação (sem recarregar a aba)
+      const card = el.closest('.item-card');
+      if (card) {
+        // Define altura fixa para a transição funcionar, depois zera
+        card.style.height = card.offsetHeight + 'px';
+        card.style.overflow = 'hidden';
+        card.style.transition = "all 0.3s ease";
+        
+        // Força um reflow rápido para o navegador pegar a altura inicial
+        void card.offsetHeight; 
+
+        // Aplica o efeito de sumir
+        requestAnimationFrame(() => {
+            card.style.opacity = "0";
+            card.style.height = "0px";
+            card.style.marginBottom = "0px";
+            card.style.padding = "0px";
+            card.style.border = "none";
+        });
+
+        // Remove do DOM após a animação acabar
+        setTimeout(() => card.remove(), 300);
+      }
+
+      // 4. Atualiza CA na esquerda (caso tenha removido uma armadura equipada)
       if (typeof atualizarAC === 'function') atualizarAC();
-      window.dispatchEvent(new CustomEvent('sheet-updated'));
+      
+      // NÃO chamamos renderActiveTab() aqui para manter a fluidez
     };
   });
 
@@ -1611,54 +1638,48 @@ function renderSpells() {
 ============================================================= */
 
 /* =============================================================
-   CORREÇÃO: Atualização Global (Sincroniza Esquerda e Direita)
-   Substitua o listener 'sheet-updated' antigo por este:
+   CORREÇÃO CRÍTICA: Evento de Atualização com "Guarda de Foco"
+   (Evita que a tela pisque ou trave enquanto você digita)
 ============================================================= */
 window.addEventListener('sheet-updated', () => {
-  // 1. Atualiza DT Magias (Logica Local da Direita)
-  if (typeof calculateSpellDC === 'function') {
-      state.dtMagias = calculateSpellDC();
-      const inputDT = document.getElementById('dtMagiasInput');
-      if (inputDT) inputDT.value = state.dtMagias;
-      
-      const inputDTPrep = document.getElementById('dtMagiasInput_Prep');
-      if (inputDTPrep) inputDTPrep.value = state.dtMagias;
-  }
-
-  // 2. FORÇA A ATUALIZAÇÃO DA ESQUERDA (CA, Vida, Status, etc)
-  // Isso é crucial: chama as funções do EsquerdaJS.js
-  if (typeof atualizarAC === 'function') atualizarAC();
-  if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
-
-  // 3. ATUALIZAÇÃO AUTOMÁTICA DA DIREITA (Mantém cursor e scroll)
-  if (['Magias', 'Mag. Preparadas', 'Habilidades', 'Combate', 'Inventário', 'Descrição'].includes(state.activeTab)) {
-
-    const scrollContainer = document.querySelector('.lado-direito .conteudo') || document.querySelector('.lado-direito');
-    const savedScroll = scrollContainer ? scrollContainer.scrollTop : 0;
-
-    // Salva o foco e cursor
-    const activeElement = document.activeElement;
-    const activeId = activeElement ? activeElement.id : null;
-    const cursorStart = activeElement ? activeElement.selectionStart : null;
-    const cursorEnd = activeElement ? activeElement.selectionEnd : null;
-
-    // Redesenha a aba
-    renderActiveTab();
-
-    // Restaura Scroll
-    if (scrollContainer) scrollContainer.scrollTop = savedScroll;
-
-    // Restaura Foco
-    if (activeId) {
-      const el = document.getElementById(activeId);
-      if (el) {
-        el.focus();
-        if (cursorStart !== null && cursorEnd !== null && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) {
-             try { el.setSelectionRange(cursorStart, cursorEnd); } catch(e){}
-        }
-      }
+    // 1. Atualiza DT Magias (Cálculo silencioso)
+    if (typeof calculateSpellDC === 'function') {
+        state.dtMagias = calculateSpellDC();
+        const inputDT = document.getElementById('dtMagiasInput');
+        if (inputDT) inputDT.value = state.dtMagias;
+        
+        const inputDTPrep = document.getElementById('dtMagiasInput_Prep');
+        if (inputDTPrep) inputDTPrep.value = state.dtMagias;
     }
-  }
+
+    // 2. FORÇA A ATUALIZAÇÃO DA ESQUERDA (CA, Vida, Status, etc)
+    if (typeof atualizarAC === 'function') atualizarAC();
+    if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
+
+    // 3. ATUALIZAÇÃO DA DIREITA (COM PROTEÇÃO DE DIGITAÇÃO)
+    if (['Magias', 'Mag. Preparadas', 'Habilidades', 'Combate', 'Inventário', 'Descrição'].includes(state.activeTab)) {
+
+        const activeElement = document.activeElement;
+        
+        // >>> A MÁGICA ACONTECE AQUI <<<
+        // Se o usuário estiver digitando em um Input ou Textarea DENTRO da direita, 
+        // NÃO redesenha a tela. O valor já está lá porque ele acabou de digitar.
+        const isTyping = activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA');
+        const isInsideContent = document.querySelector('.lado-direito').contains(activeElement);
+
+        if (isTyping && isInsideContent) {
+            // Ignora o redesenho para não travar a digitação
+            return; 
+        }
+
+        // Se não estiver digitando, salva o scroll e redesenha
+        const scrollContainer = document.querySelector('.lado-direito .conteudo') || document.querySelector('.lado-direito');
+        const savedScroll = scrollContainer ? scrollContainer.scrollTop : 0;
+
+        renderActiveTab();
+
+        if (scrollContainer) scrollContainer.scrollTop = savedScroll;
+    }
 });
 
 /* =============================================================
@@ -3792,84 +3813,53 @@ function openNewAbilityModal(existingAbility = null) {
 
 /* ---------------- DESCRIÇÃO ---------------- */
 /* =============================================================
-   CORREÇÃO 1: renderDescription com "Debounce"
-   (Evita salvar e recarregar a tela a cada letra)
+   CORREÇÃO 2: renderDescription Otimizada (Debounce)
 ============================================================= */
-
-let descSaveTimer = null; // Variável para controlar o tempo de salvamento
+let descSaveTimer = null; 
 
 function renderDescription() {
-  const d = state.description;
+    const d = state.description;
 
-  // HTML (sem botão salvar, fundo escuro controlado pelo CSS acima)
-  conteudoEl.innerHTML = `
-    <div class="desc-grid">
-      <div>
-        <label>Anotações</label>
-        <textarea id="desc-anotacoes" placeholder="Anotações pessoais do agente...">${d.anotacoes}</textarea>
-      </div>
-      <div>
-        <label>Aparência</label>
-        <textarea id="desc-aparencia" placeholder="Nome, gênero, idade, descrição física...">${d.aparencia}</textarea>
-      </div>
-      <div>
-        <label>Personalidade</label>
-        <textarea id="desc-personalidade" placeholder="Traços marcantes, opiniões, ideais...">${d.personalidade}</textarea>
-      </div>
-      <div>
-        
-      </div>
-      <div>
-        <label>Ideais</label>
-        <textarea id="desc-ideais" placeholder="Ideais...">${d.ideais}</textarea>
-      </div>
-      <div>
-        <label>Vínculos</label>
-        <textarea id="desc-vinculos" placeholder="Vínculos...">${d.vinculos}</textarea>
-      </div>
-      <div>
-        <label>Fraquezas</label>
-        <textarea id="desc-fraquezas" placeholder="Fraquezas...">${d.fraquezas}</textarea>
-      </div>
-      <div>
-        <label>História</label>
-        <textarea id="desc-historia" placeholder="História...">${d.historia}</textarea>
-      </div>
-    </div>
-  `;
+    // HTML (sem botão salvar, pois é automático)
+    conteudoEl.innerHTML = `
+        <div class="desc-grid">
+            <div><label>Anotações</label><textarea id="desc-anotacoes" placeholder="Anotações pessoais...">${d.anotacoes}</textarea></div>
+            <div><label>Aparência</label><textarea id="desc-aparencia" placeholder="Descrição física...">${d.aparencia}</textarea></div>
+            <div><label>Personalidade</label><textarea id="desc-personalidade" placeholder="Traços e personalidade...">${d.personalidade}</textarea></div>
+            <div><label>Ideais</label><textarea id="desc-ideais" placeholder="Ideais...">${d.ideais}</textarea></div>
+            <div><label>Vínculos</label><textarea id="desc-vinculos" placeholder="Vínculos...">${d.vinculos}</textarea></div>
+            <div><label>Fraquezas</label><textarea id="desc-fraquezas" placeholder="Fraquezas...">${d.fraquezas}</textarea></div>
+            <div><label>História</label><textarea id="desc-historia" placeholder="História do personagem...">${d.historia}</textarea></div>
+        </div>
+    `;
 
-  // Lógica de Auto-Resize e Auto-Save INTELIGENTE
-  const textareas = conteudoEl.querySelectorAll('textarea');
+    const textareas = conteudoEl.querySelectorAll('textarea');
 
-  textareas.forEach(tx => {
-    // Função que ajusta altura baseada no conteúdo
-    const autoResize = () => {
-      tx.style.height = 'auto';
-      tx.style.height = (tx.scrollHeight + 2) + 'px';
-    };
+    textareas.forEach(tx => {
+        // Ajusta altura inicial
+        tx.style.height = 'auto';
+        tx.style.height = (tx.scrollHeight + 2) + 'px';
 
-    // Ajusta tamanho inicial ao carregar a aba
-    autoResize();
+        tx.addEventListener('input', () => {
+            // 1. Ajusta altura visualmente
+            tx.style.height = 'auto';
+            tx.style.height = (tx.scrollHeight + 2) + 'px';
 
-    // Evento ao digitar
-    tx.addEventListener('input', () => {
-      autoResize();
+            // 2. Atualiza memória LOCAL instantaneamente
+            const key = tx.id.replace('desc-', '');
+            if (state.description.hasOwnProperty(key)) {
+                state.description[key] = tx.value;
+                
+                // 3. Cancela salvamento anterior se ainda estiver digitando
+                if (descSaveTimer) clearTimeout(descSaveTimer);
 
-      // 1. Atualiza o estado LOCAL imediatamente (visual)
-      const key = tx.id.replace('desc-', '');
-      if (state.description.hasOwnProperty(key)) {
-        state.description[key] = tx.value;
-        
-        // 2. CORREÇÃO: Limpa o timer anterior se você ainda estiver digitando
-        if (descSaveTimer) clearTimeout(descSaveTimer);
-
-        // 3. Só salva no servidor se você parar de digitar por 1 segundo (1000ms)
-        descSaveTimer = setTimeout(() => {
-            saveStateToServer();
-        }, 1000);
-      }
+                // 4. Agenda novo salvamento para 1.5 segundos depois de PARAR de digitar
+                descSaveTimer = setTimeout(() => {
+                    saveStateToServer();
+                }, 1500); 
+            }
+        });
     });
-  });
 }
 
 /* --- ATUALIZADO: RENDERIZA GRUPO DE ITENS (COM LÓGICA DE FECHADO POR PADRÃO) --- */
