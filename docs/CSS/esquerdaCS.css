@@ -1246,93 +1246,93 @@ input[type=number] {
 
 
 /* =============================================================
-   12. DEATH SAVES (DESIGN MELHORADO & ROBUSTO)
+   12. DEATH SAVES (DESIGN ROBUSTO & GRANDE)
 ============================================================= */
 .death-saves-container {
     display: none; /* Oculto por padrão */
     width: 100%;
-    background-color: #050505;
-    border: 2px solid #333; /* Borda mais visível */
+    background-color: #080808;
+    border: 2px solid #333;
     border-radius: 8px;
-    flex-direction: column; /* Organiza em colunas */
+    flex-direction: column;
     padding: 10px;
     box-sizing: border-box;
-    gap: 10px;
+    gap: 8px;
     margin-top: 5px;
-    box-shadow: inset 0 0 10px #000;
+    box-shadow: inset 0 0 15px #000;
 }
 
 .ds-content {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     width: 100%;
 }
 
 .ds-row {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Espalha bem */
+    justify-content: space-between;
     background: #111;
-    padding: 6px 10px;
+    padding: 8px 12px;
     border-radius: 6px;
     border: 1px solid #222;
 }
 
 .ds-group {
     display: flex;
-    gap: 8px; /* Espaço entre as bolinhas */
+    gap: 12px; /* Espaço maior entre bolinhas */
 }
 
 .ds-label {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 800;
-    color: #888;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
-/* BOLINHAS MAIORES E MAIS CLICÁVEIS */
+/* BOLINHAS GRANDES E FACEIS DE CLICAR */
 .ds-circle {
-    width: 24px; /* Aumentado de 12px para 24px */
-    height: 24px;
+    width: 24px;  /* Tamanho aumentado */
+    height: 24px; /* Tamanho aumentado */
     border-radius: 50%;
     border: 2px solid #444;
     cursor: pointer;
     background: #1a1a1a;
-    transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.1s ease-in-out;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
 }
 
 .ds-circle:hover {
     transform: scale(1.15);
-    border-color: #bbb;
+    border-color: #888;
 }
 
-/* SUCESSO (Verde Brilhante) */
+/* SUCESSO (Verde Neon) */
 .ds-circle.success.active {
     background-color: #00e676;
     border-color: #00e676;
-    box-shadow: 0 0 8px #00e676, inset 0 -2px 5px rgba(0,0,0,0.3);
+    box-shadow: 0 0 8px rgba(0, 230, 118, 0.6), inset 0 -2px 5px rgba(0,0,0,0.3);
 }
 
 /* FALHA (Vermelho Sangue) */
 .ds-circle.failure.active {
     background-color: #ff1744;
     border-color: #ff1744;
-    box-shadow: 0 0 8px #ff1744, inset 0 -2px 5px rgba(0,0,0,0.3);
+    box-shadow: 0 0 8px rgba(255, 23, 68, 0.6), inset 0 -2px 5px rgba(0,0,0,0.3);
 }
 
 /* Botão Reviver */
 .btn-reviver {
     width: 100%;
-    background: linear-gradient(135deg, #1f1f1f, #000);
+    background: linear-gradient(135deg, #222, #000);
     border: 1px solid #444;
-    color: #ddd;
+    color: #eee;
     border-radius: 6px;
     padding: 8px 0;
-    font-size: 13px;
-    font-weight: bold;
+    height: 36px;
+    font-size: 12px;
+    font-weight: 800;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -1341,6 +1341,7 @@ input[type=number] {
     transition: all 0.2s;
     text-transform: uppercase;
     letter-spacing: 1px;
+    margin-top: 4px;
 }
 
 .btn-reviver:hover {
@@ -1354,4 +1355,5 @@ input[type=number] {
     width: 16px;
     height: 16px;
     filter: invert(1);
+    opacity: 0.9;
 }
