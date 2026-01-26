@@ -836,24 +836,45 @@ function aplicarAntecedenteNaFicha(bgBase, bgVariant) {
 }
 
 /* =============================================================
-   PROCESSADOR DE MECÂNICAS
+   PROCESSADOR DE MECÂNICAS (ATUALIZADO)
+   - Adiciona "Comum" automaticamente
+   - Corrige contagem de duplicatas
    ============================================================= */
 function processarMecanicas(...sources) {
     let resToAdd = [], imuToAdd = [], profToAdd = [], langToAdd = [], skillsToTrain = [], pendingChoices = [];
+
+    // --- CORREÇÃO: Forçar "Comum" sempre ---
+    // Garante que o idioma Comum seja adicionado à lista temporária para ser processado
+    if (!state.idiomasList) state.idiomasList = [];
+    if (!state.idiomasList.includes('Comum')) {
+        state.idiomasList.push('Comum');
+    }
 
     const lerDados = (obj) => {
         if (!obj) return;
         if (Array.isArray(obj.resistances)) resToAdd.push(...obj.resistances);
         if (Array.isArray(obj.immunities)) imuToAdd.push(...obj.immunities);
         if (Array.isArray(obj.proficiencies)) profToAdd.push(...obj.proficiencies);
-        if (Array.isArray(obj.languages)) langToAdd.push(...obj.languages);
+        
+        if (Array.isArray(obj.languages)) {
+            // Filtra duplicatas na fonte
+            obj.languages.forEach(l => {
+                if(l !== 'Comum') langToAdd.push(l); 
+            });
+        }
+        
         if (Array.isArray(obj.skills)) skillsToTrain.push(...obj.skills);
 
         const sourceTitle = obj.name || "";
 
         if (obj.chooseSkills) pendingChoices.push({ type: 'skill', count: obj.chooseSkills, list: ALL_SKILLS_LIST, source: sourceTitle });
         if (obj.chooseSkillFrom && obj.countSkills) pendingChoices.push({ type: 'skill', count: obj.countSkills, list: obj.chooseSkillFrom, source: sourceTitle });
-        if (obj.chooseLanguages) pendingChoices.push({ type: 'language', count: obj.chooseLanguages, list: ALL_LANGUAGES_LIST, source: sourceTitle });
+        
+        // Seletor de Idiomas
+        if (obj.chooseLanguages) {
+            pendingChoices.push({ type: 'language', count: obj.chooseLanguages, list: ALL_LANGUAGES_LIST, source: sourceTitle });
+        }
+        
         if (obj.chooseTools) pendingChoices.push({ type: 'tool', count: 1, list: obj.chooseTools, source: sourceTitle, customTitle: "Escolha uma Ferramenta" });
         if (obj.chooseToolAny) pendingChoices.push({ type: 'tool', count: obj.chooseToolAny, list: ALL_TOOLS_LIST, source: sourceTitle, customTitle: "Escolha Ferramentas" });
         if (obj.chooseToolFrom) pendingChoices.push({ type: 'tool', count: 1, list: obj.chooseToolFrom, source: sourceTitle, customTitle: "Escolha uma Ferramenta" });
@@ -867,7 +888,7 @@ function processarMecanicas(...sources) {
     };
 
     sources.forEach(source => {
-        if (source && source.damage && source.type) {
+        if (source && source.damage && source.type) { // Lógica para Dracônico/Ancestralidade
             const damageClean = source.damage.split('(')[0].trim();
             resToAdd.push(damageClean);
         } else {
@@ -911,6 +932,7 @@ function processarMecanicas(...sources) {
             });
         }
         else if (choice.type === 'language') {
+            // Filtra a lista de opções removendo "Comum" e o que já tem, para o visual ficar limpo
             openGenericSelector(modalTitle, choice.count, choice.list, (selected) => {
                 addUnique('idiomasList', selected);
                 saveStateToServer();
@@ -1487,30 +1509,41 @@ function exibirAvisoTemporario(mensagem) {
 
 
 /* =============================================================
-   CORREÇÃO: APLICAR CLASSE NA FICHA (COM SELETOR DE PACTO)
-============================================================= */
+   APLICAR CLASSE NA FICHA (CORRIGIDO: DRUÍDICO & BLOOD HUNTER)
+   ============================================================= */
 function aplicarClasseNaFicha(cls, subCls) {
-    // 1. Garantia de State Global
     if (typeof state === 'undefined') {
-        if (typeof window.state !== 'undefined') {
-            state = window.state;
-        } else {
-            console.error("ERRO CRÍTICO: 'state' não definido ao aplicar classe.");
-            alert("Erro: Ficha não inicializada. Recarregue a página.");
-            return false;
-        }
+        if (typeof window.state !== 'undefined') state = window.state;
+        else return false;
     }
 
-    // 2. Inicialização de Objetos Segura
+    // Inicialização segura de Arrays e Objetos
     if (!state.niveisClasses) state.niveisClasses = {};
     if (!state.atributos) state.atributos = { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 };
     if (!state.pericias) state.pericias = {};
     if (!state.proficienciasList) state.proficienciasList = [];
+    if (!state.idiomasList) state.idiomasList = []; 
     if (!state.inventory) state.inventory = [];
 
+    // --- CORREÇÃO 1: Forçar Idioma Comum (Geral) ---
+    if (!state.idiomasList.includes('Comum')) {
+        state.idiomasList.push('Comum');
+    }
+
     const classKey = cls.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    // --- CORREÇÃO 2: Forçar Idioma Druídico (Específico de Druida) ---
+    // Verifica se é Druida e se já não tem o idioma
+    if ((classKey === 'druida' || classKey === 'druid') && !state.idiomasList.includes('Druídico')) {
+        state.idiomasList.push('Druídico');
+    }
     
-    // 3. Cálculos de Nível
+    // (Opcional) Aproveitei para garantir Gíria de Ladrão para Ladinos também, caso precise
+    if ((classKey === 'ladino' || classKey === 'rogue') && !state.idiomasList.includes('Gíria de Ladrão')) {
+        state.idiomasList.push('Gíria de Ladrão');
+    }
+
+    // Cálculos de Nível
     const currentLevelInClass = state.niveisClasses[classKey] ? parseInt(state.niveisClasses[classKey]) : 0;
     const newLevelInClass = currentLevelInClass + 1;
     
@@ -1561,16 +1594,20 @@ function aplicarClasseNaFicha(cls, subCls) {
         if(!state.vidaDadosSalvos['v1']) state.vidaDadosSalvos['v1'] = cls.hit_die; 
     }
 
-    // --- ADICIONAR FEATURES DA CLASSE (COM FILTRO PARA PACTOS) ---
+    // --- ADICIONAR FEATURES DA CLASSE ---
     if (cls.features) {
         cls.features.forEach(feat => {
             const fLvl = feat.level || 1;
-            
-            // >>> CORREÇÃO AQUI: <<<
-            // Se for Bruxo e a feature for um Pacto, IGNORA a adição automática.
-            // Vamos adicionar manualmente via seletor depois.
-            if (classKey === 'bruxo' && feat.name.toLowerCase().includes('pacto d')) {
-                return; 
+            const featNameLower = feat.name.toLowerCase();
+
+            // >>> CORREÇÃO BRUXO: Ignora Pactos Automáticos <<<
+            if (classKey === 'bruxo' && featNameLower.includes('pacto d')) return; 
+
+            // >>> CORREÇÃO BLOOD HUNTER: Ignora Maldições Automáticas <<<
+            if (classKey === 'blood hunter' || classKey === 'bloodhunter') {
+                if (featNameLower.includes('maldição') || featNameLower.includes('maldicao') || featNameLower.includes('blood curse')) {
+                    return; 
+                }
             }
 
             if (fLvl <= newLevelInClass) addFeatureToState(feat, 'Classe', cls.name, '');
@@ -1596,7 +1633,7 @@ function aplicarClasseNaFicha(cls, subCls) {
     // --- MONTAGEM DA FILA DE ESCOLHAS (TASKS) ---
     const tasks = [];
 
-    // >>> NOVA TASK: ESCOLHA DE PACTO (BRUXO NÍVEL 3) <<<
+    // TASK: ESCOLHA DE PACTO (BRUXO NÍVEL 3)
     if (classKey === 'bruxo' && newLevelInClass === 3) {
         tasks.push((next) => {
             openGenericSelector("Escolha a Dádiva do Pacto", 1, Object.keys(DADIVAS_BRUXO_DB), (selected) => {

@@ -150,6 +150,7 @@ app.post('/api/criar-ficha', async (req, res) => {
             vidaDadosSalvos: { v1: 0, v2: 0, v3: 0 },
             marco: 0,
             vidaAtual: 0,
+            deathSaves: { successes: 0, failures: 0 },
             vidaTempAtual: 0,
             danoNecroAtual: 0,
             metros: 0,

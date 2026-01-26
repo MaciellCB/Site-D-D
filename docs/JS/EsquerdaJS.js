@@ -113,6 +113,7 @@ function inicializarDadosEsquerda() {
     if (!state.atributos) state.atributos = { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 };
     if (!state.niveisClasses) state.niveisClasses = {};
     if (!state.vidaDadosSalvos) state.vidaDadosSalvos = {};
+    if (!state.deathSaves) state.deathSaves = { successes: 0, failures: 0 };
 
     // Arrays e Listas
     if (!state.fraquezasList) state.fraquezasList = [];
@@ -1095,15 +1096,115 @@ window.abrirPortraitOBS = function() {
     window.open(url, windowId);
 };
 function atualizarBarraUI(prefixo, atual, total) {
-    const fill = document.getElementById(`${prefixo}-fill`);
-    const texto = document.getElementById(`${prefixo}-atual`);
-    if (fill && texto) {
-        const valAtual = parseInt(atual) || 0;
-        const valTotal = parseInt(total) || 1;
-        fill.style.width = Math.min(100, (valAtual / valTotal) * 100) + "%";
-        texto.textContent = valAtual;
+    // Se não for a barra de vida principal, comportamento padrão
+    if (prefixo !== 'vida') {
+        const fill = document.getElementById(`${prefixo}-fill`);
+        const texto = document.getElementById(`${prefixo}-atual`);
+        if (fill && texto) {
+            const valAtual = parseInt(atual) || 0;
+            const valTotal = parseInt(total) || 1;
+            fill.style.width = Math.min(100, (valAtual / valTotal) * 100) + "%";
+            texto.textContent = valAtual;
+        }
+        return;
+    }
+
+    // --- LÓGICA ESPECIAL PARA VIDA (DEATH SAVES) ---
+    const valAtual = parseInt(atual) || 0;
+    const valTotal = parseInt(total) || 1;
+    
+    const containerBarra = document.querySelector('.vida-bar'); // A barra vermelha
+    let containerDS = document.getElementById('death-saves-ui'); // O novo container
+
+    // Cria o HTML do Death Saves se não existir
+    if (!containerDS && containerBarra) {
+        containerDS = document.createElement('div');
+        containerDS.id = 'death-saves-ui';
+        containerDS.className = 'death-saves-container';
+        containerDS.innerHTML = `
+            <div class="ds-group">
+                <span class="ds-label">Sucesso</span>
+                <div class="ds-circle success" onclick="toggleDeathSave('success', 1)"></div>
+                <div class="ds-circle success" onclick="toggleDeathSave('success', 2)"></div>
+                <div class="ds-circle success" onclick="toggleDeathSave('success', 3)"></div>
+            </div>
+            <div class="ds-group">
+                <span class="ds-label">Falha</span>
+                <div class="ds-circle failure" onclick="toggleDeathSave('failure', 1)"></div>
+                <div class="ds-circle failure" onclick="toggleDeathSave('failure', 2)"></div>
+                <div class="ds-circle failure" onclick="toggleDeathSave('failure', 3)"></div>
+            </div>
+        `;
+        // Insere logo após a barra de vida
+        containerBarra.parentNode.insertBefore(containerDS, containerBarra.nextSibling);
+    }
+
+    // Alterna Visibilidade
+    if (valAtual <= 0) {
+        // MODO MORTE
+        if (containerBarra) containerBarra.style.display = 'none';
+        if (containerDS) {
+            containerDS.style.display = 'flex';
+            atualizarBolinhasDS(); // Atualiza visual das bolinhas
+        }
+    } else {
+        // MODO VIVO
+        if (containerBarra) {
+            containerBarra.style.display = 'block'; // Mostra barra
+            // Reseta Death Saves ao curar (Opcional - regra de D&D)
+            if (state.deathSaves.successes > 0 || state.deathSaves.failures > 0) {
+                state.deathSaves = { successes: 0, failures: 0 };
+                saveStateToServer(); // Salva o reset
+            }
+        }
+        if (containerDS) containerDS.style.display = 'none';
+
+        // Atualiza a barra normal
+        const fill = document.getElementById(`vida-fill`);
+        const texto = document.getElementById(`vida-atual`);
+        if (fill && texto) {
+            fill.style.width = Math.min(100, (valAtual / valTotal) * 100) + "%";
+            texto.textContent = valAtual;
+        }
     }
 }
+
+
+// --- LÓGICA DE DEATH SAVES ---
+
+function atualizarBolinhasDS() {
+    const s = state.deathSaves.successes || 0;
+    const f = state.deathSaves.failures || 0;
+
+    // Atualiza Sucessos
+    document.querySelectorAll('.ds-circle.success').forEach((el, index) => {
+        if (index < s) el.classList.add('active');
+        else el.classList.remove('active');
+    });
+
+    // Atualiza Falhas
+    document.querySelectorAll('.ds-circle.failure').forEach((el, index) => {
+        if (index < f) el.classList.add('active');
+        else el.classList.remove('active');
+    });
+}
+
+window.toggleDeathSave = function(type, index) {
+    if (!state.deathSaves) state.deathSaves = { successes: 0, failures: 0 };
+
+    // Lógica simples: se clicou na bolinha 2, define valor como 2.
+    // Se clicou na 2 e já era 2, define como 1.
+    const currentVal = type === 'success' ? state.deathSaves.successes : state.deathSaves.failures;
+    
+    let newVal = index;
+    if (currentVal === index) newVal = index - 1;
+
+    if (type === 'success') state.deathSaves.successes = newVal;
+    else state.deathSaves.failures = newVal;
+
+    atualizarBolinhasDS();
+    saveStateToServer();
+};
 
 function atualizarMarcosEXP() {
     const nivelTotal = Object.values(state.niveisClasses).reduce((a, b) => a + b, 0) || 1;

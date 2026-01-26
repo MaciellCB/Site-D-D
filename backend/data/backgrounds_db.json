@@ -128,7 +128,7 @@
     "description": "Você vem de origem humilde, mas o destino o escolheu. Seja por ter enfrentado um tirano, matado uma besta ou liderado uma revolta, o povo comum o vê como um deles, um campeão que entende suas dores.",
     "image": "img/backgrounds/Heroi.png",
     "skills": ["Lidar com animais", "Sobrevivência"],
-    "tools": ["Ferramentas de artesão", "Veículos terrestres"],
+    "tools": ["Ferramentas de artesão", "Veículos (terrestres)"],
     "languages": 0,
     "equipment": ["Ferramentas de artesão", "Pá", "Panela de ferro", "Roupas comuns", "10 PO"],
     "feature": {
@@ -217,7 +217,7 @@
     "description": "A guerra foi sua profissão. Você serviu em um exército, guarda ou milícia. Você viu a morte de perto, conhece a importância da disciplina e tem a lealdade de seus antigos companheiros de armas.",
     "image": "img/backgrounds/Soldado.png",
     "skills": ["Atletismo", "Intimidação"],
-    "tools": ["Um jogo (dados ou cartas)", "Veículos terrestres"],
+    "tools": ["Um jogo (dados ou cartas)", "Veículos (terrestres)"],
     "languages": 0,
     "equipment": ["Insígnia de patente", "Troféu de um inimigo caído", "Jogo de dados ou cartas", "Roupas comuns", "10 PO"],
     "feature": {

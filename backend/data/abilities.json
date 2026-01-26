@@ -3370,7 +3370,7 @@
     "class": "Clérigo",
     "subclass": "Domínio da Cidade",
     "name": "(Cidade, 1º nível) Habilidades Adicionais",
-    "description": "<p>Você ganha o truque <em>Ligar/Desligar</em> (On/Off). Além disso, você ganha proficiência com armas de fogo (sidearms) e veículos terrestres.</p>"
+    "description": "<p>Você ganha o truque <em>Ligar/Desligar</em> (On/Off). Além disso, você ganha proficiência com armas de fogo (sidearms) e Veículos (terrestres).</p>"
   },
   {
     "id": "cle_cid_1_coracao",

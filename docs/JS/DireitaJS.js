@@ -3129,6 +3129,22 @@ window.adicionarItemDoCatalogo = (id) => {
   const i = itemCatalog.find(x => x.id === id);
   if (!i) return;
 
+  // --- NOVA LÓGICA: Definir Atributo Padrão (Força/Destreza) ---
+  let defaultAttr = 'Nenhum'; // Padrão para Itens Gerais e Armaduras
+
+  // Aplica regra apenas se for Arma
+  if (i.type === 'Arma' || i.category === 'Armas') {
+      const t = (i.tipoArma || '').toLowerCase();
+      
+      // Verifica variações de escrita para "A Distancia"
+      if (t.includes('distancia') || t.includes('distância')) {
+          defaultAttr = 'Destreza';
+      } else {
+          // Se não for distância, assume Corpo a Corpo (Força)
+          defaultAttr = 'Força';
+      }
+  }
+
   let novoItem = {
     id: uid(),
     name: i.name,
@@ -3139,11 +3155,16 @@ window.adicionarItemDoCatalogo = (id) => {
     isEquipable: true,
     proficiency: i.proficiency || 'Armas Simples',
 
-    // --- CORREÇÃO AQUI ---
-    defense: i.defense || '',         // Copia o valor da CA (ex: "11")
-    tipoItem: i.tipoItem || '',       // Importante para saber se é "Armadura" ou "Escudo"
-    minStrength: i.minStrength || '', // Requisito de Força (para armaduras pesadas)
-    // ---------------------
+    // --- APLICA O ATRIBUTO CALCULADO ACIMA ---
+    attackAttribute: defaultAttr, 
+    damageAttribute: defaultAttr, 
+    attackBonus: i.attackBonus || '', // Mantém bônus mágica se houver no JSON
+    damageBonus: i.damageBonus || '',
+    // -----------------------------------------
+
+    defense: i.defense || '',         
+    tipoItem: i.tipoItem || '',       
+    minStrength: i.minStrength || '', 
 
     tipoArma: i.tipoArma || 'Corpo a Corpo',
     empunhadura: i.empunhadura || 'Uma mao',
