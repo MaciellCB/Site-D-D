@@ -23,12 +23,17 @@ input[type=number] {
   align-items: stretch;
 }
 
+/* ARQUIVO: CSS/esquerdaCS.css */
+
 .lado-esquerdo {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-radius: 10px;
-  width: 35%;
+  
+  /* ALTERAÇÃO AQUI: De 35% para 30% */
+  width: 30%; 
+  
   align-self: stretch;
   background-color: #121212;
   margin-top: -8px;
