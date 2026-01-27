@@ -1,6 +1,6 @@
 /* =============================================================
    LÓGICA DA ESQUERDA (ATRIBUTOS, VIDA, XP, CLASSES, CA E STATUS)
-   ARQUIVO: EsquerdaJS.js (CORREÇÃO: PRIORIDADE LOCAL PARA DEATH SAVES)
+   ARQUIVO: EsquerdaJS.js (CORREÇÃO FINAL: MEMÓRIA DE CURTO PRAZO)
 ============================================================= */
 
 // ======================================
@@ -77,13 +77,29 @@ let rotateInterval = null;
 const numerosHex = Array.from(document.querySelectorAll('.hexagrama .num'));
 const hexOverlay = document.querySelector('.hex-overlay');
 
-// --- SISTEMA DE PROTEÇÃO (NOVO) ---
+// --- SISTEMA DE MEMÓRIA DE CURTO PRAZO (BLINDAGEM TOTAL) ---
+// Isso armazena o que você clicou e SOBRESCREVE o servidor por alguns segundos
+window.localMemory = {
+    active: false,
+    timestamp: 0,
+    deathSaves: null, // Guarda estado local das bolinhas
+    vidaAtual: null   // Guarda estado local da vida
+};
+
+// Função para atualizar a memória local
+function registrarInteracaoLocal() {
+    window.localMemory.active = true;
+    window.localMemory.timestamp = Date.now();
+    // Salva uma cópia exata do que está no estado AGORA (que acabamos de alterar)
+    if (state.deathSaves) {
+        window.localMemory.deathSaves = JSON.parse(JSON.stringify(state.deathSaves));
+    }
+    window.localMemory.vidaAtual = state.vidaAtual;
+}
+
 var uiLock = false;
 var uiUnlockTimer = null;
 var dsSaveTimer = null;
-// TIMESTAMP DA ÚLTIMA INTERAÇÃO COM BOLINHAS
-// Se o tempo atual for próximo disso, ignoramos updates do servidor nas bolinhas
-var lastDSInteraction = 0; 
 
 function ativarBloqueioUI() {
     window.uiLock = true;
@@ -98,7 +114,7 @@ function ativarBloqueioUI() {
 // ======================================
 
 window.addEventListener('sheet-updated', () => {
-    // PROTEÇÃO GERAL
+    // Se o bloqueio rígido estiver ativo, ignora
     if (window.uiLock) return;
 
     inicializarDadosEsquerda();
@@ -607,56 +623,48 @@ function atualizarVidaCalculada() {
 }
 
 // ======================================
-// 6. Death Saves e Barras de UI (CORREÇÃO FINAL: PRIORIDADE LOCAL)
+// 6. Death Saves e Barras de UI (BLINDAGEM TOTAL)
 // ======================================
 
 // FUNÇÃO ROBUSTA PARA CLIQUE NAS BOLINHAS
 window.toggleDeathSave = function(type, idx) {
-    // ATUALIZA TIMESTAMP PARA IGNORAR SERVER
-    window.lastDSInteraction = Date.now();
-
-    // 1. INICIALIZAÇÃO E CORREÇÃO FORÇADA
     if (!state.deathSaves) state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
     
-    // 2. ATIVA BLOQUEIO UI
-    ativarBloqueioUI();
-
-    // 3. QUEBRA DE REFERÊNCIA (Deep Copy Simplificado)
+    // 1. ALTERA O VALOR
     let novoArray = [...(state.deathSaves[type] || [false, false, false])];
-    
-    // Altera no clone
     novoArray[idx] = !novoArray[idx];
-    
-    // Salva o clone de volta no estado
     state.deathSaves[type] = novoArray;
 
-    // 4. ATUALIZA VISUAL IMEDIATAMENTE
-    atualizarBolinhasVisualmente(true);
+    // 2. REGISTRA NA MEMÓRIA LOCAL (Isso impede que o servidor desfaça)
+    registrarInteracaoLocal();
 
-    // 5. SALVA COM DEBOUNCE
+    // 3. ATUALIZA VISUAL
+    atualizarBolinhasVisualmente(true);
+    ativarBloqueioUI(); // Liga o bloqueio rígido por precaução
+
+    // 4. SALVA
     if (window.dsSaveTimer) clearTimeout(window.dsSaveTimer);
-    
     window.dsSaveTimer = setTimeout(() => {
-        // SEGURANÇA: Se a vida for maior que 0, NÃO SALVA as bolinhas.
-        if ((parseInt(state.vidaAtual) || 0) > 0) {
-            return; 
-        }
+        if ((parseInt(state.vidaAtual) || 0) > 0) return; 
         saveStateToServer();
     }, 500);
 };
 
-// FUNÇÃO REVIVER
+// FUNÇÃO REVIVER (CORRIGIDA: VOLTAVA NO TEMPO)
 window.voltarVidaUm = function() {
-    // ATUALIZA TIMESTAMP
-    window.lastDSInteraction = Date.now();
-
     if (window.dsSaveTimer) { clearTimeout(window.dsSaveTimer); window.dsSaveTimer = null; }
-    ativarBloqueioUI();
-
+    
+    // 1. APLICA AS MUDANÇAS
     state.vidaAtual = 1;
-    // Zera criando novos arrays para evitar links
     state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
     
+    // 2. REGISTRA NA MEMÓRIA LOCAL (CRUCIAL: Isso força o valor 1 contra o eco de valor 0 do servidor)
+    registrarInteracaoLocal();
+
+    // 3. ATIVA O BLOQUEIO
+    ativarBloqueioUI();
+    
+    // 4. ATUALIZA TELA E SALVA
     atualizarBarraUI('vida', 1, state.vidaTotalCalculada);
     saveStateToServer();
 };
@@ -796,28 +804,26 @@ function inicializarDadosEsquerda() {
     if (!state.vidaDadosSalvos) state.vidaDadosSalvos = {};
     if (!state.dadosVidaGastos) state.dadosVidaGastos = {};
 
-    // INICIALIZAÇÃO BLINDADA COM PROTEÇÃO DE TIMESTAMP
-    // Se o usuário interagiu nos últimos 5 segundos, NÃO atualize as bolinhas com dados do servidor
-    const deveIgnorarServer = (Date.now() - (window.lastDSInteraction || 0)) < 5000;
+    // =========================================================
+    // A MÁGICA: SOBRESCREVENDO O SERVIDOR COM A MEMÓRIA LOCAL
+    // Se a última interação foi há menos de 4 segundos...
+    if (window.localMemory.active && (Date.now() - window.localMemory.timestamp < 4000)) {
+        // ...RESTAURA a vida e as bolinhas locais, ignorando o que veio do servidor
+        if (window.localMemory.deathSaves) {
+            state.deathSaves = JSON.parse(JSON.stringify(window.localMemory.deathSaves));
+        }
+        if (window.localMemory.vidaAtual !== null) {
+            state.vidaAtual = window.localMemory.vidaAtual;
+        }
+    }
+    // =========================================================
 
     if (!state.deathSaves) {
         state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
     } else {
-        if (!deveIgnorarServer) {
-            // Se faz tempo que não clica, aceita o servidor
-            const oldS = Array.isArray(state.deathSaves.successes) ? [...state.deathSaves.successes] : [false, false, false];
-            const oldF = Array.isArray(state.deathSaves.failures) ? [...state.deathSaves.failures] : [false, false, false];
-            state.deathSaves = { successes: oldS, failures: oldF };
-        } else {
-            // Se clicou recentemente, MANTÉM O ESTADO ATUAL (ignorando o que veio no state.deathSaves)
-            // Aqui é um truque: o 'state' já foi atualizado pelo socket antes de chamar essa função?
-            // Geralmente sim. Então precisamos restaurar?
-            // Na verdade, o ideal é que a lógica de "socket.on" não sobrescreva se for recente.
-            // Como não podemos mexer no socket.on aqui, vamos assumir que o "state" global foi atualizado
-            // e confiar no UI Lock. Se o UI Lock falhar, essa lógica aqui serve de backup se tivermos salvo o estado local antes.
-            // Nota: Para blindagem perfeita, o socket listener deveria ter essa lógica.
-            // Mas como estamos mexendo só neste arquivo, o UI Lock é a defesa principal.
-        }
+        const oldS = Array.isArray(state.deathSaves.successes) ? [...state.deathSaves.successes] : [false, false, false];
+        const oldF = Array.isArray(state.deathSaves.failures) ? [...state.deathSaves.failures] : [false, false, false];
+        state.deathSaves = { successes: oldS, failures: oldF };
     }
 
     if (!state.fraquezasList) state.fraquezasList = [];
@@ -1244,6 +1250,10 @@ function vincularEventosInputs() {
                 }
                 
                 state[key] = val;
+                
+                // REGISTRA INTERAÇÃO NA MEMÓRIA
+                registrarInteracaoLocal();
+
                 atualizarVidaCalculada();
             };
             el.onblur = () => saveStateToServer();
@@ -1272,6 +1282,10 @@ document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
         }
 
         state[key] = novo;
+        
+        // REGISTRA INTERAÇÃO NA MEMÓRIA
+        registrarInteracaoLocal();
+
         atualizarVidaCalculada();
         saveStateToServer();
     };
