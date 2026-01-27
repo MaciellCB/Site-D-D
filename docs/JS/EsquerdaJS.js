@@ -40,7 +40,7 @@ const DADOS_VALORES = {
 };
 
 const TIPOS_DANO_LISTA = [
-    'Ácido', 'Contundente', 'Doenças', 'Cortante', 'Perfurante', 'Fogo', 'Frio',
+    'Ácido', 'Contundente','Doenças', 'Cortante', 'Perfurante', 'Fogo', 'Frio',
     'Elétrico', 'Trovão', 'Veneno', 'Radiante', 'Necrótico', 'Psíquico', 'Energético'
 ];
 
@@ -51,9 +51,9 @@ const PROFICIENCIAS_LISTA_ESQUERDA = [
     'Ferramentas de Cartógrafo', 'Ferramentas de Coureiro', 'Ferramentas de Ferreiro',
     'Ferramentas de Joalheiro', 'Ferramentas de Oleiro', 'Ferramentas de Pedreiro',
     'Ferramentas de Sapateiro', 'Ferramentas de Tecelão', 'Ferramentas de Vidreiro',
-    'Ferramentas de Pintor', 'Ferramentas de Ladrão', 'Suprimentos de Alquimista', 'Ferramentas de Funileiro',
+    'Ferramentas de Pintor', 'Ferramentas de Ladrão', 'Suprimentos de Alquimista','Ferramentas de Funileiro',
     'Kit de Disfarce', 'Kit de Falsificação', 'Kit de Herborismo', 'Kit de Venenos',
-    'Instrumento Musical (Genérico)', 'Alaúde', 'Bateria', 'Charamela', 'Citara', 'Flauta', 'Flauta de Pã',
+    'Instrumento Musical (Genérico)', 'Alaúde', 'Bateria', 'Charamela', 'Citara', 'Flauta', 'Flauta de Pã', 
     'Gaita de Foles', 'Lira', 'Tambor', 'Trombeta', 'Trompa', 'Viola', 'Violino', 'Xilofone',
     'Veículos (terrestres)', 'Veículos (aquáticos)'
 ];
@@ -74,6 +74,10 @@ let rotateInterval = null;
 const numerosHex = Array.from(document.querySelectorAll('.hexagrama .num'));
 const hexOverlay = document.querySelector('.hex-overlay');
 
+// Variável Global para controlar o Delay (Evita bug de "voltar no tempo")
+let dsSaveTimer = null;
+
+
 // ======================================
 // 2. Inicialização e Listeners
 // ======================================
@@ -84,10 +88,6 @@ window.addEventListener('sheet-updated', () => {
     vincularEventosInputs();
 });
 
-/* =============================================================
-   ATUALIZAÇÃO: inicializarDadosEsquerda (CORRIGIDA)
-============================================================= */
-
 function inicializarDadosEsquerda() {
     if (!state.atributos) state.atributos = { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 };
     if (!state.niveisClasses) state.niveisClasses = {};
@@ -95,13 +95,9 @@ function inicializarDadosEsquerda() {
     if (!state.dadosVidaGastos) state.dadosVidaGastos = {};
 
     // --- CORREÇÃO AGRESSIVA DE FORMATO (DEATH SAVES) ---
-    // Se não existir, cria vazio
     if (!state.deathSaves) {
         state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
-    }
-    // Se existir mas estiver bugado ou em formato antigo (número)
-    else {
-        // Converte Número -> Array (Migração de dados antigos)
+    } else {
         if (typeof state.deathSaves.successes === 'number') {
             const num = state.deathSaves.successes;
             state.deathSaves.successes = [false, false, false].map((_, i) => i < num);
@@ -110,8 +106,6 @@ function inicializarDadosEsquerda() {
             const num = state.deathSaves.failures;
             state.deathSaves.failures = [false, false, false].map((_, i) => i < num);
         }
-
-        // Garante que são arrays se estiverem indefinidos
         if (!Array.isArray(state.deathSaves.successes)) state.deathSaves.successes = [false, false, false];
         if (!Array.isArray(state.deathSaves.failures)) state.deathSaves.failures = [false, false, false];
     }
@@ -139,31 +133,29 @@ function inicializarDadosEsquerda() {
     setVal('xpAtual', state.xp);
     setVal('marcoAtual', state.marco);
     setText('inspiraValor', state.inspiracao);
-
-    // Deslocamento
+    
     const elMetros = document.getElementById('metros');
     const elQuadrados = document.getElementById('quadrados');
-
+    
     if (elMetros && elQuadrados) {
-        elMetros.value = state.metros;
+        elMetros.value = state.metros; 
         elQuadrados.value = (state.metros / 1.5).toFixed(1);
 
         const oldLabel = document.getElementById('voo-label-display');
         if (oldLabel) oldLabel.remove();
-
+        
         let containerVooM = document.getElementById('container-voo-m');
         let containerVooQ = document.getElementById('container-voo-q');
-
+        
         if (!containerVooM) {
-            const linhaPai = elQuadrados.parentNode.parentNode;
+            const linhaPai = elQuadrados.parentNode.parentNode; 
             containerVooM = document.createElement('div');
             containerVooM.id = 'container-voo-m';
-            containerVooM.className = 'metros-box';
+            containerVooM.className = 'metros-box'; 
             containerVooM.innerHTML = `<label style="color:#4fc3f7;">Voo (m)</label><input id="voo-metros" type="number" style="border-color:#4fc3f7; color:#4fc3f7;">`;
-
             containerVooQ = document.createElement('div');
             containerVooQ.id = 'container-voo-q';
-            containerVooQ.className = 'quadrados-box';
+            containerVooQ.className = 'quadrados-box'; 
             containerVooQ.innerHTML = `<label style="color:#4fc3f7;">Voo (q)</label><input id="voo-quadrados" type="number" style="border-color:#4fc3f7; color:#4fc3f7;">`;
             linhaPai.appendChild(containerVooM);
             linhaPai.appendChild(containerVooQ);
@@ -183,17 +175,17 @@ function inicializarDadosEsquerda() {
         }
 
         inputVooM.oninput = (e) => {
-            const novoVoo = parseFloat(e.target.value) || 0;
-            state.deslocamentoVoo = novoVoo;
-            inputVooQ.value = (novoVoo / 1.5).toFixed(1);
+            const val = parseFloat(e.target.value) || 0;
+            state.deslocamentoVoo = val;
+            inputVooQ.value = (val / 1.5).toFixed(1);
             saveStateToServer();
         };
 
         inputVooQ.oninput = (e) => {
-            const novosQuadrados = parseFloat(e.target.value) || 0;
-            const novoVooMetros = novosQuadrados * 1.5;
-            state.deslocamentoVoo = novoVooMetros;
-            inputVooM.value = novoVooMetros;
+            const val = parseFloat(e.target.value) || 0;
+            const metros = val * 1.5;
+            state.deslocamentoVoo = metros;
+            inputVooM.value = metros; 
             saveStateToServer();
         };
     }
@@ -211,7 +203,7 @@ function inicializarDadosEsquerda() {
         const val = state.atributos[id] || 10;
         n.dataset.attrValue = val;
         n.textContent = mostrandoAtributos ? val : formatMod(calcularModificador(val));
-
+        
         n.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -222,13 +214,9 @@ function inicializarDadosEsquerda() {
 }
 
 // ======================================
-// LÓGICA DE DEATH SAVES (CRÍTICO: MANTENHA ESTA ORDEM)
+// LÓGICA DE DEATH SAVES E VIDA (AS FUNÇÕES QUE FALTAVAM ESTÃO AQUI)
 // ======================================
 
-// Variável Global para controlar o Delay (Evita bugs)
-let dsSaveTimer = null;
-
-// 1. Função de Atualizar HTML da Barra
 function atualizarBarraUI(prefixo, atual, total) {
     if (prefixo !== 'vida') {
         const fill = document.getElementById(`${prefixo}-fill`);
@@ -242,14 +230,13 @@ function atualizarBarraUI(prefixo, atual, total) {
         return;
     }
 
-    // --- LÓGICA DE VIDA / MORTE ---
     const valAtual = parseInt(atual) || 0;
     const valTotal = parseInt(total) || 1;
+    
+    const containerBarra = document.querySelector('.vida-bar'); 
+    let containerDS = document.getElementById('death-saves-ui'); 
 
-    const containerBarra = document.querySelector('.vida-bar');
-    let containerDS = document.getElementById('death-saves-ui');
-
-    // Cria o HTML do Death Saves se não existir (LAYOUT NOVO)
+    // Cria o HTML do Death Saves se não existir
     if (!containerDS && containerBarra) {
         containerDS = document.createElement('div');
         containerDS.id = 'death-saves-ui';
@@ -285,14 +272,12 @@ function atualizarBarraUI(prefixo, atual, total) {
         if (containerBarra) containerBarra.style.display = 'none';
         if (containerDS) {
             containerDS.style.display = 'flex';
-            // Chama a função visual (sem salvar)
-            atualizarBolinhasVisualmente();
+            atualizarBolinhasVisualmente(); 
         }
     } else {
         if (containerBarra) containerBarra.style.display = 'block';
         if (containerDS) containerDS.style.display = 'none';
 
-        // Atualiza a barra normal
         const fill = document.getElementById(`vida-fill`);
         const texto = document.getElementById(`vida-atual`);
         if (fill && texto) {
@@ -302,15 +287,13 @@ function atualizarBarraUI(prefixo, atual, total) {
     }
 }
 
-// 2. Função Visual (Pinta as bolinhas baseado no estado)
 function atualizarBolinhasVisualmente() {
     if (!state.deathSaves) return;
 
-    // Garante arrays
-    const sArr = Array.isArray(state.deathSaves.successes) ? state.deathSaves.successes : [false, false, false];
-    const fArr = Array.isArray(state.deathSaves.failures) ? state.deathSaves.failures : [false, false, false];
+    const sArr = Array.isArray(state.deathSaves.successes) ? state.deathSaves.successes : [false,false,false];
+    const fArr = Array.isArray(state.deathSaves.failures) ? state.deathSaves.failures : [false,false,false];
 
-    for (let i = 0; i < 3; i++) {
+    for(let i=0; i<3; i++) {
         const elS = document.getElementById(`btn-ds-s-${i}`);
         const elF = document.getElementById(`btn-ds-f-${i}`);
 
@@ -325,9 +308,8 @@ function atualizarBolinhasVisualmente() {
     }
 }
 
-// 3. Lógica de Clique Independente (As funções que faltavam!)
-window.toggleDeathSave = function (type, idx) {
-    if (!state.deathSaves) state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
+window.toggleDeathSave = function(type, idx) {
+    if (!state.deathSaves) state.deathSaves = { successes: [false,false,false], failures: [false,false,false] };
     if (!Array.isArray(state.deathSaves[type])) state.deathSaves[type] = [false, false, false];
 
     // Inverte APENAS o índice clicado
@@ -343,9 +325,8 @@ window.toggleDeathSave = function (type, idx) {
     }, 500);
 };
 
-// 4. Lógica do Botão Reviver
-window.voltarVidaUm = function () {
-    // Cancela qualquer clique em bolinha pendente
+window.voltarVidaUm = function() {
+    // Cancela qualquer salvamento pendente das bolinhas
     if (dsSaveTimer) {
         clearTimeout(dsSaveTimer);
         dsSaveTimer = null;
@@ -354,10 +335,10 @@ window.voltarVidaUm = function () {
     state.vidaAtual = 1;
     // Reseta bolinhas
     state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
-
+    
     // Atualiza UI
     atualizarVidaCalculada();
-
+    
     // Salva
     saveStateToServer();
 };
@@ -366,7 +347,7 @@ window.voltarVidaUm = function () {
    OUTRAS FUNÇÕES (Painéis, etc)
 ============================================================= */
 
-window.tornarPainelArrastavel = function (elemento) {
+window.tornarPainelArrastavel = function(elemento) {
     const header = elemento.querySelector('.painel-header');
     if (!header) return;
 
@@ -374,13 +355,13 @@ window.tornarPainelArrastavel = function (elemento) {
     let startX, startY, startLeft, startTop;
 
     const onMouseDown = (e) => {
-        if (e.target.tagName === 'BUTTON') return;
+        if (e.target.tagName === 'BUTTON') return; 
         e.preventDefault();
         isDragging = true;
         startX = e.clientX;
         startY = e.clientY;
         const style = window.getComputedStyle(elemento);
-        startLeft = parseInt(style.left) || 0;
+        startLeft = parseInt(style.left) || 0; 
         startTop = parseInt(style.top) || 0;
         if (style.transform !== 'none') {
             const rect = elemento.getBoundingClientRect();
@@ -412,7 +393,7 @@ window.tornarPainelArrastavel = function (elemento) {
             document.removeEventListener('mouseup', onMouseUp);
         }
     };
-    header.removeEventListener('mousedown', onMouseDown);
+    header.removeEventListener('mousedown', onMouseDown); 
     header.addEventListener('mousedown', onMouseDown);
 };
 
@@ -436,388 +417,6 @@ if (btnAbrirDV) {
 
 function renderizarPainelDadosVida(container) {
     container.innerHTML = '';
-    if (typeof syncOrdemClasses === 'function') syncOrdemClasses();
-    const ordem = state.ordemClasses || Object.keys(state.niveisClasses);
-    let totalClasses = 0;
-
-    ordem.forEach(key => {
-        const nivel = parseInt(state.niveisClasses[key]) || 0;
-        if (nivel <= 0) return;
-        totalClasses++;
-
-        const classeRef = classesPadrao.find(c => c.key === key);
-        if (!classeRef) return;
-
-        const gastos = state.dadosVidaGastos[key] || 0;
-        const restantes = Math.max(0, nivel - gastos);
-        const dadoTipo = classeRef.dado;
-
-        const div = document.createElement('div');
-        div.className = 'item-dv';
-
-        const disabledAttr = restantes <= 0 ? 'disabled' : '';
-        const textoBotao = restantes <= 0 ? 'Esgotado' : `Rolar ${dadoTipo}`;
-
-        div.innerHTML = `
-            <div class="dv-info">
-                <span class="dv-class-name">${classeRef.nome}</span>
-                <span class="dv-count">Disponível: <strong style="color:${restantes > 0 ? '#fff' : '#d32f2f'}">${restantes}</strong> / ${nivel}</span>
-            </div>
-            <button class="btn-rolar-dv" ${disabledAttr} onclick="usarDadoVida('${key}', '${dadoTipo}')">
-                <img src="img/imagem-no-site/dado.png" style="width:14px;"> ${textoBotao}
-            </button>
-        `;
-        container.appendChild(div);
-    });
-
-    if (totalClasses === 0) {
-        container.innerHTML = '<div style="color:#888; text-align:center; padding:10px;">Nenhuma classe definida.</div>';
-    }
-
-    const divReset = document.createElement('div');
-    divReset.style.marginTop = '10px';
-    divReset.style.paddingTop = '10px';
-    divReset.style.borderTop = '1px solid #333';
-    divReset.innerHTML = `
-        <button onclick="realizarDescansoLongo()" style="width:100%; background:#111; color:#aaa; border:1px solid #444; padding:8px; border-radius:4px; cursor:pointer; font-size:12px;">
-            Realizar Descanso Longo (Recuperar DV/2 e Vida)
-        </button>
-    `;
-    container.appendChild(divReset);
-}
-
-window.usarDadoVida = function (classKey, dadoTipo) {
-    const nivel = parseInt(state.niveisClasses[classKey]) || 0;
-    const gastos = state.dadosVidaGastos[classKey] || 0;
-
-    if (gastos >= nivel) return;
-
-    const faces = parseInt(dadoTipo.replace('d', ''));
-    const resultadoDado = Math.floor(Math.random() * faces) + 1;
-    const conScore = state.atributos?.n1 || 10;
-    const modCon = Math.floor((parseInt(conScore) - 10) / 2);
-    const curaTotal = Math.max(0, resultadoDado + modCon);
-
-    const vidaAtual = parseInt(state.vidaAtual) || 0;
-    const vidaMax = state.vidaTotalCalculada || 100;
-    const novaVida = Math.min(vidaMax, vidaAtual + curaTotal);
-
-    state.vidaAtual = novaVida;
-    state.dadosVidaGastos[classKey] = gastos + 1;
-
-    saveStateToServer();
-    atualizarTudoVisual();
-
-    const container = document.getElementById('listaDadosVida');
-    if (container) renderizarPainelDadosVida(container);
-
-    if (typeof showCombatResults === 'function') {
-        const nomeClasse = classesPadrao.find(c => c.key === classKey)?.nome || classKey;
-        const resultadoObj = {
-            total: curaTotal,
-            text: curaTotal.toString(),
-            detail: `${resultadoDado} (d${faces}) + ${modCon} (CON)`,
-            isCrit: resultadoDado === faces,
-            isFumble: resultadoDado === 1,
-            label: "CURA"
-        };
-        showCombatResults(`Cura (${nomeClasse})`, null, resultadoObj);
-    } else {
-        alert(`Rolou ${resultadoDado} + ${modCon} = ${curaTotal} de cura.`);
-    }
-};
-
-window.realizarDescansoLongo = function () {
-    state.vidaAtual = state.vidaTotalCalculada;
-    const ordem = state.ordemClasses || Object.keys(state.niveisClasses);
-
-    ordem.forEach(key => {
-        const nivel = parseInt(state.niveisClasses[key]) || 0;
-        const gastos = state.dadosVidaGastos[key] || 0;
-        if (nivel > 0 && gastos > 0) {
-            const recuperar = Math.max(1, Math.ceil(nivel / 2));
-            state.dadosVidaGastos[key] = Math.max(0, gastos - recuperar);
-        }
-    });
-
-    saveStateToServer();
-    atualizarTudoVisual();
-
-    const container = document.getElementById('listaDadosVida');
-    if (container) renderizarPainelDadosVida(container);
-
-    if (typeof exibirAvisoTemporario === 'function') {
-        exibirAvisoTemporario("Descanso Longo Concluído.");
-    }
-};
-
-function renderMultiSelect(elementId, optionsList, currentSelection, stateKey) {
-    const container = document.getElementById(elementId);
-    if (!container) return;
-    if (!Array.isArray(currentSelection)) currentSelection = [];
-
-    const updateDisplay = () => {
-        const display = container.querySelector('.multi-select-display');
-        if (display) {
-            display.textContent = state[stateKey].length > 0 ? state[stateKey].join(', ') : 'Selecionar...';
-        }
-    };
-
-    let display = container.querySelector('.multi-select-display');
-
-    if (!display) {
-        container.innerHTML = `
-            <div class="multi-select-box" tabindex="0">
-                <div class="multi-select-display">Selecionar...</div>
-                <div class="multi-select-options" style="display:none;">
-                    <div class="options-list-container"></div>
-                    <div class="extra-option-container" style="padding: 8px; border-top: 1px solid #333; margin-top: 5px; background: #1a1a1a;">
-                        <input type="text" placeholder="+ Add Outro (Enter)" class="extra-input" style="width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 6px; border-radius: 4px; font-size: 12px;">
-                    </div>
-                </div>
-            </div>
-        `;
-
-        display = container.querySelector('.multi-select-display');
-        const box = container.querySelector('.multi-select-box');
-        const optsContainer = container.querySelector('.multi-select-options');
-        const listContainer = container.querySelector('.options-list-container');
-        const extraInput = container.querySelector('.extra-input');
-
-        box.addEventListener('click', (e) => {
-            if (optsContainer.contains(e.target)) return;
-            const isVisible = optsContainer.style.display === 'block';
-            document.querySelectorAll('.multi-select-options').forEach(el => el.style.display = 'none');
-
-            if (!isVisible) {
-                optsContainer.style.display = 'block';
-                renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
-            } else {
-                optsContainer.style.display = 'none';
-            }
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!container.contains(e.target)) {
-                optsContainer.style.display = 'none';
-            }
-        });
-
-        extraInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                const val = extraInput.value.trim();
-                if (val && !state[stateKey].includes(val)) {
-                    state[stateKey].push(val);
-                    saveStateToServer();
-                    updateDisplay();
-                    renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
-                    extraInput.value = '';
-                    extraInput.focus();
-                }
-            }
-        });
-        renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
-    } else {
-        updateDisplay();
-        const optsContainer = container.querySelector('.multi-select-options');
-        if (optsContainer.style.display === 'block') {
-            const listContainer = container.querySelector('.options-list-container');
-            renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
-        }
-    }
-}
-
-function renderCheckboxes(container, defaultOptions, currentSelection, stateKey, displayElement) {
-    if (!Array.isArray(currentSelection)) currentSelection = [];
-    const allItems = [...new Set([...defaultOptions, ...currentSelection])].sort();
-
-    container.innerHTML = allItems.map(opt => {
-        const isChecked = currentSelection.includes(opt);
-        const isCustom = !defaultOptions.includes(opt);
-        const styleColor = isCustom ? '#e0aaff' : '#fff';
-
-        return `
-            <label style="display:flex; align-items:center; padding: 4px 8px; cursor:pointer; user-select: none;">
-                <input type="checkbox" value="${opt}" ${isChecked ? 'checked' : ''} style="margin-right: 8px;">
-                <span style="color:${styleColor}; font-size:13px;">${opt}</span>
-            </label>
-        `;
-    }).join('');
-
-    const inputs = container.querySelectorAll('input[type="checkbox"]');
-    inputs.forEach(input => {
-        input.addEventListener('change', () => {
-            const val = input.value;
-            if (input.checked) {
-                if (!state[stateKey].includes(val)) state[stateKey].push(val);
-            } else {
-                state[stateKey] = state[stateKey].filter(item => item !== val);
-            }
-            if (displayElement) {
-                displayElement.textContent = state[stateKey].length > 0 ? state[stateKey].join(', ') : 'Selecionar...';
-            }
-            saveStateToServer();
-        });
-    });
-}
-
-function updateDisplayText(element, list) {
-    element.textContent = list.length > 0 ? list.join(', ') : 'Selecionar...';
-}
-
-function calcularModificador(n) {
-    return Math.floor((parseInt(n, 10) - 10) / 2);
-}
-
-function formatMod(m) {
-    return m >= 0 ? `+${m}` : m;
-}
-
-function calcularProficiencia(nivel) {
-    if (nivel <= 0) return 2;
-    return Math.floor((nivel - 1) / 4) + 2;
-}
-
-function atualizarProficiencia() {
-    const nivelTotal = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0) || 1;
-    const prof = calcularProficiencia(nivelTotal);
-    const profEl = document.getElementById('proficienciaValor');
-    if (profEl) profEl.textContent = `+${prof}`;
-}
-
-if (hexOverlay) {
-    hexOverlay.onclick = () => {
-        if (editMode) toggleEditMode();
-        mostrandoAtributos = !mostrandoAtributos;
-        hexOverlay.src = mostrandoAtributos ? 'img/imagem-no-site/atributos.png' : 'img/imagem-no-site/modificador.png';
-        numerosHex.forEach(n => {
-            const val = n.dataset.attrValue;
-            n.textContent = mostrandoAtributos ? val : formatMod(calcularModificador(val));
-        });
-    };
-}
-
-const btnEditarHex = document.querySelector('.editar-hex');
-if (btnEditarHex) {
-    btnEditarHex.onclick = () => {
-        if (!mostrandoAtributos) {
-            mostrandoAtributos = true;
-            hexOverlay.src = 'img/imagem-no-site/atributos.png';
-            numerosHex.forEach(n => n.textContent = n.dataset.attrValue);
-        }
-        toggleEditMode();
-    };
-}
-
-function toggleEditMode() {
-    editMode = !editMode;
-    numerosHex.forEach(n => {
-        n.setAttribute('contenteditable', editMode);
-        if (!editMode) {
-            const id = n.classList[1];
-            const val = parseInt(n.textContent) || 10;
-            state.atributos[id] = val;
-            n.dataset.attrValue = val;
-        }
-    });
-    if (!editMode) {
-        saveStateToServer();
-        window.dispatchEvent(new CustomEvent('sheet-updated'));
-    }
-}
-
-const elClasseFocus = document.getElementById('classeFocus');
-const painelClasses = document.getElementById('painelClasses');
-
-window.abrirPainelClasses = function (elementoAlvo) {
-    const painelClasses = document.getElementById('painelClasses');
-    const lista = document.getElementById('listaClasses');
-
-    if (!painelClasses || !lista) return;
-
-    lista.innerHTML = '';
-    classesPadrao.forEach(c => {
-        const nivel = state.niveisClasses[c.key] || 0;
-        const div = document.createElement('div');
-        div.className = 'item-classe';
-        div.innerHTML = `
-            <span>${c.nome}</span>
-            <input type="number" min="0" value="${nivel}" oninput="salvarNivelClasse('${c.key}', this.value)">
-        `;
-        lista.appendChild(div);
-    });
-
-    painelClasses.style.display = 'block';
-
-    if (elementoAlvo) {
-        const rect = elementoAlvo.getBoundingClientRect();
-        let leftPos = rect.left;
-        if (leftPos + 300 > window.innerWidth) {
-            leftPos = window.innerWidth - 310;
-        }
-        painelClasses.style.left = `${leftPos}px`;
-        painelClasses.style.top = `${rect.bottom + 5}px`;
-        painelClasses.style.transform = 'none';
-    } else {
-        painelClasses.style.left = '50%';
-        painelClasses.style.top = '50%';
-        painelClasses.style.transform = 'translate(-50%, -50%)';
-    }
-};
-
-if (elClasseFocus && painelClasses) {
-    elClasseFocus.onclick = (e) => {
-        window.abrirPainelClasses(e.currentTarget);
-    };
-}
-
-window.salvarNivelClasse = (key, val) => {
-    const nivelNumerico = parseInt(val) || 0;
-    if (!state.niveisClasses) state.niveisClasses = {};
-    state.niveisClasses[key] = nivelNumerico;
-
-    const totalNiv = Object.values(state.niveisClasses).reduce((a, b) => a + (parseInt(b) || 0), 0);
-    if (state.vidaDadosSalvos) {
-        Object.keys(state.vidaDadosSalvos).forEach(k => {
-            const numNivel = parseInt(k.replace('v', ''));
-            if (numNivel > totalNiv) delete state.vidaDadosSalvos[k];
-        });
-    }
-
-    saveStateToServer();
-    atualizarTudoVisual();
-
-    const containerVida = document.querySelector('.classes-lista-container');
-    if (containerVida && containerVida.style.display === 'block') {
-        renderizarDadosVida();
-    }
-
-    setTimeout(() => {
-        window.dispatchEvent(new CustomEvent('sheet-updated'));
-        if (typeof atualizarTextoClassesHeader === 'function') {
-            atualizarTextoClassesHeader();
-        }
-    }, 10);
-};
-
-const btnFecharPainel = document.getElementById('fecharPainel');
-if (btnFecharPainel) btnFecharPainel.onclick = () => document.getElementById('painelClasses').style.display = 'none';
-
-const btnVida = document.getElementById('btnVida');
-if (btnVida) {
-    btnVida.onclick = () => {
-        const container = document.querySelector('.classes-lista-container');
-        container.style.display = container.style.display === 'none' ? 'block' : 'none';
-        renderizarDadosVida();
-    };
-}
-
-function renderizarDadosVida() {
-    const lista = document.getElementById('classesLista');
-    if (!lista) return;
-    lista.innerHTML = '';
-
     if (typeof syncOrdemClasses === 'function') syncOrdemClasses();
     else if (state.niveisClasses && !state.ordemClasses) state.ordemClasses = Object.keys(state.niveisClasses);
 
@@ -869,14 +468,14 @@ window.salvarDadoVida = (id, val) => {
 
 function atualizarVidaCalculada() {
     const somaDados = Object.values(state.vidaDadosSalvos || {}).reduce((acc, val) => acc + (parseInt(val) || 0), 0);
-    const conScore = state.atributos?.n1 || 10;
+    const conScore = state.atributos?.n1 || 10; 
     const modCon = Math.floor((parseInt(conScore) - 10) / 2);
     const nivelTotal = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0);
-
+    
     let vidaMax = somaDados + (modCon * nivelTotal);
     if (vidaMax < 1) vidaMax = 1;
-    state.vidaTotalCalculada = vidaMax;
-
+    state.vidaTotalCalculada = vidaMax; 
+    
     const elVidaTotal = document.getElementById('vida-total');
     if (elVidaTotal) elVidaTotal.textContent = vidaMax;
 
@@ -950,43 +549,43 @@ function atualizarAC() {
     const monkDef = habilidades.some(a => a.active && a.title.toLowerCase().includes("monge") && a.title.toLowerCase().includes("defesa"));
 
     let valorBase = 10;
-    let valorAttr1 = modDex;
+    let valorAttr1 = modDex; 
     let labelAttr1 = "DES";
-    let valorAttr2 = 0;
+    let valorAttr2 = 0;      
     let labelAttr2 = "";
     let labelBase = "BASE";
     let tipoArmaduraVisual = "SEM ARMADURA";
-    let classeCss = "nenhuma";
+    let classeCss = "nenhuma"; 
 
     if (armadura) {
         let baseArmor = parseInt(armadura.defense) || 10;
-        if (baseArmor < 5) baseArmor = 10 + baseArmor;
+        if (baseArmor < 5) baseArmor = 10 + baseArmor; 
         valorBase = baseArmor;
         labelBase = "ARMADURA";
         const prof = (armadura.proficiency || '').toLowerCase();
 
         if (prof.includes('pesada')) {
-            valorAttr1 = null;
+            valorAttr1 = null; 
             tipoArmaduraVisual = "PESADA";
             classeCss = "pesado";
-        }
+        } 
         else if (prof.includes('media') || prof.includes('média')) {
             valorAttr1 = Math.min(modDex, 2);
             tipoArmaduraVisual = "MÉDIA";
             classeCss = "media";
-        }
+        } 
         else {
             tipoArmaduraVisual = "LEVE";
             classeCss = "leve";
         }
-    }
+    } 
     else {
         if (barbDef) {
             valorAttr2 = modCon;
             labelAttr2 = "CON";
             tipoArmaduraVisual = "DEF. BÁRBARO";
             classeCss = "barbaro";
-        }
+        } 
         else if (monkDef) {
             if (escudo) {
                 tipoArmaduraVisual = "SEM ARMADURA";
@@ -997,7 +596,7 @@ function atualizarAC() {
                 tipoArmaduraVisual = "DEF. MONGE";
                 classeCss = "monge";
             }
-        }
+        } 
         else {
             tipoArmaduraVisual = "SEM ARMADURA";
             classeCss = "nenhuma";
@@ -1069,14 +668,14 @@ function atualizarAC() {
     }
 }
 
-window.updateACManual = function (val) {
+window.updateACManual = function(val) {
     state.acOutros = parseInt(val) || 0;
-    saveStateToServer();
-    atualizarAC();
+    saveStateToServer(); 
+    atualizarAC();       
 }
 
 function atualizarDeslocamento() {
-    let baseMetros = parseFloat(state.metros) || 0;
+    let baseMetros = parseFloat(state.metros) || 0; 
     let bonusMetros = 0;
     if (state.abilities) {
         state.abilities.forEach(hab => {
@@ -1095,27 +694,13 @@ function atualizarDeslocamento() {
     const totalQuadrados = totalMetros / 1.5;
 
     if (elMetros) {
-        elMetros.value = totalMetros;
-        if (bonusMetros > 0) elMetros.style.color = "#4fc3f7";
+        elMetros.value = totalMetros; 
+        if (bonusMetros > 0) elMetros.style.color = "#4fc3f7"; 
         else elMetros.style.color = "#fff";
     }
     if (elQuadrados) {
         elQuadrados.value = totalQuadrados.toFixed(1);
     }
-}
-
-function atualizarTudoVisual() {
-    atualizarFocoClasseRotativo();
-    atualizarMarcosEXP();
-    atualizarVidaCalculada();
-    atualizarProficiencia();
-    atualizarIniciativaTotal();
-    atualizarAC();
-    atualizarPassiva();
-    atualizarDeslocamento();
-    const nivelTotal = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0);
-    const elNivel = document.getElementById('nivelFoco');
-    if (elNivel) elNivel.textContent = nivelTotal;
 }
 
 function vincularEventosInputs() {
@@ -1146,7 +731,7 @@ function vincularEventosInputs() {
         marcoInput.oninput = (e) => { state.marco = parseInt(e.target.value) || 0; atualizarMarcosEXP(); saveStateToServer(); };
         marcoInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') marcoInput.blur(); });
     }
-
+    
     const metrosInput = document.getElementById('metros');
     const quadradosInput = document.getElementById('quadrados');
     if (metrosInput && quadradosInput) {
@@ -1169,13 +754,13 @@ function vincularEventosInputs() {
     const outrosInput = document.getElementById('ac-outros');
     if (outrosInput) {
         outrosInput.value = state.acOutros || 0;
-        outrosInput.oninput = () => {
-            state.acOutros = parseInt(outrosInput.value) || 0;
-            atualizarAC();
+        outrosInput.oninput = () => { 
+            state.acOutros = parseInt(outrosInput.value) || 0; 
+            atualizarAC(); 
         };
-        outrosInput.onblur = () => {
-            state.acOutros = parseInt(outrosInput.value) || 0;
-            saveStateToServer();
+        outrosInput.onblur = () => { 
+            state.acOutros = parseInt(outrosInput.value) || 0; 
+            saveStateToServer(); 
         };
         outrosInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); outrosInput.blur(); } });
     }
@@ -1197,7 +782,7 @@ function vincularEventosInputs() {
 
 document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
     if (!btn.closest('.vida-bar') && !btn.closest('.barra-secundaria')) return;
-
+    
     btn.onclick = () => {
         let key = btn.closest('.vida-container') ? "vidaAtual" : (btn.closest('.barra-secundaria:nth-child(1)') ? "vidaTempAtual" : "danoNecroAtual");
         let step = btn.classList.contains('menos5') ? -5 : (btn.classList.contains('menos1') ? -1 : (btn.classList.contains('mais1') ? 1 : 5));
@@ -1210,3 +795,195 @@ document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
 
 document.getElementById('inspiraLeft').onclick = () => { state.inspiracao = Math.max(0, (parseInt(state.inspiracao) || 0) - 1); document.getElementById('inspiraValor').textContent = state.inspiracao; saveStateToServer(); };
 document.getElementById('inspiraRight').onclick = () => { state.inspiracao = (parseInt(state.inspiracao) || 0) + 1; document.getElementById('inspiraValor').textContent = state.inspiracao; saveStateToServer(); };
+
+window.salvarNivelClasse = (key, val) => {
+    const nivelNumerico = parseInt(val) || 0;
+    if (!state.niveisClasses) state.niveisClasses = {};
+    state.niveisClasses[key] = nivelNumerico;
+
+    const totalNiv = Object.values(state.niveisClasses).reduce((a, b) => a + (parseInt(b) || 0), 0);
+    if (state.vidaDadosSalvos) {
+        Object.keys(state.vidaDadosSalvos).forEach(k => {
+            const numNivel = parseInt(k.replace('v', ''));
+            if (numNivel > totalNiv) delete state.vidaDadosSalvos[k];
+        });
+    }
+
+    saveStateToServer();
+    atualizarTudoVisual();
+
+    const containerVida = document.querySelector('.classes-lista-container');
+    if (containerVida && containerVida.style.display === 'block') {
+        renderizarDadosVida();
+    }
+
+    setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('sheet-updated'));
+        if (typeof atualizarTextoClassesHeader === 'function') {
+            atualizarTextoClassesHeader();
+        }
+    }, 10);
+};
+
+window.usarDadoVida = function(classKey, dadoTipo) {
+    const nivel = parseInt(state.niveisClasses[classKey]) || 0;
+    const gastos = state.dadosVidaGastos[classKey] || 0;
+    if (gastos >= nivel) return;
+
+    const faces = parseInt(dadoTipo.replace('d', ''));
+    const resultadoDado = Math.floor(Math.random() * faces) + 1;
+    const conScore = state.atributos?.n1 || 10;
+    const modCon = Math.floor((parseInt(conScore) - 10) / 2);
+    const curaTotal = Math.max(0, resultadoDado + modCon);
+
+    const vidaAtual = parseInt(state.vidaAtual) || 0;
+    const vidaMax = state.vidaTotalCalculada || 100;
+    const novaVida = Math.min(vidaMax, vidaAtual + curaTotal);
+    
+    state.vidaAtual = novaVida;
+    state.dadosVidaGastos[classKey] = gastos + 1;
+
+    saveStateToServer();
+    atualizarTudoVisual(); 
+    
+    const container = document.getElementById('listaDadosVida');
+    if(container) renderizarPainelDadosVida(container);
+
+    if (typeof showCombatResults === 'function') {
+        const nomeClasse = classesPadrao.find(c => c.key === classKey)?.nome || classKey;
+        const resultadoObj = {
+            total: curaTotal, text: curaTotal.toString(), detail: `${resultadoDado} (d${faces}) + ${modCon} (CON)`,
+            isCrit: resultadoDado === faces, isFumble: resultadoDado === 1, label: "CURA" 
+        };
+        showCombatResults(`Cura (${nomeClasse})`, null, resultadoObj);
+    } else {
+        alert(`Rolou ${resultadoDado} + ${modCon} = ${curaTotal} de cura.`);
+    }
+};
+
+window.realizarDescansoLongo = function() {
+    state.vidaAtual = state.vidaTotalCalculada;
+    const ordem = state.ordemClasses || Object.keys(state.niveisClasses);
+    ordem.forEach(key => {
+        const nivel = parseInt(state.niveisClasses[key]) || 0;
+        const gastos = state.dadosVidaGastos[key] || 0;
+        if (nivel > 0 && gastos > 0) {
+            const recuperar = Math.max(1, Math.ceil(nivel / 2));
+            state.dadosVidaGastos[key] = Math.max(0, gastos - recuperar);
+        }
+    });
+    saveStateToServer();
+    atualizarTudoVisual();
+    const container = document.getElementById('listaDadosVida');
+    if(container) renderizarPainelDadosVida(container);
+    if (typeof exibirAvisoTemporario === 'function') {
+        exibirAvisoTemporario("Descanso Longo Concluído.");
+    }
+};
+
+function renderMultiSelect(elementId, optionsList, currentSelection, stateKey) {
+    const container = document.getElementById(elementId);
+    if (!container) return;
+    if (!Array.isArray(currentSelection)) currentSelection = [];
+
+    const updateDisplay = () => {
+        const display = container.querySelector('.multi-select-display');
+        if (display) {
+            display.textContent = state[stateKey].length > 0 ? state[stateKey].join(', ') : 'Selecionar...';
+        }
+    };
+
+    let display = container.querySelector('.multi-select-display');
+    if (!display) {
+        container.innerHTML = `
+            <div class="multi-select-box" tabindex="0">
+                <div class="multi-select-display">Selecionar...</div>
+                <div class="multi-select-options" style="display:none;">
+                    <div class="options-list-container"></div>
+                    <div class="extra-option-container" style="padding: 8px; border-top: 1px solid #333; margin-top: 5px; background: #1a1a1a;">
+                        <input type="text" placeholder="+ Add Outro (Enter)" class="extra-input" style="width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 6px; border-radius: 4px; font-size: 12px;">
+                    </div>
+                </div>
+            </div>
+        `;
+        display = container.querySelector('.multi-select-display');
+        const box = container.querySelector('.multi-select-box');
+        const optsContainer = container.querySelector('.multi-select-options');
+        const listContainer = container.querySelector('.options-list-container');
+        const extraInput = container.querySelector('.extra-input');
+
+        box.addEventListener('click', (e) => {
+            if (optsContainer.contains(e.target)) return;
+            const isVisible = optsContainer.style.display === 'block';
+            document.querySelectorAll('.multi-select-options').forEach(el => el.style.display = 'none'); 
+            if (!isVisible) {
+                optsContainer.style.display = 'block';
+                renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
+            } else {
+                optsContainer.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!container.contains(e.target)) {
+                optsContainer.style.display = 'none';
+            }
+        });
+
+        extraInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const val = extraInput.value.trim();
+                if (val && !state[stateKey].includes(val)) {
+                    state[stateKey].push(val);
+                    saveStateToServer();
+                    updateDisplay();
+                    renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
+                    extraInput.value = ''; 
+                    extraInput.focus();
+                }
+            }
+        });
+        renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
+    } else {
+        updateDisplay();
+        const optsContainer = container.querySelector('.multi-select-options');
+        if (optsContainer.style.display === 'block') {
+            const listContainer = container.querySelector('.options-list-container');
+            renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
+        }
+    }
+}
+
+function renderCheckboxes(container, defaultOptions, currentSelection, stateKey, displayElement) {
+    if (!Array.isArray(currentSelection)) currentSelection = [];
+    const allItems = [...new Set([...defaultOptions, ...currentSelection])].sort();
+
+    container.innerHTML = allItems.map(opt => {
+        const isChecked = currentSelection.includes(opt);
+        const isCustom = !defaultOptions.includes(opt);
+        const styleColor = isCustom ? '#e0aaff' : '#fff';
+        return `
+            <label style="display:flex; align-items:center; padding: 4px 8px; cursor:pointer; user-select: none;">
+                <input type="checkbox" value="${opt}" ${isChecked ? 'checked' : ''} style="margin-right: 8px;">
+                <span style="color:${styleColor}; font-size:13px;">${opt}</span>
+            </label>
+        `;
+    }).join('');
+
+    const inputs = container.querySelectorAll('input[type="checkbox"]');
+    inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            const val = input.value;
+            if (input.checked) {
+                if (!state[stateKey].includes(val)) state[stateKey].push(val);
+            } else {
+                state[stateKey] = state[stateKey].filter(item => item !== val);
+            }
+            if (displayElement) {
+                displayElement.textContent = state[stateKey].length > 0 ? state[stateKey].join(', ') : 'Selecionar...';
+            }
+            saveStateToServer();
+        });
+    });
+}
