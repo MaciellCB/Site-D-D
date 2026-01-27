@@ -141,6 +141,44 @@ const DADIVAS_BRUXO_DB = {
     "Pacto do Talismã": "Seu patrono lhe dá um amuleto que pode ajudar o usuário quando ele falha em um teste de habilidade (d4)."
 };
 
+/* =============================================================
+   CONSTANTE: MALDIÇÕES DE SANGUE (BLOOD HUNTER)
+============================================================= */
+const BLOOD_CURSES_DB = [
+    {
+        name: "Maldição de Sangue dos Ansiosos",
+        desc: "Ação Bônus (9m). Vantagem em Intimidação contra o alvo. Ampliar: O alvo tem Desvantagem no próximo teste de resistência de Sabedoria."
+    },
+    {
+        name: "Maldição de Sangue da Ligação",
+        desc: "Ação Bônus (9m). Alvo Grande ou menor faz Salvaguarda de Força ou tem deslocamento 0. Ampliar: Afeta qualquer tamanho e dura 1 minuto."
+    },
+    {
+        name: "Maldição de Sangue da Agonia Inchada",
+        desc: "Ação Bônus (9m). Desvantagem em testes de FOR e DES. Se atacar mais de uma vez, sofre 1d8 necrótico. Ampliar: Dura 1 minuto."
+    },
+    {
+        name: "Maldição de Sangue da Exposição",
+        desc: "Reação (9m). Quando alvo sofre dano, ele perde Resistência àquele tipo de dano. Ampliar: Ignora Imunidade (trata como resistência)."
+    },
+    {
+        name: "Maldição de Sangue dos Sem Olhos",
+        desc: "Reação (9m). Subtraia seu dado de Hemomancia do ataque da criatura. Ampliar: Aplica-se a todos os ataques da criatura no turno."
+    },
+    {
+        name: "Maldição da Marionete Caída",
+        desc: "Reação (9m). Quando criatura cai a 0 PV, ela faz um ataque contra alvo à sua escolha. Ampliar: Move a criatura e adiciona bônus ao ataque."
+    },
+    {
+        name: "Maldição de Sangue dos Marcados",
+        desc: "Ação Bônus (9m). Causa 1 dado de Hemomancia extra de dano em alvos com Rito ativo. Ampliar: Vantagem no próximo ataque."
+    },
+    {
+        name: "Maldição da Mente Confusa",
+        desc: "Ação Bônus (9m). Desvantagem em CON para manter concentração. Ampliar: Desvantagem em todos os testes de CON até o fim do turno."
+    }
+];
+
 // Variáveis Globais
 let RACES_DB = [];
 let BACKGROUNDS_DB = [];
@@ -1509,7 +1547,7 @@ function exibirAvisoTemporario(mensagem) {
 
 
 /* =============================================================
-   APLICAR CLASSE NA FICHA (CORRIGIDO: DRUÍDICO & BLOOD HUNTER)
+   APLICAR CLASSE NA FICHA
    ============================================================= */
 function aplicarClasseNaFicha(cls, subCls) {
     if (typeof state === 'undefined') {
@@ -1517,7 +1555,7 @@ function aplicarClasseNaFicha(cls, subCls) {
         else return false;
     }
 
-    // Inicialização segura de Arrays e Objetos
+    // Inicialização segura
     if (!state.niveisClasses) state.niveisClasses = {};
     if (!state.atributos) state.atributos = { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 };
     if (!state.pericias) state.pericias = {};
@@ -1525,38 +1563,27 @@ function aplicarClasseNaFicha(cls, subCls) {
     if (!state.idiomasList) state.idiomasList = []; 
     if (!state.inventory) state.inventory = [];
 
-    // --- CORREÇÃO 1: Forçar Idioma Comum (Geral) ---
-    if (!state.idiomasList.includes('Comum')) {
-        state.idiomasList.push('Comum');
-    }
+    // Forçar Idioma Comum
+    if (!state.idiomasList.includes('Comum')) state.idiomasList.push('Comum');
 
     const classKey = cls.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-    // --- CORREÇÃO 2: Forçar Idioma Druídico (Específico de Druida) ---
-    // Verifica se é Druida e se já não tem o idioma
-    if ((classKey === 'druida' || classKey === 'druid') && !state.idiomasList.includes('Druídico')) {
-        state.idiomasList.push('Druídico');
-    }
-    
-    // (Opcional) Aproveitei para garantir Gíria de Ladrão para Ladinos também, caso precise
-    if ((classKey === 'ladino' || classKey === 'rogue') && !state.idiomasList.includes('Gíria de Ladrão')) {
-        state.idiomasList.push('Gíria de Ladrão');
-    }
+    // Forçar Druídico/Gíria
+    if ((classKey === 'druida' || classKey === 'druid') && !state.idiomasList.includes('Druídico')) state.idiomasList.push('Druídico');
+    if ((classKey === 'ladino' || classKey === 'rogue') && !state.idiomasList.includes('Gíria de Ladrão')) state.idiomasList.push('Gíria de Ladrão');
 
     // Cálculos de Nível
     const currentLevelInClass = state.niveisClasses[classKey] ? parseInt(state.niveisClasses[classKey]) : 0;
     const newLevelInClass = currentLevelInClass + 1;
     
     let totalCharacterLevel = 0;
-    if (state.niveisClasses) {
-        Object.values(state.niveisClasses).forEach(lvl => totalCharacterLevel += (parseInt(lvl) || 0));
-    }
+    if (state.niveisClasses) Object.values(state.niveisClasses).forEach(lvl => totalCharacterLevel += (parseInt(lvl) || 0));
     
     const isFirstLevelCharacter = (totalCharacterLevel === 0);
     const isMulticlassing = (totalCharacterLevel > 0 && currentLevelInClass === 0);
     const requiredLevel = cls.subclass_level || 3;
 
-    // --- VALIDAÇÕES DE SUBCLASSE ---
+    // Validações de Subclasse
     if (subCls && newLevelInClass < requiredLevel) {
         if(typeof exibirAvisoTemporario === 'function') 
             exibirAvisoTemporario(`Nível insuficiente (${newLevelInClass}) para subclasse ${subCls.name}.<br>Requer nível ${requiredLevel}.`);
@@ -1580,13 +1607,10 @@ function aplicarClasseNaFicha(cls, subCls) {
         }
     }
 
-    // --- APLICAÇÃO ---
+    // Aplicação
     state.niveisClasses[classKey] = newLevelInClass;
-    
     if (!state.ordemClasses) state.ordemClasses = [];
-    if (!state.ordemClasses.includes(classKey)) {
-        state.ordemClasses.push(classKey);
-    }
+    if (!state.ordemClasses.includes(classKey)) state.ordemClasses.push(classKey);
 
     if (isFirstLevelCharacter) {
         state.hitDie = `d${cls.hit_die}`;
@@ -1600,13 +1624,13 @@ function aplicarClasseNaFicha(cls, subCls) {
             const fLvl = feat.level || 1;
             const featNameLower = feat.name.toLowerCase();
 
-            // >>> CORREÇÃO BRUXO: Ignora Pactos Automáticos <<<
+            // Ignora Pactos Automáticos (Bruxo)
             if (classKey === 'bruxo' && featNameLower.includes('pacto d')) return; 
 
-            // >>> CORREÇÃO BLOOD HUNTER: Ignora Maldições Automáticas <<<
+            // >>> FILTRO BLOOD HUNTER: NÃO ADICIONA AS MALDIÇÕES AUTOMATICAMENTE <<<
             if (classKey === 'blood hunter' || classKey === 'bloodhunter') {
                 if (featNameLower.includes('maldição') || featNameLower.includes('maldicao') || featNameLower.includes('blood curse')) {
-                    return; 
+                    return; // Retorna aqui para não adicionar a feature genérica, vamos usar o modal abaixo
                 }
             }
 
@@ -1632,6 +1656,24 @@ function aplicarClasseNaFicha(cls, subCls) {
 
     // --- MONTAGEM DA FILA DE ESCOLHAS (TASKS) ---
     const tasks = [];
+
+    // TASK: BLOOD HUNTER - ESCOLHA DE MALDIÇÃO (Níveis 1, 6, 13, 17)
+    if ((classKey === 'blood hunter' || classKey === 'bloodhunter') && [1, 6, 13, 17].includes(newLevelInClass)) {
+        tasks.push((next) => {
+            // Define quantas maldições ganha. Geralmente é 1 por vez nesses níveis.
+            // Se for nível 1, escolhe 1. Se for nível 6, escolhe +1, etc.
+            openBloodCurseSelector(1, (selectedCurses) => {
+                selectedCurses.forEach(curse => {
+                    addFeatureToState({
+                        name: curse.name,
+                        description: curse.desc,
+                        level: newLevelInClass
+                    }, 'Classe', 'Blood Hunter', '');
+                });
+                next();
+            });
+        });
+    }
 
     // TASK: ESCOLHA DE PACTO (BRUXO NÍVEL 3)
     if (classKey === 'bruxo' && newLevelInClass === 3) {
@@ -1685,6 +1727,7 @@ function aplicarClasseNaFicha(cls, subCls) {
         if (cls.proficiencies && cls.proficiencies.tools) {
             cls.proficiencies.tools.forEach(toolStr => {
                 const tLower = toolStr.toLowerCase();
+                // Lógicas de ferramentas (mantidas do original)...
                 if (tLower.includes("três instrumentos") || tLower.includes("tres instrumentos")) {
                     tasks.push((next) => openGenericSelector("Escolha 3 Instrumentos", 3, LISTA_INSTRUMENTOS, (sel) => {
                         sel.forEach(s => { if (!state.proficienciasList.includes(s)) state.proficienciasList.push(s); });
@@ -2246,6 +2289,107 @@ function openDraconicSelector(raceData, variationData, lineageData) {
         }
     };
 }
+
+/* =============================================================
+   SELETOR DE MALDIÇÕES DE SANGUE (COM DESCRIÇÃO)
+============================================================= */
+function openBloodCurseSelector(count, onConfirmCallback) {
+    const overlay = document.createElement('div');
+    overlay.className = 'spell-modal-overlay race-modal-overlay';
+    overlay.style.zIndex = '50000';
+
+    // 1. Filtra o que já tem
+    const knownCurses = state.abilities ? state.abilities.map(a => a.title) : [];
+    
+    // Gera o HTML das opções
+    const optionsHtml = BLOOD_CURSES_DB.map((curse, idx) => {
+        const isKnown = knownCurses.includes(curse.name);
+        
+        // Se já tem, fica desabilitado visualmente
+        const styleWrapper = isKnown 
+            ? "opacity:0.5; border:1px solid #333; pointer-events:none;" 
+            : "border:1px solid #444; cursor:pointer;";
+
+        return `
+            <label class="variation-card-wrapper curse-option" style="${styleWrapper} display:flex; align-items:flex-start; padding:10px; gap:10px; margin-bottom:8px;">
+                <div style="padding-top:2px;">
+                    <input type="checkbox" value="${idx}" class="curse-check" ${isKnown ? 'checked disabled' : ''} style="accent-color:#b71c1c; transform:scale(1.2);">
+                </div>
+                <div style="flex:1;">
+                    <div style="color:${isKnown ? '#888' : '#ff5252'}; font-weight:bold; font-size:14px;">
+                        ${curse.name} ${isKnown ? '<small>(Já possui)</small>' : ''}
+                    </div>
+                    <div style="color:#ccc; font-size:12px; margin-top:4px; line-height:1.4;">
+                        ${curse.desc}
+                    </div>
+                </div>
+            </label>
+        `;
+    }).join('');
+
+    overlay.innerHTML = `
+        <div class="spell-modal" style="width: 500px; height: 80vh; display:flex; flex-direction:column;">
+            <div class="modal-header">
+                <h3>Escolha sua(s) Maldição(ões)</h3>
+            </div>
+            <div class="modal-body" style="padding: 15px; overflow-y: auto; flex:1;">
+                <div style="font-size:13px; color:#aaa; margin-bottom:15px; text-align:center;">
+                    Selecione <strong>${count}</strong> nova(s) maldição(ões) de sangue.
+                    <div id="curse-counter" style="color:#fff; font-weight:bold; margin-top:5px;">0/${count}</div>
+                </div>
+                <div style="display:flex; flex-direction:column;">${optionsHtml}</div>
+            </div>
+            <div class="modal-actions">
+                <button id="btn-confirm-curse" class="btn-add btn-save-modal" disabled style="background:#444;">Confirmar</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    const btnConfirm = overlay.querySelector('#btn-confirm-curse');
+    const counterDisplay = overlay.querySelector('#curse-counter');
+    const checkboxes = overlay.querySelectorAll('.curse-check:not(:disabled)'); // Apenas os selecionáveis
+
+    const updateSelection = () => {
+        const selected = overlay.querySelectorAll('.curse-check:not(:disabled):checked');
+        const qtd = selected.length;
+        counterDisplay.textContent = `${qtd}/${count}`;
+
+        if (qtd >= count) {
+            btnConfirm.removeAttribute('disabled');
+            btnConfirm.style.background = '#b71c1c'; // Vermelho sangue
+            
+            // Desabilita os não marcados para não passar do limite
+            checkboxes.forEach(chk => {
+                if (!chk.checked) {
+                    chk.disabled = true;
+                    chk.closest('.curse-option').style.opacity = '0.5';
+                }
+            });
+        } else {
+            btnConfirm.setAttribute('disabled', true);
+            btnConfirm.style.background = '#444';
+            
+            // Reabilita
+            checkboxes.forEach(chk => {
+                chk.disabled = false;
+                chk.closest('.curse-option').style.opacity = '1';
+            });
+        }
+    };
+
+    checkboxes.forEach(chk => chk.addEventListener('change', updateSelection));
+
+    btnConfirm.onclick = () => {
+        const selectedIndices = Array.from(overlay.querySelectorAll('.curse-check:not(:disabled):checked')).map(c => parseInt(c.value));
+        const selectedCurses = selectedIndices.map(idx => BLOOD_CURSES_DB[idx]);
+        
+        onConfirmCallback(selectedCurses);
+        overlay.remove();
+    };
+}
+
 
 function openAncestralRaceSelector(lineageData) {
     const overlay = document.createElement('div');
