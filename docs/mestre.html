@@ -3,192 +3,197 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Painel do Mestre</title>
+  <title>Painel do Mestre - Gerenciamento</title>
   <link rel="stylesheet" href="CSS/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
   <style>
     /* --- ESTILOS GERAIS --- */
-    body { background-color: #0a0a0a; color: white; font-family: Arial, sans-serif; margin: 0; }
+    body { background-color: #0a0a0a; color: white; font-family: Arial, sans-serif; margin: 0; overflow-x: hidden; }
     
-    /* --- GRID DE PERSONAGENS --- */
-    .grid-personagens {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    /* --- NAVBAR --- */
+    /* Assumindo que você tem classes de navbar no seu style.css, aqui vai um básico */
+    .navbar { display: flex; justify-content: space-between; padding: 15px 30px; background: #1a1a1a; align-items: center; border-bottom: 1px solid #333; }
+    .nav-links a { color: #aaa; text-decoration: none; margin-right: 20px; font-weight: bold; }
+    .nav-links a.active { color: #9c27b0; }
+    .perfil-img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #9c27b0; }
+
+    /* --- ÁREA DE TRABALHO (PASTAS) --- */
+    #area-trabalho {
+        display: flex;
+        align-items: flex-start;
         gap: 20px;
-        padding: 40px;
-        max-width: 1200px;
-        margin: 0 auto;
+        padding: 20px 40px;
+        overflow-x: auto; /* Permite rolar para o lado */
+        height: calc(100vh - 100px); /* Altura total menos header */
+        box-sizing: border-box;
     }
 
-    .card-personagem {
-        background: #1a1a1a;
+    /* Scrollbar estilizada */
+    #area-trabalho::-webkit-scrollbar { height: 12px; }
+    #area-trabalho::-webkit-scrollbar-track { background: #0a0a0a; }
+    #area-trabalho::-webkit-scrollbar-thumb { background: #333; border-radius: 6px; }
+    #area-trabalho::-webkit-scrollbar-thumb:hover { background: #9c27b0; }
+
+    /* --- COLUNA / PASTA --- */
+    .folder-container {
+        background: #161616;
         border: 1px solid #333;
         border-radius: 8px;
-        padding: 20px;
-        text-align: center;
-        cursor: pointer;
-        transition: transform 0.2s, border-color 0.2s;
-        position: relative;
-        overflow: hidden;
+        min-width: 280px;
+        max-width: 280px;
+        display: flex;
+        flex-direction: column;
+        max-height: 100%;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
     }
 
+    .folder-header {
+        background: #1f1f1f;
+        padding: 12px 15px;
+        border-bottom: 2px solid #9c27b0;
+        border-radius: 8px 8px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #e0aaff;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 0.9em;
+        letter-spacing: 1px;
+    }
+
+    .btn-del-folder {
+        background: none; border: none; color: #555; cursor: pointer; font-size: 1.1em; transition: 0.2s;
+    }
+    .btn-del-folder:hover { color: #ff4444; }
+
+    .folder-content {
+        padding: 10px;
+        flex-grow: 1;
+        overflow-y: auto; /* Scroll vertical dentro da pasta */
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-height: 50px; /* Área mínima para dropar */
+    }
+    
+    .folder-content::-webkit-scrollbar { width: 6px; }
+    .folder-content::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+
+    /* --- CARD DO PERSONAGEM (Versão Lista) --- */
+    .card-personagem {
+        background: #252525;
+        border: 1px solid #333;
+        border-radius: 6px;
+        padding: 8px 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: grab;
+        transition: transform 0.2s, border-color 0.2s;
+        position: relative;
+    }
+    .card-personagem:active { cursor: grabbing; }
+
     .card-personagem:hover {
-        transform: translateY(-5px);
         border-color: #9c27b0;
-        box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3);
+        background: #2a2a2a;
+        transform: translateY(-2px);
     }
 
     .card-img {
-        width: 100px;
-        height: 100px;
+        width: 40px; height: 40px;
         border-radius: 50%;
-        margin-bottom: 15px;
-        border: 3px solid #555;
+        border: 2px solid #555;
         object-fit: cover;
-        background-color: #000;
+        background: #000;
+        flex-shrink: 0;
     }
 
     .card-name {
         font-weight: bold;
         color: #e0aaff;
-        font-size: 1.1em;
-        text-transform: capitalize;
+        font-size: 0.95em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-grow: 1;
     }
 
-    /* --- BOTÃO DE CRIAR NOVO --- */
+    /* --- BOTÃO DE CRIAR NOVO (Dentro da lista) --- */
     .card-novo {
-        border: 2px dashed #555;
-        display: flex;
-        flex-direction: column;
+        background: rgba(156, 39, 176, 0.1);
+        border: 1px dashed #9c27b0;
         justify-content: center;
-        align-items: center;
-        color: #555;
+        color: #9c27b0;
+        font-weight: bold;
+        cursor: pointer;
     }
-    .card-novo:hover {
-        border-color: #00ff00;
-        color: #00ff00;
-        background: rgba(0, 255, 0, 0.05);
-    }
-    .plus-icon { font-size: 50px; line-height: 50px; margin-bottom: 10px; }
+    .card-novo:hover { background: rgba(156, 39, 176, 0.2); }
 
-    /* --- BOTÕES DE AÇÃO (Deletar e Editar) --- */
+    /* --- BOTÕES DE AÇÃO (Deletar e Editar dentro do card) --- */
     .btn-action {
-        position: absolute;
-        top: 5px;
         background: transparent;
         border: none;
-        font-weight: bold;
-        font-size: 16px;
         cursor: pointer;
-        z-index: 10;
-        padding: 5px 8px;
+        padding: 4px;
+        color: #666;
         border-radius: 4px;
-        transition: 0.2s;
+        font-size: 14px;
     }
-
-    .btn-delete {
-        right: 5px;
-        color: #555;
-    }
-    .btn-delete:hover {
-        background: #ff0000;
-        color: white;
-    }
-
-    .btn-edit {
-        right: 35px; /* Ao lado do botão de deletar */
-        color: #555;
-        font-size: 18px; /* Lápis levemente maior */
-    }
-    .btn-edit:hover {
-        background: #2196F3;
-        color: white;
-    }
+    .btn-edit:hover { color: #2196F3; background: rgba(33, 150, 243, 0.1); }
+    .btn-delete:hover { color: #ff4444; background: rgba(255, 68, 68, 0.1); }
 
     .img-loading { opacity: 0.5; filter: grayscale(100%); }
     .img-loaded { opacity: 1; filter: none; transition: opacity 0.5s ease; }
 
-    /* --- NOVOS MODAIS (Estilo Dark) --- */
-    .modal-overlay {
-        display: none; /* Escondido por padrão */
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.9);
-        z-index: 9999;
-        justify-content: center;
-        align-items: center;
-        backdrop-filter: blur(5px);
+    /* --- BOTÃO FLUTUANTE PARA CRIAR PASTA --- */
+    .btn-nova-pasta {
+        position: fixed; bottom: 30px; right: 30px;
+        background: #9c27b0; color: white;
+        width: 60px; height: 60px; border-radius: 50%;
+        font-size: 30px; border: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        cursor: pointer; z-index: 100;
+        display: flex; align-items: center; justify-content: center;
+        transition: transform 0.2s;
     }
+    .btn-nova-pasta:hover { transform: scale(1.1); background: #ba68c8; }
 
+    /* --- MODAIS (Estilo Dark) --- */
+    .modal-overlay {
+        display: none; position: fixed; top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.85); z-index: 9999;
+        justify-content: center; align-items: center;
+        backdrop-filter: blur(3px);
+    }
     .modal-box {
-        background: #1a1a1a;
-        border: 2px solid #9c27b0;
-        border-radius: 10px;
-        padding: 30px;
-        width: 90%;
-        max-width: 400px;
-        text-align: center;
+        background: #1a1a1a; border: 2px solid #9c27b0; border-radius: 10px;
+        padding: 30px; width: 90%; max-width: 400px; text-align: center;
         box-shadow: 0 0 20px rgba(156, 39, 176, 0.2);
         animation: slideDown 0.3s ease;
     }
-
-    @keyframes slideDown {
-        from { transform: translateY(-50px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-    }
-
-    .modal-titulo {
-        color: #e0aaff;
-        margin-bottom: 20px;
-        font-size: 1.5em;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
+    @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    
+    .modal-titulo { color: #e0aaff; margin-bottom: 20px; font-size: 1.5em; text-transform: uppercase; }
     .modal-input {
-        width: 100%;
-        padding: 12px;
-        margin-bottom: 15px;
-        background: #000;
-        border: 1px solid #333;
-        color: white;
-        border-radius: 5px;
-        font-size: 16px;
-        box-sizing: border-box; /* Garante que padding não estoure a largura */
+        width: 100%; padding: 12px; margin-bottom: 15px; background: #000;
+        border: 1px solid #333; color: white; border-radius: 5px; font-size: 16px; box-sizing: border-box;
     }
-
-    .modal-input:focus {
-        border-color: #9c27b0;
-        outline: none;
-    }
-
-    .modal-buttons {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin-top: 10px;
-    }
-
-    .btn-modal {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: 0.2s;
-        flex: 1;
-    }
-
+    .modal-input:focus { border-color: #9c27b0; outline: none; }
+    
+    .modal-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 10px; }
+    .btn-modal { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; flex: 1; }
     .btn-confirmar { background: #9c27b0; color: white; }
     .btn-confirmar:hover { background: #7b1fa2; }
-
     .btn-cancelar { background: #333; color: white; }
     .btn-cancelar:hover { background: #555; }
-
     .btn-perigo { background: #d32f2f; color: white; }
     .btn-perigo:hover { background: #b71c1c; }
 
-    /* --- TOAST CUSTOMIZADO (Aviso) --- */
+    /* TOAST */
     .custom-toast {
         position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
         background-color: #1a1a1a; color: #fff; border: 1px solid #9c27b0;
@@ -212,20 +217,19 @@
     </nav>
   </header>
 
-  <h2 style="text-align:center; margin-top:40px; color:#9c27b0;">GERENCIAR FICHAS</h2>
-
-  <div id="lista-personagens" class="grid-personagens">
-    <p style="color:#666;">Carregando fichas...</p>
+  <div id="area-trabalho">
+    <p style="color:#666; margin:auto;">Carregando sistema...</p>
   </div>
+
+  <button class="btn-nova-pasta" onclick="criarNovaPasta()" title="Criar Nova Pasta">+</button>
+
 
   <div id="modal-criar" class="modal-overlay">
       <div class="modal-box">
           <h3 class="modal-titulo">Nova Ficha</h3>
           <p style="color:#aaa; font-size:0.9em; margin-bottom:15px;">Crie um novo herói para a aventura.</p>
-          
           <input type="text" id="novo-nome" class="modal-input" placeholder="Nome do Personagem" autocomplete="off">
           <input type="password" id="novo-senha" class="modal-input" placeholder="Senha do Jogador" autocomplete="off">
-          
           <div class="modal-buttons">
               <button class="btn-modal btn-cancelar" onclick="fecharModalCriar()">Cancelar</button>
               <button class="btn-modal btn-confirmar" onclick="confirmarCriacao()">Criar Ficha</button>
@@ -239,9 +243,7 @@
           <p style="color:#ddd; margin-bottom:20px;">
             Tem certeza que deseja excluir 
             <strong id="nome-para-deletar" style="color: #e0aaff;"></strong>?
-            <br><span style="font-size:0.8em; color:#777;">Essa ação não pode ser desfeita.</span>
           </p>
-          
           <div class="modal-buttons">
               <button class="btn-modal btn-cancelar" onclick="fecharModalDeletar()">Cancelar</button>
               <button class="btn-modal btn-perigo" onclick="confirmarDelecao()">Sim, Apagar</button>
@@ -255,13 +257,10 @@
           <p style="color:#aaa; font-size:0.9em; margin-bottom:15px;">
               Alterar acesso de: <strong id="nome-antigo-display" style="color:white;"></strong>
           </p>
-          
           <label style="color: #bbb; display:block; text-align:left; margin-bottom:5px;">Novo Nome:</label>
           <input type="text" id="edit-nome" class="modal-input" placeholder="Novo Nome" autocomplete="off">
-          
           <label style="color: #bbb; display:block; text-align:left; margin-bottom:5px;">Nova Senha:</label>
           <input type="text" id="edit-senha" class="modal-input" placeholder="Nova Senha" autocomplete="off">
-          
           <div class="modal-buttons">
               <button class="btn-modal btn-cancelar" onclick="fecharModalEditar()">Cancelar</button>
               <button class="btn-modal btn-confirmar" style="background:#2196F3;" onclick="confirmarEdicao()">Salvar</button>
@@ -271,213 +270,311 @@
 
   <script>
     const API_URL = 'https://dandd-chan.onrender.com/api'; 
-    // const API_URL = 'http://localhost:3000/api'; // Use para testes locais
+    // const API_URL = 'http://localhost:3000/api'; // Teste Local
 
     let nomeDelecaoPendente = ''; 
-    let nomeEdicaoPendente = ''; // Variável para guardar quem vamos editar
+    let nomeEdicaoPendente = ''; 
+
+    // DADOS GLOBAIS
+    let layoutAtual = { folders: [], uncategorized: [] };
+    let todosPersonagens = []; 
 
     window.onload = carregarLista;
 
-    // --- FUNÇÕES DE CARREGAMENTO ---
+    // --- CARREGAMENTO INICIAL ---
     async function carregarLista() {
-        const container = document.getElementById('lista-personagens');
-        container.innerHTML = '<p style="color:#666;">Atualizando...</p>';
-
+        const container = document.getElementById('area-trabalho');
+        
         try {
-            const response = await fetch(`${API_URL}/lista-personagens`);
-            const nomes = await response.json();
-            
-            container.innerHTML = ''; 
+            // 1. Busca todos os nomes de personagens
+            const resChars = await fetch(`${API_URL}/lista-personagens`);
+            todosPersonagens = await resChars.json();
 
-            // Botão Criar Novo
-            const cardNovo = document.createElement('div');
-            cardNovo.className = 'card-personagem card-novo';
-            cardNovo.onclick = abrirModalCriar; 
-            cardNovo.innerHTML = `
-                <div class="plus-icon">+</div>
-                <div>Nova Ficha</div>
-            `;
-            container.appendChild(cardNovo);
+            // 2. Busca o layout (pastas)
+            const resLayout = await fetch(`${API_URL}/layout`);
+            layoutAtual = await resLayout.json();
 
-            // Lista Personagens
-            if(nomes.length > 0) {
-                nomes.forEach(nome => {
-                    const card = document.createElement('div');
-                    card.className = 'card-personagem';
-                    const imgId = `img-card-${nome.replace(/\s+/g, '-')}`;
-
-                    card.innerHTML = `
-                        <button class="btn-action btn-delete" title="Apagar Ficha" onclick="abrirModalDeletar(event, '${nome}')">✕</button>
-                        <button class="btn-action btn-edit" title="Editar Nome/Senha" onclick="abrirModalEditar(event, '${nome}')">✎</button>
-                        <img id="${imgId}" src="img/imagem-no-site/personagem.png" class="card-img img-loading" alt="${nome}">
-                        <div class="card-name">${nome}</div>
-                    `;
-
-                    card.onclick = (e) => {
-                        // Se clicou nos botões, não abre a ficha
-                        if(e.target.classList.contains('btn-action')) return;
-                        abrirFichaDoJogador(nome);
-                    };
-
-                    container.appendChild(card);
-                    carregarFotoIndividual(nome, imgId);
-                });
-            }
+            renderizarAreaTrabalho();
         } catch (error) {
             console.error(error);
-            container.innerHTML = '<p style="color:red">Erro ao conectar com o servidor.</p>';
+            container.innerHTML = '<p style="color:red; margin:auto;">Erro ao conectar com servidor.</p>';
         }
     };
 
-    // --- LÓGICA DO MODAL DE CRIAÇÃO ---
+    // --- RENDERIZAR O KANBAN (PASTAS) ---
+    function renderizarAreaTrabalho() {
+        const container = document.getElementById('area-trabalho');
+        container.innerHTML = '';
+
+        // Filtrar personagens que não estão em nenhuma pasta
+        let charsNoLayout = new Set([...layoutAtual.uncategorized]);
+        layoutAtual.folders.forEach(f => f.items.forEach(i => charsNoLayout.add(i)));
+
+        todosPersonagens.forEach(nome => {
+            if (!charsNoLayout.has(nome)) {
+                layoutAtual.uncategorized.push(nome);
+            }
+        });
+
+        // 1. Renderiza a coluna "Sem Grupo" (Padrão)
+        const divSemGrupo = criarElementoPasta('Sem Grupo', layoutAtual.uncategorized, 'uncategorized', false);
+        container.appendChild(divSemGrupo);
+
+        // 2. Renderiza as pastas criadas pelo usuário
+        layoutAtual.folders.forEach(pasta => {
+            const divPasta = criarElementoPasta(pasta.name, pasta.items, pasta.id, true);
+            container.appendChild(divPasta);
+        });
+        
+        // Adiciona botão de "Nova Ficha" no topo da lista Sem Grupo
+        const pastaSemGrupoContent = divSemGrupo.querySelector('.folder-content');
+        const btnNovoChar = document.createElement('div');
+        btnNovoChar.className = 'card-personagem card-novo';
+        btnNovoChar.innerHTML = '<div>+ Nova Ficha</div>';
+        btnNovoChar.onclick = abrirModalCriar;
+        
+        // Insere no começo
+        pastaSemGrupoContent.insertBefore(btnNovoChar, pastaSemGrupoContent.firstChild);
+    }
+
+    // Cria o HTML de uma coluna/pasta
+    function criarElementoPasta(titulo, itens, id, permiteDeletar) {
+        const col = document.createElement('div');
+        col.className = 'folder-container';
+        col.dataset.id = id;
+
+        // Cabeçalho
+        const header = document.createElement('div');
+        header.className = 'folder-header';
+        header.innerHTML = `<span>${titulo}</span>`;
+        
+        if (permiteDeletar) {
+            const btnDel = document.createElement('button');
+            btnDel.className = 'btn-del-folder';
+            btnDel.innerHTML = '✕'; 
+            btnDel.title = 'Excluir Pasta';
+            btnDel.onclick = () => deletarPasta(id);
+            header.appendChild(btnDel);
+        }
+        col.appendChild(header);
+
+        // Conteúdo
+        const content = document.createElement('div');
+        content.className = 'folder-content';
+        
+        // Renderizar Cards
+        itens.forEach(nome => {
+            if (todosPersonagens.includes(nome)) {
+                const card = criarCardHTML(nome);
+                content.appendChild(card);
+            }
+        });
+
+        col.appendChild(content);
+
+        // LÓGICA SORTABLE (ARRASTAR)
+        new Sortable(content, {
+            group: 'shared', // Permite mover entre listas
+            animation: 150,
+            ghostClass: 'img-loading',
+            delay: 100, // Leve delay para evitar arraste acidental no mobile
+            delayOnTouchOnly: true,
+            onEnd: function (evt) {
+                // Salva assim que soltar
+                salvarNovoLayout();
+            }
+        });
+
+        return col;
+    }
+
+    // Cria o HTML do Card de Personagem
+    function criarCardHTML(nome) {
+        const card = document.createElement('div');
+        card.className = 'card-personagem';
+        card.dataset.nome = nome;
+        const imgId = `img-${nome.replace(/\s+/g, '-')}`;
+
+        card.innerHTML = `
+            <img id="${imgId}" src="img/imagem-no-site/personagem.png" class="card-img img-loading">
+            <div class="card-name">${nome}</div>
+            <button class="btn-action btn-edit" title="Editar" onclick="abrirModalEditar(event, '${nome}')">✎</button>
+            <button class="btn-action btn-delete" title="Apagar" onclick="abrirModalDeletar(event, '${nome}')">✕</button>
+        `;
+
+        card.onclick = (e) => {
+            if(e.target.classList.contains('btn-action')) return;
+            abrirFichaDoJogador(nome);
+        };
+
+        carregarFotoIndividual(nome, imgId);
+        return card;
+    }
+
+    // --- MANIPULAÇÃO DE DADOS (API) ---
+
+    async function salvarNovoLayout() {
+        const container = document.getElementById('area-trabalho');
+        const pastasElements = container.querySelectorAll('.folder-container');
+        
+        const novoLayout = { folders: [], uncategorized: [] };
+
+        pastasElements.forEach(pastaDiv => {
+            const id = pastaDiv.dataset.id;
+            const nomePasta = pastaDiv.querySelector('.folder-header span').innerText;
+            
+            // Pega itens (ignorando o botão "Nova Ficha")
+            const cards = pastaDiv.querySelectorAll('.card-personagem[data-nome]');
+            const nomes = Array.from(cards).map(c => c.dataset.nome);
+
+            if (id === 'uncategorized') {
+                novoLayout.uncategorized = nomes;
+            } else {
+                novoLayout.folders.push({
+                    id: id,
+                    name: nomePasta,
+                    items: nomes
+                });
+            }
+        });
+
+        layoutAtual = novoLayout;
+
+        // Envia para o servidor
+        await fetch(`${API_URL}/save-layout`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(novoLayout)
+        });
+    }
+
+    async function criarNovaPasta() {
+        const nome = prompt("Nome da nova pasta:");
+        if (!nome) return;
+
+        const novaPasta = {
+            id: 'folder-' + Date.now(),
+            name: nome,
+            items: []
+        };
+
+        layoutAtual.folders.push(novaPasta);
+        renderizarAreaTrabalho();
+        salvarNovoLayout();
+    }
+
+    async function deletarPasta(id) {
+        if(!confirm("Deseja apagar esta pasta? Os personagens voltarão para 'Sem Grupo'.")) return;
+
+        const pastaIndex = layoutAtual.folders.findIndex(f => f.id === id);
+        if (pastaIndex > -1) {
+            const pasta = layoutAtual.folders[pastaIndex];
+            layoutAtual.uncategorized.push(...pasta.items); // Move itens
+            layoutAtual.folders.splice(pastaIndex, 1); // Remove pasta
+            
+            renderizarAreaTrabalho();
+            salvarNovoLayout();
+        }
+    }
+
+    // --- MODAIS E AÇÕES DE FICHA (Mantidos) ---
+    
     function abrirModalCriar() {
         document.getElementById('novo-nome').value = '';
         document.getElementById('novo-senha').value = '';
         document.getElementById('modal-criar').style.display = 'flex';
         document.getElementById('novo-nome').focus();
     }
-
-    function fecharModalCriar() {
-        document.getElementById('modal-criar').style.display = 'none';
-    }
+    function fecharModalCriar() { document.getElementById('modal-criar').style.display = 'none'; }
 
     async function confirmarCriacao() {
         const nome = document.getElementById('novo-nome').value;
         const senha = document.getElementById('novo-senha').value;
-
-        if(!nome || !senha) {
-            mostrarAviso("Preencha nome e senha!");
-            return;
-        }
+        if(!nome || !senha) return mostrarAviso("Preencha tudo!");
 
         try {
             const res = await fetch(`${API_URL}/criar-ficha`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                method: 'POST', headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ nome, senha })
             });
-            const data = await res.json();
-
             if(res.ok) {
-                mostrarAviso("Personagem criado com sucesso!");
+                mostrarAviso("Criado com sucesso!");
                 fecharModalCriar();
-                carregarLista();
+                carregarLista(); // Recarrega tudo
             } else {
-                mostrarAviso("Erro: " + data.error);
+                const d = await res.json();
+                mostrarAviso("Erro: " + d.error);
             }
-        } catch(e) {
-            mostrarAviso("Erro de conexão.");
-        }
+        } catch(e) { mostrarAviso("Erro de conexão."); }
     }
 
-    // --- LÓGICA DO MODAL DE DELEÇÃO ---
-    function abrirModalDeletar(event, nome) {
-        event.stopPropagation(); 
+    function abrirModalDeletar(e, nome) {
+        e.stopPropagation();
         nomeDelecaoPendente = nome;
         document.getElementById('nome-para-deletar').innerText = nome;
         document.getElementById('modal-deletar').style.display = 'flex';
     }
-
-    function fecharModalDeletar() {
-        nomeDelecaoPendente = '';
-        document.getElementById('modal-deletar').style.display = 'none';
-    }
+    function fecharModalDeletar() { document.getElementById('modal-deletar').style.display = 'none'; }
 
     async function confirmarDelecao() {
         if(!nomeDelecaoPendente) return;
-
         try {
             const res = await fetch(`${API_URL}/deletar-ficha`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                method: 'POST', headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ nome: nomeDelecaoPendente })
             });
-
             if(res.ok) {
-                mostrarAviso("Ficha deletada.");
+                mostrarAviso("Deletado.");
                 fecharModalDeletar();
                 carregarLista();
-            } else {
-                mostrarAviso("Erro ao deletar.");
-            }
-        } catch(e) {
-            mostrarAviso("Erro de conexão.");
-        }
+            } else mostrarAviso("Erro ao deletar.");
+        } catch(e) { mostrarAviso("Erro conexao"); }
     }
 
-    // --- LÓGICA DO MODAL DE EDIÇÃO (NOVO) ---
-    async function abrirModalEditar(event, nome) {
-        event.stopPropagation(); // Impede abrir a ficha
+    async function abrirModalEditar(e, nome) {
+        e.stopPropagation();
         nomeEdicaoPendente = nome;
-
-        // Tentar pegar a senha atual (opcional, mas ajuda o mestre)
-        // Como o mestre tem acesso a tudo, podemos fazer um load-ficha-mestre para preencher
         let senhaAtual = "";
         try {
             const res = await fetch(`${API_URL}/load-ficha-mestre`, {
-                method: 'POST', 
-                headers: {'Content-Type': 'application/json'},
+                method: 'POST', headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ nome: nome })
             });
-            if(res.ok) {
-                const data = await res.json();
-                senhaAtual = data.senha || "";
-            }
-        } catch(e) { console.log("Erro ao buscar senha antiga"); }
-
+            if(res.ok) { const d = await res.json(); senhaAtual = d.senha || ""; }
+        } catch(e) {}
         document.getElementById('nome-antigo-display').innerText = nome;
-        document.getElementById('edit-nome').value = nome; // Preenche com o nome atual
-        document.getElementById('edit-senha').value = senhaAtual; // Preenche com senha atual
-        
+        document.getElementById('edit-nome').value = nome;
+        document.getElementById('edit-senha').value = senhaAtual;
         document.getElementById('modal-editar').style.display = 'flex';
     }
-
-    function fecharModalEditar() {
-        nomeEdicaoPendente = '';
-        document.getElementById('modal-editar').style.display = 'none';
-    }
+    function fecharModalEditar() { document.getElementById('modal-editar').style.display = 'none'; }
 
     async function confirmarEdicao() {
         const novoNome = document.getElementById('edit-nome').value.trim();
         const novaSenha = document.getElementById('edit-senha').value.trim();
-
-        if(!novoNome || !novaSenha) {
-            mostrarAviso("Nome e Senha não podem ser vazios.");
-            return;
-        }
+        if(!novoNome || !novaSenha) return mostrarAviso("Preencha tudo.");
 
         try {
             const res = await fetch(`${API_URL}/editar-credenciais`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ 
-                    nomeAntigo: nomeEdicaoPendente,
-                    novoNome: novoNome,
-                    novaSenha: novaSenha
-                })
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ nomeAntigo: nomeEdicaoPendente, novoNome, novaSenha })
             });
-
-            const data = await res.json();
-
             if(res.ok) {
-                mostrarAviso("Dados atualizados com sucesso!");
+                mostrarAviso("Atualizado!");
                 fecharModalEditar();
                 carregarLista();
             } else {
-                mostrarAviso("Erro: " + data.error);
+                const d = await res.json();
+                mostrarAviso("Erro: " + d.error);
             }
-        } catch(e) {
-            mostrarAviso("Erro ao conectar.");
-            console.error(e);
-        }
+        } catch(e) { mostrarAviso("Erro conexao"); }
     }
 
     // --- UTILITÁRIOS ---
     async function carregarFotoIndividual(nome, imgId) {
         try {
             const res = await fetch(`${API_URL}/load-ficha-mestre`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nome: nome })
             });
             if (res.ok) {
@@ -489,7 +586,7 @@
                     imgElement.classList.add('img-loaded');
                 }
             }
-        } catch (e) { console.error(e); }
+        } catch (e) {}
     }
 
     function abrirFichaDoJogador(nome) {

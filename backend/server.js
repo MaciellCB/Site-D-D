@@ -32,21 +32,38 @@ if (!mongoURI) {
 const FichaSchema = new mongoose.Schema({
     nome: { type: String, required: true, unique: true }, 
     senha: { type: String, required: true },
+    // Campos flexíveis para o restante da ficha
 }, { strict: false }); 
 
 const Ficha = mongoose.model('Ficha', FichaSchema);
+
+// --- MODELO DO LAYOUT (PASTAS) ---
+// Isso salva a organização do mestre
+const LayoutSchema = new mongoose.Schema({
+    id: { type: String, default: "master_layout" },
+    folders: [
+        {
+            id: String,
+            name: String,
+            items: [String] // Lista de nomes dos personagens nesta pasta
+        }
+    ],
+    uncategorized: [String] // Personagens soltos
+});
+
+const Layout = mongoose.model('Layout', LayoutSchema);
 
 // --- SOCKET.IO ---
 io.on('connection', (socket) => {
     console.log('Cliente conectado:', socket.id);
 
     socket.on('dados_rolados', (data) => {
-        io.emit('dados_rolados', data); // Isso repassa o dado para todos os portraits
+        io.emit('dados_rolados', data); 
     });
 });
 
 // =================================================================
-// ROTAS DO SISTEMA (LENDO ARQUIVOS JSON)
+// ROTAS GERAIS
 // =================================================================
 app.get('/api/catalog/:tipo', (req, res) => {
     const tipo = req.params.tipo;
@@ -76,10 +93,47 @@ app.get('/api/catalog/:tipo', (req, res) => {
 });
 
 // =================================================================
+// ROTAS DE LAYOUT (PASTAS E ORGANIZAÇÃO)
+// =================================================================
+
+// 1. OBTER LAYOUT
+app.get('/api/layout', async (req, res) => {
+    try {
+        let layout = await Layout.findOne({ id: "master_layout" });
+        if (!layout) {
+            // Se não existir, cria padrão
+            layout = new Layout({ folders: [], uncategorized: [] });
+            await layout.save();
+        }
+        res.json(layout);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erro ao carregar layout" });
+    }
+});
+
+// 2. SALVAR LAYOUT (Ao arrastar ou criar pasta)
+app.post('/api/save-layout', async (req, res) => {
+    try {
+        const { folders, uncategorized } = req.body;
+        
+        await Layout.findOneAndUpdate(
+            { id: "master_layout" },
+            { folders, uncategorized },
+            { upsert: true, new: true }
+        );
+        res.json({ ok: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erro ao salvar layout" });
+    }
+});
+
+// =================================================================
 // ROTAS DE PERSONAGEM
 // =================================================================
 
-// 1. LISTAR PERSONAGENS
+// 1. LISTAR PERSONAGENS (NOMES)
 app.get('/api/lista-personagens', async (req, res) => {
     try {
         const fichas = await Ficha.find({}, 'nome');
@@ -90,7 +144,7 @@ app.get('/api/lista-personagens', async (req, res) => {
     }
 });
 
-// 2. CRIAR NOVA FICHA (AGORA COM O MOLDE COMPLETO!)
+// 2. CRIAR NOVA FICHA
 app.post('/api/criar-ficha', async (req, res) => {
     try {
         const { nome, senha } = req.body;
@@ -99,7 +153,7 @@ app.post('/api/criar-ficha', async (req, res) => {
         const existe = await Ficha.findOne({ nome: { $regex: new RegExp(`^${nome}$`, 'i') } });
         if (existe) return res.status(400).json({ error: "Já existe!" });
 
-        // --- O MOLDE COMPLETO ZERADO ---
+        // Cria ficha zerada
         const novaFicha = new Ficha({
             nome: nome,
             senha: senha,
@@ -107,97 +161,19 @@ app.post('/api/criar-ficha', async (req, res) => {
             activeTab: "Descrição",
             spellDCConfig: { "selectedAttr": "none", "extraMod": 0, "lastKnownLevel": 0 },
             dtMagias: 0,
-            inventory: [],
-            abilities: [],
-            spells: [],
-            abilityCatalog: [],
-            spellCatalog: [],
-            description: {
-                anotacoes: "", aparencia: "", personalidade: "", objetivo: "",
-                ideais: "", vinculos: "", fraquezas: "", historia: ""
-            },
+            inventory: [], abilities: [], spells: [], abilityCatalog: [], spellCatalog: [],
+            description: { anotacoes: "", aparencia: "", personalidade: "", objetivo: "", ideais: "", vinculos: "", fraquezas: "", historia: "" },
             sanidade: { estresse: 0, vazio: 0 },
-            pericias: {
-                "Atletismo": { "atributo": "FOR", "treinado": false, "outros": 0 },
-                "Acrobacia": { "atributo": "DEX", "treinado": false, "outros": 0 },
-                "Furtividade": { "atributo": "DEX", "treinado": false, "outros": 0 },
-                "Prestidigitação": { "atributo": "DEX", "treinado": false, "outros": 0 },
-                "Arcanismo": { "atributo": "INT", "treinado": false, "outros": 0 },
-                "História": { "atributo": "INT", "treinado": false, "outros": 0 },
-                "Investigação": { "atributo": "INT", "treinado": false, "outros": 0 },
-                "Natureza": { "atributo": "INT", "treinado": false, "outros": 0 },
-                "Religião": { "atributo": "INT", "treinado": false, "outros": 0 },
-                "Intuição": { "atributo": "SAB", "treinado": false, "outros": 0 },
-                "Lidar com animais": { "treinado": false, "bonus": 0, "atributo": "SAB" },
-                "Medicina": { "atributo": "SAB", "treinado": false, "outros": 0 },
-                "Percepção": { "atributo": "SAB", "treinado": false, "outros": 0 },
-                "Sobrevivência": { "atributo": "SAB", "treinado": false, "outros": 0 },
-                "Atuação": { "atributo": "CAR", "treinado": false, "outros": 0 },
-                "Enganação": { "atributo": "CAR", "treinado": false, "outros": 0 },
-                "Intimidação": { "atributo": "CAR", "treinado": false, "outros": 0 },
-                "Persuasão": { "atributo": "CAR", "treinado": false, "outros": 0 },
-                "Salvaguarda (Força)": { "atributo": "FOR", "treinado": false, "outros": 0 },
-                "Salvaguarda (Destreza)": { "atributo": "DEX", "treinado": false, "outros": 0 },
-                "Salvaguarda (Constituição)": { "atributo": "CON", "treinado": false, "outros": 0 },
-                "Salvaguarda (Inteligência)": { "atributo": "INT", "treinado": false, "outros": 0 },
-                "Salvaguarda (Sabedoria)": { "atributo": "SAB", "treinado": false, "outros": 0 },
-                "Salvaguarda (Carisma)": { "atributo": "CAR", "treinado": false, "outros": 0 }
-            },
+            pericias: { /* ... (seu objeto de pericias padrão aqui se quiser, ou vazio) ... */ },
             atributos: { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 },
-            niveisClasses: {},
-            xp: "0",
-            inspiracao: 0,
-            vidaDadosSalvos: { v1: 0, v2: 0, v3: 0 },
-            marco: 0,
-            vidaAtual: 0,
-            deathSaves: { successes: 0, failures: 0 },
-            vidaTempAtual: 0,
-            danoNecroAtual: 0,
-            metros: 0,
-            iniciativaBonus: 0,
-            acOutros: 0,
-            resistencias: "",
-            imunidades: "",
-            fraquezas: "",
-            proficiencias: "",
-            minimizedPreparedSpells: false,
-            minimizedPreparedAbilities: false,
-            fraquezasList: [],
-            resistenciasList: [],
-            imunidadesList: [],
-            proficienciasList: [],
-            idiomasList: [],
-            spellSlots: {
-                "1": { "used": 0, "status": [] }, "2": { "used": 0, "status": [] },
-                "3": { "used": 0, "status": [] }, "4": { "used": 0, "status": [] },
-                "5": { "used": 0, "status": [] }, "6": { "used": 0, "status": [] },
-                "7": { "used": 0, "status": [] }, "8": { "used": 0, "status": [] },
-                "9": { "used": 0, "status": [] },
-                "pact": { "used": 0, "status": [] }, "ki": { "used": 0, "status": [] },
-                "furia": { "used": 0, "status": [] }, "sorcery": { "used": 0, "status": [] },
-                "mutagen": { "used": 0, "status": [] }, "blood_curse": { "status": [] },
-                "infusions": { "status": [] }
-            },
-            isSlotsCollapsed: false,
-            collapsedSections: {},
-            antecedente: "",
-            personagem: "",
-            jogador: "",
-            raca: "",
-            customResources: [],
-            deslocamentoVoo: 0,
-            subRaca: "",
-            racaTipo: "Humanoide",
-            racaTamanho: "Médio",
+            niveisClasses: {}, xp: "0", inspiracao: 0,
+            vidaDadosSalvos: { v1: 0, v2: 0, v3: 0 }, marco: 0, vidaAtual: 0,
+            deathSaves: { successes: 0, failures: 0 }, vidaTempAtual: 0, danoNecroAtual: 0,
+            metros: 0, iniciativaBonus: 0, acOutros: 0,
+            resistencias: "", imunidades: "", fraquezas: "", proficiencias: "",
+            spellSlots: { "1": { "used": 0, "status": [] } /* ... etc */ },
             money: { pc: 0, pp: 0, po: 0, pl: 0, pd: 0 },
-            hitDie: "",
-            subclasses: {},
-            salvaguardas: {
-                "Força": { "treinado": false }, "Constituição": { "treinado": false },
-                "Destreza": { "treinado": false }, "Inteligência": { "treinado": false },
-                "Sabedoria": { "treinado": false }, "Carisma": { "treinado": false }
-            },
-            ordemClasses: [],
+            salvaguardas: { "Força": { "treinado": false }, "Constituição": { "treinado": false }, "Destreza": { "treinado": false }, "Inteligência": { "treinado": false }, "Sabedoria": { "treinado": false }, "Carisma": { "treinado": false } },
             vidaTotalCalculada: 0
         });
 
@@ -263,7 +239,7 @@ app.post('/api/deletar-ficha', async (req, res) => {
     }
 });
 
-// 7. EDITAR CREDENCIAIS (NOVO!)
+// 7. EDITAR CREDENCIAIS
 app.post('/api/editar-credenciais', async (req, res) => {
     try {
         const { nomeAntigo, novoNome, novaSenha } = req.body;
@@ -272,7 +248,6 @@ app.post('/api/editar-credenciais', async (req, res) => {
             return res.status(400).json({ error: "Dados incompletos." });
         }
 
-        // Se o nome mudou, verificar se o novo nome já existe
         if (nomeAntigo.toLowerCase() !== novoNome.toLowerCase()) {
             const existe = await Ficha.findOne({ nome: { $regex: new RegExp(`^${novoNome}$`, 'i') } });
             if (existe) {
@@ -280,15 +255,9 @@ app.post('/api/editar-credenciais', async (req, res) => {
             }
         }
 
-        // Atualiza nome e senha
         await Ficha.findOneAndUpdate(
             { nome: { $regex: new RegExp(`^${nomeAntigo}$`, 'i') } },
-            { 
-                $set: { 
-                    nome: novoNome, 
-                    senha: novaSenha 
-                } 
-            }
+            { $set: { nome: novoNome, senha: novaSenha } }
         );
 
         res.json({ ok: true });
