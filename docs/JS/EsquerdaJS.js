@@ -1,5 +1,6 @@
 /* =============================================================
    LÓGICA DA ESQUERDA (ATRIBUTOS, VIDA, XP, CLASSES, CA E STATUS)
+   ARQUIVO: EsquerdaJS.js (Corrigido e Otimizado)
 ============================================================= */
 
 // ======================================
@@ -39,6 +40,7 @@ const DADOS_VALORES = {
     'd6': [1, 2, 3, 4, 5, 6]
 };
 
+// --- LISTAS DE SELEÇÃO ---
 const TIPOS_DANO_LISTA = [
     'Ácido', 'Contundente','Doenças', 'Cortante', 'Perfurante', 'Fogo', 'Frio',
     'Elétrico', 'Trovão', 'Veneno', 'Radiante', 'Necrótico', 'Psíquico', 'Energético'
@@ -53,8 +55,10 @@ const PROFICIENCIAS_LISTA_ESQUERDA = [
     'Ferramentas de Sapateiro', 'Ferramentas de Tecelão', 'Ferramentas de Vidreiro',
     'Ferramentas de Pintor', 'Ferramentas de Ladrão', 'Suprimentos de Alquimista','Ferramentas de Funileiro',
     'Kit de Disfarce', 'Kit de Falsificação', 'Kit de Herborismo', 'Kit de Venenos',
-    'Instrumento Musical (Genérico)', 'Alaúde', 'Bateria', 'Charamela', 'Citara', 'Flauta', 'Flauta de Pã', 
-    'Gaita de Foles', 'Lira', 'Tambor', 'Trombeta', 'Trompa', 'Viola', 'Violino', 'Xilofone',
+    'Instrumento Musical (Genérico)',
+    'Alaúde', 'Bateria', 'Charamela', 'Citara', 'Flauta', 'Flauta de Pã', 
+    'Gaita de Foles', 'Lira', 'Tambor', 'Trombeta', 'Trompa', 'Viola', 
+    'Violino', 'Xilofone',
     'Veículos (terrestres)', 'Veículos (aquáticos)'
 ];
 
@@ -66,17 +70,12 @@ const IDIOMAS_LISTA = [
     'Qualith', 'Loross', 'Roussar', 'Aquan Antigo'
 ];
 
-
 // Variáveis Globais de Controle
 let mostrandoAtributos = true;
 let editMode = false;
 let rotateInterval = null;
 const numerosHex = Array.from(document.querySelectorAll('.hexagrama .num'));
 const hexOverlay = document.querySelector('.hex-overlay');
-
-// Variável Global para controlar o Delay (Evita bug de "voltar no tempo")
-let dsSaveTimer = null;
-
 
 // ======================================
 // 2. Inicialização e Listeners
@@ -88,265 +87,177 @@ window.addEventListener('sheet-updated', () => {
     vincularEventosInputs();
 });
 
-function inicializarDadosEsquerda() {
-    if (!state.atributos) state.atributos = { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 };
-    if (!state.niveisClasses) state.niveisClasses = {};
-    if (!state.vidaDadosSalvos) state.vidaDadosSalvos = {};
-    if (!state.dadosVidaGastos) state.dadosVidaGastos = {};
+// ======================================
+// 3. Sistema de Multi-Select (Dropdowns)
+// ======================================
 
-    // --- CORREÇÃO AGRESSIVA DE FORMATO (DEATH SAVES) ---
-    if (!state.deathSaves) {
-        state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
-    } else {
-        if (typeof state.deathSaves.successes === 'number') {
-            const num = state.deathSaves.successes;
-            state.deathSaves.successes = [false, false, false].map((_, i) => i < num);
+function renderMultiSelect(elementId, optionsList, currentSelection, stateKey) {
+    const container = document.getElementById(elementId);
+    if (!container) return;
+
+    if (!Array.isArray(currentSelection)) currentSelection = [];
+
+    const updateDisplay = () => {
+        const display = container.querySelector('.multi-select-display');
+        if (display) {
+            display.textContent = state[stateKey].length > 0 ? state[stateKey].join(', ') : 'Selecionar...';
         }
-        if (typeof state.deathSaves.failures === 'number') {
-            const num = state.deathSaves.failures;
-            state.deathSaves.failures = [false, false, false].map((_, i) => i < num);
-        }
-        if (!Array.isArray(state.deathSaves.successes)) state.deathSaves.successes = [false, false, false];
-        if (!Array.isArray(state.deathSaves.failures)) state.deathSaves.failures = [false, false, false];
-    }
+    };
 
-    if (!state.fraquezasList) state.fraquezasList = [];
-    if (!state.resistenciasList) state.resistenciasList = [];
-    if (!state.imunidadesList) state.imunidadesList = [];
-    if (!state.proficienciasList) state.proficienciasList = [];
-    if (!state.idiomasList) state.idiomasList = [];
-
-    state.acOutros = parseInt(state.acOutros) || 0;
-    state.iniciativaBonus = parseInt(state.iniciativaBonus) || 0;
-    state.vidaAtual = parseInt(state.vidaAtual) || 0;
-    state.vidaTempAtual = parseInt(state.vidaTempAtual) || 0;
-    state.danoNecroAtual = parseInt(state.danoNecroAtual) || 0;
-    state.xp = state.xp || "0";
-    state.marco = parseInt(state.marco) || 0;
-    state.inspiracao = parseInt(state.inspiracao) || 0;
-    state.metros = parseFloat(state.metros) || 0;
-    state.deslocamentoVoo = parseFloat(state.deslocamentoVoo) || 0;
-
-    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
-    const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-
-    setVal('xpAtual', state.xp);
-    setVal('marcoAtual', state.marco);
-    setText('inspiraValor', state.inspiracao);
+    let display = container.querySelector('.multi-select-display');
     
-    const elMetros = document.getElementById('metros');
-    const elQuadrados = document.getElementById('quadrados');
-    
-    if (elMetros && elQuadrados) {
-        elMetros.value = state.metros; 
-        elQuadrados.value = (state.metros / 1.5).toFixed(1);
-
-        const oldLabel = document.getElementById('voo-label-display');
-        if (oldLabel) oldLabel.remove();
+    if (!display) {
+        container.innerHTML = `
+            <div class="multi-select-box" tabindex="0">
+                <div class="multi-select-display">Selecionar...</div>
+                <div class="multi-select-options" style="display:none;">
+                    <div class="options-list-container"></div>
+                    <div class="extra-option-container" style="padding: 8px; border-top: 1px solid #333; margin-top: 5px; background: #1a1a1a;">
+                        <input type="text" placeholder="+ Add Outro (Enter)" class="extra-input" style="width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 6px; border-radius: 4px; font-size: 12px;">
+                    </div>
+                </div>
+            </div>
+        `;
         
-        let containerVooM = document.getElementById('container-voo-m');
-        let containerVooQ = document.getElementById('container-voo-q');
-        
-        if (!containerVooM) {
-            const linhaPai = elQuadrados.parentNode.parentNode; 
-            containerVooM = document.createElement('div');
-            containerVooM.id = 'container-voo-m';
-            containerVooM.className = 'metros-box'; 
-            containerVooM.innerHTML = `<label style="color:#4fc3f7;">Voo (m)</label><input id="voo-metros" type="number" style="border-color:#4fc3f7; color:#4fc3f7;">`;
-            containerVooQ = document.createElement('div');
-            containerVooQ.id = 'container-voo-q';
-            containerVooQ.className = 'quadrados-box'; 
-            containerVooQ.innerHTML = `<label style="color:#4fc3f7;">Voo (q)</label><input id="voo-quadrados" type="number" style="border-color:#4fc3f7; color:#4fc3f7;">`;
-            linhaPai.appendChild(containerVooM);
-            linhaPai.appendChild(containerVooQ);
-        }
+        display = container.querySelector('.multi-select-display');
+        const box = container.querySelector('.multi-select-box');
+        const optsContainer = container.querySelector('.multi-select-options');
+        const listContainer = container.querySelector('.options-list-container');
+        const extraInput = container.querySelector('.extra-input');
 
-        const inputVooM = document.getElementById('voo-metros');
-        const inputVooQ = document.getElementById('voo-quadrados');
+        box.addEventListener('click', (e) => {
+            if (optsContainer.contains(e.target)) return;
+            const isVisible = optsContainer.style.display === 'block';
+            document.querySelectorAll('.multi-select-options').forEach(el => el.style.display = 'none'); 
+            
+            if (!isVisible) {
+                optsContainer.style.display = 'block';
+                renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
+            } else {
+                optsContainer.style.display = 'none';
+            }
+        });
 
-        if (state.deslocamentoVoo > 0) {
-            inputVooM.value = state.deslocamentoVoo;
-            inputVooQ.value = (state.deslocamentoVoo / 1.5).toFixed(1);
-            containerVooM.style.display = 'flex';
-            containerVooQ.style.display = 'flex';
-        } else {
-            containerVooM.style.display = 'none';
-            containerVooQ.style.display = 'none';
-        }
+        document.addEventListener('click', (e) => {
+            if (!container.contains(e.target)) {
+                optsContainer.style.display = 'none';
+            }
+        });
 
-        inputVooM.oninput = (e) => {
-            const val = parseFloat(e.target.value) || 0;
-            state.deslocamentoVoo = val;
-            inputVooQ.value = (val / 1.5).toFixed(1);
-            saveStateToServer();
-        };
-
-        inputVooQ.oninput = (e) => {
-            const val = parseFloat(e.target.value) || 0;
-            const metros = val * 1.5;
-            state.deslocamentoVoo = metros;
-            inputVooM.value = metros; 
-            saveStateToServer();
-        };
-    }
-
-    setVal('iniciativaBonus', state.iniciativaBonus);
-
-    renderMultiSelect('sel-fraquezas', TIPOS_DANO_LISTA, state.fraquezasList, 'fraquezasList');
-    renderMultiSelect('sel-resistencias', TIPOS_DANO_LISTA, state.resistenciasList, 'resistenciasList');
-    renderMultiSelect('sel-imunidades', TIPOS_DANO_LISTA, state.imunidadesList, 'imunidadesList');
-    renderMultiSelect('sel-proficiencias', PROFICIENCIAS_LISTA_ESQUERDA, state.proficienciasList, 'proficienciasList');
-    renderMultiSelect('sel-idiomas', IDIOMAS_LISTA, state.idiomasList, 'idiomasList');
-
-    numerosHex.forEach(n => {
-        const id = n.classList[1];
-        const val = state.atributos[id] || 10;
-        n.dataset.attrValue = val;
-        n.textContent = mostrandoAtributos ? val : formatMod(calcularModificador(val));
-        
-        n.addEventListener('keydown', (e) => {
+        extraInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                if (editMode) toggleEditMode();
+                const val = extraInput.value.trim();
+                if (val && !state[stateKey].includes(val)) {
+                    state[stateKey].push(val);
+                    saveStateToServer();
+                    updateDisplay();
+                    renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
+                    extraInput.value = ''; 
+                    extraInput.focus();
+                }
             }
+        });
+
+        renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
+    } else {
+        updateDisplay();
+        const optsContainer = container.querySelector('.multi-select-options');
+        if (optsContainer.style.display === 'block') {
+            const listContainer = container.querySelector('.options-list-container');
+            renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
+        }
+    }
+}
+
+// Função auxiliar para gerar os checkboxes HTML
+function renderCheckboxes(container, defaultOptions, currentSelection, stateKey, displayElement) {
+    if (!Array.isArray(currentSelection)) currentSelection = [];
+    const allItems = [...new Set([...defaultOptions, ...currentSelection])].sort();
+
+    container.innerHTML = allItems.map(opt => {
+        const isChecked = currentSelection.includes(opt);
+        const isCustom = !defaultOptions.includes(opt);
+        const styleColor = isCustom ? '#e0aaff' : '#fff';
+        
+        return `
+            <label style="display:flex; align-items:center; padding: 4px 8px; cursor:pointer; user-select: none;">
+                <input type="checkbox" value="${opt}" ${isChecked ? 'checked' : ''} style="margin-right: 8px;">
+                <span style="color:${styleColor}; font-size:13px;">${opt}</span>
+            </label>
+        `;
+    }).join('');
+
+    const inputs = container.querySelectorAll('input[type="checkbox"]');
+    inputs.forEach(input => {
+        input.addEventListener('change', () => {
+            const val = input.value;
+            if (input.checked) {
+                if (!state[stateKey].includes(val)) state[stateKey].push(val);
+            } else {
+                state[stateKey] = state[stateKey].filter(item => item !== val);
+            }
+            if (displayElement) {
+                displayElement.textContent = state[stateKey].length > 0 ? state[stateKey].join(', ') : 'Selecionar...';
+            }
+            saveStateToServer();
         });
     });
 }
 
 // ======================================
-// LÓGICA DE DEATH SAVES E VIDA (AS FUNÇÕES QUE FALTAVAM ESTÃO AQUI)
+// 4. Lógica do Hexagrama e Atributos
 // ======================================
 
-function atualizarBarraUI(prefixo, atual, total) {
-    if (prefixo !== 'vida') {
-        const fill = document.getElementById(`${prefixo}-fill`);
-        const texto = document.getElementById(`${prefixo}-atual`);
-        if (fill && texto) {
-            const valAtual = parseInt(atual) || 0;
-            const valTotal = parseInt(total) || 1;
-            fill.style.width = Math.min(100, (valAtual / valTotal) * 100) + "%";
-            texto.textContent = valAtual;
-        }
-        return;
-    }
-
-    const valAtual = parseInt(atual) || 0;
-    const valTotal = parseInt(total) || 1;
-    
-    const containerBarra = document.querySelector('.vida-bar'); 
-    let containerDS = document.getElementById('death-saves-ui'); 
-
-    // Cria o HTML do Death Saves se não existir
-    if (!containerDS && containerBarra) {
-        containerDS = document.createElement('div');
-        containerDS.id = 'death-saves-ui';
-        containerDS.className = 'death-saves-container';
-        containerDS.innerHTML = `
-            <div class="ds-content">
-                <div class="ds-row success-row">
-                    <span class="ds-label">Sucesso</span>
-                    <div class="ds-group">
-                        <div class="ds-circle success" id="btn-ds-s-0" onclick="toggleDeathSave('success', 0)"></div>
-                        <div class="ds-circle success" id="btn-ds-s-1" onclick="toggleDeathSave('success', 1)"></div>
-                        <div class="ds-circle success" id="btn-ds-s-2" onclick="toggleDeathSave('success', 2)"></div>
-                    </div>
-                </div>
-                <div class="ds-row failure-row">
-                    <span class="ds-label">Falha</span>
-                    <div class="ds-group">
-                        <div class="ds-circle failure" id="btn-ds-f-0" onclick="toggleDeathSave('failure', 0)"></div>
-                        <div class="ds-circle failure" id="btn-ds-f-1" onclick="toggleDeathSave('failure', 1)"></div>
-                        <div class="ds-circle failure" id="btn-ds-f-2" onclick="toggleDeathSave('failure', 2)"></div>
-                    </div>
-                </div>
-            </div>
-            <button class="btn-reviver" onclick="voltarVidaUm()">
-                <img src="img/imagem-no-site/coracao.png"> LEVANTAR (1 PV)
-            </button>
-        `;
-        containerBarra.parentNode.insertBefore(containerDS, containerBarra.nextSibling);
-    }
-
-    // Alterna Visibilidade
-    if (valAtual <= 0) {
-        if (containerBarra) containerBarra.style.display = 'none';
-        if (containerDS) {
-            containerDS.style.display = 'flex';
-            atualizarBolinhasVisualmente(); 
-        }
-    } else {
-        if (containerBarra) containerBarra.style.display = 'block';
-        if (containerDS) containerDS.style.display = 'none';
-
-        const fill = document.getElementById(`vida-fill`);
-        const texto = document.getElementById(`vida-atual`);
-        if (fill && texto) {
-            fill.style.width = Math.min(100, (valAtual / valTotal) * 100) + "%";
-            texto.textContent = valAtual;
-        }
-    }
+if (hexOverlay) {
+    hexOverlay.onclick = () => {
+        if (editMode) toggleEditMode();
+        mostrandoAtributos = !mostrandoAtributos;
+        hexOverlay.src = mostrandoAtributos ? 'img/imagem-no-site/atributos.png' : 'img/imagem-no-site/modificador.png';
+        numerosHex.forEach(n => {
+            const val = n.dataset.attrValue;
+            n.textContent = mostrandoAtributos ? val : formatMod(calcularModificador(val));
+        });
+    };
 }
 
-function atualizarBolinhasVisualmente() {
-    if (!state.deathSaves) return;
-
-    const sArr = Array.isArray(state.deathSaves.successes) ? state.deathSaves.successes : [false,false,false];
-    const fArr = Array.isArray(state.deathSaves.failures) ? state.deathSaves.failures : [false,false,false];
-
-    for(let i=0; i<3; i++) {
-        const elS = document.getElementById(`btn-ds-s-${i}`);
-        const elF = document.getElementById(`btn-ds-f-${i}`);
-
-        if (elS) {
-            if (sArr[i]) elS.classList.add('active');
-            else elS.classList.remove('active');
+const btnEditarHex = document.querySelector('.editar-hex');
+if (btnEditarHex) {
+    btnEditarHex.onclick = () => {
+        if (!mostrandoAtributos) {
+            mostrandoAtributos = true;
+            hexOverlay.src = 'img/imagem-no-site/atributos.png';
+            numerosHex.forEach(n => n.textContent = n.dataset.attrValue);
         }
-        if (elF) {
-            if (fArr[i]) elF.classList.add('active');
-            else elF.classList.remove('active');
-        }
-    }
+        toggleEditMode();
+    };
 }
 
-window.toggleDeathSave = function(type, idx) {
-    if (!state.deathSaves) state.deathSaves = { successes: [false,false,false], failures: [false,false,false] };
-    if (!Array.isArray(state.deathSaves[type])) state.deathSaves[type] = [false, false, false];
-
-    // Inverte APENAS o índice clicado
-    state.deathSaves[type][idx] = !state.deathSaves[type][idx];
-
-    // Atualiza visual instantâneo
-    atualizarBolinhasVisualmente();
-
-    // Debounce para rede
-    if (dsSaveTimer) clearTimeout(dsSaveTimer);
-    dsSaveTimer = setTimeout(() => {
+function toggleEditMode() {
+    editMode = !editMode;
+    numerosHex.forEach(n => {
+        n.setAttribute('contenteditable', editMode);
+        if (!editMode) {
+            const id = n.classList[1];
+            const val = parseInt(n.textContent) || 10;
+            state.atributos[id] = val;
+            n.dataset.attrValue = val;
+        }
+    });
+    if (!editMode) {
         saveStateToServer();
-    }, 500);
-};
-
-window.voltarVidaUm = function() {
-    // Cancela qualquer salvamento pendente das bolinhas
-    if (dsSaveTimer) {
-        clearTimeout(dsSaveTimer);
-        dsSaveTimer = null;
+        window.dispatchEvent(new CustomEvent('sheet-updated'));
     }
+}
 
-    state.vidaAtual = 1;
-    // Reseta bolinhas
-    state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
-    
-    // Atualiza UI
-    atualizarVidaCalculada();
-    
-    // Salva
-    saveStateToServer();
-};
+function calcularModificador(n) { return Math.floor((parseInt(n, 10) - 10) / 2); }
+function formatMod(m) { return m >= 0 ? `+${m}` : m; }
 
-/* =============================================================
-   OUTRAS FUNÇÕES (Painéis, etc)
-============================================================= */
+// ======================================
+// 5. Classes, Dados de Vida e Painéis
+// ======================================
 
+/* --- GERENCIAMENTO DE PAINÉIS ARRASTÁVEIS --- */
 window.tornarPainelArrastavel = function(elemento) {
     const header = elemento.querySelector('.painel-header');
     if (!header) return;
@@ -361,8 +272,9 @@ window.tornarPainelArrastavel = function(elemento) {
         startX = e.clientX;
         startY = e.clientY;
         const style = window.getComputedStyle(elemento);
-        startLeft = parseInt(style.left) || 0; 
+        startLeft = parseInt(style.left) || 0;
         startTop = parseInt(style.top) || 0;
+
         if (style.transform !== 'none') {
             const rect = elemento.getBoundingClientRect();
             elemento.style.transform = 'none';
@@ -397,6 +309,7 @@ window.tornarPainelArrastavel = function(elemento) {
     header.addEventListener('mousedown', onMouseDown);
 };
 
+/* --- PAINEL DE DADOS DE VIDA (DESCANSOS) --- */
 const btnAbrirDV = document.getElementById('btn-abrir-dv');
 if (btnAbrirDV) {
     btnAbrirDV.addEventListener('click', (e) => {
@@ -418,6 +331,200 @@ if (btnAbrirDV) {
 function renderizarPainelDadosVida(container) {
     container.innerHTML = '';
     if (typeof syncOrdemClasses === 'function') syncOrdemClasses();
+    const ordem = state.ordemClasses || Object.keys(state.niveisClasses);
+    let totalClasses = 0;
+
+    ordem.forEach(key => {
+        const nivel = parseInt(state.niveisClasses[key]) || 0;
+        if (nivel <= 0) return;
+        totalClasses++;
+        const classeRef = classesPadrao.find(c => c.key === key);
+        if (!classeRef) return;
+        const gastos = state.dadosVidaGastos[key] || 0;
+        const restantes = Math.max(0, nivel - gastos);
+        const dadoTipo = classeRef.dado; 
+        const div = document.createElement('div');
+        div.className = 'item-dv';
+        const disabledAttr = restantes <= 0 ? 'disabled' : '';
+        const textoBotao = restantes <= 0 ? 'Esgotado' : `Rolar ${dadoTipo}`;
+        div.innerHTML = `
+            <div class="dv-info">
+                <span class="dv-class-name">${classeRef.nome}</span>
+                <span class="dv-count">Disponível: <strong style="color:${restantes > 0 ? '#fff' : '#d32f2f'}">${restantes}</strong> / ${nivel}</span>
+            </div>
+            <button class="btn-rolar-dv" ${disabledAttr} onclick="usarDadoVida('${key}', '${dadoTipo}')">
+                <img src="img/imagem-no-site/dado.png" style="width:14px;"> ${textoBotao}
+            </button>
+        `;
+        container.appendChild(div);
+    });
+
+    if (totalClasses === 0) {
+        container.innerHTML = '<div style="color:#888; text-align:center; padding:10px;">Nenhuma classe definida.</div>';
+    }
+    
+    const divReset = document.createElement('div');
+    divReset.style.marginTop = '10px';
+    divReset.style.paddingTop = '10px';
+    divReset.style.borderTop = '1px solid #333';
+    divReset.innerHTML = `
+        <button onclick="realizarDescansoLongo()" style="width:100%; background:#111; color:#aaa; border:1px solid #444; padding:8px; border-radius:4px; cursor:pointer; font-size:12px;">
+            Realizar Descanso Longo (Recuperar DV/2 e Vida)
+        </button>
+    `;
+    container.appendChild(divReset);
+}
+
+window.usarDadoVida = function(classKey, dadoTipo) {
+    const nivel = parseInt(state.niveisClasses[classKey]) || 0;
+    const gastos = state.dadosVidaGastos[classKey] || 0;
+    if (gastos >= nivel) return;
+
+    const faces = parseInt(dadoTipo.replace('d', ''));
+    const resultadoDado = Math.floor(Math.random() * faces) + 1;
+    const conScore = state.atributos?.n1 || 10;
+    const modCon = Math.floor((parseInt(conScore) - 10) / 2);
+    const curaTotal = Math.max(0, resultadoDado + modCon);
+
+    const vidaAtual = parseInt(state.vidaAtual) || 0;
+    const vidaMax = state.vidaTotalCalculada || 100;
+    const novaVida = Math.min(vidaMax, vidaAtual + curaTotal);
+    
+    state.vidaAtual = novaVida;
+    state.dadosVidaGastos[classKey] = gastos + 1;
+
+    saveStateToServer();
+    atualizarTudoVisual(); 
+    
+    const container = document.getElementById('listaDadosVida');
+    if(container) renderizarPainelDadosVida(container);
+
+    if (typeof showCombatResults === 'function') {
+        const nomeClasse = classesPadrao.find(c => c.key === classKey)?.nome || classKey;
+        const resultadoObj = {
+            total: curaTotal,
+            text: curaTotal.toString(),
+            detail: `${resultadoDado} (d${faces}) + ${modCon} (CON)`,
+            isCrit: resultadoDado === faces, 
+            isFumble: resultadoDado === 1,
+            label: "CURA"
+        };
+        showCombatResults(`Cura (${nomeClasse})`, null, resultadoObj);
+    } else {
+        alert(`Rolou ${resultadoDado} + ${modCon} = ${curaTotal} de cura.`);
+    }
+};
+
+window.realizarDescansoLongo = function() {
+    state.vidaAtual = state.vidaTotalCalculada;
+    const ordem = state.ordemClasses || Object.keys(state.niveisClasses);
+    ordem.forEach(key => {
+        const nivel = parseInt(state.niveisClasses[key]) || 0;
+        const gastos = state.dadosVidaGastos[key] || 0;
+        if (nivel > 0 && gastos > 0) {
+            const recuperar = Math.max(1, Math.ceil(nivel / 2));
+            state.dadosVidaGastos[key] = Math.max(0, gastos - recuperar);
+        }
+    });
+
+    saveStateToServer();
+    atualizarTudoVisual();
+    const container = document.getElementById('listaDadosVida');
+    if(container) renderizarPainelDadosVida(container);
+    if (typeof exibirAvisoTemporario === 'function') {
+        exibirAvisoTemporario("Descanso Longo Concluído.");
+    }
+};
+
+/* --- PAINEL DE CLASSES (GERAL) --- */
+const elClasseFocus = document.getElementById('classeFocus');
+const painelClasses = document.getElementById('painelClasses');
+
+window.abrirPainelClasses = function(elementoAlvo) {
+    const painelClasses = document.getElementById('painelClasses');
+    const lista = document.getElementById('listaClasses');
+    
+    if (!painelClasses || !lista) return;
+
+    lista.innerHTML = '';
+    classesPadrao.forEach(c => {
+        const nivel = state.niveisClasses[c.key] || 0;
+        const div = document.createElement('div');
+        div.className = 'item-classe';
+        div.innerHTML = `
+            <span>${c.nome}</span>
+            <input type="number" min="0" value="${nivel}" oninput="salvarNivelClasse('${c.key}', this.value)">
+        `;
+        lista.appendChild(div);
+    });
+
+    painelClasses.style.display = 'block';
+    if (elementoAlvo) {
+        const rect = elementoAlvo.getBoundingClientRect();
+        let leftPos = rect.left;
+        if (leftPos + 300 > window.innerWidth) leftPos = window.innerWidth - 310;
+        painelClasses.style.left = `${leftPos}px`;
+        painelClasses.style.top = `${rect.bottom + 5}px`;
+        painelClasses.style.transform = 'none';
+    } else {
+        painelClasses.style.left = '50%';
+        painelClasses.style.top = '50%';
+        painelClasses.style.transform = 'translate(-50%, -50%)';
+    }
+    tornarPainelArrastavel(painelClasses);
+};
+
+if (elClasseFocus && painelClasses) {
+    elClasseFocus.onclick = (e) => {
+        window.abrirPainelClasses(e.currentTarget);
+    };
+}
+
+const btnFecharPainel = document.getElementById('fecharPainel');
+if (btnFecharPainel) btnFecharPainel.onclick = () => document.getElementById('painelClasses').style.display = 'none';
+
+window.salvarNivelClasse = (key, val) => {
+    const nivelNumerico = parseInt(val) || 0;
+    if (!state.niveisClasses) state.niveisClasses = {};
+    state.niveisClasses[key] = nivelNumerico;
+
+    const totalNiv = Object.values(state.niveisClasses).reduce((a, b) => a + (parseInt(b) || 0), 0);
+    if (state.vidaDadosSalvos) {
+        Object.keys(state.vidaDadosSalvos).forEach(k => {
+            const numNivel = parseInt(k.replace('v', ''));
+            if (numNivel > totalNiv) delete state.vidaDadosSalvos[k];
+        });
+    }
+
+    saveStateToServer();
+    atualizarTudoVisual();
+
+    const containerVida = document.querySelector('.classes-lista-container');
+    if (containerVida && containerVida.style.display === 'block') {
+        renderizarDadosVida();
+    }
+    setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('sheet-updated'));
+        if (typeof atualizarTextoClassesHeader === 'function') atualizarTextoClassesHeader();
+    }, 10);
+};
+
+/* --- DADOS DE VIDA (HP MÁXIMO CALCULADO) --- */
+const btnVida = document.getElementById('btnVida');
+if (btnVida) {
+    btnVida.onclick = () => {
+        const container = document.querySelector('.classes-lista-container');
+        container.style.display = container.style.display === 'none' ? 'block' : 'none';
+        renderizarDadosVida();
+    };
+}
+
+function renderizarDadosVida() {
+    const lista = document.getElementById('classesLista');
+    if (!lista) return;
+    lista.innerHTML = '';
+    
+    if (typeof syncOrdemClasses === 'function') syncOrdemClasses();
     else if (state.niveisClasses && !state.ordemClasses) state.ordemClasses = Object.keys(state.niveisClasses);
 
     let counter = 1;
@@ -429,9 +536,8 @@ function renderizarPainelDadosVida(container) {
         for (let i = 1; i <= nivel; i++) {
             const vidId = `v${counter}`;
             const faces = parseInt(classeRef.dado.replace('d', ''));
-            if (counter === 1 && (!state.vidaDadosSalvos[vidId])) {
-                state.vidaDadosSalvos[vidId] = faces;
-            }
+            if (counter === 1 && (!state.vidaDadosSalvos[vidId])) state.vidaDadosSalvos[vidId] = faces;
+
             const valorSalvo = state.vidaDadosSalvos[vidId] || 0;
             const opcoes = DADOS_VALORES[classeRef.dado] || [];
 
@@ -452,6 +558,7 @@ function renderizarPainelDadosVida(container) {
     });
     atualizarVidaCalculada();
 }
+
 window.rolarDadoVida = (id, dado) => {
     const faces = parseInt(dado.replace('d', ''));
     state.vidaDadosSalvos[id] = Math.floor(Math.random() * faces) + 1;
@@ -471,11 +578,10 @@ function atualizarVidaCalculada() {
     const conScore = state.atributos?.n1 || 10; 
     const modCon = Math.floor((parseInt(conScore) - 10) / 2);
     const nivelTotal = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0);
-    
     let vidaMax = somaDados + (modCon * nivelTotal);
     if (vidaMax < 1) vidaMax = 1;
-    state.vidaTotalCalculada = vidaMax; 
     
+    state.vidaTotalCalculada = vidaMax; 
     const elVidaTotal = document.getElementById('vida-total');
     if (elVidaTotal) elVidaTotal.textContent = vidaMax;
 
@@ -484,20 +590,308 @@ function atualizarVidaCalculada() {
     atualizarBarraUI('dano-necro', state.danoNecroAtual, 100);
 }
 
+// ======================================
+// 6. Death Saves e Barras de UI
+// ======================================
+
+// Variável Global para controlar o salvamento (Debounce)
+let dsSaveTimer = null;
+
+// FUNÇÃO ROBUSTA PARA CLIQUE NAS BOLINHAS
+window.toggleDeathSave = function(type, idx) {
+    // 1. Garantia de Estrutura
+    if (!state.deathSaves) state.deathSaves = { successes: [false,false,false], failures: [false,false,false] };
+    if (!Array.isArray(state.deathSaves[type])) state.deathSaves[type] = [false, false, false];
+
+    // 2. Alterna o valor lógico
+    state.deathSaves[type][idx] = !state.deathSaves[type][idx];
+
+    // 3. ATUALIZA VISUALMENTE IMEDIATAMENTE
+    const prefix = type === 'success' ? 'btn-ds-s-' : 'btn-ds-f-';
+    const el = document.getElementById(prefix + idx);
+    if (el) {
+        if (state.deathSaves[type][idx]) el.classList.add('active');
+        else el.classList.remove('active');
+    }
+
+    // 4. Salva no servidor com pequeno atraso (debounce)
+    if (dsSaveTimer) clearTimeout(dsSaveTimer);
+    dsSaveTimer = setTimeout(() => {
+        saveStateToServer();
+    }, 500);
+};
+
+// FUNÇÃO REVIVER
+window.voltarVidaUm = function() {
+    if (dsSaveTimer) {
+        clearTimeout(dsSaveTimer);
+        dsSaveTimer = null;
+    }
+    state.vidaAtual = 1;
+    state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
+    
+    atualizarBarraUI('vida', 1, state.vidaTotalCalculada);
+    saveStateToServer();
+};
+
+function atualizarBolinhasVisualmente() {
+    if (!state.deathSaves) return;
+    const sArr = Array.isArray(state.deathSaves.successes) ? state.deathSaves.successes : [false,false,false];
+    const fArr = Array.isArray(state.deathSaves.failures) ? state.deathSaves.failures : [false,false,false];
+
+    for(let i=0; i<3; i++) {
+        const elS = document.getElementById(`btn-ds-s-${i}`);
+        const elF = document.getElementById(`btn-ds-f-${i}`);
+
+        if (elS) {
+            if (sArr[i]) elS.classList.add('active');
+            else elS.classList.remove('active');
+        }
+        if (elF) {
+            if (fArr[i]) elF.classList.add('active');
+            else elF.classList.remove('active');
+        }
+    }
+}
+
+function atualizarBarraUI(prefixo, atual, total) {
+    if (prefixo !== 'vida') {
+        const fill = document.getElementById(`${prefixo}-fill`);
+        const texto = document.getElementById(`${prefixo}-atual`);
+        if (fill && texto) {
+            const valAtual = parseInt(atual) || 0;
+            const valTotal = parseInt(total) || 1;
+            fill.style.width = Math.min(100, (valAtual / valTotal) * 100) + "%";
+            texto.textContent = valAtual;
+        }
+        return;
+    }
+
+    // --- LOGICA DE VIDA / MORTE ---
+    const valAtual = parseInt(atual) || 0;
+    const valTotal = parseInt(total) || 1;
+    
+    const containerBarra = document.querySelector('.vida-bar'); 
+    let containerDS = document.getElementById('death-saves-ui'); 
+
+    // CRIA HTML SE NÃO EXISTIR
+    if (!containerDS && containerBarra) {
+        containerDS = document.createElement('div');
+        containerDS.id = 'death-saves-ui';
+        containerDS.className = 'death-saves-container';
+        containerDS.innerHTML = `
+            <div class="ds-content">
+                <div class="ds-row success-row">
+                    <span class="ds-label">Sucesso</span>
+                    <div class="ds-group">
+                        <div class="ds-circle success" id="btn-ds-s-0" onclick="toggleDeathSave('success', 0)"></div>
+                        <div class="ds-circle success" id="btn-ds-s-1" onclick="toggleDeathSave('success', 1)"></div>
+                        <div class="ds-circle success" id="btn-ds-s-2" onclick="toggleDeathSave('success', 2)"></div>
+                    </div>
+                </div>
+                <div class="ds-row failure-row">
+                    <span class="ds-label">Falha</span>
+                    <div class="ds-group">
+                        <div class="ds-circle failure" id="btn-ds-f-0" onclick="toggleDeathSave('failure', 0)"></div>
+                        <div class="ds-circle failure" id="btn-ds-f-1" onclick="toggleDeathSave('failure', 1)"></div>
+                        <div class="ds-circle failure" id="btn-ds-f-2" onclick="toggleDeathSave('failure', 2)"></div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-reviver" onclick="voltarVidaUm()">
+                <img src="img/imagem-no-site/coracao.png"> LEVANTAR (1 PV)
+            </button>
+        `;
+        containerBarra.parentNode.insertBefore(containerDS, containerBarra.nextSibling);
+    }
+
+    // ALTERNA VISIBILIDADE
+    if (valAtual <= 0) {
+        if (containerBarra) containerBarra.style.display = 'none';
+        if (containerDS) {
+            containerDS.style.display = 'flex';
+            atualizarBolinhasVisualmente(); 
+        }
+    } else {
+        if (containerBarra) containerBarra.style.display = 'block';
+        if (containerDS) containerDS.style.display = 'none';
+
+        const fill = document.getElementById(`vida-fill`);
+        const texto = document.getElementById(`vida-atual`);
+        if (fill && texto) {
+            fill.style.width = Math.min(100, (valAtual / valTotal) * 100) + "%";
+            texto.textContent = valAtual;
+        }
+    }
+}
+
+// ======================================
+// 7. Funções de Atualização Visual e Cálculos
+// ======================================
+
+function atualizarPassiva() {
+    if (!state.pericias || !state.pericias["Percepção"]) {
+        const el = document.getElementById('passivaValor');
+        if (el) el.textContent = 10;
+        return;
+    }
+    const dados = state.pericias["Percepção"];
+    const mapAtributos = { "FOR": "n6", "DEX": "n2", "CON": "n1", "INT": "n5", "SAB": "n3", "CAR": "n4" };
+    const attrKey = mapAtributos[dados.atributo] || "n3"; 
+    const atributoValor = parseInt(state.atributos[attrKey] || 10);
+    const modAtributo = Math.floor((atributoValor - 10) / 2);
+    let bonusProf = 0;
+    if (dados.treinado) {
+        const nivelTotal = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0) || 1;
+        bonusProf = Math.floor((nivelTotal - 1) / 4) + 2;
+    }
+    const outros = parseInt(dados.outros) || 0;
+    const valorPassiva = 10 + modAtributo + bonusProf + outros;
+    const el = document.getElementById('passivaValor');
+    if (el) el.textContent = valorPassiva;
+}
+
+window.abrirPortraitOBS = function() {
+    if (!state.nome) {
+        alert("Defina um nome para o personagem antes de abrir o Portrait.");
+        return;
+    }
+    const windowId = "Portrait_" + state.nome.replace(/\s+/g, '_');
+    const url = `portrait.html?nome=${encodeURIComponent(state.nome)}`;
+    window.open(url, windowId);
+};
+
+function inicializarDadosEsquerda() {
+    if (!state.atributos) state.atributos = { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 };
+    if (!state.niveisClasses) state.niveisClasses = {};
+    if (!state.vidaDadosSalvos) state.vidaDadosSalvos = {};
+    if (!state.dadosVidaGastos) state.dadosVidaGastos = {};
+
+    // INICIALIZAÇÃO SEGURA DAS SALVAGUARDAS DE MORTE
+    if (!state.deathSaves) {
+        state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
+    } else {
+        if (!state.deathSaves.successes) state.deathSaves.successes = [false, false, false];
+        if (!state.deathSaves.failures) state.deathSaves.failures = [false, false, false];
+
+        // CONVERSÃO DE LEGADO
+        if (typeof state.deathSaves.successes === 'number') {
+            const num = state.deathSaves.successes;
+            state.deathSaves.successes = [false, false, false].map((_, i) => i < num);
+        }
+        if (typeof state.deathSaves.failures === 'number') {
+            const num = state.deathSaves.failures;
+            state.deathSaves.failures = [false, false, false].map((_, i) => i < num);
+        }
+    }
+
+    if (!state.fraquezasList) state.fraquezasList = [];
+    if (!state.resistenciasList) state.resistenciasList = [];
+    if (!state.imunidadesList) state.imunidadesList = [];
+    if (!state.proficienciasList) state.proficienciasList = [];
+    if (!state.idiomasList) state.idiomasList = [];
+
+    state.acOutros = parseInt(state.acOutros) || 0;
+    state.iniciativaBonus = parseInt(state.iniciativaBonus) || 0;
+    state.vidaAtual = parseInt(state.vidaAtual) || 0;
+    state.vidaTempAtual = parseInt(state.vidaTempAtual) || 0;
+    state.danoNecroAtual = parseInt(state.danoNecroAtual) || 0;
+    state.xp = state.xp || "0";
+    state.marco = parseInt(state.marco) || 0;
+    state.inspiracao = parseInt(state.inspiracao) || 0;
+    state.metros = parseFloat(state.metros) || 0;
+    state.deslocamentoVoo = parseFloat(state.deslocamentoVoo) || 0;
+
+    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+    const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+    setVal('xpAtual', state.xp);
+    setVal('marcoAtual', state.marco);
+    setText('inspiraValor', state.inspiracao);
+    
+    const elMetros = document.getElementById('metros');
+    const elQuadrados = document.getElementById('quadrados');
+    if (elMetros && elQuadrados) {
+        elMetros.value = state.metros; 
+        elQuadrados.value = (state.metros / 1.5).toFixed(1);
+        
+        const oldLabel = document.getElementById('voo-label-display');
+        if (oldLabel) oldLabel.remove();
+        
+        let containerVooM = document.getElementById('container-voo-m');
+        let containerVooQ = document.getElementById('container-voo-q');
+        
+        if (!containerVooM) {
+            const linhaPai = elQuadrados.parentNode.parentNode; 
+            containerVooM = document.createElement('div');
+            containerVooM.id = 'container-voo-m';
+            containerVooM.className = 'metros-box'; 
+            containerVooM.innerHTML = `<label style="color:#4fc3f7;">Voo (m)</label><input id="voo-metros" type="number" style="border-color:#4fc3f7; color:#4fc3f7;">`;
+            containerVooQ = document.createElement('div');
+            containerVooQ.id = 'container-voo-q';
+            containerVooQ.className = 'quadrados-box'; 
+            containerVooQ.innerHTML = `<label style="color:#4fc3f7;">Voo (q)</label><input id="voo-quadrados" type="number" style="border-color:#4fc3f7; color:#4fc3f7;">`;
+            linhaPai.appendChild(containerVooM);
+            linhaPai.appendChild(containerVooQ);
+        }
+
+        const inputVooM = document.getElementById('voo-metros');
+        const inputVooQ = document.getElementById('voo-quadrados');
+        if (state.deslocamentoVoo > 0) {
+            inputVooM.value = state.deslocamentoVoo;
+            inputVooQ.value = (state.deslocamentoVoo / 1.5).toFixed(1);
+            containerVooM.style.display = 'flex';
+            containerVooQ.style.display = 'flex';
+        } else {
+            containerVooM.style.display = 'none';
+            containerVooQ.style.display = 'none';
+        }
+        inputVooM.oninput = (e) => {
+            const val = parseFloat(e.target.value) || 0;
+            state.deslocamentoVoo = val;
+            inputVooQ.value = (val / 1.5).toFixed(1);
+            saveStateToServer();
+        };
+        inputVooQ.oninput = (e) => {
+            const val = parseFloat(e.target.value) || 0;
+            const metros = val * 1.5;
+            state.deslocamentoVoo = metros;
+            inputVooM.value = metros; 
+            saveStateToServer();
+        };
+    }
+
+    setVal('iniciativaBonus', state.iniciativaBonus);
+    renderMultiSelect('sel-fraquezas', TIPOS_DANO_LISTA, state.fraquezasList, 'fraquezasList');
+    renderMultiSelect('sel-resistencias', TIPOS_DANO_LISTA, state.resistenciasList, 'resistenciasList');
+    renderMultiSelect('sel-imunidades', TIPOS_DANO_LISTA, state.imunidadesList, 'imunidadesList');
+    renderMultiSelect('sel-proficiencias', PROFICIENCIAS_LISTA_ESQUERDA, state.proficienciasList, 'proficienciasList');
+    renderMultiSelect('sel-idiomas', IDIOMAS_LISTA, state.idiomasList, 'idiomasList');
+
+    numerosHex.forEach(n => {
+        const id = n.classList[1];
+        const val = state.atributos[id] || 10;
+        n.dataset.attrValue = val;
+        n.textContent = mostrandoAtributos ? val : formatMod(calcularModificador(val));
+        n.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (editMode) toggleEditMode();
+            }
+        });
+    });
+}
+
 function atualizarMarcosEXP() {
     const nivelTotal = Object.values(state.niveisClasses).reduce((a, b) => a + b, 0) || 1;
     const tabela = xpPorNivel[Math.min(20, Math.max(1, nivelTotal))];
-
     const elXPText = document.getElementById('xpTotalText');
     if (elXPText) elXPText.textContent = `/ ${tabela.max}`;
-
     const elXPBar = document.getElementById('xpBar');
     if (elXPBar) elXPBar.style.width = Math.min(100, (parseInt(state.xp || 0) / tabela.max) * 100) + "%";
-
     const marcoMax = tabela.marco;
     const elMarcoMax = document.getElementById('marcoMax');
     if (elMarcoMax) elMarcoMax.value = marcoMax;
-
     const elMarcoBar = document.getElementById('marcoBar');
     if (elMarcoBar) elMarcoBar.style.width = marcoMax > 0 ? Math.min(100, (parseInt(state.marco || 0) / marcoMax) * 100) + "%" : "0%";
 }
@@ -540,9 +934,9 @@ function atualizarAC() {
     const modDex = getMod('n2');
     const modCon = getMod('n1');
     const modSab = getMod('n3');
-
     const inventario = state.inventory || [];
     const habilidades = state.abilities || [];
+
     const armadura = inventario.find(i => i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'armadura');
     const escudo = inventario.find(i => i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'escudo');
     const barbDef = habilidades.some(a => a.active && a.title.toLowerCase().includes("bárbaro") && a.title.toLowerCase().includes("defesa"));
@@ -563,7 +957,6 @@ function atualizarAC() {
         valorBase = baseArmor;
         labelBase = "ARMADURA";
         const prof = (armadura.proficiency || '').toLowerCase();
-
         if (prof.includes('pesada')) {
             valorAttr1 = null; 
             tipoArmaduraVisual = "PESADA";
@@ -645,11 +1038,13 @@ function atualizarAC() {
                 <span class="zero-label">${lbl}</span>
             </div>
         `;
-        const plusSign = `<span class="formula-plus">+</span>`;
-        const plusSignExtra = `<span class="formula-plus plus-extra">+</span>`;
-        let htmlFormula = ``;
 
+        const plusSign = `<span class="formula-plus">+</span>`; 
+        const plusSignExtra = `<span class="formula-plus plus-extra">+</span>`; 
+
+        let htmlFormula = ``;
         htmlFormula += createBlock(valorBase, labelBase);
+
         if (valorAttr1 !== null) {
             htmlFormula += plusSign;
             htmlFormula += createBlock(valorAttr1 >= 0 ? valorAttr1 : valorAttr1, labelAttr1);
@@ -664,6 +1059,7 @@ function atualizarAC() {
         }
         htmlFormula += plusSignExtra;
         htmlFormula += createInputBlock(bonusManual, "EXTRA");
+
         formulaContainer.innerHTML = htmlFormula;
     }
 }
@@ -671,7 +1067,7 @@ function atualizarAC() {
 window.updateACManual = function(val) {
     state.acOutros = parseInt(val) || 0;
     saveStateToServer(); 
-    atualizarAC();       
+    atualizarAC();        
 }
 
 function atualizarDeslocamento() {
@@ -688,6 +1084,7 @@ function atualizarDeslocamento() {
             }
         });
     }
+
     const elMetros = document.getElementById('metros');
     const elQuadrados = document.getElementById('quadrados');
     const totalMetros = baseMetros + bonusMetros;
@@ -701,6 +1098,32 @@ function atualizarDeslocamento() {
     if (elQuadrados) {
         elQuadrados.value = totalQuadrados.toFixed(1);
     }
+}
+
+function atualizarTudoVisual() {
+    atualizarFocoClasseRotativo();
+    atualizarMarcosEXP();
+    atualizarVidaCalculada();
+    atualizarProficiencia();
+    atualizarIniciativaTotal();
+    atualizarAC(); 
+    atualizarPassiva();
+    atualizarDeslocamento(); 
+    const nivelTotal = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0);
+    const elNivel = document.getElementById('nivelFoco');
+    if (elNivel) elNivel.textContent = nivelTotal;
+}
+
+function calcularProficiencia(nivel) {
+    if (nivel <= 0) return 2;
+    return Math.floor((nivel - 1) / 4) + 2;
+}
+
+function atualizarProficiencia() {
+    const nivelTotal = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0) || 1;
+    const prof = calcularProficiencia(nivelTotal);
+    const profEl = document.getElementById('proficienciaValor');
+    if (profEl) profEl.textContent = `+${prof}`;
 }
 
 function vincularEventosInputs() {
@@ -753,7 +1176,7 @@ function vincularEventosInputs() {
 
     const outrosInput = document.getElementById('ac-outros');
     if (outrosInput) {
-        outrosInput.value = state.acOutros || 0;
+        outrosInput.value = state.acOutros || 0; 
         outrosInput.oninput = () => { 
             state.acOutros = parseInt(outrosInput.value) || 0; 
             atualizarAC(); 
@@ -787,6 +1210,7 @@ document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
         let key = btn.closest('.vida-container') ? "vidaAtual" : (btn.closest('.barra-secundaria:nth-child(1)') ? "vidaTempAtual" : "danoNecroAtual");
         let step = btn.classList.contains('menos5') ? -5 : (btn.classList.contains('menos1') ? -1 : (btn.classList.contains('mais1') ? 1 : 5));
         let max = key === 'vidaAtual' ? parseInt(document.getElementById('vida-total').textContent) : 9999;
+        
         state[key] = Math.max(0, Math.min(max, (parseInt(state[key]) || 0) + step));
         atualizarVidaCalculada();
         saveStateToServer();
@@ -795,195 +1219,3 @@ document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
 
 document.getElementById('inspiraLeft').onclick = () => { state.inspiracao = Math.max(0, (parseInt(state.inspiracao) || 0) - 1); document.getElementById('inspiraValor').textContent = state.inspiracao; saveStateToServer(); };
 document.getElementById('inspiraRight').onclick = () => { state.inspiracao = (parseInt(state.inspiracao) || 0) + 1; document.getElementById('inspiraValor').textContent = state.inspiracao; saveStateToServer(); };
-
-window.salvarNivelClasse = (key, val) => {
-    const nivelNumerico = parseInt(val) || 0;
-    if (!state.niveisClasses) state.niveisClasses = {};
-    state.niveisClasses[key] = nivelNumerico;
-
-    const totalNiv = Object.values(state.niveisClasses).reduce((a, b) => a + (parseInt(b) || 0), 0);
-    if (state.vidaDadosSalvos) {
-        Object.keys(state.vidaDadosSalvos).forEach(k => {
-            const numNivel = parseInt(k.replace('v', ''));
-            if (numNivel > totalNiv) delete state.vidaDadosSalvos[k];
-        });
-    }
-
-    saveStateToServer();
-    atualizarTudoVisual();
-
-    const containerVida = document.querySelector('.classes-lista-container');
-    if (containerVida && containerVida.style.display === 'block') {
-        renderizarDadosVida();
-    }
-
-    setTimeout(() => {
-        window.dispatchEvent(new CustomEvent('sheet-updated'));
-        if (typeof atualizarTextoClassesHeader === 'function') {
-            atualizarTextoClassesHeader();
-        }
-    }, 10);
-};
-
-window.usarDadoVida = function(classKey, dadoTipo) {
-    const nivel = parseInt(state.niveisClasses[classKey]) || 0;
-    const gastos = state.dadosVidaGastos[classKey] || 0;
-    if (gastos >= nivel) return;
-
-    const faces = parseInt(dadoTipo.replace('d', ''));
-    const resultadoDado = Math.floor(Math.random() * faces) + 1;
-    const conScore = state.atributos?.n1 || 10;
-    const modCon = Math.floor((parseInt(conScore) - 10) / 2);
-    const curaTotal = Math.max(0, resultadoDado + modCon);
-
-    const vidaAtual = parseInt(state.vidaAtual) || 0;
-    const vidaMax = state.vidaTotalCalculada || 100;
-    const novaVida = Math.min(vidaMax, vidaAtual + curaTotal);
-    
-    state.vidaAtual = novaVida;
-    state.dadosVidaGastos[classKey] = gastos + 1;
-
-    saveStateToServer();
-    atualizarTudoVisual(); 
-    
-    const container = document.getElementById('listaDadosVida');
-    if(container) renderizarPainelDadosVida(container);
-
-    if (typeof showCombatResults === 'function') {
-        const nomeClasse = classesPadrao.find(c => c.key === classKey)?.nome || classKey;
-        const resultadoObj = {
-            total: curaTotal, text: curaTotal.toString(), detail: `${resultadoDado} (d${faces}) + ${modCon} (CON)`,
-            isCrit: resultadoDado === faces, isFumble: resultadoDado === 1, label: "CURA" 
-        };
-        showCombatResults(`Cura (${nomeClasse})`, null, resultadoObj);
-    } else {
-        alert(`Rolou ${resultadoDado} + ${modCon} = ${curaTotal} de cura.`);
-    }
-};
-
-window.realizarDescansoLongo = function() {
-    state.vidaAtual = state.vidaTotalCalculada;
-    const ordem = state.ordemClasses || Object.keys(state.niveisClasses);
-    ordem.forEach(key => {
-        const nivel = parseInt(state.niveisClasses[key]) || 0;
-        const gastos = state.dadosVidaGastos[key] || 0;
-        if (nivel > 0 && gastos > 0) {
-            const recuperar = Math.max(1, Math.ceil(nivel / 2));
-            state.dadosVidaGastos[key] = Math.max(0, gastos - recuperar);
-        }
-    });
-    saveStateToServer();
-    atualizarTudoVisual();
-    const container = document.getElementById('listaDadosVida');
-    if(container) renderizarPainelDadosVida(container);
-    if (typeof exibirAvisoTemporario === 'function') {
-        exibirAvisoTemporario("Descanso Longo Concluído.");
-    }
-};
-
-function renderMultiSelect(elementId, optionsList, currentSelection, stateKey) {
-    const container = document.getElementById(elementId);
-    if (!container) return;
-    if (!Array.isArray(currentSelection)) currentSelection = [];
-
-    const updateDisplay = () => {
-        const display = container.querySelector('.multi-select-display');
-        if (display) {
-            display.textContent = state[stateKey].length > 0 ? state[stateKey].join(', ') : 'Selecionar...';
-        }
-    };
-
-    let display = container.querySelector('.multi-select-display');
-    if (!display) {
-        container.innerHTML = `
-            <div class="multi-select-box" tabindex="0">
-                <div class="multi-select-display">Selecionar...</div>
-                <div class="multi-select-options" style="display:none;">
-                    <div class="options-list-container"></div>
-                    <div class="extra-option-container" style="padding: 8px; border-top: 1px solid #333; margin-top: 5px; background: #1a1a1a;">
-                        <input type="text" placeholder="+ Add Outro (Enter)" class="extra-input" style="width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 6px; border-radius: 4px; font-size: 12px;">
-                    </div>
-                </div>
-            </div>
-        `;
-        display = container.querySelector('.multi-select-display');
-        const box = container.querySelector('.multi-select-box');
-        const optsContainer = container.querySelector('.multi-select-options');
-        const listContainer = container.querySelector('.options-list-container');
-        const extraInput = container.querySelector('.extra-input');
-
-        box.addEventListener('click', (e) => {
-            if (optsContainer.contains(e.target)) return;
-            const isVisible = optsContainer.style.display === 'block';
-            document.querySelectorAll('.multi-select-options').forEach(el => el.style.display = 'none'); 
-            if (!isVisible) {
-                optsContainer.style.display = 'block';
-                renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
-            } else {
-                optsContainer.style.display = 'none';
-            }
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!container.contains(e.target)) {
-                optsContainer.style.display = 'none';
-            }
-        });
-
-        extraInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                const val = extraInput.value.trim();
-                if (val && !state[stateKey].includes(val)) {
-                    state[stateKey].push(val);
-                    saveStateToServer();
-                    updateDisplay();
-                    renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
-                    extraInput.value = ''; 
-                    extraInput.focus();
-                }
-            }
-        });
-        renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
-    } else {
-        updateDisplay();
-        const optsContainer = container.querySelector('.multi-select-options');
-        if (optsContainer.style.display === 'block') {
-            const listContainer = container.querySelector('.options-list-container');
-            renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
-        }
-    }
-}
-
-function renderCheckboxes(container, defaultOptions, currentSelection, stateKey, displayElement) {
-    if (!Array.isArray(currentSelection)) currentSelection = [];
-    const allItems = [...new Set([...defaultOptions, ...currentSelection])].sort();
-
-    container.innerHTML = allItems.map(opt => {
-        const isChecked = currentSelection.includes(opt);
-        const isCustom = !defaultOptions.includes(opt);
-        const styleColor = isCustom ? '#e0aaff' : '#fff';
-        return `
-            <label style="display:flex; align-items:center; padding: 4px 8px; cursor:pointer; user-select: none;">
-                <input type="checkbox" value="${opt}" ${isChecked ? 'checked' : ''} style="margin-right: 8px;">
-                <span style="color:${styleColor}; font-size:13px;">${opt}</span>
-            </label>
-        `;
-    }).join('');
-
-    const inputs = container.querySelectorAll('input[type="checkbox"]');
-    inputs.forEach(input => {
-        input.addEventListener('change', () => {
-            const val = input.value;
-            if (input.checked) {
-                if (!state[stateKey].includes(val)) state[stateKey].push(val);
-            } else {
-                state[stateKey] = state[stateKey].filter(item => item !== val);
-            }
-            if (displayElement) {
-                displayElement.textContent = state[stateKey].length > 0 ? state[stateKey].join(', ') : 'Selecionar...';
-            }
-            saveStateToServer();
-        });
-    });
-}
