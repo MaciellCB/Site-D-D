@@ -1,6 +1,6 @@
 /* =============================================================
    LÓGICA DA ESQUERDA (ATRIBUTOS, VIDA, XP, CLASSES, CA E STATUS)
-   ARQUIVO: EsquerdaJS.js (CORREÇÃO: DEATH SAVES E RESET AUTOMÁTICO)
+   ARQUIVO: EsquerdaJS.js (CORREÇÃO FINAL: MEMÓRIA DAS BOLINHAS)
 ============================================================= */
 
 // ======================================
@@ -609,41 +609,35 @@ function atualizarVidaCalculada() {
 }
 
 // ======================================
-// 6. Death Saves e Barras de UI (BLINDADO)
+// 6. Death Saves e Barras de UI (CORREÇÃO DE REFERÊNCIA)
 // ======================================
 
 // FUNÇÃO ROBUSTA PARA CLIQUE NAS BOLINHAS
 window.toggleDeathSave = function(type, idx) {
     // 1. INICIALIZAÇÃO E CORREÇÃO FORÇADA
-    // Garante que a estrutura existe e que os arrays têm 3 booleanos
     if (!state.deathSaves) state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
-    if (!Array.isArray(state.deathSaves.successes)) state.deathSaves.successes = [false, false, false];
-    if (!Array.isArray(state.deathSaves.failures)) state.deathSaves.failures = [false, false, false];
-
-    // Verifica se os índices existem (se não, cria)
-    if (state.deathSaves.successes.length < 3) state.deathSaves.successes = [false, false, false];
-    if (state.deathSaves.failures.length < 3) state.deathSaves.failures = [false, false, false];
-
-    // 2. ATIVA BLOQUEIO UI (Para ignorar o servidor enquanto clica)
+    
+    // 2. ATIVA BLOQUEIO UI
     ativarBloqueioUI();
 
-    // 3. ALTERNA O VALOR
-    // Garante que o tipo seja 'successes' ou 'failures' e o índice seja válido
-    if (state.deathSaves[type] && typeof state.deathSaves[type][idx] !== 'undefined') {
-        state.deathSaves[type][idx] = !state.deathSaves[type][idx];
-        
-        // Garante integridade do array
-        state.deathSaves[type] = state.deathSaves[type].slice(0, 3);
-    }
+    // 3. QUEBRA DE REFERÊNCIA (O PULO DO GATO)
+    // Ao invés de mexer direto, copiamos o array para uma nova variável (memory clone)
+    let novoArray = [...(state.deathSaves[type] || [false, false, false])];
+    
+    // Altera no clone
+    novoArray[idx] = !novoArray[idx];
+    
+    // Salva o clone de volta no estado
+    state.deathSaves[type] = novoArray;
 
-    // 4. ATUALIZA VISUAL (FORCE = TRUE para passar do bloqueio)
+    // 4. ATUALIZA VISUAL
     atualizarBolinhasVisualmente(true);
 
-    // 5. SALVA COM DEBOUNCE (e verifica vida > 0)
+    // 5. SALVA COM DEBOUNCE
     if (window.dsSaveTimer) clearTimeout(window.dsSaveTimer);
     
     window.dsSaveTimer = setTimeout(() => {
-        // SEGURANÇA CRÍTICA: Se a vida for maior que 0, NÃO SALVA as bolinhas.
+        // SEGURANÇA: Se a vida for maior que 0, NÃO SALVA as bolinhas.
         if ((parseInt(state.vidaAtual) || 0) > 0) {
             return; 
         }
@@ -651,26 +645,21 @@ window.toggleDeathSave = function(type, idx) {
     }, 500);
 };
 
-// FUNÇÃO REVIVER (AGORA RESPEITANDO BLOQUEIO)
+// FUNÇÃO REVIVER
 window.voltarVidaUm = function() {
-    // 1. CANCELA qualquer save de bolinha pendente
     if (window.dsSaveTimer) { clearTimeout(window.dsSaveTimer); window.dsSaveTimer = null; }
-    
-    // 2. ATIVA O BLOQUEIO GERAL (Para ignorar eco do servidor)
     ativarBloqueioUI();
 
-    // 3. DEFINE VIDA E LIMPA BOLINHAS
     state.vidaAtual = 1;
+    // Zera criando novos arrays para evitar links
     state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
     
-    // 4. ATUALIZA E SALVA
     atualizarBarraUI('vida', 1, state.vidaTotalCalculada);
     saveStateToServer();
 };
 
-// ATUALIZADOR VISUAL (COM SUPORTE A BLOQUEIO)
+// ATUALIZADOR VISUAL
 function atualizarBolinhasVisualmente(force = false) {
-    // Se estiver bloqueado (clicando), ignora updates externos
     if (window.uiLock && !force) return;
 
     if (!state.deathSaves) return;
@@ -683,7 +672,6 @@ function atualizarBolinhasVisualmente(force = false) {
         const elF = document.getElementById(`btn-ds-f-${i}`);
 
         if (elS) {
-            // Remove primeiro para garantir reflow se necessário
             elS.classList.remove('active');
             if (sArr[i]) elS.classList.add('active');
         }
@@ -713,7 +701,6 @@ function atualizarBarraUI(prefixo, atual, total) {
     const containerBarra = document.querySelector('.vida-bar'); 
     let containerDS = document.getElementById('death-saves-ui'); 
 
-    // GERA O HTML (AGORA COM OS NOMES CERTOS: 'successes' e 'failures')
     if (!containerDS && containerBarra) {
         containerDS = document.createElement('div');
         containerDS.id = 'death-saves-ui';
@@ -749,7 +736,6 @@ function atualizarBarraUI(prefixo, atual, total) {
         if (containerBarra) containerBarra.style.display = 'none';
         if (containerDS) {
             containerDS.style.display = 'flex';
-            // Chama sem 'force', respeitando o bloqueio se houver
             atualizarBolinhasVisualmente(); 
         }
     } else {
@@ -807,12 +793,13 @@ function inicializarDadosEsquerda() {
     if (!state.vidaDadosSalvos) state.vidaDadosSalvos = {};
     if (!state.dadosVidaGastos) state.dadosVidaGastos = {};
 
-    // INICIALIZAÇÃO SEGURA DAS SALVAGUARDAS DE MORTE
+    // CORREÇÃO CRÍTICA NA INICIALIZAÇÃO: QUEBRAR LINK DE MEMÓRIA
     if (!state.deathSaves) {
         state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
     } else {
-        const oldS = Array.isArray(state.deathSaves.successes) ? state.deathSaves.successes : [false, false, false];
-        const oldF = Array.isArray(state.deathSaves.failures) ? state.deathSaves.failures : [false, false, false];
+        // Usa o spread operator [...] para criar NOVOS arrays na memória
+        const oldS = Array.isArray(state.deathSaves.successes) ? [...state.deathSaves.successes] : [false, false, false];
+        const oldF = Array.isArray(state.deathSaves.failures) ? [...state.deathSaves.failures] : [false, false, false];
         state.deathSaves = { successes: oldS, failures: oldF };
     }
 
@@ -1230,11 +1217,13 @@ function vincularEventosInputs() {
                 const val = parseInt(el.textContent) || 0;
                 const key = id.includes('temp') ? 'vidaTempAtual' : (id.includes('necro') ? 'danoNecroAtual' : 'vidaAtual');
                 
-                // --- NOVA LOGICA DE RESET AO ZERAR ---
-                // Se for a vida atual e estiver zerando, limpa as bolinhas
-                const anterior = state[key];
-                if (key === 'vidaAtual' && val <= 0 && anterior > 0) {
-                     state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
+                // RESET DE BOLINHAS SE VIDA SUBIR ACIMA DE 0 OU ZERAR (Lógica de segurança)
+                if (key === 'vidaAtual') {
+                     const anterior = state[key] || 0;
+                     if (val <= 0 && anterior > 0) {
+                         // Se zerou, limpa (quebrando referência)
+                         state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
+                     }
                 }
                 
                 state[key] = val;
@@ -1261,7 +1250,6 @@ document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
         const anterior = parseInt(state[key]) || 0;
         let novo = Math.max(0, Math.min(max, anterior + step));
         
-        // --- NOVA LOGICA DE RESET AO ZERAR VIA BOTAO ---
         if (key === 'vidaAtual' && novo <= 0 && anterior > 0) {
              state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
         }
