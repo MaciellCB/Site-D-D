@@ -1,6 +1,6 @@
 /* =============================================================
    LÓGICA DA ESQUERDA (ATRIBUTOS, VIDA, XP, CLASSES, CA E STATUS)
-   ARQUIVO: EsquerdaJS.js (CORREÇÃO: BLOQUEIO DE ECO NO DEATH SAVE)
+   ARQUIVO: EsquerdaJS.js (CORREÇÃO TOTAL: PREVINE VOLTAR NO TEMPO EM TUDO)
 ============================================================= */
 
 // ======================================
@@ -77,15 +77,32 @@ let rotateInterval = null;
 const numerosHex = Array.from(document.querySelectorAll('.hexagrama .num'));
 const hexOverlay = document.querySelector('.hex-overlay');
 
-// --- CONTROLE DE DEATH SAVES (PARA NÃO VOLTAR NO TEMPO) ---
-// O timer é global para que possamos verificar se ele está ativo
-var dsSaveTimer = null; 
+// --- SISTEMA DE TRAVA (LOCK) ---
+// Impede que o "Eco" do servidor sobrescreva o que você acabou de clicar
+var uiLock = false;       // Se true, ignora atualizações externas
+var uiUnlockTimer = null; // Timer para destravar
+var dsSaveTimer = null;   // Timer específico do Death Save (debounce)
+
+// Função auxiliar para ativar o bloqueio
+function ativarBloqueioUI() {
+    window.uiLock = true;
+    if (window.uiUnlockTimer) clearTimeout(window.uiUnlockTimer);
+    // Mantém bloqueado por 1.5s após a última ação
+    window.uiUnlockTimer = setTimeout(() => {
+        window.uiLock = false;
+    }, 1500);
+}
 
 // ======================================
 // 2. Inicialização e Listeners
 // ======================================
 
 window.addEventListener('sheet-updated', () => {
+    // --- O PULO DO GATO ---
+    // Se o bloqueio estiver ativo (usuário clicando rápido), IGNORA o update do servidor.
+    // Isso impede que a vida volte para 1 logo após você clicar em +5.
+    if (window.uiLock) return;
+
     inicializarDadosEsquerda();
     atualizarTudoVisual();
     vincularEventosInputs();
@@ -593,55 +610,45 @@ function atualizarVidaCalculada() {
 window.toggleDeathSave = function(type, idx) {
     // 1. INICIALIZAÇÃO FORÇADA E CORRETA
     if (!state.deathSaves) state.deathSaves = { successes: [false,false,false], failures: [false,false,false] };
-    
-    // GARANTIA: Se por acaso estiver undefined, cria o array
     if (!Array.isArray(state.deathSaves[type])) {
         state.deathSaves[type] = [false, false, false];
     }
 
-    // 2. ALTERNA O VALOR LOGICAMENTE
+    // 2. ATIVA BLOQUEIO UI
+    ativarBloqueioUI();
+
+    // 3. ALTERNA O VALOR
     state.deathSaves[type][idx] = !state.deathSaves[type][idx];
 
-    // 3. ATUALIZA O VISUAL NA HORA (Force = true)
-    // Passamos 'true' para forçar a atualização mesmo com o bloqueio ligado
+    // 4. ATUALIZA VISUAL (FORCE = TRUE para passar do bloqueio)
     atualizarBolinhasVisualmente(true);
 
-    // 4. AGENDAMENTO DE SALVAMENTO (DEBOUNCE + BLOQUEIO DE UI)
-    
-    // Limpa timer anterior se você clicou rápido
-    if (dsSaveTimer) clearTimeout(dsSaveTimer);
-
-    // Define um timer longo (800ms). Se você clicar de novo antes disso, o save anterior é cancelado.
-    // Assim, só enviamos pro servidor quando você PARAR de clicar.
-    dsSaveTimer = setTimeout(() => {
+    // 5. SALVA COM DEBOUNCE
+    if (window.dsSaveTimer) clearTimeout(window.dsSaveTimer);
+    window.dsSaveTimer = setTimeout(() => {
         saveStateToServer();
-        dsSaveTimer = null; // Libera o bloqueio
-    }, 800);
+    }, 500);
 };
 
 // FUNÇÃO REVIVER
 window.voltarVidaUm = function() {
-    // Mata qualquer timer pendente para não sobrescrever
-    if (dsSaveTimer) { 
-        clearTimeout(dsSaveTimer); 
-        dsSaveTimer = null; 
-    }
+    // Mata timer do death save se tiver
+    if (window.dsSaveTimer) { clearTimeout(window.dsSaveTimer); window.dsSaveTimer = null; }
+    
+    // Ativa Bloqueio
+    ativarBloqueioUI();
 
     state.vidaAtual = 1;
     state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
     
-    // Atualiza tudo e salva
     atualizarBarraUI('vida', 1, state.vidaTotalCalculada);
     saveStateToServer();
 };
 
-// ATUALIZADOR VISUAL (Com suporte a Bloqueio)
+// ATUALIZADOR VISUAL (COM SUPORTE A BLOQUEIO)
 function atualizarBolinhasVisualmente(force = false) {
-    // SE O TIMER ESTIVER RODANDO (dsSaveTimer !== null), significa que o usuário
-    // está clicando ou acabou de clicar. Nesse caso, a gente IGNORA atualizações
-    // externas (vindas do servidor ou do sheet-updated) para não "voltar no tempo".
-    // A única exceção é se 'force' for true (que é quando o próprio clique chama a função).
-    if (dsSaveTimer !== null && !force) return;
+    // SE BLOQUEADO (usuário agindo), ignora updates externos para não piscar/voltar
+    if (window.uiLock && !force) return;
 
     if (!state.deathSaves) return;
     
@@ -1192,8 +1199,8 @@ function vincularEventosInputs() {
         const el = document.getElementById(id);
         if (el) {
             el.oninput = () => {
-                // SE O USUÁRIO DIGITA VIDA MANUALMENTE, CANCELA SAVE PENDENTE DE BOLINHAS
-                if (dsSaveTimer) { clearTimeout(dsSaveTimer); dsSaveTimer = null; }
+                // Ao digitar, bloqueia atualizações externas
+                ativarBloqueioUI();
 
                 const val = parseInt(el.textContent) || 0;
                 const key = id.includes('temp') ? 'vidaTempAtual' : (id.includes('necro') ? 'danoNecroAtual' : 'vidaAtual');
@@ -1210,8 +1217,11 @@ document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
     if (!btn.closest('.vida-bar') && !btn.closest('.barra-secundaria')) return;
     
     btn.onclick = () => {
-        // SE O USUÁRIO CLICA NOS BOTÕES (+1, -5 etc), CANCELA SAVE PENDENTE DE BOLINHAS
-        if (dsSaveTimer) { clearTimeout(dsSaveTimer); dsSaveTimer = null; }
+        // Mata timer do death save se tiver
+        if (window.dsSaveTimer) { clearTimeout(window.dsSaveTimer); window.dsSaveTimer = null; }
+        
+        // ATIVA O BLOQUEIO DE ECO
+        ativarBloqueioUI();
 
         let key = btn.closest('.vida-container') ? "vidaAtual" : (btn.closest('.barra-secundaria:nth-child(1)') ? "vidaTempAtual" : "danoNecroAtual");
         let step = btn.classList.contains('menos5') ? -5 : (btn.classList.contains('menos1') ? -1 : (btn.classList.contains('mais1') ? 1 : 5));
