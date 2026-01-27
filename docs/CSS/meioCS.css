@@ -4,9 +4,9 @@
 
 .lado-centro {
   /* DIMINUINDO O MEIO PARA COMPENSAR A ESQUERDA GRANDE */
-  width: 28%;
-  max-width: 28%;
-  flex: 0 0 28%;
+  width: 30%;
+  max-width: 30%;
+  flex: 0 0 30%;
   
   flex-shrink: 0;
   min-width: 220px; /* Garante que não fique esmagado demais */
