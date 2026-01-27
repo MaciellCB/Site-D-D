@@ -12,7 +12,6 @@
     body { background-color: #0a0a0a; color: white; font-family: Arial, sans-serif; margin: 0; overflow-x: hidden; }
     
     /* --- NAVBAR --- */
-    /* Assumindo que você tem classes de navbar no seu style.css, aqui vai um básico */
     .navbar { display: flex; justify-content: space-between; padding: 15px 30px; background: #1a1a1a; align-items: center; border-bottom: 1px solid #333; }
     .nav-links a { color: #aaa; text-decoration: none; margin-right: 20px; font-weight: bold; }
     .nav-links a.active { color: #9c27b0; }
@@ -221,7 +220,7 @@
     <p style="color:#666; margin:auto;">Carregando sistema...</p>
   </div>
 
-  <button class="btn-nova-pasta" onclick="criarNovaPasta()" title="Criar Nova Pasta">+</button>
+  <button class="btn-nova-pasta" onclick="abrirModalNovaPasta()" title="Criar Nova Pasta">+</button>
 
 
   <div id="modal-criar" class="modal-overlay">
@@ -268,12 +267,38 @@
       </div>
   </div>
 
+  <div id="modal-nova-pasta" class="modal-overlay">
+      <div class="modal-box">
+          <h3 class="modal-titulo">Nova Pasta</h3>
+          <p style="color:#aaa; font-size:0.9em; margin-bottom:15px;">Organize suas fichas em grupos.</p>
+          <input type="text" id="nome-nova-pasta" class="modal-input" placeholder="Nome da Pasta (Ex: NPCs, Party)" autocomplete="off">
+          <div class="modal-buttons">
+              <button class="btn-modal btn-cancelar" onclick="document.getElementById('modal-nova-pasta').style.display='none'">Cancelar</button>
+              <button class="btn-modal btn-confirmar" onclick="confirmarNovaPasta()">Criar Pasta</button>
+          </div>
+      </div>
+  </div>
+
+  <div id="modal-deletar-pasta" class="modal-overlay">
+      <div class="modal-box" style="border-color: #d32f2f;">
+          <h3 class="modal-titulo" style="color: #ef5350;">Apagar Pasta?</h3>
+          <p style="color:#ddd; margin-bottom:20px;">
+             As fichas dentro dela voltarão para a lista "Sem Grupo".
+          </p>
+          <div class="modal-buttons">
+              <button class="btn-modal btn-cancelar" onclick="document.getElementById('modal-deletar-pasta').style.display='none'">Cancelar</button>
+              <button class="btn-modal btn-perigo" onclick="confirmarDelecaoPasta()">Apagar Pasta</button>
+          </div>
+      </div>
+  </div>
+
   <script>
     const API_URL = 'https://dandd-chan.onrender.com/api'; 
     // const API_URL = 'http://localhost:3000/api'; // Teste Local
 
     let nomeDelecaoPendente = ''; 
     let nomeEdicaoPendente = ''; 
+    let pastaIdDelecaoPendente = ''; // Para guardar o ID da pasta que vai ser apagada
 
     // DADOS GLOBAIS
     let layoutAtual = { folders: [], uncategorized: [] };
@@ -353,7 +378,8 @@
             btnDel.className = 'btn-del-folder';
             btnDel.innerHTML = '✕'; 
             btnDel.title = 'Excluir Pasta';
-            btnDel.onclick = () => deletarPasta(id);
+            // Chama o novo modal de deletar pasta
+            btnDel.onclick = () => abrirModalDeletarPasta(id);
             header.appendChild(btnDel);
         }
         col.appendChild(header);
@@ -448,9 +474,20 @@
         });
     }
 
-    async function criarNovaPasta() {
-        const nome = prompt("Nome da nova pasta:");
-        if (!nome) return;
+    // --- FUNÇÕES DE PASTA (COM NOVOS MODAIS) ---
+
+    function abrirModalNovaPasta() {
+        document.getElementById('nome-nova-pasta').value = '';
+        document.getElementById('modal-nova-pasta').style.display = 'flex';
+        document.getElementById('nome-nova-pasta').focus();
+    }
+
+    async function confirmarNovaPasta() {
+        const nome = document.getElementById('nome-nova-pasta').value.trim();
+        if (!nome) {
+            mostrarAviso("Digite um nome para a pasta.");
+            return;
+        }
 
         const novaPasta = {
             id: 'folder-' + Date.now(),
@@ -459,14 +496,20 @@
         };
 
         layoutAtual.folders.push(novaPasta);
+        document.getElementById('modal-nova-pasta').style.display = 'none'; // Fecha modal
         renderizarAreaTrabalho();
         salvarNovoLayout();
     }
 
-    async function deletarPasta(id) {
-        if(!confirm("Deseja apagar esta pasta? Os personagens voltarão para 'Sem Grupo'.")) return;
+    function abrirModalDeletarPasta(id) {
+        pastaIdDelecaoPendente = id;
+        document.getElementById('modal-deletar-pasta').style.display = 'flex';
+    }
 
-        const pastaIndex = layoutAtual.folders.findIndex(f => f.id === id);
+    async function confirmarDelecaoPasta() {
+        if (!pastaIdDelecaoPendente) return;
+
+        const pastaIndex = layoutAtual.folders.findIndex(f => f.id === pastaIdDelecaoPendente);
         if (pastaIndex > -1) {
             const pasta = layoutAtual.folders[pastaIndex];
             layoutAtual.uncategorized.push(...pasta.items); // Move itens
@@ -475,6 +518,8 @@
             renderizarAreaTrabalho();
             salvarNovoLayout();
         }
+        document.getElementById('modal-deletar-pasta').style.display = 'none'; // Fecha modal
+        pastaIdDelecaoPendente = '';
     }
 
     // --- MODAIS E AÇÕES DE FICHA (Mantidos) ---
