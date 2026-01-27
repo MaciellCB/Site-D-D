@@ -39,50 +39,30 @@ const DADOS_VALORES = {
     'd6': [1, 2, 3, 4, 5, 6]
 };
 
-// --- LISTAS DE SELEÇÃO (Solicitadas) ---
 const TIPOS_DANO_LISTA = [
-    'Ácido', 'Contundente','Doenças', 'Cortante', 'Perfurante', 'Fogo', 'Frio',
+    'Ácido', 'Contundente', 'Doenças', 'Cortante', 'Perfurante', 'Fogo', 'Frio',
     'Elétrico', 'Trovão', 'Veneno', 'Radiante', 'Necrótico', 'Psíquico', 'Energético'
 ];
 
-// --- LISTAS DE SELEÇÃO (Atualizada com Instrumentos) ---
 const PROFICIENCIAS_LISTA_ESQUERDA = [
-    // Armaduras e Armas
     'Armaduras leves', 'Armaduras médias', 'Armaduras pesadas', 'Escudos',
     'Armas simples', 'Armas marciais', 'Armas de fogo',
-    
-    // Ferramentas de Artesão
     'Ferramentas de Alquimista', 'Ferramentas de Calígrafo', 'Ferramentas de Carpinteiro',
     'Ferramentas de Cartógrafo', 'Ferramentas de Coureiro', 'Ferramentas de Ferreiro',
     'Ferramentas de Joalheiro', 'Ferramentas de Oleiro', 'Ferramentas de Pedreiro',
     'Ferramentas de Sapateiro', 'Ferramentas de Tecelão', 'Ferramentas de Vidreiro',
-    'Ferramentas de Pintor', 'Ferramentas de Ladrão', 'Suprimentos de Alquimista','Ferramentas de Funileiro',
-    
-    // Kits
+    'Ferramentas de Pintor', 'Ferramentas de Ladrão', 'Suprimentos de Alquimista', 'Ferramentas de Funileiro',
     'Kit de Disfarce', 'Kit de Falsificação', 'Kit de Herborismo', 'Kit de Venenos',
-    
-    // Instrumentos Musicais
-    'Instrumento Musical (Genérico)',
-    'Alaúde', 'Bateria', 'Charamela', 'Citara', 'Flauta', 'Flauta de Pã', 
-    'Gaita de Foles', 'Lira', 'Tambor', 'Trombeta', 'Trompa', 'Viola', 
-    'Violino', 'Xilofone',
-
-    // Veículos
+    'Instrumento Musical (Genérico)', 'Alaúde', 'Bateria', 'Charamela', 'Citara', 'Flauta', 'Flauta de Pã',
+    'Gaita de Foles', 'Lira', 'Tambor', 'Trombeta', 'Trompa', 'Viola', 'Violino', 'Xilofone',
     'Veículos (terrestres)', 'Veículos (aquáticos)'
 ];
 
 const IDIOMAS_LISTA = [
-    // Comuns
     'Comum', 'Anão', 'Élfico', 'Gigante', 'Gnômico', 'Goblin', 'Halfling', 'Orc',
-
-    // Exóticas
     'Abissal', 'Celestial', 'Dialeto Subterrâneo', 'Dracônico', 'Infernal',
     'Primordial', 'Silvestre', 'Druídico', 'Gíria de Ladrões',
-
-    // Subidiomas do Primordial
     'Auran', 'Aquan', 'Ignan', 'Terrano',
-
-    // Idiomas de cenários (oficiais)
     'Qualith', 'Loross', 'Roussar', 'Aquan Antigo'
 ];
 
@@ -104,36 +84,304 @@ window.addEventListener('sheet-updated', () => {
     vincularEventosInputs();
 });
 
-
-
-
-
-// Listener para abrir o painel de Dados de Vida
 /* =============================================================
-   TORNA O PAINEL ARRASTÁVEL (GLOBAL - CORRIGIDO)
+   ATUALIZAÇÃO: inicializarDadosEsquerda (CORRIGIDA)
 ============================================================= */
-window.tornarPainelArrastavel = function(elemento) {
+
+function inicializarDadosEsquerda() {
+    if (!state.atributos) state.atributos = { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 };
+    if (!state.niveisClasses) state.niveisClasses = {};
+    if (!state.vidaDadosSalvos) state.vidaDadosSalvos = {};
+    if (!state.dadosVidaGastos) state.dadosVidaGastos = {};
+
+    // --- CORREÇÃO AGRESSIVA DE FORMATO (DEATH SAVES) ---
+    // Se não existir, cria vazio
+    if (!state.deathSaves) {
+        state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
+    }
+    // Se existir mas estiver bugado ou em formato antigo (número)
+    else {
+        // Converte Número -> Array (Migração de dados antigos)
+        if (typeof state.deathSaves.successes === 'number') {
+            const num = state.deathSaves.successes;
+            state.deathSaves.successes = [false, false, false].map((_, i) => i < num);
+        }
+        if (typeof state.deathSaves.failures === 'number') {
+            const num = state.deathSaves.failures;
+            state.deathSaves.failures = [false, false, false].map((_, i) => i < num);
+        }
+
+        // Garante que são arrays se estiverem indefinidos
+        if (!Array.isArray(state.deathSaves.successes)) state.deathSaves.successes = [false, false, false];
+        if (!Array.isArray(state.deathSaves.failures)) state.deathSaves.failures = [false, false, false];
+    }
+
+    if (!state.fraquezasList) state.fraquezasList = [];
+    if (!state.resistenciasList) state.resistenciasList = [];
+    if (!state.imunidadesList) state.imunidadesList = [];
+    if (!state.proficienciasList) state.proficienciasList = [];
+    if (!state.idiomasList) state.idiomasList = [];
+
+    state.acOutros = parseInt(state.acOutros) || 0;
+    state.iniciativaBonus = parseInt(state.iniciativaBonus) || 0;
+    state.vidaAtual = parseInt(state.vidaAtual) || 0;
+    state.vidaTempAtual = parseInt(state.vidaTempAtual) || 0;
+    state.danoNecroAtual = parseInt(state.danoNecroAtual) || 0;
+    state.xp = state.xp || "0";
+    state.marco = parseInt(state.marco) || 0;
+    state.inspiracao = parseInt(state.inspiracao) || 0;
+    state.metros = parseFloat(state.metros) || 0;
+    state.deslocamentoVoo = parseFloat(state.deslocamentoVoo) || 0;
+
+    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+    const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+    setVal('xpAtual', state.xp);
+    setVal('marcoAtual', state.marco);
+    setText('inspiraValor', state.inspiracao);
+
+    // Deslocamento
+    const elMetros = document.getElementById('metros');
+    const elQuadrados = document.getElementById('quadrados');
+
+    if (elMetros && elQuadrados) {
+        elMetros.value = state.metros;
+        elQuadrados.value = (state.metros / 1.5).toFixed(1);
+
+        const oldLabel = document.getElementById('voo-label-display');
+        if (oldLabel) oldLabel.remove();
+
+        let containerVooM = document.getElementById('container-voo-m');
+        let containerVooQ = document.getElementById('container-voo-q');
+
+        if (!containerVooM) {
+            const linhaPai = elQuadrados.parentNode.parentNode;
+            containerVooM = document.createElement('div');
+            containerVooM.id = 'container-voo-m';
+            containerVooM.className = 'metros-box';
+            containerVooM.innerHTML = `<label style="color:#4fc3f7;">Voo (m)</label><input id="voo-metros" type="number" style="border-color:#4fc3f7; color:#4fc3f7;">`;
+
+            containerVooQ = document.createElement('div');
+            containerVooQ.id = 'container-voo-q';
+            containerVooQ.className = 'quadrados-box';
+            containerVooQ.innerHTML = `<label style="color:#4fc3f7;">Voo (q)</label><input id="voo-quadrados" type="number" style="border-color:#4fc3f7; color:#4fc3f7;">`;
+            linhaPai.appendChild(containerVooM);
+            linhaPai.appendChild(containerVooQ);
+        }
+
+        const inputVooM = document.getElementById('voo-metros');
+        const inputVooQ = document.getElementById('voo-quadrados');
+
+        if (state.deslocamentoVoo > 0) {
+            inputVooM.value = state.deslocamentoVoo;
+            inputVooQ.value = (state.deslocamentoVoo / 1.5).toFixed(1);
+            containerVooM.style.display = 'flex';
+            containerVooQ.style.display = 'flex';
+        } else {
+            containerVooM.style.display = 'none';
+            containerVooQ.style.display = 'none';
+        }
+
+        inputVooM.oninput = (e) => {
+            const novoVoo = parseFloat(e.target.value) || 0;
+            state.deslocamentoVoo = novoVoo;
+            inputVooQ.value = (novoVoo / 1.5).toFixed(1);
+            saveStateToServer();
+        };
+
+        inputVooQ.oninput = (e) => {
+            const novosQuadrados = parseFloat(e.target.value) || 0;
+            const novoVooMetros = novosQuadrados * 1.5;
+            state.deslocamentoVoo = novoVooMetros;
+            inputVooM.value = novoVooMetros;
+            saveStateToServer();
+        };
+    }
+
+    setVal('iniciativaBonus', state.iniciativaBonus);
+
+    renderMultiSelect('sel-fraquezas', TIPOS_DANO_LISTA, state.fraquezasList, 'fraquezasList');
+    renderMultiSelect('sel-resistencias', TIPOS_DANO_LISTA, state.resistenciasList, 'resistenciasList');
+    renderMultiSelect('sel-imunidades', TIPOS_DANO_LISTA, state.imunidadesList, 'imunidadesList');
+    renderMultiSelect('sel-proficiencias', PROFICIENCIAS_LISTA_ESQUERDA, state.proficienciasList, 'proficienciasList');
+    renderMultiSelect('sel-idiomas', IDIOMAS_LISTA, state.idiomasList, 'idiomasList');
+
+    numerosHex.forEach(n => {
+        const id = n.classList[1];
+        const val = state.atributos[id] || 10;
+        n.dataset.attrValue = val;
+        n.textContent = mostrandoAtributos ? val : formatMod(calcularModificador(val));
+
+        n.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (editMode) toggleEditMode();
+            }
+        });
+    });
+}
+
+// ======================================
+// LÓGICA DE DEATH SAVES (CRÍTICO: MANTENHA ESTA ORDEM)
+// ======================================
+
+// Variável Global para controlar o Delay (Evita bugs)
+let dsSaveTimer = null;
+
+// 1. Função de Atualizar HTML da Barra
+function atualizarBarraUI(prefixo, atual, total) {
+    if (prefixo !== 'vida') {
+        const fill = document.getElementById(`${prefixo}-fill`);
+        const texto = document.getElementById(`${prefixo}-atual`);
+        if (fill && texto) {
+            const valAtual = parseInt(atual) || 0;
+            const valTotal = parseInt(total) || 1;
+            fill.style.width = Math.min(100, (valAtual / valTotal) * 100) + "%";
+            texto.textContent = valAtual;
+        }
+        return;
+    }
+
+    // --- LÓGICA DE VIDA / MORTE ---
+    const valAtual = parseInt(atual) || 0;
+    const valTotal = parseInt(total) || 1;
+
+    const containerBarra = document.querySelector('.vida-bar');
+    let containerDS = document.getElementById('death-saves-ui');
+
+    // Cria o HTML do Death Saves se não existir (LAYOUT NOVO)
+    if (!containerDS && containerBarra) {
+        containerDS = document.createElement('div');
+        containerDS.id = 'death-saves-ui';
+        containerDS.className = 'death-saves-container';
+        containerDS.innerHTML = `
+            <div class="ds-content">
+                <div class="ds-row success-row">
+                    <span class="ds-label">Sucesso</span>
+                    <div class="ds-group">
+                        <div class="ds-circle success" id="btn-ds-s-0" onclick="toggleDeathSave('success', 0)"></div>
+                        <div class="ds-circle success" id="btn-ds-s-1" onclick="toggleDeathSave('success', 1)"></div>
+                        <div class="ds-circle success" id="btn-ds-s-2" onclick="toggleDeathSave('success', 2)"></div>
+                    </div>
+                </div>
+                <div class="ds-row failure-row">
+                    <span class="ds-label">Falha</span>
+                    <div class="ds-group">
+                        <div class="ds-circle failure" id="btn-ds-f-0" onclick="toggleDeathSave('failure', 0)"></div>
+                        <div class="ds-circle failure" id="btn-ds-f-1" onclick="toggleDeathSave('failure', 1)"></div>
+                        <div class="ds-circle failure" id="btn-ds-f-2" onclick="toggleDeathSave('failure', 2)"></div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-reviver" onclick="voltarVidaUm()">
+                <img src="img/imagem-no-site/coracao.png"> LEVANTAR (1 PV)
+            </button>
+        `;
+        containerBarra.parentNode.insertBefore(containerDS, containerBarra.nextSibling);
+    }
+
+    // Alterna Visibilidade
+    if (valAtual <= 0) {
+        if (containerBarra) containerBarra.style.display = 'none';
+        if (containerDS) {
+            containerDS.style.display = 'flex';
+            // Chama a função visual (sem salvar)
+            atualizarBolinhasVisualmente();
+        }
+    } else {
+        if (containerBarra) containerBarra.style.display = 'block';
+        if (containerDS) containerDS.style.display = 'none';
+
+        // Atualiza a barra normal
+        const fill = document.getElementById(`vida-fill`);
+        const texto = document.getElementById(`vida-atual`);
+        if (fill && texto) {
+            fill.style.width = Math.min(100, (valAtual / valTotal) * 100) + "%";
+            texto.textContent = valAtual;
+        }
+    }
+}
+
+// 2. Função Visual (Pinta as bolinhas baseado no estado)
+function atualizarBolinhasVisualmente() {
+    if (!state.deathSaves) return;
+
+    // Garante arrays
+    const sArr = Array.isArray(state.deathSaves.successes) ? state.deathSaves.successes : [false, false, false];
+    const fArr = Array.isArray(state.deathSaves.failures) ? state.deathSaves.failures : [false, false, false];
+
+    for (let i = 0; i < 3; i++) {
+        const elS = document.getElementById(`btn-ds-s-${i}`);
+        const elF = document.getElementById(`btn-ds-f-${i}`);
+
+        if (elS) {
+            if (sArr[i]) elS.classList.add('active');
+            else elS.classList.remove('active');
+        }
+        if (elF) {
+            if (fArr[i]) elF.classList.add('active');
+            else elF.classList.remove('active');
+        }
+    }
+}
+
+// 3. Lógica de Clique Independente (As funções que faltavam!)
+window.toggleDeathSave = function (type, idx) {
+    if (!state.deathSaves) state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
+    if (!Array.isArray(state.deathSaves[type])) state.deathSaves[type] = [false, false, false];
+
+    // Inverte APENAS o índice clicado
+    state.deathSaves[type][idx] = !state.deathSaves[type][idx];
+
+    // Atualiza visual instantâneo
+    atualizarBolinhasVisualmente();
+
+    // Debounce para rede
+    if (dsSaveTimer) clearTimeout(dsSaveTimer);
+    dsSaveTimer = setTimeout(() => {
+        saveStateToServer();
+    }, 500);
+};
+
+// 4. Lógica do Botão Reviver
+window.voltarVidaUm = function () {
+    // Cancela qualquer clique em bolinha pendente
+    if (dsSaveTimer) {
+        clearTimeout(dsSaveTimer);
+        dsSaveTimer = null;
+    }
+
+    state.vidaAtual = 1;
+    // Reseta bolinhas
+    state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
+
+    // Atualiza UI
+    atualizarVidaCalculada();
+
+    // Salva
+    saveStateToServer();
+};
+
+/* =============================================================
+   OUTRAS FUNÇÕES (Painéis, etc)
+============================================================= */
+
+window.tornarPainelArrastavel = function (elemento) {
     const header = elemento.querySelector('.painel-header');
     if (!header) return;
 
     let isDragging = false;
     let startX, startY, startLeft, startTop;
 
-    // Função iniciadora
     const onMouseDown = (e) => {
-        if (e.target.tagName === 'BUTTON') return; 
+        if (e.target.tagName === 'BUTTON') return;
         e.preventDefault();
-
         isDragging = true;
         startX = e.clientX;
         startY = e.clientY;
-
-        // Obtém a posição computada atual
         const style = window.getComputedStyle(elemento);
-        startLeft = parseInt(style.left) || 0; // Se for 'auto', assume 0 ou ajusta na abertura
+        startLeft = parseInt(style.left) || 0;
         startTop = parseInt(style.top) || 0;
-
-        // Se a posição for baseada em transform translate (centralizado), precisamos resetar para absolute
         if (style.transform !== 'none') {
             const rect = elemento.getBoundingClientRect();
             elemento.style.transform = 'none';
@@ -142,10 +390,7 @@ window.tornarPainelArrastavel = function(elemento) {
             startLeft = rect.left;
             startTop = rect.top;
         }
-
         header.style.cursor = 'grabbing';
-        
-        // Adiciona listeners no document para seguir o mouse fora do elemento
         document.addEventListener('mousemove', onMouseMove);
         document.addEventListener('mouseup', onMouseUp);
     };
@@ -153,10 +398,8 @@ window.tornarPainelArrastavel = function(elemento) {
     const onMouseMove = (e) => {
         if (!isDragging) return;
         e.preventDefault();
-
         const dx = e.clientX - startX;
         const dy = e.clientY - startY;
-
         elemento.style.left = `${startLeft + dx}px`;
         elemento.style.top = `${startTop + dy}px`;
     };
@@ -165,43 +408,28 @@ window.tornarPainelArrastavel = function(elemento) {
         if (isDragging) {
             isDragging = false;
             header.style.cursor = 'move';
-            // Remove listeners globais para limpar memória
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
         }
     };
-
-    // Remove event listener antigo se existir para evitar duplicação (opcional mas bom)
-    header.removeEventListener('mousedown', onMouseDown); 
+    header.removeEventListener('mousedown', onMouseDown);
     header.addEventListener('mousedown', onMouseDown);
 };
 
-/* =============================================================
-   SISTEMA DE DADOS DE VIDA (DESCANSOS) - CORRIGIDO
-============================================================= */
-
-// Listener para abrir o painel
 const btnAbrirDV = document.getElementById('btn-abrir-dv');
 if (btnAbrirDV) {
     btnAbrirDV.addEventListener('click', (e) => {
         const painel = document.getElementById('painelDadosVida');
         const lista = document.getElementById('listaDadosVida');
-        
         renderizarPainelDadosVida(lista);
-        
         painel.style.display = 'block';
-        
-        // Posicionamento inicial (se ainda não foi movido)
         if (!painel.style.left) {
             const rect = e.currentTarget.getBoundingClientRect();
             let leftPos = rect.left;
             if (leftPos + 300 > window.innerWidth) leftPos = window.innerWidth - 310;
-            
             painel.style.left = `${leftPos}px`;
             painel.style.top = `${rect.bottom + 10}px`;
         }
-        
-        // Aplica o arrastar
         tornarPainelArrastavel(painel);
     });
 }
@@ -222,11 +450,11 @@ function renderizarPainelDadosVida(container) {
 
         const gastos = state.dadosVidaGastos[key] || 0;
         const restantes = Math.max(0, nivel - gastos);
-        const dadoTipo = classeRef.dado; 
+        const dadoTipo = classeRef.dado;
 
         const div = document.createElement('div');
         div.className = 'item-dv';
-        
+
         const disabledAttr = restantes <= 0 ? 'disabled' : '';
         const textoBotao = restantes <= 0 ? 'Esgotado' : `Rolar ${dadoTipo}`;
 
@@ -245,8 +473,7 @@ function renderizarPainelDadosVida(container) {
     if (totalClasses === 0) {
         container.innerHTML = '<div style="color:#888; text-align:center; padding:10px;">Nenhuma classe definida.</div>';
     }
-    
-    // Botão de Descanso Longo (Sem confirmação agora)
+
     const divReset = document.createElement('div');
     divReset.style.marginTop = '10px';
     divReset.style.paddingTop = '10px';
@@ -259,68 +486,55 @@ function renderizarPainelDadosVida(container) {
     container.appendChild(divReset);
 }
 
-/* --- FUNÇÃO CORRIGIDA: USAR DADO DE VIDA --- */
-window.usarDadoVida = function(classKey, dadoTipo) {
+window.usarDadoVida = function (classKey, dadoTipo) {
     const nivel = parseInt(state.niveisClasses[classKey]) || 0;
     const gastos = state.dadosVidaGastos[classKey] || 0;
-    
+
     if (gastos >= nivel) return;
 
     const faces = parseInt(dadoTipo.replace('d', ''));
     const resultadoDado = Math.floor(Math.random() * faces) + 1;
-    
     const conScore = state.atributos?.n1 || 10;
     const modCon = Math.floor((parseInt(conScore) - 10) / 2);
-    
-    // Mínimo de 0 na cura total
     const curaTotal = Math.max(0, resultadoDado + modCon);
 
     const vidaAtual = parseInt(state.vidaAtual) || 0;
     const vidaMax = state.vidaTotalCalculada || 100;
     const novaVida = Math.min(vidaMax, vidaAtual + curaTotal);
-    
+
     state.vidaAtual = novaVida;
     state.dadosVidaGastos[classKey] = gastos + 1;
 
     saveStateToServer();
-    atualizarTudoVisual(); 
-    
-    const container = document.getElementById('listaDadosVida');
-    if(container) renderizarPainelDadosVida(container);
+    atualizarTudoVisual();
 
-    // --- VISUAL CORRIGIDO COM LABEL 'CURA' ---
+    const container = document.getElementById('listaDadosVida');
+    if (container) renderizarPainelDadosVida(container);
+
     if (typeof showCombatResults === 'function') {
         const nomeClasse = classesPadrao.find(c => c.key === classKey)?.nome || classKey;
-        
         const resultadoObj = {
             total: curaTotal,
             text: curaTotal.toString(),
             detail: `${resultadoDado} (d${faces}) + ${modCon} (CON)`,
-            isCrit: resultadoDado === faces, 
+            isCrit: resultadoDado === faces,
             isFumble: resultadoDado === 1,
-            label: "CURA" // <--- AQUI ESTÁ A CORREÇÃO DO NOME
+            label: "CURA"
         };
-
         showCombatResults(`Cura (${nomeClasse})`, null, resultadoObj);
     } else {
         alert(`Rolou ${resultadoDado} + ${modCon} = ${curaTotal} de cura.`);
     }
 };
 
-/* --- FUNÇÃO CORRIGIDA: DESCANSO LONGO --- */
-window.realizarDescansoLongo = function() {
-    // 1. Recupera Vida Total
+window.realizarDescansoLongo = function () {
     state.vidaAtual = state.vidaTotalCalculada;
-
-    // 2. Recupera Dados de Vida (Metade do total, ARREDONDADO PARA CIMA)
     const ordem = state.ordemClasses || Object.keys(state.niveisClasses);
-    
+
     ordem.forEach(key => {
         const nivel = parseInt(state.niveisClasses[key]) || 0;
         const gastos = state.dadosVidaGastos[key] || 0;
-        
         if (nivel > 0 && gastos > 0) {
-            // Math.ceil para arredondar para cima
             const recuperar = Math.max(1, Math.ceil(nivel / 2));
             state.dadosVidaGastos[key] = Math.max(0, gastos - recuperar);
         }
@@ -328,30 +542,20 @@ window.realizarDescansoLongo = function() {
 
     saveStateToServer();
     atualizarTudoVisual();
-    
+
     const container = document.getElementById('listaDadosVida');
-    if(container) renderizarPainelDadosVida(container);
-    
-    // Aviso discreto que descansou
+    if (container) renderizarPainelDadosVida(container);
+
     if (typeof exibirAvisoTemporario === 'function') {
         exibirAvisoTemporario("Descanso Longo Concluído.");
     }
 };
-// ======================================
-// 3. Sistema de Multi-Select (Dropdowns)
-// ======================================
 
-/* =============================================================
-   SISTEMA DE MULTI-SELECT (CORRIGIDO: NÃO FECHA AO CLICAR)
-============================================================= */
 function renderMultiSelect(elementId, optionsList, currentSelection, stateKey) {
     const container = document.getElementById(elementId);
     if (!container) return;
-
-    // 1. Garante que currentSelection seja um array
     if (!Array.isArray(currentSelection)) currentSelection = [];
 
-    // 2. Função interna para atualizar o texto do display
     const updateDisplay = () => {
         const display = container.querySelector('.multi-select-display');
         if (display) {
@@ -359,86 +563,63 @@ function renderMultiSelect(elementId, optionsList, currentSelection, stateKey) {
         }
     };
 
-    // 3. Verifica se a estrutura HTML já existe
     let display = container.querySelector('.multi-select-display');
-    
+
     if (!display) {
-        // Renderiza a estrutura inicial (fechada)
         container.innerHTML = `
             <div class="multi-select-box" tabindex="0">
                 <div class="multi-select-display">Selecionar...</div>
                 <div class="multi-select-options" style="display:none;">
                     <div class="options-list-container"></div>
-                    
                     <div class="extra-option-container" style="padding: 8px; border-top: 1px solid #333; margin-top: 5px; background: #1a1a1a;">
                         <input type="text" placeholder="+ Add Outro (Enter)" class="extra-input" style="width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 6px; border-radius: 4px; font-size: 12px;">
                     </div>
                 </div>
             </div>
         `;
-        
+
         display = container.querySelector('.multi-select-display');
         const box = container.querySelector('.multi-select-box');
         const optsContainer = container.querySelector('.multi-select-options');
         const listContainer = container.querySelector('.options-list-container');
         const extraInput = container.querySelector('.extra-input');
 
-        // --- CORREÇÃO AQUI: Toggle Abrir/Fechar ---
         box.addEventListener('click', (e) => {
-            // Verifica se o clique foi DENTRO da lista de opções (checkboxes, labels, input extra).
-            // Se foi, paramos a função aqui para NÃO fechar o menu.
             if (optsContainer.contains(e.target)) return;
-            
             const isVisible = optsContainer.style.display === 'block';
-            
-            // Fecha outros dropdowns que estejam abertos na página para evitar bagunça
-            document.querySelectorAll('.multi-select-options').forEach(el => el.style.display = 'none'); 
-            
+            document.querySelectorAll('.multi-select-options').forEach(el => el.style.display = 'none');
+
             if (!isVisible) {
                 optsContainer.style.display = 'block';
-                // Recalcula a lista ao abrir para garantir que itens novos apareçam
                 renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
             } else {
                 optsContainer.style.display = 'none';
             }
         });
 
-        // Fechar ao clicar fora do componente
         document.addEventListener('click', (e) => {
             if (!container.contains(e.target)) {
                 optsContainer.style.display = 'none';
             }
         });
 
-        // Evento para adicionar item Customizado via Input (Enter)
         extraInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 const val = extraInput.value.trim();
-                
-                // Adiciona apenas se não for vazio e não existir ainda
                 if (val && !state[stateKey].includes(val)) {
                     state[stateKey].push(val);
                     saveStateToServer();
                     updateDisplay();
-                    
-                    // Re-renderiza a lista para o novo item aparecer como checkbox marcado imediatamente
                     renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
-                    
-                    extraInput.value = ''; // Limpa input
-                    // Mantém o foco no input para adicionar mais se quiser
+                    extraInput.value = '';
                     extraInput.focus();
                 }
             }
         });
-
-        // Renderização inicial dos checkboxes
         renderCheckboxes(listContainer, optionsList, state[stateKey], stateKey, display);
     } else {
-        // Se já existe HTML, apenas atualiza o texto do display
         updateDisplay();
-        
-        // Se estiver aberto, atualiza a lista em tempo real
         const optsContainer = container.querySelector('.multi-select-options');
         if (optsContainer.style.display === 'block') {
             const listContainer = container.querySelector('.options-list-container');
@@ -447,20 +628,15 @@ function renderMultiSelect(elementId, optionsList, currentSelection, stateKey) {
     }
 }
 
-// Função auxiliar para gerar os checkboxes HTML
 function renderCheckboxes(container, defaultOptions, currentSelection, stateKey, displayElement) {
     if (!Array.isArray(currentSelection)) currentSelection = [];
-
-    // Une opções padrão com o que está no state (customizados)
-    // Cria um Set para garantir unicidade e converte de volta para array
     const allItems = [...new Set([...defaultOptions, ...currentSelection])].sort();
 
     container.innerHTML = allItems.map(opt => {
         const isChecked = currentSelection.includes(opt);
-        // Destaca visualmente itens que não são padrão (customizados)
         const isCustom = !defaultOptions.includes(opt);
         const styleColor = isCustom ? '#e0aaff' : '#fff';
-        
+
         return `
             <label style="display:flex; align-items:center; padding: 4px 8px; cursor:pointer; user-select: none;">
                 <input type="checkbox" value="${opt}" ${isChecked ? 'checked' : ''} style="margin-right: 8px;">
@@ -469,7 +645,6 @@ function renderCheckboxes(container, defaultOptions, currentSelection, stateKey,
         `;
     }).join('');
 
-    // Reatribui eventos aos novos checkboxes
     const inputs = container.querySelectorAll('input[type="checkbox"]');
     inputs.forEach(input => {
         input.addEventListener('change', () => {
@@ -479,89 +654,6 @@ function renderCheckboxes(container, defaultOptions, currentSelection, stateKey,
             } else {
                 state[stateKey] = state[stateKey].filter(item => item !== val);
             }
-            
-            // Atualiza texto do display
-            if (displayElement) {
-                displayElement.textContent = state[stateKey].length > 0 ? state[stateKey].join(', ') : 'Selecionar...';
-            }
-            saveStateToServer();
-        });
-    });
-}
-
-// Função auxiliar para gerar os checkboxes HTML
-function renderCheckboxes(container, defaultOptions, currentSelection, stateKey, displayElement) {
-    if (!Array.isArray(currentSelection)) currentSelection = [];
-
-    // Une opções padrão com o que está no state (customizados)
-    // Cria um Set para garantir unicidade e converte de volta para array
-    const allItems = [...new Set([...defaultOptions, ...currentSelection])].sort();
-
-    container.innerHTML = allItems.map(opt => {
-        const isChecked = currentSelection.includes(opt);
-        // Destaca visualmente itens que não são padrão (customizados)
-        const isCustom = !defaultOptions.includes(opt);
-        const styleColor = isCustom ? '#e0aaff' : '#fff';
-        
-        return `
-            <label style="display:flex; align-items:center; padding: 4px 8px; cursor:pointer;">
-                <input type="checkbox" value="${opt}" ${isChecked ? 'checked' : ''} style="margin-right: 8px;">
-                <span style="color:${styleColor}; font-size:13px;">${opt}</span>
-            </label>
-        `;
-    }).join('');
-
-    // Reatribui eventos aos novos checkboxes
-    const inputs = container.querySelectorAll('input[type="checkbox"]');
-    inputs.forEach(input => {
-        input.addEventListener('change', () => {
-            const val = input.value;
-            if (input.checked) {
-                if (!state[stateKey].includes(val)) state[stateKey].push(val);
-            } else {
-                state[stateKey] = state[stateKey].filter(item => item !== val);
-            }
-            
-            // Atualiza texto do display
-            if (displayElement) {
-                displayElement.textContent = state[stateKey].length > 0 ? state[stateKey].join(', ') : 'Selecionar...';
-            }
-            saveStateToServer();
-        });
-    });
-}
-
-// Função auxiliar para gerar os checkboxes HTML
-function renderCheckboxes(container, defaultOptions, currentSelection, stateKey, displayElement) {
-    // Une opções padrão com o que está no state (customizados)
-    const allItems = [...new Set([...defaultOptions, ...currentSelection])].sort();
-
-    container.innerHTML = allItems.map(opt => {
-        const isChecked = currentSelection.includes(opt);
-        // Destaca visualmente itens que não são padrão (customizados)
-        const isCustom = !defaultOptions.includes(opt);
-        const styleColor = isCustom ? '#e0aaff' : '#fff';
-        
-        return `
-            <label style="display:flex; align-items:center; padding: 4px 8px; cursor:pointer;">
-                <input type="checkbox" value="${opt}" ${isChecked ? 'checked' : ''} style="margin-right: 8px;">
-                <span style="color:${styleColor}; font-size:13px;">${opt}</span>
-            </label>
-        `;
-    }).join('');
-
-    // Reatribui eventos aos novos checkboxes
-    const inputs = container.querySelectorAll('input[type="checkbox"]');
-    inputs.forEach(input => {
-        input.addEventListener('change', () => {
-            const val = input.value;
-            if (input.checked) {
-                if (!state[stateKey].includes(val)) state[stateKey].push(val);
-            } else {
-                state[stateKey] = state[stateKey].filter(item => item !== val);
-            }
-            
-            // Atualiza texto do display
             if (displayElement) {
                 displayElement.textContent = state[stateKey].length > 0 ? state[stateKey].join(', ') : 'Selecionar...';
             }
@@ -573,10 +665,6 @@ function renderCheckboxes(container, defaultOptions, currentSelection, stateKey,
 function updateDisplayText(element, list) {
     element.textContent = list.length > 0 ? list.join(', ') : 'Selecionar...';
 }
-
-// ======================================
-// 4. Funções de Cálculo
-// ======================================
 
 function calcularModificador(n) {
     return Math.floor((parseInt(n, 10) - 10) / 2);
@@ -597,10 +685,6 @@ function atualizarProficiencia() {
     const profEl = document.getElementById('proficienciaValor');
     if (profEl) profEl.textContent = `+${prof}`;
 }
-
-// ======================================
-// 5. Lógica do Hexagrama
-// ======================================
 
 if (hexOverlay) {
     hexOverlay.onclick = () => {
@@ -643,24 +727,15 @@ function toggleEditMode() {
     }
 }
 
-// ======================================
-// 6. Classes e Dados de Vida (COM ARRASTAR)
-// ======================================
-
 const elClasseFocus = document.getElementById('classeFocus');
-const painelClasses = document.getElementById('painelClasses'); // Referência global
+const painelClasses = document.getElementById('painelClasses');
 
-/* =============================================================
-   NOVA FUNÇÃO GLOBAL: ABRIR PAINEL DE CLASSES
-   (Permite que o Header também chame este painel)
-============================================================= */
-window.abrirPainelClasses = function(elementoAlvo) {
+window.abrirPainelClasses = function (elementoAlvo) {
     const painelClasses = document.getElementById('painelClasses');
     const lista = document.getElementById('listaClasses');
-    
+
     if (!painelClasses || !lista) return;
 
-    // 1. Limpa e Popula a lista (Mesma lógica original)
     lista.innerHTML = '';
     classesPadrao.forEach(c => {
         const nivel = state.niveisClasses[c.key] || 0;
@@ -673,98 +748,35 @@ window.abrirPainelClasses = function(elementoAlvo) {
         lista.appendChild(div);
     });
 
-    // 2. Exibe o Painel
     painelClasses.style.display = 'block';
 
-    // 3. Posicionamento (Perto do elemento que foi clicado)
     if (elementoAlvo) {
         const rect = elementoAlvo.getBoundingClientRect();
-        // Ajusta para não sair da tela na direita
         let leftPos = rect.left;
-        if (leftPos + 300 > window.innerWidth) { // 300 é a largura do painel
+        if (leftPos + 300 > window.innerWidth) {
             leftPos = window.innerWidth - 310;
         }
-        
         painelClasses.style.left = `${leftPos}px`;
         painelClasses.style.top = `${rect.bottom + 5}px`;
-        
-        // Reset do transform caso tenha sido arrastado antes
         painelClasses.style.transform = 'none';
     } else {
-        // Fallback centralizado
         painelClasses.style.left = '50%';
         painelClasses.style.top = '50%';
         painelClasses.style.transform = 'translate(-50%, -50%)';
     }
 };
 
-// Listener original da Esquerda (Mantém o funcionamento antigo chamando a nova função)
 if (elClasseFocus && painelClasses) {
     elClasseFocus.onclick = (e) => {
         window.abrirPainelClasses(e.currentTarget);
     };
-
-    // --- FUNÇÃO PARA ARRASTAR O PAINEL ---
-function tornarPainelArrastavel(elemento) {
-    const header = elemento.querySelector('.painel-header');
-    let isDragging = false;
-    let startX, startY, initialLeft, initialTop;
-
-    header.addEventListener('mousedown', (e) => {
-        // Impede arrastar se clicar no botão de fechar (X)
-        if (e.target.tagName === 'BUTTON') return;
-
-        isDragging = true;
-        startX = e.clientX;
-        startY = e.clientY;
-        
-        // Pega a posição atual computada (caso seja 'auto' ou porcentagem)
-        const rect = elemento.getBoundingClientRect();
-        initialLeft = rect.left;
-        initialTop = rect.top;
-
-        header.style.cursor = 'grabbing';
-    });
-
-    document.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        e.preventDefault(); // Evita seleção de texto
-
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-
-        elemento.style.left = `${initialLeft + dx}px`;
-        elemento.style.top = `${initialTop + dy}px`;
-    });
-
-    document.addEventListener('mouseup', () => {
-        if (isDragging) {
-            isDragging = false;
-            header.style.cursor = 'grab';
-        }
-    });
 }
-}
-
-
-
-
-
-
-/* =============================================================
-   ATUALIZAÇÃO: JS/EsquerdaJS.js
-   Procure a função "window.salvarNivelClasse" e substitua por esta:
-============================================================= */
 
 window.salvarNivelClasse = (key, val) => {
-    // 1. Garante que é número (se vazio, vira 0)
     const nivelNumerico = parseInt(val) || 0;
-
-    // 2. Atualiza o estado
     if (!state.niveisClasses) state.niveisClasses = {};
     state.niveisClasses[key] = nivelNumerico;
 
-    // 3. Limpa dados de vida excedentes se o nível baixou
     const totalNiv = Object.values(state.niveisClasses).reduce((a, b) => a + (parseInt(b) || 0), 0);
     if (state.vidaDadosSalvos) {
         Object.keys(state.vidaDadosSalvos).forEach(k => {
@@ -773,27 +785,22 @@ window.salvarNivelClasse = (key, val) => {
         });
     }
 
-    // 4. Salva e Atualiza a Visualização da Esquerda
     saveStateToServer();
     atualizarTudoVisual();
 
-    // 5. Atualiza a lista de dados de vida se estiver aberta
     const containerVida = document.querySelector('.classes-lista-container');
     if (containerVida && containerVida.style.display === 'block') {
         renderizarDadosVida();
     }
 
-    // 6. DISPARA A ATUALIZAÇÃO GLOBAL (Para Header e Direita)
-    // Pequeno delay de 10ms ajuda o navegador a processar o input antes de redesenhar
     setTimeout(() => {
         window.dispatchEvent(new CustomEvent('sheet-updated'));
-
-        // SEGURANÇA EXTRA: Chama o Header diretamente se a função existir
         if (typeof atualizarTextoClassesHeader === 'function') {
             atualizarTextoClassesHeader();
         }
     }, 10);
 };
+
 const btnFecharPainel = document.getElementById('fecharPainel');
 if (btnFecharPainel) btnFecharPainel.onclick = () => document.getElementById('painelClasses').style.display = 'none';
 
@@ -806,36 +813,26 @@ if (btnVida) {
     };
 }
 
-/* =============================================================
-   SUBSTITUA NO ESQUERDAJS.js (Para sincronizar com o Header)
-============================================================= */
 function renderizarDadosVida() {
     const lista = document.getElementById('classesLista');
     if (!lista) return;
     lista.innerHTML = '';
-    
-    // Garante sincronia antes de renderizar
+
     if (typeof syncOrdemClasses === 'function') syncOrdemClasses();
-    // Fallback se a função não estiver no escopo global
     else if (state.niveisClasses && !state.ordemClasses) state.ordemClasses = Object.keys(state.niveisClasses);
 
     let counter = 1;
-
-    // Usa a ordemClasses para iterar
     state.ordemClasses.forEach(key => {
         const nivel = parseInt(state.niveisClasses[key]) || 0;
         const classeRef = classesPadrao.find(c => c.key === key);
-        
         if (!classeRef || nivel <= 0) return;
 
         for (let i = 1; i <= nivel; i++) {
             const vidId = `v${counter}`;
             const faces = parseInt(classeRef.dado.replace('d', ''));
-
             if (counter === 1 && (!state.vidaDadosSalvos[vidId])) {
                 state.vidaDadosSalvos[vidId] = faces;
             }
-
             const valorSalvo = state.vidaDadosSalvos[vidId] || 0;
             const opcoes = DADOS_VALORES[classeRef.dado] || [];
 
@@ -870,32 +867,16 @@ window.salvarDadoVida = (id, val) => {
     saveStateToServer();
 };
 
-/* =============================================================
-   CORREÇÃO: VIDA TOTAL = DADOS + (MOD. CON * NÍVEL)
-============================================================= */
 function atualizarVidaCalculada() {
-    // 1. Soma os valores dos dados de vida salvos
     const somaDados = Object.values(state.vidaDadosSalvos || {}).reduce((acc, val) => acc + (parseInt(val) || 0), 0);
-    
-    // 2. Calcula o Modificador de Constituição (n1)
-    // Se o atributo não existir, assume 10 (modificador 0)
-    const conScore = state.atributos?.n1 || 10; 
+    const conScore = state.atributos?.n1 || 10;
     const modCon = Math.floor((parseInt(conScore) - 10) / 2);
-
-    // 3. Calcula o Nível Total do Personagem (soma de todas as classes)
     const nivelTotal = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0);
 
-    // 4. Cálculo Final: Soma dos Dados + (Modificador * Nível)
     let vidaMax = somaDados + (modCon * nivelTotal);
-
-    // Segurança: Evita que a vida máxima seja 0 ou negativa (opcional, mas recomendado)
     if (vidaMax < 1) vidaMax = 1;
-    
-    // --- ATUALIZAÇÃO DO ESTADO E VISUAL ---
-    
-    // Salva o total calculado no estado para o Portrait ler
-    state.vidaTotalCalculada = vidaMax; 
-    
+    state.vidaTotalCalculada = vidaMax;
+
     const elVidaTotal = document.getElementById('vida-total');
     if (elVidaTotal) elVidaTotal.textContent = vidaMax;
 
@@ -903,395 +884,6 @@ function atualizarVidaCalculada() {
     atualizarBarraUI('vida-temp', state.vidaTempAtual, 100);
     atualizarBarraUI('dano-necro', state.danoNecroAtual, 100);
 }
-function atualizarPassiva() {
-    // 1. Verifica se as perícias existem no estado
-    if (!state.pericias || !state.pericias["Percepção"]) {
-        const el = document.getElementById('passivaValor');
-        if (el) el.textContent = 10; // Valor base padrão sem nada
-        return;
-    }
-
-    const dados = state.pericias["Percepção"];
-
-    // 2. Descobre qual atributo a Percepção está usando (Geralmente Sabedoria/n3)
-    // Mapeamento simples reverso baseada no seu sistema
-    const mapAtributos = { "FOR": "n6", "DEX": "n2", "CON": "n1", "INT": "n5", "SAB": "n3", "CAR": "n4" };
-    const attrKey = mapAtributos[dados.atributo] || "n3"; // Padrão n3 (Sabedoria)
-    
-    // 3. Calcula o Modificador do Atributo
-    const atributoValor = parseInt(state.atributos[attrKey] || 10);
-    const modAtributo = Math.floor((atributoValor - 10) / 2);
-
-    // 4. Calcula Bônus de Proficiência (se treinado)
-    let bonusProf = 0;
-    if (dados.treinado) {
-        const nivelTotal = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0) || 1;
-        bonusProf = Math.floor((nivelTotal - 1) / 4) + 2;
-    }
-
-    // 5. Soma 'Outros' bônus manuais da perícia
-    const outros = parseInt(dados.outros) || 0;
-
-    // 6. Fórmula Final: 10 + Mod + Prof + Outros
-    const valorPassiva = 10 + modAtributo + bonusProf + outros;
-
-    // 7. Atualiza na tela
-    const el = document.getElementById('passivaValor');
-    if (el) el.textContent = valorPassiva;
-}
-// --- ADICIONE esta nova função em qualquer lugar do EsquerdaJS.js (pode ser no final) ---
-
-window.abrirPortraitOBS = function() {
-    if (!state.nome) {
-        alert("Defina um nome para o personagem antes de abrir o Portrait.");
-        return;
-    }
-    // Identificador único por personagem
-    const windowId = "Portrait_" + state.nome.replace(/\s+/g, '_');
-    const url = `portrait.html?nome=${encodeURIComponent(state.nome)}`;
-    
-    // Abre em nova guia ou janela independente
-    window.open(url, windowId);
-};
-
-
-/* =============================================================
-   1. INICIALIZAÇÃO (COM CONVERSÃO AUTOMÁTICA PARA ARRAY)
-============================================================= */
-function inicializarDadosEsquerda() {
-    // Inicializa objetos básicos
-    if (!state.atributos) state.atributos = { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 };
-    if (!state.niveisClasses) state.niveisClasses = {};
-    if (!state.vidaDadosSalvos) state.vidaDadosSalvos = {};
-    if (!state.dadosVidaGastos) state.dadosVidaGastos = {};
-
-    // --- CORREÇÃO AGRESSIVA DE FORMATO (DEATH SAVES) ---
-    // Se não existir, cria vazio
-    if (!state.deathSaves) {
-        state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
-    } 
-    // Se existir mas estiver bugado (null ou undefined nas chaves interna)
-    else {
-        if (!state.deathSaves.successes) state.deathSaves.successes = [false, false, false];
-        if (!state.deathSaves.failures) state.deathSaves.failures = [false, false, false];
-
-        // CONVERSÃO DE LEGADO (Se for número, transforma em array agora)
-        if (typeof state.deathSaves.successes === 'number') {
-            const num = state.deathSaves.successes;
-            state.deathSaves.successes = [false, false, false].map((_, i) => i < num);
-        }
-        if (typeof state.deathSaves.failures === 'number') {
-            const num = state.deathSaves.failures;
-            state.deathSaves.failures = [false, false, false].map((_, i) => i < num);
-        }
-    }
-
-    // Inicializa Listas
-    if (!state.fraquezasList) state.fraquezasList = [];
-    if (!state.resistenciasList) state.resistenciasList = [];
-    if (!state.imunidadesList) state.imunidadesList = [];
-    if (!state.proficienciasList) state.proficienciasList = [];
-    if (!state.idiomasList) state.idiomasList = [];
-
-    // Números seguros
-    state.acOutros = parseInt(state.acOutros) || 0;
-    state.iniciativaBonus = parseInt(state.iniciativaBonus) || 0;
-    state.vidaAtual = parseInt(state.vidaAtual) || 0;
-    state.vidaTempAtual = parseInt(state.vidaTempAtual) || 0;
-    state.danoNecroAtual = parseInt(state.danoNecroAtual) || 0;
-    state.xp = state.xp || "0";
-    state.marco = parseInt(state.marco) || 0;
-    state.inspiracao = parseInt(state.inspiracao) || 0;
-    state.metros = parseFloat(state.metros) || 0;
-    state.deslocamentoVoo = parseFloat(state.deslocamentoVoo) || 0;
-
-    // --- LÓGICA DE UI BÁSICA ---
-    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
-    const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-
-    setVal('xpAtual', state.xp);
-    setVal('marcoAtual', state.marco);
-    setText('inspiraValor', state.inspiracao);
-    
-    // Lógica de Deslocamento
-    const elMetros = document.getElementById('metros');
-    const elQuadrados = document.getElementById('quadrados');
-    if (elMetros && elQuadrados) {
-        elMetros.value = state.metros; 
-        elQuadrados.value = (state.metros / 1.5).toFixed(1);
-        
-        // Remove label antigo
-        const oldLabel = document.getElementById('voo-label-display');
-        if (oldLabel) oldLabel.remove();
-        
-        let containerVooM = document.getElementById('container-voo-m');
-        let containerVooQ = document.getElementById('container-voo-q');
-        
-        if (!containerVooM) {
-            const linhaPai = elQuadrados.parentNode.parentNode; 
-            containerVooM = document.createElement('div');
-            containerVooM.id = 'container-voo-m';
-            containerVooM.className = 'metros-box'; 
-            containerVooM.innerHTML = `<label style="color:#4fc3f7;">Voo (m)</label><input id="voo-metros" type="number" style="border-color:#4fc3f7; color:#4fc3f7;">`;
-            containerVooQ = document.createElement('div');
-            containerVooQ.id = 'container-voo-q';
-            containerVooQ.className = 'quadrados-box'; 
-            containerVooQ.innerHTML = `<label style="color:#4fc3f7;">Voo (q)</label><input id="voo-quadrados" type="number" style="border-color:#4fc3f7; color:#4fc3f7;">`;
-            linhaPai.appendChild(containerVooM);
-            linhaPai.appendChild(containerVooQ);
-        }
-
-        const inputVooM = document.getElementById('voo-metros');
-        const inputVooQ = document.getElementById('voo-quadrados');
-        if (state.deslocamentoVoo > 0) {
-            inputVooM.value = state.deslocamentoVoo;
-            inputVooQ.value = (state.deslocamentoVoo / 1.5).toFixed(1);
-            containerVooM.style.display = 'flex';
-            containerVooQ.style.display = 'flex';
-        } else {
-            containerVooM.style.display = 'none';
-            containerVooQ.style.display = 'none';
-        }
-        inputVooM.oninput = (e) => {
-            const val = parseFloat(e.target.value) || 0;
-            state.deslocamentoVoo = val;
-            inputVooQ.value = (val / 1.5).toFixed(1);
-            saveStateToServer();
-        };
-        inputVooQ.oninput = (e) => {
-            const val = parseFloat(e.target.value) || 0;
-            const metros = val * 1.5;
-            state.deslocamentoVoo = metros;
-            inputVooM.value = metros; 
-            saveStateToServer();
-        };
-    }
-
-    setVal('iniciativaBonus', state.iniciativaBonus);
-    renderMultiSelect('sel-fraquezas', TIPOS_DANO_LISTA, state.fraquezasList, 'fraquezasList');
-    renderMultiSelect('sel-resistencias', TIPOS_DANO_LISTA, state.resistenciasList, 'resistenciasList');
-    renderMultiSelect('sel-imunidades', TIPOS_DANO_LISTA, state.imunidadesList, 'imunidadesList');
-    renderMultiSelect('sel-proficiencias', PROFICIENCIAS_LISTA_ESQUERDA, state.proficienciasList, 'proficienciasList');
-    renderMultiSelect('sel-idiomas', IDIOMAS_LISTA, state.idiomasList, 'idiomasList');
-
-    numerosHex.forEach(n => {
-        const id = n.classList[1];
-        const val = state.atributos[id] || 10;
-        n.dataset.attrValue = val;
-        n.textContent = mostrandoAtributos ? val : formatMod(calcularModificador(val));
-        n.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                if (editMode) toggleEditMode();
-            }
-        });
-    });
-}
-
-
-/* =============================================================
-   3. ATUALIZAR BARRA UI (Gera os botões independentes)
-============================================================= */
-function atualizarBarraUI(prefixo, atual, total) {
-    if (prefixo !== 'vida') {
-        const fill = document.getElementById(`${prefixo}-fill`);
-        const texto = document.getElementById(`${prefixo}-atual`);
-        if (fill && texto) {
-            const valAtual = parseInt(atual) || 0;
-            const valTotal = parseInt(total) || 1;
-            fill.style.width = Math.min(100, (valAtual / valTotal) * 100) + "%";
-            texto.textContent = valAtual;
-        }
-        return;
-    }
-
-    // --- LOGICA DE VIDA / MORTE ---
-    const valAtual = parseInt(atual) || 0;
-    const valTotal = parseInt(total) || 1;
-    
-    const containerBarra = document.querySelector('.vida-bar'); 
-    let containerDS = document.getElementById('death-saves-ui'); 
-
-    // CRIA HTML SE NÃO EXISTIR
-    if (!containerDS && containerBarra) {
-        containerDS = document.createElement('div');
-        containerDS.id = 'death-saves-ui';
-        containerDS.className = 'death-saves-container';
-        containerDS.innerHTML = `
-            <div class="ds-content">
-                <div class="ds-row success-row">
-                    <span class="ds-label">Sucesso</span>
-                    <div class="ds-group">
-                        <div class="ds-circle success" id="btn-ds-s-0" onclick="toggleDeathSave('success', 0)"></div>
-                        <div class="ds-circle success" id="btn-ds-s-1" onclick="toggleDeathSave('success', 1)"></div>
-                        <div class="ds-circle success" id="btn-ds-s-2" onclick="toggleDeathSave('success', 2)"></div>
-                    </div>
-                </div>
-                <div class="ds-row failure-row">
-                    <span class="ds-label">Falha</span>
-                    <div class="ds-group">
-                        <div class="ds-circle failure" id="btn-ds-f-0" onclick="toggleDeathSave('failure', 0)"></div>
-                        <div class="ds-circle failure" id="btn-ds-f-1" onclick="toggleDeathSave('failure', 1)"></div>
-                        <div class="ds-circle failure" id="btn-ds-f-2" onclick="toggleDeathSave('failure', 2)"></div>
-                    </div>
-                </div>
-            </div>
-            <button class="btn-reviver" onclick="voltarVidaUm()">
-                <img src="img/imagem-no-site/coracao.png"> LEVANTAR (1 PV)
-            </button>
-        `;
-        containerBarra.parentNode.insertBefore(containerDS, containerBarra.nextSibling);
-    }
-
-    // ALTERNA VISIBILIDADE
-    if (valAtual <= 0) {
-        // MODO MORTE
-        if (containerBarra) containerBarra.style.display = 'none';
-        if (containerDS) {
-            containerDS.style.display = 'flex';
-            atualizarBolinhasVisualmente(); 
-        }
-    } else {
-        // MODO VIVO
-        if (containerBarra) containerBarra.style.display = 'block';
-        if (containerDS) containerDS.style.display = 'none';
-
-        const fill = document.getElementById(`vida-fill`);
-        const texto = document.getElementById(`vida-atual`);
-        if (fill && texto) {
-            fill.style.width = Math.min(100, (valAtual / valTotal) * 100) + "%";
-            texto.textContent = valAtual;
-        }
-    }
-}
-
-/* =============================================================
-   4. BOTÃO REVIVER (CORRIGIDO: CANCELA DELAY ANTERIOR)
-============================================================= */
-// --- Variável Global ÚNICA para controlar o salvamento ---
-let dsSaveTimer = null;
-
-// --- BOTÃO REVIVER (CORRIGIDO) ---
-window.voltarVidaUm = function() {
-    // 1. Cancela salvamentos pendentes das bolinhas (evita "voltar no tempo")
-    if (dsSaveTimer) {
-        clearTimeout(dsSaveTimer);
-        dsSaveTimer = null;
-    }
-
-    // 2. Define estado local limpo
-    state.vidaAtual = 1;
-    // Reseta bolinhas para tudo falso (limpo)
-    state.deathSaves = { 
-        successes: [false, false, false], 
-        failures: [false, false, false] 
-    };
-    
-    // 3. Atualiza a tela IMEDIATAMENTE (Esconde painel de morte, mostra barra de vida)
-    // Chamamos a função principal de atualização de UI
-    atualizarBarraUI('vida', 1, state.vidaTotalCalculada);
-    
-    // 4. Salva imediatamente no banco
-    saveStateToServer();
-};
-
-// --- CLIQUE INDEPENDENTE (CORRIGIDO PARA NÃO TRAVAR) ---
-window.toggleDeathSave = function(type, idx) {
-    // 1. Segurança: Se não existir ou estiver corrompido, cria estrutura nova
-    if (!state.deathSaves) state.deathSaves = { successes: [false,false,false], failures: [false,false,false] };
-    
-    // Se por acaso ainda for número (migração falhou), converte agora forçadamente
-    if (!Array.isArray(state.deathSaves[type])) {
-        state.deathSaves[type] = [false, false, false];
-    }
-
-    // 2. Inverte o valor do índice clicado (True <-> False)
-    state.deathSaves[type][idx] = !state.deathSaves[type][idx];
-
-    // 3. Atualiza visualmente NA HORA
-    atualizarBolinhasVisualmente();
-
-    // 4. Debounce (Espera você parar de clicar para salvar)
-    if (dsSaveTimer) clearTimeout(dsSaveTimer);
-    dsSaveTimer = setTimeout(() => {
-        saveStateToServer();
-    }, 500);
-};
-
-// --- ATUALIZADOR VISUAL (Auxiliar) ---
-function atualizarBolinhasVisualmente() {
-    if (!state.deathSaves) return;
-
-    const sArr = Array.isArray(state.deathSaves.successes) ? state.deathSaves.successes : [false,false,false];
-    const fArr = Array.isArray(state.deathSaves.failures) ? state.deathSaves.failures : [false,false,false];
-
-    for(let i=0; i<3; i++) {
-        const elS = document.getElementById(`btn-ds-s-${i}`);
-        const elF = document.getElementById(`btn-ds-f-${i}`);
-
-        if (elS) {
-            if (sArr[i]) elS.classList.add('active');
-            else elS.classList.remove('active');
-        }
-        if (elF) {
-            if (fArr[i]) elF.classList.add('active');
-            else elF.classList.remove('active');
-        }
-    }
-}
-
-
-
-/* =============================================================
-   6. CLIQUE INDEPENDENTE + DEBOUNCE (SEM BUG DE VOLTAR NO TEMPO)
-============================================================= */
-window.toggleDeathSave = function(type, idx) {
-    if (!state.deathSaves) state.deathSaves = { successes: [false,false,false], failures: [false,false,false] };
-    if (!Array.isArray(state.deathSaves[type])) state.deathSaves[type] = [false, false, false];
-
-    // Lógica Independente: Apenas inverte o índice clicado
-    // Não importa a ordem, cada bolinha é um switch
-    state.deathSaves[type][idx] = !state.deathSaves[type][idx];
-
-    // Atualiza o visual NA HORA (feedback instantâneo)
-    atualizarBolinhasVisualmente();
-
-    // DEBOUNCE: Espera 500ms sem cliques para enviar ao servidor
-    // Isso resolve o problema de enviar muitos requests e bugar o portrait
-    if (dsSaveTimer) clearTimeout(dsSaveTimer);
-    
-    dsSaveTimer = setTimeout(() => {
-        saveStateToServer(); // Envia o estado completo final
-    }, 500);
-};
-
-
-
-
-
-
-// --- LÓGICA DE DEATH SAVES (COM DEBOUNCE PARA NÃO TRAVAR O PORTRAIT) ---
-
-function atualizarBolinhasDS() {
-    const s = state.deathSaves.successes || 0;
-    const f = state.deathSaves.failures || 0;
-
-    // Atualiza Sucessos
-    document.querySelectorAll('.ds-circle.success').forEach((el, index) => {
-        if (index < s) el.classList.add('active');
-        else el.classList.remove('active');
-    });
-
-    // Atualiza Falhas
-    document.querySelectorAll('.ds-circle.failure').forEach((el, index) => {
-        if (index < f) el.classList.add('active');
-        else el.classList.remove('active');
-    });
-}
-
-
-
-
 
 function atualizarMarcosEXP() {
     const nivelTotal = Object.values(state.niveisClasses).reduce((a, b) => a + b, 0) || 1;
@@ -1333,27 +925,18 @@ function atualizarFocoClasseRotativo() {
     if (ativas.length > 1) rotateInterval = setInterval(mudar, 5000);
 }
 
-// ATUALIZAÇÃO DA INICIATIVA (AGORA CORRIGIDA)
 function atualizarIniciativaTotal() {
     const dexScore = state.atributos?.n2 || 10;
     const dexMod = Math.floor((dexScore - 10) / 2);
-    // Lê diretamente do estado, garantindo que seja número
     const bonus = parseInt(state.iniciativaBonus) || 0;
-
     const total = dexMod + bonus;
     const sinal = total >= 0 ? "+" : "";
-
     const elIni = document.getElementById('iniciativaValor');
     if (elIni) elIni.textContent = `${sinal}${total}`;
 }
 
-/* =============================================================
-   ATUALIZAÇÃO DE CA (COM ESTRUTURA HTML ALINHADA E CLASSE EXTRA)
-============================================================= */
 function atualizarAC() {
-    // 1. Verificações de Segurança
     if (!state || !state.atributos) return;
-
     const getMod = (n) => Math.floor((parseInt(state.atributos?.[n] || 10) - 10) / 2);
     const modDex = getMod('n2');
     const modCon = getMod('n1');
@@ -1361,59 +944,49 @@ function atualizarAC() {
 
     const inventario = state.inventory || [];
     const habilidades = state.abilities || [];
-
-    // 2. Identifica Equipamento
     const armadura = inventario.find(i => i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'armadura');
     const escudo = inventario.find(i => i.equip && (i.type === 'Proteção' || i.type === 'protecao') && (i.tipoItem || '').toLowerCase() === 'escudo');
-    
-    // 3. Identifica Habilidades de Classe
     const barbDef = habilidades.some(a => a.active && a.title.toLowerCase().includes("bárbaro") && a.title.toLowerCase().includes("defesa"));
     const monkDef = habilidades.some(a => a.active && a.title.toLowerCase().includes("monge") && a.title.toLowerCase().includes("defesa"));
 
-    // Variáveis de Cálculo Padrão
     let valorBase = 10;
-    let valorAttr1 = modDex; 
+    let valorAttr1 = modDex;
     let labelAttr1 = "DES";
-    let valorAttr2 = 0;      
+    let valorAttr2 = 0;
     let labelAttr2 = "";
     let labelBase = "BASE";
-    
-    // Variáveis Visuais
     let tipoArmaduraVisual = "SEM ARMADURA";
-    let classeCss = "nenhuma"; 
+    let classeCss = "nenhuma";
 
-    // --- LÓGICA DE DECISÃO DA FÓRMULA ---
     if (armadura) {
         let baseArmor = parseInt(armadura.defense) || 10;
-        if (baseArmor < 5) baseArmor = 10 + baseArmor; 
-        
+        if (baseArmor < 5) baseArmor = 10 + baseArmor;
         valorBase = baseArmor;
         labelBase = "ARMADURA";
         const prof = (armadura.proficiency || '').toLowerCase();
 
         if (prof.includes('pesada')) {
-            valorAttr1 = null; // Remove atributo 1
+            valorAttr1 = null;
             tipoArmaduraVisual = "PESADA";
             classeCss = "pesado";
-        } 
+        }
         else if (prof.includes('media') || prof.includes('média')) {
             valorAttr1 = Math.min(modDex, 2);
             tipoArmaduraVisual = "MÉDIA";
             classeCss = "media";
-        } 
+        }
         else {
             tipoArmaduraVisual = "LEVE";
             classeCss = "leve";
         }
-    } 
+    }
     else {
-        // Sem Armadura
         if (barbDef) {
             valorAttr2 = modCon;
             labelAttr2 = "CON";
             tipoArmaduraVisual = "DEF. BÁRBARO";
             classeCss = "barbaro";
-        } 
+        }
         else if (monkDef) {
             if (escudo) {
                 tipoArmaduraVisual = "SEM ARMADURA";
@@ -1424,39 +997,30 @@ function atualizarAC() {
                 tipoArmaduraVisual = "DEF. MONGE";
                 classeCss = "monge";
             }
-        } 
+        }
         else {
             tipoArmaduraVisual = "SEM ARMADURA";
             classeCss = "nenhuma";
         }
     }
 
-    // --- CÁLCULO DE BÔNUS ---
-    
-    // Automáticos (Escudo + Itens + Habilidades)
     let bonusAuto = 0;
     if (escudo) bonusAuto += (parseInt(escudo.defense) || 2);
-    
     inventario.forEach(i => {
         if (i.equip && i.type === 'Geral' && i.defenseBonus) {
             bonusAuto += parseInt(i.defenseBonus) || 0;
         }
     });
-    
     habilidades.forEach(hab => {
         if (hab.active && hab.defenseBonus) {
             bonusAuto += (parseInt(hab.defenseBonus.replace(/[^0-9-]/g, '')) || 0);
         }
     });
 
-    // Manual (Editável)
     if (state.acOutros === undefined) state.acOutros = 0;
     let bonusManual = parseInt(state.acOutros) || 0;
-
-    // Total
     const acFinal = valorBase + (valorAttr1 !== null ? valorAttr1 : 0) + valorAttr2 + bonusAuto + bonusManual;
 
-    // --- ATUALIZAÇÃO DO DOM ---
     const elValor = document.getElementById('armaduraValor');
     if (elValor) elValor.textContent = acFinal;
 
@@ -1466,11 +1030,8 @@ function atualizarAC() {
         elTextoTipo.className = 'armadura-tag ' + classeCss;
     }
 
-    // --- MONTAGEM DA FÓRMULA HTML ---
     const formulaContainer = document.querySelector('.inline-formula');
-    
     if (formulaContainer) {
-        // Estrutura Padronizada: Número -> Divisor -> Texto
         const createBlock = (val, lbl) => `
             <div class="zero-pair">
                 <span class="zero-num">${val}</span>
@@ -1478,7 +1039,6 @@ function atualizarAC() {
                 <span class="zero-label">${lbl}</span>
             </div>
         `;
-        
         const createInputBlock = (val, lbl) => `
             <div class="zero-pair">
                 <input type="number" class="zero-input" value="${val}" onchange="window.updateACManual(this.value)" onclick="this.select()">
@@ -1486,102 +1046,63 @@ function atualizarAC() {
                 <span class="zero-label">${lbl}</span>
             </div>
         `;
-
-        // Sinais de Soma
-        const plusSign = `<span class="formula-plus">+</span>`; // Normal
-        const plusSignExtra = `<span class="formula-plus plus-extra">+</span>`; // Especial para o Extra
-
+        const plusSign = `<span class="formula-plus">+</span>`;
+        const plusSignExtra = `<span class="formula-plus plus-extra">+</span>`;
         let htmlFormula = ``;
 
-        // 1. Base
         htmlFormula += createBlock(valorBase, labelBase);
-
-        // 2. Atributo 1 (DEX)
         if (valorAttr1 !== null) {
             htmlFormula += plusSign;
             htmlFormula += createBlock(valorAttr1 >= 0 ? valorAttr1 : valorAttr1, labelAttr1);
         }
-
-        // 3. Atributo 2 (CON/SAB)
         if (valorAttr2 !== 0) {
             htmlFormula += plusSign;
             htmlFormula += createBlock(valorAttr2, labelAttr2);
         }
-
-        // 4. Bônus Automáticos (Escudo/Itens)
         if (bonusAuto !== 0) {
             htmlFormula += plusSign;
             htmlFormula += createBlock(bonusAuto, "ITENS");
         }
-
-        // 5. Bônus Manual (EXTRA) - AQUI USAMOS O SINAL ESPECIAL
         htmlFormula += plusSignExtra;
         htmlFormula += createInputBlock(bonusManual, "EXTRA");
-
         formulaContainer.innerHTML = htmlFormula;
     }
 }
 
-/* =============================================================
-   FUNÇÃO AUXILIAR: SALVAR AC EXTRA (MANUAL)
-============================================================= */
-window.updateACManual = function(val) {
+window.updateACManual = function (val) {
     state.acOutros = parseInt(val) || 0;
-    saveStateToServer(); 
-    atualizarAC();       
+    saveStateToServer();
+    atualizarAC();
 }
 
-/* =============================================================
-   ATUALIZAÇÃO DE DESLOCAMENTO (SOMA HABILIDADES)
-============================================================= */
 function atualizarDeslocamento() {
-    // 1. Pega o valor base (digitado no input)
-    // Nota: Assumimos que o valor no input 'metros' é a base racial + ajustes manuais
-    // Se quiser somar automático, precisamos pegar o valor 'cru' do state e somar os bônus visualmente.
-    
-    let baseMetros = parseFloat(state.metros) || 0; 
+    let baseMetros = parseFloat(state.metros) || 0;
     let bonusMetros = 0;
-
-    // 2. Itera Habilidades Ativas
     if (state.abilities) {
         state.abilities.forEach(hab => {
             if (hab.active && hab.speedBonus) {
-                // Tenta limpar strings como "+3m" ou "1.5"
-                // Substitui virgula por ponto para float
                 let clean = hab.speedBonus.replace(',', '.').replace(/[^0-9.-]/g, '');
                 let val = parseFloat(clean);
-                
-                // Se o valor for muito pequeno (ex: 1.5), é metros. Se for 5 ou 10, pode ser pés? 
-                // Vamos assumir que o usuário digita em METROS conforme o padrão da ficha.
                 if (!isNaN(val)) {
                     bonusMetros += val;
                 }
             }
         });
     }
-
-    // 3. Atualiza o Input VISUALMENTE (sem salvar no state para não somar infinitamente)
     const elMetros = document.getElementById('metros');
     const elQuadrados = document.getElementById('quadrados');
-
     const totalMetros = baseMetros + bonusMetros;
     const totalQuadrados = totalMetros / 1.5;
 
     if (elMetros) {
-        // Mostra o total. Se tiver bônus, muda a cor para indicar buff
-        elMetros.value = totalMetros; 
-        if (bonusMetros > 0) elMetros.style.color = "#4fc3f7"; // Azul claro para indicar buff
+        elMetros.value = totalMetros;
+        if (bonusMetros > 0) elMetros.style.color = "#4fc3f7";
         else elMetros.style.color = "#fff";
     }
-    
     if (elQuadrados) {
         elQuadrados.value = totalQuadrados.toFixed(1);
     }
 }
-
-// ======================================
-// 8. Função Mestre e Listeners
-// ======================================
 
 function atualizarTudoVisual() {
     atualizarFocoClasseRotativo();
@@ -1589,26 +1110,20 @@ function atualizarTudoVisual() {
     atualizarVidaCalculada();
     atualizarProficiencia();
     atualizarIniciativaTotal();
-    atualizarAC(); 
+    atualizarAC();
     atualizarPassiva();
-    atualizarDeslocamento(); 
-    
+    atualizarDeslocamento();
     const nivelTotal = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0);
     const elNivel = document.getElementById('nivelFoco');
     if (elNivel) elNivel.textContent = nivelTotal;
 }
 
-/* =============================================================
-   CORREÇÃO 1: vincularEventosInputs (AC Outros e Iniciativa)
-============================================================= */
 function vincularEventosInputs() {
     const addEnterBlur = (el, stateKey) => {
         if (!el) return;
-        // Só define o valor se o elemento não estiver focado para evitar pular cursor
         if (document.activeElement !== el) {
             el.value = state[stateKey] || "";
         }
-        
         el.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') { e.preventDefault(); state[stateKey] = el.value; saveStateToServer(); el.blur(); }
         });
@@ -1631,8 +1146,7 @@ function vincularEventosInputs() {
         marcoInput.oninput = (e) => { state.marco = parseInt(e.target.value) || 0; atualizarMarcosEXP(); saveStateToServer(); };
         marcoInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') marcoInput.blur(); });
     }
-    
-    // Deslocamento
+
     const metrosInput = document.getElementById('metros');
     const quadradosInput = document.getElementById('quadrados');
     if (metrosInput && quadradosInput) {
@@ -1642,36 +1156,30 @@ function vincularEventosInputs() {
         quadradosInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') quadradosInput.blur(); });
     }
 
-    // Iniciativa Bônus
     const iniBonus = document.getElementById('iniciativaBonus');
     if (iniBonus) {
         iniBonus.oninput = (e) => {
             state.iniciativaBonus = parseInt(e.target.value) || 0;
             atualizarIniciativaTotal();
-            // saveStateToServer(); // Opcional: Salvar no blur para melhor performance
         };
         iniBonus.onblur = () => saveStateToServer();
         iniBonus.addEventListener('keydown', (e) => { if (e.key === 'Enter') iniBonus.blur(); });
     }
 
-    // --- CORREÇÃO AQUI: AC Outros (Armadura Bônus) ---
-    // Usava textContent (errado para input), agora usa .value
     const outrosInput = document.getElementById('ac-outros');
     if (outrosInput) {
-        outrosInput.value = state.acOutros || 0; // Garante valor inicial
-        
-        outrosInput.oninput = () => { 
-            state.acOutros = parseInt(outrosInput.value) || 0; 
-            atualizarAC(); 
+        outrosInput.value = state.acOutros || 0;
+        outrosInput.oninput = () => {
+            state.acOutros = parseInt(outrosInput.value) || 0;
+            atualizarAC();
         };
-        outrosInput.onblur = () => { 
-            state.acOutros = parseInt(outrosInput.value) || 0; 
-            saveStateToServer(); 
+        outrosInput.onblur = () => {
+            state.acOutros = parseInt(outrosInput.value) || 0;
+            saveStateToServer();
         };
         outrosInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); outrosInput.blur(); } });
     }
 
-    // Inputs de Vida (Digitação direta)
     ['vida-atual', 'vida-temp-atual', 'dano-necro-atual'].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
@@ -1687,23 +1195,14 @@ function vincularEventosInputs() {
     });
 }
 
-/* =============================================================
-   CORREÇÃO 2: Botões de Vida (Sem limitar a 100)
-============================================================= */
 document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
     if (!btn.closest('.vida-bar') && !btn.closest('.barra-secundaria')) return;
-    
+
     btn.onclick = () => {
         let key = btn.closest('.vida-container') ? "vidaAtual" : (btn.closest('.barra-secundaria:nth-child(1)') ? "vidaTempAtual" : "danoNecroAtual");
-        
         let step = btn.classList.contains('menos5') ? -5 : (btn.classList.contains('menos1') ? -1 : (btn.classList.contains('mais1') ? 1 : 5));
-        
-        // CORREÇÃO: Se for vida normal, usa o máximo calculado.
-        // Se for Vida Temp ou Necrótico, usa 9999 (infinito prático) para não travar em 100.
         let max = key === 'vidaAtual' ? parseInt(document.getElementById('vida-total').textContent) : 9999;
-        
         state[key] = Math.max(0, Math.min(max, (parseInt(state[key]) || 0) + step));
-        
         atualizarVidaCalculada();
         saveStateToServer();
     };
@@ -1711,5 +1210,3 @@ document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
 
 document.getElementById('inspiraLeft').onclick = () => { state.inspiracao = Math.max(0, (parseInt(state.inspiracao) || 0) - 1); document.getElementById('inspiraValor').textContent = state.inspiracao; saveStateToServer(); };
 document.getElementById('inspiraRight').onclick = () => { state.inspiracao = (parseInt(state.inspiracao) || 0) + 1; document.getElementById('inspiraValor').textContent = state.inspiracao; saveStateToServer(); };
-
-
