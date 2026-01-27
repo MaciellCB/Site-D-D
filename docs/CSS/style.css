@@ -76,38 +76,6 @@ header {
   flex-wrap: wrap; /* Permite quebra em telas menores */
 }
 
-/* --- Colunas --- */
-
-/* Esquerda (Status e Info) */
-.lado-esquerdo {
-  flex: 2 1 420px;
-  min-width: 400px;
-  background-color: #121212;
-  border-radius: 10px;
-  padding: 15px;
-  margin: 0;
-}
-
-/* Centro (Perícias e Hex) */
-.lado-centro {
-  flex: 1 1 250px;
-  min-width: 240px;
-  background-color: #121212;
-  border-radius: 10px;
-  padding: 8px;
-  overflow: hidden; /* Corta conteúdo vazado */
-  margin: 0;
-}
-
-/* Direita (Inventário e Magias) */
-.lado-direito {
-  flex: 1.5 1 auto; /* Peso maior que o centro */
-  min-width: 350px;
-  background-color: #121212;
-  border-radius: 10px;
-  padding: 15px;
-  margin: 0;
-}
 
 /* Esconde navbar mobile no desktop */
 #mobile-navbar {
