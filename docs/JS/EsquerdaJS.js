@@ -343,7 +343,7 @@ window.realizarDescansoLongo = function() {
 
 /* =============================================================
    SISTEMA DE MULTI-SELECT (CORRIGIDO: NÃO FECHA AO CLICAR)
-   ============================================================= */
+============================================================= */
 function renderMultiSelect(elementId, optionsList, currentSelection, stateKey) {
     const container = document.getElementById(elementId);
     if (!container) return;
