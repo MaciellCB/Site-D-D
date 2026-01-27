@@ -1,6 +1,6 @@
 /* =============================================================
    LÓGICA DA ESQUERDA (ATRIBUTOS, VIDA, XP, CLASSES, CA E STATUS)
-   ARQUIVO: EsquerdaJS.js (Versão Corrigida: Death Saves & Reviver)
+   ARQUIVO: EsquerdaJS.js (Versão Blindada Contra Bugs de Save)
 ============================================================= */
 
 // ======================================
@@ -77,8 +77,8 @@ let rotateInterval = null;
 const numerosHex = Array.from(document.querySelectorAll('.hexagrama .num'));
 const hexOverlay = document.querySelector('.hex-overlay');
 
-// TIMER GLOBAL DE DEATH SAVE (IMPORTANTE PARA EVITAR BUGS)
-var dsSaveTimer = null; 
+// VARIÁVEL CRÍTICA PARA CORRIGIR O BUG DE VOLTAR NO TEMPO
+let dsSaveTimer = null; 
 
 // ======================================
 // 2. Inicialização e Listeners
@@ -256,12 +256,14 @@ function calcularModificador(n) { return Math.floor((parseInt(n, 10) - 10) / 2);
 function formatMod(m) { return m >= 0 ? `+${m}` : m; }
 
 // ======================================
-// 5. Classes e Dados de Vida
+// 5. Classes, Dados de Vida e Painéis
 // ======================================
 
+/* --- GERENCIAMENTO DE PAINÉIS ARRASTÁVEIS --- */
 window.tornarPainelArrastavel = function(elemento) {
     const header = elemento.querySelector('.painel-header');
     if (!header) return;
+
     let isDragging = false;
     let startX, startY, startLeft, startTop;
 
@@ -309,6 +311,7 @@ window.tornarPainelArrastavel = function(elemento) {
     header.addEventListener('mousedown', onMouseDown);
 };
 
+/* --- PAINEL DE DADOS DE VIDA (DESCANSOS) --- */
 const btnAbrirDV = document.getElementById('btn-abrir-dv');
 if (btnAbrirDV) {
     btnAbrirDV.addEventListener('click', (e) => {
@@ -394,6 +397,7 @@ window.usarDadoVida = function(classKey, dadoTipo) {
 
     saveStateToServer();
     atualizarTudoVisual(); 
+    
     const container = document.getElementById('listaDadosVida');
     if(container) renderizarPainelDadosVida(container);
 
@@ -415,7 +419,9 @@ window.usarDadoVida = function(classKey, dadoTipo) {
 
 window.realizarDescansoLongo = function() {
     state.vidaAtual = state.vidaTotalCalculada;
+    // Reseta death saves no descanso longo por segurança
     state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
+    
     const ordem = state.ordemClasses || Object.keys(state.niveisClasses);
     ordem.forEach(key => {
         const nivel = parseInt(state.niveisClasses[key]) || 0;
@@ -425,6 +431,7 @@ window.realizarDescansoLongo = function() {
             state.dadosVidaGastos[key] = Math.max(0, gastos - recuperar);
         }
     });
+
     saveStateToServer();
     atualizarTudoVisual();
     const container = document.getElementById('listaDadosVida');
@@ -434,12 +441,14 @@ window.realizarDescansoLongo = function() {
     }
 };
 
+/* --- PAINEL DE CLASSES (GERAL) --- */
 const elClasseFocus = document.getElementById('classeFocus');
 const painelClasses = document.getElementById('painelClasses');
 
 window.abrirPainelClasses = function(elementoAlvo) {
     const painelClasses = document.getElementById('painelClasses');
     const lista = document.getElementById('listaClasses');
+    
     if (!painelClasses || !lista) return;
 
     lista.innerHTML = '';
@@ -505,6 +514,7 @@ window.salvarNivelClasse = (key, val) => {
     }, 10);
 };
 
+/* --- DADOS DE VIDA (HP MÁXIMO CALCULADO) --- */
 const btnVida = document.getElementById('btnVida');
 if (btnVida) {
     btnVida.onclick = () => {
@@ -575,6 +585,7 @@ function atualizarVidaCalculada() {
     const nivelTotal = Object.values(state.niveisClasses || {}).reduce((a, b) => a + (parseInt(b) || 0), 0);
     let vidaMax = somaDados + (modCon * nivelTotal);
     if (vidaMax < 1) vidaMax = 1;
+    
     state.vidaTotalCalculada = vidaMax; 
     const elVidaTotal = document.getElementById('vida-total');
     if (elVidaTotal) elVidaTotal.textContent = vidaMax;
@@ -590,58 +601,47 @@ function atualizarVidaCalculada() {
 
 // FUNÇÃO ROBUSTA PARA CLIQUE NAS BOLINHAS
 window.toggleDeathSave = function(type, idx) {
-    // 1. INICIALIZAÇÃO FORÇADA: Se o array não existir, cria agora.
+    // 1. Garantia de Estrutura
     if (!state.deathSaves) state.deathSaves = { successes: [false,false,false], failures: [false,false,false] };
     if (!Array.isArray(state.deathSaves[type])) state.deathSaves[type] = [false, false, false];
 
-    // 2. ALTERNA O VALOR
+    // 2. Alterna o valor lógico
     state.deathSaves[type][idx] = !state.deathSaves[type][idx];
 
-    // 3. ATUALIZA O VISUAL (NA HORA)
-    // Isso garante que a bolinha acenda/apague instantaneamente para o usuário
+    // 3. ATUALIZA VISUALMENTE IMEDIATAMENTE (Para o usuário ver que clicou)
     atualizarBolinhasVisualmente();
 
-    // 4. AGENDAMENTO DE SALVAMENTO (DEBOUNCE)
-    // Limpa qualquer timer anterior para não salvar "estados velhos"
+    // 4. Salva no servidor com pequeno atraso (debounce) e timer global
     if (dsSaveTimer) clearTimeout(dsSaveTimer);
-
-    // Cria um novo timer para salvar daqui a 500ms
+    
+    // IMPORTANTE: Só agenda o save se a vida ainda for <= 0. 
+    // Se o usuário curou nesse meio tempo, o timer será cancelado pelas outras funções.
     dsSaveTimer = setTimeout(() => {
-        // SEGURANÇA FINAL: Só salva se a vida ainda for <= 0.
-        // Se o jogador curou nesse meio tempo, o save é ignorado para não sobrescrever a cura.
         if ((parseInt(state.vidaAtual) || 0) <= 0) {
             saveStateToServer();
         }
     }, 500);
 };
 
-// FUNÇÃO REVIVER (AGORA BLINDADA)
+// FUNÇÃO REVIVER (CORRIGIDA: Mata o timer anterior)
 window.voltarVidaUm = function() {
-    // 1. MATA O TIMER! 
-    // Isso impede que um clique anterior numa bolinha sobrescreva esta ação.
+    // 1. CANCELA qualquer salvamento de bolinha que estivesse pendente
     if (dsSaveTimer) {
         clearTimeout(dsSaveTimer);
         dsSaveTimer = null;
     }
 
-    // 2. DEFINE O ESTADO LIMPO
+    // 2. Define vida e limpa bolinhas
     state.vidaAtual = 1;
-    // Reseta completamente as bolinhas
     state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
     
-    // 3. FORÇA A ATUALIZAÇÃO VISUAL GLOBAL
-    // Isso vai esconder o painel de morte e mostrar a barra de vida
-    atualizarBarraUI('vida', 1, state.vidaTotalCalculada);
-
-    // 4. SALVA IMEDIATAMENTE
+    // 3. Salva IMEDIATAMENTE e força UI
     saveStateToServer();
+    atualizarTudoVisual(); // Isso chama atualizarBarraUI, que vai esconder o painel de morte
 };
 
-// ATUALIZADOR VISUAL DAS BOLINHAS
 function atualizarBolinhasVisualmente() {
     if (!state.deathSaves) return;
-    
-    // Garante que sArr e fArr sejam arrays válidos antes de iterar
     const sArr = Array.isArray(state.deathSaves.successes) ? state.deathSaves.successes : [false,false,false];
     const fArr = Array.isArray(state.deathSaves.failures) ? state.deathSaves.failures : [false,false,false];
 
@@ -673,13 +673,14 @@ function atualizarBarraUI(prefixo, atual, total) {
         return;
     }
 
+    // --- LOGICA DE VIDA / MORTE ---
     const valAtual = parseInt(atual) || 0;
     const valTotal = parseInt(total) || 1;
     
     const containerBarra = document.querySelector('.vida-bar'); 
     let containerDS = document.getElementById('death-saves-ui'); 
 
-    // GERA O HTML DO PAINEL DE MORTE SE NÃO EXISTIR
+    // CRIA HTML SE NÃO EXISTIR
     if (!containerDS && containerBarra) {
         containerDS = document.createElement('div');
         containerDS.id = 'death-saves-ui';
@@ -710,16 +711,14 @@ function atualizarBarraUI(prefixo, atual, total) {
         containerBarra.parentNode.insertBefore(containerDS, containerBarra.nextSibling);
     }
 
-    // LÓGICA DE EXIBIÇÃO: VIDA VS MORTE
+    // ALTERNA VISIBILIDADE
     if (valAtual <= 0) {
-        // MODO MORTE
         if (containerBarra) containerBarra.style.display = 'none';
         if (containerDS) {
             containerDS.style.display = 'flex';
-            atualizarBolinhasVisualmente(); // Garante que as bolinhas apareçam corretas ao abrir
+            atualizarBolinhasVisualmente(); 
         }
     } else {
-        // MODO VIVO
         if (containerBarra) containerBarra.style.display = 'block';
         if (containerDS) containerDS.style.display = 'none';
 
@@ -775,14 +774,16 @@ function inicializarDadosEsquerda() {
     if (!state.dadosVidaGastos) state.dadosVidaGastos = {};
 
     // INICIALIZAÇÃO SEGURA DAS SALVAGUARDAS DE MORTE
-    if (!state.deathSaves) {
-        state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
-    } else {
-        // Recupera o que existe, ou cria novo se estiver quebrado
-        const oldS = Array.isArray(state.deathSaves.successes) ? state.deathSaves.successes : [false, false, false];
-        const oldF = Array.isArray(state.deathSaves.failures) ? state.deathSaves.failures : [false, false, false];
-        
-        state.deathSaves = { successes: oldS, failures: oldF };
+    // Se não existir o objeto OU se faltarem as chaves internas
+    if (!state.deathSaves || !state.deathSaves.successes || !state.deathSaves.failures) {
+        // Preserva o que já existe, cria o que falta
+        const oldS = state.deathSaves ? state.deathSaves.successes : null;
+        const oldF = state.deathSaves ? state.deathSaves.failures : null;
+
+        state.deathSaves = { 
+            successes: Array.isArray(oldS) ? oldS : [false, false, false], 
+            failures: Array.isArray(oldF) ? oldF : [false, false, false] 
+        };
     }
 
     if (!state.fraquezasList) state.fraquezasList = [];
