@@ -31,8 +31,7 @@ input[type=number] {
   align-items: center;
   border-radius: 10px;
   
-  /* ALTERAÇÃO AQUI: De 35% para 30% */
-  width: 34%; 
+  width: 33%; 
   
   align-self: stretch;
   background-color: #121212;
