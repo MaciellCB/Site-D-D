@@ -1,6 +1,6 @@
 /* =============================================================
    LÓGICA DA ESQUERDA (ATRIBUTOS, VIDA, XP, CLASSES, CA E STATUS)
-   ARQUIVO: EsquerdaJS.js (CORREÇÃO DEFINITIVA: VOLTAR NO TEMPO)
+   ARQUIVO: EsquerdaJS.js (CORREÇÃO: BLOQUEIO DE ECO NO DEATH SAVE)
 ============================================================= */
 
 // ======================================
@@ -78,9 +78,8 @@ const numerosHex = Array.from(document.querySelectorAll('.hexagrama .num'));
 const hexOverlay = document.querySelector('.hex-overlay');
 
 // --- CONTROLE DE DEATH SAVES (PARA NÃO VOLTAR NO TEMPO) ---
-var dsSaveTimer = null;   // Timer para salvar no banco
-var dsUnlockTimer = null; // Timer para liberar a atualização visual
-var dsLock = false;       // Bloqueia atualizações externas enquanto clica
+// O timer é global para que possamos verificar se ele está ativo
+var dsSaveTimer = null; 
 
 // ======================================
 // 2. Inicialização e Listeners
@@ -587,7 +586,7 @@ function atualizarVidaCalculada() {
 }
 
 // ======================================
-// 6. Death Saves e Barras de UI (CORRIGIDO + BLOQUEIO DE ECHO)
+// 6. Death Saves e Barras de UI (CORRIGIDO + BLOQUEIO DE ECO)
 // ======================================
 
 // FUNÇÃO ROBUSTA PARA CLIQUE NAS BOLINHAS
@@ -600,39 +599,33 @@ window.toggleDeathSave = function(type, idx) {
         state.deathSaves[type] = [false, false, false];
     }
 
-    // 2. ATIVA BLOQUEIO DE INTERFACE (Impede echo do servidor)
-    window.dsLock = true;
-
-    // 3. ALTERNA O VALOR LOGICAMENTE
+    // 2. ALTERNA O VALOR LOGICAMENTE
     state.deathSaves[type][idx] = !state.deathSaves[type][idx];
 
-    // 4. ATUALIZA O VISUAL NA HORA (Force = true)
+    // 3. ATUALIZA O VISUAL NA HORA (Force = true)
     // Passamos 'true' para forçar a atualização mesmo com o bloqueio ligado
     atualizarBolinhasVisualmente(true);
 
-    // 5. AGENDAMENTO DE SALVAMENTO (DEBOUNCE)
-    if (window.dsSaveTimer) clearTimeout(window.dsSaveTimer);
-    if (window.dsUnlockTimer) clearTimeout(window.dsUnlockTimer);
+    // 4. AGENDAMENTO DE SALVAMENTO (DEBOUNCE + BLOQUEIO DE UI)
+    
+    // Limpa timer anterior se você clicou rápido
+    if (dsSaveTimer) clearTimeout(dsSaveTimer);
 
-    // Salva depois de 500ms
-    window.dsSaveTimer = setTimeout(() => {
+    // Define um timer longo (800ms). Se você clicar de novo antes disso, o save anterior é cancelado.
+    // Assim, só enviamos pro servidor quando você PARAR de clicar.
+    dsSaveTimer = setTimeout(() => {
         saveStateToServer();
-    }, 500);
-
-    // Libera o bloqueio de UI depois de 1.5 segundos (tempo suficiente pro servidor responder)
-    window.dsUnlockTimer = setTimeout(() => {
-        window.dsLock = false;
-    }, 1500);
+        dsSaveTimer = null; // Libera o bloqueio
+    }, 800);
 };
 
 // FUNÇÃO REVIVER
 window.voltarVidaUm = function() {
     // Mata qualquer timer pendente para não sobrescrever
-    if (window.dsSaveTimer) { clearTimeout(window.dsSaveTimer); window.dsSaveTimer = null; }
-    if (window.dsUnlockTimer) { clearTimeout(window.dsUnlockTimer); window.dsUnlockTimer = null; }
-    
-    // Remove o bloqueio
-    window.dsLock = false;
+    if (dsSaveTimer) { 
+        clearTimeout(dsSaveTimer); 
+        dsSaveTimer = null; 
+    }
 
     state.vidaAtual = 1;
     state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
@@ -644,8 +637,11 @@ window.voltarVidaUm = function() {
 
 // ATUALIZADOR VISUAL (Com suporte a Bloqueio)
 function atualizarBolinhasVisualmente(force = false) {
-    // SE ESTIVER BLOQUEADO (usuário clicando) e NÃO for forçado, ignora atualização externa
-    if (window.dsLock && !force) return;
+    // SE O TIMER ESTIVER RODANDO (dsSaveTimer !== null), significa que o usuário
+    // está clicando ou acabou de clicar. Nesse caso, a gente IGNORA atualizações
+    // externas (vindas do servidor ou do sheet-updated) para não "voltar no tempo".
+    // A única exceção é se 'force' for true (que é quando o próprio clique chama a função).
+    if (dsSaveTimer !== null && !force) return;
 
     if (!state.deathSaves) return;
     
