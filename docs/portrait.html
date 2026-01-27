@@ -1,15 +1,22 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <title>OBS Portrait - HUD Pro</title>
     <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Roboto:wght@500;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Roboto:wght@500;900&display=swap"
+        rel="stylesheet">
     <style>
-        body, html {
+        body,
+        html {
             background-color: #00f91f;
-            margin: 0; padding: 0; overflow: hidden;
-            width: 100%; height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
             font-family: 'Roboto', sans-serif;
             display: flex;
             justify-content: center;
@@ -18,10 +25,10 @@
 
         /* Container Principal */
         .hud-wrapper {
-            position: relative; 
+            position: relative;
             display: flex;
             align-items: flex-end;
-            transform: scale(1.5); 
+            transform: scale(1.5);
             transform-origin: center center;
         }
 
@@ -39,7 +46,7 @@
             height: 100%;
             border-radius: 50%;
             border: 6px solid #1a1a1a;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
             overflow: hidden;
             background: #000;
             position: relative;
@@ -65,13 +72,13 @@
             z-index: 15;
             pointer-events: none;
         }
-        
+
         .insp-smoke {
-            position: absolute; 
-            width: 100%; 
+            position: absolute;
+            width: 100%;
             height: 100%;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(0,0,0,1) 20%, rgba(20,20,20,0.8) 50%, transparent 80%);
+            background: radial-gradient(circle, rgba(0, 0, 0, 1) 20%, rgba(20, 20, 20, 0.8) 50%, transparent 80%);
             filter: blur(4px);
             z-index: 1;
         }
@@ -105,7 +112,7 @@
             font-size: 24px;
             text-transform: uppercase;
             text-shadow: 2px 2px 4px #000;
-            background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, transparent 80%);
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0%, transparent 80%);
             padding: 4px 20px 4px 25px;
             border-radius: 4px 4px 0 0;
             display: inline-block;
@@ -118,9 +125,9 @@
             height: 50px;
             background: #0f0f0f;
             border: 4px solid #1a1a1a;
-            border-radius: 0 12px 12px 0; 
-            overflow: hidden; 
-            box-shadow: 3px 3px 10px rgba(0,0,0,0.5);
+            border-radius: 0 12px 12px 0;
+            overflow: hidden;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
             display: flex;
             align-items: center;
             padding-left: 45px;
@@ -129,7 +136,9 @@
 
         .hp-fill {
             position: absolute;
-            top: 0; left: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            bottom: 0;
             background: linear-gradient(90deg, #500000, #b30000, #ff3333);
             width: 0%;
             transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
@@ -143,7 +152,7 @@
             color: #fff;
             font-size: 28px;
             font-weight: 900;
-            text-shadow: 2px 2px 0 #000, 0 0 5px rgba(0,0,0,0.8);
+            text-shadow: 2px 2px 0 #000, 0 0 5px rgba(0, 0, 0, 0.8);
             margin-left: 10px;
         }
 
@@ -167,14 +176,33 @@
             margin-right: 2px;
         }
 
-        .mini-fill { height: 100%; width: 0%; transition: width 0.4s; position: absolute; left: 0; top: 0; }
-        .fill-temp { background: linear-gradient(90deg, #004d40, #00e5ff); }
-        .fill-necro { background: linear-gradient(90deg, #311b92, #d500f9); }
-        
-        .mini-val { 
-            position: relative; z-index: 2; color: #fff; 
-            font-size: 11px; font-weight: bold; text-align: center; 
-            display: block; line-height: 16px; text-shadow: 1px 1px 0 #000;
+        .mini-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .fill-temp {
+            background: linear-gradient(90deg, #004d40, #00e5ff);
+        }
+
+        .fill-necro {
+            background: linear-gradient(90deg, #311b92, #d500f9);
+        }
+
+        .mini-val {
+            position: relative;
+            z-index: 2;
+            color: #fff;
+            font-size: 11px;
+            font-weight: bold;
+            text-align: center;
+            display: block;
+            line-height: 16px;
+            text-shadow: 1px 1px 0 #000;
         }
 
         /* =========================================================================
@@ -182,13 +210,14 @@
            ========================================================================= */
         .dice-area {
             position: absolute;
-            left: 475px; /* Posição calculada matematicamente */
+            left: 475px;
+            /* Posição calculada matematicamente */
             bottom: 12px;
             display: flex;
-            flex-direction: row; 
-            gap: 10px; 
+            flex-direction: row;
+            gap: 10px;
             pointer-events: none;
-            z-index: 20; 
+            z-index: 20;
         }
 
         .roll-card {
@@ -196,12 +225,12 @@
             border: none;
             box-shadow: none;
             animation: popInDice 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            transform-origin: bottom center; 
+            transform-origin: bottom center;
             opacity: 0;
             transform: scale(0.5);
             display: flex;
             flex-direction: row;
-            gap: 15px; 
+            gap: 15px;
         }
 
         .roll-card.fade-out {
@@ -210,16 +239,24 @@
         }
 
         @keyframes popInDice {
-            to { opacity: 1; transform: scale(1); }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
+
         @keyframes floatUpFade {
-            to { opacity: 0; transform: translateY(-40px) scale(1.1); filter: blur(2px); }
+            to {
+                opacity: 0;
+                transform: translateY(-40px) scale(1.1);
+                filter: blur(2px);
+            }
         }
 
         .dice-result-box {
             position: relative;
-            width: 50px; 
-            height: 50px; 
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -231,38 +268,52 @@
             position: absolute;
             top: 0;
             left: 0;
-            filter: brightness(2.5); 
+            filter: brightness(2.5);
             z-index: 1;
             animation: wobble 3s ease-in-out infinite;
         }
 
         @keyframes wobble {
-            0%, 100% { transform: rotate(-3deg); }
-            50% { transform: rotate(3deg); }
+
+            0%,
+            100% {
+                transform: rotate(-3deg);
+            }
+
+            50% {
+                transform: rotate(3deg);
+            }
         }
 
         /* --- ESTILO DO NÚMERO (CORRIGIDO) --- */
         .d-val {
             position: relative;
             z-index: 2;
-            font-size: 20px; 
+            font-size: 20px;
             font-weight: 900;
             color: #fff;
             /* Sombra limpa: cria uma borda preta sólida em volta do número branco */
-            text-shadow: 
-                2px 0 0 #000, -2px 0 0 #000, 
-                0 2px 0 #000, 0 -2px 0 #000, 
+            text-shadow:
+                2px 0 0 #000, -2px 0 0 #000,
+                0 2px 0 #000, 0 -2px 0 #000,
                 1px 1px 0 #000;
             font-family: 'Roboto', sans-serif;
         }
 
         /* Cores especiais para Crítico e Falha (mantendo geometria) */
-        .d-val.crit { color: #e040fb; text-shadow: 0 0 10px #e040fb, 2px 2px 0 #000; }
-        .d-val.fumble { color: #ff3333; text-shadow: 0 0 10px #ff0000, 2px 2px 0 #000; }
-        
+        .d-val.crit {
+            color: #e040fb;
+            text-shadow: 0 0 10px #e040fb, 2px 2px 0 #000;
+        }
+
+        .d-val.fumble {
+            color: #ff3333;
+            text-shadow: 0 0 10px #ff0000, 2px 2px 0 #000;
+        }
+
         /* CORRIGIDO: Dano agora usa o mesmo estilo padrão (sem brilho branco estranho) */
-        .d-val.dmg-val { 
-            color: #fff; 
+        .d-val.dmg-val {
+            color: #fff;
             /* Herda o text-shadow padrão do .d-val */
         }
 
@@ -282,48 +333,67 @@
 
         /* ... CSS existente ... */
 
-/* --- DEATH SAVES NO PORTRAIT --- */
-.death-saves-wrapper {
-    display: none; /* Oculto por padrão */
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0; left: 0;
-    align-items: center;
-    justify-content: space-evenly;
-    background: #0f0f0f; /* Fundo igual ao da barra */
-    z-index: 10;
-}
+        /* --- DEATH SAVES NO PORTRAIT --- */
+        .death-saves-wrapper {
+            display: none;
+            /* Oculto por padrão */
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            align-items: center;
+            justify-content: space-evenly;
+            background: #0f0f0f;
+            /* Fundo igual ao da barra */
+            z-index: 10;
+        }
 
-.ds-icon {
-    width: 24px;
-    height: 24px;
-    opacity: 0.2; /* Inativo */
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
+        .ds-icon {
+            width: 24px;
+            height: 24px;
+            opacity: 0.2;
+            /* Inativo */
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
 
-/* Sucessos (Escudos/Corações) */
-.ds-icon.success-icon { fill: #4caf50; filter: drop-shadow(0 0 2px #4caf50); }
-.ds-icon.success-icon.active { opacity: 1; transform: scale(1.3); }
+        /* Sucessos (Escudos/Corações) */
+        .ds-icon.success-icon {
+            fill: #4caf50;
+            filter: drop-shadow(0 0 2px #4caf50);
+        }
 
-/* Falhas (Caveiras) */
-.ds-icon.failure-icon { fill: #f44336; filter: drop-shadow(0 0 2px #f44336); }
-.ds-icon.failure-icon.active { opacity: 1; transform: scale(1.3); }
+        .ds-icon.success-icon.active {
+            opacity: 1;
+            transform: scale(1.3);
+        }
 
-/* Texto de Morte */
-.death-text {
-    position: absolute;
-    font-size: 10px;
-    color: #555;
-    font-weight: bold;
-    letter-spacing: 2px;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-}
+        /* Falhas (Caveiras) */
+        .ds-icon.failure-icon {
+            fill: #f44336;
+            filter: drop-shadow(0 0 2px #f44336);
+        }
+
+        .ds-icon.failure-icon.active {
+            opacity: 1;
+            transform: scale(1.3);
+        }
+
+        /* Texto de Morte */
+        .death-text {
+            position: absolute;
+            font-size: 10px;
+            color: #555;
+            font-weight: bold;
+            letter-spacing: 2px;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
     </style>
 </head>
+
 <body>
 
     <div class="hud-wrapper">
@@ -339,29 +409,47 @@
 
         <div class="stats-container">
             <div id="display-nome" class="char-name">CARREGANDO...</div>
-            
-           <div class="health-bar-frame">
-    
-    <div id="hp-bar" class="hp-fill"></div>
-    <div id="hp-text-container" class="hp-text">
-        <span id="hp-atual">?</span> / <span id="hp-total">?</span>
-    </div>
 
-    <div id="death-saves-hud" class="death-saves-wrapper">
-        <div class="death-text">DEATH SAVES</div>
-        
-        <svg class="ds-icon success-icon" id="ds-s-1" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-        <svg class="ds-icon success-icon" id="ds-s-2" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-        <svg class="ds-icon success-icon" id="ds-s-3" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            <div class="health-bar-frame">
 
-        <div style="width:1px; height:20px; background:#333;"></div>
+                <div id="hp-bar" class="hp-fill"></div>
+                <div id="hp-text-container" class="hp-text">
+                    <span id="hp-atual">?</span> / <span id="hp-total">?</span>
+                </div>
 
-        <svg class="ds-icon failure-icon" id="ds-f-1" viewBox="0 0 24 24"><path d="M12 2C7 2 3 6 3 11c0 2.5 1.5 4.5 4 5.5V20c0 1 1 2 2 2h6c1 0 2-1 2-2v-3.5c2.5-1 4-3 4-5.5 0-5-4-9-9-9zM10 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm4 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
-        <svg class="ds-icon failure-icon" id="ds-f-2" viewBox="0 0 24 24"><path d="M12 2C7 2 3 6 3 11c0 2.5 1.5 4.5 4 5.5V20c0 1 1 2 2 2h6c1 0 2-1 2-2v-3.5c2.5-1 4-3 4-5.5 0-5-4-9-9-9zM10 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm4 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
-        <svg class="ds-icon failure-icon" id="ds-f-3" viewBox="0 0 24 24"><path d="M12 2C7 2 3 6 3 11c0 2.5 1.5 4.5 4 5.5V20c0 1 1 2 2 2h6c1 0 2-1 2-2v-3.5c2.5-1 4-3 4-5.5 0-5-4-9-9-9zM10 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm4 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
-    </div>
+                <div id="death-saves-hud" class="death-saves-wrapper">
+                    <div class="death-text">DEATH SAVES</div>
 
-</div>
+                    <svg class="ds-icon success-icon" id="ds-s-1" viewBox="0 0 24 24">
+                        <path
+                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                    <svg class="ds-icon success-icon" id="ds-s-2" viewBox="0 0 24 24">
+                        <path
+                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                    <svg class="ds-icon success-icon" id="ds-s-3" viewBox="0 0 24 24">
+                        <path
+                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+
+                    <div style="width:1px; height:20px; background:#333;"></div>
+
+                    <svg class="ds-icon failure-icon" id="ds-f-1" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C7 2 3 6 3 11c0 2.5 1.5 4.5 4 5.5V20c0 1 1 2 2 2h6c1 0 2-1 2-2v-3.5c2.5-1 4-3 4-5.5 0-5-4-9-9-9zM10 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm4 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" />
+                    </svg>
+                    <svg class="ds-icon failure-icon" id="ds-f-2" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C7 2 3 6 3 11c0 2.5 1.5 4.5 4 5.5V20c0 1 1 2 2 2h6c1 0 2-1 2-2v-3.5c2.5-1 4-3 4-5.5 0-5-4-9-9-9zM10 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm4 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" />
+                    </svg>
+                    <svg class="ds-icon failure-icon" id="ds-f-3" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C7 2 3 6 3 11c0 2.5 1.5 4.5 4 5.5V20c0 1 1 2 2 2h6c1 0 2-1 2-2v-3.5c2.5-1 4-3 4-5.5 0-5-4-9-9-9zM10 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm4 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" />
+                    </svg>
+                </div>
+
+            </div>
 
             <div class="sub-bars">
                 <div class="mini-bar">
@@ -397,50 +485,58 @@
             const imgEl = document.getElementById('img-personagem');
             imgEl.src = (data.fotoPerfil && data.fotoPerfil.length > 10) ? data.fotoPerfil : 'img/imagem-no-site/personagem.png';
 
+            const atual = parseInt(data.vidaAtual) || 0;
+            const total = parseInt(data.vidaTotalCalculada) || 1;
 
-            
-           const atual = parseInt(data.vidaAtual) || 0;
-    const total = parseInt(data.vidaTotalCalculada) || 1;
+            // Elementos da UI
+            const hpBar = document.getElementById('hp-bar');
+            const hpText = document.getElementById('hp-text-container');
+            const dsHud = document.getElementById('death-saves-hud');
 
-    // Elementos da UI
-    const hpBar = document.getElementById('hp-bar');
-    const hpText = document.getElementById('hp-text-container'); // Nota: adicione id="hp-text-container" na div do texto no HTML
-    const dsHud = document.getElementById('death-saves-hud');
+            if (atual <= 0) {
+                // --- MODO MORTE ATIVADO ---
+                hpBar.style.display = 'none';
+                if(hpText) hpText.style.display = 'none';
+                dsHud.style.display = 'flex';
 
-    if (atual <= 0) {
-        // --- MODO MORTE ATIVADO ---
-        hpBar.style.display = 'none';
-        if(hpText) hpText.style.display = 'none';
-        dsHud.style.display = 'flex';
+                // --- LÓGICA DE LEITURA (ARRAY ou NÚMERO) ---
+                const dsData = data.deathSaves || {};
+                
+                // Helper para verificar se o índice deve acender
+                const checkActive = (val, i) => {
+                    if (Array.isArray(val)) {
+                        // Novo sistema (Array): verifica o índice exato (i-1)
+                        return val[i-1] === true;
+                    } else {
+                        // Sistema antigo (Número): verifica quantidade
+                        return (parseInt(val) || 0) >= i;
+                    }
+                };
 
-        // Atualiza ícones
-        const successes = data.deathSaves ? (data.deathSaves.successes || 0) : 0;
-        const failures = data.deathSaves ? (data.deathSaves.failures || 0) : 0;
+                for(let i=1; i<=3; i++) {
+                    const elS = document.getElementById(`ds-s-${i}`);
+                    const elF = document.getElementById(`ds-f-${i}`);
+                    
+                    if(checkActive(dsData.successes, i)) elS.classList.add('active');
+                    else elS.classList.remove('active');
 
-        for(let i=1; i<=3; i++) {
-            const elS = document.getElementById(`ds-s-${i}`);
-            const elF = document.getElementById(`ds-f-${i}`);
-            
-            if(i <= successes) elS.classList.add('active');
-            else elS.classList.remove('active');
+                    if(checkActive(dsData.failures, i)) elF.classList.add('active');
+                    else elF.classList.remove('active');
+                }
 
-            if(i <= failures) elF.classList.add('active');
-            else elF.classList.remove('active');
-        }
+            } else {
+                // --- MODO VIDA NORMAL ---
+                hpBar.style.display = 'block';
+                if(hpText) hpText.style.display = 'block';
+                dsHud.style.display = 'none';
 
-    } else {
-        // --- MODO VIDA NORMAL ---
-        hpBar.style.display = 'block';
-        if(hpText) hpText.style.display = 'block'; // ou flex
-        dsHud.style.display = 'none';
+                document.getElementById('hp-atual').innerText = atual;
+                document.getElementById('hp-total').innerText = total;
+                const pct = Math.min(100, Math.max(0, (atual / total) * 100));
+                hpBar.style.width = pct + "%";
+            }
 
-        // Lógica da barra normal
-        document.getElementById('hp-atual').innerText = atual;
-        document.getElementById('hp-total').innerText = total;
-        const pct = Math.min(100, Math.max(0, (atual / total) * 100));
-        hpBar.style.width = pct + "%";
-    }
-
+            // Atualiza barras secundárias
             const temp = parseInt(data.vidaTempAtual) || 0;
             const necro = parseInt(data.danoNecroAtual) || 0;
             document.getElementById('temp-bar').style.width = Math.min(100, temp) + "%";
@@ -452,8 +548,6 @@
             const inspBadge = document.getElementById('insp-badge');
             document.getElementById('insp-val').innerText = insp;
             inspBadge.style.display = insp > 0 ? 'flex' : 'none';
-
-            
         }
 
         // --- ROLAGEM DE DADOS (VISUALIZAÇÃO LIMPA) ---
@@ -465,7 +559,7 @@
 
         function criarPopUpDado(data) {
             const area = document.getElementById('dice-area');
-            
+
             // Limpa dados anteriores para não acumular
             area.innerHTML = '';
 
@@ -474,14 +568,14 @@
 
             let conteudoHTML = '';
             // Ícone padrão do dado
-            const iconSrc = "img/imagem-no-site/fundo-dado-portrait.png"; 
+            const iconSrc = "img/imagem-no-site/fundo-dado-portrait.png";
 
             // 1. DADO DE ATAQUE (D20)
             if (data.ataque) {
                 const isCrit = data.ataque.isCrit;
                 const isFumble = data.ataque.isFumble;
                 const valClass = isCrit ? 'crit' : (isFumble ? 'fumble' : '');
-                
+
                 conteudoHTML += `
                     <div class="dice-result-box">
                         <img src="${iconSrc}" class="d-icon">
@@ -493,9 +587,9 @@
 
             // 2. DADO DE DANO (Genérico)
             if (data.dano) {
-                const isCritDmg = data.dano.isCrit; 
+                const isCritDmg = data.dano.isCrit;
                 const valClass = isCritDmg ? 'crit' : 'dmg-val';
-                
+
                 // Sem filtro de inversão, cor original (agora tratada no CSS com brightness)
                 conteudoHTML += `
                     <div class="dice-result-box">
@@ -517,17 +611,18 @@
         }
 
         async function carregarDados() {
-            if(!nomeOriginalURL) return;
+            if (!nomeOriginalURL) return;
             try {
                 const res = await fetch('https://dandd-chan.onrender.com/api/load-ficha-mestre', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ nome: nomeOriginalURL })
                 });
-                if(res.ok) atualizarInterface(await res.json());
-            } catch(e) { console.error(e); }
+                if (res.ok) atualizarInterface(await res.json());
+            } catch (e) { console.error(e); }
         }
 
         carregarDados();
     </script>
 </body>
+
 </html>
