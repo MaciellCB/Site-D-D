@@ -1,6 +1,6 @@
 /* =============================================================
    LÓGICA DA ESQUERDA (ATRIBUTOS, VIDA, XP, CLASSES, CA E STATUS)
-   ARQUIVO: EsquerdaJS.js (Versão Corrigida: Death Saves & Reviver)
+   ARQUIVO: EsquerdaJS.js (CORREÇÃO: BOLINHAS DEATH SAVES)
 ============================================================= */
 
 // ======================================
@@ -77,7 +77,7 @@ let rotateInterval = null;
 const numerosHex = Array.from(document.querySelectorAll('.hexagrama .num'));
 const hexOverlay = document.querySelector('.hex-overlay');
 
-// TIMER GLOBAL DE DEATH SAVE (IMPORTANTE PARA EVITAR BUGS)
+// TIMER GLOBAL DE DEATH SAVE
 var dsSaveTimer = null; 
 
 // ======================================
@@ -585,63 +585,54 @@ function atualizarVidaCalculada() {
 }
 
 // ======================================
-// 6. Death Saves e Barras de UI (CORRIGIDO)
+// 6. Death Saves e Barras de UI (CORRIGIDO PLURAL)
 // ======================================
 
 // FUNÇÃO ROBUSTA PARA CLIQUE NAS BOLINHAS
 window.toggleDeathSave = function(type, idx) {
-    // 1. INICIALIZAÇÃO FORÇADA: Se o array não existir, cria agora.
+    // 1. INICIALIZAÇÃO FORÇADA E CORRETA
     if (!state.deathSaves) state.deathSaves = { successes: [false,false,false], failures: [false,false,false] };
-    if (!Array.isArray(state.deathSaves[type])) state.deathSaves[type] = [false, false, false];
+    
+    // GARANTIA: Se por acaso estiver undefined, cria o array
+    if (!Array.isArray(state.deathSaves[type])) {
+        state.deathSaves[type] = [false, false, false];
+    }
 
     // 2. ALTERNA O VALOR
     state.deathSaves[type][idx] = !state.deathSaves[type][idx];
 
-    // 3. ATUALIZA O VISUAL (NA HORA)
-    // Isso garante que a bolinha acenda/apague instantaneamente para o usuário
+    // 3. ATUALIZA O VISUAL NA HORA
     atualizarBolinhasVisualmente();
 
     // 4. AGENDAMENTO DE SALVAMENTO (DEBOUNCE)
-    // Limpa qualquer timer anterior para não salvar "estados velhos"
     if (dsSaveTimer) clearTimeout(dsSaveTimer);
 
-    // Cria um novo timer para salvar daqui a 500ms
+    // Salva depois de 300ms se o usuário parar de clicar
     dsSaveTimer = setTimeout(() => {
-        // SEGURANÇA FINAL: Só salva se a vida ainda for <= 0.
-        // Se o jogador curou nesse meio tempo, o save é ignorado para não sobrescrever a cura.
-        if ((parseInt(state.vidaAtual) || 0) <= 0) {
-            saveStateToServer();
-        }
-    }, 500);
+        saveStateToServer();
+    }, 300);
 };
 
-// FUNÇÃO REVIVER (AGORA BLINDADA)
+// FUNÇÃO REVIVER
 window.voltarVidaUm = function() {
-    // 1. MATA O TIMER! 
-    // Isso impede que um clique anterior numa bolinha sobrescreva esta ação.
+    // Mata qualquer timer pendente para não sobrescrever
     if (dsSaveTimer) {
         clearTimeout(dsSaveTimer);
         dsSaveTimer = null;
     }
 
-    // 2. DEFINE O ESTADO LIMPO
     state.vidaAtual = 1;
-    // Reseta completamente as bolinhas
     state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
     
-    // 3. FORÇA A ATUALIZAÇÃO VISUAL GLOBAL
-    // Isso vai esconder o painel de morte e mostrar a barra de vida
+    // Atualiza tudo e salva
     atualizarBarraUI('vida', 1, state.vidaTotalCalculada);
-
-    // 4. SALVA IMEDIATAMENTE
     saveStateToServer();
 };
 
-// ATUALIZADOR VISUAL DAS BOLINHAS
+// ATUALIZADOR VISUAL
 function atualizarBolinhasVisualmente() {
     if (!state.deathSaves) return;
     
-    // Garante que sArr e fArr sejam arrays válidos antes de iterar
     const sArr = Array.isArray(state.deathSaves.successes) ? state.deathSaves.successes : [false,false,false];
     const fArr = Array.isArray(state.deathSaves.failures) ? state.deathSaves.failures : [false,false,false];
 
@@ -679,7 +670,7 @@ function atualizarBarraUI(prefixo, atual, total) {
     const containerBarra = document.querySelector('.vida-bar'); 
     let containerDS = document.getElementById('death-saves-ui'); 
 
-    // GERA O HTML DO PAINEL DE MORTE SE NÃO EXISTIR
+    // GERA O HTML (AGORA COM OS NOMES CERTOS: 'successes' e 'failures')
     if (!containerDS && containerBarra) {
         containerDS = document.createElement('div');
         containerDS.id = 'death-saves-ui';
@@ -689,17 +680,17 @@ function atualizarBarraUI(prefixo, atual, total) {
                 <div class="ds-row success-row">
                     <span class="ds-label">Sucesso</span>
                     <div class="ds-group">
-                        <div class="ds-circle success" id="btn-ds-s-0" onclick="toggleDeathSave('success', 0)"></div>
-                        <div class="ds-circle success" id="btn-ds-s-1" onclick="toggleDeathSave('success', 1)"></div>
-                        <div class="ds-circle success" id="btn-ds-s-2" onclick="toggleDeathSave('success', 2)"></div>
+                        <div class="ds-circle success" id="btn-ds-s-0" onclick="toggleDeathSave('successes', 0)"></div>
+                        <div class="ds-circle success" id="btn-ds-s-1" onclick="toggleDeathSave('successes', 1)"></div>
+                        <div class="ds-circle success" id="btn-ds-s-2" onclick="toggleDeathSave('successes', 2)"></div>
                     </div>
                 </div>
                 <div class="ds-row failure-row">
                     <span class="ds-label">Falha</span>
                     <div class="ds-group">
-                        <div class="ds-circle failure" id="btn-ds-f-0" onclick="toggleDeathSave('failure', 0)"></div>
-                        <div class="ds-circle failure" id="btn-ds-f-1" onclick="toggleDeathSave('failure', 1)"></div>
-                        <div class="ds-circle failure" id="btn-ds-f-2" onclick="toggleDeathSave('failure', 2)"></div>
+                        <div class="ds-circle failure" id="btn-ds-f-0" onclick="toggleDeathSave('failures', 0)"></div>
+                        <div class="ds-circle failure" id="btn-ds-f-1" onclick="toggleDeathSave('failures', 1)"></div>
+                        <div class="ds-circle failure" id="btn-ds-f-2" onclick="toggleDeathSave('failures', 2)"></div>
                     </div>
                 </div>
             </div>
@@ -712,14 +703,12 @@ function atualizarBarraUI(prefixo, atual, total) {
 
     // LÓGICA DE EXIBIÇÃO: VIDA VS MORTE
     if (valAtual <= 0) {
-        // MODO MORTE
         if (containerBarra) containerBarra.style.display = 'none';
         if (containerDS) {
             containerDS.style.display = 'flex';
-            atualizarBolinhasVisualmente(); // Garante que as bolinhas apareçam corretas ao abrir
+            atualizarBolinhasVisualmente(); 
         }
     } else {
-        // MODO VIVO
         if (containerBarra) containerBarra.style.display = 'block';
         if (containerDS) containerDS.style.display = 'none';
 
@@ -778,10 +767,8 @@ function inicializarDadosEsquerda() {
     if (!state.deathSaves) {
         state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
     } else {
-        // Recupera o que existe, ou cria novo se estiver quebrado
         const oldS = Array.isArray(state.deathSaves.successes) ? state.deathSaves.successes : [false, false, false];
         const oldF = Array.isArray(state.deathSaves.failures) ? state.deathSaves.failures : [false, false, false];
-        
         state.deathSaves = { successes: oldS, failures: oldF };
     }
 
