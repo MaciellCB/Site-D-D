@@ -1,6 +1,6 @@
 /* =============================================================
    LÓGICA DA ESQUERDA (ATRIBUTOS, VIDA, XP, CLASSES, CA E STATUS)
-   ARQUIVO: EsquerdaJS.js (CORREÇÃO: BLINDAGEM DE DEATH SAVES)
+   ARQUIVO: EsquerdaJS.js (CORREÇÃO: DEATH SAVES E RESET AUTOMÁTICO)
 ============================================================= */
 
 // ======================================
@@ -87,7 +87,7 @@ var dsSaveTimer = null; // Timer específico para as bolinhas
 function ativarBloqueioUI() {
     window.uiLock = true;
     if (window.uiUnlockTimer) clearTimeout(window.uiUnlockTimer);
-    // Bloqueia atualizações externas por 2.0s após a última ação (Aumentei para garantir)
+    // Bloqueia atualizações externas por 2.0s após a última ação
     window.uiUnlockTimer = setTimeout(() => {
         window.uiLock = false;
     }, 2000);
@@ -620,6 +620,10 @@ window.toggleDeathSave = function(type, idx) {
     if (!Array.isArray(state.deathSaves.successes)) state.deathSaves.successes = [false, false, false];
     if (!Array.isArray(state.deathSaves.failures)) state.deathSaves.failures = [false, false, false];
 
+    // Verifica se os índices existem (se não, cria)
+    if (state.deathSaves.successes.length < 3) state.deathSaves.successes = [false, false, false];
+    if (state.deathSaves.failures.length < 3) state.deathSaves.failures = [false, false, false];
+
     // 2. ATIVA BLOQUEIO UI (Para ignorar o servidor enquanto clica)
     ativarBloqueioUI();
 
@@ -628,7 +632,7 @@ window.toggleDeathSave = function(type, idx) {
     if (state.deathSaves[type] && typeof state.deathSaves[type][idx] !== 'undefined') {
         state.deathSaves[type][idx] = !state.deathSaves[type][idx];
         
-        // Limpeza de arrays (opcional, mas bom pra evitar "lixo" no array se ele cresceu)
+        // Garante integridade do array
         state.deathSaves[type] = state.deathSaves[type].slice(0, 3);
     }
 
@@ -679,12 +683,13 @@ function atualizarBolinhasVisualmente(force = false) {
         const elF = document.getElementById(`btn-ds-f-${i}`);
 
         if (elS) {
+            // Remove primeiro para garantir reflow se necessário
+            elS.classList.remove('active');
             if (sArr[i]) elS.classList.add('active');
-            else elS.classList.remove('active');
         }
         if (elF) {
+            elF.classList.remove('active');
             if (fArr[i]) elF.classList.add('active');
-            else elF.classList.remove('active');
         }
     }
 }
@@ -1224,6 +1229,14 @@ function vincularEventosInputs() {
 
                 const val = parseInt(el.textContent) || 0;
                 const key = id.includes('temp') ? 'vidaTempAtual' : (id.includes('necro') ? 'danoNecroAtual' : 'vidaAtual');
+                
+                // --- NOVA LOGICA DE RESET AO ZERAR ---
+                // Se for a vida atual e estiver zerando, limpa as bolinhas
+                const anterior = state[key];
+                if (key === 'vidaAtual' && val <= 0 && anterior > 0) {
+                     state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
+                }
+                
                 state[key] = val;
                 atualizarVidaCalculada();
             };
@@ -1245,7 +1258,15 @@ document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
         let step = btn.classList.contains('menos5') ? -5 : (btn.classList.contains('menos1') ? -1 : (btn.classList.contains('mais1') ? 1 : 5));
         let max = key === 'vidaAtual' ? parseInt(document.getElementById('vida-total').textContent) : 9999;
         
-        state[key] = Math.max(0, Math.min(max, (parseInt(state[key]) || 0) + step));
+        const anterior = parseInt(state[key]) || 0;
+        let novo = Math.max(0, Math.min(max, anterior + step));
+        
+        // --- NOVA LOGICA DE RESET AO ZERAR VIA BOTAO ---
+        if (key === 'vidaAtual' && novo <= 0 && anterior > 0) {
+             state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
+        }
+
+        state[key] = novo;
         atualizarVidaCalculada();
         saveStateToServer();
     };
