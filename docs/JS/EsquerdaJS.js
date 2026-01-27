@@ -1,6 +1,6 @@
 /* =============================================================
    LÓGICA DA ESQUERDA (ATRIBUTOS, VIDA, XP, CLASSES, CA E STATUS)
-   ARQUIVO: EsquerdaJS.js (CORREÇÃO TOTAL: PREVINE VOLTAR NO TEMPO EM TUDO)
+   ARQUIVO: EsquerdaJS.js (CORREÇÃO: PRIORIDADE DE VIDA > MORTE)
 ============================================================= */
 
 // ======================================
@@ -77,17 +77,17 @@ let rotateInterval = null;
 const numerosHex = Array.from(document.querySelectorAll('.hexagrama .num'));
 const hexOverlay = document.querySelector('.hex-overlay');
 
-// --- SISTEMA DE TRAVA (LOCK) ---
-// Impede que o "Eco" do servidor sobrescreva o que você acabou de clicar
-var uiLock = false;       // Se true, ignora atualizações externas
-var uiUnlockTimer = null; // Timer para destravar
-var dsSaveTimer = null;   // Timer específico do Death Save (debounce)
+// --- SISTEMA DE BLOQUEIO E TIMERS ---
+// Garante que a interface não pisque ou volte no tempo
+var uiLock = false;
+var uiUnlockTimer = null;
+var dsSaveTimer = null; // Timer específico para as bolinhas
 
-// Função auxiliar para ativar o bloqueio
+// Função para ativar o bloqueio de Eco do servidor
 function ativarBloqueioUI() {
     window.uiLock = true;
     if (window.uiUnlockTimer) clearTimeout(window.uiUnlockTimer);
-    // Mantém bloqueado por 1.5s após a última ação
+    // Bloqueia atualizações externas por 1.5s após a última ação do usuário
     window.uiUnlockTimer = setTimeout(() => {
         window.uiLock = false;
     }, 1500);
@@ -98,9 +98,7 @@ function ativarBloqueioUI() {
 // ======================================
 
 window.addEventListener('sheet-updated', () => {
-    // --- O PULO DO GATO ---
-    // Se o bloqueio estiver ativo (usuário clicando rápido), IGNORA o update do servidor.
-    // Isso impede que a vida volte para 1 logo após você clicar em +5.
+    // Se o usuário está interagindo, IGNORA o update do servidor para não "voltar no tempo"
     if (window.uiLock) return;
 
     inicializarDadosEsquerda();
@@ -407,6 +405,10 @@ window.usarDadoVida = function(classKey, dadoTipo) {
     const vidaMax = state.vidaTotalCalculada || 100;
     const novaVida = Math.min(vidaMax, vidaAtual + curaTotal);
     
+    // Mata timer de death save para garantir transição
+    if (window.dsSaveTimer) { clearTimeout(window.dsSaveTimer); window.dsSaveTimer = null; }
+    ativarBloqueioUI();
+
     state.vidaAtual = novaVida;
     state.dadosVidaGastos[classKey] = gastos + 1;
 
@@ -432,6 +434,10 @@ window.usarDadoVida = function(classKey, dadoTipo) {
 };
 
 window.realizarDescansoLongo = function() {
+    // Mata timer de death save
+    if (window.dsSaveTimer) { clearTimeout(window.dsSaveTimer); window.dsSaveTimer = null; }
+    ativarBloqueioUI();
+
     state.vidaAtual = state.vidaTotalCalculada;
     state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
     const ordem = state.ordemClasses || Object.keys(state.niveisClasses);
@@ -603,7 +609,7 @@ function atualizarVidaCalculada() {
 }
 
 // ======================================
-// 6. Death Saves e Barras de UI (CORRIGIDO + BLOQUEIO DE ECO)
+// 6. Death Saves e Barras de UI (CORRIGIDO)
 // ======================================
 
 // FUNÇÃO ROBUSTA PARA CLIQUE NAS BOLINHAS
@@ -620,34 +626,42 @@ window.toggleDeathSave = function(type, idx) {
     // 3. ALTERNA O VALOR
     state.deathSaves[type][idx] = !state.deathSaves[type][idx];
 
-    // 4. ATUALIZA VISUAL (FORCE = TRUE para passar do bloqueio)
+    // 4. ATUALIZA VISUAL
     atualizarBolinhasVisualmente(true);
 
-    // 5. SALVA COM DEBOUNCE
+    // 5. SALVA COM DEBOUNCE (e verifica vida > 0)
     if (window.dsSaveTimer) clearTimeout(window.dsSaveTimer);
+    
     window.dsSaveTimer = setTimeout(() => {
+        // SEGURANÇA CRÍTICA: Se a vida for maior que 0, NÃO SALVA as bolinhas.
+        // Isso impede que um clique atrasado sobrescreva uma cura recente.
+        if ((parseInt(state.vidaAtual) || 0) > 0) {
+            return; 
+        }
         saveStateToServer();
     }, 500);
 };
 
-// FUNÇÃO REVIVER
+// FUNÇÃO REVIVER (AGORA RESPEITANDO BLOQUEIO)
 window.voltarVidaUm = function() {
-    // Mata timer do death save se tiver
+    // 1. CANCELA qualquer save de bolinha pendente
     if (window.dsSaveTimer) { clearTimeout(window.dsSaveTimer); window.dsSaveTimer = null; }
     
-    // Ativa Bloqueio
+    // 2. ATIVA O BLOQUEIO GERAL (Para ignorar eco do servidor)
     ativarBloqueioUI();
 
+    // 3. DEFINE VIDA E LIMPA BOLINHAS
     state.vidaAtual = 1;
     state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
     
+    // 4. ATUALIZA E SALVA
     atualizarBarraUI('vida', 1, state.vidaTotalCalculada);
     saveStateToServer();
 };
 
 // ATUALIZADOR VISUAL (COM SUPORTE A BLOQUEIO)
 function atualizarBolinhasVisualmente(force = false) {
-    // SE BLOQUEADO (usuário agindo), ignora updates externos para não piscar/voltar
+    // Se estiver bloqueado (clicando), ignora updates externos
     if (window.uiLock && !force) return;
 
     if (!state.deathSaves) return;
@@ -689,7 +703,7 @@ function atualizarBarraUI(prefixo, atual, total) {
     const containerBarra = document.querySelector('.vida-bar'); 
     let containerDS = document.getElementById('death-saves-ui'); 
 
-    // GERA O HTML (AGORA COM OS NOMES CERTOS: 'successes' e 'failures')
+    // GERA O HTML 
     if (!containerDS && containerBarra) {
         containerDS = document.createElement('div');
         containerDS.id = 'death-saves-ui';
@@ -725,7 +739,6 @@ function atualizarBarraUI(prefixo, atual, total) {
         if (containerBarra) containerBarra.style.display = 'none';
         if (containerDS) {
             containerDS.style.display = 'flex';
-            // Chama sem 'force', respeitando o bloqueio se houver
             atualizarBolinhasVisualmente(); 
         }
     } else {
@@ -1199,8 +1212,9 @@ function vincularEventosInputs() {
         const el = document.getElementById(id);
         if (el) {
             el.oninput = () => {
-                // Ao digitar, bloqueia atualizações externas
-                ativarBloqueioUI();
+                // CANCELA qualquer save de bolinha pendente se mexer na vida
+                if (dsSaveTimer) { clearTimeout(dsSaveTimer); dsSaveTimer = null; }
+                ativarBloqueioUI(); // Ativa a proteção de eco
 
                 const val = parseInt(el.textContent) || 0;
                 const key = id.includes('temp') ? 'vidaTempAtual' : (id.includes('necro') ? 'danoNecroAtual' : 'vidaAtual');
@@ -1217,11 +1231,9 @@ document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
     if (!btn.closest('.vida-bar') && !btn.closest('.barra-secundaria')) return;
     
     btn.onclick = () => {
-        // Mata timer do death save se tiver
-        if (window.dsSaveTimer) { clearTimeout(window.dsSaveTimer); window.dsSaveTimer = null; }
-        
-        // ATIVA O BLOQUEIO DE ECO
-        ativarBloqueioUI();
+        // CANCELA qualquer save de bolinha pendente se mexer na vida
+        if (dsSaveTimer) { clearTimeout(dsSaveTimer); dsSaveTimer = null; }
+        ativarBloqueioUI(); // Ativa a proteção de eco
 
         let key = btn.closest('.vida-container') ? "vidaAtual" : (btn.closest('.barra-secundaria:nth-child(1)') ? "vidaTempAtual" : "danoNecroAtual");
         let step = btn.classList.contains('menos5') ? -5 : (btn.classList.contains('menos1') ? -1 : (btn.classList.contains('mais1') ? 1 : 5));
