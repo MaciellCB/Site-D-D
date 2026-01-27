@@ -1,6 +1,6 @@
 /* =============================================================
    LÓGICA DA ESQUERDA (ATRIBUTOS, VIDA, XP, CLASSES, CA E STATUS)
-   ARQUIVO: EsquerdaJS.js (CORREÇÃO: BOLINHAS DEATH SAVES)
+   ARQUIVO: EsquerdaJS.js (CORREÇÃO DEFINITIVA: VOLTAR NO TEMPO)
 ============================================================= */
 
 // ======================================
@@ -77,8 +77,10 @@ let rotateInterval = null;
 const numerosHex = Array.from(document.querySelectorAll('.hexagrama .num'));
 const hexOverlay = document.querySelector('.hex-overlay');
 
-// TIMER GLOBAL DE DEATH SAVE
-var dsSaveTimer = null; 
+// --- CONTROLE DE DEATH SAVES (PARA NÃO VOLTAR NO TEMPO) ---
+var dsSaveTimer = null;   // Timer para salvar no banco
+var dsUnlockTimer = null; // Timer para liberar a atualização visual
+var dsLock = false;       // Bloqueia atualizações externas enquanto clica
 
 // ======================================
 // 2. Inicialização e Listeners
@@ -585,7 +587,7 @@ function atualizarVidaCalculada() {
 }
 
 // ======================================
-// 6. Death Saves e Barras de UI (CORRIGIDO PLURAL)
+// 6. Death Saves e Barras de UI (CORRIGIDO + BLOQUEIO DE ECHO)
 // ======================================
 
 // FUNÇÃO ROBUSTA PARA CLIQUE NAS BOLINHAS
@@ -598,28 +600,39 @@ window.toggleDeathSave = function(type, idx) {
         state.deathSaves[type] = [false, false, false];
     }
 
-    // 2. ALTERNA O VALOR
+    // 2. ATIVA BLOQUEIO DE INTERFACE (Impede echo do servidor)
+    window.dsLock = true;
+
+    // 3. ALTERNA O VALOR LOGICAMENTE
     state.deathSaves[type][idx] = !state.deathSaves[type][idx];
 
-    // 3. ATUALIZA O VISUAL NA HORA
-    atualizarBolinhasVisualmente();
+    // 4. ATUALIZA O VISUAL NA HORA (Force = true)
+    // Passamos 'true' para forçar a atualização mesmo com o bloqueio ligado
+    atualizarBolinhasVisualmente(true);
 
-    // 4. AGENDAMENTO DE SALVAMENTO (DEBOUNCE)
-    if (dsSaveTimer) clearTimeout(dsSaveTimer);
+    // 5. AGENDAMENTO DE SALVAMENTO (DEBOUNCE)
+    if (window.dsSaveTimer) clearTimeout(window.dsSaveTimer);
+    if (window.dsUnlockTimer) clearTimeout(window.dsUnlockTimer);
 
-    // Salva depois de 300ms se o usuário parar de clicar
-    dsSaveTimer = setTimeout(() => {
+    // Salva depois de 500ms
+    window.dsSaveTimer = setTimeout(() => {
         saveStateToServer();
-    }, 300);
+    }, 500);
+
+    // Libera o bloqueio de UI depois de 1.5 segundos (tempo suficiente pro servidor responder)
+    window.dsUnlockTimer = setTimeout(() => {
+        window.dsLock = false;
+    }, 1500);
 };
 
 // FUNÇÃO REVIVER
 window.voltarVidaUm = function() {
     // Mata qualquer timer pendente para não sobrescrever
-    if (dsSaveTimer) {
-        clearTimeout(dsSaveTimer);
-        dsSaveTimer = null;
-    }
+    if (window.dsSaveTimer) { clearTimeout(window.dsSaveTimer); window.dsSaveTimer = null; }
+    if (window.dsUnlockTimer) { clearTimeout(window.dsUnlockTimer); window.dsUnlockTimer = null; }
+    
+    // Remove o bloqueio
+    window.dsLock = false;
 
     state.vidaAtual = 1;
     state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
@@ -629,8 +642,11 @@ window.voltarVidaUm = function() {
     saveStateToServer();
 };
 
-// ATUALIZADOR VISUAL
-function atualizarBolinhasVisualmente() {
+// ATUALIZADOR VISUAL (Com suporte a Bloqueio)
+function atualizarBolinhasVisualmente(force = false) {
+    // SE ESTIVER BLOQUEADO (usuário clicando) e NÃO for forçado, ignora atualização externa
+    if (window.dsLock && !force) return;
+
     if (!state.deathSaves) return;
     
     const sArr = Array.isArray(state.deathSaves.successes) ? state.deathSaves.successes : [false,false,false];
@@ -706,6 +722,7 @@ function atualizarBarraUI(prefixo, atual, total) {
         if (containerBarra) containerBarra.style.display = 'none';
         if (containerDS) {
             containerDS.style.display = 'flex';
+            // Chama sem 'force', respeitando o bloqueio se houver
             atualizarBolinhasVisualmente(); 
         }
     } else {
