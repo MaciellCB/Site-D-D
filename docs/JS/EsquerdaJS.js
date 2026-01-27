@@ -1,6 +1,6 @@
 /* =============================================================
    LÓGICA DA ESQUERDA (ATRIBUTOS, VIDA, XP, CLASSES, CA E STATUS)
-   ARQUIVO: EsquerdaJS.js (CORREÇÃO FINAL: MEMÓRIA DE CURTO PRAZO)
+   ARQUIVO: EsquerdaJS.js (CORREÇÃO FINAL: MEMÓRIA SOBERANA)
 ============================================================= */
 
 // ======================================
@@ -77,8 +77,7 @@ let rotateInterval = null;
 const numerosHex = Array.from(document.querySelectorAll('.hexagrama .num'));
 const hexOverlay = document.querySelector('.hex-overlay');
 
-// --- SISTEMA DE MEMÓRIA DE CURTO PRAZO (BLINDAGEM TOTAL) ---
-// Isso armazena o que você clicou e SOBRESCREVE o servidor por alguns segundos
+// --- SISTEMA DE MEMÓRIA SOBERANA (BLINDAGEM CONTRA ECO) ---
 window.localMemory = {
     active: false,
     timestamp: 0,
@@ -86,11 +85,12 @@ window.localMemory = {
     vidaAtual: null   // Guarda estado local da vida
 };
 
-// Função para atualizar a memória local
+// Função: Registra o que o usuário acabou de fazer e diz "Isso é verdade absoluta pelos próximos 3s"
 function registrarInteracaoLocal() {
     window.localMemory.active = true;
     window.localMemory.timestamp = Date.now();
-    // Salva uma cópia exata do que está no estado AGORA (que acabamos de alterar)
+    
+    // Clona o estado atual das deathSaves para a memória
     if (state.deathSaves) {
         window.localMemory.deathSaves = JSON.parse(JSON.stringify(state.deathSaves));
     }
@@ -114,7 +114,7 @@ function ativarBloqueioUI() {
 // ======================================
 
 window.addEventListener('sheet-updated', () => {
-    // Se o bloqueio rígido estiver ativo, ignora
+    // Se estiver bloqueado rigidamente, nem processa
     if (window.uiLock) return;
 
     inicializarDadosEsquerda();
@@ -125,6 +125,8 @@ window.addEventListener('sheet-updated', () => {
 // ======================================
 // 3. Sistema de Multi-Select (Dropdowns)
 // ======================================
+// ... (Código do Multi-Select permanece igual para economizar espaço se necessário, 
+// mas vou manter aqui para garantir integridade do arquivo)
 
 function renderMultiSelect(elementId, optionsList, currentSelection, stateKey) {
     const container = document.getElementById(elementId);
@@ -650,7 +652,7 @@ window.toggleDeathSave = function(type, idx) {
     }, 500);
 };
 
-// FUNÇÃO REVIVER (CORRIGIDA: VOLTAVA NO TEMPO)
+// FUNÇÃO REVIVER
 window.voltarVidaUm = function() {
     if (window.dsSaveTimer) { clearTimeout(window.dsSaveTimer); window.dsSaveTimer = null; }
     
@@ -1246,6 +1248,7 @@ function vincularEventosInputs() {
                      if (val <= 0 && anterior > 0) {
                          // Se zerou, limpa (quebrando referência)
                          state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
+                         atualizarBolinhasVisualmente(true); // FORÇA VISUAL LIMPO AGORA
                      }
                 }
                 
@@ -1279,6 +1282,7 @@ document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
         
         if (key === 'vidaAtual' && novo <= 0 && anterior > 0) {
              state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
+             atualizarBolinhasVisualmente(true); // FORÇA VISUAL LIMPO AGORA
         }
 
         state[key] = novo;
