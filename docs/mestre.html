@@ -298,11 +298,41 @@
 
     let nomeDelecaoPendente = ''; 
     let nomeEdicaoPendente = ''; 
-    let pastaIdDelecaoPendente = ''; // Para guardar o ID da pasta que vai ser apagada
+    let pastaIdDelecaoPendente = ''; 
 
     // DADOS GLOBAIS
     let layoutAtual = { folders: [], uncategorized: [] };
     let todosPersonagens = []; 
+
+    // --- OBJETO DE PERÍCIAS PADRÃO (CORREÇÃO AQUI) ---
+    const PERICIAS_PADRAO = {
+        "Atletismo": { "atributo": "FOR", "treinado": false, "outros": 0 },
+        "Acrobacia": { "atributo": "DEX", "treinado": false, "outros": 0 },
+        "Furtividade": { "atributo": "DEX", "treinado": false, "outros": 0 },
+        "Prestidigitação": { "atributo": "DEX", "treinado": false, "outros": 0 },
+        "Arcanismo": { "atributo": "INT", "treinado": false, "outros": 0 },
+        "História": { "atributo": "INT", "treinado": false, "outros": 0 },
+        "Investigação": { "atributo": "INT", "treinado": false, "outros": 0 },
+        "Natureza": { "atributo": "INT", "treinado": false, "outros": 0 },
+        "Religião": { "atributo": "INT", "treinado": false, "outros": 0 },
+        "Intuição": { "atributo": "SAB", "treinado": false, "outros": 0 },
+        "Lidar com animais": { "atributo": "SAB", "treinado": false, "outros": 0 },
+        "Medicina": { "atributo": "SAB", "treinado": false, "outros": 0 },
+        "Percepção": { "atributo": "SAB", "treinado": false, "outros": 0 },
+        "Sobrevivência": { "atributo": "SAB", "treinado": false, "outros": 0 },
+        "Atuação": { "atributo": "CAR", "treinado": false, "outros": 0 },
+        "Enganação": { "atributo": "CAR", "treinado": false, "outros": 0 },
+        "Intimidação": { "atributo": "CAR", "treinado": false, "outros": 0 },
+        "Persuasão": { "atributo": "CAR", "treinado": false, "outros": 0 },
+        
+        // Salvaguardas
+        "Salvaguarda (Força)": { "atributo": "FOR", "treinado": false, "outros": 0 },
+        "Salvaguarda (Destreza)": { "atributo": "DEX", "treinado": false, "outros": 0 },
+        "Salvaguarda (Constituição)": { "atributo": "CON", "treinado": false, "outros": 0 },
+        "Salvaguarda (Inteligência)": { "atributo": "INT", "treinado": false, "outros": 0 },
+        "Salvaguarda (Sabedoria)": { "atributo": "SAB", "treinado": false, "outros": 0 },
+        "Salvaguarda (Carisma)": { "atributo": "CAR", "treinado": false, "outros": 0 }
+    };
 
     window.onload = carregarLista;
 
@@ -474,7 +504,7 @@
         });
     }
 
-    // --- FUNÇÕES DE PASTA (COM NOVOS MODAIS) ---
+    // --- FUNÇÕES DE PASTA ---
 
     function abrirModalNovaPasta() {
         document.getElementById('nome-nova-pasta').value = '';
@@ -522,7 +552,7 @@
         pastaIdDelecaoPendente = '';
     }
 
-    // --- MODAIS E AÇÕES DE FICHA (Mantidos) ---
+    // --- MODAIS E AÇÕES DE FICHA ---
     
     function abrirModalCriar() {
         document.getElementById('novo-nome').value = '';
@@ -532,16 +562,52 @@
     }
     function fecharModalCriar() { document.getElementById('modal-criar').style.display = 'none'; }
 
+    // --- FUNÇÃO DE CRIAÇÃO ATUALIZADA COM O PÁDRÃO JSON ---
     async function confirmarCriacao() {
-        const nome = document.getElementById('novo-nome').value;
-        const senha = document.getElementById('novo-senha').value;
+        const nome = document.getElementById('novo-nome').value.trim();
+        const senha = document.getElementById('novo-senha').value.trim();
+        
         if(!nome || !senha) return mostrarAviso("Preencha tudo!");
+
+        // Monta o objeto completo para garantir que nada venha quebrado
+        const novaFichaCompleta = {
+            nome: nome,
+            senha: senha,
+            fotoPerfil: "",
+            activeTab: "Inventário",
+            atributos: { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 },
+            pericias: PERICIAS_PADRAO, // Usa a constante definida acima
+            niveisClasses: {},
+            xp: "0",
+            marco: 0,
+            vidaAtual: 0,
+            vidaTotalCalculada: 0,
+            inventory: [],
+            abilities: [],
+            spells: [],
+            description: {
+                anotacoes: "", aparencia: "", personalidade: "",
+                objetivo: "", ideais: "", vinculos: "", fraquezas: "", historia: ""
+            },
+            spellSlots: {
+                "1": { used: 0, status: [] }, "2": { used: 0, status: [] },
+                "3": { used: 0, status: [] }, "4": { used: 0, status: [] },
+                "5": { used: 0, status: [] }, "6": { used: 0, status: [] },
+                "7": { used: 0, status: [] }, "8": { used: 0, status: [] },
+                "9": { used: 0, status: [] }, "pact": { used: 0, status: [] },
+                "ki": { used: 0, status: [] }, "furia": { used: 0, status: [] },
+                "sorcery": { used: 0, status: [] }, "mutagen": { used: 0, status: [] }
+            }
+        };
 
         try {
             const res = await fetch(`${API_URL}/criar-ficha`, {
-                method: 'POST', headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ nome, senha })
+                method: 'POST', 
+                headers: {'Content-Type': 'application/json'},
+                // Envia a ficha completa em vez de apenas nome/senha
+                body: JSON.stringify(novaFichaCompleta) 
             });
+
             if(res.ok) {
                 mostrarAviso("Criado com sucesso!");
                 fecharModalCriar();
@@ -550,7 +616,10 @@
                 const d = await res.json();
                 mostrarAviso("Erro: " + d.error);
             }
-        } catch(e) { mostrarAviso("Erro de conexão."); }
+        } catch(e) { 
+            console.error(e);
+            mostrarAviso("Erro de conexão."); 
+        }
     }
 
     function abrirModalDeletar(e, nome) {
