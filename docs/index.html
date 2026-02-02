@@ -260,22 +260,24 @@
           </div>
 
           <div class="linha linha-metros">
-  <div class="metros-box">
-    <label>Metros (m)</label>
-    <input type="number" id="metros" min="0" value="0" />
-  </div>
+            <div class="metros-box">
+              <label>Metros (m)</label>
+              <input type="number" id="metros" min="0" value="0" />
+            </div>
 
-  <div class="dv-box">
-    <label>D. Vida</label>
-    <button id="btn-abrir-dv" class="btn-dv-trigger">
-        <img src="img/imagem-no-site/dado.png" alt="DV">
-    </button>
-  </div>
-  <div class="quadrados-box">
-    <label>Quadrados (q)</label>
-    <input type="number" id="quadrados" min="0" step="1" />
-  </div>
-</div>
+            <div class="quadrados-box">
+              <label>Quadrados (q)</label>
+              <input type="number" id="quadrados" min="0" step="1" />
+            </div>
+
+            <div class="dv-box">
+              <label>D. Vida</label>
+              <button id="btn-abrir-dv" class="btn-dv-trigger">
+                <img src="img/imagem-no-site/dado.png" alt="DV">
+              </button>
+            </div>
+
+          </div>
 
           <div class="vida-container">
             <h3 id="btnVida">VIDA</h3>
@@ -283,7 +285,7 @@
               <div class="vida-fill" id="vida-fill"></div>
               <div class="vida-text">
                 <button class="vida-btn menos5">«</button>
-                <button class="vida-btn menos1"> < </button>
+                <button class="vida-btn menos1"><</button>
                     <span id="vida-atual">0</span>/<span id="vida-total">0</span>
                     <button class="vida-btn mais1">></button>
                     <button class="vida-btn mais5">»</button>
@@ -301,10 +303,10 @@
                 <div class="vida-fill" id="vida-temp-fill"></div>
                 <div class="vida-text">
                   <button class="vida-btn menos5">«</button>
-                  <button class="vida-btn menos1"> < </button>
-                  <span id="vida-temp-atual" contenteditable="true">0</span>
-                  <button class="vida-btn mais1">></button>
-                  <button class="vida-btn mais5">»</button>
+                  <button class="vida-btn menos1"><</button>
+                      <span id="vida-temp-atual" contenteditable="true">0</span>
+                      <button class="vida-btn mais1">></button>
+                      <button class="vida-btn mais5">»</button>
                 </div>
               </div>
             </div>
@@ -314,11 +316,11 @@
                 <div class="vida-fill" id="dano-necro-fill" style="background-color: purple;"></div>
                 <div class="vida-text">
                   <button class="vida-btn menos5">«</button>
-                  <button class="vida-btn menos1">« </button>
+                  <button class="vida-btn menos1"><</button>
 
-                    <span id="dano-necro-atual" contenteditable="true">0</span>
-                    <button class="vida-btn mais1">></button>
-                    <button class="vida-btn mais5">»</button>
+                  <span id="dano-necro-atual" contenteditable="true">0</span>
+                  <button class="vida-btn mais1">></button>
+                  <button class="vida-btn mais5">»</button>
                 </div>
               </div>
             </div>
@@ -418,18 +420,19 @@
   </div>
 
   <div id="painelDadosVida" class="painel-classes" style="z-index: 20001;" aria-hidden="true">
-  <div class="painel-inner">
-    <div class="painel-header" style="cursor: move;">
-      <h4>Dados de Vida</h4>
-      <button onclick="document.getElementById('painelDadosVida').style.display='none'">✖</button>
-    </div>
-    <div id="listaDadosVida" class="lista-classes" style="padding-bottom:10px;">
+    <div class="painel-inner">
+      <div class="painel-header" style="cursor: move;">
+        <h4>Dados de Vida</h4>
+        <button onclick="document.getElementById('painelDadosVida').style.display='none'">✖</button>
       </div>
-    <div style="font-size:11px; color:#777; text-align:center; margin-top:5px; border-top:1px solid #333; padding-top:5px;">
-      Clique no dado para rolar e curar.<br>Mod. CON é somado automatico.
+      <div id="listaDadosVida" class="lista-classes" style="padding-bottom:10px;">
+      </div>
+      <div
+        style="font-size:11px; color:#777; text-align:center; margin-top:5px; border-top:1px solid #333; padding-top:5px;">
+        Clique no dado para rolar e curar.<br>Mod. CON é somado automatico.
+      </div>
     </div>
   </div>
-</div>
 
   <div id="login-overlay"
     style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:100000; display:flex; align-items:center; justify-content:center; font-family: sans-serif;">

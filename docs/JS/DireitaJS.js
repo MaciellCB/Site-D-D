@@ -4706,20 +4706,90 @@ document.addEventListener('click', function(e) {
         if (spellCard) {
             const spellTitle = spellCard.querySelector('.spell-title')?.textContent || "Magia";
             
-            // 1. CONSUMO DE SLOT
+           // 1. CONSUMO DE SLOT (ATUALIZADO COM PRIORIDADE DE BRUXO)
             const selectSlot = spellCard.querySelector('.spell-slot-selector');
             if (selectSlot) {
-                const levelToCast = selectSlot.value; 
-                if (!state.spellSlots[levelToCast]) { alert(`Erro: Slot nível ${levelToCast} não configurado.`); return; }
-                const slotData = state.spellSlots[levelToCast];
-                const max = parseInt(slotData.max) || 0;
-                if (!Array.isArray(slotData.status)) slotData.status = [];
-                while (slotData.status.length < max) slotData.status.push(false);
-                const firstAvailableIndex = slotData.status.findIndex(used => used === false);
-                if (firstAvailableIndex === -1) { alert(`Sem espaços de ${levelToCast}º Círculo disponíveis!`); return; }
-                slotData.status[firstAvailableIndex] = true;
-                saveStateToServer();
-                setTimeout(() => renderActiveTab(), 100); 
+                const selectedLevel = parseInt(selectSlot.value); // O nível que o jogador escolheu no dropdown
+                let slotKeyToUse = String(selectedLevel); // Por padrão, assume o slot normal (1 a 9)
+
+                // --- NOVA LÓGICA: TENTAR USAR PACTO PRIMEIRO ---
+                const pactData = state.spellSlots['pact'];
+
+                // 1. O personagem tem slots de Pacto configurados?
+                if (pactData && pactData.max > 0) {
+                    
+                    // 2. O nível do Slot de Pacto é alto o suficiente?
+                    // (Ex: Magia pede lv 3. Se Pacto for lv 2, não serve. Se for lv 3+, serve)
+                    if (pactData.level >= selectedLevel) {
+                        
+                        // 3. Tem slot de Pacto disponível (não gasto)?
+                        if (!Array.isArray(pactData.status)) pactData.status = [];
+                        
+                        // Conta quantos slots estão gastos (true)
+                        const gastosPacto = pactData.status.filter(s => s === true).length;
+                        
+                        // Se gastos for menor que o máximo, significa que tem slot livre!
+                        if (gastosPacto < pactData.max) {
+                            slotKeyToUse = 'pact'; // MUDANÇA: Usa a chave 'pact' em vez do número
+                        }
+                    }
+                }
+
+                // --- EXECUÇÃO DO GASTO (COM A CHAVE DEFINIDA ACIMA) ---
+                if (!state.spellSlots[slotKeyToUse]) { 
+                    alert(`Erro interno: Slot ${slotKeyToUse} não existe.`); 
+                    return; 
+                }
+
+                const slotAlvo = state.spellSlots[slotKeyToUse];
+                const max = parseInt(slotAlvo.max) || 0;
+
+                // Garante integridade do array
+                if (!Array.isArray(slotAlvo.status)) slotAlvo.status = [];
+                while (slotAlvo.status.length < max) slotAlvo.status.push(false);
+
+                // Busca o primeiro slot livre (false)
+                const firstAvailableIndex = slotAlvo.status.findIndex(used => used === false);
+
+                if (firstAvailableIndex === -1) {
+                    // Se chegou aqui, é porque tentou usar o slot definido e estava cheio.
+                    // Se a prioridade era Pacto e falhou, e não tentamos o normal ainda, poderíamos tentar o normal?
+                    // Pela sua regra: "depois de eles acabarem, ele desconta dos circulos magicos".
+                    
+                    if (slotKeyToUse === 'pact') {
+                        // O pacto acabou. Tenta voltar para o slot normal.
+                        slotKeyToUse = String(selectedLevel);
+                        const slotNormal = state.spellSlots[slotKeyToUse];
+                        
+                        // Verifica se o slot normal existe e tem espaço
+                        let slotNormalDisponivel = -1;
+                        if (slotNormal && slotNormal.max > 0) {
+                             if (!Array.isArray(slotNormal.status)) slotNormal.status = [];
+                             while (slotNormal.status.length < slotNormal.max) slotNormal.status.push(false);
+                             slotNormalDisponivel = slotNormal.status.findIndex(u => u === false);
+                        }
+
+                        if (slotNormalDisponivel !== -1) {
+                            // Gasta do normal
+                            state.spellSlots[slotKeyToUse].status[slotNormalDisponivel] = true;
+                            saveStateToServer();
+                            setTimeout(() => renderActiveTab(), 100);
+                            // Continua para rolar o dado...
+                        } else {
+                            alert(`Sem espaços de Pacto e sem espaços de ${selectedLevel}º Círculo disponíveis!`);
+                            return; // Cancela rolagem
+                        }
+                    } else {
+                        // Era slot normal mesmo e acabou
+                        alert(`Sem espaços de ${selectedLevel}º Círculo disponíveis!`);
+                        return; // Cancela rolagem
+                    }
+                } else {
+                    // Tem slot livre no escolhido (seja Pacto ou Normal)
+                    slotAlvo.status[firstAvailableIndex] = true;
+                    saveStateToServer();
+                    setTimeout(() => renderActiveTab(), 100);
+                }
             }
 
             // 2. EXTRAÇÃO DO TEXTO DO DANO

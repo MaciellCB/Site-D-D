@@ -851,7 +851,7 @@ function inicializarDadosEsquerda() {
     setVal('xpAtual', state.xp);
     setVal('marcoAtual', state.marco);
     setText('inspiraValor', state.inspiracao);
-    
+
     const elMetros = document.getElementById('metros');
     const elQuadrados = document.getElementById('quadrados');
     if (elMetros && elQuadrados) {
@@ -865,15 +865,19 @@ function inicializarDadosEsquerda() {
         let containerVooQ = document.getElementById('container-voo-q');
         
         if (!containerVooM) {
+            // Pega a linha pai (.linha-metros)
             const linhaPai = elQuadrados.parentNode.parentNode; 
+            
             containerVooM = document.createElement('div');
             containerVooM.id = 'container-voo-m';
-            containerVooM.className = 'metros-box'; 
+            containerVooM.className = 'metros-box'; // Reusa estilo
             containerVooM.innerHTML = `<label style="color:#4fc3f7;">Voo (m)</label><input id="voo-metros" type="number" style="border-color:#4fc3f7; color:#4fc3f7;">`;
+            
             containerVooQ = document.createElement('div');
             containerVooQ.id = 'container-voo-q';
-            containerVooQ.className = 'quadrados-box'; 
+            containerVooQ.className = 'quadrados-box'; // Reusa estilo
             containerVooQ.innerHTML = `<label style="color:#4fc3f7;">Voo (q)</label><input id="voo-quadrados" type="number" style="border-color:#4fc3f7; color:#4fc3f7;">`;
+            
             linhaPai.appendChild(containerVooM);
             linhaPai.appendChild(containerVooQ);
         }
