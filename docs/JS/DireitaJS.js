@@ -4706,14 +4706,13 @@ document.addEventListener('click', function(e) {
         if (spellCard) {
             const spellTitle = spellCard.querySelector('.spell-title')?.textContent || "Magia";
             
-           // 1. CONSUMO DE SLOT (CORRIGIDO: CÁLCULO REAL DO NÍVEL DE PACTO)
+           // 1. CONSUMO DE SLOT (CORRIGIDO: PRIORIDADE DE PACTO CORRETA)
             const selectSlot = spellCard.querySelector('.spell-slot-selector');
             if (selectSlot) {
-                const selectedLevel = parseInt(selectSlot.value); // Nível escolhido no dropdown
+                const selectedLevel = parseInt(selectSlot.value); // Nível escolhido (ex: 1)
                 let slotKeyToUse = String(selectedLevel); // Padrão: Tenta usar slot normal (1 a 9)
 
                 // --- PASSO A: Descobrir dados REAIS do Pacto (Bruxo) ---
-                // Usamos a função do MagicSystem para garantir que temos o nível certo
                 let nivelPacto = 0;
                 let maxPacto = 0;
 
@@ -4724,57 +4723,57 @@ document.addEventListener('click', function(e) {
                         maxPacto = dadosMisticos.pact.qtd || 0;
                     }
                 } else {
-                    // Fallback se MagicSystem falhar: tenta ler do state (pode estar desatualizado)
+                    // Fallback de segurança
                     if (state.spellSlots['pact']) {
                         nivelPacto = state.spellSlots['pact'].level || 0;
                         maxPacto = state.spellSlots['pact'].max || 0;
                     }
                 }
 
-                // --- PASSO B: TENTAR USAR PACTO PRIMEIRO ---
-                // Só tenta usar pacto se o personagem tiver slots E o nível for suficiente
+                // --- PASSO B: DEFINIR PRIORIDADE (A CORREÇÃO ESTÁ AQUI) ---
+                // Se eu sou Bruxo e meu pacto aguenta essa magia, EU TENTO O PACTO.
+                // Não importa se está cheio agora. Se estiver cheio, o código lá embaixo
+                // vai perceber e tentar o slot normal (fallback).
                 if (maxPacto > 0 && nivelPacto >= selectedLevel) {
-                    
-                    const pactState = state.spellSlots['pact'];
-                    if (!pactState.status) pactState.status = [];
-                    
-                    // Conta quantos slots estão gastos (true)
-                    const gastosPacto = pactState.status.filter(s => s === true).length;
-
-                    // Se ainda tem espaço, define que vamos usar o 'pact'
-                    if (gastosPacto < maxPacto) {
-                        slotKeyToUse = 'pact';
-                    }
+                    slotKeyToUse = 'pact';
                 }
 
-                // --- PASSO C: EFETIVAR O GASTO ---
+                // --- PASSO C: PREPARAR O SLOT ALVO ---
+                // Garante que o objeto existe no state
                 if (!state.spellSlots[slotKeyToUse]) {
-                    // Cria estrutura se não existir (segurança)
                     state.spellSlots[slotKeyToUse] = { used: 0, status: [] };
                 }
 
                 const slotAlvo = state.spellSlots[slotKeyToUse];
                 
-                // Define o máximo baseado no tipo (se é pacto ou normal)
+                // Define o máximo real baseado no tipo
                 let maxSlots = 0;
                 if (slotKeyToUse === 'pact') maxSlots = maxPacto;
                 else maxSlots = state.spellSlots[slotKeyToUse].max || 0;
 
-                // Garante integridade do array de status
+                // Garante integridade visual (arrays de true/false)
                 if (!Array.isArray(slotAlvo.status)) slotAlvo.status = [];
                 while (slotAlvo.status.length < maxSlots) slotAlvo.status.push(false);
 
                 // Busca o primeiro slot livre (false)
                 const firstAvailableIndex = slotAlvo.status.findIndex(used => used === false);
 
+                // --- PASSO D: TENTAR GASTAR OU FAZER FALLBACK ---
                 if (firstAvailableIndex === -1) {
-                    // SE O PACTO ESTIVER CHEIO, TENTA VOLTAR PRO NORMAL (FALLBACK)
+                    
+                    // CENÁRIO: Tentei usar o slot escolhido, mas estava cheio.
+                    
                     if (slotKeyToUse === 'pact') {
+                        // Se eu tentei Pacto e falhou, agora tento o slot NORMAL do nível selecionado.
+                        // Isso cobre multiclasse (Bruxo gastou tudo, usa slot de Mago).
                         const keyNormal = String(selectedLevel);
-                        const slotNormal = state.spellSlots[keyNormal];
-                        const maxNormal = slotNormal ? (slotNormal.max || 0) : 0;
                         
-                        // Verifica slot normal
+                        // Garante existência
+                        if (!state.spellSlots[keyNormal]) state.spellSlots[keyNormal] = { used: 0, status: [] };
+                        const slotNormal = state.spellSlots[keyNormal];
+                        const maxNormal = slotNormal.max || 0; // Pega do state, pois slots normais já estão lá
+
+                        // Verifica se tem espaço no normal
                         let indexNormal = -1;
                         if (maxNormal > 0) {
                             if (!Array.isArray(slotNormal.status)) slotNormal.status = [];
@@ -4783,22 +4782,23 @@ document.addEventListener('click', function(e) {
                         }
 
                         if (indexNormal !== -1) {
-                            // Gasta do normal
+                            // SUCESSO NO FALLBACK (SLOT NORMAL)
                             slotNormal.status[indexNormal] = true;
                             saveStateToServer();
                             setTimeout(() => renderActiveTab(), 50);
-                            // Deixa fluir para rolar o dado...
+                            // Segue para rolar o dado...
                         } else {
+                            // FALHA TOTAL (Pacto cheio E Normal cheio/inexistente)
                             alert(`Sem espaços de Pacto e sem espaços de ${selectedLevel}º Círculo disponíveis!`);
-                            return; // Cancela
+                            return; // Cancela rolagem
                         }
                     } else {
-                        // Era slot normal mesmo e acabou
+                        // Eu já estava tentando slot normal e não tem.
                         alert(`Sem espaços de ${selectedLevel}º Círculo disponíveis!`);
-                        return; // Cancela
+                        return; // Cancela rolagem
                     }
                 } else {
-                    // Tem slot livre no escolhido (seja Pacto ou Normal)
+                    // SUCESSO NO SLOT PREFERENCIAL
                     slotAlvo.status[firstAvailableIndex] = true;
                     saveStateToServer();
                     setTimeout(() => renderActiveTab(), 50);
