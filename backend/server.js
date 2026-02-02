@@ -144,43 +144,39 @@ app.get('/api/lista-personagens', async (req, res) => {
     }
 });
 
-// 2. CRIAR NOVA FICHA
+// 2. CRIAR NOVA FICHA (CORRIGIDO)
 app.post('/api/criar-ficha', async (req, res) => {
     try {
+        // Pega nome e senha para validação
         const { nome, senha } = req.body;
-        if (!nome || !senha) return res.status(400).json({ error: "Nome e senha obrigatórios" });
+        
+        if (!nome || !senha) {
+            return res.status(400).json({ error: "Nome e senha obrigatórios" });
+        }
 
+        // Verifica duplicidade
         const existe = await Ficha.findOne({ nome: { $regex: new RegExp(`^${nome}$`, 'i') } });
-        if (existe) return res.status(400).json({ error: "Já existe!" });
+        if (existe) {
+            return res.status(400).json({ error: "Já existe!" });
+        }
 
-        // Cria ficha zerada
-        const novaFicha = new Ficha({
-            nome: nome,
-            senha: senha,
-            fotoPerfil: "",
-            activeTab: "Descrição",
-            spellDCConfig: { "selectedAttr": "none", "extraMod": 0, "lastKnownLevel": 0 },
-            dtMagias: 0,
-            inventory: [], abilities: [], spells: [], abilityCatalog: [], spellCatalog: [],
-            description: { anotacoes: "", aparencia: "", personalidade: "", objetivo: "", ideais: "", vinculos: "", fraquezas: "", historia: "" },
-            sanidade: { estresse: 0, vazio: 0 },
-            pericias: { /* ... (seu objeto de pericias padrão aqui se quiser, ou vazio) ... */ },
-            atributos: { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 },
-            niveisClasses: {}, xp: "0", inspiracao: 0,
-            vidaDadosSalvos: { v1: 0, v2: 0, v3: 0 }, marco: 0, vidaAtual: 0,
-            deathSaves: { successes: 0, failures: 0 }, vidaTempAtual: 0, danoNecroAtual: 0,
-            metros: 0, iniciativaBonus: 0, acOutros: 0,
-            resistencias: "", imunidades: "", fraquezas: "", proficiencias: "",
-            spellSlots: { "1": { "used": 0, "status": [] } /* ... etc */ },
-            money: { pc: 0, pp: 0, po: 0, pl: 0, pd: 0 },
-            salvaguardas: { "Força": { "treinado": false }, "Constituição": { "treinado": false }, "Destreza": { "treinado": false }, "Inteligência": { "treinado": false }, "Sabedoria": { "treinado": false }, "Carisma": { "treinado": false } },
-            vidaTotalCalculada: 0
-        });
+        // --- A MÁGICA ACONTECE AQUI ---
+        // Em vez de definir campo por campo manualmente e deixar vazio,
+        // nós pegamos TUDO o que o mestre.html enviou (...req.body)
+        // e usamos para criar a ficha.
+        const novaFicha = new Ficha(req.body);
+
+        // Se por acaso o frontend mandou sem ID ou algo assim, o Mongo resolve.
+        // Mas garantimos que nome e senha estão lá.
+        novaFicha.nome = nome;
+        novaFicha.senha = senha;
 
         await novaFicha.save();
         res.json({ ok: true });
+
     } catch (error) {
-        res.status(500).json({ error: "Erro ao criar" });
+        console.error("Erro ao criar ficha:", error);
+        res.status(500).json({ error: "Erro ao criar no banco de dados." });
     }
 });
 
