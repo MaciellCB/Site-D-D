@@ -2818,88 +2818,130 @@ document.addEventListener('click', function(event) {
 });
 
 /* =============================================================
-   SISTEMA DE HISTÓRICO DE DADOS E AJUDA
+   SISTEMA DE HISTÓRICO DE DADOS E AJUDA (GERADOS DINAMICAMENTE)
 ============================================================= */
 
-// Função auxiliar para fechar os modais novos
-function fecharModaisNovos() {
-    document.getElementById('modal-historico').style.display = 'none';
-    document.getElementById('modal-ajuda').style.display = 'none';
-    if (typeof checkScrollLock === 'function') checkScrollLock();
-}
-
-// Abre o Modal de Ajuda
+// 1. MODAL DE AJUDA
 function abrirAjudaSistema() {
-    document.getElementById('popup-config-foto').style.display = 'none'; // Fecha o menu pequeno
-    document.getElementById('modal-ajuda').style.display = 'flex';
+    document.getElementById('popup-config-foto').style.display = 'none';
+
+    // Remove se já existir
+    const existing = document.querySelector('.ajuda-modal-overlay');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.className = 'spell-modal-overlay ajuda-modal-overlay';
+    overlay.style.zIndex = '60000';
+
+    overlay.innerHTML = `
+        <div class="spell-modal" style="width: 800px; height: 80vh; display:flex; flex-direction:column;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <h3>❓ Ajuda sobre o Sistema</h3>
+                <button class="modal-close">✖</button>
+            </div>
+            <div class="modal-body" style="padding: 20px; overflow-y: auto; flex:1;">
+                <div style="margin-bottom: 20px;">
+                    <input type="text" id="pesquisa-ajuda" placeholder="🔍 Pesquisar na ajuda..." 
+                           style="width: 100%; padding: 12px; background: #111; color: #fff; border: 1px solid #444; border-radius: 6px; font-size: 16px;">
+                </div>
+                <div class="grid-ajuda">
+                    <div class="card-ajuda">
+                        <h4>Como rolar dados?</h4>
+                        <p>Clique nos números sublinhados na ficha para realizar rolagens automáticas...</p>
+                    </div>
+                    <div class="card-ajuda">
+                        <h4>Edição de Imagem</h4>
+                        <p>Clique na foto do personagem para abrir o menu de recorte e upload...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
     if (typeof checkScrollLock === 'function') checkScrollLock();
+
+    // Evento para fechar e destruir o modal
+    overlay.querySelector('.modal-close').onclick = () => {
+        overlay.remove();
+        if (typeof checkScrollLock === 'function') checkScrollLock();
+    };
 }
 
-// Abre o Modal de Histórico e renderiza a lista
+// 2. MODAL DE HISTÓRICO
 function abrirHistoricoDados() {
-    document.getElementById('popup-config-foto').style.display = 'none'; // Fecha o menu pequeno
-    renderizarHistoricoDados();
-    document.getElementById('modal-historico').style.display = 'flex';
+    document.getElementById('popup-config-foto').style.display = 'none';
+
+    const existing = document.querySelector('.historico-modal-overlay');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.className = 'spell-modal-overlay historico-modal-overlay';
+    overlay.style.zIndex = '60000';
+
+    // Gera o HTML da lista de dados
+    let listaHtml = '<div style="color: #666; text-align: center; margin-top: 20px;">Nenhum dado rolado nesta sessão ainda.</div>';
+    
+    if (typeof state !== 'undefined' && state.historicoRolls && state.historicoRolls.length > 0) {
+        listaHtml = state.historicoRolls.map(roll => {
+            let borderCor = "#9c27b0";
+            let valorCor = "#e0aaff";
+            if (roll.valor === 20) { borderCor = "#4caf50"; valorCor = "#4caf50"; } 
+            else if (roll.valor === 1) { borderCor = "#f44336"; valorCor = "#f44336"; }
+
+            return `
+                <div class="historico-item" style="border-left-color: ${borderCor};">
+                    <div class="historico-info">
+                        <span class="historico-titulo">${roll.titulo}</span>
+                        <span class="historico-data">Hoje às ${roll.horario}</span>
+                    </div>
+                    <div class="historico-valor" style="color: ${valorCor};">${roll.valor}</div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    overlay.innerHTML = `
+        <div class="spell-modal" style="width: 500px; height: 70vh; display:flex; flex-direction:column;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <h3>🎲 Histórico de Rolagens</h3>
+                <button class="modal-close">✖</button>
+            </div>
+            <div class="modal-body" style="padding: 15px; overflow-y: auto; flex:1; background: #0a0a0a;">
+                <div style="font-size:12px; color:#888; text-align:center; margin-bottom: 10px;">Mostrando os últimos 20 testes</div>
+                <div style="display:flex; flex-direction:column; gap: 8px;">
+                    ${listaHtml}
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
     if (typeof checkScrollLock === 'function') checkScrollLock();
+
+    // Evento para fechar e destruir o modal
+    overlay.querySelector('.modal-close').onclick = () => {
+        overlay.remove();
+        if (typeof checkScrollLock === 'function') checkScrollLock();
+    };
 }
 
-// Função que você deve chamar sempre que um dado for rolado
-// Exemplo de uso: adicionarAoHistorico("Ataque com Espada", 18);
+// 3. FUNÇÃO PARA ALIMENTAR O HISTÓRICO
 function adicionarAoHistorico(titulo, valor) {
     if (typeof state === 'undefined') return;
     if (!state.historicoRolls) state.historicoRolls = [];
 
-    // Cria o objeto do novo roll
     const novoRoll = {
         titulo: titulo,
         valor: valor,
         horario: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
-    // Adiciona no começo do Array (mais recente primeiro)
+    // Adiciona no topo da lista
     state.historicoRolls.unshift(novoRoll);
 
-    // Limita aos 20 dados anteriores
+    // Mantém apenas os últimos 20
     if (state.historicoRolls.length > 20) {
         state.historicoRolls.pop();
     }
-
-    // Opcional: Salvar no servidor (se você quiser que o histórico persista após F5)
-    // if (typeof saveStateToServer === 'function') saveStateToServer();
-}
-
-// Constrói o HTML baseado no Array de histórico
-function renderizarHistoricoDados() {
-    const container = document.getElementById('lista-historico-dados');
-    container.innerHTML = '';
-
-    if (typeof state === 'undefined' || !state.historicoRolls || state.historicoRolls.length === 0) {
-        container.innerHTML = '<div style="color: #666; text-align: center; margin-top: 20px;">Nenhum dado rolado nesta sessão ainda.</div>';
-        return;
-    }
-
-    state.historicoRolls.forEach(roll => {
-        // Define cor baseada no resultado (Crítico, Falha Crítica ou Normal)
-        let borderCor = "#9c27b0"; // Roxo padrão
-        let valorCor = "#e0aaff";
-        
-        if (roll.valor === 20) {
-            borderCor = "#4caf50"; // Verde crítico
-            valorCor = "#4caf50";
-        } else if (roll.valor === 1) {
-            borderCor = "#f44336"; // Vermelho falha
-            valorCor = "#f44336";
-        }
-
-        const itemHtml = `
-            <div class="historico-item" style="border-left-color: ${borderCor};">
-                <div class="historico-info">
-                    <span class="historico-titulo">${roll.titulo}</span>
-                    <span class="historico-data">Hoje às ${roll.horario}</span>
-                </div>
-                <div class="historico-valor" style="color: ${valorCor};">${roll.valor}</div>
-            </div>
-        `;
-        container.insertAdjacentHTML('beforeend', itemHtml);
-    });
 }
