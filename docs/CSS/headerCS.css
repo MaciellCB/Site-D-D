@@ -979,8 +979,8 @@
 /* Botão colado no canto inferior esquerdo */
 .btn-config-foto {
   position: absolute;
-  bottom: 2px; /* Bem no limite inferior */
-  left: 2px;   /* Bem no limite esquerdo */
+  bottom: -5px; 
+  left: -10px;   
   background: #1a1a1a;
   color: #fff;
   border: 1px solid #9c27b0;
