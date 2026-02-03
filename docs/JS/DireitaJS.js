@@ -4330,26 +4330,26 @@ diceStyles.textContent = `
 
         display: flex; /* Para alinhar lado a lado */
         flex-direction: row; /* Inspiração na esquerda, conteúdo na direita */
-        overflow: hidden; /* Para as bordas arredondadas da mancha */
+       
     }
     #dice-results-container.active { right: 20px; }
 
     /* Container para a Inspiração (Esquerda) */
     .inspiration-container {
-        width: 70px; /* Largura fixa para o ícone */
-        flex-shrink: 0; /* Não encolhe */
-        
-        /* Fundo "Mancha preta, meio transparente" */
-        background-color: rgba(0, 0, 0, 0.5);
-        /* Opcional: gradiente sutil para efeito de mancha */
-        background-image: radial-gradient(circle at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 70%, transparent 100%);
-        
-        border-right: 1px solid rgba(156, 39, 176, 0.5); /* Separador à direita */
-        
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+    width: 70px; 
+    flex-shrink: 0; 
+    background-color: rgba(0, 0, 0, 0.5);
+    background-image: radial-gradient(circle at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 70%, transparent 100%);
+    border-right: 1px solid rgba(156, 39, 176, 0.5); 
+    
+    /* ADICIONE ESSAS DUAS LINHAS: */
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
     /* Ícone de Inspiração (Estático, Dourado) */
     .inspiration-icon {
