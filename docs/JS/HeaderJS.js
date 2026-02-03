@@ -2927,7 +2927,7 @@ function abrirHistoricoDados() {
 }
 
 // 3. FUNÇÃO PARA ALIMENTAR O HISTÓRICO
-function adicionarAoHistorico(titulo, valor) {
+   window.adicionarAoHistorico = function(titulo, valor) {
     if (typeof state === 'undefined') return;
     if (!state.historicoRolls) state.historicoRolls = [];
 
@@ -2944,4 +2944,7 @@ function adicionarAoHistorico(titulo, valor) {
     if (state.historicoRolls.length > 20) {
         state.historicoRolls.pop();
     }
-}
+
+    // Salva no servidor para manter o histórico mesmo se recarregar a página
+    if (typeof saveStateToServer === 'function') saveStateToServer();
+};

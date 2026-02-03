@@ -1009,7 +1009,7 @@
   display: none; 
   position: absolute;
   top: 38px;
-  left: 55px; /* <--- AUMENTADO PARA 55px (Afastou do botão) */
+  left: 55px; 
   background: #151515;
   border: 1px solid #333;
   border-radius: 6px;

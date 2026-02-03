@@ -86,6 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
 
             // --- NOVO: EVENTO DE ROLAGEM DE PERÍCIA ---
+            // --- NOVO: EVENTO DE ROLAGEM DE PERÍCIA ---
             const btnDado = li.querySelector('.col-icon');
             btnDado.addEventListener('click', () => {
                 // Efeito visual de clique
@@ -96,11 +97,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 const sinal = bonusTotal >= 0 ? '+' : '';
                 const expressao = `1d20 ${sinal} ${bonusTotal}`;
 
-                // Chama as funções globais definidas no DireitaJS.js
-                // REMOVIDO O AVISO (ALERT) DO ELSE
-                if (typeof rollDiceExpression === 'function' && typeof showDiceResults === 'function') {
+                // CORREÇÃO: Agora chama showCombatResults, que alimenta o Histórico
+                if (typeof rollDiceExpression === 'function' && typeof showCombatResults === 'function') {
                     const resultado = rollDiceExpression(expressao);
-                    showDiceResults(`Perícia: ${nome}`, resultado);
+                    // Passamos o resultado como "Ataque", e null para "Dano"
+                    showCombatResults(`Perícia: ${nome}`, resultado, null); 
                 } 
             });
             // ------------------------------------------

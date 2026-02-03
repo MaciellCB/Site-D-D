@@ -4533,12 +4533,12 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
   // Mostra o container
   requestAnimationFrame(() => { container.classList.add('active'); });
 
-  // --- LÓGICA DE HISTÓRICO LOCAL (NOVIDADE AQUI!) ---
-  if (!isRemote && typeof adicionarAoHistorico === 'function') {
+ // --- LÓGICA DE HISTÓRICO LOCAL (CORRIGIDA) ---
+  if (!isRemote && typeof window.adicionarAoHistorico === 'function') {
     // Salva o ataque no histórico (se houver)
-    if (attackResult) adicionarAoHistorico(`${title} (Acerto)`, attackResult.total);
+    if (attackResult) window.adicionarAoHistorico(`${title} (Acerto)`, attackResult.total);
     // Salva o dano no histórico (se houver)
-    if (damageResult) adicionarAoHistorico(`${title} (Dano)`, damageResult.total);
+    if (damageResult) window.adicionarAoHistorico(`${title} (Dano)`, damageResult.total);
   }
 
   // --- LÓGICA DE SOCKET (Mantenha o seu código original aqui) ---
