@@ -129,10 +129,19 @@
     </button>
 
     <div id="popup-config-foto" class="popup-config-foto">
-      <button onclick="abrirPortraitOBS()">🔗 Abrir OBS</button>
-      <button onclick="alert('Em breve...')">⭐ Exemplo 1</button>
-      <button onclick="alert('Em breve...')">⭐ Exemplo 2</button>
-    </div>
+    <button onclick="abrirPortraitOBS()">
+        🔗 Abrir OBS <br>
+        <small style="font-size: 10px; color: #888;">(Link para o navegador)</small>
+    </button>
+    
+    <button onclick="alert('Configurações de Layout aplicadas!')">
+        🖼️ Alterar Layout
+    </button>
+    
+    <button onclick="alert('Exportando dados da ficha...')">
+        💾 Exportar JSON
+    </button>
+</div>
   </div>
 
   <input type="file" id="input-foto-upload" accept="image/*" style="display: none;" />
