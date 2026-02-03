@@ -49,13 +49,12 @@ async function saveStateToServer() {
   // Se não tiver nome, nem tenta salvar
   if (!state.nome) return;
 
-  // 1. Se já existe um salvamento agendado, CANCELA ele.
-  // Isso faz o cronômetro reiniciar toda vez que você clica ou digita.
+  // 1. Cancela o salvamento anterior se houver cliques simultâneos
   if (saveTimer) {
     clearTimeout(saveTimer);
   }
 
-  // 2. Agenda o salvamento para daqui a 1 segundo (1000ms)
+  // 2. Agenda o salvamento para daqui a 100ms (MUITO mais rápido que os 1000ms anteriores)
   saveTimer = setTimeout(async () => {
     try {
       // Envia os dados para o servidor
@@ -65,14 +64,11 @@ async function saveStateToServer() {
         body: JSON.stringify(state)
       });
 
-      // SUCESSO SILENCIOSO: Não faz nada visualmente.
-      // O dado foi salvo no banco, mas o usuário não é interrompido.
-
+      // SUCESSO SILENCIOSO
     } catch (e) {
-      // Apenas erros graves aparecem no console (para debug), sem travar a tela
       console.error("Erro silencioso de conexão:", e);
     }
-  }, 1000); // <-- Tempo de espera: 1 segundo
+  }, 100); // <-- CORREÇÃO: Alterado de 1000 para 100
 }
 
 
@@ -233,7 +229,9 @@ const CLASSES_WITH_SUBCLASSES = {
 
 const CLASSES_AVAILABLE = Object.keys(CLASSES_WITH_SUBCLASSES);
 const conteudoEl = document.querySelector('.lado-direito .conteudo');
-function uid() { return Date.now() + Math.floor(Math.random() * 1000); }
+function uid() { 
+  return Date.now().toString(36) + Math.random().toString(36).substr(2, 5); 
+}
 
 /* --- FUNÇÃO AUXILIAR PARA TRAVAR/LIBERAR SCROLL (CORRIGIDA) --- */
 function checkScrollLock() {
