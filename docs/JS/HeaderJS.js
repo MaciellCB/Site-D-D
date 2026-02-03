@@ -2781,16 +2781,30 @@ function openAlignmentModal() {
    FUNÇÕES DO POPUP DE CONFIGURAÇÃO DA FOTO
 ============================================================= */
 
-// Função para abrir/fechar o popup
 function toggleConfigPopup(event) {
-    event.stopPropagation(); // Evita que o clique propague e feche o popup imediatamente
+    event.stopPropagation(); // Impede que o clique feche imediatamente
     const popup = document.getElementById('popup-config-foto');
+    
+    // Se estiver visível, esconde. Se estiver escondido, mostra (usando flex para respeitar a coluna)
     if (popup.style.display === 'flex') {
         popup.style.display = 'none';
     } else {
         popup.style.display = 'flex';
     }
 }
+
+// Fecha o popup se o usuário clicar em qualquer outro lugar da tela
+document.addEventListener('click', function(event) {
+    const popup = document.getElementById('popup-config-foto');
+    const btn = document.querySelector('.btn-config-foto');
+    
+    if (popup && popup.style.display === 'flex') {
+        // Se o clique não foi no popup nem no botão de abrir, fecha o popup
+        if (!popup.contains(event.target) && event.target !== btn) {
+            popup.style.display = 'none';
+        }
+    }
+});
 
 // Evento para fechar o popup ao clicar em qualquer outro lugar da tela
 document.addEventListener('click', function(event) {

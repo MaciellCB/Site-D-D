@@ -119,12 +119,12 @@
 
   <section class="info-personagem">
     <div class="info-esquerda">
-  <div style="position: relative; display: inline-block; margin-bottom: 15px;">
+  <div style="position: relative; display: inline-block;">
     <img src="img/imagem-no-site/personagem.png" alt="Foto do personagem" class="foto-personagem"
       id="img-personagem-visual" onclick="document.getElementById('input-foto-upload').click()"
       title="Clique para alterar a foto" />
 
-    <button onclick="toggleConfigPopup(event)" class="btn-config-foto" title="Configurações">
+    <button onclick="toggleConfigPopup(event)" class="btn-config-foto" title="Opções da Ficha">
       ⚙️
     </button>
 
@@ -273,7 +273,8 @@
               <div class="vida-fill" id="vida-fill"></div>
               <div class="vida-text">
                 <button class="vida-btn menos5">«</button>
-                <button class="vida-btn menos1"><</button>
+                <button class="vida-btn menos1">
+                  << /button>
                     <span id="vida-atual">0</span>/<span id="vida-total">0</span>
                     <button class="vida-btn mais1">></button>
                     <button class="vida-btn mais5">»</button>
@@ -291,7 +292,8 @@
                 <div class="vida-fill" id="vida-temp-fill"></div>
                 <div class="vida-text">
                   <button class="vida-btn menos5">«</button>
-                  <button class="vida-btn menos1"><</button>
+                  <button class="vida-btn menos1">
+                    << /button>
                       <span id="vida-temp-atual" contenteditable="true">0</span>
                       <button class="vida-btn mais1">></button>
                       <button class="vida-btn mais5">»</button>
@@ -304,11 +306,12 @@
                 <div class="vida-fill" id="dano-necro-fill" style="background-color: purple;"></div>
                 <div class="vida-text">
                   <button class="vida-btn menos5">«</button>
-                  <button class="vida-btn menos1"><</button>
+                  <button class="vida-btn menos1">
+                    << /button>
 
-                  <span id="dano-necro-atual" contenteditable="true">0</span>
-                  <button class="vida-btn mais1">></button>
-                  <button class="vida-btn mais5">»</button>
+                      <span id="dano-necro-atual" contenteditable="true">0</span>
+                      <button class="vida-btn mais1">></button>
+                      <button class="vida-btn mais5">»</button>
                 </div>
               </div>
             </div>
