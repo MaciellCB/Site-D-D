@@ -2816,3 +2816,90 @@ document.addEventListener('click', function(event) {
         popup.style.display = 'none';
     }
 });
+
+/* =============================================================
+   SISTEMA DE HISTÓRICO DE DADOS E AJUDA
+============================================================= */
+
+// Função auxiliar para fechar os modais novos
+function fecharModaisNovos() {
+    document.getElementById('modal-historico').style.display = 'none';
+    document.getElementById('modal-ajuda').style.display = 'none';
+    if (typeof checkScrollLock === 'function') checkScrollLock();
+}
+
+// Abre o Modal de Ajuda
+function abrirAjudaSistema() {
+    document.getElementById('popup-config-foto').style.display = 'none'; // Fecha o menu pequeno
+    document.getElementById('modal-ajuda').style.display = 'flex';
+    if (typeof checkScrollLock === 'function') checkScrollLock();
+}
+
+// Abre o Modal de Histórico e renderiza a lista
+function abrirHistoricoDados() {
+    document.getElementById('popup-config-foto').style.display = 'none'; // Fecha o menu pequeno
+    renderizarHistoricoDados();
+    document.getElementById('modal-historico').style.display = 'flex';
+    if (typeof checkScrollLock === 'function') checkScrollLock();
+}
+
+// Função que você deve chamar sempre que um dado for rolado
+// Exemplo de uso: adicionarAoHistorico("Ataque com Espada", 18);
+function adicionarAoHistorico(titulo, valor) {
+    if (typeof state === 'undefined') return;
+    if (!state.historicoRolls) state.historicoRolls = [];
+
+    // Cria o objeto do novo roll
+    const novoRoll = {
+        titulo: titulo,
+        valor: valor,
+        horario: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    // Adiciona no começo do Array (mais recente primeiro)
+    state.historicoRolls.unshift(novoRoll);
+
+    // Limita aos 20 dados anteriores
+    if (state.historicoRolls.length > 20) {
+        state.historicoRolls.pop();
+    }
+
+    // Opcional: Salvar no servidor (se você quiser que o histórico persista após F5)
+    // if (typeof saveStateToServer === 'function') saveStateToServer();
+}
+
+// Constrói o HTML baseado no Array de histórico
+function renderizarHistoricoDados() {
+    const container = document.getElementById('lista-historico-dados');
+    container.innerHTML = '';
+
+    if (typeof state === 'undefined' || !state.historicoRolls || state.historicoRolls.length === 0) {
+        container.innerHTML = '<div style="color: #666; text-align: center; margin-top: 20px;">Nenhum dado rolado nesta sessão ainda.</div>';
+        return;
+    }
+
+    state.historicoRolls.forEach(roll => {
+        // Define cor baseada no resultado (Crítico, Falha Crítica ou Normal)
+        let borderCor = "#9c27b0"; // Roxo padrão
+        let valorCor = "#e0aaff";
+        
+        if (roll.valor === 20) {
+            borderCor = "#4caf50"; // Verde crítico
+            valorCor = "#4caf50";
+        } else if (roll.valor === 1) {
+            borderCor = "#f44336"; // Vermelho falha
+            valorCor = "#f44336";
+        }
+
+        const itemHtml = `
+            <div class="historico-item" style="border-left-color: ${borderCor};">
+                <div class="historico-info">
+                    <span class="historico-titulo">${roll.titulo}</span>
+                    <span class="historico-data">Hoje às ${roll.horario}</span>
+                </div>
+                <div class="historico-valor" style="color: ${valorCor};">${roll.valor}</div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', itemHtml);
+    });
+}

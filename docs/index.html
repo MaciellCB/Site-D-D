@@ -133,14 +133,8 @@
       🔗 Abrir OBS <br>
       <span style="font-size: 10px; color: #888; font-weight: normal;">(Link para o navegador)</span>
     </button>
-    
-    <button onclick="alert('Função 1 ativada')">
-      🎭 Mudar Layout
-    </button>
-    
-    <button onclick="alert('Função 2 ativada')">
-      💾 Exportar Ficha
-    </button>
+    <div style="height: 1px; background: #333; margin: 4px 0;"></div> <button onclick="abrirHistoricoDados()">🎲 Histórico de Dados</button>
+    <button onclick="abrirAjudaSistema()">❓ Ajuda sobre Sistema</button>
   </div>
 </div>
 
@@ -282,8 +276,7 @@
               <div class="vida-fill" id="vida-fill"></div>
               <div class="vida-text">
                 <button class="vida-btn menos5">«</button>
-                <button class="vida-btn menos1">
-                  << /button>
+                <button class="vida-btn menos1"><</button>
                     <span id="vida-atual">0</span>/<span id="vida-total">0</span>
                     <button class="vida-btn mais1">></button>
                     <button class="vida-btn mais5">»</button>
@@ -301,8 +294,7 @@
                 <div class="vida-fill" id="vida-temp-fill"></div>
                 <div class="vida-text">
                   <button class="vida-btn menos5">«</button>
-                  <button class="vida-btn menos1">
-                    << /button>
+                  <button class="vida-btn menos1"> < </button>
                       <span id="vida-temp-atual" contenteditable="true">0</span>
                       <button class="vida-btn mais1">></button>
                       <button class="vida-btn mais5">»</button>
@@ -315,8 +307,7 @@
                 <div class="vida-fill" id="dano-necro-fill" style="background-color: purple;"></div>
                 <div class="vida-text">
                   <button class="vida-btn menos5">«</button>
-                  <button class="vida-btn menos1">
-                    << /button>
+                  <button class="vida-btn menos1"><</button>
 
                       <span id="dano-necro-atual" contenteditable="true">0</span>
                       <button class="vida-btn mais1">></button>
@@ -833,3 +824,42 @@
 </body>
 
 </html>
+
+<div id="modal-historico" class="spell-modal-overlay" style="display:none; z-index: 60000;">
+    <div class="spell-modal" style="width: 500px; height: 70vh; display:flex; flex-direction:column;">
+      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>🎲 Histórico de Rolagens</h3>
+        <button class="modal-close" onclick="fecharModaisNovos()">✖</button>
+      </div>
+      <div class="modal-body" style="padding: 15px; overflow-y: auto; flex:1; background: #0a0a0a;">
+        <div style="font-size:12px; color:#888; text-align:center; margin-bottom: 10px;">Mostrando os últimos 20 testes</div>
+        <div id="lista-historico-dados" style="display:flex; flex-direction:column; gap: 8px;">
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-ajuda" class="spell-modal-overlay" style="display:none; z-index: 60000;">
+    <div class="spell-modal" style="width: 800px; height: 80vh; display:flex; flex-direction:column;">
+      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>❓ Ajuda sobre o Sistema</h3>
+        <button class="modal-close" onclick="fecharModaisNovos()">✖</button>
+      </div>
+      <div class="modal-body" style="padding: 20px; overflow-y: auto; flex:1;">
+        <div style="margin-bottom: 20px;">
+          <input type="text" id="pesquisa-ajuda" placeholder="🔍 Pesquisar na ajuda..." 
+                 style="width: 100%; padding: 12px; background: #111; color: #fff; border: 1px solid #444; border-radius: 6px; font-size: 16px;">
+        </div>
+        <div class="grid-ajuda">
+          <div class="card-ajuda">
+            <h4>Como rolar dados?</h4>
+            <p>Clique nos números sublinhados na ficha para realizar rolagens automáticas...</p>
+          </div>
+          <div class="card-ajuda">
+            <h4>Edição de Imagem</h4>
+            <p>Clique na foto do personagem para abrir o menu de recorte e upload...</p>
+          </div>
+          </div>
+      </div>
+    </div>
+  </div>
