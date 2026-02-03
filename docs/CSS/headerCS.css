@@ -971,3 +971,80 @@
     color: #e0aaff;
     opacity: 0.1;
 }
+
+
+
+
+/* =============================================================
+   BOTÃO DE CONFIGURAÇÃO DA FOTO E POPUP
+============================================================= */
+
+/* Botão de engrenagem no canto inferior esquerdo da foto */
+.btn-config-foto {
+  position: absolute;
+  bottom: -10px;
+  left: -10px; /* Movido totalmente para a esquerda */
+  background: #9c27b0;
+  color: white;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  transition: 0.2s;
+  padding: 0;
+}
+
+.btn-config-foto:hover {
+  background: #ba68c8;
+  transform: scale(1.1);
+}
+
+/* Popup de opções */
+.popup-config-foto {
+  display: none; /* Escondido por padrão */
+  position: absolute;
+  bottom: -40px;
+  left: 25px; /* Aparece ao lado do botão de engrenagem */
+  background: #1a1a1a;
+  border: 1px solid #9c27b0;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+  z-index: 20000;
+  flex-direction: column;
+  min-width: 140px;
+  overflow: hidden;
+  animation: fadeInPopup 0.2s ease-out;
+}
+
+@keyframes fadeInPopup {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.popup-config-foto button {
+  background: transparent;
+  color: #fff;
+  border: none;
+  padding: 10px 12px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 13px;
+  border-bottom: 1px solid #333;
+  transition: background 0.2s;
+  font-family: Arial, sans-serif;
+}
+
+.popup-config-foto button:last-child {
+  border-bottom: none;
+}
+
+.popup-config-foto button:hover {
+  background: #9c27b0;
+}

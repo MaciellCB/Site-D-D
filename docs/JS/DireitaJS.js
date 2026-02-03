@@ -4530,10 +4530,7 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
   // Mostra o container
   requestAnimationFrame(() => { container.classList.add('active'); });
 
-  // --- TEMPO DE DURAÇÃO (15 Segundos) ---
-  diceTimer = setTimeout(() => { 
-      container.classList.remove('active'); 
-  }, 15000);
+  
 
   // --- LÓGICA DE SOCKET ---
   if (!isRemote && typeof socket !== 'undefined') {

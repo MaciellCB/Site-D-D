@@ -2775,3 +2775,30 @@ function openAlignmentModal() {
         delete window.selectAlignment; // Limpa função global
     };
 }
+
+
+/* =============================================================
+   FUNÇÕES DO POPUP DE CONFIGURAÇÃO DA FOTO
+============================================================= */
+
+// Função para abrir/fechar o popup
+function toggleConfigPopup(event) {
+    event.stopPropagation(); // Evita que o clique propague e feche o popup imediatamente
+    const popup = document.getElementById('popup-config-foto');
+    if (popup.style.display === 'flex') {
+        popup.style.display = 'none';
+    } else {
+        popup.style.display = 'flex';
+    }
+}
+
+// Evento para fechar o popup ao clicar em qualquer outro lugar da tela
+document.addEventListener('click', function(event) {
+    const popup = document.getElementById('popup-config-foto');
+    const btn = document.querySelector('.btn-config-foto');
+    
+    // Se o popup existe, está visível, e o clique NÃO foi nele nem no botão de abrir
+    if (popup && popup.style.display === 'flex' && !popup.contains(event.target) && event.target !== btn) {
+        popup.style.display = 'none';
+    }
+});

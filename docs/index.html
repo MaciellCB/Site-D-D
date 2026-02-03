@@ -119,36 +119,24 @@
 
   <section class="info-personagem">
     <div class="info-esquerda">
-      <div style="position: relative; display: inline-block; margin-bottom: 15px;">
-        <img src="img/imagem-no-site/personagem.png" alt="Foto do personagem" class="foto-personagem"
-          id="img-personagem-visual" onclick="document.getElementById('input-foto-upload').click()"
-          title="Clique para alterar a foto" />
+  <div style="position: relative; display: inline-block; margin-bottom: 15px;">
+    <img src="img/imagem-no-site/personagem.png" alt="Foto do personagem" class="foto-personagem"
+      id="img-personagem-visual" onclick="document.getElementById('input-foto-upload').click()"
+      title="Clique para alterar a foto" />
 
-        <button onclick="abrirPortraitOBS()" style="
-              position: absolute; 
-              bottom: -12px; 
-              left: 50%; 
-              transform: translateX(-50%); 
-              background: #9c27b0; 
-              color: white; 
-              border: 1px solid #fff; 
-              border-radius: 50%; 
-              width: 24px; 
-              height: 24px; 
-              font-size: 8px; 
-              font-weight: bold; 
-              cursor: pointer;
-              z-index: 10;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              box-shadow: 0 2px 5px rgba(0,0,0,0.5);" title="Abrir Portrait para OBS">
-          OBS
-        </button>
-      </div>
+    <button onclick="toggleConfigPopup(event)" class="btn-config-foto" title="Configurações">
+      ⚙️
+    </button>
 
-      <input type="file" id="input-foto-upload" accept="image/*" style="display: none;" />
+    <div id="popup-config-foto" class="popup-config-foto">
+      <button onclick="abrirPortraitOBS()">🔗 Abrir OBS</button>
+      <button onclick="alert('Em breve...')">⭐ Exemplo 1</button>
+      <button onclick="alert('Em breve...')">⭐ Exemplo 2</button>
     </div>
+  </div>
+
+  <input type="file" id="input-foto-upload" accept="image/*" style="display: none;" />
+</div>
     <div class="info-direita">
       <div class="linha-info">
         <div class="campo">

@@ -2231,3 +2231,44 @@ a.editar-spell {
     color: #e0aaff; 
     font-size: 26px;
 }
+
+
+
+/* No seu CSS ou na tag <style> do JS */
+.dice-tooltip {
+    visibility: hidden; 
+    opacity: 0;
+    position: absolute; 
+    bottom: 100%; 
+    right: 0;
+    background: #2a1a35; 
+    border: 1px solid #9c27b0; 
+    padding: 8px 12px; 
+    border-radius: 6px;
+    font-size: 14px; 
+    font-weight: 500; 
+    
+    /* ALTERAÇÕES CRÍTICAS AQUI: */
+    white-space: pre-wrap !important; /* Permite quebras de linha (<br>) */
+    max-height: 180px;               /* Evita que o balão suba demais e suma da tela */
+    overflow-y: auto;                /* Adiciona scroll se houver muitos mísseis (ex: Upcast alto) */
+    min-width: 160px;
+    width: max-content;
+    
+    z-index: 100; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.8); 
+    color: #ddd;
+    margin-bottom: 5px; 
+    transition: opacity 0.2s;
+    pointer-events: none;
+    text-align: left;
+}
+
+/* Estilizando a barrinha de scroll do tooltip para ficar bonita */
+.dice-tooltip::-webkit-scrollbar {
+    width: 4px;
+}
+.dice-tooltip::-webkit-scrollbar-thumb {
+    background: #9c27b0;
+    border-radius: 10px;
+}
