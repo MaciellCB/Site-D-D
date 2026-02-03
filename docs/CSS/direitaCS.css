@@ -2213,3 +2213,21 @@ a.editar-spell {
     color: #ddd;
     line-height: 1.5;
 }
+
+
+.dice-tooltip {
+    /* ... seus estilos existentes ... */
+    white-space: pre-wrap; /* Permite que o <br> ou quebras de linha funcionem */
+    text-align: left;
+    min-width: 150px;
+    line-height: 1.4;
+    background: #1a1a1a;
+    border: 1px solid #9c27b0;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+/* Um destaque para o total quando houver múltiplos projéteis */
+.dice-value.multi-projectile {
+    color: #e0aaff; 
+    font-size: 26px;
+}

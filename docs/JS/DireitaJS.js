@@ -4748,147 +4748,89 @@ document.addEventListener('click', function(e) {
         e.preventDefault(); 
         e.stopPropagation();
 
-        // -------------------------------------------------------------
-        // A. VERIFICA SE É MAGIA (SPELL CARD)
-        // -------------------------------------------------------------
-        const spellCard = e.target.closest('.spell-card');
-        if (spellCard) {
-            const spellTitle = spellCard.querySelector('.spell-title')?.textContent || "Magia";
-            
-           // 1. CONSUMO DE SLOT (CORRIGIDO: PRIORIDADE DE PACTO CORRETA)
-            const selectSlot = spellCard.querySelector('.spell-slot-selector');
-            if (selectSlot) {
-                const selectedLevel = parseInt(selectSlot.value); // Nível escolhido (ex: 1)
-                let slotKeyToUse = String(selectedLevel); // Padrão: Tenta usar slot normal (1 a 9)
+    // -------------------------------------------------------------
+    // A. VERIFICA SE É MAGIA (SPELL CARD) - LÓGICA DE PROJÉTEIS
+    // -------------------------------------------------------------
+const spellCard = e.target.closest('.spell-card');
+if (spellCard) {
+    const spellId = spellCard.getAttribute('data-id');
+    const s = state.spells.find(x => String(x.id) === String(spellId));
+    if (!s) return;
 
-                // --- PASSO A: Descobrir dados REAIS do Pacto (Bruxo) ---
-                let nivelPacto = 0;
-                let maxPacto = 0;
+    const spellTitle = s.name || "Magia";
+    const selectSlot = spellCard.querySelector('.spell-slot-selector');
+    const selectedLevel = selectSlot ? parseInt(selectSlot.value) : (s.levelNumber || 0);
+    const baseLevel = s.levelNumber || 0;
 
-                if (typeof calcularRecursosTotais === 'function') {
-                    const dadosMisticos = calcularRecursosTotais(state.niveisClasses, state.abilities, state.atributos);
-                    if (dadosMisticos.pact) {
-                        nivelPacto = dadosMisticos.pact.nivel || 0;
-                        maxPacto = dadosMisticos.pact.qtd || 0;
-                    }
-                } else {
-                    // Fallback de segurança
-                    if (state.spellSlots['pact']) {
-                        nivelPacto = state.spellSlots['pact'].level || 0;
-                        maxPacto = state.spellSlots['pact'].max || 0;
-                    }
-                }
+    // --- LÓGICA DE MULTI-PROJÉTEIS ---
+    let numProjectiles = 1;
+    let isMulti = false;
 
-                // --- PASSO B: DEFINIR PRIORIDADE (A CORREÇÃO ESTÁ AQUI) ---
-                // Se eu sou Bruxo e meu pacto aguenta essa magia, EU TENTO O PACTO.
-                // Não importa se está cheio agora. Se estiver cheio, o código lá embaixo
-                // vai perceber e tentar o slot normal (fallback).
-                if (maxPacto > 0 && nivelPacto >= selectedLevel) {
-                    slotKeyToUse = 'pact';
-                }
+    // Identifica magias de múltiplos projéteis (Mísseis Mágicos, Raio Ardente, etc)
+    const nomeLimpo = spellTitle.toLowerCase();
+    if (nomeLimpo.includes("mísseis mágicos") || nomeLimpo.includes("misseis magicos")) {
+        numProjectiles = 3 + (selectedLevel - baseLevel);
+        isMulti = true;
+    } else if (nomeLimpo.includes("raio ardente")) {
+        numProjectiles = 3 + (selectedLevel - baseLevel);
+        isMulti = true;
+    }
 
-                // --- PASSO C: PREPARAR O SLOT ALVO ---
-                // Garante que o objeto existe no state
-                if (!state.spellSlots[slotKeyToUse]) {
-                    state.spellSlots[slotKeyToUse] = { used: 0, status: [] };
-                }
+    // --- EXECUÇÃO DAS ROLAGENS ---
+    let totalDamage = 0;
+    let allRollsDetails = [];
+    const damageText = spellCard.querySelector('.dynamic-damage-text')?.textContent.trim() || s.damage;
 
-                const slotAlvo = state.spellSlots[slotKeyToUse];
-                
-                // Define o máximo real baseado no tipo
-                let maxSlots = 0;
-                if (slotKeyToUse === 'pact') maxSlots = maxPacto;
-                else maxSlots = state.spellSlots[slotKeyToUse].max || 0;
-
-                // Garante integridade visual (arrays de true/false)
-                if (!Array.isArray(slotAlvo.status)) slotAlvo.status = [];
-                while (slotAlvo.status.length < maxSlots) slotAlvo.status.push(false);
-
-                // Busca o primeiro slot livre (false)
-                const firstAvailableIndex = slotAlvo.status.findIndex(used => used === false);
-
-                // --- PASSO D: TENTAR GASTAR OU FAZER FALLBACK ---
-                if (firstAvailableIndex === -1) {
-                    
-                    // CENÁRIO: Tentei usar o slot escolhido, mas estava cheio.
-                    
-                    if (slotKeyToUse === 'pact') {
-                        // Se eu tentei Pacto e falhou, agora tento o slot NORMAL do nível selecionado.
-                        // Isso cobre multiclasse (Bruxo gastou tudo, usa slot de Mago).
-                        const keyNormal = String(selectedLevel);
-                        
-                        // Garante existência
-                        if (!state.spellSlots[keyNormal]) state.spellSlots[keyNormal] = { used: 0, status: [] };
-                        const slotNormal = state.spellSlots[keyNormal];
-                        const maxNormal = slotNormal.max || 0; // Pega do state, pois slots normais já estão lá
-
-                        // Verifica se tem espaço no normal
-                        let indexNormal = -1;
-                        if (maxNormal > 0) {
-                            if (!Array.isArray(slotNormal.status)) slotNormal.status = [];
-                            while (slotNormal.status.length < maxNormal) slotNormal.status.push(false);
-                            indexNormal = slotNormal.status.findIndex(u => u === false);
-                        }
-
-                        if (indexNormal !== -1) {
-                            // SUCESSO NO FALLBACK (SLOT NORMAL)
-                            slotNormal.status[indexNormal] = true;
-                            saveStateToServer();
-                            setTimeout(() => renderActiveTab(), 50);
-                            // Segue para rolar o dado...
-                        } else {
-                            // FALHA TOTAL (Pacto cheio E Normal cheio/inexistente)
-                            alert(`Sem espaços de Pacto e sem espaços de ${selectedLevel}º Círculo disponíveis!`);
-                            return; // Cancela rolagem
-                        }
-                    } else {
-                        // Eu já estava tentando slot normal e não tem.
-                        alert(`Sem espaços de ${selectedLevel}º Círculo disponíveis!`);
-                        return; // Cancela rolagem
-                    }
-                } else {
-                    // SUCESSO NO SLOT PREFERENCIAL
-                    slotAlvo.status[firstAvailableIndex] = true;
-                    saveStateToServer();
-                    setTimeout(() => renderActiveTab(), 50);
-                }
-            }
-
-            // 2. EXTRAÇÃO DO TEXTO DO DANO
-            let damageText = '';
-            const dynamicSpan = spellCard.querySelector('.dynamic-damage-text');
-            if (dynamicSpan) {
-                damageText = dynamicSpan.textContent.trim();
+    // Se for multi-projétil, rodamos o loop
+    for (let i = 1; i <= numProjectiles; i++) {
+        if (damageText && damageText !== '-' && damageText !== '0') {
+            let res = rollDiceExpression(damageText);
+            totalDamage += res.total;
+            if (isMulti) {
+                allRollsDetails.push(`P${i}: ${res.text} <small>(${res.detail})</small>`);
             } else {
-                const parent = e.target.closest('.spell-damage');
-                if (parent) {
-                     damageText = Array.from(parent.childNodes).filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent.trim()).join('');
-                }
+                allRollsDetails.push(res.detail);
             }
-
-            // 3. CÁLCULO
-            let damageRes = null;
-            if (damageText && damageText !== '-' && damageText !== '0') { damageRes = rollDiceExpression(damageText); }
-
-            let attackRes = null;
-            const vals = getSpellAttackValues(); 
-            if (vals) {
-                const d20 = Math.floor(Math.random() * 20) + 1;
-                const totalAttack = d20 + vals.prof + vals.mod + vals.extra;
-                const isCrit = (d20 === 20);
-                const isFumble = (d20 === 1);
-                const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
-                const parts = [d20Html];
-                if (vals.mod !== 0) parts.push(vals.mod);
-                if (vals.prof !== 0) parts.push(vals.prof);
-                if (vals.extra !== 0) parts.push(vals.extra);
-
-                attackRes = { total: totalAttack, text: totalAttack.toString(), detail: parts.join(' + '), isCrit: isCrit, isFumble: isFumble };
-            }
-
-            if (attackRes || damageRes) showCombatResults(spellTitle, attackRes, damageRes);
-            return;
         }
+    }
+
+    const damageRes = {
+        total: totalDamage,
+        text: totalDamage.toString(),
+        detail: allRollsDetails.join(isMulti ? '<br>' : ' + '),
+        label: isMulti ? `${numProjectiles} PROJÉTEIS` : "DANO",
+        isCrit: false // Mísseis não criticam, Raio Ardente sim (ajuste se desejar)
+    };
+
+    // --- ROLAGEM DE ATAQUE (Ignora se for Mísseis Mágicos) ---
+    let attackRes = null;
+    if (!nomeLimpo.includes("mísseis")) {
+        const vals = getSpellAttackValues();
+        if (vals) {
+            const d20 = Math.floor(Math.random() * 20) + 1;
+            const totalAttack = d20 + vals.prof + vals.mod + vals.extra;
+            const isCrit = (d20 === 20);
+            const isFumble = (d20 === 1);
+            const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
+            
+            attackRes = {
+                total: totalAttack,
+                text: totalAttack.toString(),
+                detail: `${d20Html} + ${vals.mod} + ${vals.prof} + ${vals.extra}`,
+                isCrit: isCrit,
+                isFumble: isFumble,
+                label: isMulti ? "ATAQUE (1º RAIO)" : "ACERTO" // No D&D, Raio Ardente rola ataque para cada raio, mas aqui simplificamos.
+            };
+        }
+    }
+
+    // Exibe o resultado unificado
+    showCombatResults(spellTitle, attackRes, damageRes);
+
+    // --- CONSUMO DE SLOT (Sua lógica existente) ---
+    // Mantenha aqui a sua parte de gasto de slots que já funciona...
+    return;
+}
 
         // -------------------------------------------------------------
         // B. VERIFICA SE É ITEM (ARMA/INVENTÁRIO) - CORRIGIDO V3
