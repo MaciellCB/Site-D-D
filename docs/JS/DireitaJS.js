@@ -41,34 +41,38 @@ async function carregarCatalogosDireita() {
 carregarCatalogosDireita();
 
 
-// --- FUNÇÕES DE LOGIN E SALVAMENTO ---
-
-let saveTimer = null; // Variável global para controlar o cronômetro
+let saveTimer = null; 
+let isUserInteracting = false; // NOVA VARIÁVEL: O "Escudo"
 
 async function saveStateToServer() {
-  // Se não tiver nome, nem tenta salvar
   if (!state.nome) return;
 
-  // 1. Cancela o salvamento anterior se houver cliques simultâneos
+  // 1. Ativa o escudo: O usuário está clicando, bloqueie a recriação da tela.
+  isUserInteracting = true;
+
   if (saveTimer) {
     clearTimeout(saveTimer);
   }
 
-  // 2. Agenda o salvamento para daqui a 100ms (MUITO mais rápido que os 1000ms anteriores)
+  // 2. Tempo super rápido de 100ms
   saveTimer = setTimeout(async () => {
     try {
-      // Envia os dados para o servidor
       await fetch(`${API_URL}/save-ficha`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(state)
       });
 
-      // SUCESSO SILENCIOSO
+      // 3. Desativa o escudo 500ms DEPOIS de salvar, para garantir que o servidor já atualizou
+      setTimeout(() => {
+        isUserInteracting = false;
+      }, 500);
+
     } catch (e) {
       console.error("Erro silencioso de conexão:", e);
+      isUserInteracting = false;
     }
-  }, 100); // <-- CORREÇÃO: Alterado de 1000 para 100
+  }, 100); 
 }
 
 
@@ -1678,41 +1682,39 @@ function renderSpells() {
    (Evita que a tela pisque ou trave enquanto você digita)
 ============================================================= */
 window.addEventListener('sheet-updated', () => {
-    // 1. Atualiza DT Magias (Cálculo silencioso)
+    // 1. Atualiza DT Magias (Pode manter o código que já tem aqui)
     if (typeof calculateSpellDC === 'function') {
         state.dtMagias = calculateSpellDC();
         const inputDT = document.getElementById('dtMagiasInput');
         if (inputDT) inputDT.value = state.dtMagias;
-        
         const inputDTPrep = document.getElementById('dtMagiasInput_Prep');
         if (inputDTPrep) inputDTPrep.value = state.dtMagias;
     }
 
-    // 2. FORÇA A ATUALIZAÇÃO DA ESQUERDA (CA, Vida, Status, etc)
+    // 2. FORÇA A ATUALIZAÇÃO DA ESQUERDA (CA, Vida, Status - Pode manter)
     if (typeof atualizarAC === 'function') atualizarAC();
     if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
 
-    // 3. ATUALIZAÇÃO DA DIREITA (COM PROTEÇÃO DE DIGITAÇÃO)
-    if (['Magias', 'Mag. Preparadas', 'Habilidades', 'Combate', 'Inventário', 'Descrição'].includes(state.activeTab)) {
+    // ==============================================================
+    // >>> NOVO BLOQUEIO AQUI <<<
+    // Se o usuário estiver clicando em magias/colapsados, NÃO redesenhe a direita!
+    if (typeof isUserInteracting !== 'undefined' && isUserInteracting) {
+        return; // Sai da função e ignora o servidor temporariamente
+    }
+    // ==============================================================
 
+    // 3. ATUALIZAÇÃO DA DIREITA (O resto do seu código continua igual...)
+    if (['Magias', 'Mag. Preparadas', 'Habilidades', 'Combate', 'Inventário', 'Descrição'].includes(state.activeTab)) {
         const activeElement = document.activeElement;
-        
-        // >>> A MÁGICA ACONTECE AQUI <<<
-        // Se o usuário estiver digitando em um Input ou Textarea DENTRO da direita, 
-        // NÃO redesenha a tela. O valor já está lá porque ele acabou de digitar.
         const isTyping = activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA');
         const isInsideContent = document.querySelector('.lado-direito').contains(activeElement);
 
-        if (isTyping && isInsideContent) {
-            // Ignora o redesenho para não travar a digitação
-            return; 
-        }
+        if (isTyping && isInsideContent) return;
 
-        // Se não estiver digitando, salva o scroll e redesenha
         const scrollContainer = document.querySelector('.lado-direito .conteudo') || document.querySelector('.lado-direito');
         const savedScroll = scrollContainer ? scrollContainer.scrollTop : 0;
 
-        renderActiveTab();
+        renderActiveTab(); // A tela só é recriada se o escudo estiver desligado
 
         if (scrollContainer) scrollContainer.scrollTop = savedScroll;
     }
