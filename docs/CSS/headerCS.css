@@ -1008,8 +1008,8 @@
 .popup-config-foto {
   display: none; 
   position: absolute;
-  top: 38px;  /* Abaixo do botão */
-  left: 35px; /* <--- ALTERADO: Agora abre mais para a direita */
+  top: 38px;
+  left: 55px; /* <--- AUMENTADO PARA 55px (Afastou do botão) */
   background: #151515;
   border: 1px solid #333;
   border-radius: 6px;

@@ -235,14 +235,20 @@ const CLASSES_AVAILABLE = Object.keys(CLASSES_WITH_SUBCLASSES);
 const conteudoEl = document.querySelector('.lado-direito .conteudo');
 function uid() { return Date.now() + Math.floor(Math.random() * 1000); }
 
-/* --- FUNÇÃO AUXILIAR PARA TRAVAR/LIBERAR SCROLL --- */
+/* --- FUNÇÃO AUXILIAR PARA TRAVAR/LIBERAR SCROLL (CORRIGIDA) --- */
 function checkScrollLock() {
-  const hasModal = document.querySelector('.spell-modal-overlay') || document.querySelector('.catalog-overlay-large');
-  if (hasModal) {
-    document.body.classList.add('no-scroll');
-  } else {
-    document.body.classList.remove('no-scroll');
-  }
+  const modais = document.querySelectorAll('.spell-modal-overlay, .catalog-overlay-large, .ajuda-modal-overlay, .historico-modal-overlay');
+  
+  let temModalAberto = false;
+  modais.forEach(modal => {
+    if (window.getComputedStyle(modal).display !== 'none') {
+      temModalAberto = true;
+    }
+  });
+
+  // Remove as classes antigas e usa o estilo direto
+  document.body.classList.remove('no-scroll');
+  document.body.style.overflow = temModalAberto ? 'hidden' : '';
 }
 
 
@@ -4420,9 +4426,6 @@ document.head.appendChild(diceStyles);
 
 
 /* =============================================================
-   ATUALIZAÇÃO: showCombatResults com suporte a Remoto
-============================================================= */
-/* =============================================================
    ATUALIZAÇÃO: showCombatResults (Com botão X e mais tempo)
 ============================================================= */
 let diceTimer = null;
@@ -4530,9 +4533,15 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
   // Mostra o container
   requestAnimationFrame(() => { container.classList.add('active'); });
 
-  
+  // --- LÓGICA DE HISTÓRICO LOCAL (NOVIDADE AQUI!) ---
+  if (!isRemote && typeof adicionarAoHistorico === 'function') {
+    // Salva o ataque no histórico (se houver)
+    if (attackResult) adicionarAoHistorico(`${title} (Acerto)`, attackResult.total);
+    // Salva o dano no histórico (se houver)
+    if (damageResult) adicionarAoHistorico(`${title} (Dano)`, damageResult.total);
+  }
 
-  // --- LÓGICA DE SOCKET ---
+  // --- LÓGICA DE SOCKET (Mantenha o seu código original aqui) ---
   if (!isRemote && typeof socket !== 'undefined') {
     const payload = {
       socketId: socket.id,
