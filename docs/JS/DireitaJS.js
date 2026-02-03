@@ -1496,16 +1496,22 @@ function openAbilityCatalogOverlay() {
   renderCatalogList();
 }
 
-/* ---------------- FORMATAR CARD DE MAGIA (COM UPCAST) ---------------- */
+/* ---------------- FORMATAR CARD DE MAGIA (DESIGN LIMPO + TAGS) ---------------- */
 function formatMySpellCard(s) {
-  const schoolPill = `<div class="pill" style="margin:0;">${s.school || '—'}${s.levelNumber !== undefined ? ` <span class="pill-level">${s.levelNumber}</span>` : ''}</div>`;
-  const classDisplay = `<div class="class-box-display" style="margin:0; min-height:0; padding:6px 10px;">${s.spellClass || '—'}</div>`;
+  // 1. Geração de Tags (Nível, Escola, Classe, Concentração, Ritual)
+  const levelText = s.levelNumber === 0 ? 'Truque' : `Nível ${s.levelNumber}`;
+  const schoolPill = `<div class="pill" style="margin:0;">${s.school || '—'} <span class="pill-level">${levelText}</span></div>`;
+  const classDisplay = s.spellClass ? `<div class="class-box-display" style="margin:0; min-height:0; padding:6px 10px;">${s.spellClass}</div>` : '';
+  
+  // Tags de Concentração e Ritual
+  const concTag = s.concentration ? `<span class="spell-tag conc" title="Requer Concentração">C</span>` : '';
+  const ritTag = s.ritual ? `<span class="spell-tag rit" title="Pode ser feito como Ritual">R</span>` : '';
+
   const caretSymbol = s.expanded ? '▾' : '▸';
 
-  // --- LÓGICA DE UPCAST (DROPDOWN) ---
+  // 2. Lógica de Upcast (Apenas se for Nível 1+)
   let levelOptions = '';
   const baseLevel = s.levelNumber || 0;
-
   if (baseLevel > 0) {
     for (let i = baseLevel; i <= 9; i++) {
       const label = i === baseLevel ? `${i}º (Base)` : `${i}º Círculo`;
@@ -1513,67 +1519,96 @@ function formatMySpellCard(s) {
     }
   }
 
-  const scalingAttr = s.scaling ? `data-scaling="${s.scaling}"` : '';
-  const baseDmgAttr = `data-base-dmg="${s.damage || ''}"`;
-  const baseLvlAttr = `data-base-lvl="${baseLevel}"`;
-
-  // REMOVIDO O BOTÃO GASTAR, MANTIDO APENAS O SELECT
   const castControlsHTML = baseLevel > 0 ? `
       <div class="cast-controls">
           <span class="cast-label">Círculo:</span>
-          <select class="slot-select spell-slot-selector" 
-                  data-id="${s.id}" 
-                  ${scalingAttr} ${baseDmgAttr} ${baseLvlAttr}>
+          <select class="slot-select spell-slot-selector" data-id="${s.id}" data-base-dmg="${s.damage || ''}" data-base-lvl="${baseLevel}">
               ${levelOptions}
           </select>
-          </div>
-  ` : `<div class="cast-controls" style="justify-content:center; color:#777; font-size:12px;">Truques (Não gastam slot)</div>`;
+      </div>
+  ` : `<div class="cast-controls" style="justify-content:center; color:#777; font-size:12px;">Truques não gastam slot</div>`;
 
-  const damageDisplay = `<span class="dynamic-damage-text">${s.damage || '-'}</span>`;
+  // 3. Info Rápida (Sempre visível no cabeçalho)
+  // Oculta se estiver vazio
+  const getInfo = (label, val) => val ? `<div><span class="purple" style="font-size: 10px; text-transform: uppercase;">${label}:</span> ${val}</div>` : '';
+  
+  const quickAttrs = `
+    <div class="spell-quick-info" style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; width: 100%; margin-top: 8px; font-size: 11px; color: #bbb;">
+      ${getInfo('Exec', s.attrs?.execucao)}
+      ${getInfo('Alc', s.attrs?.alcance)}
+      ${getInfo('Área', s.attrs?.area)}
+      ${getInfo('Dur', s.attrs?.duracao)}
+    </div>
+  `;
+
+  // --- LÓGICA DE OCULTAÇÃO (DESIGN LIMPO NO CORPO DA MAGIA) ---
+  const temAlvo = s.attrs?.alvo && s.attrs.alvo.trim() !== '';
+  const temRes = s.attrs?.resistencia && s.attrs.resistencia.trim() !== '';
+  const temComponentes = s.components?.V || s.components?.S || s.components?.M;
+  const temMaterial = s.material && s.material.trim() !== '';
+
+  const alvoHTML = temAlvo ? `<div class="clean-row"><span class="comp-title">Alvo:</span> <span>${s.attrs.alvo}</span></div>` : '';
+  const resHTML = temRes ? `<div class="clean-row"><span class="comp-title" style="color:#e040fb;">Resistência:</span> <span style="font-weight:bold;">${s.attrs.resistencia}</span></div>` : '';
+  
+  const compHTML = temComponentes ? `
+    <div class="clean-row">
+        <span class="comp-title">Componentes:</span>
+        <div class="comp-letters">
+          ${s.components?.V ? '<span class="comp-letter on">V</span>' : ''}
+          ${s.components?.S ? '<span class="comp-letter on">S</span>' : ''}
+          ${s.components?.M ? '<span class="comp-letter on">M</span>' : ''}
+        </div>
+    </div>
+  ` : '';
+
+  const materialHTML = temMaterial ? `<div class="spell-mat"><strong>Material:</strong> ${s.material}</div>` : '';
 
   return `
       <div class="card spell-card ${s.expanded ? 'expanded' : ''}" data-id="${s.id}">
-        <div class="card-header spell-header">
-          <div class="spell-left" data-id="${s.id}">
+        <div class="card-header spell-header" style="flex-wrap: wrap;">
+          <div class="spell-left" data-id="${s.id}" style="width: 100%; margin-bottom: 8px;">
             <span class="caret">${caretSymbol}</span>
-            <div class="spell-title-block">
-              <div class="card-title spell-title">${s.name}</div>
+            <div class="spell-title-block" style="display:flex; align-items:center; gap:8px;">
+              <div class="card-title spell-title" style="margin:0;">${s.name}</div>
+              ${concTag} ${ritTag}
             </div>
           </div>
-          <div class="spell-right">
-            <div class="card-meta spell-damage">
-                ${damageDisplay} 
-                <img class="dice-img" src="img/imagem-no-site/dado.png" alt="dado" title="Rolar e Gastar Slot" />
-            </div>
-            <label class="check-ativar"><input class="spell-activate" type="checkbox" data-id="${s.id}" ${s.active ? 'checked' : ''}/><span class="square-check"></span></label>
+          
+          <div style="width: 100%; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+             <div style="flex: 1;">
+                <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+                  ${schoolPill} ${classDisplay}
+                </div>
+                ${quickAttrs}
+             </div>
+             <div class="spell-right" style="flex-direction: column; align-items: flex-end; gap: 8px;">
+                ${(s.damage && s.damage !== '-' && s.damage !== '') ? `
+                <div class="card-meta spell-damage">
+                    <span class="dynamic-damage-text">${s.damage}</span> 
+                    <img class="dice-img" src="img/imagem-no-site/dado.png" alt="dado" />
+                </div>` : ''}
+                <label class="check-ativar"><input class="spell-activate" type="checkbox" data-id="${s.id}" ${s.active ? 'checked' : ''}/><span class="square-check"></span></label>
+             </div>
           </div>
         </div>
         
         <div class="card-body" style="${s.expanded ? '' : 'display:none;'}">
-           <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-start; width:100%;">
-                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-                    ${schoolPill} ${classDisplay}
-                </div>
-                 <div style="display:flex; gap:10px; align-items:center;">
-                    <span class="comp-title" style="margin:0; font-size:13px; color:#ccc; font-weight:800;">Componentes:</span>
-                    <div class="comp-letters">
-                      <span class="comp-letter ${s.components && s.components.V ? 'on' : ''}">V</span>
-                      <span class="comp-letter ${s.components && s.components.S ? 'on' : ''}">S</span>
-                      <span class="comp-letter ${s.components && s.components.M ? 'on' : ''}">M</span>
-                    </div>
-                </div>
-           </div>
+            
+            ${alvoHTML}
+            ${resHTML}
+            ${compHTML}
+            ${materialHTML}
 
-           <div style="margin-top:10px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:10px;">
-                ${s.description}
-           </div>
+            <div style="margin-top:10px; border-top:1px solid rgba(255,255,255,0.05); padding-top:10px;">
+                ${s.description || '<em style="color:#666;">Sem descrição.</em>'}
+            </div>
 
-           ${castControlsHTML}
+            ${castControlsHTML}
 
-           <div style="margin-top:8px;">
+            <div style="margin-top:8px;">
                 <a href="#" class="remover-spell" data-id="${s.id}">Remover</a>
                 <a href="#" class="editar-spell" data-id="${s.id}" style="float:right;color:#2e7d32">Editar</a>
-           </div>
+            </div>
         </div>
       </div>
   `;
@@ -2285,17 +2320,19 @@ function openDTConfigModal() {
   };
 }
 
-/* ---------------- MODAL MAGIA (DESCRIÇÃO CORRIGIDA) ---------------- */
+/* ---------------- MODAL MAGIA (COM CONCENTRAÇÃO, RITUAL E RESISTÊNCIA) ---------------- */
 function openSpellModal(existingSpell = null) {
   const modal = document.createElement('div');
   modal.className = 'spell-modal-overlay';
   modal.style.zIndex = '11000';
 
-  // Prepara o editor
   const descContent = existingSpell ? existingSpell.description : '';
   const editorHTML = createRichEditorHTML(descContent, 'spell-editor-content');
 
-  // Mantendo o resto do HTML igual, mas garantindo que o editor fique num bloco visível
+  // Verifica estados das tags
+  const isConc = existingSpell && existingSpell.concentration ? 'checked' : '';
+  const isRit = existingSpell && existingSpell.ritual ? 'checked' : '';
+
   modal.innerHTML = `
       <div class="spell-modal">
         <div class="modal-header">
@@ -2306,8 +2343,17 @@ function openSpellModal(existingSpell = null) {
         </div>
         
         <div class="modal-body">
-          <div style="flex-shrink:0;"> <label>Nome*</label>
-              <input id="modal-name" type="text" value="${existingSpell ? escapeHtml(existingSpell.name) : 'Nova Magia'}" />
+          <div style="flex-shrink:0;">
+              <div style="display: flex; gap: 10px; align-items: flex-end;">
+                  <div style="flex: 1;">
+                      <label>Nome*</label>
+                      <input id="modal-name" type="text" value="${existingSpell ? escapeHtml(existingSpell.name) : 'Nova Magia'}" />
+                  </div>
+                  <div style="display: flex; gap: 8px; padding-bottom: 6px;">
+                      <label class="check-inline-tag"><input id="modal-conc" type="checkbox" ${isConc} /> <span class="tag-box conc">Concentração</span></label>
+                      <label class="check-inline-tag"><input id="modal-rit" type="checkbox" ${isRit} /> <span class="tag-box rit">Ritual</span></label>
+                  </div>
+              </div>
               
               <div class="modal-row" style="margin-top:10px;">
                 <div>
@@ -2333,15 +2379,15 @@ function openSpellModal(existingSpell = null) {
                     </div>
                   </div>
                 </div>
-                <div><label>Execução</label><input id="modal-exec" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.execucao ? escapeHtml(existingSpell.attrs.execucao) : 'padrão'}" /></div>
-                <div><label>Alcance</label><input id="modal-alc" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.alcance ? escapeHtml(existingSpell.attrs.alcance) : 'pessoal'}" /></div>
+                <div><label>Execução</label><input id="modal-exec" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.execucao ? escapeHtml(existingSpell.attrs.execucao) : '1 ação'}" /></div>
+                <div><label>Alcance</label><input id="modal-alc" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.alcance ? escapeHtml(existingSpell.attrs.alcance) : ''}" /></div>
               </div>
 
               <div class="modal-row">
                 <div><label>Área</label><input id="modal-area" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.area ? escapeHtml(existingSpell.attrs.area) : ''}" /></div>
                 <div><label>Alvo</label><input id="modal-alvo" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.alvo ? escapeHtml(existingSpell.attrs.alvo) : ''}" /></div>
                 <div><label>Duração</label><input id="modal-dur" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.duracao ? escapeHtml(existingSpell.attrs.duracao) : ''}" /></div>
-                <div><label>Resistência</label><input id="modal-res" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.resistencia ? escapeHtml(existingSpell.attrs.resistencia) : ''}" /></div>
+                <div><label>Resistência (Salva)</label><input id="modal-res" type="text" value="${existingSpell && existingSpell.attrs && existingSpell.attrs.resistencia ? escapeHtml(existingSpell.attrs.resistencia) : ''}" placeholder="Ex: DEX" /></div>
               </div>
 
               <div class="modal-row">
@@ -2353,8 +2399,8 @@ function openSpellModal(existingSpell = null) {
                     <label><input id="comp-m" type="checkbox" /> M</label>
                   </div>
                 </div>
-                <div><label>Material</label><input id="modal-material" type="text" value="${existingSpell && existingSpell.material ? escapeHtml(existingSpell.material) : ''}" /></div>
-                <div style="flex:1"><label>Damage / Observações</label><input id="modal-damage" type="text" value="${existingSpell && existingSpell.damage ? escapeHtml(existingSpell.damage) : ''}" /></div>
+                <div style="flex:1"><label>Material</label><input id="modal-material" type="text" value="${existingSpell && existingSpell.material ? escapeHtml(existingSpell.material) : ''}" /></div>
+                <div style="flex:1"><label>Damage / Cura (Ex: 1d8)</label><input id="modal-damage" type="text" value="${existingSpell && existingSpell.damage ? escapeHtml(existingSpell.damage) : ''}" /></div>
               </div>
           </div>
 
@@ -2373,21 +2419,24 @@ function openSpellModal(existingSpell = null) {
   document.body.appendChild(modal);
   checkScrollLock();
 
-  // Inicializa eventos do editor (CRUCIAL PARA FUNCIONAR)
   setTimeout(() => initRichEditorEvents('spell-editor-content'), 50);
 
-  // ... (Lógica de dropdowns e selects mantida igual) ...
+  // Seleciona a escola atual
   const schoolSel = modal.querySelector('#modal-school');
   if (existingSpell && existingSpell.school) {
     for (let i = 0; i < schoolSel.options.length; i++) {
       if (schoolSel.options[i].text === existingSpell.school) { schoolSel.selectedIndex = i; break; }
     }
   }
+
+  // Checkboxes de Componentes
   if (existingSpell && existingSpell.components) {
     modal.querySelector('#comp-v').checked = !!existingSpell.components.V;
     modal.querySelector('#comp-s').checked = !!existingSpell.components.S;
     modal.querySelector('#comp-m').checked = !!existingSpell.components.M;
   }
+
+  // Lógica do Dropdown de Classe
   const classToggle = modal.querySelector('#class-select-toggle');
   const classOptions = modal.querySelector('#class-select-options');
   const classValueEl = modal.querySelector('#class-select-value');
@@ -2406,6 +2455,7 @@ function openSpellModal(existingSpell = null) {
   });
   function onDocClick(e) { if (!modal.contains(e.target)) closeClassOptions(); }
   document.addEventListener('click', onDocClick);
+
   const closeModalClean = () => {
     document.removeEventListener('click', onDocClick);
     modal.remove();
@@ -2414,13 +2464,12 @@ function openSpellModal(existingSpell = null) {
   modal.querySelector('.modal-close').addEventListener('click', closeModalClean);
   modal.querySelector('.btn-cancel').addEventListener('click', (ev) => { ev.preventDefault(); closeModalClean(); });
 
+  // === SALVAR MAGIA ===
   const saveBtn = modal.querySelector('.btn-save-modal');
-  // ... dentro de openSpellModal ...
   if (saveBtn) {
     saveBtn.addEventListener('click', (ev) => {
       ev.preventDefault();
 
-      // --- LER DO EDITOR ---
       const descElement = document.getElementById('spell-editor-content');
       const desc = descElement ? descElement.innerHTML : '';
 
@@ -2428,31 +2477,34 @@ function openSpellModal(existingSpell = null) {
         id: existingSpell ? existingSpell.id : uid(),
         name: modal.querySelector('#modal-name').value.trim() || 'Sem nome',
         levelNumber: Number(modal.querySelector('#modal-level').value) || 0,
-        damage: modal.querySelector('#modal-damage').value.trim() || '-',
-
-        // ALTERADO: Se for nova (existingSpell null), expanded é false. Se for edição, mantém o que estava.
+        damage: modal.querySelector('#modal-damage').value.trim(),
+        
         expanded: existingSpell ? existingSpell.expanded : false,
-
         active: existingSpell ? existingSpell.active : false,
+        
+        // --- NOVAS TAGS ---
+        concentration: modal.querySelector('#modal-conc').checked,
+        ritual: modal.querySelector('#modal-rit').checked,
+
         components: {
           V: modal.querySelector('#comp-v').checked,
           S: modal.querySelector('#comp-s').checked,
           M: modal.querySelector('#comp-m').checked
         },
-        // ... restante do código ...
         material: modal.querySelector('#modal-material').value.trim(),
         attrs: {
-          execucao: modal.querySelector('#modal-exec').value.trim() || 'padrão',
-          alcance: modal.querySelector('#modal-alc') ? modal.querySelector('#modal-alc').value.trim() : '',
+          execucao: modal.querySelector('#modal-exec').value.trim(),
+          alcance: modal.querySelector('#modal-alc').value.trim(),
           area: modal.querySelector('#modal-area').value.trim(),
           alvo: modal.querySelector('#modal-alvo').value.trim(),
           duracao: modal.querySelector('#modal-dur').value.trim(),
-          resistencia: modal.querySelector('#modal-res').value.trim()
+          resistencia: modal.querySelector('#modal-res').value.trim() // Salva Resistência
         },
         school: modal.querySelector('#modal-school').value,
         spellClass: modal.querySelector('#class-select-value').textContent === 'Selecione' ? '' : modal.querySelector('#class-select-value').textContent,
         description: desc
       };
+
       if (existingSpell) {
         state.spells = state.spells.map(s => s.id === novo.id ? novo : s);
       } else {
