@@ -4753,88 +4753,122 @@ document.addEventListener('click', function(e) {
         e.stopPropagation();
 
     // -------------------------------------------------------------
-    // A. VERIFICA SE É MAGIA (SPELL CARD) - LÓGICA DE PROJÉTEIS
+    // A. VERIFICA SE É MAGIA (SPELL CARD) - LÓGICA DE PROJÉTEIS + SLOTS
     // -------------------------------------------------------------
-const spellCard = e.target.closest('.spell-card');
-if (spellCard) {
-    const spellId = spellCard.getAttribute('data-id');
-    const s = state.spells.find(x => String(x.id) === String(spellId));
-    if (!s) return;
+    const spellCard = e.target.closest('.spell-card');
+    if (spellCard) {
+      const spellId = spellCard.getAttribute('data-id');
+      const s = state.spells.find(x => String(x.id) === String(spellId));
+      if (!s) return;
 
-    const spellTitle = s.name || "Magia";
-    const selectSlot = spellCard.querySelector('.spell-slot-selector');
-    const selectedLevel = selectSlot ? parseInt(selectSlot.value) : (s.levelNumber || 0);
-    const baseLevel = s.levelNumber || 0;
+      const spellTitle = s.name || "Magia";
+      const selectSlot = spellCard.querySelector('.spell-slot-selector');
+      // Pega o nível selecionado no dropdown (Upcast) ou o nível base da magia
+      const selectedLevel = selectSlot ? parseInt(selectSlot.value) : (s.levelNumber || 0);
+      const baseLevel = s.levelNumber || 0;
 
-    // --- LÓGICA DE MULTI-PROJÉTEIS ---
-    let numProjectiles = 1;
-    let isMulti = false;
+      // --- LÓGICA DE MULTI-PROJÉTEIS ---
+      let numProjectiles = 1;
+      let isMulti = false;
 
-    // Identifica magias de múltiplos projéteis (Mísseis Mágicos, Raio Ardente, etc)
-    const nomeLimpo = spellTitle.toLowerCase();
-    if (nomeLimpo.includes("mísseis mágicos") || nomeLimpo.includes("misseis magicos")) {
+      const nomeLimpo = spellTitle.toLowerCase();
+      if (nomeLimpo.includes("mísseis mágicos") || nomeLimpo.includes("misseis magicos")) {
         numProjectiles = 3 + (selectedLevel - baseLevel);
         isMulti = true;
-    } else if (nomeLimpo.includes("raio ardente")) {
+      } else if (nomeLimpo.includes("raio ardente")) {
         numProjectiles = 3 + (selectedLevel - baseLevel);
         isMulti = true;
-    }
+      }
 
-    // --- EXECUÇÃO DAS ROLAGENS ---
-    let totalDamage = 0;
-    let allRollsDetails = [];
-    const damageText = spellCard.querySelector('.dynamic-damage-text')?.textContent.trim() || s.damage;
+      // --- EXECUÇÃO DAS ROLAGENS (DANO) ---
+      let totalDamage = 0;
+      let allRollsDetails = [];
+      const damageText = spellCard.querySelector('.dynamic-damage-text')?.textContent.trim() || s.damage;
 
-    // Se for multi-projétil, rodamos o loop
-    for (let i = 1; i <= numProjectiles; i++) {
+      for (let i = 1; i <= numProjectiles; i++) {
         if (damageText && damageText !== '-' && damageText !== '0') {
-            let res = rollDiceExpression(damageText);
-            totalDamage += res.total;
-            if (isMulti) {
-                allRollsDetails.push(`P${i}: ${res.text} <small>(${res.detail})</small>`);
-            } else {
-                allRollsDetails.push(res.detail);
-            }
+          let res = rollDiceExpression(damageText);
+          totalDamage += res.total;
+          if (isMulti) {
+            allRollsDetails.push(`P${i}: ${res.text} <small>(${res.detail})</small>`);
+          } else {
+            allRollsDetails.push(res.detail);
+          }
         }
-    }
+      }
 
-    const damageRes = {
+      const damageRes = {
         total: totalDamage,
         text: totalDamage.toString(),
         detail: allRollsDetails.join(isMulti ? '<br>' : ' + '),
         label: isMulti ? `${numProjectiles} PROJÉTEIS` : "DANO",
-        isCrit: false // Mísseis não criticam, Raio Ardente sim (ajuste se desejar)
-    };
+        isCrit: false
+      };
 
-    // --- ROLAGEM DE ATAQUE (Ignora se for Mísseis Mágicos) ---
-    let attackRes = null;
-    if (!nomeLimpo.includes("mísseis")) {
+      // --- ROLAGEM DE ATAQUE ---
+      let attackRes = null;
+      if (!nomeLimpo.includes("mísseis")) {
         const vals = getSpellAttackValues();
         if (vals) {
-            const d20 = Math.floor(Math.random() * 20) + 1;
-            const totalAttack = d20 + vals.prof + vals.mod + vals.extra;
-            const isCrit = (d20 === 20);
-            const isFumble = (d20 === 1);
-            const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
-            
-            attackRes = {
-                total: totalAttack,
-                text: totalAttack.toString(),
-                detail: `${d20Html} + ${vals.mod} + ${vals.prof} + ${vals.extra}`,
-                isCrit: isCrit,
-                isFumble: isFumble,
-                label: isMulti ? "ATAQUE (1º RAIO)" : "ACERTO" // No D&D, Raio Ardente rola ataque para cada raio, mas aqui simplificamos.
-            };
+          const d20 = Math.floor(Math.random() * 20) + 1;
+          const totalAttack = d20 + vals.prof + vals.mod + vals.extra;
+          const isCrit = (d20 === 20);
+          const isFumble = (d20 === 1);
+          const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
+
+          attackRes = {
+            total: totalAttack,
+            text: totalAttack.toString(),
+            detail: `${d20Html} + ${vals.mod} + ${vals.prof} + ${vals.extra}`,
+            isCrit: isCrit,
+            isFumble: isFumble,
+            label: isMulti ? "ATAQUE (1º RAIO)" : "ACERTO"
+          };
         }
+      }
+
+      // Exibe o resultado unificado na tela
+      showCombatResults(spellTitle, attackRes, damageRes);
+
+      // ====================================================================
+      // --- CONSUMO DE SLOT AUTOMÁTICO (CORRIGIDO) ---
+      // ====================================================================
+      // Se for Truque (nível 0), não gasta slot.
+      if (selectedLevel > 0) {
+        let slotConsumed = false;
+        
+        // 1. Tenta gastar o slot padrão do nível selecionado (Upcast usa o nível maior)
+        const standardKey = String(selectedLevel);
+        if (state.spellSlots[standardKey] && state.spellSlots[standardKey].status) {
+          // Procura a primeira bolinha que está 'false' (disponível)
+          const availableIdx = state.spellSlots[standardKey].status.indexOf(false);
+          if (availableIdx !== -1) {
+            state.spellSlots[standardKey].status[availableIdx] = true; // Marca como usada
+            slotConsumed = true;
+          }
+        }
+
+        // 2. Se não tinha slot padrão (ou acabaram), tenta gastar Slot de Pacto (Bruxo)
+        if (!slotConsumed && state.spellSlots['pact'] && state.spellSlots['pact'].status) {
+          const pactAvailableIdx = state.spellSlots['pact'].status.indexOf(false);
+          if (pactAvailableIdx !== -1) {
+            state.spellSlots['pact'].status[pactAvailableIdx] = true;
+            slotConsumed = true;
+          }
+        }
+
+        // 3. Atualiza a interface e salva no servidor
+        if (slotConsumed) {
+          saveStateToServer();
+          renderActiveTab(); // Atualiza as bolinhas na tela
+        } else {
+          // Mostra aviso se rolar a magia sem ter slots sobrando
+          alert(`Sem slots disponíveis para o ${selectedLevel}º Círculo! A rolagem foi feita, mas nenhum slot foi gasto.`);
+        }
+      }
+
+      return;
     }
-
-    // Exibe o resultado unificado
-    showCombatResults(spellTitle, attackRes, damageRes);
-
-    // --- CONSUMO DE SLOT (Sua lógica existente) ---
-    // Mantenha aqui a sua parte de gasto de slots que já funciona...
-    return;
-}
 
         // -------------------------------------------------------------
         // B. VERIFICA SE É ITEM (ARMA/INVENTÁRIO) - CORRIGIDO V3
