@@ -1496,12 +1496,14 @@ function openAbilityCatalogOverlay() {
   renderCatalogList();
 }
 
-/* ---------------- FORMATAR CARD DE MAGIA (DESIGN LIMPO + TAGS) ---------------- */
+/* ---------------- FORMATAR CARD DE MAGIA (DESIGN LIVRO DE REGRAS) ---------------- */
 function formatMySpellCard(s) {
-  // 1. Geração de Tags (Nível, Escola, Classe, Concentração, Ritual)
+  // 1. Tags do Cabeçalho (Nível destacado, Escola Menor)
   const levelText = s.levelNumber === 0 ? 'Truque' : `Nível ${s.levelNumber}`;
-  const schoolPill = `<div class="pill" style="margin:0;">${s.school || '—'} <span class="pill-level">${levelText}</span></div>`;
-  const classDisplay = s.spellClass ? `<div class="class-box-display" style="margin:0; min-height:0; padding:6px 10px;">${s.spellClass}</div>` : '';
+  
+  // A Escola agora tem uma fonte menor e o nível fica em destaque
+  const schoolPill = `<div class="pill school-pill">${s.school || '—'} <span class="pill-level">${levelText}</span></div>`;
+  const classDisplay = s.spellClass ? `<div class="class-box-display">${s.spellClass}</div>` : '';
   
   // Tags de Concentração e Ritual
   const concTag = s.concentration ? `<span class="spell-tag conc" title="Requer Concentração">C</span>` : '';
@@ -1509,7 +1511,7 @@ function formatMySpellCard(s) {
 
   const caretSymbol = s.expanded ? '▾' : '▸';
 
-  // 2. Lógica de Upcast (Apenas se for Nível 1+)
+  // 2. Lógica de Upcast (Slots)
   let levelOptions = '';
   const baseLevel = s.levelNumber || 0;
   if (baseLevel > 0) {
@@ -1528,45 +1530,45 @@ function formatMySpellCard(s) {
       </div>
   ` : `<div class="cast-controls" style="justify-content:center; color:#777; font-size:12px;">Truques não gastam slot</div>`;
 
-  // 3. Info Rápida (Sempre visível no cabeçalho)
-  // Oculta se estiver vazio
-  const getInfo = (label, val) => val ? `<div><span class="purple" style="font-size: 10px; text-transform: uppercase;">${label}:</span> ${val}</div>` : '';
-  
-  const quickAttrs = `
-    <div class="spell-quick-info" style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; width: 100%; margin-top: 8px; font-size: 11px; color: #bbb;">
-      ${getInfo('Exec', s.attrs?.execucao)}
-      ${getInfo('Alc', s.attrs?.alcance)}
-      ${getInfo('Área', s.attrs?.area)}
-      ${getInfo('Dur', s.attrs?.duracao)}
+  // 3. GRADE DE ESPECIFICAÇÕES PADRONIZADA (Beleza e Organização)
+  // Função auxiliar para só criar o bloco se houver valor
+  const createSpec = (label, val, isHighlight = false) => {
+    if (!val || val.trim() === '') return '';
+    const valClass = isHighlight ? 'spec-val highlight' : 'spec-val';
+    return `<div class="spec-item"><span class="spec-label">${label}</span><span class="${valClass}">${val}</span></div>`;
+  };
+
+  // Monta a grade com os atributos (se não existir, não aparece)
+  const specsGridHTML = `
+    <div class="spell-specs-grid">
+      ${createSpec('Tempo', s.attrs?.execucao)}
+      ${createSpec('Alcance', s.attrs?.alcance)}
+      ${createSpec('Duração', s.attrs?.duracao)}
+      ${createSpec('Área', s.attrs?.area)}
+      ${createSpec('Alvo', s.attrs?.alvo)}
+      ${createSpec('Resistência', s.attrs?.resistencia, true)}
     </div>
   `;
 
-  // --- LÓGICA DE OCULTAÇÃO (DESIGN LIMPO NO CORPO DA MAGIA) ---
-  const temAlvo = s.attrs?.alvo && s.attrs.alvo.trim() !== '';
-  const temRes = s.attrs?.resistencia && s.attrs.resistencia.trim() !== '';
+  // 4. Componentes e Material (Rodapé das especificações)
   const temComponentes = s.components?.V || s.components?.S || s.components?.M;
-  const temMaterial = s.material && s.material.trim() !== '';
-
-  const alvoHTML = temAlvo ? `<div class="clean-row"><span class="comp-title">Alvo:</span> <span>${s.attrs.alvo}</span></div>` : '';
-  const resHTML = temRes ? `<div class="clean-row"><span class="comp-title" style="color:#e040fb;">Resistência:</span> <span style="font-weight:bold;">${s.attrs.resistencia}</span></div>` : '';
-  
   const compHTML = temComponentes ? `
-    <div class="clean-row">
-        <span class="comp-title">Componentes:</span>
+    <div class="comp-row">
+        <span class="spec-label">Comp:</span>
         <div class="comp-letters">
           ${s.components?.V ? '<span class="comp-letter on">V</span>' : ''}
           ${s.components?.S ? '<span class="comp-letter on">S</span>' : ''}
           ${s.components?.M ? '<span class="comp-letter on">M</span>' : ''}
         </div>
+        ${s.material ? `<span class="spell-mat-text">(${s.material})</span>` : ''}
     </div>
   ` : '';
 
-  const materialHTML = temMaterial ? `<div class="spell-mat"><strong>Material:</strong> ${s.material}</div>` : '';
-
+  // 5. HTML FINAL DO CARD
   return `
       <div class="card spell-card ${s.expanded ? 'expanded' : ''}" data-id="${s.id}">
         <div class="card-header spell-header" style="flex-wrap: wrap;">
-          <div class="spell-left" data-id="${s.id}" style="width: 100%; margin-bottom: 8px;">
+          <div class="spell-left" data-id="${s.id}" style="width: 100%; margin-bottom: 6px;">
             <span class="caret">${caretSymbol}</span>
             <div class="spell-title-block" style="display:flex; align-items:center; gap:8px;">
               <div class="card-title spell-title" style="margin:0;">${s.name}</div>
@@ -1574,14 +1576,11 @@ function formatMySpellCard(s) {
             </div>
           </div>
           
-          <div style="width: 100%; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
-             <div style="flex: 1;">
-                <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
-                  ${schoolPill} ${classDisplay}
-                </div>
-                ${quickAttrs}
+          <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+             <div style="flex: 1; display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+                ${schoolPill} ${classDisplay}
              </div>
-             <div class="spell-right" style="flex-direction: column; align-items: flex-end; gap: 8px;">
+             <div class="spell-right" style="flex-direction: row; align-items: center; gap: 12px;">
                 ${(s.damage && s.damage !== '-' && s.damage !== '') ? `
                 <div class="card-meta spell-damage">
                     <span class="dynamic-damage-text">${s.damage}</span> 
@@ -1594,20 +1593,18 @@ function formatMySpellCard(s) {
         
         <div class="card-body" style="${s.expanded ? '' : 'display:none;'}">
             
-            ${alvoHTML}
-            ${resHTML}
+            ${specsGridHTML}
             ${compHTML}
-            ${materialHTML}
 
-            <div style="margin-top:10px; border-top:1px solid rgba(255,255,255,0.05); padding-top:10px;">
+            <div class="spell-desc-box">
                 ${s.description || '<em style="color:#666;">Sem descrição.</em>'}
             </div>
 
             ${castControlsHTML}
 
-            <div style="margin-top:8px;">
+            <div style="margin-top:12px; display:flex; justify-content:space-between;">
                 <a href="#" class="remover-spell" data-id="${s.id}">Remover</a>
-                <a href="#" class="editar-spell" data-id="${s.id}" style="float:right;color:#2e7d32">Editar</a>
+                <a href="#" class="editar-spell" data-id="${s.id}" style="color:#2e7d32">Editar</a>
             </div>
         </div>
       </div>

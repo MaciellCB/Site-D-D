@@ -2108,3 +2108,108 @@ a.editar-spell {
     border-radius: 4px;
     border-left: 2px solid #9c27b0;
 }
+
+/* ==========================================================================
+   MELHORIAS VISUAIS DE MAGIA (ESCOLA MENOR E GRID PADRONIZADO)
+   ========================================================================== */
+
+/* 1. Escola da Magia (Fonte Menor) */
+.pill.school-pill {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #999; /* Cor mais suave */
+    font-size: 11px; /* FONTE MENOR */
+    font-weight: 600;
+    padding: 3px 8px;
+    margin: 0;
+}
+
+.school-pill .pill-level {
+    background: #111;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 2px 6px;
+    margin-left: 4px;
+}
+
+/* Ajuste da Classe para combinar com a escola menor */
+.class-box-display {
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+}
+
+/* 2. Grade de Especificações da Magia (O Padrão Bonito) */
+.spell-specs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 8px;
+    background: #121212;
+    border: 1px solid rgba(156, 39, 176, 0.2);
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.spec-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.spec-label {
+    font-size: 10px;
+    font-weight: 800;
+    color: #9c27b0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.spec-val {
+    font-size: 13px;
+    color: #eee;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Destaque para a Resistência na grade */
+.spec-val.highlight {
+    color: #e040fb;
+    font-weight: 800;
+}
+
+/* 3. Linha de Componentes e Material (Nova) */
+.comp-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 4px;
+}
+
+.spell-mat-text {
+    font-size: 11px;
+    color: #aaa;
+    font-style: italic;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+}
+
+/* 4. Caixa de Descrição Isolada */
+.spell-desc-box {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    font-size: 13.5px;
+    color: #ddd;
+    line-height: 1.5;
+}
