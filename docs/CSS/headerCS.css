@@ -1004,12 +1004,12 @@
   box-shadow: 0 4px 12px rgba(156, 39, 176, 0.4);
 }
 
-/* Menu abrindo para BAIXO do botão */
+/* Menu abrindo para BAIXO e para a DIREITA */
 .popup-config-foto {
   display: none; 
   position: absolute;
-  top: 38px; /* Abre logo abaixo do botão de 32px */
-  left: -5px; /* Levemente alinhado à esquerda do botão */
+  top: 38px;  /* Abaixo do botão */
+  left: 35px; /* <--- ALTERADO: Agora abre mais para a direita */
   background: #151515;
   border: 1px solid #333;
   border-radius: 6px;
