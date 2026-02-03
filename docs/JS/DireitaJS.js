@@ -4535,10 +4535,8 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
 
  // --- LÓGICA DE HISTÓRICO LOCAL (CORRIGIDA) ---
   if (!isRemote && typeof window.adicionarAoHistorico === 'function') {
-    // Salva o ataque no histórico (se houver)
-    if (attackResult) window.adicionarAoHistorico(`${title} (Acerto)`, attackResult.total);
-    // Salva o dano no histórico (se houver)
-    if (damageResult) window.adicionarAoHistorico(`${title} (Dano)`, damageResult.total);
+    // Agora mandamos tudo de uma vez para a função:
+    window.adicionarAoHistorico(title, attackResult, damageResult);
   }
 
   // --- LÓGICA DE SOCKET (Mantenha o seu código original aqui) ---
@@ -5052,23 +5050,7 @@ if (spellCard) {
     if (e.target.classList.contains('col-icon') && e.target.closest('.pericia-item')) {
         e.preventDefault(); e.stopPropagation();
         const itemLi = e.target.closest('.pericia-item');
-        const nome = itemLi.querySelector('.col-nome').textContent.trim();
-        const bonus = parseInt(itemLi.querySelector('.bonus-span').textContent.replace(/[()]/g, '')) || 0;
         
-        const d20 = Math.floor(Math.random() * 20) + 1;
-        const total = d20 + bonus;
-        const isCrit = (d20 === 20);
-        const isFumble = (d20 === 1); 
-
-        const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
-        
-        const res = { 
-            total: total, 
-            text: total.toString(), 
-            detail: `${d20Html} + ${bonus}`, 
-            isCrit: isCrit, 
-            isFumble: isFumble 
-        };
         showCombatResults(nome, res, null);
     }
 });

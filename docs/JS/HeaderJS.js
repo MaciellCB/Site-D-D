@@ -2869,6 +2869,7 @@ function abrirAjudaSistema() {
 }
 
 // 2. MODAL DE HISTÓRICO
+// 2. MODAL DE HISTÓRICO (ATUALIZADO PARA DANO+ACERTO JUNTOS)
 function abrirHistoricoDados() {
     document.getElementById('popup-config-foto').style.display = 'none';
 
@@ -2879,15 +2880,19 @@ function abrirHistoricoDados() {
     overlay.className = 'spell-modal-overlay historico-modal-overlay';
     overlay.style.zIndex = '60000';
 
-    // Gera o HTML da lista de dados
     let listaHtml = '<div style="color: #666; text-align: center; margin-top: 20px;">Nenhum dado rolado nesta sessão ainda.</div>';
     
     if (typeof state !== 'undefined' && state.historicoRolls && state.historicoRolls.length > 0) {
         listaHtml = state.historicoRolls.map(roll => {
             let borderCor = "#9c27b0";
             let valorCor = "#e0aaff";
-            if (roll.valor === 20) { borderCor = "#4caf50"; valorCor = "#4caf50"; } 
-            else if (roll.valor === 1) { borderCor = "#f44336"; valorCor = "#f44336"; }
+            
+            // Usa as tags crit e fumble salvas na rolagem
+            if (roll.crit) { borderCor = "#4caf50"; valorCor = "#4caf50"; } 
+            else if (roll.fumble) { borderCor = "#f44336"; valorCor = "#f44336"; }
+
+            // Se for duplo (Acerto + Dano), diminui um pouco a fonte para caber
+            const fontSize = String(roll.valor).includes('|') ? '15px' : '18px';
 
             return `
                 <div class="historico-item" style="border-left-color: ${borderCor};">
@@ -2895,7 +2900,9 @@ function abrirHistoricoDados() {
                         <span class="historico-titulo">${roll.titulo}</span>
                         <span class="historico-data">Hoje às ${roll.horario}</span>
                     </div>
-                    <div class="historico-valor" style="color: ${valorCor};">${roll.valor}</div>
+                    <div class="historico-valor" style="color: ${valorCor}; font-size: ${fontSize}; white-space: nowrap;">
+                        ${roll.valor}
+                    </div>
                 </div>
             `;
         }).join('');
@@ -2919,21 +2926,44 @@ function abrirHistoricoDados() {
     document.body.appendChild(overlay);
     if (typeof checkScrollLock === 'function') checkScrollLock();
 
-    // Evento para fechar e destruir o modal
     overlay.querySelector('.modal-close').onclick = () => {
         overlay.remove();
         if (typeof checkScrollLock === 'function') checkScrollLock();
     };
 }
 
-// 3. FUNÇÃO PARA ALIMENTAR O HISTÓRICO
-   window.adicionarAoHistorico = function(titulo, valor) {
+// 3. FUNÇÃO GLOBAL PARA ALIMENTAR O HISTÓRICO (UNIFICADA)
+window.adicionarAoHistorico = function(titulo, ataqueResult, danoResult) {
     if (typeof state === 'undefined') return;
     if (!state.historicoRolls) state.historicoRolls = [];
 
+    let valorDisplay = "";
+    let ehCritico = false;
+    let ehFalha = false;
+
+    // Cenário 1: Tem Acerto E Dano (Armas/Magias) - Junta os dois
+    if (ataqueResult && danoResult) {
+        valorDisplay = `⚔️ ${ataqueResult.total} | 🩸 ${danoResult.total}`;
+        ehCritico = ataqueResult.isCrit;
+        ehFalha = ataqueResult.isFumble;
+    } 
+    // Cenário 2: Só Ataque (Perícias)
+    else if (ataqueResult) {
+        valorDisplay = ataqueResult.total;
+        ehCritico = ataqueResult.isCrit;
+        ehFalha = ataqueResult.isFumble;
+    } 
+    // Cenário 3: Só Dano
+    else if (danoResult) {
+        valorDisplay = danoResult.total;
+        ehCritico = danoResult.isCrit;
+    }
+
     const novoRoll = {
         titulo: titulo,
-        valor: valor,
+        valor: valorDisplay,
+        crit: ehCritico,
+        fumble: ehFalha,
         horario: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
@@ -2945,6 +2975,7 @@ function abrirHistoricoDados() {
         state.historicoRolls.pop();
     }
 
-    // Salva no servidor para manter o histórico mesmo se recarregar a página
     if (typeof saveStateToServer === 'function') saveStateToServer();
 };
+
+
