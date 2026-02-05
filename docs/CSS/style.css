@@ -344,3 +344,164 @@ header {
     margin-top: 15px;
   }
 }
+
+
+
+/* =============================================================
+   CORREÇÃO FINAL DE RESPONSIVIDADE (MOBILE FIXES)
+   Cole isso no FINAL do arquivo style.css
+============================================================= */
+
+@media (max-width: 768px) {
+
+  /* 1. FORÇAR LARGURA TOTAL E REMOVER TRAVAS DE DESKTOP */
+  .container {
+    display: block !important; /* Remove flexbox lateral */
+    padding: 10px 5px !important;
+    height: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Sobrescreve as larguras fixas dos arquivos CS individuais */
+  .lado-esquerdo,
+  .lado-centro,
+  .lado-direito {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    flex: none !important;
+    margin: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding-bottom: 80px !important; /* Espaço para navbar */
+  }
+
+  /* 2. AJUSTE DO HEADER (PERFIL) */
+  /* Transforma as linhas de inputs em colunas empilhadas */
+  .info-personagem {
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 10px !important;
+    gap: 15px !important;
+  }
+
+  .info-esquerda {
+    margin-bottom: 10px;
+  }
+
+  .info-direita {
+    width: 100% !important;
+  }
+
+  .linha-info {
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+
+  .campo {
+    width: 100% !important;
+  }
+
+  /* 3. AJUSTE DA ESQUERDA (STATUS/HEXAGRAMA) */
+  .hexagrama {
+    transform: scale(0.85); /* Diminui um pouco o hexagrama para caber */
+    margin: -10px auto !important;
+  }
+
+  .linha-top {
+    flex-wrap: wrap; /* Permite que Inspiração/Proficiência quebrem linha */
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .status-row {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Armadura e Iniciativa empilhados */
+  .armadura-grid {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .escudo-col {
+    margin-bottom: 20px;
+  }
+
+  /* Fórmula de CA responsiva */
+  .inline-formula {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  /* 4. AJUSTE DA DIREITA (LISTAS E ABAS) */
+  .abas {
+    grid-template-columns: repeat(3, 1fr) !important; /* Garante 3 colunas */
+    gap: 5px !important;
+  }
+
+  .abas button {
+    font-size: 11px !important;
+    padding: 8px 2px !important;
+  }
+
+  /* Cards de itens/magias ocupando largura total */
+  .card-header {
+    flex-wrap: wrap;
+  }
+  
+  .card-title {
+    font-size: 14px !important;
+  }
+
+  /* 5. AJUSTE DOS MODAIS (Para não vazar a tela) */
+  .spell-modal-overlay,
+  .catalog-overlay-large {
+    padding: 10px !important;
+    align-items: flex-start !important; /* Começa do topo para permitir scroll */
+  }
+
+  .spell-modal,
+  .catalog-large {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 20px !important;
+    max-height: 85vh !important;
+    border-radius: 8px;
+  }
+
+  .modal-row {
+    flex-direction: column !important; /* Empilha inputs dos modais */
+    gap: 10px !important;
+  }
+  
+  /* Ajuste específico para o modal de criação de magia */
+  .spell-modal input, .spell-modal select {
+    font-size: 16px !important; /* Evita zoom automático no iPhone */
+  }
+
+  /* 6. SISTEMA DE VIEWS (GARANTIR VISIBILIDADE) */
+  /* Quando uma view está ativa, força display block e esconde as outras */
+  
+  body[data-mobile-view="header"] .info-personagem { display: flex !important; }
+  body[data-mobile-view="header"] header { display: block !important; }
+  
+  body[data-mobile-view="status"] .lado-esquerdo { display: flex !important; }
+  
+  body[data-mobile-view="pericia"] .lado-centro { display: block !important; }
+  
+  body[data-mobile-view="inventario"] .lado-direito { display: flex !important; }
+
+  /* Esconde o que não é da view ativa */
+  body:not([data-mobile-view="header"]) header,
+  body:not([data-mobile-view="header"]) .info-personagem { display: none !important; }
+  
+  body:not([data-mobile-view="status"]) .lado-esquerdo { display: none !important; }
+  
+  body:not([data-mobile-view="pericia"]) .lado-centro { display: none !important; }
+  
+  body:not([data-mobile-view="inventario"]) .lado-direito { display: none !important; }
+}
