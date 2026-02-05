@@ -37,6 +37,20 @@ async function carregarCatalogosDireita() {
   }
 }
 
+
+// --- NO TOPO DO ARQUIVO DireitaJS.js ---
+window.isUserInteracting = false;
+window.interactionTimer = null;
+
+window.travarTelaParaClique = function() {
+    window.isUserInteracting = true;
+    if (window.interactionTimer) clearTimeout(window.interactionTimer);
+    window.interactionTimer = setTimeout(() => {
+        window.isUserInteracting = false;
+    }, 2000); // 2 segundos de blindagem total
+};
+
+
 // Executa assim que o arquivo é lido
 carregarCatalogosDireita();
 
@@ -1682,28 +1696,24 @@ function renderSpells() {
    (Evita que a tela pisque ou trave enquanto você digita)
 ============================================================= */
 window.addEventListener('sheet-updated', () => {
-    // 1. Atualiza DT Magias (Pode manter o código que já tem aqui)
+    // Mantém as atualizações da Esquerda e da DT...
     if (typeof calculateSpellDC === 'function') {
         state.dtMagias = calculateSpellDC();
         const inputDT = document.getElementById('dtMagiasInput');
         if (inputDT) inputDT.value = state.dtMagias;
-        const inputDTPrep = document.getElementById('dtMagiasInput_Prep');
-        if (inputDTPrep) inputDTPrep.value = state.dtMagias;
     }
-
-    // 2. FORÇA A ATUALIZAÇÃO DA ESQUERDA (CA, Vida, Status - Pode manter)
     if (typeof atualizarAC === 'function') atualizarAC();
     if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
 
-    // ==============================================================
-    // >>> NOVO BLOQUEIO AQUI <<<
-    // Se o usuário estiver clicando em magias/colapsados, NÃO redesenhe a direita!
-    if (typeof isUserInteracting !== 'undefined' && isUserInteracting) {
-        return; // Sai da função e ignora o servidor temporariamente
+    // =================================================================
+    // O BLOQUEIO ABSOLUTO: Se estiver clicando, NADA redesenha a direita.
+    // =================================================================
+    if (window.isUserInteracting) {
+        console.log("Servidor tentou atualizar, mas o usuário está clicando. Ignorado.");
+        return; 
     }
-    // ==============================================================
 
-    // 3. ATUALIZAÇÃO DA DIREITA (O resto do seu código continua igual...)
+    // Se a trava estiver desligada, atualiza normalmente:
     if (['Magias', 'Mag. Preparadas', 'Habilidades', 'Combate', 'Inventário', 'Descrição'].includes(state.activeTab)) {
         const activeElement = document.activeElement;
         const isTyping = activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA');
@@ -1714,7 +1724,7 @@ window.addEventListener('sheet-updated', () => {
         const scrollContainer = document.querySelector('.lado-direito .conteudo') || document.querySelector('.lado-direito');
         const savedScroll = scrollContainer ? scrollContainer.scrollTop : 0;
 
-        renderActiveTab(); // A tela só é recriada se o escudo estiver desligado
+        renderActiveTab();
 
         if (scrollContainer) scrollContainer.scrollTop = savedScroll;
     }
@@ -1899,19 +1909,25 @@ function bindSlotEvents() {
   }
 
   // 4. Clique nas Bolinhas (Gastar/Recuperar)
+  // --- DENTRO DA FUNÇÃO bindSlotEvents() ---
+
   document.querySelectorAll('.slot-pip').forEach(pip => {
     pip.addEventListener('click', (e) => {
       e.stopPropagation();
+      
+      // 1. ATIVA A BLINDAGEM GLOBAL
+      window.travarTelaParaClique();
+
       const key = pip.dataset.key;
       const idx = parseInt(pip.dataset.idx);
 
       if (!state.spellSlots[key]) state.spellSlots[key] = { status: [] };
       if (!state.spellSlots[key].status) state.spellSlots[key].status = [];
 
+      // 2. Inverte o estado localmente
       state.spellSlots[key].status[idx] = !state.spellSlots[key].status[idx];
-      saveStateToServer();
 
-      // Atualização visual instantânea
+      // 3. Força a cor a mudar INSTANTANEAMENTE via CSS
       const isNowSpent = state.spellSlots[key].status[idx];
       if (isNowSpent) {
         pip.classList.remove('available');
@@ -1920,6 +1936,9 @@ function bindSlotEvents() {
         pip.classList.remove('used');
         pip.classList.add('available');
       }
+
+      // 4. Salva no fundo sem travar a tela
+      saveStateToServer(); 
     });
   });
 }
