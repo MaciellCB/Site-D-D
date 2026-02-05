@@ -509,22 +509,22 @@ header {
 
 
 /* =============================================================
-   CORREÇÃO CRÍTICA: CARD DE DADOS NO MOBILE
-   Cola isso no FINAL do style.css para garantir prioridade
+   CORREÇÃO CRÍTICA V2: POSIÇÃO E Z-INDEX NO MOBILE
+   Substitua o bloco anterior no final do style.css por este
 ============================================================= */
 @media (max-width: 768px) {
   #dice-results-container {
-    /* 1. Z-INDEX ALTÍSSIMO: Para ficar ACIMA da barra de navegação (que tem 99999) */
-    z-index: 200005 !important; 
+    /* Z-Index Máximo para garantir que fique acima da navbar */
+    z-index: 2147483647 !important; 
     
-    /* 2. POSIÇÃO MAIS ALTA: 100px do fundo dá margem segura da barra */
-    bottom: 100px !important; 
+    /* Posição: Canto Direito e Mais Alto */
+    bottom: 140px !important; /* Sobe bem para sair da área da navbar */
+    right: 10px !important;   /* Volta para o canto direito */
+    left: auto !important;    /* Remove a centralização */
     
-    /* 3. AJUSTES VISUAIS: Centralizar melhor no celular */
-    right: 5% !important;
-    left: 5% !important;
-    max-width: 90% !important;
+    /* Tamanho */
     width: auto !important;
-    min-width: 0 !important;
+    max-width: 85% !important; /* Não deixa vazar se a tela for minúscula */
+    min-width: 280px !important;
   }
 }
