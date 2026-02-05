@@ -505,3 +505,20 @@ header {
   
   body:not([data-mobile-view="inventario"]) .lado-direito { display: none !important; }
 }
+
+
+
+/* =============================================================
+   CORREÇÃO: POSIÇÃO DO DADO NO CELULAR (Bug Fix)
+   Isso garante que o resultado suba e não fique em cima da aba
+============================================================= */
+@media (max-width: 768px) {
+  #dice-results-container {
+    /* Sobe o card para 160px do fundo (acima da navbar que tem ~60-80px) */
+    bottom: 160px !important; 
+    
+    /* Garante que o card não fique largo demais e centraliza melhor */
+    max-width: 85% !important;
+    right: 20px !important; /* Mantém alinhado à direita como no PC */
+  }
+}
