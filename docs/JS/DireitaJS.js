@@ -4571,9 +4571,8 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
   }
   // -------------------------------------------------------
 
-  // Mostra o container
-  requestAnimationFrame(() => { container.classList.add('active'); });
-  // ...
+  
+  
 
   // Mostra o container
   requestAnimationFrame(() => { container.classList.add('active'); });
