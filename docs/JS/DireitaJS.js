@@ -4547,7 +4547,33 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
         `;
   }
 
+  // ... (dentro de showCombatResults, logo após definir o innerHTML)
   container.innerHTML = inspirationHtml + contentHtml;
+
+  // --- CORREÇÃO: FORÇAR O FUNCIONAMENTO DO BOTÃO FECHAR ---
+  const btnFechar = container.querySelector('.dice-close');
+  if (btnFechar) {
+      // Remove clones de eventos anteriores para não bugar
+      const novoBtn = btnFechar.cloneNode(true);
+      btnFechar.parentNode.replaceChild(novoBtn, btnFechar);
+      
+      // Adiciona evento de clique e toque
+      novoBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          window.fecharDiceResult();
+      });
+      novoBtn.addEventListener('touchstart', (e) => {
+          e.preventDefault(); // Evita duplo clique em alguns celulares
+          e.stopPropagation();
+          window.fecharDiceResult();
+      });
+  }
+  // -------------------------------------------------------
+
+  // Mostra o container
+  requestAnimationFrame(() => { container.classList.add('active'); });
+  // ...
 
   // Mostra o container
   requestAnimationFrame(() => { container.classList.add('active'); });
