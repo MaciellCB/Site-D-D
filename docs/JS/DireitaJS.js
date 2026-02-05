@@ -4490,9 +4490,10 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
   // 2. Limpa timer anterior se houver
   if (diceTimer) clearTimeout(diceTimer);
 
-  // --- MONTAGEM DO HTML ---
+  // --- MONTAGEM DO HTML (ATUALIZADA) ---
+  // Adicionamos ontouchstart para garantir resposta imediata no toque
   let contentHtml = `
-      <div class="dice-close" onclick="fecharDiceResult()">✖</div>
+      <div class="dice-close" onclick="fecharDiceResult()" ontouchstart="fecharDiceResult()">✖</div>
       <div class="dice-content-wrapper">
   `;
   
@@ -4626,7 +4627,10 @@ window.fecharDiceResult = function() {
     const container = document.getElementById('dice-results-container');
     if (container) {
         container.classList.remove('active');
-        if (diceTimer) clearTimeout(diceTimer); // Cancela o timer para não tentar fechar de novo depois
+        // Remove do DOM após a animação para garantir reset limpo na próxima rolagem
+        setTimeout(() => {
+             if (!container.classList.contains('active')) container.remove();
+        }, 300);
     }
 };
 

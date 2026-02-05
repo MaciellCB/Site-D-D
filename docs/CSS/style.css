@@ -528,3 +528,45 @@ header {
     min-width: 280px !important;
   }
 }
+
+
+/* =============================================================
+   CORREÇÃO FINAL V3: POSIÇÃO DIREITA E BOTÃO X (MOBILE)
+   Substitua o bloco anterior no final do style.css
+============================================================= */
+@media (max-width: 768px) {
+  #dice-results-container {
+    /* POSIÇÃO: Força canto direito inferior */
+    z-index: 2147483647 !important; 
+    bottom: 150px !important;
+    
+    right: 10px !important;
+    left: auto !important;        /* Anula centralização horizontal */
+    top: auto !important;         /* Anula centralização vertical */
+    transform: none !important;   /* Remove translação de centro */
+    
+    /* TAMANHO */
+    width: auto !important;
+    min-width: 260px !important;
+    max-width: 80% !important;
+    
+    /* Visual */
+    margin: 0 !important;
+  }
+
+  /* BOTÃO FECHAR (X) - VERSÃO MOBILE (Maior e mais fácil de clicar) */
+  .dice-close {
+    display: block !important;
+    font-size: 28px !important;      /* Ícone maior */
+    padding: 15px !important;        /* Área de toque expandida */
+    top: -10px !important;           /* Posição ajustada */
+    right: -5px !important;          /* Posição ajustada */
+    color: #ff5252 !important;       /* Vermelho para destaque */
+    z-index: 2147483648 !important;  /* Acima do container */
+    background: transparent !important;
+    width: 50px !important;          /* Largura fixa para clique */
+    height: 50px !important;         /* Altura fixa para clique */
+    text-align: center;
+    line-height: 20px !important;
+  }
+}
