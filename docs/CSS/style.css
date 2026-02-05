@@ -509,16 +509,22 @@ header {
 
 
 /* =============================================================
-   CORREÇÃO: POSIÇÃO DO DADO NO CELULAR (Bug Fix)
-   Isso garante que o resultado suba e não fique em cima da aba
+   CORREÇÃO CRÍTICA: CARD DE DADOS NO MOBILE
+   Cola isso no FINAL do style.css para garantir prioridade
 ============================================================= */
 @media (max-width: 768px) {
   #dice-results-container {
-    /* Sobe o card para 160px do fundo (acima da navbar que tem ~60-80px) */
-    bottom: 160px !important; 
+    /* 1. Z-INDEX ALTÍSSIMO: Para ficar ACIMA da barra de navegação (que tem 99999) */
+    z-index: 200005 !important; 
     
-    /* Garante que o card não fique largo demais e centraliza melhor */
-    max-width: 85% !important;
-    right: 20px !important; /* Mantém alinhado à direita como no PC */
+    /* 2. POSIÇÃO MAIS ALTA: 100px do fundo dá margem segura da barra */
+    bottom: 100px !important; 
+    
+    /* 3. AJUSTES VISUAIS: Centralizar melhor no celular */
+    right: 5% !important;
+    left: 5% !important;
+    max-width: 90% !important;
+    width: auto !important;
+    min-width: 0 !important;
   }
 }
