@@ -83,44 +83,27 @@ header {
 
 /* =============================================================
    4. MODO MOBILE (Telas < 768px)
-   (CORREÇÃO: Largura Total e Espaço para Hotbar)
+   (CORREÇÃO FINAL: Hexagrama alto e Perícias largas)
 ============================================================= */
 @media (max-width: 768px) {
 
-  /* --- 4.1. Ajustes Gerais de Estrutura --- */
+  /* --- 4.1. Estrutura Base --- */
   body {
-    /* Garante que o scroll da página desça mais que o normal */
     padding-bottom: 90px !important;
     overflow-x: hidden;
+    margin: 0; /* Garante margem zero */
   }
 
-  /* Container: Removemos o padding lateral para usar 100% da tela */
   .container {
     display: block;
     height: auto;
     min-height: auto;
-    padding: 10px 0; /* Zero nas laterais */
+    padding: 0 !important; /* Removemos qualquer padding do container pai */
     width: 100%;
     margin: 0;
   }
 
-  /* Sobrescreve as larguras fixas das colunas para ocupar 100% */
-  .lado-esquerdo,
-  .lado-centro,
-  .lado-direito {
-    width: 100% !important;
-    max-width: 100% !important;
-    flex: none;
-    margin: 0;
-    
-    /* AQUI ESTÁ O TRUQUE PARA SUBIR O CONTEÚDO */
-    /* Adiciona espaço interno no final de cada painel para passar da hotbar */
-    padding-bottom: 90px !important; 
-    
-    background: transparent;
-  }
-
-  /* --- 4.2. Hotbar (Navegação Inferior) --- */
+  /* --- 4.2. Hotbar Fixa --- */
   #mobile-navbar {
     display: flex;
     position: fixed;
@@ -128,7 +111,7 @@ header {
     left: 0;
     width: 100%;
     height: 60px;
-    background-color: #0e0e0e; /* Fundo sólido para cobrir o conteúdo ao scrollar */
+    background-color: #0e0e0e;
     border-top: 1px solid #333;
     z-index: 99999;
     justify-content: space-around;
@@ -150,208 +133,204 @@ header {
     padding-top: 5px;
   }
 
-  .mobile-nav-btn svg {
-    width: 22px;
-    height: 22px;
-    margin-bottom: 4px;
-  }
-
+  .mobile-nav-btn svg { width: 22px; height: 22px; margin-bottom: 4px; }
+  
   .mobile-nav-btn.active {
     color: #9c27b0;
     background-color: #1a1a1a;
     border-top: 2px solid #9c27b0;
   }
 
-  /* --- 4.3. Sistema de Views (Lógica de Exibição) --- */
+  /* --- 4.3. Views e Layout --- */
 
-  /* Oculta tudo por padrão */
-  header,
-  .info-personagem,
-  .lado-esquerdo,
-  .lado-centro,
-  .lado-direito {
+  /* Reset Geral */
+  .lado-esquerdo, .lado-centro, .lado-direito, 
+  header, .info-personagem {
     display: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box; /* Garante que padding não aumente largura */
   }
 
-  /* VIEW: HEADER (Perfil) */
+  /* VIEW: HEADER */
   body[data-mobile-view="header"] header,
   body[data-mobile-view="header"] .info-personagem {
     display: flex !important;
     flex-direction: column;
-    width: 100%;
-    padding: 10px 5px; /* Pequeno padding nas laterais */
+    padding: 10px 5px 90px 5px !important;
     gap: 15px;
-    padding-bottom: 90px !important; /* Espaço Hotbar */
   }
-  
   .info-personagem { padding: 5px; }
   .info-esquerda { margin: 0 auto 15px auto; }
-  .info-direita { width: 100%; }
   .linha-info { flex-direction: column; gap: 10px; }
   .campo { width: 100%; }
 
-  /* VIEW: STATUS (Esquerda) */
+  /* VIEW: ESQUERDA (STATUS) - AJUSTE "MAIS PRA CIMA" */
   body[data-mobile-view="status"] .lado-esquerdo {
     display: flex !important;
     flex-direction: column;
-    /* Padding lateral mínimo (2px) para não colar totalmente na borda */
-    padding: 0 2px 90px 2px !important; 
     align-items: stretch;
+    /* Remove padding do topo para subir tudo */
+    padding: 0 0 90px 0 !important; 
+    justify-content: flex-start;
   }
 
-  /* VIEW: PERÍCIAS (Centro) */
-  body[data-mobile-view="pericia"] .lado-centro {
-    display: block !important;
-    /* Padding lateral zero para aproveitar tudo */
-    padding: 0 0 90px 0 !important;
-  }
-
-  /* VIEW: INVENTÁRIO/MAGIAS (Direita) */
-  body[data-mobile-view="inventario"] .lado-direito {
-    display: flex !important;
-    flex-direction: column;
-    height: auto;
-    padding: 0 2px 90px 2px !important;
-  }
-
-  /* --- 4.4. Ajustes Específicos dos Componentes no Mobile --- */
-
-  /* ESQUERDA */
+  /* O Hexagrama é puxado para cima com margem negativa e transform */
   .hexagrama {
-    transform: scale(0.85);
-    margin: -10px auto 10px auto;
+    transform: scale(0.80); /* Levemente menor para caber melhor */
+    margin: -25px auto 0 auto !important; /* Puxa bem pra cima */
+    transform-origin: center top;
   }
 
+  /* Ajustes dos componentes abaixo do hexagrama */
   .ficha-compacta {
-    width: 100%;
-    padding: 0;
+    padding: 0 4px;
+    margin-top: -15px; /* Sobe a ficha compacta para perto do hexagrama */
   }
 
-  .linha-top, .linha-xp, .linha-metros {
+  .linha-top, .linha-xp, .linha-metros, .status-row {
     flex-wrap: wrap;
     justify-content: center;
-  }
-  
-  .status-row {
     width: 100%;
-    justify-content: space-around;
-    margin-top: 10px;
   }
 
-  .xp-box {
-    min-width: 100%;
-    margin-bottom: 10px;
-  }
+  .xp-box { min-width: 100%; margin-bottom: 8px; }
+  .metros-box, .quadrados-box, .dv-box { margin-top: 8px; }
   
-  .metros-box, .quadrados-box, .dv-box {
-    margin-top: 10px;
-  }
-
   .armadura-card {
     height: auto;
-    padding: 15px 5px; /* Mais espaço interno */
-    margin-top: 15px;
+    padding: 10px 4px;
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  .escudo-col {
+    width: 100%;
+    padding: 0 5px;
+    justify-content: space-around;
   }
   
-  .armadura-grid {
+  .bonus-iniciativa-block { display: none; }
+  .inline-formula { flex-wrap: wrap; justify-content: center; }
+
+  /* VIEW: MEIO (PERÍCIAS) - AJUSTE "MAIS ESPAÇO PROS LADOS" */
+  body[data-mobile-view="pericia"] .lado-centro {
+    display: block !important;
+    padding: 0 0 90px 0 !important; /* Padding zero nas laterais */
+    width: 100vw !important; /* Força largura da viewport */
+  }
+
+  .pericias {
+    width: 100% !important;
+    padding: 2px 0 !important; /* Mínimo possível */
     display: flex;
     flex-direction: column;
     align-items: center;
   }
-  
-  .escudo-col {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 15px;
-    padding: 0 10px;
-  }
-  
-  .escudo-wrap { order: 1; }
-  .iniciativa-block { order: 2; margin: 0; }
-  .bonus-iniciativa-block { display: none; }
 
-  .inline-formula {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  /* CENTRO: Perícias e Dinheiro */
-  .pericias {
-    width: 100%;
-    padding: 0 4px; /* Leve respiro nas laterais */
-  }
-
-  /* Ajuste Fino da Grade de Perícias para ocupar tudo */
   .pericia-item {
-    padding: 6px 2px; /* Aumentei um pouco a altura do toque */
+    width: 100% !important; /* Garante largura total */
+    box-sizing: border-box;
+    padding: 6px 2px; /* Mantém altura de toque boa */
     font-size: 12px;
-    gap: 2px;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
+    border-radius: 0; /* Remove bordas arredondadas para parecer lista contínua */
+    border-bottom: 1px solid #333; /* Separador visual */
     
-    /* Grid Mobile Otimizada para Largura Total */
-    /* Ícone | Nome | Attr | Bônus | Check | Outros */
-    grid-template-columns: 24px 1fr 38px 38px 28px 38px;
+    /* GRID OTIMIZADA PARA ESPAÇO */
+    /* Diminuí as colunas fixas para dar folga */
+    /* Icone | Nome (Elastic) | Attr | Bônus | Treino | Outros */
+    grid-template-columns: 20px 1fr 32px 32px 24px 36px !important;
+    column-gap: 1px;
+  }
+
+  /* Ajustes finos nos inputs para não estourarem */
+  .pericia-item .outros { 
+    max-width: 100%; 
+    padding: 4px 0; 
+    text-align: center;
+  }
+  
+  .pericia-item select.atributo-select { 
+    padding: 0; 
+    font-size: 11px; /* Fonte levemente menor no select */
   }
 
   .pericia-item .col-nome {
-    white-space: normal;
-    line-height: 1.1;
-    padding-left: 2px;
+    white-space: nowrap; /* Tenta manter em uma linha */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 4px;
+    font-size: 13px; /* Nome levemente maior para leitura */
   }
   
-  /* Inputs internos maiores para facilitar toque */
-  .pericia-item .outros { padding: 4px 0; }
-  .pericia-item select.atributo-select { padding: 4px 0; }
+  /* Ajuste no cabeçalho da tabela */
+  .pericia-item.header-row {
+    font-size: 10px;
+    background: #111;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
 
-  /* Dinheiro */
+  /* Dinheiro e Sanidade no Meio */
   .money-wrapper {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-    margin: 10px 4px; /* Margem lateral pequena */
+    margin: 10px 0;
+    width: 100%;
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
   }
   
   .sanidade-panel {
-    width: 98%;
-    margin: 0 auto;
+    width: 100%;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
   }
   
-  .btn-sanidade-img { width: 80%; }
+  .btn-sanidade-img { width: 90%; margin-top: 10px; }
 
-  /* DIREITA: Abas */
+
+  /* VIEW: DIREITA (INVENTÁRIO) */
+  body[data-mobile-view="inventario"] .lado-direito {
+    display: flex !important;
+    flex-direction: column;
+    padding: 0 0 90px 0 !important;
+  }
+
   .abas {
     grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
+    gap: 1px;
+    width: 100%;
   }
   
   .abas button {
     font-size: 11px;
-    padding: 10px 2px;
+    padding: 10px 0;
+    border-radius: 0;
+  }
+  
+  .conteudo {
+    padding: 10px;
   }
 
-  /* --- 4.5. Notificação de Dados (Dice Results V5) --- */
+  /* --- 4.4. Notificações e Modals --- */
   #dice-results-container {
     left: 50%;
     transform: translateX(-50%);
-    right: auto;
-    top: auto;
-    bottom: 80px; /* Acima da navbar */
-    width: 96%;
+    bottom: 80px;
+    width: 98%;
     max-width: 400px;
   }
   
   .dice-close {
-    width: 44px;
-    height: 44px;
-    line-height: 44px;
-    font-size: 24px;
-    background: rgba(0,0,0,0.8);
-    border-radius: 50%;
-    right: -5px;
     top: -15px;
-    color: #fff;
-    border: 1px solid #555;
+    right: -5px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 22px;
   }
 }
