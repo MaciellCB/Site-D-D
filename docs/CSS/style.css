@@ -76,7 +76,6 @@ header {
   flex-wrap: wrap; /* Permite quebra em telas menores */
 }
 
-
 /* Esconde navbar mobile no desktop */
 #mobile-navbar {
   display: none;
@@ -84,23 +83,40 @@ header {
 
 /* =============================================================
    4. MODO MOBILE (Telas < 768px)
+   (Consolidado: Layout, Views, Correções e Dice V5)
 ============================================================= */
 @media (max-width: 768px) {
 
-  /* --- Ajustes Gerais Mobile --- */
+  /* --- 4.1. Ajustes Gerais de Estrutura --- */
   body {
     padding-bottom: 70px; /* Espaço para a hotbar */
     overflow-y: auto;
   }
 
+  /* Container: Força layout em bloco e remove travas de desktop */
   .container {
-    display: block; /* Remove flexbox lateral */
-    height: auto;
+    display: block !important; /* Remove flexbox lateral */
+    height: auto !important;
     min-height: auto;
-    padding: 5px;
+    padding: 10px 5px !important;
+    overflow-x: hidden !important;
   }
 
-  /* --- Hotbar (Navegação Inferior) --- */
+  /* Sobrescreve as larguras fixas das colunas */
+  .lado-esquerdo,
+  .lado-centro,
+  .lado-direito {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    flex: none !important;
+    margin: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding-bottom: 80px !important; /* Espaço extra seguro */
+  }
+
+  /* --- 4.2. Hotbar (Navegação Inferior) --- */
   #mobile-navbar {
     display: flex;
     position: fixed;
@@ -143,14 +159,7 @@ header {
     border-top: 2px solid #9c27b0;
   }
 
-  /* Ajuste de Notificação de Dados */
-  #dice-results-container {
-    bottom: 80px;
-    z-index: 200000;
-    max-width: 90%;
-  }
-
-  /* --- Sistema de Views (Abas) --- */
+  /* --- 4.3. Sistema de Views (Abas) --- */
 
   /* Oculta tudo por padrão no mobile */
   header,
@@ -161,60 +170,66 @@ header {
     display: none;
   }
 
-  /* View: Header (Perfil) */
+  /* Lógica de Exibição com !important para garantir sobreposição */
+  
+  /* View: Header */
   body[data-mobile-view="header"] header,
   body[data-mobile-view="header"] .info-personagem {
-    display: flex;
-    flex-direction: column;
+    display: flex !important;
+    flex-direction: column !important;
     width: 100%;
-    padding: 10px;
+    padding: 10px !important;
     height: auto;
+    align-items: center !important;
+    gap: 15px !important;
   }
-
-  body[data-mobile-view="header"] .linha-info {
-    flex-direction: column;
-    gap: 10px;
-  }
+  
+  /* Ajustes internos do Header Mobile */
+  .info-esquerda { margin-bottom: 10px; }
+  .info-direita { width: 100% !important; }
+  .linha-info { flex-direction: column !important; gap: 15px !important; }
+  .campo { width: 100% !important; }
 
   /* View: Status (Esquerda) */
   body[data-mobile-view="status"] .lado-esquerdo {
-    display: flex;
+    display: flex !important;
     flex-direction: column;
-    width: 100%;
-    min-width: 0;
-    max-width: none;
-    margin: 0;
-    padding: 10px 5px;
     align-items: center;
     overflow-x: hidden;
   }
 
   /* View: Perícia (Centro) */
   body[data-mobile-view="pericia"] .lado-centro {
-    display: block;
-    width: 100%;
-    flex: none;
-    max-width: none;
-    margin: 0;
+    display: block !important;
   }
 
   /* View: Inventário (Direita) */
   body[data-mobile-view="inventario"] .lado-direito {
-    display: flex;
-    width: 100%;
-    flex: none;
-    max-width: none;
-    margin: 0;
+    display: flex !important;
     height: auto;
     min-height: calc(100vh - 80px);
   }
 
-  .abas button {
-    font-size: 11px;
-    padding: 8px 2px;
+  /* Ocultar elementos quando não estão na view ativa */
+  body:not([data-mobile-view="header"]) header,
+  body:not([data-mobile-view="header"]) .info-personagem { display: none !important; }
+  body:not([data-mobile-view="status"]) .lado-esquerdo { display: none !important; }
+  body:not([data-mobile-view="pericia"]) .lado-centro { display: none !important; }
+  body:not([data-mobile-view="inventario"]) .lado-direito { display: none !important; }
+
+  /* --- 4.4. Componentes Específicos (Armadura, Status, Abas) --- */
+
+  /* Hexagrama */
+  .hexagrama {
+    transform: scale(0.85);
+    margin: -10px auto !important;
   }
 
-  /* --- Ajustes Específicos de Componentes Mobile --- */
+  .linha-top, .status-row {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
 
   /* Grid de Armadura e Iniciativa */
   .armadura-card {
@@ -227,7 +242,7 @@ header {
   }
 
   .armadura-grid {
-    display: flex;
+    display: flex !important;
     flex-direction: column;
     align-items: center;
     width: 100%;
@@ -238,21 +253,15 @@ header {
     display: grid;
     width: 100%;
     grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "ini bonus"
-      "shield shield";
+    grid-template-areas: "ini bonus" "shield shield";
     justify-items: center;
     align-items: end;
     gap: 15px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
 
-  .iniciativa-block {
-    grid-area: ini;
-    margin: 0;
-    justify-self: end;
-  }
-
+  .iniciativa-block { grid-area: ini; margin: 0; justify-self: end; }
+  
   .bonus-iniciativa-block {
     grid-area: bonus;
     margin: 0;
@@ -275,7 +284,7 @@ header {
     margin-top: 10px;
   }
 
-  /* Fórmula de CA no Mobile */
+  /* Fórmula de CA */
   .armadura-titulo {
     font-size: 11px;
     margin-bottom: 45px;
@@ -299,21 +308,17 @@ header {
 
   .inline-formula {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap; /* Permite quebra se necessário */
     align-items: flex-end;
     justify-content: center;
-    gap: 6px;
+    gap: 5px;
     width: 100%;
     margin: 0;
   }
 
-  /* Reset de transformações e posições do desktop */
-  .inline-formula > span,
-  .inline-formula > div,
-  .formula-text,
-  .formula-attr,
-  .zero-num,
-  .formula-text.heavy-armor-mode {
+  /* Reset de transformações da fórmula */
+  .inline-formula > span, .inline-formula > div, .formula-text,
+  .formula-attr, .zero-num, .formula-text.heavy-armor-mode {
     transform: none;
     position: relative;
     margin: 0;
@@ -325,121 +330,18 @@ header {
 
   .zero-pair {
     display: flex;
-    flex-direction: column-reverse; /* Número em cima no mobile */
+    flex-direction: column-reverse;
     align-items: center;
     gap: 2px;
   }
 
-  .zero-num {
-    padding-bottom: 0;
-  }
+  .zero-num { padding-bottom: 0; }
+  .zero-num::after, .iniciativa-valor::after { display: none; }
+  .tipo-col { margin-top: 15px; }
 
-  /* Remove decorações desnecessárias no mobile */
-  .zero-num::after,
-  .iniciativa-valor::after {
-    display: none;
-  }
-
-  .tipo-col {
-    margin-top: 15px;
-  }
-}
-
-
-
-/* =============================================================
-   CORREÇÃO FINAL DE RESPONSIVIDADE (MOBILE FIXES)
-   Cole isso no FINAL do arquivo style.css
-============================================================= */
-
-@media (max-width: 768px) {
-
-  /* 1. FORÇAR LARGURA TOTAL E REMOVER TRAVAS DE DESKTOP */
-  .container {
-    display: block !important; /* Remove flexbox lateral */
-    padding: 10px 5px !important;
-    height: auto !important;
-    overflow-x: hidden !important;
-  }
-
-  /* Sobrescreve as larguras fixas dos arquivos CS individuais */
-  .lado-esquerdo,
-  .lado-centro,
-  .lado-direito {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    flex: none !important;
-    margin: 0 !important;
-    height: auto !important;
-    min-height: 0 !important;
-    padding-bottom: 80px !important; /* Espaço para navbar */
-  }
-
-  /* 2. AJUSTE DO HEADER (PERFIL) */
-  /* Transforma as linhas de inputs em colunas empilhadas */
-  .info-personagem {
-    flex-direction: column !important;
-    align-items: center !important;
-    padding: 10px !important;
-    gap: 15px !important;
-  }
-
-  .info-esquerda {
-    margin-bottom: 10px;
-  }
-
-  .info-direita {
-    width: 100% !important;
-  }
-
-  .linha-info {
-    flex-direction: column !important;
-    gap: 15px !important;
-  }
-
-  .campo {
-    width: 100% !important;
-  }
-
-  /* 3. AJUSTE DA ESQUERDA (STATUS/HEXAGRAMA) */
-  .hexagrama {
-    transform: scale(0.85); /* Diminui um pouco o hexagrama para caber */
-    margin: -10px auto !important;
-  }
-
-  .linha-top {
-    flex-wrap: wrap; /* Permite que Inspiração/Proficiência quebrem linha */
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .status-row {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  /* Armadura e Iniciativa empilhados */
-  .armadura-grid {
-    display: flex !important;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .escudo-col {
-    margin-bottom: 20px;
-  }
-
-  /* Fórmula de CA responsiva */
-  .inline-formula {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 5px;
-  }
-
-  /* 4. AJUSTE DA DIREITA (LISTAS E ABAS) */
+  /* Abas e Cards (Direita) */
   .abas {
-    grid-template-columns: repeat(3, 1fr) !important; /* Garante 3 colunas */
+    grid-template-columns: repeat(3, 1fr) !important;
     gap: 5px !important;
   }
 
@@ -448,20 +350,14 @@ header {
     padding: 8px 2px !important;
   }
 
-  /* Cards de itens/magias ocupando largura total */
-  .card-header {
-    flex-wrap: wrap;
-  }
-  
-  .card-title {
-    font-size: 14px !important;
-  }
+  .card-header { flex-wrap: wrap; }
+  .card-title { font-size: 14px !important; }
 
-  /* 5. AJUSTE DOS MODAIS (Para não vazar a tela) */
+  /* --- 4.5. Modals (Popups) --- */
   .spell-modal-overlay,
   .catalog-overlay-large {
     padding: 10px !important;
-    align-items: flex-start !important; /* Começa do topo para permitir scroll */
+    align-items: flex-start !important; /* Permite scroll se for muito alto */
   }
 
   .spell-modal,
@@ -474,166 +370,16 @@ header {
   }
 
   .modal-row {
-    flex-direction: column !important; /* Empilha inputs dos modais */
+    flex-direction: column !important;
     gap: 10px !important;
   }
   
-  /* Ajuste específico para o modal de criação de magia */
   .spell-modal input, .spell-modal select {
-    font-size: 16px !important; /* Evita zoom automático no iPhone */
+    font-size: 16px !important; /* Evita zoom no iPhone */
   }
 
-  /* 6. SISTEMA DE VIEWS (GARANTIR VISIBILIDADE) */
-  /* Quando uma view está ativa, força display block e esconde as outras */
-  
-  body[data-mobile-view="header"] .info-personagem { display: flex !important; }
-  body[data-mobile-view="header"] header { display: block !important; }
-  
-  body[data-mobile-view="status"] .lado-esquerdo { display: flex !important; }
-  
-  body[data-mobile-view="pericia"] .lado-centro { display: block !important; }
-  
-  body[data-mobile-view="inventario"] .lado-direito { display: flex !important; }
-
-  /* Esconde o que não é da view ativa */
-  body:not([data-mobile-view="header"]) header,
-  body:not([data-mobile-view="header"]) .info-personagem { display: none !important; }
-  
-  body:not([data-mobile-view="status"]) .lado-esquerdo { display: none !important; }
-  
-  body:not([data-mobile-view="pericia"]) .lado-centro { display: none !important; }
-  
-  body:not([data-mobile-view="inventario"]) .lado-direito { display: none !important; }
-}
-
-
-
-/* =============================================================
-   CORREÇÃO CRÍTICA V2: POSIÇÃO E Z-INDEX NO MOBILE
-   Substitua o bloco anterior no final do style.css por este
-============================================================= */
-@media (max-width: 768px) {
-  #dice-results-container {
-    /* Z-Index Máximo para garantir que fique acima da navbar */
-    z-index: 2147483647 !important; 
-    
-    /* Posição: Canto Direito e Mais Alto */
-    bottom: 140px !important; /* Sobe bem para sair da área da navbar */
-    right: 10px !important;   /* Volta para o canto direito */
-    left: auto !important;    /* Remove a centralização */
-    
-    /* Tamanho */
-    width: auto !important;
-    max-width: 85% !important; /* Não deixa vazar se a tela for minúscula */
-    min-width: 280px !important;
-  }
-}
-
-
-/* =============================================================
-   CORREÇÃO FINAL V3: POSIÇÃO DIREITA E BOTÃO X (MOBILE)
-   Substitua o bloco anterior no final do style.css
-============================================================= */
-@media (max-width: 768px) {
-  #dice-results-container {
-    /* POSIÇÃO: Força canto direito inferior */
-    z-index: 2147483647 !important; 
-    bottom: 150px !important;
-    
-    right: 10px !important;
-    left: auto !important;        /* Anula centralização horizontal */
-    top: auto !important;         /* Anula centralização vertical */
-    transform: none !important;   /* Remove translação de centro */
-    
-    /* TAMANHO */
-    width: auto !important;
-    min-width: 260px !important;
-    max-width: 80% !important;
-    
-    /* Visual */
-    margin: 0 !important;
-  }
-
-  /* BOTÃO FECHAR (X) - VERSÃO MOBILE (Maior e mais fácil de clicar) */
-  .dice-close {
-    display: block !important;
-    font-size: 28px !important;      /* Ícone maior */
-    padding: 15px !important;        /* Área de toque expandida */
-    top: -10px !important;           /* Posição ajustada */
-    right: -5px !important;          /* Posição ajustada */
-    color: #ff5252 !important;       /* Vermelho para destaque */
-    z-index: 2147483648 !important;  /* Acima do container */
-    background: transparent !important;
-    width: 50px !important;          /* Largura fixa para clique */
-    height: 50px !important;         /* Altura fixa para clique */
-    text-align: center;
-    line-height: 20px !important;
-  }
-}
-
-
-
-/* =============================================================
-   CORREÇÃO FINAL V4: CENTRALIZADO + BOTÃO X CINZA (MOBILE)
-   Substitua o bloco @media do final do arquivo style.css
-============================================================= */
-@media (max-width: 768px) {
-  #dice-results-container {
-    /* POSIÇÃO: Centralizado horizontalmente e acima da navbar */
-    z-index: 2147483647 !important; 
-    bottom: 140px !important;
-    
-    left: 50% !important;         /* Ponto de partida no meio */
-    right: auto !important;       /* Desliga alinhamento à direita */
-    top: auto !important;
-    transform: translateX(-50%) !important; /* Recua 50% para centralizar exato */
-    
-    /* TAMANHO */
-    width: 90% !important;        /* Ocupa quase toda largura */
-    max-width: 380px !important;  /* Mas não exagera */
-    min-width: 0 !important;
-    
-    margin: 0 !important;
-    display: flex !important;
-  }
-
-  /* BOTÃO FECHAR (X) - ESTILO MOBILE ESPECÍFICO */
-  .dice-close {
-    display: block !important;
-    font-size: 26px !important;      
-    font-weight: normal !important;
-    
-    /* Área de toque grande */
-    padding: 15px !important;        
-    width: 60px !important;
-    height: 60px !important;
-    line-height: 30px !important;
-    text-align: center;
-    
-    /* Posicionamento */
-    position: absolute !important;
-    top: -5px !important;
-    right: -5px !important;
-    z-index: 2147483648 !important;
-    
-    /* CORES (O Pedido: Cinza -> Branco) */
-    color: #888 !important;          /* Cinza padrão */
-    background: transparent !important;
-    transition: color 0.1s !important;
-  }
-
-  /* Quando tocar ou clicar */
-  .dice-close:active, 
-  .dice-close:hover {
-    color: #ffffff !important;       /* Branco ao toque */
-  }
-}
-
-/* =============================================================
-   CORREÇÃO FINAL V5: CENTRALIZADO + X CINZA/BRANCO (MOBILE)
-   Substitua os blocos de "dice-results" anteriores no final do CSS
-============================================================= */
-@media (max-width: 768px) {
+  /* --- 4.6. Notificação de Dados (DICE RESULTS V5) --- */
+  /* Centralizado horizontalmente + Botão X Cinza/Branco */
   #dice-results-container {
     /* FORÇAR CENTRALIZAÇÃO ABSOLUTA */
     left: 50% !important;
@@ -656,13 +402,13 @@ header {
     display: flex !important;
   }
 
-  /* BOTÃO FECHAR (X) - CINZA -> BRANCO */
+  /* BOTÃO FECHAR (X) - ESTILO V5 */
   .dice-close {
     display: block !important;
     font-size: 28px !important;      
     font-weight: normal !important;
     
-    /* Área de toque grande para funcionar fácil */
+    /* Área de toque grande */
     padding: 10px !important;        
     width: 50px !important;
     height: 50px !important;
@@ -675,7 +421,7 @@ header {
     right: -5px !important;
     z-index: 2147483648 !important;
     
-    /* CORES: Cinza padrão */
+    /* CORES: Cinza padrão (#888) */
     color: #888 !important;          
     background: transparent !important;
     transition: color 0.1s !important;
