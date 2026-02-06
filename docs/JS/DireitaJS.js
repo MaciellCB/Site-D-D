@@ -4428,16 +4428,16 @@ diceStyles.textContent = `
     }
 
     /* --- ESTILOS DE DESTAQUE --- */
-    .dice-roll-max { color: #e040fb !important; font-weight: bold; text-shadow: 0 0 5px #e040fb; } 
-    .dice-roll-min { color: #ff3333 !important; font-weight: bold; text-shadow: 0 0 5px #ff3333; }
+    .dice-roll-max { color: #e040fb ; font-weight: bold; text-shadow: 0 0 5px #e040fb; } 
+    .dice-roll-min { color: #ff3333 ; font-weight: bold; text-shadow: 0 0 5px #ff3333; }
     
     .crit-total { 
-        color: #e040fb !important; 
+        color: #e040fb ; 
         text-shadow: 0 0 10px rgba(224, 64, 251, 0.8), 0 0 20px rgba(224, 64, 251, 0.4);
     }
 
     .fumble-total {
-        color: #ff3333 !important;
+        color: #ff3333 ;
         text-shadow: 0 0 10px rgba(255, 51, 51, 0.8), 0 0 20px rgba(255, 51, 51, 0.4);
     }
 `;
@@ -4468,7 +4468,7 @@ closeBtnStyle.textContent = `
     }
     /* Ajuste para o conteúdo não ficar por cima do X */
     .dice-content-wrapper {
-        padding-right: 25px !important; 
+        padding-right: 25px ; 
     }
 `;
 document.head.appendChild(closeBtnStyle);

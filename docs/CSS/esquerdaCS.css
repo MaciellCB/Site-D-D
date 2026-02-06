@@ -652,7 +652,7 @@ input[type=number] {
   color: #e6e6e6;
 }
 
-/* Limpeza de propriedades legadas (garantia sem !important) */
+/* Limpeza de propriedades legadas (garantia sem ) */
 .inline-formula > :nth-child(-n+5),
 .formula-text {
   transform: none;

@@ -130,10 +130,10 @@
   -moz-appearance: none;
   border: none;
   background: transparent;
-  color: #cfcfcf !important;
+  color: #cfcfcf ;
   font-family: 'Segoe UI', sans-serif;
   font-weight: 600;
-  font-size: 12px !important;
+  font-size: 12px ;
   /* Mantido menor para caber na coluna estreita */
   padding: 0 2px;
   margin: 0;
@@ -153,7 +153,7 @@
 }
 
 .atributo-openable {
-  z-index: 2000 !important;
+  z-index: 2000 ;
   position: relative;
 }
 
@@ -194,10 +194,10 @@
 
 .pericia-item .col-outros .outros {
   width: 100%;
-  max-width: 38px !important;
+  max-width: 38px ;
   /* Ajustado para coluna estreita */
-  font-size: 12px !important;
-  padding: 2px !important;
+  font-size: 12px ;
+  padding: 2px ;
   border-radius: 4px;
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -347,7 +347,7 @@
 
 /* Input Vazio Específico */
 #input-vazio {
-  background-color: rgba(0, 0, 0, 0.3) !important;
+  background-color: rgba(0, 0, 0, 0.3) ;
   z-index: 2;
   position: relative;
   border-color: rgba(255, 255, 255, 0.2);
@@ -412,30 +412,30 @@ input[type=number] {
 
 /* Efeitos de Vazio/Infusão */
 .row-infundido {
-  border: 1px solid #9c27b0 !important;
+  border: 1px solid #9c27b0 ;
   box-shadow: 0 0 20px rgba(156, 39, 176, 0.4), inset 0 0 20px rgba(74, 20, 140, 0.6);
 }
 
 .vazio-infundido {
   box-shadow: 0 0 15px #9c27b0, inset 0 0 10px #4a0072;
-  border-color: #e040fb !important;
-  color: #fff !important;
+  border-color: #e040fb ;
+  color: #fff ;
   text-shadow: 0 0 5px #e040fb;
-  font-size: 14px !important;
+  font-size: 14px ;
   text-transform: uppercase;
 }
 
 .input-infundido-text {
-  color: #e040fb !important;
+  color: #e040fb ;
   text-shadow: 0 0 5px #000;
-  font-size: 13px !important;
-  border-color: #e040fb !important;
+  font-size: 13px ;
+  border-color: #e040fb ;
 }
 
 .input-sincronizado {
-  width: 120px !important;
-  border-color: #9c27b0 !important;
-  color: #e040fb !important;
+  width: 120px ;
+  border-color: #9c27b0 ;
+  color: #e040fb ;
   text-shadow: 0 0 5px #9c27b0;
 }
 

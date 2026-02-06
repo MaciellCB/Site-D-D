@@ -95,25 +95,25 @@ header {
 
   /* Container: Força layout em bloco e remove travas de desktop */
   .container {
-    display: block !important; /* Remove flexbox lateral */
-    height: auto !important;
+    display: block ; /* Remove flexbox lateral */
+    height: auto ;
     min-height: auto;
-    padding: 10px 5px !important;
-    overflow-x: hidden !important;
+    padding: 10px 5px ;
+    overflow-x: hidden ;
   }
 
   /* Sobrescreve as larguras fixas das colunas */
   .lado-esquerdo,
   .lado-centro,
   .lado-direito {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    flex: none !important;
-    margin: 0 !important;
-    height: auto !important;
-    min-height: 0 !important;
-    padding-bottom: 80px !important; /* Espaço extra seguro */
+    width: 100% ;
+    max-width: 100% ;
+    min-width: 0 ;
+    flex: none ;
+    margin: 0 ;
+    height: auto ;
+    min-height: 0 ;
+    padding-bottom: 80px ; /* Espaço extra seguro */
   }
 
   /* --- 4.2. Hotbar (Navegação Inferior) --- */
@@ -170,29 +170,29 @@ header {
     display: none;
   }
 
-  /* Lógica de Exibição com !important para garantir sobreposição */
+  /* Lógica de Exibição com  para garantir sobreposição */
   
   /* View: Header */
   body[data-mobile-view="header"] header,
   body[data-mobile-view="header"] .info-personagem {
-    display: flex !important;
-    flex-direction: column !important;
+    display: flex ;
+    flex-direction: column ;
     width: 100%;
-    padding: 10px !important;
+    padding: 10px ;
     height: auto;
-    align-items: center !important;
-    gap: 15px !important;
+    align-items: center ;
+    gap: 15px ;
   }
   
   /* Ajustes internos do Header Mobile */
   .info-esquerda { margin-bottom: 10px; }
-  .info-direita { width: 100% !important; }
-  .linha-info { flex-direction: column !important; gap: 15px !important; }
-  .campo { width: 100% !important; }
+  .info-direita { width: 100% ; }
+  .linha-info { flex-direction: column ; gap: 15px ; }
+  .campo { width: 100% ; }
 
   /* View: Status (Esquerda) */
   body[data-mobile-view="status"] .lado-esquerdo {
-    display: flex !important;
+    display: flex ;
     flex-direction: column;
     align-items: center;
     overflow-x: hidden;
@@ -200,29 +200,29 @@ header {
 
   /* View: Perícia (Centro) */
   body[data-mobile-view="pericia"] .lado-centro {
-    display: block !important;
+    display: block ;
   }
 
   /* View: Inventário (Direita) */
   body[data-mobile-view="inventario"] .lado-direito {
-    display: flex !important;
+    display: flex ;
     height: auto;
     min-height: calc(100vh - 80px);
   }
 
   /* Ocultar elementos quando não estão na view ativa */
   body:not([data-mobile-view="header"]) header,
-  body:not([data-mobile-view="header"]) .info-personagem { display: none !important; }
-  body:not([data-mobile-view="status"]) .lado-esquerdo { display: none !important; }
-  body:not([data-mobile-view="pericia"]) .lado-centro { display: none !important; }
-  body:not([data-mobile-view="inventario"]) .lado-direito { display: none !important; }
+  body:not([data-mobile-view="header"]) .info-personagem { display: none ; }
+  body:not([data-mobile-view="status"]) .lado-esquerdo { display: none ; }
+  body:not([data-mobile-view="pericia"]) .lado-centro { display: none ; }
+  body:not([data-mobile-view="inventario"]) .lado-direito { display: none ; }
 
   /* --- 4.4. Componentes Específicos (Armadura, Status, Abas) --- */
 
   /* Hexagrama */
   .hexagrama {
     transform: scale(0.85);
-    margin: -10px auto !important;
+    margin: -10px auto ;
   }
 
   .linha-top, .status-row {
@@ -242,7 +242,7 @@ header {
   }
 
   .armadura-grid {
-    display: flex !important;
+    display: flex ;
     flex-direction: column;
     align-items: center;
     width: 100%;
@@ -341,97 +341,97 @@ header {
 
   /* Abas e Cards (Direita) */
   .abas {
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 5px !important;
+    grid-template-columns: repeat(3, 1fr) ;
+    gap: 5px ;
   }
 
   .abas button {
-    font-size: 11px !important;
-    padding: 8px 2px !important;
+    font-size: 11px ;
+    padding: 8px 2px ;
   }
 
   .card-header { flex-wrap: wrap; }
-  .card-title { font-size: 14px !important; }
+  .card-title { font-size: 14px ; }
 
   /* --- 4.5. Modals (Popups) --- */
   .spell-modal-overlay,
   .catalog-overlay-large {
-    padding: 10px !important;
-    align-items: flex-start !important; /* Permite scroll se for muito alto */
+    padding: 10px ;
+    align-items: flex-start ; /* Permite scroll se for muito alto */
   }
 
   .spell-modal,
   .catalog-large {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-top: 20px !important;
-    max-height: 85vh !important;
+    width: 100% ;
+    max-width: 100% ;
+    margin-top: 20px ;
+    max-height: 85vh ;
     border-radius: 8px;
   }
 
   .modal-row {
-    flex-direction: column !important;
-    gap: 10px !important;
+    flex-direction: column ;
+    gap: 10px ;
   }
   
   .spell-modal input, .spell-modal select {
-    font-size: 16px !important; /* Evita zoom no iPhone */
+    font-size: 16px ; /* Evita zoom no iPhone */
   }
 
   /* --- 4.6. Notificação de Dados (DICE RESULTS V5) --- */
   /* Centralizado horizontalmente + Botão X Cinza/Branco */
   #dice-results-container {
     /* FORÇAR CENTRALIZAÇÃO ABSOLUTA */
-    left: 50% !important;
-    transform: translateX(-50%) !important;
+    left: 50% ;
+    transform: translateX(-50%) ;
     
     /* Remover alinhamentos laterais antigos */
-    right: auto !important;
-    top: auto !important;
-    margin: 0 !important;
+    right: auto ;
+    top: auto ;
+    margin: 0 ;
 
     /* Altura segura da barra de baixo */
-    bottom: 140px !important;
+    bottom: 140px ;
     
     /* Tamanho e Prioridade */
-    width: 90% !important;
-    max-width: 380px !important;
-    min-width: 0 !important;
-    z-index: 2147483647 !important; 
+    width: 90% ;
+    max-width: 380px ;
+    min-width: 0 ;
+    z-index: 2147483647 ; 
     
-    display: flex !important;
+    display: flex ;
   }
 
   /* BOTÃO FECHAR (X) - ESTILO V5 */
   .dice-close {
-    display: block !important;
-    font-size: 28px !important;      
-    font-weight: normal !important;
+    display: block ;
+    font-size: 28px ;      
+    font-weight: normal ;
     
     /* Área de toque grande */
-    padding: 10px !important;        
-    width: 50px !important;
-    height: 50px !important;
-    line-height: 30px !important;
+    padding: 10px ;        
+    width: 50px ;
+    height: 50px ;
+    line-height: 30px ;
     text-align: center;
     
     /* Posicionamento */
-    position: absolute !important;
-    top: -5px !important;
-    right: -5px !important;
-    z-index: 2147483648 !important;
+    position: absolute ;
+    top: -5px ;
+    right: -5px ;
+    z-index: 2147483648 ;
     
     /* CORES: Cinza padrão (#888) */
-    color: #888 !important;          
-    background: transparent !important;
-    transition: color 0.1s !important;
-    cursor: pointer !important;
+    color: #888 ;          
+    background: transparent ;
+    transition: color 0.1s ;
+    cursor: pointer ;
   }
 
   /* Efeito ao tocar (Fica Branco) */
   .dice-close:active, 
   .dice-close:hover {
-    color: #ffffff !important;       
+    color: #ffffff ;       
   }
 }
 

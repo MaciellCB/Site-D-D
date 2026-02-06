@@ -42,18 +42,18 @@
 
 /* 1. Antecedente (1ª coluna): Bem menor para dar espaço às classes */
 .info-direita .linha-info:nth-child(2) .campo:nth-child(1) {
-  flex: 0.5 !important;
+  flex: 0.5 ;
   min-width: 90px;
 }
 
 /* 2. Classes (2ª coluna): Ocupa a maior parte do espaço */
 .info-direita .linha-info:nth-child(2) .campo:nth-child(2) {
-  flex: 2.5 !important;
+  flex: 2.5 ;
 }
 
 /* 3. Raça (3ª coluna): Tamanho médio */
 .info-direita .linha-info:nth-child(2) .campo:nth-child(3) {
-  flex: 0.8 !important;
+  flex: 0.8 ;
 }
 
 /* =============================================================
@@ -496,9 +496,9 @@
 
 /* Removemos qualquer restrição de altura dos filhos diretos */
 .wizard-content > div {
-  max-height: none !important;
-  overflow: visible !important;
-  height: auto !important;
+  max-height: none ;
+  overflow: visible ;
+  height: auto ;
 }
 
 /* Ajuste visual para a descrição da sub-raça */
@@ -707,9 +707,9 @@
 .catalog-large-close, 
 .lightbox-close,
 .remove-trait-btn {
-  background: transparent !important;
-  border: none !important;
-  color: #fff !important;
+  background: transparent ;
+  border: none ;
+  color: #fff ;
   font-size: 24px; /* Nota: O Lightbox usava 40px antes, mas a regra mais recente (24px) prevaleceu */
   font-weight: bold;
   cursor: pointer;
@@ -717,7 +717,7 @@
   line-height: 1;
   opacity: 0.7;
   transition: 0.2s;
-  box-shadow: none !important;
+  box-shadow: none ;
 }
 
 /* Hover Compartilhado */
@@ -725,19 +725,19 @@
 .catalog-large-close:hover,
 .lightbox-close:hover,
 .remove-trait-btn:hover {
-  color: #f44336 !important; /* Vermelho ao passar o mouse */
-  background: transparent !important;
+  color: #f44336 ; /* Vermelho ao passar o mouse */
+  background: transparent ;
   opacity: 1;
 }
 
 /* Ajuste específico para o botão de remover habilidade (sobrescreve o compartilhado) */
 .remove-trait-btn {
-  font-size: 18px !important;
-  color: #d32f2f !important;
+  font-size: 18px ;
+  color: #d32f2f ;
 }
 
 .remove-trait-btn:hover {
-  color: #ff5252 !important;
+  color: #ff5252 ;
 }
 
 
@@ -899,7 +899,7 @@
     overflow: hidden;
 
     /* AQUI ESTÁ A MUDANÇA IMPORTANTE */
-    z-index: 20000 !important; /* Maior que 12000 do modal de classes */
+    z-index: 20000 ; /* Maior que 12000 do modal de classes */
 }
 
 /* =============================================================

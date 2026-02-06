@@ -3,12 +3,12 @@
    ========================================================================== */
 .lado-direito {
   /* Layout e Tamanho - Prioridade Maxima */
-  flex: 0 0 400px !important;
-  width: 400px !important;
-  max-width: 400px !important;
-  height: fit-content !important;
+  flex: 0 0 400px ;
+  width: 400px ;
+  max-width: 400px ;
+  height: fit-content ;
   min-height: 100vh;
-  max-height: none !important;
+  max-height: none ;
 
   /* Visual */
   background-color: #171717;
@@ -21,7 +21,7 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  overflow: visible !important;
+  overflow: visible ;
   flex-shrink: 0;
   overflow-anchor: none;
 }
@@ -31,16 +31,16 @@
   background-color: transparent;
   padding: 0;
   color: #e6e6e6;
-  display: block !important;
-  height: auto !important;
-  overflow: visible !important;
-  flex: none !important;
+  display: block ;
+  height: auto ;
+  overflow: visible ;
+  flex: none ;
   /* Impede o flexbox de encolher */
 }
 
 /* Travamento do Body ao abrir Modais */
 body.no-scroll {
-  overflow: hidden !important;
+  overflow: hidden ;
   height: 100vh;
 }
 
@@ -138,7 +138,7 @@ body.no-scroll {
 }
 
 .card:not(.expanded) .card-body {
-  display: none !important;
+  display: none ;
 }
 
 /* Header do Card */
@@ -164,8 +164,8 @@ body.no-scroll {
 .card-header img,
 .spell-header img,
 .dice-img {
-  max-width: 20px !important;
-  max-height: 20px !important;
+  max-width: 20px ;
+  max-height: 20px ;
   width: auto;
   height: auto;
   object-fit: contain;
@@ -326,7 +326,7 @@ body.no-scroll {
 }
 
 .spell-damage img {
-  max-width: 20px !important;
+  max-width: 20px ;
 }
 
 .spell-attrs {
@@ -443,7 +443,7 @@ body.no-scroll {
 }
 
 .toggle-section-header:hover {
-  color: #fff !important;
+  color: #fff ;
 }
 
 /* Checkboxes (Equipamento / Ativar) */
@@ -606,7 +606,7 @@ input:checked+.square-check::after {
 }
 
 .slots-container.collapsed .slots-body-content {
-  display: none !important;
+  display: none ;
 }
 
 .slots-container.collapsed .slots-header-actions {
@@ -1314,7 +1314,7 @@ input:checked+.square-check::after {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  overflow-y: auto !important;
+  overflow-y: auto ;
   min-height: 0;
 }
 
@@ -1495,7 +1495,7 @@ input:checked+.square-check::after {
 a.remover-item,
 a.remover-hab,
 a.remover-spell {
-  color: #d32f2f !important;
+  color: #d32f2f ;
   font-weight: 700;
   font-size: 13px;
   text-transform: uppercase;
@@ -1506,7 +1506,7 @@ a.remover-spell {
 a.editar-item,
 a.editar-hab,
 a.editar-spell {
-  color: #388e3c !important;
+  color: #388e3c ;
   font-weight: 700;
   font-size: 13px;
   text-transform: uppercase;
@@ -1837,15 +1837,15 @@ a.editar-spell {
 /* No final do arquivo DireitaJS.js (dentro das tags <style> ou string CSS) */
 
 .lado-direito {
-  /* ANTES: flex: 0 0 400px !important; width: 400px !important; */
+  /* ANTES: flex: 0 0 400px ; width: 400px ; */
   /* DEPOIS: */
-  flex: 0 0 340px !important;
-  width: 340px !important;
-  max-width: 340px !important;
+  flex: 0 0 340px ;
+  width: 340px ;
+  max-width: 340px ;
 
-  height: fit-content !important;
+  height: fit-content ;
   min-height: 100vh;
-  max-height: none !important;
+  max-height: none ;
   background-color: #171717;
   border-radius: 5px;
   padding: 12px;
@@ -1854,7 +1854,7 @@ a.editar-spell {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  overflow: visible !important;
+  overflow: visible ;
   flex-shrink: 0;
   overflow-anchor: none;
 }
@@ -1895,7 +1895,7 @@ a.editar-spell {
   border-radius: 8px;
   
   /* Reset de margens antigas que causavam problemas */
-  margin: 0 !important; 
+  margin: 0 ; 
   position: relative;
 }
 
@@ -2027,7 +2027,7 @@ a.editar-spell {
 }
 
 .spell-header {
-    padding-bottom: 10px !important;
+    padding-bottom: 10px ;
 }
 
 
@@ -2135,10 +2135,10 @@ a.editar-spell {
 
 /* Ajuste da Classe para combinar com a escola menor */
 .class-box-display {
-    padding: 4px 8px !important;
-    font-size: 11px !important;
-    min-height: 0 !important;
-    min-width: 0 !important;
+    padding: 4px 8px ;
+    font-size: 11px ;
+    min-height: 0 ;
+    min-width: 0 ;
 }
 
 /* 2. Grade de Especificações da Magia (O Padrão Bonito) */
@@ -2249,7 +2249,7 @@ a.editar-spell {
     font-weight: 500; 
     
     /* ALTERAÇÕES CRÍTICAS AQUI: */
-    white-space: pre-wrap !important; /* Permite quebras de linha (<br>) */
+    white-space: pre-wrap ; /* Permite quebras de linha (<br>) */
     max-height: 180px;               /* Evita que o balão suba demais e suma da tela */
     overflow-y: auto;                /* Adiciona scroll se houver muitos mísseis (ex: Upcast alto) */
     min-width: 160px;
