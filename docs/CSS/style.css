@@ -628,3 +628,63 @@ header {
     color: #ffffff !important;       /* Branco ao toque */
   }
 }
+
+/* =============================================================
+   CORREÇÃO FINAL V5: CENTRALIZADO + X CINZA/BRANCO (MOBILE)
+   Substitua os blocos de "dice-results" anteriores no final do CSS
+============================================================= */
+@media (max-width: 768px) {
+  #dice-results-container {
+    /* FORÇAR CENTRALIZAÇÃO ABSOLUTA */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    
+    /* Remover alinhamentos laterais antigos */
+    right: auto !important;
+    top: auto !important;
+    margin: 0 !important;
+
+    /* Altura segura da barra de baixo */
+    bottom: 140px !important;
+    
+    /* Tamanho e Prioridade */
+    width: 90% !important;
+    max-width: 380px !important;
+    min-width: 0 !important;
+    z-index: 2147483647 !important; 
+    
+    display: flex !important;
+  }
+
+  /* BOTÃO FECHAR (X) - CINZA -> BRANCO */
+  .dice-close {
+    display: block !important;
+    font-size: 28px !important;      
+    font-weight: normal !important;
+    
+    /* Área de toque grande para funcionar fácil */
+    padding: 10px !important;        
+    width: 50px !important;
+    height: 50px !important;
+    line-height: 30px !important;
+    text-align: center;
+    
+    /* Posicionamento */
+    position: absolute !important;
+    top: -5px !important;
+    right: -5px !important;
+    z-index: 2147483648 !important;
+    
+    /* CORES: Cinza padrão */
+    color: #888 !important;          
+    background: transparent !important;
+    transition: color 0.1s !important;
+    cursor: pointer !important;
+  }
+
+  /* Efeito ao tocar (Fica Branco) */
+  .dice-close:active, 
+  .dice-close:hover {
+    color: #ffffff !important;       
+  }
+}
