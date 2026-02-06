@@ -148,7 +148,7 @@ header {
     display: none !important;
   }
 
-  /* === VIEW HEADER (PERFIL) - CORRIGIDO === */
+  /* === VIEW HEADER (PERFIL) === */
   body[data-mobile-view="header"] header,
   body[data-mobile-view="header"] .info-personagem {
     display: flex !important;
@@ -185,7 +185,6 @@ header {
     display: flex; align-items: center; justify-content: center; border: 1px solid #555; z-index: 10;
   }
 
-  /* Layout Vertical dos Inputs */
   .info-direita { width: 100% !important; }
   .linha-info { 
       display: flex !important; 
@@ -209,17 +208,17 @@ header {
       letter-spacing: 1px;
   }
   
-  /* Inputs maiores e caixa cheia */
+  /* Inputs com recuo interno para o texto não colar na borda */
   .campo input, .campo textarea, .input-simulado {
     background: #161616 !important; 
     border: 1px solid #333 !important; 
-    padding: 12px 10px;
+    padding: 12px 10px 12px 15px !important; /* Mais padding na esquerda (15px) */
     min-height: 45px; 
     border-radius: 8px !important; 
     width: 100% !important; 
     color: #fff; 
     font-size: 15px !important;
-    box-sizing: border-box; /* Essencial */
+    box-sizing: border-box; 
   }
   
   #input-classesHeader {
@@ -260,38 +259,41 @@ header {
   .escudo-col { padding: 0 5px; justify-content: space-around; width: 100%; }
   .bonus-iniciativa-block { display: none !important; }
 
-  /* === VIEW MEIO (PERÍCIAS) - CORRIGIDO === */
+  /* === VIEW MEIO (PERÍCIAS) === */
   body[data-mobile-view="pericia"] .lado-centro {
     display: block !important;
-    padding: 10px 5px 150px 5px !important;
+    padding: 10px 2px 150px 2px !important;
     width: 100% !important;
   }
 
   .pericias {
-    width: 100% !important; margin: 0 auto !important;
-    padding: 0 !important; gap: 3px !important;
+    width: 98% !important; margin: 0 auto !important;
+    padding: 0 !important; gap: 4px !important;
   }
 
-  /* CABEÇALHO: Grid ajustada, Fonte menor */
+  /* CABEÇALHO: Espaçamento ajustado */
   .pericia-item.header-row {
     position: sticky !important; top: 0; z-index: 50;
     background: #0e0e0e !important; border-bottom: 1px solid #333 !important;
-    margin-bottom: 5px !important; padding: 8px 2px !important;
+    margin-bottom: 8px !important; 
+    padding: 10px 4px !important; /* Mais altura */
     border-radius: 0 0 8px 8px !important;
     
-    /* Grid Mobile: Icon | Nome | Attr | Bônus | Treino | Outros */
+    /* Grid Mobile Expandida: 
+       Aumentei as colunas fixas (Attr, Bonus, Treino, Outros) e o Gap
+       para forçar a distância entre as palavras. O nome (1fr) vai encolher.
+    */
     display: grid !important;
-    grid-template-columns: 20px 1fr 30px 38px 32px 35px !important;
-    gap: 2px !important;
+    grid-template-columns: 20px 1fr 32px 42px 35px 38px !important; 
+    gap: 5px !important;
     
     text-align: center; 
-    font-size: 9px !important; /* Fonte reduzida para caber */
+    font-size: 9px !important; 
     color: #aaa; align-items: center;
     font-weight: 800; letter-spacing: 0px; 
     text-transform: uppercase;
   }
   
-  /* Remove alinhamento específico do desktop se atrapalhar */
   .pericia-item.header-row > div:nth-child(2) { text-align: left; padding-left: 2px; }
 
   /* ITEM DA LISTA */
@@ -299,29 +301,38 @@ header {
     width: 100% !important; margin: 0 !important;
     border-radius: 6px !important; border: 1px solid #252525 !important;
     background-color: #141414 !important;
-    padding: 8px 2px !important; font-size: 12px !important; align-items: center;
+    
+    /* Mais espaço nas bordas do item */
+    padding: 12px 4px !important; 
+    font-size: 12px !important; align-items: center;
     
     display: grid !important;
-    grid-template-columns: 20px 1fr 30px 38px 32px 35px !important;
-    gap: 2px !important;
+    grid-template-columns: 20px 1fr 32px 42px 35px 38px !important;
+    gap: 5px !important;
   }
 
   .pericia-item .col-nome {
     text-align: left; padding-left: 4px; font-weight: 500;
-    color: #eee; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    color: #eee; 
+    
+    /* Garante que o nome seja cortado se faltar espaço */
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+    
     font-size: 13px !important;
   }
   
   .pericia-item .outros { 
     background: #000; border: 1px solid #444; color: #fff; 
-    padding: 2px 0; border-radius: 4px; 
-    width: 100% !important; max-width: 100%;
+    padding: 4px 0; border-radius: 4px; 
+    width: 100% !important; 
     margin: 0 auto; text-align: center;
     font-size: 11px !important;
   }
   
   .pericia-item .treino {
-      width: 14px; height: 14px;
+      width: 16px; height: 16px;
   }
 
   .money-wrapper, .sanidade-panel {
@@ -360,14 +371,12 @@ header {
       justify-content: space-between !important;
   }
 
-  /* Campo Esquerdo (Botão/Pesquisa) ocupa tudo */
   body[data-mobile-view="inventario"] .lado-direito .conteudo > div:nth-child(2) > *:first-child {
       flex: 1 !important; 
       width: auto !important;
       min-width: 0 !important;
   }
 
-  /* Campo Direito (DT) fixo pequeno */
   body[data-mobile-view="inventario"] .lado-direito .conteudo > div:nth-child(2) > *:last-child {
       flex: none !important; 
       width: 60px !important; 
@@ -381,7 +390,6 @@ header {
       text-align: center !important;
   }
   
-  /* Esconde label DT */
   body[data-mobile-view="inventario"] .lado-direito .conteudo > div:nth-child(2) > *:last-child label {
       font-size: 8px !important; white-space: nowrap;
   }
