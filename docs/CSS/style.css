@@ -78,16 +78,20 @@ header {
 #mobile-navbar {
   display: none;
 }
+
+
+
+
 /* =============================================================
    4. MODO MOBILE (Telas < 768px)
-   (CORREÇÃO FINAL: Espaçamentos, Perfil e Layout de Magias)
+   (CORREÇÃO FINAL: Status, Perícias e Barra de Magias)
 ============================================================= */
 @media (max-width: 768px) {
 
   /* --- 4.1. Estrutura Base --- */
   body {
-    /* Espaço padrão em baixo */
-    padding-bottom: 150px !important; 
+    /* Espaço gigante para dropdowns e rolagem */
+    padding-bottom: 350px !important; 
     overflow-x: hidden !important;
     background-color: #0a0a0a !important;
   }
@@ -99,6 +103,7 @@ header {
     width: 100% !important;
   }
 
+  /* Painéis: Configuração de scroll e fundo */
   .lado-esquerdo, .lado-centro, .lado-direito {
     width: 100% !important;
     max-width: 100% !important;
@@ -106,8 +111,8 @@ header {
     border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
-    /* Espaço inferior padronizado para não cortar conteúdo */
-    padding-bottom: 150px !important; 
+    /* Garante que dropdowns longos (como linguas) não cortem */
+    padding-bottom: 350px !important; 
   }
 
   /* --- 4.2. Hotbar Fixa --- */
@@ -142,12 +147,12 @@ header {
   .mobile-nav-btn svg { width: 22px; height: 22px; margin-bottom: 4px; }
   .mobile-nav-btn.active { color: #9c27b0; background-color: #1a1a1a; border-top: 2px solid #9c27b0; }
 
-  /* --- 4.3. Views (Controle de Exibição) --- */
+  /* --- 4.3. Views --- */
   header, .info-personagem, .lado-esquerdo, .lado-centro, .lado-direito {
     display: none !important;
   }
 
-  /* === VIEW HEADER (PERFIL) - FORMATAÇÃO CORRIGIDA === */
+  /* === VIEW HEADER (PERFIL) === */
   body[data-mobile-view="header"] header,
   body[data-mobile-view="header"] .info-personagem {
     display: flex !important;
@@ -155,17 +160,12 @@ header {
     width: 100%;
     padding: 30px 20px 150px 20px !important; 
     align-items: center;
-    /* Aumentei o espaço entre os campos para não ficarem colados */
     gap: 25px !important; 
   }
 
   .info-esquerda {
-    position: relative;
-    width: 110px;
-    height: 110px;
-    margin: 0 auto 20px auto !important;
-    display: flex;
-    justify-content: center;
+    position: relative; width: 110px; height: 110px;
+    margin: 0 auto 20px auto !important; display: flex; justify-content: center;
   }
   
   .foto-personagem {
@@ -177,35 +177,26 @@ header {
   .btn-config-foto {
     position: absolute !important; bottom: 5px; right: 0; background: #000;
     border-radius: 50%; width: 35px; height: 35px;
-    display: flex; align-items: center; justify-content: center;
-    border: 1px solid #666; z-index: 10;
+    display: flex; align-items: center; justify-content: center; border: 1px solid #666; z-index: 10;
   }
 
   .info-direita { width: 100% !important; }
-  /* Gap maior entre os inputs */
   .linha-info { flex-direction: column !important; gap: 25px !important; width: 100%; }
   .campo { width: 100% !important; }
   
-  /* Labels mais bonitos e separados */
-  .campo label { 
-    color: #9c27b0; margin-bottom: 8px; display: block; 
-    font-weight: bold; font-size: 14px; letter-spacing: 0.5px;
-  }
-  
-  /* Inputs mais altos e com mais espaço interno para o texto não cortar */
+  .campo label { color: #9c27b0; margin-bottom: 8px; display: block; font-weight: bold; font-size: 14px; }
   .campo input, .campo textarea, .input-simulado {
-    background: #111; border: 1px solid #333; 
-    padding: 15px; /* Mais preenchimento */
-    min-height: 50px; /* Altura mínima garantida */
-    border-radius: 8px; width: 100%; color: #fff; font-size: 15px;
+    background: #111; border: 1px solid #333; padding: 15px;
+    min-height: 50px; border-radius: 8px; width: 100%; color: #fff; font-size: 15px;
   }
 
-  /* === VIEW ESQUERDA (STATUS) - ESPAÇOS AJUSTADOS === */
+  /* === VIEW ESQUERDA (STATUS) - RESPIRO INTERNO E ESPAÇO INFERIOR === */
   body[data-mobile-view="status"] .lado-esquerdo {
     display: flex !important;
     flex-direction: column;
-    /* PADDING AJUSTADO: Mais espaço em cima (50px), menos em baixo (150px) */
-    padding: 50px 0 150px 0 !important; 
+    /* Padding-top 50px: Respiro interno no topo */
+    /* Padding-bottom 350px: Espaço para dropdowns */
+    padding: 50px 0 350px 0 !important; 
     margin-top: 0 !important;
   }
 
@@ -233,11 +224,10 @@ header {
   .escudo-col { padding: 0 5px; justify-content: space-around; width: 100%; }
   .bonus-iniciativa-block { display: none !important; }
 
-  /* === VIEW MEIO (PERÍCIAS) - ESPAÇO INFERIOR REDUZIDO === */
+  /* === VIEW MEIO (PERÍCIAS) - GRID CORRIGIDA (SEM SOBREPOSIÇÃO) === */
   body[data-mobile-view="pericia"] .lado-centro {
     display: block !important;
-    /* Padding inferior reduzido para 150px */
-    padding: 15px 0 150px 0 !important;
+    padding: 15px 0 200px 0 !important;
   }
 
   .pericias {
@@ -245,26 +235,31 @@ header {
     padding: 0 !important; gap: 5px !important;
   }
 
-  /* CABEÇALHO DA TABELA */
+  /* CABEÇALHO: Fontes menores e colunas mais largas para texto */
   .pericia-item.header-row {
     position: sticky !important; top: 0; z-index: 50;
     background: #0e0e0e !important; border-bottom: 1px solid #333 !important;
-    margin-bottom: 5px !important; padding: 8px 2px !important;
+    margin-bottom: 5px !important; padding: 8px 0 !important;
     border-radius: 0 0 8px 8px !important;
+    
+    /* GRID OTIMIZADA PARA TEXTO: Icone(20) Nome(Flex) Attr(30) Bonus(35) Treino(35) Outros(35) */
     display: grid !important;
-    grid-template-columns: 22px 1fr 34px 38px 32px 40px !important;
+    grid-template-columns: 20px 1fr 30px 35px 35px 35px !important;
+    
     text-align: center; font-size: 9px !important; color: #aaa; align-items: center;
+    font-weight: bold; letter-spacing: -0.5px; /* Aperta um pouco as letras */
   }
   .pericia-item.header-row > div:nth-child(2) { text-align: left; padding-left: 5px; }
 
-  /* ITEM DA PERÍCIA */
+  /* ITEM: Mesma grid do cabeçalho */
   .pericia-item {
     width: 100% !important; margin: 0 !important;
     border-radius: 6px !important; border: 1px solid #2a2a2a !important;
     background-color: #141414 !important;
-    padding: 8px 2px !important; font-size: 13px !important; align-items: center;
+    padding: 8px 0 !important; font-size: 12px !important; align-items: center;
+    
     display: grid !important;
-    grid-template-columns: 22px 1fr 34px 38px 32px 40px !important;
+    grid-template-columns: 20px 1fr 30px 35px 35px 35px !important;
     gap: 2px;
   }
 
@@ -273,17 +268,17 @@ header {
     color: #eee; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .pericia-item .outros { 
-    background: #000; border: 1px solid #444; color: #fff; padding: 4px 0; border-radius: 4px; width: 100%; text-align: center;
+    background: #000; border: 1px solid #444; color: #fff; padding: 4px 0; border-radius: 4px; width: 90%; margin: 0 auto; text-align: center;
   }
   .money-wrapper, .sanidade-panel {
     width: 96% !important; margin: 15px auto !important;
     border-radius: 8px !important; border: 1px solid #333 !important; background: #111;
   }
 
-  /* === VIEW DIREITA (INVENTÁRIO/MAGIAS) === */
+  /* === VIEW DIREITA (INVENTÁRIO/MAGIAS) - LAYOUT CORRIGIDO === */
   body[data-mobile-view="inventario"] .lado-direito {
     display: flex !important; flex-direction: column;
-    padding: 15px 0 150px 0 !important;
+    padding: 15px 0 200px 0 !important;
   }
 
   .abas { 
@@ -301,42 +296,48 @@ header {
 
   .conteudo { padding: 0 4% !important; width: 100%; }
 
-  /* --- TENTATIVA DE LAYOUT PARA A BARRA DE CONTROLE DE MAGIAS (Imagem 10) --- */
-  /* Tenta encontrar o container que tem o botão de pesquisa e o dropdown DT */
-  /* Assume que é o segundo bloco principal dentro do conteúdo */
-  body[data-mobile-view="inventario"] .lado-direito .conteudo > div:nth-of-type(2) {
+  /* --- CORREÇÃO DA BARRA DE MAGIAS (Nova Magia vs DT) --- */
+  /* Encontra a linha que tem inputs/botões agrupados no topo do conteúdo */
+  /* Geralmente é o segundo elemento (após filtros) ou um div flex */
+  .conteudo > div[style*="display: flex"], 
+  .conteudo > div[class*="magic-header"],
+  .conteudo > div:nth-child(2) { 
+      /* Se a estrutura for divs diretas, o nth-child(2) pega a barra de controle */
       display: flex !important;
       flex-direction: row !important;
       gap: 10px !important;
-      align-items: flex-end !important; /* Alinha a base */
+      align-items: flex-end !important;
       width: 100% !important;
-      margin-bottom: 20px !important;
   }
 
-  /* O elemento da esquerda (Botão Pesquisa/Nova Magia) - Fica MAIOR (flex: 3) */
-  body[data-mobile-view="inventario"] .lado-direito .conteudo > div:nth-of-type(2) > :first-child {
-      flex: 3 !important;
+  /* Botão "Nova Magia" (O primeiro elemento) -> Fica GRANDE */
+  .conteudo > div:nth-child(2) > *:first-child,
+  .btn-nova-magia {
+      flex: 10 !important; /* Cresce muito */
       width: auto !important;
-      margin-bottom: 0 !important;
   }
 
-  /* O elemento da direita (Container do Dropdown DT) - Fica MENOR (flex: 1) */
-  body[data-mobile-view="inventario"] .lado-direito .conteudo > div:nth-of-type(2) > :last-child {
-      flex: 1 !important;
-      min-width: 90px !important;
+  /* Container da DT (O último elemento) -> Fica PEQUENO */
+  .conteudo > div:nth-child(2) > *:last-child {
+      flex: 1 !important; /* Cresce pouco */
+      width: 80px !important; /* Largura fixa pequena */
+      min-width: 80px !important;
+      max-width: 90px !important;
   }
-  /* Força o select interno a ocupar o espaço do seu container */
-  body[data-mobile-view="inventario"] .lado-direito .conteudo > div:nth-of-type(2) > :last-child select {
+  
+  /* Garante que o select dentro da DT não estoure */
+  .conteudo > div:nth-child(2) > *:last-child select,
+  .conteudo > div:nth-child(2) > *:last-child input {
       width: 100% !important;
+      padding: 5px !important;
   }
 
-  /* Estilo geral dos cards de itens */
-  .conteudo > div:not(.filtro-container):not(:nth-of-type(2)) { 
+  /* Cards de Itens */
+  .conteudo > div:not(.filtro-container):not(:nth-child(2)) { 
     background-color: #121212; border: 1px solid #333;
     border-radius: 8px; margin-bottom: 12px; padding: 12px;
   }
 
-  /* Inputs de pesquisa gerais */
   .conteudo input[type="text"] {
     width: 100%; padding: 12px; margin-bottom: 15px;
     background: #080808; border: 1px solid #444; color: white; border-radius: 6px;
