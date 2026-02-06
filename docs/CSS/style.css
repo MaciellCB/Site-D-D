@@ -80,13 +80,14 @@ header {
 }
 /* =============================================================
    4. MODO MOBILE (Telas < 768px)
-   (CORREÇÃO FINAL: Espaços, Bordas e Cores)
+   (CORREÇÃO FINAL: Dropdowns, Textos e Cores)
 ============================================================= */
 @media (max-width: 768px) {
 
   /* --- 4.1. Estrutura Base --- */
   body {
-    padding-bottom: 200px !important; /* Espaço gigante em baixo para tudo */
+    /* Espaço monstruoso em baixo para garantir que dropdowns abram */
+    padding-bottom: 300px !important; 
     overflow-x: hidden !important;
     background-color: #0a0a0a !important;
   }
@@ -105,7 +106,8 @@ header {
     border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
-    padding-bottom: 200px !important;
+    /* Garante rolagem extra para menus flutuantes */
+    padding-bottom: 300px !important; 
   }
 
   /* --- 4.2. Hotbar Fixa --- */
@@ -145,64 +147,67 @@ header {
     display: none !important;
   }
 
-  /* === VIEW HEADER (PERFIL) - ESPAÇAMENTO CORRIGIDO === */
+  /* === VIEW HEADER (PERFIL) - ESPAÇAMENTO MELHORADO === */
   body[data-mobile-view="header"] header,
   body[data-mobile-view="header"] .info-personagem {
     display: flex !important;
     flex-direction: column;
     width: 100%;
-    /* Mais espaço no topo (30px) */
-    padding: 30px 15px 150px 15px !important; 
+    /* Mais espaço entre os itens */
+    padding: 30px 20px 150px 20px !important; 
     align-items: center;
+    gap: 20px !important; /* Aumentei o gap */
   }
 
   .info-esquerda {
     position: relative;
-    width: 100px;
-    height: 100px;
-    margin: 0 auto 25px auto !important; /* Mais espaço abaixo da foto */
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 30px auto !important; /* Espaço abaixo da foto */
     display: flex;
     justify-content: center;
   }
   
   .foto-personagem {
-    width: 100px !important;
-    height: 100px !important;
+    width: 110px !important;
+    height: 110px !important;
     border-radius: 50% !important;
     object-fit: cover;
-    border: 2px solid #333;
+    border: 3px solid #333;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
   }
 
   .btn-config-foto {
     position: absolute !important;
-    bottom: 0; right: 0; background: #000;
-    border-radius: 50%; width: 30px; height: 30px;
+    bottom: 5px; right: 0; background: #000;
+    border-radius: 50%; width: 35px; height: 35px;
     display: flex; align-items: center; justify-content: center;
-    border: 1px solid #555; z-index: 10;
+    border: 1px solid #666; z-index: 10;
   }
 
   .info-direita { width: 100% !important; }
-  .linha-info { flex-direction: column !important; gap: 15px !important; width: 100%; }
+  .linha-info { flex-direction: column !important; gap: 18px !important; width: 100%; }
   .campo { width: 100% !important; margin-bottom: 5px; }
   
+  .campo label { color: #9c27b0; margin-bottom: 5px; display: block; }
+  
   .campo input, .campo textarea, .input-simulado {
-    background: #111; border: 1px solid #333; padding: 10px;
-    border-radius: 6px; width: 100%; color: #fff; font-size: 14px;
+    background: #111; border: 1px solid #333; padding: 12px;
+    border-radius: 8px; width: 100%; color: #fff; font-size: 15px;
   }
 
-  /* === VIEW ESQUERDA (STATUS) - ESPAÇO EM CIMA E EM BAIXO === */
+  /* === VIEW ESQUERDA (STATUS) - ESPAÇO INFERIOR EXTRA === */
   body[data-mobile-view="status"] .lado-esquerdo {
     display: flex !important;
     flex-direction: column;
-    /* Padding Top de 20px para o "pouquinho mais de espaço" */
-    padding: 20px 0 200px 0 !important; 
+    /* PADDING-BOTTOM: 400px!! Isso garante espaço pro dropdown de idiomas */
+    padding: 30px 0 400px 0 !important; 
     margin-top: 0 !important;
   }
 
-  /* Hexagrama normalizado */
   .hexagrama {
     transform: scale(0.85) !important;
-    margin: 0 auto 10px auto !important; 
+    margin: 0 auto 15px auto !important; 
     transform-origin: top center;
   }
 
@@ -216,125 +221,137 @@ header {
   }
   .xp-box { min-width: 100%; margin-bottom: 15px; }
   
-  /* Mais borda lateral para a armadura */
   .armadura-card { 
-    margin-top: 20px; padding: 15px; width: 94%;
+    margin-top: 25px; padding: 15px; width: 94%;
     margin-left: auto; margin-right: auto;
-    border-radius: 12px;
+    border-radius: 12px; border: 1px solid #333;
   }
   .escudo-col { padding: 0 5px; justify-content: space-around; width: 100%; }
   .bonus-iniciativa-block { display: none !important; }
 
-  /* === VIEW MEIO (PERÍCIAS) - NOMES E BORDA CORRIGIDOS === */
+  /* === VIEW MEIO (PERÍCIAS) - TEXTO NÃO ENCAVALADO === */
   body[data-mobile-view="pericia"] .lado-centro {
     display: block !important;
-    padding: 15px 0 200px 0 !important;
+    padding: 15px 0 250px 0 !important;
   }
 
   .pericias {
-    /* Mais borda: largura reduzida para 94% */
-    width: 94% !important; 
+    width: 96% !important; /* Aumentei um pouquinho a largura */
     margin: 0 auto !important;
     padding: 0 !important;
-    gap: 6px !important;
+    gap: 5px !important;
   }
 
-  /* CABEÇALHO CORRIGIDO: Grid exata, alinhamento central */
+  /* CABEÇALHO DA TABELA - CORRIGIDO */
   .pericia-item.header-row {
     position: sticky !important;
     top: 0; z-index: 50;
-    background: #111 !important;
-    border-bottom: 2px solid #333 !important;
+    background: #0e0e0e !important;
+    border-bottom: 1px solid #333 !important;
     margin-bottom: 5px !important;
-    padding: 10px 5px !important;
+    padding: 8px 2px !important;
     border-radius: 0 0 8px 8px !important;
     
-    /* GRID IDENTICA AO ITEM */
+    /* GRID AJUSTADA PARA O CABEÇALHO NÃO ENCAVALAR */
     display: grid !important;
-    grid-template-columns: 24px 1fr 34px 34px 30px 40px !important;
-    text-align: center; /* Centraliza todos os títulos */
-    font-size: 10px !important;
-    color: #888;
-    font-weight: bold;
+    /* Tirei espaço do nome (1fr) e dei para as colunas de texto */
+    grid-template-columns: 22px 1fr 34px 38px 32px 40px !important;
+    
+    text-align: center; 
+    font-size: 9px !important; /* Fonte menor no cabeçalho */
+    letter-spacing: 0 !important;
+    color: #aaa;
+    align-items: center;
   }
-  /* Força o primeiro item (PERÍCIA) a alinhar com a coluna de nomes */
-  .pericia-item.header-row > div:nth-child(2) { text-align: left; padding-left: 8px; }
+  
+  .pericia-item.header-row > div:nth-child(2) { text-align: left; padding-left: 5px; }
 
   /* ITEM DA PERÍCIA */
   .pericia-item {
     width: 100% !important; margin: 0 !important;
-    border-radius: 8px !important;
-    border: 1px solid #252525 !important;
-    background-color: #161616 !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.4) !important;
-    padding: 10px 5px !important; font-size: 13px !important;
+    border-radius: 6px !important;
+    border: 1px solid #2a2a2a !important; /* Borda mais visível */
+    background-color: #141414 !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+    padding: 8px 2px !important; 
+    font-size: 13px !important;
     align-items: center;
-    /* GRID IDENTICA AO CABEÇALHO */
+
+    /* MESMA GRID DO HEADER */
     display: grid !important;
-    grid-template-columns: 24px 1fr 34px 34px 30px 40px !important;
+    grid-template-columns: 22px 1fr 34px 38px 32px 40px !important;
     gap: 2px;
   }
 
   .pericia-item .col-nome {
-    text-align: left; padding-left: 8px; font-weight: bold;
-    color: #ddd; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    text-align: left; padding-left: 5px; font-weight: 500;
+    color: #eee; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .pericia-item .col-dados, .pericia-item .col-bonus, .pericia-item .col-treino {
-    justify-content: center; display: flex;
-  }
+  
   .pericia-item .outros { 
-    background: #000; border: 1px solid #444; color: #fff; padding: 4px; border-radius: 4px; width: 100%; text-align: center;
+    background: #000; border: 1px solid #444; color: #fff; padding: 4px 0; border-radius: 4px; width: 100%; text-align: center;
   }
 
   .money-wrapper, .sanidade-panel {
-    width: 94% !important; margin: 15px auto !important;
+    width: 96% !important; margin: 15px auto !important;
     border-radius: 8px !important; border: 1px solid #333 !important; background: #111;
   }
 
-  /* === VIEW DIREITA (INVENTÁRIO) - BORDA E COR DA ABA === */
+  /* === VIEW DIREITA (INVENTÁRIO) - CORES E BORDAS === */
   body[data-mobile-view="inventario"] .lado-direito {
     display: flex !important; flex-direction: column;
-    padding: 10px 0 200px 0 !important;
+    padding: 15px 0 250px 0 !important;
   }
 
-  /* ABAS: Mais borda (94%) e correção da cor */
+  /* ABAS: Design Corrigido */
   .abas { 
-    width: 94%; margin: 0 auto 15px auto; 
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; 
+    width: 96%; margin: 0 auto 20px auto; 
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; 
   }
+  
   .abas button { 
-    padding: 10px 0; border-radius: 6px; font-size: 12px; 
-    background: #222; border: 1px solid #444; color: #aaa;
+    padding: 12px 0; border-radius: 6px; font-size: 12px; 
+    background: #111; /* Fundo escuro padrão */
+    border: 1px solid #333; color: #888;
     transition: all 0.2s;
   }
-  /* ABA ATIVA: Só texto e borda roxos, fundo escuro */
+  
+  /* ABA ATIVA: Fundo escuro, Borda Roxa, Texto Roxo */
   .abas button.ativa { 
-    background: #1a1a1a !important; /* Fundo quase preto */
-    border-color: #9c27b0 !important; /* Borda roxa */
-    color: #ba68c8 !important; /* Texto roxo claro */
+    background: #0a0a0a !important; 
+    border: 1px solid #9c27b0 !important; 
+    color: #d05ce3 !important; 
+    box-shadow: 0 0 8px rgba(156, 39, 176, 0.2) !important;
     font-weight: bold;
   }
 
-  /* CONTEÚDO: Mais borda lateral */
+  /* CONTEÚDO */
   .conteudo {
-    padding: 0 3% !important; /* 3% de cada lado */
+    padding: 0 4% !important; /* Mais borda lateral */
     width: 100%;
   }
 
-  /* Estilo de cartões para os itens */
+  /* Cards de Itens */
   .conteudo > div:not(.filtro-container) { 
-    background-color: #181818; border: 1px solid #333;
-    border-radius: 8px; margin-bottom: 10px; padding: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-  }
-  .conteudo input[type="text"] {
-    width: 100%; padding: 10px; margin-bottom: 10px;
-    background: #111; border: 1px solid #444; color: white; border-radius: 6px;
-  }
-  .conteudo button {
-    padding: 10px; margin-bottom: 10px; border-radius: 6px; cursor: pointer;
+    background-color: #121212; 
+    border: 1px solid #333; /* Borda sutil */
+    border-radius: 8px; 
+    margin-bottom: 12px; 
+    padding: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
   }
 
+  .conteudo input[type="text"] {
+    width: 100%; padding: 12px; margin-bottom: 15px;
+    background: #080808; border: 1px solid #444; color: white; border-radius: 6px;
+  }
+  
+  .conteudo button {
+    padding: 12px; margin-bottom: 10px; border-radius: 6px; cursor: pointer;
+    font-weight: bold; letter-spacing: 0.5px;
+  }
+
+  /* Dice Results */
   #dice-results-container {
     bottom: 80px !important; width: 94% !important;
     left: 50% !important; transform: translateX(-50%) !important;
