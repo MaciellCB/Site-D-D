@@ -15,6 +15,16 @@ body {
   overflow-x: hidden;
 }
 
+/* Remove setas dos inputs numéricos */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 /* =============================================================
    2. HEADER E NAVEGAÇÃO
 ============================================================= */
@@ -79,12 +89,9 @@ header {
   display: none;
 }
 
-
-
-
 /* =============================================================
    4. MODO MOBILE (Telas < 768px)
-   (CORREÇÃO: Magias, Perícias e Status)
+   (CORREÇÃO: Perfil, Magias, Perícias e Status)
 ============================================================= */
 @media (max-width: 768px) {
 
@@ -136,12 +143,12 @@ header {
   .mobile-nav-btn svg { width: 22px; height: 22px; margin-bottom: 4px; }
   .mobile-nav-btn.active { color: #9c27b0; background-color: #1a1a1a; border-top: 2px solid #9c27b0; }
 
-  /* 4.3. Views */
+  /* 4.3. Views - Oculta tudo por padrão */
   header, .info-personagem, .lado-esquerdo, .lado-centro, .lado-direito {
     display: none !important;
   }
 
-  /* === VIEW HEADER (PERFIL) - FORMATO LIMPO === */
+  /* === VIEW HEADER (PERFIL) - CORRIGIDO === */
   body[data-mobile-view="header"] header,
   body[data-mobile-view="header"] .info-personagem {
     display: flex !important;
@@ -150,28 +157,42 @@ header {
     padding: 20px 15px 150px 15px !important; 
     align-items: center;
     gap: 15px !important; 
+    background-color: #0a0a0a;
   }
 
   .info-esquerda {
-    position: relative; width: 100px; height: 100px;
-    margin: 0 auto 20px auto !important; display: flex; justify-content: center;
+    position: relative; 
+    width: 120px; 
+    height: 120px;
+    margin: 0 auto 15px auto !important; 
+    display: flex; 
+    justify-content: center;
+    flex-shrink: 0;
   }
   
   .foto-personagem {
-    width: 100px !important; height: 100px !important;
-    border-radius: 50% !important; object-fit: cover;
-    border: 2px solid #333;
+    width: 120px !important; 
+    height: 120px !important;
+    border-radius: 50% !important; 
+    object-fit: cover;
+    border: 3px solid #9c27b0;
+    box-shadow: 0 0 15px rgba(156, 39, 176, 0.4);
   }
 
   .btn-config-foto {
     position: absolute !important; bottom: 0; right: 0; background: #000;
-    border-radius: 50%; width: 30px; height: 30px;
+    border-radius: 50%; width: 35px; height: 35px;
     display: flex; align-items: center; justify-content: center; border: 1px solid #555; z-index: 10;
   }
 
-  /* Inputs organizados para não sobrepor */
+  /* Layout Vertical dos Inputs */
   .info-direita { width: 100% !important; }
-  .linha-info { flex-direction: column !important; gap: 15px !important; width: 100%; }
+  .linha-info { 
+      display: flex !important; 
+      flex-direction: column !important; 
+      gap: 15px !important; 
+      width: 100%; 
+  }
   
   .campo { 
     width: 100% !important; 
@@ -179,20 +200,38 @@ header {
     display: flex; flex-direction: column; 
   }
   
-  .campo label { color: #9c27b0; margin-bottom: 5px; font-weight: bold; font-size: 13px; }
+  .campo label { 
+      color: #e0aaff; 
+      margin-bottom: 6px; 
+      font-weight: 800; 
+      font-size: 13px; 
+      text-transform: uppercase;
+      letter-spacing: 1px;
+  }
   
-  /* Garante altura e padding corretos */
+  /* Inputs maiores e caixa cheia */
   .campo input, .campo textarea, .input-simulado {
-    background: #111; border: 1px solid #333; padding: 12px;
-    min-height: 45px; border-radius: 6px; width: 100%; color: #fff; font-size: 14px;
-    box-sizing: border-box; /* Essencial para não estourar */
+    background: #161616 !important; 
+    border: 1px solid #333 !important; 
+    padding: 12px 10px;
+    min-height: 45px; 
+    border-radius: 8px !important; 
+    width: 100% !important; 
+    color: #fff; 
+    font-size: 15px !important;
+    box-sizing: border-box; /* Essencial */
+  }
+  
+  #input-classesHeader {
+      height: auto;
+      min-height: 45px;
+      resize: none;
   }
 
-  /* === VIEW ESQUERDA (STATUS) - SEM ESPAÇO NO TOPO === */
+  /* === VIEW ESQUERDA (STATUS) === */
   body[data-mobile-view="status"] .lado-esquerdo {
     display: flex !important;
     flex-direction: column;
-    /* PADDING-TOP REDUZIDO (10px) para tirar o espaço gigante */
     padding: 10px 0 400px 0 !important; 
     margin-top: 0 !important;
   }
@@ -221,61 +260,76 @@ header {
   .escudo-col { padding: 0 5px; justify-content: space-around; width: 100%; }
   .bonus-iniciativa-block { display: none !important; }
 
-  /* === VIEW MEIO (PERÍCIAS) - CORREÇÃO DE TEXTO === */
+  /* === VIEW MEIO (PERÍCIAS) - CORRIGIDO === */
   body[data-mobile-view="pericia"] .lado-centro {
     display: block !important;
-    padding: 15px 0 150px 0 !important;
+    padding: 10px 5px 150px 5px !important;
+    width: 100% !important;
   }
 
   .pericias {
-    width: 96% !important; margin: 0 auto !important;
-    padding: 0 !important; gap: 4px !important;
+    width: 100% !important; margin: 0 auto !important;
+    padding: 0 !important; gap: 3px !important;
   }
 
-  /* CABEÇALHO: Fontes menores e colunas ajustadas */
+  /* CABEÇALHO: Grid ajustada, Fonte menor */
   .pericia-item.header-row {
     position: sticky !important; top: 0; z-index: 50;
     background: #0e0e0e !important; border-bottom: 1px solid #333 !important;
-    margin-bottom: 5px !important; padding: 8px 0 !important;
+    margin-bottom: 5px !important; padding: 8px 2px !important;
     border-radius: 0 0 8px 8px !important;
     
-    /* GRID AJUSTADA PARA NÃO ENCAVALAR */
-    /* Diminuí a coluna 'nome' (1fr) e aumentei as últimas colunas */
+    /* Grid Mobile: Icon | Nome | Attr | Bônus | Treino | Outros */
     display: grid !important;
-    grid-template-columns: 20px 1fr 30px 35px 35px 38px !important;
+    grid-template-columns: 20px 1fr 30px 38px 32px 35px !important;
+    gap: 2px !important;
     
     text-align: center; 
-    font-size: 9px !important; /* Fonte pequena para caber */
+    font-size: 9px !important; /* Fonte reduzida para caber */
     color: #aaa; align-items: center;
-    font-weight: bold; letter-spacing: 0.5px;
+    font-weight: 800; letter-spacing: 0px; 
+    text-transform: uppercase;
   }
-  .pericia-item.header-row > div:nth-child(2) { text-align: left; padding-left: 5px; }
+  
+  /* Remove alinhamento específico do desktop se atrapalhar */
+  .pericia-item.header-row > div:nth-child(2) { text-align: left; padding-left: 2px; }
 
-  /* ITEM */
+  /* ITEM DA LISTA */
   .pericia-item {
     width: 100% !important; margin: 0 !important;
-    border-radius: 6px !important; border: 1px solid #2a2a2a !important;
+    border-radius: 6px !important; border: 1px solid #252525 !important;
     background-color: #141414 !important;
-    padding: 8px 0 !important; font-size: 12px !important; align-items: center;
+    padding: 8px 2px !important; font-size: 12px !important; align-items: center;
     
     display: grid !important;
-    grid-template-columns: 20px 1fr 30px 35px 35px 38px !important;
-    gap: 2px;
+    grid-template-columns: 20px 1fr 30px 38px 32px 35px !important;
+    gap: 2px !important;
   }
 
   .pericia-item .col-nome {
-    text-align: left; padding-left: 5px; font-weight: 500;
+    text-align: left; padding-left: 4px; font-weight: 500;
     color: #eee; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    font-size: 13px !important;
   }
+  
   .pericia-item .outros { 
-    background: #000; border: 1px solid #444; color: #fff; padding: 4px 0; border-radius: 4px; width: 90%; margin: 0 auto; text-align: center;
+    background: #000; border: 1px solid #444; color: #fff; 
+    padding: 2px 0; border-radius: 4px; 
+    width: 100% !important; max-width: 100%;
+    margin: 0 auto; text-align: center;
+    font-size: 11px !important;
   }
+  
+  .pericia-item .treino {
+      width: 14px; height: 14px;
+  }
+
   .money-wrapper, .sanidade-panel {
     width: 96% !important; margin: 15px auto !important;
     border-radius: 8px !important; border: 1px solid #333 !important; background: #111;
   }
 
-  /* === VIEW DIREITA (MAGIAS/INVENTÁRIO) - CORREÇÃO DT/PESQUISA === */
+  /* === VIEW DIREITA (MAGIAS/INVENTÁRIO) === */
   body[data-mobile-view="inventario"] .lado-direito {
     display: flex !important; flex-direction: column;
     padding: 15px 0 150px 0 !important;
@@ -296,10 +350,7 @@ header {
 
   .conteudo { padding: 0 4% !important; width: 100%; }
 
-  /* --- CORREÇÃO BARRA DE MAGIAS (PESQUISA GRANDE / DT PEQUENA) --- */
-  
-  /* Identifica o container que segura os controles (Nova Magia e DT) */
-  /* Geralmente é o segundo elemento dentro de .conteudo */
+  /* Ajuste Barra de Pesquisa e DT no Mobile */
   body[data-mobile-view="inventario"] .lado-direito .conteudo > div:nth-child(2) {
       display: flex !important;
       flex-direction: row !important;
@@ -309,21 +360,20 @@ header {
       justify-content: space-between !important;
   }
 
-  /* 1. Elemento da ESQUERDA (Botão ou Pesquisa) -> Fica ENORME */
+  /* Campo Esquerdo (Botão/Pesquisa) ocupa tudo */
   body[data-mobile-view="inventario"] .lado-direito .conteudo > div:nth-child(2) > *:first-child {
-      flex: 1 !important; /* Ocupa todo espaço disponível */
+      flex: 1 !important; 
       width: auto !important;
-      min-width: 0 !important; /* Permite encolher se necessário, mas flex:1 faz crescer */
+      min-width: 0 !important;
   }
 
-  /* 2. Elemento da DIREITA (Container da DT) -> Fica PEQUENO E FIXO */
+  /* Campo Direito (DT) fixo pequeno */
   body[data-mobile-view="inventario"] .lado-direito .conteudo > div:nth-child(2) > *:last-child {
-      flex: none !important; /* Não cresce nem diminui além do width */
-      width: 60px !important; /* Largura fixa pequena */
+      flex: none !important; 
+      width: 60px !important; 
       min-width: 60px !important;
   }
   
-  /* Ajuste interno do DT para caber no espaço pequeno */
   body[data-mobile-view="inventario"] .lado-direito .conteudo > div:nth-child(2) > *:last-child select,
   body[data-mobile-view="inventario"] .lado-direito .conteudo > div:nth-child(2) > *:last-child input {
       padding: 5px 2px !important;
@@ -331,10 +381,9 @@ header {
       text-align: center !important;
   }
   
-  /* Esconde label "DT DE MAGIAS" se houver, para economizar espaço */
+  /* Esconde label DT */
   body[data-mobile-view="inventario"] .lado-direito .conteudo > div:nth-child(2) > *:last-child label {
-      font-size: 8px !important; 
-      white-space: nowrap;
+      font-size: 8px !important; white-space: nowrap;
   }
 
   /* Cards de Itens */
