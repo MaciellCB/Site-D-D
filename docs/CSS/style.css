@@ -570,3 +570,61 @@ header {
     line-height: 20px !important;
   }
 }
+
+
+
+/* =============================================================
+   CORREÇÃO FINAL V4: CENTRALIZADO + BOTÃO X CINZA (MOBILE)
+   Substitua o bloco @media do final do arquivo style.css
+============================================================= */
+@media (max-width: 768px) {
+  #dice-results-container {
+    /* POSIÇÃO: Centralizado horizontalmente e acima da navbar */
+    z-index: 2147483647 !important; 
+    bottom: 140px !important;
+    
+    left: 50% !important;         /* Ponto de partida no meio */
+    right: auto !important;       /* Desliga alinhamento à direita */
+    top: auto !important;
+    transform: translateX(-50%) !important; /* Recua 50% para centralizar exato */
+    
+    /* TAMANHO */
+    width: 90% !important;        /* Ocupa quase toda largura */
+    max-width: 380px !important;  /* Mas não exagera */
+    min-width: 0 !important;
+    
+    margin: 0 !important;
+    display: flex !important;
+  }
+
+  /* BOTÃO FECHAR (X) - ESTILO MOBILE ESPECÍFICO */
+  .dice-close {
+    display: block !important;
+    font-size: 26px !important;      
+    font-weight: normal !important;
+    
+    /* Área de toque grande */
+    padding: 15px !important;        
+    width: 60px !important;
+    height: 60px !important;
+    line-height: 30px !important;
+    text-align: center;
+    
+    /* Posicionamento */
+    position: absolute !important;
+    top: -5px !important;
+    right: -5px !important;
+    z-index: 2147483648 !important;
+    
+    /* CORES (O Pedido: Cinza -> Branco) */
+    color: #888 !important;          /* Cinza padrão */
+    background: transparent !important;
+    transition: color 0.1s !important;
+  }
+
+  /* Quando tocar ou clicar */
+  .dice-close:active, 
+  .dice-close:hover {
+    color: #ffffff !important;       /* Branco ao toque */
+  }
+}

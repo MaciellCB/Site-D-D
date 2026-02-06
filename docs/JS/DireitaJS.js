@@ -4493,7 +4493,7 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
   // --- MONTAGEM DO HTML (ATUALIZADA) ---
   // Adicionamos ontouchstart para garantir resposta imediata no toque
   let contentHtml = `
-      <div class="dice-close" onclick="fecharDiceResult()" ontouchstart="fecharDiceResult()">✖</div>
+      <div class="dice-close" onclick="fecharDiceResult()" ontouchstart="event.preventDefault(); fecharDiceResult()">✖</div>
       <div class="dice-content-wrapper">
   `;
   
