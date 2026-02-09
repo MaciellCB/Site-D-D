@@ -91,13 +91,13 @@ header {
 
 /* =============================================================
    4. MODO MOBILE (Telas < 768px)
-   (CORREÇÃO GERAL: Layout, Grids, Larguras e Abas)
+   (CORREÇÃO GERAL: Layout Vertical Forçado)
 ============================================================= */
 @media (max-width: 768px) {
 
   /* 4.1. Estrutura Base */
   body {
-    padding-bottom: 350px !important; /* Espaço para dropdowns funcionarem */
+    padding-bottom: 350px !important;
     overflow-x: hidden !important;
     background-color: #0a0a0a !important;
   }
@@ -109,19 +109,21 @@ header {
     width: 100% !important;
   }
 
-  /* Reset dos Containers Principais */
+  /* Reset Total dos Containers Principais */
   .lado-esquerdo, .lado-centro, .lado-direito {
     width: 100% !important;
     max-width: 100% !important;
-    min-width: 100% !important; /* Garante que não encolha */
+    min-width: 100% !important;
     margin: 0 !important;
     border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
     padding-bottom: 350px !important;
+    
+    /* Força layout vertical */
     display: flex !important;
     flex-direction: column !important;
-    align-items: stretch !important; /* Estica os filhos */
+    align-items: stretch !important;
   }
 
   /* 4.2. Hotbar */
@@ -148,7 +150,7 @@ header {
   .mobile-nav-btn svg { width: 22px; height: 22px; margin-bottom: 4px; }
   .mobile-nav-btn.active { color: #9c27b0; background-color: #1a1a1a; border-top: 2px solid #9c27b0; }
 
-  /* 4.3. Views - Oculta tudo por padrão para alternar via JS */
+  /* 4.3. Views - Oculta tudo por padrão */
   header, .info-personagem, .lado-esquerdo, .lado-centro, .lado-direito {
     display: none !important;
   }
@@ -213,11 +215,11 @@ header {
       letter-spacing: 1px;
   }
   
-  /* Inputs com recuo interno para o texto não colar na borda */
+  /* Inputs com recuo interno */
   .campo input, .campo textarea, .input-simulado {
     background: #161616 !important; 
     border: 1px solid #333 !important; 
-    padding: 12px 10px 12px 16px !important; /* Padding esquerdo aumentado */
+    padding: 12px 10px 12px 16px !important;
     min-height: 48px; 
     border-radius: 8px !important; 
     width: 100% !important; 
@@ -273,10 +275,10 @@ header {
 
   .pericias {
     width: 100% !important; margin: 0 auto !important;
-    padding: 0 !important; gap: 6px !important; /* Gap aumentado entre linhas */
+    padding: 0 !important; gap: 6px !important;
   }
 
-  /* CABEÇALHO: Espaçamento ajustado para não encavalar */
+  /* Grid Mobile das Perícias */
   .pericia-item.header-row {
     position: sticky !important; top: 0; z-index: 50;
     background: #0e0e0e !important; border-bottom: 1px solid #333 !important;
@@ -284,10 +286,6 @@ header {
     padding: 10px 4px !important;
     border-radius: 0 0 8px 8px !important;
     
-    /* Grid Mobile Atualizada: 
-       Prioriza espaço para os números e checkboxes. 
-       A coluna do Nome (1fr) vai encolher se precisar.
-    */
     display: grid !important;
     grid-template-columns: 20px 1fr 35px 45px 40px 45px !important; 
     gap: 4px !important;
@@ -301,18 +299,15 @@ header {
   
   .pericia-item.header-row > div:nth-child(2) { text-align: left; padding-left: 2px; }
 
-  /* ITEM DA LISTA */
   .pericia-item {
     width: 100% !important; margin: 0 !important;
     border-radius: 6px !important; border: 1px solid #252525 !important;
     background-color: #141414 !important;
     
-    /* Mais espaço nas bordas (padding) */
     padding: 14px 4px !important; 
     font-size: 13px !important; align-items: center;
     
     display: grid !important;
-    /* Mesma grid do Header */
     grid-template-columns: 20px 1fr 35px 45px 40px 45px !important;
     gap: 4px !important;
   }
@@ -320,12 +315,9 @@ header {
   .pericia-item .col-nome {
     text-align: left; padding-left: 6px; font-weight: 500;
     color: #eee; 
-    
-    /* Garante que o nome seja cortado com (...) se faltar espaço, sem quebrar a linha */
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis;
-    
     font-size: 13px !important;
   }
   
@@ -338,7 +330,7 @@ header {
   }
   
   .pericia-item .treino {
-      width: 18px; height: 18px; /* Checkbox um pouco maior */
+      width: 18px; height: 18px;
   }
 
   .money-wrapper, .sanidade-panel {
@@ -346,11 +338,11 @@ header {
     border-radius: 8px !important; border: 1px solid #333 !important; background: #111;
   }
 
-  /* === VIEW DIREITA (MAGIAS/INVENTÁRIO/HABILIDADES/COMBATE) - CORREÇÃO DE BUG === */
+  /* === VIEW DIREITA (MAGIAS/INVENTÁRIO/HABILIDADES/COMBATE) - CORREÇÃO DE LAYOUT === */
   body[data-mobile-view="inventario"] .lado-direito {
     display: flex !important; 
     flex-direction: column !important;
-    /* Padding ajustado para dar distância das bordas laterais */
+    /* Padding lateral para não colar na borda da tela */
     padding: 15px 10px 150px 10px !important;
     width: 100% !important;
     max-width: 100% !important;
@@ -381,6 +373,7 @@ header {
   }
 
   /* CORREÇÃO DOS CONTAINERS INTERNOS (Listas de Cards) */
+  /* Força a direção vertical para que fiquem um embaixo do outro */
   .inventory-list-wrapper, 
   .abilities-list, 
   .spells-list,
@@ -389,13 +382,12 @@ header {
       width: 100% !important;
       max-width: 100% !important;
       display: flex !important;
-      /* Força a direção vertical para empilhar os cards */
       flex-direction: column !important;
-      gap: 12px !important; /* Espaço entre os cards */
+      gap: 12px !important; /* Espaço vertical entre os cards */
       box-sizing: border-box !important;
   }
 
-  /* CORREÇÃO DOS CARDS (Para ocuparem toda a largura e ficarem um abaixo do outro) */
+  /* CORREÇÃO DOS CARDS (Para ocuparem toda a largura e ficarem empilhados) */
   .card, .item-card, .hab-card, .spell-card {
       width: 100% !important;
       max-width: 100% !important;
@@ -403,14 +395,16 @@ header {
       box-sizing: border-box !important;
       display: flex !important;
       flex-direction: column !important;
-      /* Remove qualquer flex-grow/shrink que possa estar causando o problema */
-      flex: 1 0 auto !important;
+      
+      /* IMPORTANTE: Reseta flex-grow/shrink para evitar comportamento estranho */
+      flex: 0 0 auto !important; 
   }
   
   /* Garante que os grupos de seção ocupem a largura toda */
   .inv-section-group, .hab-section-group {
       width: 100% !important;
       margin-bottom: 15px !important;
+      display: block !important; /* Garante comportamento de bloco */
   }
 
   /* Ajuste Barra de Pesquisa e Controles */
@@ -436,7 +430,7 @@ header {
       align-items: center !important;
       width: 100% !important;
       justify-content: space-between !important;
-      margin-bottom: 15px !important; /* Adicionado espaço abaixo da barra de pesquisa */
+      margin-bottom: 15px !important;
   }
 
   /* Dice Results flutuante no mobile */
