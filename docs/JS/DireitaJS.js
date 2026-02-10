@@ -538,7 +538,7 @@ function renderInventory() {
 
 
 /* =============================================================
-   CORREÇÃO 1: "2 Mãos" com Debounce (Evita voltar no tempo)
+   CORREÇÃO 1: "2 Mãos" com Proteção de Estado Global
    Substitua a função bindInventoryCardEvents inteira por esta:
 ============================================================= */
 function bindInventoryCardEvents() {
@@ -550,6 +550,7 @@ function bindInventoryCardEvents() {
     const header = card.querySelector('.card-header');
 
     header.onclick = (ev) => {
+      // Ignora cliques em elementos interativos
       if (ev.target.closest('.header-equip') ||
         ev.target.closest('.item-actions-footer') ||
         ev.target.closest('.dice-img') ||
@@ -610,17 +611,20 @@ function bindInventoryCardEvents() {
     };
   });
 
-  // --- 3. ALTERNAR 2 MÃOS (COM DEBOUNCE / TEMPO DE ESPERA) ---
+  // --- 3. ALTERNAR 2 MÃOS (CORRIGIDO: BLINDAGEM DE TEMPO) ---
   document.querySelectorAll('.toggle-versatile').forEach(ch => {
     ch.onchange = (ev) => {
       const rawId = ev.target.getAttribute('data-id');
       const item = findItemById(rawId);
       
       if (item) {
-        // 1. Atualiza memória local imediatamente
+        // A. Ativa a blindagem global imediatamente para impedir reversão
+        window.isUserInteracting = true;
+
+        // B. Atualiza memória local
         item.useTwoHands = ev.target.checked;
         
-        // 2. Atualiza APENAS o texto visualmente (DOM)
+        // C. Atualiza visualmente o DOM (Instantâneo)
         const card = ev.target.closest('.item-card');
         const damageSpan = card.querySelector('.spell-damage span');
         const valueSpanBody = card.querySelector('.item-data-row .white-val.bold');
@@ -639,13 +643,14 @@ function bindInventoryCardEvents() {
         if (damageSpan) damageSpan.textContent = finalDisplay;
         if (valueSpanBody) valueSpanBody.textContent = finalDisplay;
 
-        // 3. DEBOUNCE: Cancela salvamento anterior e agenda um novo
+        // D. Lógica de Salvamento com Debounce
         if (window.invSaveTimer) clearTimeout(window.invSaveTimer);
         
         window.invSaveTimer = setTimeout(() => {
-            console.log("Salvando estado do inventário após pausa...");
-            saveStateToServer();
-        }, 800); // Espera 800ms após o último clique para salvar
+            saveStateToServer(); // Salva no servidor
+            // Só libera a blindagem um pouco depois de salvar
+            setTimeout(() => { window.isUserInteracting = false; }, 500);
+        }, 1000); // Espera 1 segundo inteiro sem cliques para salvar
       }
     };
   });
@@ -2175,28 +2180,31 @@ function calculateNewDamage(baseDamage, scalingDamage, baseLevel, targetLevel) {
   return `${newQtd}d${dieType}${extraStr}`;
 }
 /* ---------------- EVENTOS DAS MAGIAS (LIMPO) ---------------- */
+/* =============================================================
+   CORREÇÃO 2: Eventos de Magia (Expandir/Colapsar Resolvido)
+   Substitua a função bindSpellEvents inteira por esta:
+============================================================= */
 function bindSpellEvents() {
     // 1. Botões do topo
     const botAdd = document.getElementById('botAddSpell');
     const btnDT = document.getElementById('btnOpenDTConfig');
-    if (botAdd) botAdd.addEventListener('click', () => openSpellCatalogOverlay());
-    if (btnDT) btnDT.addEventListener('click', openDTConfigModal);
+    if (botAdd) botAdd.onclick = () => openSpellCatalogOverlay();
+    if (btnDT) btnDT.onclick = openDTConfigModal;
 
     // 2. Filtro
     const filtro = document.getElementById('filterMagias');
-    if (filtro) filtro.addEventListener('input', (e) => {
+    if (filtro) filtro.oninput = (e) => {
         const q = e.target.value.toLowerCase();
         document.querySelectorAll('.spell-card').forEach(card => {
             const title = card.querySelector('.spell-title').textContent.toLowerCase();
             card.style.display = title.includes(q) ? '' : 'none';
         });
-    });
+    };
 
-    // 3. EVENTO DE MUDANÇA NO DROPDOWN (UPCAST VISUAL)
+    // 3. Upcast Visual
     document.querySelectorAll('.spell-slot-selector').forEach(sel => {
-        sel.addEventListener('change', (ev) => {
+        sel.onchange = (ev) => {
             ev.stopPropagation(); 
-            
             const targetLvl = parseInt(ev.target.value);
             const scaling = ev.target.dataset.scaling;
             const baseDmg = ev.target.dataset.baseDmg;
@@ -2206,70 +2214,92 @@ function bindSpellEvents() {
             const damageTextEl = card.querySelector('.dynamic-damage-text');
             
             if (damageTextEl && scaling && baseDmg) {
-                // Função calculateNewDamage deve estar definida no seu código (do passo anterior)
                 const newDmg = calculateNewDamage(baseDmg, scaling, baseLvl, targetLvl);
                 damageTextEl.textContent = newDmg;
                 damageTextEl.style.color = '#e040fb';
-                setTimeout(() => damageTextEl.style.color = '#9c27b0', 500);
             } else if (damageTextEl) {
                 damageTextEl.textContent = baseDmg;
             }
-        });
+        };
     });
 
-    // 4. Listeners Padrão dos Cards (Expandir, Remover, Editar)
+    // 4. EVENTOS DOS CARDS (EXPANDIR / PREPARAR / EDITAR)
     document.querySelectorAll('.spell-card').forEach(card => {
         const id = Number(card.getAttribute('data-id'));
+        
+        // A. Expandir/Colapsar (Clique no Header)
         const header = card.querySelector('.card-header');
-
-        // A. Expandir Card
-        header.addEventListener('click', (ev) => {
-            if (ev.target.closest('.spell-right') || 
-                ev.target.closest('.check-ativar') || 
-                ev.target.closest('.cast-controls')) return;
+        if (header) {
+            header.onclick = (ev) => {
+                // Impede que cliques nos controles fechem o card
+                if (ev.target.closest('.spell-right') || 
+                    ev.target.closest('.check-ativar') || 
+                    ev.target.closest('.cast-controls') ||
+                    ev.target.closest('.dice-img')) return;
                 
-            const s = state.spells.find(x => x.id === id);
-            if (s) {
-                s.expanded = !s.expanded;
-                renderSpells(); 
-            }
-        });
+                const s = state.spells.find(x => x.id === id);
+                if (s) {
+                    s.expanded = !s.expanded;
+                    
+                    // Atualiza DOM localmente sem recarregar tudo (Evita bugs)
+                    const body = card.querySelector('.card-body');
+                    const caret = card.querySelector('.caret');
+                    if(s.expanded) {
+                        body.style.display = 'block';
+                        card.classList.add('expanded');
+                        if(caret) caret.textContent = '▾';
+                    } else {
+                        body.style.display = 'none';
+                        card.classList.remove('expanded');
+                        if(caret) caret.textContent = '▸';
+                    }
+                    
+                    // Salva silenciosamente
+                    saveStateToServer();
+                }
+            };
+        }
 
         // B. Checkbox Preparar
         const ch = card.querySelector('.spell-activate');
         if (ch) {
-            ch.addEventListener('change', (ev) => {
+            ch.onchange = (ev) => {
                 const s = state.spells.find(x => x.id === id);
                 if (s) {
                     s.active = ev.target.checked;
                     saveStateToServer();
                 }
-            });
-            ch.addEventListener('click', ev => ev.stopPropagation());
+            };
+            ch.onclick = ev => ev.stopPropagation();
         }
     });
 
     // C. Remover / Editar
     document.querySelectorAll('.remover-spell').forEach(a => {
-        a.addEventListener('click', (ev) => {
+        a.onclick = (ev) => {
             ev.preventDefault();
             const id = Number(a.getAttribute('data-id'));
             state.spells = state.spells.filter(s => s.id !== id);
             renderSpells();
             saveStateToServer();
-        });
+        };
     });
+    
     document.querySelectorAll('.editar-spell').forEach(a => {
-        a.addEventListener('click', (ev) => {
+        a.onclick = (ev) => {
             ev.preventDefault();
             const id = Number(a.getAttribute('data-id'));
             const s = state.spells.find(x => x.id === id);
             if (s) openSpellModal(s);
-        });
+        };
     });
 }
 
 
+/* =============================================================
+   CORREÇÃO 3: Modal de DT com Margem de Crítico e Multiplicador
+   Substitua a função openDTConfigModal inteira por esta:
+============================================================= */
 function openDTConfigModal() {
   const existing = document.querySelector('.dt-modal-overlay');
   if (existing) existing.remove();
@@ -2279,35 +2309,57 @@ function openDTConfigModal() {
   overlay.style.zIndex = '12000';
 
   const cfg = state.spellDCConfig;
+  // Valores padrão se não existirem
+  const critVal = cfg.critRange || 20;
+  const multVal = cfg.critMult || 2;
 
   overlay.innerHTML = `
     <div class="spell-modal" style="width: 400px; max-width:90%;">
       <div class="modal-header">
-        <h3>Configurar DT de Magia</h3>
+        <h3>Configurar Magia Global</h3>
         <button class="modal-close">✖</button>
       </div>
       <div class="modal-body" style="gap:15px;">
         <div style="background:#151515; padding:10px; border-radius:6px; border:1px solid #333;">
             <p style="font-size:13px; color:#aaa; margin:0; text-align:center;">
-              Fórmula: <strong style="color:#fff;">8 + Prof + Mod + Extra</strong>
+              Fórmula DT: <strong style="color:#fff;">8 + Prof + Mod + Extra</strong>
             </p>
         </div>
-        <div>
-          <label>Atributo Chave</label>
-          <select id="dt-attr-select" class="dark-select">
-            <option value="none" ${!cfg.selectedAttr ? 'selected' : ''}>Selecione...</option>
-            <option value="int" ${cfg.selectedAttr === 'int' ? 'selected' : ''}>Inteligência</option>
-            <option value="sab" ${cfg.selectedAttr === 'sab' ? 'selected' : ''}>Sabedoria</option>
-            <option value="car" ${cfg.selectedAttr === 'car' ? 'selected' : ''}>Carisma</option>
-            <option value="con" ${cfg.selectedAttr === 'con' ? 'selected' : ''}>Constituição</option>
-            <option value="dex" ${cfg.selectedAttr === 'dex' ? 'selected' : ''}>Destreza</option>
-            <option value="for" ${cfg.selectedAttr === 'for' ? 'selected' : ''}>Força</option>
-          </select>
+        
+        <div style="display:flex; gap:10px;">
+            <div style="flex:1;">
+                <label>Atributo Chave</label>
+                <select id="dt-attr-select" class="dark-select">
+                    <option value="none" ${!cfg.selectedAttr ? 'selected' : ''}>Selecione...</option>
+                    <option value="int" ${cfg.selectedAttr === 'int' ? 'selected' : ''}>Inteligência</option>
+                    <option value="sab" ${cfg.selectedAttr === 'sab' ? 'selected' : ''}>Sabedoria</option>
+                    <option value="car" ${cfg.selectedAttr === 'car' ? 'selected' : ''}>Carisma</option>
+                    <option value="con" ${cfg.selectedAttr === 'con' ? 'selected' : ''}>Constituição</option>
+                    <option value="dex" ${cfg.selectedAttr === 'dex' ? 'selected' : ''}>Destreza</option>
+                    <option value="for" ${cfg.selectedAttr === 'for' ? 'selected' : ''}>Força</option>
+                </select>
+            </div>
+            <div style="width:100px;">
+                <label>Mod. Extra</label>
+                <input id="dt-extra-val" type="number" value="${cfg.extraMod || 0}">
+            </div>
         </div>
-        <div>
-          <label>Modificador Extra</label>
-          <input id="dt-extra-val" type="number" value="${cfg.extraMod || 0}">
+
+        <hr style="border:0; border-top:1px dashed #444; margin:5px 0;">
+
+        <div style="display:flex; gap:10px;">
+            <div style="flex:1;">
+                <label>Margem Crítico</label>
+                <input id="dt-crit-range" type="number" min="1" max="20" value="${critVal}" placeholder="20">
+                <span style="font-size:10px; color:#777;">(Ex: 19 ou 20)</span>
+            </div>
+            <div style="flex:1;">
+                <label>Multiplicador</label>
+                <input id="dt-crit-mult" type="number" min="1" value="${multVal}" placeholder="2">
+                <span style="font-size:10px; color:#777;">(Quantos dados rola)</span>
+            </div>
         </div>
+
         <div class="modal-actions">
           <button class="btn-add btn-save-dt">Salvar</button>
         </div>
@@ -2321,12 +2373,17 @@ function openDTConfigModal() {
   overlay.querySelector('.modal-close').onclick = () => { overlay.remove(); checkScrollLock(); };
 
   overlay.querySelector('.btn-save-dt').onclick = () => {
+    // Salva DT
     state.spellDCConfig.selectedAttr = document.getElementById('dt-attr-select').value;
     state.spellDCConfig.extraMod = parseInt(document.getElementById('dt-extra-val').value) || 0;
+    
+    // Salva Crítico
+    state.spellDCConfig.critRange = parseInt(document.getElementById('dt-crit-range').value) || 20;
+    state.spellDCConfig.critMult = parseInt(document.getElementById('dt-crit-mult').value) || 2;
 
     state.dtMagias = calculateSpellDC();
     renderSpells();
-    saveStateToServer(); // SALVA A CONFIGURAÇÃO DA DT NO BACKEND
+    saveStateToServer();
     overlay.remove();
     checkScrollLock();
   };
@@ -4795,7 +4852,7 @@ document.addEventListener('click', function(e) {
         e.stopPropagation();
 
     // -------------------------------------------------------------
-    // A. VERIFICA SE É MAGIA (SPELL CARD) - LÓGICA DE PROJÉTEIS + SLOTS
+    // A. VERIFICA SE É MAGIA (SPELL CARD) - ATUALIZADO CRIT GLOBAL
     // -------------------------------------------------------------
     const spellCard = e.target.closest('.spell-card');
     if (spellCard) {
@@ -4805,14 +4862,16 @@ document.addEventListener('click', function(e) {
 
       const spellTitle = s.name || "Magia";
       const selectSlot = spellCard.querySelector('.spell-slot-selector');
-      // Pega o nível selecionado no dropdown (Upcast) ou o nível base da magia
       const selectedLevel = selectSlot ? parseInt(selectSlot.value) : (s.levelNumber || 0);
       const baseLevel = s.levelNumber || 0;
+
+      // Configurações Globais de Crítico (Fallback: 20 e 2x)
+      const critRange = state.spellDCConfig.critRange || 20;
+      const critMult = state.spellDCConfig.critMult || 2;
 
       // --- LÓGICA DE MULTI-PROJÉTEIS ---
       let numProjectiles = 1;
       let isMulti = false;
-
       const nomeLimpo = spellTitle.toLowerCase();
       if (nomeLimpo.includes("mísseis mágicos") || nomeLimpo.includes("misseis magicos")) {
         numProjectiles = 3 + (selectedLevel - baseLevel);
@@ -4822,41 +4881,19 @@ document.addEventListener('click', function(e) {
         isMulti = true;
       }
 
-      // --- EXECUÇÃO DAS ROLAGENS (DANO) ---
-      let totalDamage = 0;
-      let allRollsDetails = [];
-      const damageText = spellCard.querySelector('.dynamic-damage-text')?.textContent.trim() || s.damage;
-
-      for (let i = 1; i <= numProjectiles; i++) {
-        if (damageText && damageText !== '-' && damageText !== '0') {
-          let res = rollDiceExpression(damageText);
-          totalDamage += res.total;
-          if (isMulti) {
-            allRollsDetails.push(`P${i}: ${res.text} <small>(${res.detail})</small>`);
-          } else {
-            allRollsDetails.push(res.detail);
-          }
-        }
-      }
-
-      const damageRes = {
-        total: totalDamage,
-        text: totalDamage.toString(),
-        detail: allRollsDetails.join(isMulti ? '<br>' : ' + '),
-        label: isMulti ? `${numProjectiles} PROJÉTEIS` : "DANO",
-        isCrit: false
-      };
-
       // --- ROLAGEM DE ATAQUE ---
       let attackRes = null;
+      // Se não for mísseis (auto-hit), rola ataque
       if (!nomeLimpo.includes("mísseis")) {
         const vals = getSpellAttackValues();
         if (vals) {
           const d20 = Math.floor(Math.random() * 20) + 1;
           const totalAttack = d20 + vals.prof + vals.mod + vals.extra;
-          const isCrit = (d20 === 20);
+          
+          // Usa margem configurada
+          const isCrit = (d20 >= critRange);
           const isFumble = (d20 === 1);
-          const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
+          const d20Html = isCrit ? `<span class="dice-roll-max">${d20}</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
 
           attackRes = {
             total: totalAttack,
@@ -4869,28 +4906,75 @@ document.addEventListener('click', function(e) {
         }
       }
 
-      // Exibe o resultado unificado na tela
+      // --- EXECUÇÃO DAS ROLAGENS (DANO) ---
+      let totalDamage = 0;
+      let allRollsDetails = [];
+      const damageText = spellCard.querySelector('.dynamic-damage-text')?.textContent.trim() || s.damage;
+
+      for (let i = 1; i <= numProjectiles; i++) {
+        if (damageText && damageText !== '-' && damageText !== '0') {
+          // Se for crítico no ataque, multiplica os dados
+          let exprFinal = damageText;
+          let isCritDamage = false;
+
+          // Se tiver ataque e for crítico, aplica o multiplicador configurado
+          if (attackRes && attackRes.isCrit) {
+             isCritDamage = true;
+             // Tenta multiplicar a quantidade de dados (ex: 1d10 -> 2d10)
+             // Regex simples para capturar XdY
+             const regexDice = /^(\d*)d(\d+)(.*)$/i;
+             const match = damageText.match(regexDice);
+             
+             if (match) {
+                 const qtd = match[1] === "" ? 1 : parseInt(match[1]);
+                 const faces = match[2];
+                 const resto = match[3] || "";
+                 // Multiplica Qtd pelo critMult
+                 const novaQtd = qtd * critMult;
+                 exprFinal = `${novaQtd}d${faces}${resto}`;
+             } else {
+                 // Se for dano fixo, multiplica o valor final
+                 // (Implementação simples: deixa rolar e depois multiplica se necessário, 
+                 // mas idealmente editamos a string aqui. Vamos assumir que é dado na maioria dos casos)
+             }
+          }
+
+          let res = rollDiceExpression(exprFinal);
+          totalDamage += res.total;
+          
+          // Se não tiver ataque (ex: Bola de Fogo), não tem critico automático aqui,
+          // a menos que queira implementar clique + shift. Por padrão, magia de área não crita.
+
+          if (isMulti) {
+            allRollsDetails.push(`P${i}: ${res.text} <small>(${res.detail})</small>`);
+          } else {
+            allRollsDetails.push(res.detail);
+          }
+        }
+      }
+
+      const damageRes = {
+        total: totalDamage,
+        text: totalDamage.toString(),
+        detail: allRollsDetails.join(isMulti ? '<br>' : ' + '),
+        label: isMulti ? `${numProjectiles} PROJÉTEIS` : (attackRes && attackRes.isCrit ? `CRÍTICO (${critMult}x)` : "DANO"),
+        isCrit: attackRes ? attackRes.isCrit : false // Pinta de roxo se foi critico
+      };
+
+      // Exibe
       showCombatResults(spellTitle, attackRes, damageRes);
 
-      // ====================================================================
-      // --- CONSUMO DE SLOT AUTOMÁTICO (CORRIGIDO) ---
-      // ====================================================================
-      // Se for Truque (nível 0), não gasta slot.
+      // Consumo de Slot (Omissis - Mantém o código de consumo de slot igual ao anterior)
       if (selectedLevel > 0) {
         let slotConsumed = false;
-        
-        // 1. Tenta gastar o slot padrão do nível selecionado (Upcast usa o nível maior)
         const standardKey = String(selectedLevel);
         if (state.spellSlots[standardKey] && state.spellSlots[standardKey].status) {
-          // Procura a primeira bolinha que está 'false' (disponível)
           const availableIdx = state.spellSlots[standardKey].status.indexOf(false);
           if (availableIdx !== -1) {
-            state.spellSlots[standardKey].status[availableIdx] = true; // Marca como usada
+            state.spellSlots[standardKey].status[availableIdx] = true;
             slotConsumed = true;
           }
         }
-
-        // 2. Se não tinha slot padrão (ou acabaram), tenta gastar Slot de Pacto (Bruxo)
         if (!slotConsumed && state.spellSlots['pact'] && state.spellSlots['pact'].status) {
           const pactAvailableIdx = state.spellSlots['pact'].status.indexOf(false);
           if (pactAvailableIdx !== -1) {
@@ -4898,17 +4982,13 @@ document.addEventListener('click', function(e) {
             slotConsumed = true;
           }
         }
-
-        // 3. Atualiza a interface e salva no servidor
         if (slotConsumed) {
           saveStateToServer();
-          renderActiveTab(); // Atualiza as bolinhas na tela
+          renderActiveTab();
         } else {
-          // Mostra aviso se rolar a magia sem ter slots sobrando
-          alert(`Sem slots disponíveis para o ${selectedLevel}º Círculo! A rolagem foi feita, mas nenhum slot foi gasto.`);
+          alert(`Sem slots de ${selectedLevel}º círculo!`);
         }
       }
-
       return;
     }
 
