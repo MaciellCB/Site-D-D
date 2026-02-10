@@ -538,8 +538,8 @@ function renderInventory() {
 
 
 /* =============================================================
-   CORREÇÃO 1: "2 Mãos" com Proteção de Estado Global
-   Substitua a função bindInventoryCardEvents inteira por esta:
+   CORREÇÃO 1: "2 Mãos" Blindado (Funciona em múltiplos itens)
+   Substitua a função bindInventoryCardEvents inteira:
 ============================================================= */
 function bindInventoryCardEvents() {
   const findItemById = (rawId) => state.inventory.find(x => String(x.id) === String(rawId));
@@ -547,35 +547,44 @@ function bindInventoryCardEvents() {
   // --- 1. EXPANDIR/RECOLHER ---
   document.querySelectorAll('.item-card').forEach(card => {
     const rawId = card.getAttribute('data-id');
+    
+    // O clique deve ser no header, mas precisamos filtrar os botões internos
     const header = card.querySelector('.card-header');
-
+    
     header.onclick = (ev) => {
-      // Ignora cliques em elementos interativos
+      // Lista de coisas que NÃO devem disparar o expandir
       if (ev.target.closest('.header-equip') ||
-        ev.target.closest('.item-actions-footer') ||
-        ev.target.closest('.dice-img') ||
-        ev.target.closest('.spell-damage') ||
-        ev.target.closest('.versatile-check-inline')) { 
+          ev.target.closest('.item-actions-footer') ||
+          ev.target.closest('.dice-img') ||
+          ev.target.closest('.spell-damage') ||
+          ev.target.closest('.versatile-check-inline') || // Checkbox 2 mãos
+          ev.target.closest('input') || // Qualquer input
+          ev.target.tagName === 'INPUT') { 
         return;
       }
 
       const it = findItemById(rawId);
       if (!it) return;
 
+      // Alterna estado
       it.expanded = !it.expanded;
 
+      // Atualiza DOM localmente (Instantâneo)
       const body = card.querySelector('.card-body');
       const caret = card.querySelector('.caret');
 
       if (it.expanded) {
         body.style.display = 'block';
-        caret.textContent = '▾';
+        if(caret) caret.textContent = '▾';
         card.classList.add('expanded');
       } else {
         body.style.display = 'none';
-        caret.textContent = '▸';
+        if(caret) caret.textContent = '▸';
         card.classList.remove('expanded');
       }
+      
+      // Salva sem recarregar a tela (evita fechar outros cards)
+      saveStateToServer(); 
     };
   });
 
@@ -586,6 +595,7 @@ function bindInventoryCardEvents() {
       const item = findItemById(rawId);
       const isChecked = ev.target.checked;
 
+      // Lógica de Escudo/Armadura únicos
       if (item && isChecked) {
         if (item.type === 'Proteção' || item.type === 'protecao') {
           const isEscudo = item.tipoItem?.toLowerCase() === 'escudo' || item.proficiency?.toLowerCase() === 'escudo';
@@ -595,6 +605,7 @@ function bindInventoryCardEvents() {
               const otherIsEscudo = other.tipoItem?.toLowerCase() === 'escudo' || other.proficiency?.toLowerCase() === 'escudo';
               if (isEscudo === otherIsEscudo) {
                 other.equip = false; 
+                // Desmarca visualmente o outro
                 const otherChk = document.querySelector(`.item-equip-checkbox[data-id="${other.id}"]`);
                 if (otherChk) otherChk.checked = false;
               }
@@ -606,25 +617,27 @@ function bindInventoryCardEvents() {
       if (item) item.equip = isChecked;
       saveStateToServer();
 
+      // Atualiza Esquerda
       if (typeof atualizarAC === 'function') atualizarAC();
       if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
     };
   });
 
-  // --- 3. ALTERNAR 2 MÃOS (CORRIGIDO: BLINDAGEM DE TEMPO) ---
+  // --- 3. ALTERNAR 2 MÃOS (CORREÇÃO DE MÚLTIPLOS CLIQUES) ---
   document.querySelectorAll('.toggle-versatile').forEach(ch => {
     ch.onchange = (ev) => {
       const rawId = ev.target.getAttribute('data-id');
       const item = findItemById(rawId);
       
       if (item) {
-        // A. Ativa a blindagem global imediatamente para impedir reversão
+        // A. Ativa ESCUDO GLOBAL imediatamente
+        // Isso impede que o socket.io redesenhe a tela se chegar algo do servidor agora
         window.isUserInteracting = true;
 
-        // B. Atualiza memória local
+        // B. Atualiza a memória local
         item.useTwoHands = ev.target.checked;
         
-        // C. Atualiza visualmente o DOM (Instantâneo)
+        // C. Atualiza o visual do Dano (DOM) instantaneamente
         const card = ev.target.closest('.item-card');
         const damageSpan = card.querySelector('.spell-damage span');
         const valueSpanBody = card.querySelector('.item-data-row .white-val.bold');
@@ -643,14 +656,16 @@ function bindInventoryCardEvents() {
         if (damageSpan) damageSpan.textContent = finalDisplay;
         if (valueSpanBody) valueSpanBody.textContent = finalDisplay;
 
-        // D. Lógica de Salvamento com Debounce
-        if (window.invSaveTimer) clearTimeout(window.invSaveTimer);
+        // D. DEBOUNCE GLOBAL: Só salva quando você parar de clicar em TUDO
+        if (window.globalSaveTimer) clearTimeout(window.globalSaveTimer);
         
-        window.invSaveTimer = setTimeout(() => {
-            saveStateToServer(); // Salva no servidor
-            // Só libera a blindagem um pouco depois de salvar
+        window.globalSaveTimer = setTimeout(() => {
+            console.log("Salvando alterações acumuladas do inventário...");
+            saveStateToServer();
+            
+            // Só abaixa o escudo um pouco depois de salvar
             setTimeout(() => { window.isUserInteracting = false; }, 500);
-        }, 1000); // Espera 1 segundo inteiro sem cliques para salvar
+        }, 800); // 0.8s de espera
       }
     };
   });
@@ -660,15 +675,22 @@ function bindInventoryCardEvents() {
     el.onclick = (ev) => {
       ev.preventDefault();
       const rawId = el.getAttribute('data-id');
+      
+      // Remove do state
       state.inventory = state.inventory.filter(i => String(i.id) !== String(rawId));
       saveStateToServer();
       
+      // Animação visual de remoção
       const card = el.closest('.item-card');
       if (card) {
         card.style.transition = "all 0.3s ease";
         card.style.opacity = "0";
+        card.style.height = "0";
+        card.style.margin = "0";
+        card.style.padding = "0";
         setTimeout(() => card.remove(), 300);
       }
+      
       if (typeof atualizarAC === 'function') atualizarAC();
     };
   });
@@ -2180,9 +2202,11 @@ function calculateNewDamage(baseDamage, scalingDamage, baseLevel, targetLevel) {
   return `${newQtd}d${dieType}${extraStr}`;
 }
 /* ---------------- EVENTOS DAS MAGIAS (LIMPO) ---------------- */
+
+
 /* =============================================================
-   CORREÇÃO 2: Eventos de Magia (Expandir/Colapsar Resolvido)
-   Substitua a função bindSpellEvents inteira por esta:
+   CORREÇÃO 2: Magias (Expandir/Colapsar Resolvido)
+   Substitua a função bindSpellEvents inteira:
 ============================================================= */
 function bindSpellEvents() {
     // 1. Botões do topo
@@ -2201,8 +2225,9 @@ function bindSpellEvents() {
         });
     };
 
-    // 3. Upcast Visual
+    // 3. Upcast Visual (Dropdown de Nível)
     document.querySelectorAll('.spell-slot-selector').forEach(sel => {
+        sel.onclick = (ev) => ev.stopPropagation(); // Impede fechar ao clicar
         sel.onchange = (ev) => {
             ev.stopPropagation(); 
             const targetLvl = parseInt(ev.target.value);
@@ -2213,37 +2238,46 @@ function bindSpellEvents() {
             const card = ev.target.closest('.spell-card');
             const damageTextEl = card.querySelector('.dynamic-damage-text');
             
+            // Atualiza texto do dano se for escalável
             if (damageTextEl && scaling && baseDmg) {
+                // (Assumindo que a função calculateNewDamage existe no seu código)
                 const newDmg = calculateNewDamage(baseDmg, scaling, baseLvl, targetLvl);
                 damageTextEl.textContent = newDmg;
                 damageTextEl.style.color = '#e040fb';
-            } else if (damageTextEl) {
-                damageTextEl.textContent = baseDmg;
             }
         };
     });
 
-    // 4. EVENTOS DOS CARDS (EXPANDIR / PREPARAR / EDITAR)
+    // 4. EVENTOS DOS CARDS
     document.querySelectorAll('.spell-card').forEach(card => {
-        const id = Number(card.getAttribute('data-id'));
+        const rawId = card.getAttribute('data-id');
         
-        // A. Expandir/Colapsar (Clique no Header)
+        // A. EXPANDIR / COLAPSAR
+        // Selecionamos o header explicitamente
         const header = card.querySelector('.card-header');
+        
         if (header) {
             header.onclick = (ev) => {
-                // Impede que cliques nos controles fechem o card
+                // Filtra cliques que NÃO devem expandir (Botões, Checkboxes, Selects)
                 if (ev.target.closest('.spell-right') || 
                     ev.target.closest('.check-ativar') || 
                     ev.target.closest('.cast-controls') ||
-                    ev.target.closest('.dice-img')) return;
+                    ev.target.closest('.dice-img') ||
+                    ev.target.tagName === 'SELECT' ||
+                    ev.target.tagName === 'INPUT') {
+                    return;
+                }
                 
-                const s = state.spells.find(x => x.id === id);
+                // Busca a magia no State (usando String para segurança)
+                const s = state.spells.find(x => String(x.id) === String(rawId));
+                
                 if (s) {
                     s.expanded = !s.expanded;
                     
-                    // Atualiza DOM localmente sem recarregar tudo (Evita bugs)
+                    // MANIPULAÇÃO DOM DIRETA (Para garantir resposta visual)
                     const body = card.querySelector('.card-body');
                     const caret = card.querySelector('.caret');
+                    
                     if(s.expanded) {
                         body.style.display = 'block';
                         card.classList.add('expanded');
@@ -2254,7 +2288,7 @@ function bindSpellEvents() {
                         if(caret) caret.textContent = '▸';
                     }
                     
-                    // Salva silenciosamente
+                    // Salva silenciosamente (sem re-renderizar tudo)
                     saveStateToServer();
                 }
             };
@@ -2264,32 +2298,37 @@ function bindSpellEvents() {
         const ch = card.querySelector('.spell-activate');
         if (ch) {
             ch.onchange = (ev) => {
-                const s = state.spells.find(x => x.id === id);
+                const s = state.spells.find(x => String(x.id) === String(rawId));
                 if (s) {
                     s.active = ev.target.checked;
                     saveStateToServer();
                 }
             };
-            ch.onclick = ev => ev.stopPropagation();
+            ch.onclick = ev => ev.stopPropagation(); // Impede propagação
         }
     });
 
-    // C. Remover / Editar
+    // C. Remover
     document.querySelectorAll('.remover-spell').forEach(a => {
         a.onclick = (ev) => {
             ev.preventDefault();
-            const id = Number(a.getAttribute('data-id'));
-            state.spells = state.spells.filter(s => s.id !== id);
-            renderSpells();
+            const id = a.getAttribute('data-id'); // Pega como string
+            state.spells = state.spells.filter(s => String(s.id) !== String(id));
+            
+            // Remove visualmente
+            const card = a.closest('.spell-card');
+            if(card) card.remove();
+            
             saveStateToServer();
         };
     });
     
+    // D. Editar
     document.querySelectorAll('.editar-spell').forEach(a => {
         a.onclick = (ev) => {
             ev.preventDefault();
-            const id = Number(a.getAttribute('data-id'));
-            const s = state.spells.find(x => x.id === id);
+            const id = a.getAttribute('data-id');
+            const s = state.spells.find(x => String(x.id) === String(id));
             if (s) openSpellModal(s);
         };
     });
