@@ -4338,50 +4338,54 @@ function initRichEditorEvents(idContainer) {
 const diceStyles = document.createElement('style');
 diceStyles.textContent = `
     #dice-results-container {
-        position: fixed; bottom: 20px; right: -350px; /* Largura um pouco maior */
+        position: fixed; 
+        bottom: 90px; /* <--- ALTERADO DE 20px PARA 90px (Para subir acima do menu) */
+        right: -350px; 
         min-width: 280px; max-width: 400px;
         
         background: #0f0f0f; border: 1px solid #9c27b0; border-radius: 8px;
-        /* padding removido daqui, aplicado nos filhos */
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.9);
-        color: #fff; z-index: 15000; transition: right 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); 
+        color: #fff; 
+        
+        /* AUMENTAMOS O Z-INDEX PARA GARANTIR QUE FIQUE ACIMA DE TUDO */
+        z-index: 2147483647; 
+        
+        transition: right 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); 
         font-family: 'Segoe UI', sans-serif;
 
-        display: flex; /* Para alinhar lado a lado */
-        flex-direction: row; /* Inspiração na esquerda, conteúdo na direita */
-       
+        display: flex; 
+        flex-direction: row; 
     }
     #dice-results-container.active { right: 20px; }
 
     /* Container para a Inspiração (Esquerda) */
     .inspiration-container {
-    width: 70px; 
-    flex-shrink: 0; 
-    background-color: rgba(0, 0, 0, 0.5);
-    background-image: radial-gradient(circle at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 70%, transparent 100%);
-    border-right: 1px solid rgba(156, 39, 176, 0.5); 
-    
-    /* ADICIONE ESSAS DUAS LINHAS: */
-    border-top-left-radius: 7px;
-    border-bottom-left-radius: 7px;
-    
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        width: 70px; 
+        flex-shrink: 0; 
+        background-color: rgba(0, 0, 0, 0.5);
+        background-image: radial-gradient(circle at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 70%, transparent 100%);
+        border-right: 1px solid rgba(156, 39, 176, 0.5); 
+        
+        border-top-left-radius: 7px;
+        border-bottom-left-radius: 7px;
+        
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-    /* Ícone de Inspiração (Estático, Dourado) */
+    /* Ícone de Inspiração */
     .inspiration-icon {
-        font-size: 36px; /* Tamanho do ícone */
-        color: #FFD700; /* Dourado */
+        font-size: 36px; 
+        color: #FFD700; 
         text-shadow: 0 0 15px rgba(255, 215, 0, 0.8), 0 0 5px #fff;
         cursor: help;
     }
 
-    /* Container para o Conteúdo Principal (Direita) */
+    /* Container para o Conteúdo Principal */
     .dice-content-wrapper {
-        flex-grow: 1; /* Ocupa o espaço restante */
-        padding: 15px; /* Padding interno */
+        flex-grow: 1; 
+        padding: 15px; 
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -4411,7 +4415,7 @@ diceStyles.textContent = `
         cursor: help; 
     }
     
-    /* TOOLTIP HTML */
+    /* TOOLTIP */
     .dice-tooltip {
         visibility: hidden; opacity: 0;
         position: absolute; bottom: 100%; right: 0;
@@ -4427,7 +4431,7 @@ diceStyles.textContent = `
         visibility: visible; opacity: 1;
     }
 
-    /* --- ESTILOS DE DESTAQUE --- */
+    /* --- DESTAQUES --- */
     .dice-roll-max { color: #e040fb ; font-weight: bold; text-shadow: 0 0 5px #e040fb; } 
     .dice-roll-min { color: #ff3333 ; font-weight: bold; text-shadow: 0 0 5px #ff3333; }
     
