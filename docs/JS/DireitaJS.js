@@ -538,29 +538,31 @@ function renderInventory() {
 
 
 /* =============================================================
-   CORREÇÃO: Eventos de Inventário (Com gatilho para CA)
+   CORREÇÃO 1: "2 Mãos" sem recarregar a tela (Correção do Lag/Volta no tempo)
    Substitua a função bindInventoryCardEvents inteira por esta:
 ============================================================= */
 function bindInventoryCardEvents() {
   const findItemById = (rawId) => state.inventory.find(x => String(x.id) === String(rawId));
 
-  // --- 1. EXPANDIR/RECOLHER (SOMENTE LOCAL) ---
+  // --- 1. EXPANDIR/RECOLHER ---
   document.querySelectorAll('.item-card').forEach(card => {
     const rawId = card.getAttribute('data-id');
     const header = card.querySelector('.card-header');
 
     header.onclick = (ev) => {
+      // Ignora cliques em elementos interativos dentro do header
       if (ev.target.closest('.header-equip') ||
         ev.target.closest('.item-actions-footer') ||
         ev.target.closest('.dice-img') ||
-        ev.target.closest('.spell-damage')) {
+        ev.target.closest('.spell-damage') ||
+        ev.target.closest('.versatile-check-inline')) { // Adicionado ignore para o toggle
         return;
       }
 
       const it = findItemById(rawId);
       if (!it) return;
 
-      it.expanded = !it.expanded; // Altera memória local
+      it.expanded = !it.expanded;
 
       const body = card.querySelector('.card-body');
       const caret = card.querySelector('.caret');
@@ -577,7 +579,7 @@ function bindInventoryCardEvents() {
     };
   });
 
- // --- 2. CHECKBOX EQUIPAR (OTIMIZADO) ---
+  // --- 2. CHECKBOX EQUIPAR ---
   document.querySelectorAll('.item-equip-checkbox').forEach(ch => {
     ch.onchange = (ev) => {
       const rawId = ev.target.getAttribute('data-id');
@@ -585,19 +587,14 @@ function bindInventoryCardEvents() {
       const isChecked = ev.target.checked;
 
       if (item && isChecked) {
-        // Lógica de Exclusividade (Só 1 Armadura / Só 1 Escudo)
         if (item.type === 'Proteção' || item.type === 'protecao') {
           const isEscudo = item.tipoItem?.toLowerCase() === 'escudo' || item.proficiency?.toLowerCase() === 'escudo';
           
           state.inventory.forEach(other => {
-            // Se for outro item de proteção diferente deste
             if (String(other.id) !== String(rawId) && (other.type === 'Proteção' || other.type === 'protecao')) {
               const otherIsEscudo = other.tipoItem?.toLowerCase() === 'escudo' || other.proficiency?.toLowerCase() === 'escudo';
-              
-              // Se ambos forem escudos OU ambos forem armaduras, desmarca o outro
               if (isEscudo === otherIsEscudo) {
                 other.equip = false; 
-                // Atualiza visualmente o checkbox do outro item sem recarregar tudo
                 const otherChk = document.querySelector(`.item-equip-checkbox[data-id="${other.id}"]`);
                 if (otherChk) otherChk.checked = false;
               }
@@ -606,74 +603,69 @@ function bindInventoryCardEvents() {
         }
       }
 
-      // Atualiza o estado do item atual
       if (item) item.equip = isChecked;
-
-      // Salva no servidor (com debounce interno se houver, ou direto)
       saveStateToServer();
 
-      // >>> GATILHO PARA A ESQUERDA ATUALIZAR A CA <<<
-      // Importante: Isso atualiza o número da CA na esquerda sem travar a direita
       if (typeof atualizarAC === 'function') atualizarAC();
       if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
     };
   });
 
-  // --- 3. ALTERNAR 2 MÃOS (GLOBAL) ---
+  // --- 3. ALTERNAR 2 MÃOS (CORRIGIDO: NÃO RECARREGA A ABA) ---
   document.querySelectorAll('.toggle-versatile').forEach(ch => {
     ch.onchange = (ev) => {
       const rawId = ev.target.getAttribute('data-id');
       const item = findItemById(rawId);
+      
       if (item) {
+        // 1. Atualiza memória
         item.useTwoHands = ev.target.checked;
+        
+        // 2. Salva silenciosamente
         saveStateToServer();
-        const scrollY = window.scrollY;
-        renderActiveTab();
-        window.scrollTo(0, scrollY);
+
+        // 3. Atualiza APENAS o texto do dano visualmente (DOM Direto)
+        // Procura o span de dano dentro deste card específico
+        const card = ev.target.closest('.item-card');
+        const damageSpan = card.querySelector('.spell-damage span'); // Onde fica o valor do dano
+        const valueSpanBody = card.querySelector('.item-data-row .white-val.bold'); // Onde fica o valor no corpo
+
+        // Define qual dano mostrar
+        let baseDamage = item.damage;
+        if (item.useTwoHands && item.damage2Hands) {
+            baseDamage = item.damage2Hands;
+        }
+
+        // Monta string visual (incluindo extras se houver)
+        let dmgParts = [baseDamage];
+        if (item.moreDmgList) {
+            item.moreDmgList.forEach(m => { if (m.dano) dmgParts.push(m.dano); });
+        }
+        const finalDisplay = dmgParts.join(' + ') || '-';
+
+        // Aplica no DOM sem recarregar tudo
+        if (damageSpan) damageSpan.textContent = finalDisplay;
+        if (valueSpanBody) valueSpanBody.textContent = finalDisplay;
       }
     };
   });
 
- // --- 4. REMOVER ITEM (OTIMIZADO COM ANIMAÇÃO) ---
+ // --- 4. REMOVER ITEM ---
   document.querySelectorAll('.remover-item').forEach(el => {
     el.onclick = (ev) => {
       ev.preventDefault();
       const rawId = el.getAttribute('data-id');
-      
-      // 1. Remove do estado (memória)
       state.inventory = state.inventory.filter(i => String(i.id) !== String(rawId));
-      
-      // 2. Salva no servidor
       saveStateToServer();
       
-      // 3. Remove visualmente com animação (sem recarregar a aba)
       const card = el.closest('.item-card');
       if (card) {
-        // Define altura fixa para a transição funcionar, depois zera
-        card.style.height = card.offsetHeight + 'px';
-        card.style.overflow = 'hidden';
         card.style.transition = "all 0.3s ease";
-        
-        // Força um reflow rápido para o navegador pegar a altura inicial
-        void card.offsetHeight; 
-
-        // Aplica o efeito de sumir
-        requestAnimationFrame(() => {
-            card.style.opacity = "0";
-            card.style.height = "0px";
-            card.style.marginBottom = "0px";
-            card.style.padding = "0px";
-            card.style.border = "none";
-        });
-
-        // Remove do DOM após a animação acabar
+        card.style.opacity = "0";
         setTimeout(() => card.remove(), 300);
       }
 
-      // 4. Atualiza CA na esquerda (caso tenha removido uma armadura equipada)
       if (typeof atualizarAC === 'function') atualizarAC();
-      
-      // NÃO chamamos renderActiveTab() aqui para manter a fluidez
     };
   });
 
@@ -4922,8 +4914,8 @@ document.addEventListener('click', function(e) {
       return;
     }
 
-        // -------------------------------------------------------------
-        // B. VERIFICA SE É ITEM (ARMA/INVENTÁRIO) - CORRIGIDO V3
+       // -------------------------------------------------------------
+        // B. VERIFICA SE É ITEM (ARMA/INVENTÁRIO) - ATUALIZADO CRÍTICO
         // -------------------------------------------------------------
         const itemCard = e.target.closest('.item-card');
         if (itemCard) {
@@ -4933,6 +4925,9 @@ document.addEventListener('click', function(e) {
             if (item) {
                 // 1. ROLA ATAQUE
                 let attackRes = null;
+                // Critico Nativo do Item (ex: 19 ou 20) ou padrão 20
+                const margemCritico = parseInt(item.crit) || 20;
+                
                 const temAtributoDefinido = item.attackAttribute && item.attackAttribute !== 'Nenhum';
                 
                 if (item.type === 'Arma' || temAtributoDefinido) {
@@ -4941,13 +4936,12 @@ document.addEventListener('click', function(e) {
                     const d20 = Math.floor(Math.random() * 20) + 1;
                     const totalAttack = d20 + modAttr + profBonus + itemBonus;
                     
-                    const isCrit = (d20 === 20); 
+                    // Verifica Crítico baseado na margem do item
+                    const isCrit = (d20 >= margemCritico); 
                     const isFumble = (d20 === 1);
-                    const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
+                    const d20Html = isCrit ? `<span class="dice-roll-max">${d20}</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
                     
-                    // Monta o detalhe (Tooltip)
                     const detailParts = [d20Html];
-                    // Nome do atributo usado (pega do retorno ou tenta deduzir para exibição)
                     const nomeAttr = attrUsed || (item.type === 'Arma' ? ((item.tipoArma||'').includes('istancia') ? 'Destreza' : 'Força') : '');
                     
                     if (modAttr !== 0) detailParts.push(`${modAttr} (${nomeAttr.substring(0,3)})`); 
@@ -4963,47 +4957,67 @@ document.addEventListener('click', function(e) {
                     };
                 }
 
-                // 2. ROLA DANO (CALCULADO SEMPRE)
+                // 2. ROLA DANO
                 let damageRes = null;
                 let expressionDano = "";
 
-                // a) Pega o Dano Base (Considera Versátil)
+                // a) Dano Base (Versátil)
                 let baseDano = item.damage || '0';
                 if (item.empunhadura === 'Versátil' && item.useTwoHands && item.damage2Hands) {
                     baseDano = item.damage2Hands;
                 }
 
-                // b) Calcula o Modificador de Atributo para o Dano
+                // b) Modificadores
                 let modDano = 0;
-                
-                // Se o usuário escolheu um atributo específico para o dano
                 if (item.damageAttribute && item.damageAttribute !== 'Nenhum') {
                     modDano = getAttributeMod(item.damageAttribute);
-                } 
-                // Se não escolheu, mas é arma, usa o mesmo modificador que usou no ataque (Força/Destreza)
-                else if (item.type === 'Arma') {
+                } else if (item.type === 'Arma') {
                     const { modAttr } = getItemAttackValues(item);
                     modDano = modAttr;
                 }
-
-                // c) Soma Bônus Fixo de Dano (Item mágico +1, etc)
                 const bonusDano = parseInt(item.damageBonus) || 0;
-                
-                // d) Total a somar
                 const totalModDano = modDano + bonusDano;
 
-                // e) Monta a string final para o rolador (Ex: "1d8+3")
-                // Se o dado base já tiver + (ex: "1d6+2"), o código apenas anexa o resto
+                // c) Monta Expressão
                 if (totalModDano !== 0) {
-                    const sinal = totalModDano >= 0 ? '+' : ''; // Adiciona + se for positivo, - se for negativo
+                    const sinal = totalModDano >= 0 ? '+' : '';
                     expressionDano = `${baseDano}${sinal}${totalModDano}`;
                 } else {
                     expressionDano = baseDano;
                 }
                 
-                // Rola
+                // d) Rola o Dano
                 if (expressionDano && expressionDano !== '-' && expressionDano !== '0') { 
                     damageRes = rollDiceExpression(expressionDano); 
+
+                    // === LÓGICA DE CRÍTICO MATEMÁTICO ===
+                    // Se houve ataque e foi Crítico (d20 >= margem)
+                    if (attackRes && attackRes.isCrit) {
+                        // 1. Ler o campo Multiplicador (ex: "2" ou "2+2")
+                        const multStr = item.multiplicador ? String(item.multiplicador) : "2";
+                        
+                        // Separa por '+' (Ex: "3+10" vira ["3", "10"])
+                        const partes = multStr.split('+');
+                        
+                        // Fator de multiplicação (Primeira parte, padrão 2)
+                        const fator = parseInt(partes[0]) || 2;
+                        
+                        // Bônus Extra (Segunda parte se existir, padrão 0)
+                        const bonusExtraCrit = partes.length > 1 ? (parseInt(partes[1]) || 0) : 0;
+
+                        // Aplica a fórmula: (DanoRolado * Fator) + BonusExtra
+                        const danoOriginal = damageRes.total;
+                        const danoCriticoFinal = (danoOriginal * fator) + bonusExtraCrit;
+
+                        // Atualiza o objeto de resultado
+                        damageRes.total = danoCriticoFinal;
+                        damageRes.text = danoCriticoFinal.toString();
+                        damageRes.isCrit = true; // Marca visualmente como roxo
+                        
+                        // Detalhe no tooltip
+                        const textoBonus = bonusExtraCrit > 0 ? ` + ${bonusExtraCrit}` : '';
+                        damageRes.detail = `${danoOriginal} (Rolado) × ${fator}${textoBonus} = <strong>${danoCriticoFinal}</strong>`;
+                    }
                 }
 
                 if (attackRes || damageRes) showCombatResults(item.name, attackRes, damageRes);
