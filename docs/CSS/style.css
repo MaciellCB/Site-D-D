@@ -91,20 +91,15 @@ header {
 
 /* =============================================================
    4. MODO MOBILE (Telas < 768px)
-   (CORREÇÃO DEFINITIVA: Layout, Margens e Empilhamento)
+   (CORREÇÃO DEFINITIVA DE LAYOUT COLAPSADO)
 ============================================================= */
 @media (max-width: 768px) {
 
-  /* 4.1. Estrutura Base */
+  /* --- 4.1. ESTRUTURA BASE --- */
   body {
-    padding-bottom: 350px !important; /* Espaço para o teclado/scroll */
-    overflow-x: hidden !important; /* Impede rolagem lateral acidental */
+    padding-bottom: 350px !important;
+    overflow-x: hidden !important;
     background-color: #0a0a0a !important;
-  }
-
-  /* Garante que o padding não aumente a largura total */
-  * {
-    box-sizing: border-box !important;
   }
 
   .container {
@@ -112,248 +107,145 @@ header {
     flex-direction: column !important;
     padding: 0 !important;
     margin: 0 !important;
-    width: 100% !important;
+    width: 100vw !important;
     max-width: 100vw !important;
+    overflow-x: hidden !important;
   }
 
-  /* Reset Total dos Containers Principais */
+  /* --- 4.2. CORREÇÃO DOS PAINÉIS LATERAIS --- */
+  /* Remove a largura fixa de 400px e força tela cheia */
   .lado-esquerdo, .lado-centro, .lado-direito {
     width: 100% !important;
     max-width: 100% !important;
-    min-width: 0 !important; /* Permite encolher se necessário */
+    min-width: 100% !important;
+    flex: none !important; /* Impede o flexbox de tentar dimensionar */
     margin: 0 !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    padding: 0 !important; 
     border: none !important;
-    
-    /* Força layout vertical */
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
   }
 
-  /* 4.2. Hotbar (Menu Inferior) */
+  /* --- 4.3. VIEWS E NAVEGAÇÃO --- */
+  header, .info-personagem, .lado-esquerdo, .lado-centro, .lado-direito {
+    display: none !important; /* Esconde tudo por padrão */
+  }
+
+  /* Hotbar fixa embaixo */
   #mobile-navbar {
     display: flex !important;
     position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 60px;
+    bottom: 0; left: 0; width: 100%; height: 60px;
     background-color: #0e0e0e;
     border-top: 1px solid #333;
-    z-index: 999999; 
+    z-index: 200000;
     justify-content: space-around;
     align-items: center;
     box-shadow: 0 -5px 20px rgba(0,0,0,1);
   }
-
   .mobile-nav-btn {
     background: none; border: none; color: #666;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    font-size: 10px; width: 100%; height: 100%; padding-top: 5px;
+    font-size: 10px; width: 100%; height: 100%;
   }
   .mobile-nav-btn svg { width: 22px; height: 22px; margin-bottom: 4px; }
   .mobile-nav-btn.active { color: #9c27b0; background-color: #1a1a1a; border-top: 2px solid #9c27b0; }
 
-  /* 4.3. Views - Oculta tudo por padrão para alternar via JS */
-  header, .info-personagem, .lado-esquerdo, .lado-centro, .lado-direito {
-    display: none !important;
-  }
-
-  /* === VIEW HEADER (PERFIL) === */
-  body[data-mobile-view="header"] header,
-  body[data-mobile-view="header"] .info-personagem {
-    display: flex !important;
-    flex-direction: column;
-    width: 100%;
-    padding: 20px 20px 100px 20px !important; 
-    align-items: center;
-    gap: 15px !important; 
-    background-color: #0a0a0a;
-  }
-
-  .info-esquerda {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 15px;
-  }
+  /* --- 4.4. VIEW ESPECÍFICA: DIREITA (INVENTÁRIO/HABILIDADES) --- */
+  /* Aqui está a correção do BUG DAS LETRAS QUEBRADAS */
   
-  .foto-personagem {
-    width: 140px !important; 
-    height: 140px !important;
-    border-radius: 50% !important; 
-    object-fit: cover;
-    border: 3px solid #9c27b0;
-    box-shadow: 0 0 15px rgba(156, 39, 176, 0.4);
-  }
-
-  .info-direita { width: 100% !important; }
-  .linha-info { 
-      display: flex !important; 
-      flex-direction: column !important; 
-      gap: 15px !important; 
-      width: 100%; 
-  }
-  
-  /* Inputs Grandes no Mobile */
-  .campo { width: 100% !important; margin-bottom: 5px; }
-  .campo input, .campo textarea, .input-simulado {
-    background: #161616 !important; 
-    border: 1px solid #333 !important; 
-    padding: 12px 16px !important;
-    min-height: 50px; 
-    border-radius: 8px !important; 
-    width: 100% !important; 
-    color: #fff; 
-    font-size: 16px !important; /* Fonte maior evita zoom no iPhone */
-  }
-
-  /* === VIEW ESQUERDA (STATUS) === */
-  body[data-mobile-view="status"] .lado-esquerdo {
-    display: flex !important;
-    flex-direction: column;
-    padding: 10px 0 150px 0 !important; 
-  }
-
-  .ficha-compacta {
-    margin-top: 0px !important; 
-    padding: 0 10px !important;
-  }
-
-  .hexagrama { transform: scale(0.85); margin: 0 auto; }
-
-  /* Ajuste dos Status (Vida, XP, etc) para não quebrar */
-  .linha-top, .linha-xp, .linha-metros, .status-row {
-    flex-wrap: wrap; 
-    justify-content: center; 
-    width: 100%;
-    gap: 10px;
-  }
-  
-  .armadura-card { 
-    margin-top: 20px; 
-    padding: 15px; 
-    width: 96%;
-    margin-left: auto; 
-    margin-right: auto;
-  }
-
-  /* === VIEW MEIO (PERÍCIAS) === */
-  body[data-mobile-view="pericia"] .lado-centro {
-    display: block !important;
-    padding: 10px 10px 150px 10px !important;
-    width: 100% !important;
-  }
-
-  .pericia-item {
-    padding: 14px 8px !important; 
-    font-size: 14px !important;
-    height: auto !important;
-  }
-
-  /* === VIEW DIREITA (MAGIAS/INVENTÁRIO/HABILIDADES/COMBATE) === */
-  /* AQUI ESTÁ A CORREÇÃO PRINCIPAL */
   body[data-mobile-view="inventario"] .lado-direito {
-    display: flex !important; 
+    display: flex !important;
     flex-direction: column !important;
-    /* PADDING LATERAL IMPORTANTE: Evita colar nos lados */
-    padding: 15px 15px 150px 15px !important;
+    /* Adiciona padding lateral para o texto não colar na borda da tela */
+    padding: 15px 15px 150px 15px !important; 
     width: 100% !important;
-    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
-  .conteudo { 
-      padding: 0 !important; 
-      width: 100% !important; 
-      display: flex !important;
-      flex-direction: column !important;
+  .conteudo {
+    width: 100% !important;
+    display: block !important; /* Garante bloco, não flex-row */
+    padding: 0 !important;
   }
 
-  /* LISTAS E CARDS - FORÇAR EMPILHAMENTO */
-  .inventory-list-wrapper, 
-  .abilities-list, 
-  .spells-list,
+  /* Força os GRUPOS (Armas, Itens Gerais) a ficarem um embaixo do outro */
+  .inventory-list-wrapper,
+  .abilities-list,
+  .spells-list {
+    display: flex !important;
+    flex-direction: column !important; /* Coluna Vertical */
+    width: 100% !important;
+    gap: 15px !important;
+  }
+
+  /* Força os grupos individuais a ocuparem a largura total */
+  .inv-section-group, 
+  .hab-section-group {
+    width: 100% !important;
+    display: block !important;
+    margin-bottom: 10px !important;
+  }
+
+  /* Força o CONTEÚDO dos grupos a empilhar verticalmente */
   .inv-section-content,
   .section-content {
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 12px !important; /* Espaço vertical entre cards */
-      width: 100% !important;
-  }
-
-  /* FORÇAR CARDS A OCUPAREM A LARGURA CHEIA */
-  .card, .item-card, .hab-card, .spell-card {
-      width: 100% !important;
-      max-width: 100% !important;
-      min-width: 0 !important; /* Previne overflow */
-      margin: 0 0 5px 0 !important;
-      
-      /* Reseta flex que poderia estar quebrando o layout */
-      flex: 1 1 auto !important; 
-      display: flex !important;
-      flex-direction: column !important;
-  }
-
-  /* Cabeçalho de Grupos (Ex: Armas, Magias Nível 1) */
-  .inv-section-group, .hab-section-group {
-      width: 100% !important;
-      margin-bottom: 20px !important;
-      display: flex !important;
-      flex-direction: column !important;
-  }
-
-  /* Barra de Pesquisa e Botões */
-  .controls-row, .inventory-controls {
-      display: flex !important;
-      flex-direction: column !important; /* Pesquisa em cima, botões embaixo */
-      width: 100% !important;
-      gap: 10px !important;
-      margin-bottom: 20px !important;
-  }
-  
-  .controls-row input, .inventory-controls input {
-      width: 100% !important;
-      min-height: 45px;
-  }
-  
-  .right-controls {
-      width: 100% !important;
-      display: flex !important;
-      justify-content: space-between !important;
-  }
-
-  /* Ajuste das Abas no topo da Direita */
-  .abas { 
-    display: grid !important; 
-    grid-template-columns: repeat(3, 1fr) !important; 
-    gap: 8px !important; 
+    display: flex !important;
+    flex-direction: column !important;
     width: 100% !important;
-    margin-bottom: 20px !important;
-  }
-  
-  .abas button {
-      padding: 10px 4px !important;
-      font-size: 11px !important;
-      background: #111 !important;
-      border: 1px solid #333 !important;
-      color: #999 !important;
-  }
-  .abas button.ativa {
-      border-color: #9c27b0 !important;
-      color: #fff !important;
-      background: #1a1a1a !important;
   }
 
-  /* Dice Results flutuante no mobile (Mais acima para não cobrir menu) */
-  #dice-results-container {
-    bottom: 70px !important; 
-    width: 90% !important;
-    left: 5% !important; 
-    right: auto !important;
-    transform: none !important;
+  /* Força os CARDS a ocuparem 100% da largura e não encolherem */
+  .card, .item-card, .hab-card, .spell-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important; /* Previne overflow */
+    margin: 0 0 10px 0 !important;
+    flex: 0 0 auto !important; /* Impede encolhimento */
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Corrige o título quebrando letra por letra */
+  .card-title {
+    white-space: normal !important;
+    word-break: break-word !important;
+  }
+
+  /* Ajustes dos controles (Barra de pesquisa) */
+  .controls-row, .inventory-controls, .abilities-controls {
+    display: flex !important;
+    flex-direction: column !important; /* Pesquisa em cima, botões embaixo */
+    width: 100% !important;
+    gap: 10px !important;
+    margin-bottom: 15px !important;
+  }
+  .controls-row input, .inventory-controls input {
+    width: 100% !important;
+    height: 45px !important;
+  }
+  .right-controls {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: space-between !important;
+  }
+
+  /* --- OUTRAS VIEWS (HEADER, STATUS, ETC) --- */
+  body[data-mobile-view="header"] header,
+  body[data-mobile-view="header"] .info-personagem {
+    display: flex !important; flex-direction: column; width: 100%;
+    padding: 20px 15px 120px 15px !important; gap: 15px !important;
+  }
+  .info-esquerda { width: 100%; display: flex; justify-content: center; }
+  .foto-personagem { width: 140px !important; height: 140px !important; }
+  .info-direita, .linha-info, .campo { width: 100% !important; display: flex !important; flex-direction: column !important; }
+  
+  body[data-mobile-view="status"] .lado-esquerdo {
+    display: flex !important; flex-direction: column; padding: 10px 0 150px 0 !important;
+  }
+  .hexagrama { transform: scale(0.85); margin: 0 auto; }
+  .linha-top, .linha-xp, .linha-metros, .status-row { flex-wrap: wrap; justify-content: center; width: 100%; gap: 10px; }
+
+  body[data-mobile-view="pericia"] .lado-centro {
+    display: block !important; padding: 10px 10px 150px 10px !important; width: 100% !important;
   }
 }
