@@ -1,7 +1,7 @@
 /* =============================================================
    JS/DireitaJS.js - INTEGRAÇÃO E LÓGICA PRINCIPAL
 ============================================================= */
-
+window.invSaveTimer = null;
 const API_URL = 'https://dandd-chan.onrender.com/api';
 
 // --- VARIÁVEIS GLOBAIS DE CATÁLOGO ---
@@ -538,7 +538,7 @@ function renderInventory() {
 
 
 /* =============================================================
-   CORREÇÃO 1: "2 Mãos" sem recarregar a tela (Correção do Lag/Volta no tempo)
+   CORREÇÃO 1: "2 Mãos" com Debounce (Evita voltar no tempo)
    Substitua a função bindInventoryCardEvents inteira por esta:
 ============================================================= */
 function bindInventoryCardEvents() {
@@ -550,12 +550,11 @@ function bindInventoryCardEvents() {
     const header = card.querySelector('.card-header');
 
     header.onclick = (ev) => {
-      // Ignora cliques em elementos interativos dentro do header
       if (ev.target.closest('.header-equip') ||
         ev.target.closest('.item-actions-footer') ||
         ev.target.closest('.dice-img') ||
         ev.target.closest('.spell-damage') ||
-        ev.target.closest('.versatile-check-inline')) { // Adicionado ignore para o toggle
+        ev.target.closest('.versatile-check-inline')) { 
         return;
       }
 
@@ -611,46 +610,47 @@ function bindInventoryCardEvents() {
     };
   });
 
-  // --- 3. ALTERNAR 2 MÃOS (CORRIGIDO: NÃO RECARREGA A ABA) ---
+  // --- 3. ALTERNAR 2 MÃOS (COM DEBOUNCE / TEMPO DE ESPERA) ---
   document.querySelectorAll('.toggle-versatile').forEach(ch => {
     ch.onchange = (ev) => {
       const rawId = ev.target.getAttribute('data-id');
       const item = findItemById(rawId);
       
       if (item) {
-        // 1. Atualiza memória
+        // 1. Atualiza memória local imediatamente
         item.useTwoHands = ev.target.checked;
         
-        // 2. Salva silenciosamente
-        saveStateToServer();
-
-        // 3. Atualiza APENAS o texto do dano visualmente (DOM Direto)
-        // Procura o span de dano dentro deste card específico
+        // 2. Atualiza APENAS o texto visualmente (DOM)
         const card = ev.target.closest('.item-card');
-        const damageSpan = card.querySelector('.spell-damage span'); // Onde fica o valor do dano
-        const valueSpanBody = card.querySelector('.item-data-row .white-val.bold'); // Onde fica o valor no corpo
+        const damageSpan = card.querySelector('.spell-damage span');
+        const valueSpanBody = card.querySelector('.item-data-row .white-val.bold');
 
-        // Define qual dano mostrar
         let baseDamage = item.damage;
         if (item.useTwoHands && item.damage2Hands) {
             baseDamage = item.damage2Hands;
         }
 
-        // Monta string visual (incluindo extras se houver)
         let dmgParts = [baseDamage];
         if (item.moreDmgList) {
             item.moreDmgList.forEach(m => { if (m.dano) dmgParts.push(m.dano); });
         }
         const finalDisplay = dmgParts.join(' + ') || '-';
 
-        // Aplica no DOM sem recarregar tudo
         if (damageSpan) damageSpan.textContent = finalDisplay;
         if (valueSpanBody) valueSpanBody.textContent = finalDisplay;
+
+        // 3. DEBOUNCE: Cancela salvamento anterior e agenda um novo
+        if (window.invSaveTimer) clearTimeout(window.invSaveTimer);
+        
+        window.invSaveTimer = setTimeout(() => {
+            console.log("Salvando estado do inventário após pausa...");
+            saveStateToServer();
+        }, 800); // Espera 800ms após o último clique para salvar
       }
     };
   });
 
- // --- 4. REMOVER ITEM ---
+  // --- 4. REMOVER ITEM ---
   document.querySelectorAll('.remover-item').forEach(el => {
     el.onclick = (ev) => {
       ev.preventDefault();
@@ -664,7 +664,6 @@ function bindInventoryCardEvents() {
         card.style.opacity = "0";
         setTimeout(() => card.remove(), 300);
       }
-
       if (typeof atualizarAC === 'function') atualizarAC();
     };
   });
@@ -678,7 +677,6 @@ function bindInventoryCardEvents() {
     };
   });
 }
-
 function bindInventorySectionEvents() {
   document.querySelectorAll('.toggle-inv-header').forEach(header => {
     header.addEventListener('click', (e) => {
@@ -4914,8 +4912,8 @@ document.addEventListener('click', function(e) {
       return;
     }
 
-       // -------------------------------------------------------------
-        // B. VERIFICA SE É ITEM (ARMA/INVENTÁRIO) - ATUALIZADO CRÍTICO
+      // -------------------------------------------------------------
+        // B. VERIFICA SE É ITEM (ARMA/INVENTÁRIO) - CRÍTICO CORRIGIDO (DADOS MULTIPLICADOS)
         // -------------------------------------------------------------
         const itemCard = e.target.closest('.item-card');
         if (itemCard) {
@@ -4925,7 +4923,6 @@ document.addEventListener('click', function(e) {
             if (item) {
                 // 1. ROLA ATAQUE
                 let attackRes = null;
-                // Critico Nativo do Item (ex: 19 ou 20) ou padrão 20
                 const margemCritico = parseInt(item.crit) || 20;
                 
                 const temAtributoDefinido = item.attackAttribute && item.attackAttribute !== 'Nenhum';
@@ -4936,7 +4933,7 @@ document.addEventListener('click', function(e) {
                     const d20 = Math.floor(Math.random() * 20) + 1;
                     const totalAttack = d20 + modAttr + profBonus + itemBonus;
                     
-                    // Verifica Crítico baseado na margem do item
+                    // Verifica Crítico
                     const isCrit = (d20 >= margemCritico); 
                     const isFumble = (d20 === 1);
                     const d20Html = isCrit ? `<span class="dice-roll-max">${d20}</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
@@ -4957,7 +4954,7 @@ document.addEventListener('click', function(e) {
                     };
                 }
 
-                // 2. ROLA DANO
+                // 2. PREPARA EXPRESSÃO DE DANO
                 let damageRes = null;
                 let expressionDano = "";
 
@@ -4978,7 +4975,7 @@ document.addEventListener('click', function(e) {
                 const bonusDano = parseInt(item.damageBonus) || 0;
                 const totalModDano = modDano + bonusDano;
 
-                // c) Monta Expressão
+                // c) Monta Expressão Original (ex: 1d8+3)
                 if (totalModDano !== 0) {
                     const sinal = totalModDano >= 0 ? '+' : '';
                     expressionDano = `${baseDano}${sinal}${totalModDano}`;
@@ -4988,35 +4985,56 @@ document.addEventListener('click', function(e) {
                 
                 // d) Rola o Dano
                 if (expressionDano && expressionDano !== '-' && expressionDano !== '0') { 
-                    damageRes = rollDiceExpression(expressionDano); 
-
-                    // === LÓGICA DE CRÍTICO MATEMÁTICO ===
-                    // Se houve ataque e foi Crítico (d20 >= margem)
+                    
+                    // === LÓGICA DE CRÍTICO: MULTIPLICAR DADOS ===
                     if (attackRes && attackRes.isCrit) {
-                        // 1. Ler o campo Multiplicador (ex: "2" ou "2+2")
+                        // 1. Ler o campo Multiplicador (ex: "2" ou "3+10")
                         const multStr = item.multiplicador ? String(item.multiplicador) : "2";
-                        
-                        // Separa por '+' (Ex: "3+10" vira ["3", "10"])
                         const partes = multStr.split('+');
-                        
-                        // Fator de multiplicação (Primeira parte, padrão 2)
-                        const fator = parseInt(partes[0]) || 2;
-                        
-                        // Bônus Extra (Segunda parte se existir, padrão 0)
-                        const bonusExtraCrit = partes.length > 1 ? (parseInt(partes[1]) || 0) : 0;
+                        const fator = parseInt(partes[0]) || 2; // Quantas vezes roda o dado
+                        const bonusExtraCrit = partes.length > 1 ? (parseInt(partes[1]) || 0) : 0; // Soma no final
 
-                        // Aplica a fórmula: (DanoRolado * Fator) + BonusExtra
-                        const danoOriginal = damageRes.total;
-                        const danoCriticoFinal = (danoOriginal * fator) + bonusExtraCrit;
+                        // 2. Analisar a expressão de dano (regex para achar XdY)
+                        // Procura algo como "1d8", "2d6", etc.
+                        const regexDice = /^(\d*)d(\d+)(.*)$/i;
+                        const match = expressionDano.match(regexDice);
 
-                        // Atualiza o objeto de resultado
-                        damageRes.total = danoCriticoFinal;
-                        damageRes.text = danoCriticoFinal.toString();
-                        damageRes.isCrit = true; // Marca visualmente como roxo
-                        
-                        // Detalhe no tooltip
-                        const textoBonus = bonusExtraCrit > 0 ? ` + ${bonusExtraCrit}` : '';
-                        damageRes.detail = `${danoOriginal} (Rolado) × ${fator}${textoBonus} = <strong>${danoCriticoFinal}</strong>`;
+                        if (match) {
+                            // É uma rolagem de dados (ex: 1d8+3)
+                            let qtdDados = match[1] === "" ? 1 : parseInt(match[1]); // ex: 1
+                            const faces = match[2]; // ex: 8
+                            const restoExpressao = match[3] || ""; // ex: "+3"
+
+                            // 3. Multiplica a quantidade de dados
+                            const novaQtd = qtdDados * fator; // ex: 1 * 2 = 2
+
+                            // 4. Monta nova expressão: 2d8 + 3 + BonusCrit
+                            let novaExpressao = `${novaQtd}d${faces}${restoExpressao}`;
+                            
+                            if (bonusExtraCrit > 0) {
+                                novaExpressao += `+${bonusExtraCrit}`;
+                            }
+
+                            damageRes = rollDiceExpression(novaExpressao);
+                            damageRes.isCrit = true;
+                            damageRes.label = `CRÍTICO (${fator}x DADOS)`;
+                        } else {
+                            // Fallback: Se não for dado (ex: dano fixo "5"), multiplica o valor
+                            let danoFixo = rollDiceExpression(expressionDano).total;
+                            let totalCrit = (danoFixo * fator) + bonusExtraCrit;
+                            
+                            damageRes = {
+                                total: totalCrit,
+                                text: totalCrit.toString(),
+                                detail: `${danoFixo} x ${fator} + ${bonusExtraCrit}`,
+                                isCrit: true,
+                                label: "DANO CRÍTICO"
+                            };
+                        }
+
+                    } else {
+                        // Dano Normal
+                        damageRes = rollDiceExpression(expressionDano); 
                     }
                 }
 
