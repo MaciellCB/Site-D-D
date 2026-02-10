@@ -2205,7 +2205,7 @@ function calculateNewDamage(baseDamage, scalingDamage, baseLevel, targetLevel) {
 
 
 /* =============================================================
-   CORREÇÃO 2: Magias (Expandir/Colapsar Resolvido)
+   CORREÇÃO DEFINITIVA: Magias (Expandir/Colapsar + ID Texto)
    Substitua a função bindSpellEvents inteira:
 ============================================================= */
 function bindSpellEvents() {
@@ -2227,7 +2227,7 @@ function bindSpellEvents() {
 
     // 3. Upcast Visual (Dropdown de Nível)
     document.querySelectorAll('.spell-slot-selector').forEach(sel => {
-        sel.onclick = (ev) => ev.stopPropagation(); // Impede fechar ao clicar
+        sel.onclick = (ev) => ev.stopPropagation(); 
         sel.onchange = (ev) => {
             ev.stopPropagation(); 
             const targetLvl = parseInt(ev.target.value);
@@ -2238,9 +2238,8 @@ function bindSpellEvents() {
             const card = ev.target.closest('.spell-card');
             const damageTextEl = card.querySelector('.dynamic-damage-text');
             
-            // Atualiza texto do dano se for escalável
-            if (damageTextEl && scaling && baseDmg) {
-                // (Assumindo que a função calculateNewDamage existe no seu código)
+            // Se tiver função de cálculo disponível, usa ela
+            if (damageTextEl && scaling && baseDmg && typeof calculateNewDamage === 'function') {
                 const newDmg = calculateNewDamage(baseDmg, scaling, baseLvl, targetLvl);
                 damageTextEl.textContent = newDmg;
                 damageTextEl.style.color = '#e040fb';
@@ -2248,17 +2247,17 @@ function bindSpellEvents() {
         };
     });
 
-    // 4. EVENTOS DOS CARDS
+    // 4. EVENTOS DOS CARDS (CORRIGIDO ID STRING)
     document.querySelectorAll('.spell-card').forEach(card => {
+        // PEGA O ID COMO STRING (NÃO NUMBER)
         const rawId = card.getAttribute('data-id');
         
         // A. EXPANDIR / COLAPSAR
-        // Selecionamos o header explicitamente
         const header = card.querySelector('.card-header');
         
         if (header) {
             header.onclick = (ev) => {
-                // Filtra cliques que NÃO devem expandir (Botões, Checkboxes, Selects)
+                // Filtra cliques que NÃO devem expandir
                 if (ev.target.closest('.spell-right') || 
                     ev.target.closest('.check-ativar') || 
                     ev.target.closest('.cast-controls') ||
@@ -2268,13 +2267,13 @@ function bindSpellEvents() {
                     return;
                 }
                 
-                // Busca a magia no State (usando String para segurança)
+                // Busca a magia comparando STRING com STRING
                 const s = state.spells.find(x => String(x.id) === String(rawId));
                 
                 if (s) {
                     s.expanded = !s.expanded;
                     
-                    // MANIPULAÇÃO DOM DIRETA (Para garantir resposta visual)
+                    // MANIPULAÇÃO DOM DIRETA
                     const body = card.querySelector('.card-body');
                     const caret = card.querySelector('.caret');
                     
@@ -2288,7 +2287,6 @@ function bindSpellEvents() {
                         if(caret) caret.textContent = '▸';
                     }
                     
-                    // Salva silenciosamente (sem re-renderizar tudo)
                     saveStateToServer();
                 }
             };
@@ -2304,7 +2302,7 @@ function bindSpellEvents() {
                     saveStateToServer();
                 }
             };
-            ch.onclick = ev => ev.stopPropagation(); // Impede propagação
+            ch.onclick = ev => ev.stopPropagation();
         }
     });
 
@@ -2312,13 +2310,14 @@ function bindSpellEvents() {
     document.querySelectorAll('.remover-spell').forEach(a => {
         a.onclick = (ev) => {
             ev.preventDefault();
-            const id = a.getAttribute('data-id'); // Pega como string
+            const id = a.getAttribute('data-id'); // String
             state.spells = state.spells.filter(s => String(s.id) !== String(id));
             
-            // Remove visualmente
             const card = a.closest('.spell-card');
-            if(card) card.remove();
-            
+            if(card) {
+                card.style.opacity = '0';
+                setTimeout(() => card.remove(), 200);
+            }
             saveStateToServer();
         };
     });
@@ -2327,7 +2326,7 @@ function bindSpellEvents() {
     document.querySelectorAll('.editar-spell').forEach(a => {
         a.onclick = (ev) => {
             ev.preventDefault();
-            const id = a.getAttribute('data-id');
+            const id = a.getAttribute('data-id'); // String
             const s = state.spells.find(x => String(x.id) === String(id));
             if (s) openSpellModal(s);
         };
