@@ -91,7 +91,7 @@ header {
 
 /* =============================================================
    4. MODO MOBILE (Telas < 768px)
-   (CORREÇÃO GERAL: Layout Vertical Forçado)
+   (CORREÇÃO DEFINITIVA: Layout Vertical, Padding e Cards)
 ============================================================= */
 @media (max-width: 768px) {
 
@@ -338,12 +338,14 @@ header {
     border-radius: 8px !important; border: 1px solid #333 !important; background: #111;
   }
 
-  /* === VIEW DIREITA (MAGIAS/INVENTÁRIO/HABILIDADES/COMBATE) - CORREÇÃO DE LAYOUT === */
+  /* === VIEW DIREITA (MAGIAS/INVENTÁRIO/HABILIDADES/COMBATE) - LAYOUT FINAL === */
   body[data-mobile-view="inventario"] .lado-direito {
     display: flex !important; 
     flex-direction: column !important;
-    /* Padding lateral para não colar na borda da tela */
-    padding: 15px 10px 150px 10px !important;
+    
+    /* 1. Padding lateral para desgrudar da borda */
+    padding: 15px 16px 150px 16px !important;
+    
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
@@ -363,6 +365,7 @@ header {
     color: #d05ce3 !important; font-weight: bold;
   }
 
+  /* 2. Container de Conteúdo */
   .conteudo { 
       padding: 0 !important; 
       width: 100% !important; 
@@ -370,10 +373,10 @@ header {
       box-sizing: border-box !important;
       display: flex !important;
       flex-direction: column !important;
+      align-items: stretch !important; /* Estica os filhos */
   }
 
-  /* CORREÇÃO DOS CONTAINERS INTERNOS (Listas de Cards) */
-  /* Força a direção vertical para que fiquem um embaixo do outro */
+  /* 3. Wrappers das Listas (Inventário, Habilidades, etc) */
   .inventory-list-wrapper, 
   .abilities-list, 
   .spells-list,
@@ -381,30 +384,57 @@ header {
   .section-content {
       width: 100% !important;
       max-width: 100% !important;
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 12px !important; /* Espaço vertical entre os cards */
-      box-sizing: border-box !important;
-  }
-
-  /* CORREÇÃO DOS CARDS (Para ocuparem toda a largura e ficarem empilhados) */
-  .card, .item-card, .hab-card, .spell-card {
-      width: 100% !important;
-      max-width: 100% !important;
-      margin: 0 0 12px 0 !important; /* Margem inferior para separar */
-      box-sizing: border-box !important;
+      
+      /* Força Layout Vertical */
       display: flex !important;
       flex-direction: column !important;
       
-      /* IMPORTANTE: Reseta flex-grow/shrink para evitar comportamento estranho */
-      flex: 0 0 auto !important; 
+      gap: 12px !important; /* Distância entre cards */
+      box-sizing: border-box !important;
   }
-  
-  /* Garante que os grupos de seção ocupem a largura toda */
+
+  /* 4. Headers de Seção (Ex: "Armas", "Ataques") */
   .inv-section-group, .hab-section-group {
       width: 100% !important;
-      margin-bottom: 15px !important;
-      display: block !important; /* Garante comportamento de bloco */
+      margin-bottom: 10px !important;
+      display: flex !important;
+      flex-direction: column !important;
+  }
+
+  .toggle-inv-header, .toggle-section-header {
+      width: 100% !important;
+      box-sizing: border-box !important;
+      background: #1e1e1e !important; /* Destaque leve */
+      border: 1px solid #333 !important;
+      border-radius: 6px !important;
+      padding: 12px !important;
+      margin-bottom: 8px !important;
+  }
+
+  /* 5. CARDS (Onde estava o problema) */
+  .card, .item-card, .hab-card, .spell-card {
+      /* Largura Total */
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      
+      /* Empilhamento */
+      margin: 0 !important; /* O gap do container pai cuida do espaço */
+      box-sizing: border-box !important;
+      
+      /* Layout Interno */
+      display: flex !important;
+      flex-direction: column !important;
+      
+      /* Reset de comportamento flex para garantir bloco */
+      flex: 0 0 auto !important; 
+      align-self: stretch !important;
+      
+      /* Visual mais robusto */
+      background: #141414 !important;
+      border: 1px solid #2a2a2a !important;
+      border-radius: 8px !important;
+      padding: 12px !important;
   }
 
   /* Ajuste Barra de Pesquisa e Controles */
@@ -420,6 +450,9 @@ header {
   .controls-row input, .inventory-controls input {
       flex: 1 !important;
       min-width: 150px !important;
+      background: #161616 !important;
+      border: 1px solid #333 !important;
+      padding: 10px !important;
   }
 
   /* Ajuste Específico para a Barra de Magias/Inventário (Pesquisa + DT) */
