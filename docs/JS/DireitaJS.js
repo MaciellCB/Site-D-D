@@ -2024,26 +2024,31 @@ function renderSpellSlotsHTML() {
   return html;
 }
 
-/* ---------------- EVENTOS DOS SLOTS (ATUALIZADO PARA FUNCIONAR EM QUALQUER ABA) ---------------- */
+/* =============================================================
+   CORREÇÃO 3: EVENTOS DE SLOTS (ANTI-CLIQUE DUPLO)
+============================================================= */
 function bindSlotEvents() {
   // 1. Toggle Minimizar
   const headerToggle = document.getElementById('headerSlotsToggle');
   if (headerToggle) {
-    headerToggle.addEventListener('click', (e) => {
+    // Removemos listener antigo clonando o elemento (truque de limpeza)
+    const newHeader = headerToggle.cloneNode(true);
+    headerToggle.parentNode.replaceChild(newHeader, headerToggle);
+    
+    newHeader.addEventListener('click', (e) => {
       if (e.target.closest('button')) return;
-
       state.isSlotsCollapsed = !state.isSlotsCollapsed;
-      saveStateToServer();
-
-      // ATUALIZADO: Renderiza a aba ativa atual, não apenas renderSpells()
-      renderActiveTab();
+      renderActiveTab(); // Renderiza localmente rápido
+      // Não precisa salvar no server apenas por colapsar visualmente
     });
   }
 
-  // 2. Botão Configurar (Engrenagem)
+  // 2. Botão Configurar
   const btnConfig = document.getElementById('btnConfigRes');
   if (btnConfig) {
-    btnConfig.addEventListener('click', (e) => {
+    const newBtn = btnConfig.cloneNode(true);
+    btnConfig.parentNode.replaceChild(newBtn, btnConfig);
+    newBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       openResourceConfigModal();
     });
@@ -2052,51 +2057,52 @@ function bindSlotEvents() {
   // 3. Descanso Longo
   const btnRest = document.getElementById('btnRestSlots');
   if (btnRest) {
-    btnRest.onclick = (e) => {
+    const newRest = btnRest.cloneNode(true);
+    btnRest.parentNode.replaceChild(newRest, btnRest);
+    newRest.onclick = (e) => {
       e.stopPropagation();
-      // Reseta todos os slots
-      for (let key in state.spellSlots) {
-        state.spellSlots[key].status = [];
+      if(confirm("Recuperar todos os espaços de magia e recursos?")) {
+          for (let key in state.spellSlots) {
+            state.spellSlots[key].status = []; // Limpa tudo
+          }
+          saveStateToServer();
+          renderActiveTab();
       }
-      saveStateToServer();
-
-      // ATUALIZADO: Renderiza a aba ativa atual
-      renderActiveTab();
     };
   }
 
-  // 4. Clique nas Bolinhas (Gastar/Recuperar)
-  // --- DENTRO DA FUNÇÃO bindSlotEvents() ---
-
+  // 4. CLIQUE NAS BOLINHAS (CORREÇÃO PRINCIPAL)
   document.querySelectorAll('.slot-pip').forEach(pip => {
-    pip.addEventListener('click', (e) => {
+    pip.onclick = (e) => {
+      e.preventDefault();
       e.stopPropagation();
-      
-      // 1. ATIVA A BLINDAGEM GLOBAL
+      e.stopImmediatePropagation(); // Impede disparo duplo
+
+      // Ativa o escudo para que o servidor não reverta essa mudança
       window.travarTelaParaClique();
 
       const key = pip.dataset.key;
       const idx = parseInt(pip.dataset.idx);
 
+      // Garante estrutura
       if (!state.spellSlots[key]) state.spellSlots[key] = { status: [] };
       if (!state.spellSlots[key].status) state.spellSlots[key].status = [];
 
-      // 2. Inverte o estado localmente
-      state.spellSlots[key].status[idx] = !state.spellSlots[key].status[idx];
+      // Inverte valor
+      const currentVal = !!state.spellSlots[key].status[idx];
+      state.spellSlots[key].status[idx] = !currentVal;
 
-      // 3. Força a cor a mudar INSTANTANEAMENTE via CSS
-      const isNowSpent = state.spellSlots[key].status[idx];
-      if (isNowSpent) {
+      // Feedback Visual INSTANTÂNEO (Antes de salvar)
+      if (!currentVal) { // Se estava false, virou true (gastou)
         pip.classList.remove('available');
         pip.classList.add('used');
-      } else {
+      } else { // Recuperou
         pip.classList.remove('used');
         pip.classList.add('available');
       }
 
-      // 4. Salva no fundo sem travar a tela
-      saveStateToServer(); 
-    });
+      saveStateToServer();
+    };
   });
 }
 
@@ -5379,56 +5385,53 @@ document.addEventListener('click', function(e) {
 });
 
 /* =============================================================
-   NOVA FUNÇÃO: MESCLAR DADOS SEM PERDER O VISUAL
-   Coloque no final do DireitaJS.js
+   CORREÇÃO 2: MESCLAGEM INTELIGENTE (PROTEGE SLOTS)
 ============================================================= */
 window.mesclarEstadoVisual = function (estadoAntigo, estadoNovo) {
-  // 1. Preserva Aba Ativa (Prioridade: LocalStorage > Memória atual)
+  // 1. Preserva Aba Ativa
   if (state.nome) {
     const savedTab = localStorage.getItem(`activeTab_${state.nome}`);
     if (savedTab) estadoNovo.activeTab = savedTab;
     else if (estadoAntigo.activeTab) estadoNovo.activeTab = estadoAntigo.activeTab;
   }
 
-  // 2. Preserva Seções Colapsadas (Habilidades/Inventário)
+  // 2. PROTEÇÃO CONTRA "VOLTA NO TEMPO" DOS SLOTS
+  // Se o usuário clicou recentemente (isUserInteracting), ignoramos 
+  // a atualização de slots vinda do servidor e mantemos a local.
+  if (window.isUserInteracting && estadoAntigo.spellSlots) {
+      console.log("Protegendo slots locais contra sobrescrita do servidor...");
+      estadoNovo.spellSlots = JSON.parse(JSON.stringify(estadoAntigo.spellSlots));
+  }
+
+  // 3. Preserva Seções Colapsadas
   if (estadoAntigo.collapsedSections) {
     estadoNovo.collapsedSections = { ...estadoAntigo.collapsedSections };
   }
 
-  // 3. Preserva Itens Expandidos (Inventário)
+  // 4. Preserva Itens Expandidos (Inventário)
   if (estadoAntigo.inventory && estadoNovo.inventory) {
     estadoNovo.inventory.forEach(newItem => {
-      // Busca o item correspondente no estado antigo pelo ID
       const oldItem = estadoAntigo.inventory.find(old => String(old.id) === String(newItem.id));
-      if (oldItem) {
-        newItem.expanded = oldItem.expanded; // Mantém o estado visual local
-      } else {
-        newItem.expanded = false; // Se é novo, começa fechado
-      }
+      if (oldItem) newItem.expanded = oldItem.expanded;
+      else newItem.expanded = false;
     });
   }
 
-  // 4. Preserva Magias Expandidas
+  // 5. Preserva Magias Expandidas
   if (estadoAntigo.spells && estadoNovo.spells) {
     estadoNovo.spells.forEach(newSpell => {
       const oldSpell = estadoAntigo.spells.find(old => String(old.id) === String(newSpell.id));
-      if (oldSpell) {
-        newSpell.expanded = oldSpell.expanded;
-      } else {
-        newSpell.expanded = false;
-      }
+      if (oldSpell) newSpell.expanded = oldSpell.expanded;
+      else newSpell.expanded = false;
     });
   }
 
-  // 5. Preserva Habilidades Expandidas
+  // 6. Preserva Habilidades Expandidas
   if (estadoAntigo.abilities && estadoNovo.abilities) {
     estadoNovo.abilities.forEach(newHab => {
       const oldHab = estadoAntigo.abilities.find(old => String(old.id) === String(newHab.id));
-      if (oldHab) {
-        newHab.expanded = oldHab.expanded;
-      } else {
-        newHab.expanded = false;
-      }
+      if (oldHab) newHab.expanded = oldHab.expanded;
+      else newHab.expanded = false;
     });
   }
 
@@ -5436,34 +5439,38 @@ window.mesclarEstadoVisual = function (estadoAntigo, estadoNovo) {
 }
 
 /* =============================================================
-   CORREÇÃO: CONSUMO DE SLOT COM AVISOS E TRAVA
+   CORREÇÃO 1: CONSUMO DE SLOT BLINDADO (SEM GASTO DUPLO)
 ============================================================= */
+window.isConsumingSlot = false; // Trava global
+
 function consumirSlotSeNecessario(selectedLevel) {
-    // 0 = Truque (não gasta nada)
+    // 1. Bloqueio de Segurança (Debounce)
+    if (window.isConsumingSlot) return; 
     if (!selectedLevel || selectedLevel <= 0) return;
+
+    window.isConsumingSlot = true; // Ativa a trava
+
+    // Libera a trava após 500ms (tempo suficiente para animação e salvar)
+    setTimeout(() => { window.isConsumingSlot = false; }, 500);
 
     const key = String(selectedLevel);
     let slotGasto = false;
     let tipoGasto = "";
 
-    // 1. Tenta Slot Normal (Ex: "1", "2", "3"...)
-    // Verifica se a chave existe e se tem o array de status
+    // A. Tenta Slot Normal
     if (state.spellSlots[key] && Array.isArray(state.spellSlots[key].status)) {
-        // Encontra o primeiro índice que é 'false' (ou seja, disponível/não usado)
+        // Pega o primeiro false (disponível)
         const idx = state.spellSlots[key].status.indexOf(false);
-        
         if (idx !== -1) {
-            state.spellSlots[key].status[idx] = true; // Marca como usado
+            state.spellSlots[key].status[idx] = true; // Marca usado
             slotGasto = true;
             tipoGasto = `${selectedLevel}º Círculo`;
         }
     }
 
-    // 2. Se não conseguiu slot normal, tenta Slot de Pacto (Bruxo/Blood Hunter)
+    // B. Se falhar, tenta Pacto (Bruxo)
     if (!slotGasto && state.spellSlots['pact'] && Array.isArray(state.spellSlots['pact'].status)) {
          const pactLvl = state.spellSlots['pact'].level || 0;
-         
-         // Só gasta pacto se o nível do pacto for igual ou maior que a magia pede
          if (pactLvl >= selectedLevel) {
              const idx = state.spellSlots['pact'].status.indexOf(false);
              if (idx !== -1) {
@@ -5475,17 +5482,15 @@ function consumirSlotSeNecessario(selectedLevel) {
     }
 
     if (slotGasto) {
+        // Salva e atualiza imediatamente
         saveStateToServer();
-        renderActiveTab(); // Atualiza visualmente as bolinhas
+        renderActiveTab(); 
         
-        // Feedback Visual (Sucesso)
         if (typeof exibirAvisoTemporario === 'function') {
             exibirAvisoTemporario(`Gasto: Espaço de ${tipoGasto}`);
         }
     } else {
-        // AVISO DE FALTA DE SLOT (Correção solicitada)
-        const msg = `ATENÇÃO: Você não tem espaços de ${selectedLevel}º Círculo (ou Pacto equivalente) disponíveis!`;
-        
+        const msg = `Sem espaços de ${selectedLevel}º Círculo disponíveis!`;
         if (typeof exibirAvisoTemporario === 'function') {
             exibirAvisoTemporario(msg);
         } else {
