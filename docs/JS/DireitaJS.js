@@ -4496,17 +4496,61 @@ function initAbas() {
 }
 
 /* =============================================================
-   INICIALIZAÇÃO (FINAL DO ARQUIVO DIREITA.JS)
+   LÓGICA DO BOTÃO DE INICIATIVA (ESQUERDA)
 ============================================================= */
-
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Inicializa os listeners das abas
-  initAbas();
+    const btnIni = document.getElementById('btn-roll-ini');
+    if (btnIni) {
+        
+        const getExpr = () => {
+            const bonus = parseInt(document.getElementById('iniciativaBonus').value) || 0;
+            const dexScore = state.atributos?.n2 || 10;
+            const dexMod = Math.floor((parseInt(dexScore) - 10) / 2);
+            return `1d20 + ${dexMod + bonus}`;
+        };
 
-  // 2. Força uma renderização inicial se já tivermos dados
-  if (state && state.niveisClasses) {
-    renderActiveTab();
-  }
+        // 1. CLIQUE ESQUERDO: Rola Normal + Adiciona ao Tracker
+        btnIni.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Animação
+            btnIni.style.transform = "scale(0.95)";
+            setTimeout(() => btnIni.style.transform = "scale(1)", 100);
+
+            const expressao = getExpr();
+
+            // Rola direto
+            if (typeof rollDiceExpression === 'function' && typeof showCombatResults === 'function') {
+                // Rola normal (0 vantagem, 0 desvantagem)
+                const res = (typeof rollDiceWithAdvantage === 'function') 
+                    ? rollDiceWithAdvantage(expressao, 0, 0)
+                    : rollDiceExpression(expressao);
+                
+                showCombatResults("Iniciativa", res, null);
+
+                // --- ADICIONA DIRETO AO TRACKER ---
+                if (typeof window.adicionarAoTrackerExterno === 'function') {
+                    window.adicionarAoTrackerExterno(res.total);
+                }
+            }
+        });
+
+        // 2. BOTÃO DIREITO / SEGURAR: Abre Menu
+        if (typeof window.addLongPressListener === 'function') {
+            window.addLongPressListener(btnIni, (e) => {
+                const expressao = getExpr();
+                if (typeof window.abrirMenuRolagem === 'function') {
+                    window.abrirMenuRolagem(e, "Iniciativa", expressao, null);
+                }
+            });
+        } else {
+            // Fallback
+            btnIni.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                const expressao = getExpr();
+                window.abrirMenuRolagem(e, "Iniciativa", expressao, null);
+            });
+        }
+    }
 });
 function escapeHtml(str) {
   if (str === 0) return '0';
@@ -5729,7 +5773,7 @@ function rollDiceWithAdvantage(expression, advCount, disCount) {
 // 2. Variáveis Globais de Estado do Menu
 let menuState = { adv: 0, dis: 0 };
 
-// 3. Criar Popup Arrastável (DESIGN FINAL: SEM BOTÃO NORMAL, BOTÃO RODAR COM ÍCONE)
+// 3. Criar Popup Arrastável (DESIGN FINAL: SEM BOTÃO NORMAL EM CIMA)
 window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage = null) {
     if(e.preventDefault) e.preventDefault();
     if(e.stopPropagation) e.stopPropagation();
@@ -5751,7 +5795,7 @@ window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage
     menu.style.left = `${posX}px`;
     menu.style.top = `${posY}px`;
 
-    // HTML da imagem do dado para reuso
+    // Imagem do dado para o botão
     const imgDado = `<img src="img/imagem-no-site/dado.png" alt="dado" style="width:18px; height:18px; vertical-align:middle; margin-bottom:2px;" />`;
 
     menu.innerHTML = `
@@ -5777,7 +5821,7 @@ window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage
             </div>
 
             <button class="btn-rodar-final" id="btn-executar-rolagem">
-                RODAR ${imgDado}
+                Rodar ${imgDado}
             </button>
         </div>
     `;
@@ -5795,7 +5839,6 @@ window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage
     };
 
     const executar = () => {
-        // Se ambos forem 0, funciona como "Normal" automaticamente
         let adv = menuState.adv;
         let dis = menuState.dis;
         let attackRes = null;
@@ -5823,6 +5866,14 @@ window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage
         }
 
         showCombatResults(titulo, attackRes, damageRes);
+        
+        // SE FOR INICIATIVA, MANDA PRO TRACKER
+        if (titulo === "Iniciativa" && attackRes) {
+             if (typeof window.adicionarAoTrackerExterno === 'function') {
+                window.adicionarAoTrackerExterno(attackRes.total);
+            }
+        }
+
         menu.remove();
         document.removeEventListener('mousedown', closeMenuOutside);
     };

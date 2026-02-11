@@ -2981,34 +2981,74 @@ window.adicionarAoHistorico = function(titulo, ataqueResult, danoResult) {
 
 
 
-
 /* =============================================================
-   SISTEMA DE TRACKER DE INICIATIVA & COLAR IMAGEM
+   SISTEMA DE TRACKER DE INICIATIVA
 ============================================================= */
-
-// Estado local do tracker (não precisa ir pro servidor necessariamente, 
-// a menos que queira sincronizar entre jogadores, mas o pedido foi visual)
 let trackerList = [];
 let tempImgSrc = "img/imagem-no-site/dado.png";
 
-// 1. Alternar Visibilidade
+// 1. Função chamada pela EsquerdaJS ao rolar iniciativa
+window.adicionarAoTrackerExterno = function(valor) {
+    const nome = state.personagem || state.nome || "Personagem";
+    const foto = (state.fotoPerfil && state.fotoPerfil.length > 50) 
+                 ? state.fotoPerfil 
+                 : "img/imagem-no-site/personagem.png";
+
+    // Verifica se já existe para atualizar
+    const existingIdx = trackerList.findIndex(x => x.name === nome);
+    
+    if (existingIdx >= 0) {
+        trackerList[existingIdx].val = valor;
+        trackerList[existingIdx].img = foto;
+        // Move para o topo visualmente ou reordena depois? Por enquanto só atualiza.
+    } else {
+        trackerList.push({
+            id: Date.now(),
+            name: nome,
+            val: valor,
+            img: foto
+        });
+    }
+    
+    // Abre se estiver fechado
+    const el = document.getElementById('tracker-overlay');
+    if (el && el.style.display !== 'flex') {
+        el.style.display = 'flex';
+    }
+    
+    renderTracker();
+    // Ordena automático ao adicionar? Geralmente é bom.
+    sortTracker(); 
+};
+
+// 2. Toggle Visibilidade
 window.toggleTracker = function() {
     const el = document.getElementById('tracker-overlay');
     if (el.style.display === 'flex') {
         el.style.display = 'none';
     } else {
         el.style.display = 'flex';
-        // Tornar arrastável
+        // Torna arrastável usando handle
         if(typeof window.tornarPainelArrastavel === 'function') {
-            // Reutiliza a função de arrastar da EsquerdaJS se disponível, 
-            // ou usa a lógica local abaixo
-            tornarElementoArrastavel(el, document.getElementById('tracker-handle'));
+             // Usa lógica simples se a complexa falhar
+             const handle = document.getElementById('tracker-handle');
+             let isDown = false;
+             let offset = [0,0];
+             handle.onmousedown = (e) => { isDown = true; offset = [el.offsetLeft - e.clientX, el.offsetTop - e.clientY]; };
+             document.addEventListener('mouseup', () => { isDown = false; });
+             document.addEventListener('mousemove', (e) => {
+                 if (isDown) {
+                     e.preventDefault();
+                     el.style.left = (e.clientX + offset[0]) + 'px';
+                     el.style.top  = (e.clientY + offset[1]) + 'px';
+                 }
+             });
         }
         document.getElementById('popup-config-foto').style.display = 'none';
     }
 };
 
-// 2. Adicionar Mob
+// 3. Adicionar Manualmente (Botão +)
 window.addMobToTracker = function() {
     const nameInput = document.getElementById('new-mob-name');
     const valInput = document.getElementById('new-mob-val');
@@ -3025,7 +3065,7 @@ window.addMobToTracker = function() {
 
     renderTracker();
     
-    // Reset inputs
+    // Reset
     nameInput.value = "";
     valInput.value = "";
     tempImgSrc = "img/imagem-no-site/dado.png";
@@ -3033,25 +3073,34 @@ window.addMobToTracker = function() {
     nameInput.focus();
 };
 
-// 3. Renderizar Lista
+// 4. Renderizar
+// --- No final do HeaderJS.js, onde está a lógica do Tracker ---
+
 function renderTracker() {
     const container = document.getElementById('tracker-list');
+    if(!container) return;
     container.innerHTML = "";
 
-    // Adiciona o jogador atual automaticamente se não estiver
-    // (Opcional, mas útil)
+    // Ordena decrescente
+    trackerList.sort((a, b) => b.val - a.val);
 
     trackerList.forEach(item => {
         const div = document.createElement('div');
         div.className = 'init-row';
         div.innerHTML = `
             <div class="init-val">${item.val}</div>
-            <img src="${item.img}" class="init-img">
+            <img src="${item.img}" class="init-img" onclick="changeMobImage(${item.id})" title="Trocar Imagem">
             <div class="init-name">${item.name}</div>
-            <button onclick="removeTrackerItem(${item.id})" style="background:none; border:none; color:#f44336; cursor:pointer;">×</button>
+            <button onclick="removeTrackerItem(${item.id})" style="background:none; border:none; color:#f44336; cursor:pointer; font-weight:bold;">×</button>
         `;
         container.appendChild(div);
     });
+
+    // --- NOVO: ENVIA ATUALIZAÇÃO VIA SOCKET PARA O OBS ---
+    if (typeof socket !== 'undefined') {
+        // Emite um evento personalizado 'update_tracker' com a lista completa
+        socket.emit('update_tracker', trackerList);
+    }
 }
 
 window.removeTrackerItem = function(id) {
@@ -3060,24 +3109,67 @@ window.removeTrackerItem = function(id) {
 };
 
 window.limparTracker = function() {
-    if(confirm("Limpar todas as iniciativas?")) {
+    if(confirm("Limpar lista?")) {
         trackerList = [];
         renderTracker();
     }
 };
 
 window.sortTracker = function() {
-    trackerList.sort((a, b) => b.val - a.val);
-    renderTracker();
+    renderTracker(); // Já ordena na renderização
 };
 
-// 4. Lógica de Colar Imagem (Paste)
-// Colar imagem no Profile ao passar o mouse e apertar Ctrl+V
-document.addEventListener('paste', function(e) {
-    const imgProfile = document.getElementById('img-personagem-visual');
-    const isHoveringProfile = imgProfile.matches(':hover'); // Funciona na maioria dos browsers modernos
+// 5. Trocar imagem do Mob (Upload/Input Oculto)
+// Cria input oculto dinamicamente
+const fileInputTracker = document.createElement('input');
+fileInputTracker.type = 'file';
+fileInputTracker.accept = 'image/*';
+fileInputTracker.style.display = 'none';
+document.body.appendChild(fileInputTracker);
 
-    if (isHoveringProfile) {
+window.changeMobImage = function(id) {
+    fileInputTracker.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const item = trackerList.find(x => x.id === id);
+                if (item) {
+                    item.img = ev.target.result;
+                    renderTracker();
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    fileInputTracker.click();
+};
+
+// Clique na imagem de preview para upload (Adicionar Novo)
+document.addEventListener('DOMContentLoaded', () => {
+    const preview = document.getElementById('new-mob-preview');
+    if(preview) {
+        preview.onclick = () => {
+             fileInputTracker.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        tempImgSrc = ev.target.result;
+                        preview.src = tempImgSrc;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            fileInputTracker.click();
+        };
+    }
+});
+
+// 6. Colar Imagem (Paste) no input de nome
+document.addEventListener('paste', function(e) {
+    // Se o foco estiver no input de nome do tracker
+    if (document.activeElement && document.activeElement.id === 'new-mob-name') {
         const items = (e.clipboardData || e.originalEvent.clipboardData).items;
         for (let index in items) {
             const item = items[index];
@@ -3085,10 +3177,27 @@ document.addEventListener('paste', function(e) {
                 const blob = item.getAsFile();
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    // Atualiza visual
+                    tempImgSrc = event.target.result;
+                    const el = document.getElementById('new-mob-preview');
+                    if(el) el.src = tempImgSrc;
+                };
+                reader.readAsDataURL(blob);
+                e.preventDefault(); 
+            }
+        }
+    }
+    
+    // Lógica para a foto do personagem principal (Header)
+    const imgProfile = document.getElementById('img-personagem-visual');
+    if (imgProfile && imgProfile.matches(':hover')) {
+         const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+         for (let index in items) {
+            const item = items[index];
+            if (item.kind === 'file' && item.type.includes('image/')) {
+                const blob = item.getAsFile();
+                const reader = new FileReader();
+                reader.onload = function(event) {
                     imgProfile.src = event.target.result;
-                    
-                    // Salva no State
                     if(typeof state !== 'undefined') {
                         state.fotoPerfil = event.target.result;
                         if(typeof saveStateToServer === 'function') saveStateToServer();
@@ -3096,36 +3205,6 @@ document.addEventListener('paste', function(e) {
                 };
                 reader.readAsDataURL(blob);
             }
-        }
+         }
     }
 });
-
-
-// 5. Função de Arrastar Local (Caso não tenha importado a outra)
-function tornarElementoArrastavel(elmnt, handle) {
-    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-    handle.onmousedown = dragMouseDown;
-
-    function dragMouseDown(e) {
-        e.preventDefault();
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        document.onmouseup = closeDragElement;
-        document.onmousemove = elementDrag;
-    }
-
-    function elementDrag(e) {
-        e.preventDefault();
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-    }
-
-    function closeDragElement() {
-        document.onmouseup = null;
-        document.onmousemove = null;
-    }
-}

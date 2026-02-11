@@ -1377,3 +1377,63 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+
+
+/* =============================================================
+   LÓGICA DO BOTÃO DE INICIATIVA (ESQUERDA)
+============================================================= */
+document.addEventListener('DOMContentLoaded', () => {
+    const btnIni = document.getElementById('btn-roll-ini');
+    if (btnIni) {
+        
+        const getExpr = () => {
+            const bonus = parseInt(document.getElementById('iniciativaBonus').value) || 0;
+            const dexScore = state.atributos?.n2 || 10;
+            const dexMod = Math.floor((parseInt(dexScore) - 10) / 2);
+            return `1d20 + ${dexMod + bonus}`;
+        };
+
+        // 1. CLIQUE ESQUERDO: Rola Normal + Adiciona ao Tracker
+        btnIni.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Animação
+            btnIni.style.transform = "scale(0.95)";
+            setTimeout(() => btnIni.style.transform = "scale(1)", 100);
+
+            const expressao = getExpr();
+
+            // Rola direto
+            if (typeof rollDiceExpression === 'function' && typeof showCombatResults === 'function') {
+                // Rola normal (0 vantagem, 0 desvantagem)
+                const res = (typeof rollDiceWithAdvantage === 'function') 
+                    ? rollDiceWithAdvantage(expressao, 0, 0)
+                    : rollDiceExpression(expressao);
+                
+                showCombatResults("Iniciativa", res, null);
+
+                // --- ADICIONA DIRETO AO TRACKER ---
+                if (typeof window.adicionarAoTrackerExterno === 'function') {
+                    window.adicionarAoTrackerExterno(res.total);
+                }
+            }
+        });
+
+        // 2. BOTÃO DIREITO / SEGURAR: Abre Menu
+        if (typeof window.addLongPressListener === 'function') {
+            window.addLongPressListener(btnIni, (e) => {
+                const expressao = getExpr();
+                if (typeof window.abrirMenuRolagem === 'function') {
+                    window.abrirMenuRolagem(e, "Iniciativa", expressao, null);
+                }
+            });
+        } else {
+            // Fallback
+            btnIni.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                const expressao = getExpr();
+                window.abrirMenuRolagem(e, "Iniciativa", expressao, null);
+            });
+        }
+    }
+});

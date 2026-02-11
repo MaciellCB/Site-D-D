@@ -60,6 +60,10 @@ io.on('connection', (socket) => {
     socket.on('dados_rolados', (data) => {
         io.emit('dados_rolados', data); 
     });
+socket.on('update_tracker', (lista) => {
+        // Envia para todos os conectados (incluindo a página do OBS)
+        io.emit('sync_tracker_update', lista);
+    });
 });
 
 // =================================================================

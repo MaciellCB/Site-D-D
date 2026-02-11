@@ -393,58 +393,102 @@
     }
 
     // Cria o HTML de uma coluna/pasta
-    function criarElementoPasta(titulo, itens, id, permiteDeletar) {
-        const col = document.createElement('div');
-        col.className = 'folder-container';
-        col.dataset.id = id;
+   // --- NO ARQUIVO MESTRE.HTML (Dentro da tag <script>) ---
 
-        // Cabeçalho
-        const header = document.createElement('div');
-        header.className = 'folder-header';
-        header.innerHTML = `<span>${titulo}</span>`;
-        
-        if (permiteDeletar) {
-            const btnDel = document.createElement('button');
-            btnDel.className = 'btn-del-folder';
-            btnDel.innerHTML = '✕'; 
-            btnDel.title = 'Excluir Pasta';
-            // Chama o novo modal de deletar pasta
-            btnDel.onclick = () => abrirModalDeletarPasta(id);
-            header.appendChild(btnDel);
-        }
-        col.appendChild(header);
+// --- DENTRO DO MESTRE.HTML ---
 
-        // Conteúdo
-        const content = document.createElement('div');
-        content.className = 'folder-content';
-        
-        // Renderizar Cards
-        itens.forEach(nome => {
-            if (todosPersonagens.includes(nome)) {
-                const card = criarCardHTML(nome);
-                content.appendChild(card);
-            }
-        });
+function criarElementoPasta(titulo, itens, id, permiteDeletar) {
+    const col = document.createElement('div');
+    col.className = 'folder-container';
+    col.dataset.id = id;
 
-        col.appendChild(content);
-
-        // LÓGICA SORTABLE (ARRASTAR)
-        new Sortable(content, {
-            group: 'shared', // Permite mover entre listas
-            animation: 150,
-            ghostClass: 'img-loading',
-            delay: 100, // Leve delay para evitar arraste acidental no mobile
-            delayOnTouchOnly: true,
-            onEnd: function (evt) {
-                // Salva assim que soltar
-                salvarNovoLayout();
-            }
-        });
-
-        return col;
+    // Cabeçalho
+    const header = document.createElement('div');
+    header.className = 'folder-header';
+    header.innerHTML = `<span>${titulo}</span>`;
+    
+    if (permiteDeletar) {
+        const btnDel = document.createElement('button');
+        btnDel.className = 'btn-del-folder';
+        btnDel.innerHTML = '✕'; 
+        btnDel.title = 'Excluir Pasta';
+        // Chama modal de deletar pasta (certifique-se que essa função existe no seu código)
+        btnDel.onclick = () => abrirModalDeletarPasta(id);
+        header.appendChild(btnDel);
     }
+    col.appendChild(header);
 
-    // Cria o HTML do Card de Personagem
+    // Conteúdo (Lista de Cards)
+    const content = document.createElement('div');
+    content.className = 'folder-content';
+    
+    itens.forEach(nome => {
+        if (todosPersonagens.includes(nome)) {
+            const card = criarCardHTML(nome);
+            content.appendChild(card);
+        }
+    });
+
+    col.appendChild(content);
+
+    // Sortable (Arrastar e Soltar)
+    new Sortable(content, {
+        group: 'shared',
+        animation: 150,
+        ghostClass: 'img-loading',
+        delay: 100,
+        delayOnTouchOnly: true,
+        onEnd: function (evt) { salvarNovoLayout(); }
+    });
+
+    // --- NOVO: RODAPÉ COM BOTÃO OBS ---
+    const footer = document.createElement('div');
+    footer.style.cssText = `
+        padding: 10px;
+        background: #1a1a1a;
+        border-top: 1px solid #333;
+        border-radius: 0 0 8px 8px;
+    `;
+
+    const btnObs = document.createElement('button');
+    btnObs.innerHTML = "🎥 Iniciativa OBS";
+    btnObs.title = "Abrir janela de iniciativa apenas para este grupo";
+    btnObs.style.cssText = `
+        width: 100%;
+        padding: 8px;
+        background: linear-gradient(45deg, #1f1f1f, #2a2a2a);
+        border: 1px solid #9c27b0;
+        color: #e0aaff;
+        border-radius: 4px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 11px;
+        text-transform: uppercase;
+        transition: 0.2s;
+    `;
+
+    btnObs.onmouseover = () => { btnObs.style.background = "#9c27b0"; btnObs.style.color = "#fff"; };
+    btnObs.onmouseout = () => { btnObs.style.background = "linear-gradient(45deg, #1f1f1f, #2a2a2a)"; btnObs.style.color = "#e0aaff"; };
+
+    // AÇÃO: Abrir a janela de OBS filtrada
+    btnObs.onclick = () => {
+        // Coleta os nomes que estão VISUALMENTE nesta pasta agora
+        const cards = content.querySelectorAll('.card-personagem');
+        const nomesMembros = Array.from(cards).map(c => c.dataset.nome).join(',');
+        
+        // Abre a janela passando os membros na URL
+        const winId = `OBS_INIT_${id}`;
+        // Tamanho ajustado para caber a lista lateral
+        window.open(`iniciativa_obs.html?grupo=${encodeURIComponent(titulo)}&membros=${encodeURIComponent(nomesMembros)}`, winId, "width=360,height=600");
+    };
+
+    footer.appendChild(btnObs);
+    col.appendChild(footer);
+
+    return col;
+}
+
+// Cria o HTML do Card de Personagem
     function criarCardHTML(nome) {
         const card = document.createElement('div');
         card.className = 'card-personagem';

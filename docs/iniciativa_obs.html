@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciativa OBS</title>
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;900&display=swap" rel="stylesheet">
+    <style>
+        /* Fundo transparente para Chroma Key (Verde) */
+        body, html { 
+            margin: 0; padding: 10px; 
+            background-color: #00f91f; 
+            font-family: 'Roboto', sans-serif; 
+            overflow: hidden; 
+        }
+
+        #tracker-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 320px;
+            transition: all 0.5s ease;
+        }
+
+        /* Card Base */
+        .init-card {
+            display: flex;
+            align-items: center;
+            background: #111;
+            border-radius: 50px 10px 10px 50px; /* Arredondado na esquerda */
+            padding: 5px;
+            color: #fff;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.6);
+            border: 2px solid #333;
+            transform: translateX(-100%); /* Animação de entrada */
+            animation: slideIn 0.5s forwards;
+            position: relative;
+        }
+
+        @keyframes slideIn {
+            to { transform: translateX(0); }
+        }
+
+        /* Estilo Herói (Grupo Selecionado) */
+        .is-hero {
+            border-color: #9c27b0;
+            background: linear-gradient(90deg, #1a051a, #111);
+        }
+        
+        .is-hero .init-val {
+            background: #9c27b0;
+            color: #fff;
+            box-shadow: 0 0 10px #9c27b0;
+        }
+
+        /* Estilo Inimigo/Outro */
+        .is-enemy {
+            border-color: #b71c1c;
+            background: linear-gradient(90deg, #1a0505, #111);
+        }
+
+        .is-enemy .init-val {
+            background: #b71c1c;
+            color: #fff;
+            box-shadow: 0 0 10px #b71c1c;
+        }
+
+        /* Valor da Iniciativa (Bolinha) */
+        .init-val {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 900;
+            z-index: 3;
+            border: 3px solid #fff;
+        }
+
+        /* Imagem */
+        .init-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: -15px; /* Sobreposição */
+            border: 2px solid #333;
+            background: #000;
+            z-index: 2;
+        }
+
+        /* Nome */
+        .init-name {
+            margin-left: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 180px;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="tracker-container">
+        </div>
+
+    <script>
+        const socket = io('https://dandd-chan.onrender.com');
+        const params = new URLSearchParams(window.location.search);
+        
+        // Pega os membros do grupo passados na URL e converte para minúsculo para comparação
+        // Ex: ?membros=Aragorn,Legolas
+        const rawMembros = params.get('membros') || "";
+        const listaMembros = rawMembros.toLowerCase().split(',').map(s => s.trim());
+        const nomeGrupo = params.get('grupo') || "Combate";
+
+        document.title = `Iniciativa - ${nomeGrupo}`;
+
+        socket.on('sync_tracker_update', (lista) => {
+            renderizar(lista);
+        });
+
+        function renderizar(lista) {
+            const container = document.getElementById('tracker-container');
+            container.innerHTML = "";
+
+            // Ordena (Maior para menor)
+            lista.sort((a, b) => b.val - a.val);
+
+            lista.forEach((item, index) => {
+                const nomeItem = item.name.toLowerCase().trim();
+                
+                // Lógica de Identificação:
+                // Se o nome está na lista do grupo, é Herói.
+                // Se não está, assume-se que é um Monstro/Inimigo adicionado pelo Mestre.
+                const ehDoGrupo = listaMembros.includes(nomeItem);
+                
+                // Define classes
+                const cssClass = ehDoGrupo ? 'is-hero' : 'is-enemy';
+                
+                const div = document.createElement('div');
+                div.className = `init-card ${cssClass}`;
+                div.style.animationDelay = `${index * 0.1}s`; // Cascata
+                
+                div.innerHTML = `
+                    <div class="init-val">${item.val}</div>
+                    <img src="${item.img}" class="init-img" onerror="this.src='img/imagem-no-site/dado.png'">
+                    <div class="init-name">${item.name}</div>
+                `;
+
+                container.appendChild(div);
+            });
+        }
+    </script>
+</body>
+</html>
