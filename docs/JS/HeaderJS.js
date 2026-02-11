@@ -2979,3 +2979,153 @@ window.adicionarAoHistorico = function(titulo, ataqueResult, danoResult) {
 };
 
 
+
+
+
+/* =============================================================
+   SISTEMA DE TRACKER DE INICIATIVA & COLAR IMAGEM
+============================================================= */
+
+// Estado local do tracker (não precisa ir pro servidor necessariamente, 
+// a menos que queira sincronizar entre jogadores, mas o pedido foi visual)
+let trackerList = [];
+let tempImgSrc = "img/imagem-no-site/dado.png";
+
+// 1. Alternar Visibilidade
+window.toggleTracker = function() {
+    const el = document.getElementById('tracker-overlay');
+    if (el.style.display === 'flex') {
+        el.style.display = 'none';
+    } else {
+        el.style.display = 'flex';
+        // Tornar arrastável
+        if(typeof window.tornarPainelArrastavel === 'function') {
+            // Reutiliza a função de arrastar da EsquerdaJS se disponível, 
+            // ou usa a lógica local abaixo
+            tornarElementoArrastavel(el, document.getElementById('tracker-handle'));
+        }
+        document.getElementById('popup-config-foto').style.display = 'none';
+    }
+};
+
+// 2. Adicionar Mob
+window.addMobToTracker = function() {
+    const nameInput = document.getElementById('new-mob-name');
+    const valInput = document.getElementById('new-mob-val');
+    
+    const nome = nameInput.value.trim() || "Inimigo";
+    const valor = parseInt(valInput.value) || 0;
+
+    trackerList.push({
+        id: Date.now(),
+        name: nome,
+        val: valor,
+        img: tempImgSrc
+    });
+
+    renderTracker();
+    
+    // Reset inputs
+    nameInput.value = "";
+    valInput.value = "";
+    tempImgSrc = "img/imagem-no-site/dado.png";
+    document.getElementById('new-mob-preview').src = tempImgSrc;
+    nameInput.focus();
+};
+
+// 3. Renderizar Lista
+function renderTracker() {
+    const container = document.getElementById('tracker-list');
+    container.innerHTML = "";
+
+    // Adiciona o jogador atual automaticamente se não estiver
+    // (Opcional, mas útil)
+
+    trackerList.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'init-row';
+        div.innerHTML = `
+            <div class="init-val">${item.val}</div>
+            <img src="${item.img}" class="init-img">
+            <div class="init-name">${item.name}</div>
+            <button onclick="removeTrackerItem(${item.id})" style="background:none; border:none; color:#f44336; cursor:pointer;">×</button>
+        `;
+        container.appendChild(div);
+    });
+}
+
+window.removeTrackerItem = function(id) {
+    trackerList = trackerList.filter(x => x.id !== id);
+    renderTracker();
+};
+
+window.limparTracker = function() {
+    if(confirm("Limpar todas as iniciativas?")) {
+        trackerList = [];
+        renderTracker();
+    }
+};
+
+window.sortTracker = function() {
+    trackerList.sort((a, b) => b.val - a.val);
+    renderTracker();
+};
+
+// 4. Lógica de Colar Imagem (Paste)
+// Colar imagem no Profile ao passar o mouse e apertar Ctrl+V
+document.addEventListener('paste', function(e) {
+    const imgProfile = document.getElementById('img-personagem-visual');
+    const isHoveringProfile = imgProfile.matches(':hover'); // Funciona na maioria dos browsers modernos
+
+    if (isHoveringProfile) {
+        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+        for (let index in items) {
+            const item = items[index];
+            if (item.kind === 'file' && item.type.includes('image/')) {
+                const blob = item.getAsFile();
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    // Atualiza visual
+                    imgProfile.src = event.target.result;
+                    
+                    // Salva no State
+                    if(typeof state !== 'undefined') {
+                        state.fotoPerfil = event.target.result;
+                        if(typeof saveStateToServer === 'function') saveStateToServer();
+                    }
+                };
+                reader.readAsDataURL(blob);
+            }
+        }
+    }
+});
+
+
+// 5. Função de Arrastar Local (Caso não tenha importado a outra)
+function tornarElementoArrastavel(elmnt, handle) {
+    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    handle.onmousedown = dragMouseDown;
+
+    function dragMouseDown(e) {
+        e.preventDefault();
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
+    }
+
+    function elementDrag(e) {
+        e.preventDefault();
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    }
+
+    function closeDragElement() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+    }
+}

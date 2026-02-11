@@ -4,7 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Ficha de Personagem D&D</title>
+  <title>Herdeiros do Caos</title>
+
+  <link rel="icon" type="image/png" href="img/imagem-no-site/logo.png" />
 
   <link rel="stylesheet" href="CSS/style.css" />
   <link rel="stylesheet" href="CSS/esquerdaCS.css">
@@ -18,7 +20,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
 
   <style>
-    /* CSS DO AVISO CUSTOMIZADO (TOAST) */
+    /* CSS DO AVISO CUSTOMIZADO (TOAST) - Mantido inline para garantir carregamento */
     .custom-toast-warning {
       position: fixed;
       top: 20px;
@@ -89,7 +91,7 @@
     }
 
     /* =========================================================================
-       CORREÇÃO NUCLEAR V8 (PERFIL AJUSTADO)
+       CORREÇÃO NUCLEAR V8 (PERFIL AJUSTADO MOBILE)
        ========================================================================= */
     @media (max-width: 768px) {
       
@@ -133,22 +135,21 @@
 
       /* === REGRAS DE ATIVAÇÃO PELO MENU INFERIOR === */
       
-      /* ABA 1: PERFIL (Ajustes de Espaçamento) */
+      /* ABA 1: PERFIL */
       body[data-mobile-view="header"] header { display: block !important; }
       body[data-mobile-view="header"] .info-personagem { 
         display: flex !important; 
         flex-direction: column !important;
-        /* Padding reduzido: Topo 10px, Baixo 80px (para o menu) */
         padding: 10px 15px 80px 15px !important;
         width: 100% !important;
         box-sizing: border-box !important;
-        gap: 10px !important; /* Menor gap entre elementos */
+        gap: 10px !important; 
       }
       body[data-mobile-view="header"] .info-esquerda {
         width: 100% !important; 
         display: flex !important; 
         justify-content: center !important; 
-        margin-bottom: 10px !important; /* Margem reduzida */
+        margin-bottom: 10px !important; 
         margin-top: 0 !important;
       }
       body[data-mobile-view="header"] .info-direita, 
@@ -157,10 +158,8 @@
         width: 100% !important; 
         display: flex !important; 
         flex-direction: column !important;
-        margin-bottom: 0 !important; /* Remove margens extras */
+        margin-bottom: 0 !important; 
       }
-      
-      /* Ajuste fino dos inputs no perfil para não ocupar tanto espaço vertical */
       body[data-mobile-view="header"] .campo {
           margin-bottom: 8px !important;
       }
@@ -226,7 +225,7 @@
         height: 45px !important;
       }
       
-      /* === MENU INFERIOR TRAVADO (FIXED REAL) === */
+      /* === MENU INFERIOR TRAVADO === */
       #mobile-navbar { 
         display: flex !important;
         position: fixed !important;
@@ -234,20 +233,18 @@
         left: 0 !important;
         width: 100% !important;
         height: 60px !important;
-        z-index: 2147483647 !important; /* Z-Index máximo para garantir que fique por cima */
+        z-index: 2147483647 !important; 
         background-color: #0e0e0e !important;
         border-top: 1px solid #333 !important;
         box-sizing: border-box !important;
-        
-        /* O "Cadeado" Definitivo */
         overflow: hidden !important; 
-        touch-action: none !important; /* Impede qualquer gesto de arrastar na barra */
+        touch-action: none !important; 
         user-select: none !important;
         -webkit-user-select: none !important;
       }
 
       .mobile-nav-btn {
-        flex: 1 !important; /* Divisão exata */
+        flex: 1 !important; 
         min-width: 0 !important;
         height: 100% !important;
         padding: 0 !important;
@@ -256,8 +253,6 @@
         flex-direction: column !important;
         justify-content: center !important;
         align-items: center !important;
-        
-        /* Remove qualquer comportamento estranho de botão */
         background: none !important;
         border: none !important;
         outline: none !important;
@@ -274,6 +269,10 @@
 <body>
   <header>
     <nav class="navbar">
+      <a href="#" class="logo-link" style="display: flex; align-items: center; text-decoration: none;">
+         <img src="img/imagem-no-site/logo.png" alt="Logo" class="site-logo" />
+      </a>
+
       <div class="nav-links">
         <a href="#" class="active">Personagem</a>
         <a href="mestre.html" id="link-voltar-painel" class="nav-mestre-link">Voltar ao Painel (Mestre)</a>
@@ -297,7 +296,12 @@
             🔗 Abrir OBS <br>
             <span style="font-size: 10px; color: #888; font-weight: normal;">(Link para o navegador)</span>
           </button>
-          <div style="height: 1px; background: #333; margin: 4px 0;"></div> <button onclick="abrirHistoricoDados()">🎲 Histórico de Dados</button>
+          
+          <div style="height: 1px; background: #333; margin: 4px 0;"></div>
+          
+          <button onclick="toggleTracker()">⚔️ Iniciativas</button>
+          
+          <button onclick="abrirHistoricoDados()">🎲 Histórico de Dados</button>
           <button onclick="abrirAjudaSistema()">❓ Ajuda sobre Sistema</button>
         </div>
       </div>
@@ -362,7 +366,6 @@
             </div>
 
             <div class="status-row">
-
               <div class="status-item">
                 <span class="status-label-top">Inspiração</span>
                 <div class="caixa-valor-controle">
@@ -381,11 +384,9 @@
               <div class="status-item">
                 <span class="status-label-top">Proficiência</span>
                 <div class="caixa-valor-fixo">
-
                   <span id="proficienciaValor" class="valor-grande">2</span>
                 </div>
               </div>
-
             </div>
           </div>
 
@@ -431,7 +432,6 @@
                 <img src="img/imagem-no-site/dado.png" alt="DV">
               </button>
             </div>
-
           </div>
 
           <div class="vida-container">
@@ -472,7 +472,6 @@
                 <div class="vida-text">
                   <button class="vida-btn menos5">«</button>
                   <button class="vida-btn menos1"><</button>
-
                       <span id="dano-necro-atual" contenteditable="true">0</span>
                       <button class="vida-btn mais1">></button>
                       <button class="vida-btn mais5">»</button>
@@ -497,7 +496,11 @@
                     <span class="bonus-label">BÔNUS</span>
                     <input type="number" id="iniciativaBonus" class="bonus-valor" value="0" />
                   </div>
+                  <button class="btn-rolar-iniciativa" id="btn-roll-ini" title="Rolar Iniciativa">
+                    <img src="img/imagem-no-site/dado.png"> Rolar
+                  </button>
                 </div>
+
                 <div class="formula-col">
                   <div class="armadura-titulo">CLASSE DE ARMADURA</div>
                   <div class="inline-formula">
@@ -625,35 +628,58 @@
     </div>
   </div>
 
+  <div id="tracker-overlay">
+    <div class="tracker-header" id="tracker-handle">
+        <span class="tracker-title">Rastreador</span>
+        <button onclick="toggleTracker()" style="background:none; border:none; color:#fff; cursor:pointer;">✖</button>
+    </div>
+    <div class="tracker-body">
+        
+        <div class="add-init-box">
+            <div style="display:flex; flex-direction:column; gap:4px; flex:1;">
+                <input type="text" id="new-mob-name" class="add-init-input" placeholder="Nome (Cole img aqui)">
+                <input type="number" id="new-mob-val" class="add-init-input" placeholder="Valor">
+            </div>
+            <div style="display:flex; flex-direction:column; gap:4px;">
+                <img id="new-mob-preview" src="img/imagem-no-site/dado.png" style="width:30px; height:30px; object-fit:cover; border-radius:4px; border:1px solid #555;">
+                <button onclick="addMobToTracker()" class="btn-add" style="padding:4px; height:100%;">+</button>
+            </div>
+        </div>
+
+        <div id="tracker-list" class="tracker-list">
+            </div>
+    </div>
+    <div class="init-actions">
+        <button onclick="limparTracker()" style="flex:1; background:#b71c1c; border:none; color:#fff; padding:6px; border-radius:4px; font-size:11px; cursor:pointer;">Limpar</button>
+        <button onclick="sortTracker()" style="flex:1; background:#333; border:1px solid #555; color:#fff; padding:6px; border-radius:4px; font-size:11px; cursor:pointer;">Ordenar</button>
+    </div>
+  </div>
+
   <div id="mobile-navbar">
     <button class="mobile-nav-btn active" onclick="setMobileView('header')">
       <svg viewBox="0 0 24 24" fill="currentColor">
-        <path
-          d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
       </svg>
       <span>Perfil</span>
     </button>
 
     <button class="mobile-nav-btn" onclick="setMobileView('status')">
       <svg viewBox="0 0 24 24" fill="currentColor">
-        <path
-          d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
       </svg>
       <span>Status</span>
     </button>
 
     <button class="mobile-nav-btn" onclick="setMobileView('pericia')">
       <svg viewBox="0 0 24 24" fill="currentColor">
-        <path
-          d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z" />
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z" />
       </svg>
       <span>Perícias</span>
     </button>
 
     <button class="mobile-nav-btn" onclick="setMobileView('inventario')">
       <svg viewBox="0 0 24 24" fill="currentColor">
-        <path
-          d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z" />
+        <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z" />
       </svg>
       <span>Inv/Mag</span>
     </button>

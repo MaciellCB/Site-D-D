@@ -1341,3 +1341,39 @@ document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
 
 document.getElementById('inspiraLeft').onclick = () => { state.inspiracao = Math.max(0, (parseInt(state.inspiracao) || 0) - 1); document.getElementById('inspiraValor').textContent = state.inspiracao; saveStateToServer(); };
 document.getElementById('inspiraRight').onclick = () => { state.inspiracao = (parseInt(state.inspiracao) || 0) + 1; document.getElementById('inspiraValor').textContent = state.inspiracao; saveStateToServer(); };
+
+/* =============================================================
+   LÓGICA DO BOTÃO DE INICIATIVA DA ESQUERDA
+============================================================= */
+document.addEventListener('DOMContentLoaded', () => {
+    const btnIni = document.getElementById('btn-roll-ini');
+    if (btnIni) {
+        // Evento híbrido: Clique Esquerdo e Direito abrem o popup de rolagem
+        // (Já que iniciativa é um teste puro de atributo)
+        
+        const acaoRolar = (e) => {
+            const bonus = parseInt(document.getElementById('iniciativaBonus').value) || 0;
+            const dexScore = state.atributos?.n2 || 10;
+            const dexMod = Math.floor((parseInt(dexScore) - 10) / 2);
+            const totalBonus = dexMod + bonus;
+            
+            const expressao = `1d20 + ${totalBonus}`;
+            
+            if (typeof window.abrirMenuRolagem === 'function') {
+                window.abrirMenuRolagem(e, "Iniciativa", expressao, null);
+            }
+        };
+
+        btnIni.addEventListener('click', acaoRolar);
+        
+        // Suporte Mobile Long Press
+        if(typeof window.addLongPressListener === 'function') {
+            window.addLongPressListener(btnIni, acaoRolar);
+        } else {
+            btnIni.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                acaoRolar(e);
+            });
+        }
+    }
+});
