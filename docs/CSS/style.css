@@ -509,3 +509,25 @@ header {
     border-color: #9c27b0 !important;
     background: #1a051a !important;
 }
+
+/* =============================================================
+   ESTILO DA LOGO
+============================================================= */
+.site-logo {
+  height: 45px; /* Ajuste a altura conforme necessário */
+  width: auto;  /* Mantém a proporção */
+  object-fit: contain;
+  transition: transform 0.2s;
+}
+
+.logo-link:hover .site-logo {
+  transform: scale(1.05); /* Pequeno efeito ao passar o mouse */
+  filter: drop-shadow(0 0 5px rgba(156, 39, 176, 0.5)); /* Brilho roxo */
+}
+
+/* Ajuste Mobile para não quebrar o layout */
+@media (max-width: 768px) {
+  .site-logo {
+    height: 35px; /* Um pouco menor no celular */
+  }
+}
