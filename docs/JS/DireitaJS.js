@@ -37,6 +37,12 @@ async function carregarCatalogosDireita() {
   }
 }
 
+/* --- FUNÇÃO AUXILIAR: CALCULA NÍVEL TOTAL DO PERSONAGEM --- */
+function getTotalCharacterLevel() {
+  if (!state.niveisClasses) return 1;
+  const total = Object.values(state.niveisClasses).reduce((acc, val) => acc + (parseInt(val) || 0), 0);
+  return Math.max(1, total); // Garante no mínimo nível 1
+}
 
 // --- NO TOPO DO ARQUIVO DireitaJS.js ---
 window.isUserInteracting = false;
@@ -1535,22 +1541,16 @@ function openAbilityCatalogOverlay() {
   renderCatalogList();
 }
 
-/* ---------------- FORMATAR CARD DE MAGIA (DESIGN LIVRO DE REGRAS) ---------------- */
+/* ---------------- FORMATAR CARD DE MAGIA (COM SUPORTE A RAJADA MÍSTICA) ---------------- */
 function formatMySpellCard(s) {
-  // 1. Tags do Cabeçalho (Nível destacado, Escola Menor)
   const levelText = s.levelNumber === 0 ? 'Truque' : `Nível ${s.levelNumber}`;
-  
-  // A Escola agora tem uma fonte menor e o nível fica em destaque
   const schoolPill = `<div class="pill school-pill">${s.school || '—'} <span class="pill-level">${levelText}</span></div>`;
   const classDisplay = s.spellClass ? `<div class="class-box-display">${s.spellClass}</div>` : '';
-  
-  // Tags de Concentração e Ritual
   const concTag = s.concentration ? `<span class="spell-tag conc" title="Requer Concentração">C</span>` : '';
   const ritTag = s.ritual ? `<span class="spell-tag rit" title="Pode ser feito como Ritual">R</span>` : '';
-
   const caretSymbol = s.expanded ? '▾' : '▸';
 
-  // 2. Lógica de Upcast (Slots)
+  // Lógica de Upcast (Slots)
   let levelOptions = '';
   const baseLevel = s.levelNumber || 0;
   if (baseLevel > 0) {
@@ -1560,6 +1560,44 @@ function formatMySpellCard(s) {
     }
   }
 
+  // =========================================================================
+  // NOVA LÓGICA DE ESCALA: TRUQUES VS RAJADA MÍSTICA
+  // =========================================================================
+  let finalDamageDisplay = s.damage;
+  const nomeLimpo = (s.name || '').toLowerCase();
+  
+  // Verifica se é a Rajada Mística (Eldritch Blast)
+  const isEldritchBlast = nomeLimpo.includes('rajada mística') || nomeLimpo.includes('eldritch blast');
+
+  if (s.levelNumber === 0 && s.scaling) {
+      const charLevel = getTotalCharacterLevel();
+      
+      // Regra 5e: Aumenta em 5, 11 e 17
+      let multiplier = 1;
+      if (charLevel >= 5) multiplier = 2;
+      if (charLevel >= 11) multiplier = 3;
+      if (charLevel >= 17) multiplier = 4;
+
+      if (multiplier > 1) {
+          if (isEldritchBlast) {
+              // SE FOR RAJADA MÍSTICA: Não multiplica o dado (mantém 1d10), 
+              // mas mostra a quantidade de feixes no texto para o jogador saber.
+              finalDamageDisplay = `${s.damage} (${multiplier}x)`; 
+          } else {
+              // SE FOR TRUQUE COMUM (Chama Sagrada, Raio de Fogo): Multiplica o dado (2d8)
+              const regex = /^(\d*)d(\d+)(.*)$/i;
+              const match = s.scaling.match(regex);
+              if (match) {
+                  const baseQtd = match[1] === "" ? 1 : parseInt(match[1]);
+                  const faces = match[2];
+                  const resto = match[3] || "";
+                  finalDamageDisplay = `${baseQtd * multiplier}d${faces}${resto}`;
+              }
+          }
+      }
+  }
+  // =========================================================================
+
   const castControlsHTML = baseLevel > 0 ? `
       <div class="cast-controls">
           <span class="cast-label">Círculo:</span>
@@ -1567,17 +1605,14 @@ function formatMySpellCard(s) {
               ${levelOptions}
           </select>
       </div>
-  ` : `<div class="cast-controls" style="justify-content:center; color:#777; font-size:12px;">Truques não gastam slot</div>`;
+  ` : `<div class="cast-controls" style="justify-content:center; color:#777; font-size:12px;">Truque (Nível ${getTotalCharacterLevel()})</div>`;
 
-  // 3. GRADE DE ESPECIFICAÇÕES PADRONIZADA (Beleza e Organização)
-  // Função auxiliar para só criar o bloco se houver valor
   const createSpec = (label, val, isHighlight = false) => {
     if (!val || val.trim() === '') return '';
     const valClass = isHighlight ? 'spec-val highlight' : 'spec-val';
     return `<div class="spec-item"><span class="spec-label">${label}</span><span class="${valClass}">${val}</span></div>`;
   };
 
-  // Monta a grade com os atributos (se não existir, não aparece)
   const specsGridHTML = `
     <div class="spell-specs-grid">
       ${createSpec('Tempo', s.attrs?.execucao)}
@@ -1589,7 +1624,6 @@ function formatMySpellCard(s) {
     </div>
   `;
 
-  // 4. Componentes e Material (Rodapé das especificações)
   const temComponentes = s.components?.V || s.components?.S || s.components?.M;
   const compHTML = temComponentes ? `
     <div class="comp-row">
@@ -1603,7 +1637,6 @@ function formatMySpellCard(s) {
     </div>
   ` : '';
 
-  // 5. HTML FINAL DO CARD
   return `
       <div class="card spell-card ${s.expanded ? 'expanded' : ''}" data-id="${s.id}">
         <div class="card-header spell-header" style="flex-wrap: wrap;">
@@ -1616,31 +1649,27 @@ function formatMySpellCard(s) {
           </div>
           
           <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
-             <div style="flex: 1; display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+              <div style="flex: 1; display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
                 ${schoolPill} ${classDisplay}
-             </div>
-             <div class="spell-right" style="flex-direction: row; align-items: center; gap: 12px;">
-                ${(s.damage && s.damage !== '-' && s.damage !== '') ? `
+              </div>
+              <div class="spell-right" style="flex-direction: row; align-items: center; gap: 12px;">
+                ${(finalDamageDisplay && finalDamageDisplay !== '-' && finalDamageDisplay !== '') ? `
                 <div class="card-meta spell-damage">
-                    <span class="dynamic-damage-text">${s.damage}</span> 
-                    <img class="dice-img" src="img/imagem-no-site/dado.png" alt="dado" />
+                    <span class="dynamic-damage-text">${finalDamageDisplay}</span> 
+                    <img class="dice-img" src="img/imagem-no-site/dado.png" alt="dado" title="Rolar (Auto-ajuste por nível)"/>
                 </div>` : ''}
                 <label class="check-ativar"><input class="spell-activate" type="checkbox" data-id="${s.id}" ${s.active ? 'checked' : ''}/><span class="square-check"></span></label>
-             </div>
+              </div>
           </div>
         </div>
         
         <div class="card-body" style="${s.expanded ? '' : 'display:none;'}">
-            
             ${specsGridHTML}
             ${compHTML}
-
             <div class="spell-desc-box">
                 ${s.description || '<em style="color:#666;">Sem descrição.</em>'}
             </div>
-
             ${castControlsHTML}
-
             <div style="margin-top:12px; display:flex; justify-content:space-between;">
                 <a href="#" class="remover-spell" data-id="${s.id}">Remover</a>
                 <a href="#" class="editar-spell" data-id="${s.id}" style="color:#2e7d32">Editar</a>
@@ -2175,8 +2204,9 @@ function openSlotConfigModal() {
 function calculateNewDamage(baseDamage, scalingDamage, baseLevel, targetLevel) {
   if (!scalingDamage || targetLevel <= baseLevel) return baseDamage;
 
-  // Regex para separar "5" de "d8" ou "2" de "d6 + 3"
-  // Aceita formatos: "5d8", "1d6+2", "10"
+if (baseLevel === 0) return baseDamage; 
+
+  if (!scalingDamage || targetLevel <= baseLevel) return baseDamag
   const regex = /^(\d+)d(\d+)(.*)$/i;
 
   const baseMatch = baseDamage.match(regex);
@@ -4890,7 +4920,7 @@ document.addEventListener('click', function(e) {
         e.stopPropagation();
 
     // -------------------------------------------------------------
-    // A. VERIFICA SE É MAGIA (SPELL CARD) - ATUALIZADO CRIT GLOBAL
+    // A. VERIFICA SE É MAGIA (SPELL CARD) - ATUALIZADO (TRUQUES & RAJADA MÍSTICA)
     // -------------------------------------------------------------
     const spellCard = e.target.closest('.spell-card');
     if (spellCard) {
@@ -4899,36 +4929,141 @@ document.addEventListener('click', function(e) {
       if (!s) return;
 
       const spellTitle = s.name || "Magia";
+      const nomeLimpo = spellTitle.toLowerCase();
+      
       const selectSlot = spellCard.querySelector('.spell-slot-selector');
       const selectedLevel = selectSlot ? parseInt(selectSlot.value) : (s.levelNumber || 0);
       const baseLevel = s.levelNumber || 0;
 
-      // Configurações Globais de Crítico (Fallback: 20 e 2x)
+      // Configurações Globais
       const critRange = state.spellDCConfig.critRange || 20;
       const critMult = state.spellDCConfig.critMult || 2;
 
-      // --- LÓGICA DE MULTI-PROJÉTEIS ---
-      let numProjectiles = 1;
-      let isMulti = false;
-      const nomeLimpo = spellTitle.toLowerCase();
+      // =========================================================
+      // LÓGICA DE RAJADA MÍSTICA (Eldritch Blast)
+      // =========================================================
+      if (nomeLimpo.includes("rajada mística") || nomeLimpo.includes("eldritch blast")) {
+          const charLevel = getTotalCharacterLevel();
+          let numFeixes = 1;
+          if (charLevel >= 5) numFeixes = 2;
+          if (charLevel >= 11) numFeixes = 3;
+          if (charLevel >= 17) numFeixes = 4;
+
+          const vals = getSpellAttackValues();
+          if (!vals) { alert("Configure a DT/Atributo de conjuração primeiro!"); return; }
+
+          let detalhesAtaque = [];
+          let detalhesDano = [];
+          let totalDanoSomado = 0;
+
+          // Loop para cada feixe
+          for (let i = 1; i <= numFeixes; i++) {
+              // 1. Rola Ataque
+              const d20 = Math.floor(Math.random() * 20) + 1;
+              const atkTotal = d20 + vals.prof + vals.mod + vals.extra;
+              
+              let status = "Errou";
+              let classeCor = "";
+              let isCrit = (d20 >= critRange);
+              let isFumble = (d20 === 1);
+
+              if (isCrit) { status = "CRÍTICO!"; classeCor = "dice-roll-max"; }
+              else if (isFumble) { status = "FALHA"; classeCor = "dice-roll-min"; }
+              else { status = atkTotal; } // Mostra o valor total se for normal
+
+              detalhesAtaque.push(`#${i}: <strong class="${classeCor}">${status}</strong> <small>(${d20}${isCrit || isFumble ? '' : '+' + (vals.prof+vals.mod+vals.extra)})</small>`);
+
+              // 2. Rola Dano (1d10 ou 1d10+CAR se tiver Agonizing Blast - assumimos base por enquanto)
+              // Se tiver modificadores extras no dano (ex: Hex), adicione aqui depois.
+              // Para simplificar, pegamos o dano base da magia (1d10)
+              
+              let formulaDano = s.damage || "1d10"; 
+              
+              // Se for crítico, dobra os dados
+              if (isCrit) {
+                  const regex = /^(\d*)d(\d+)(.*)$/i;
+                  const match = formulaDano.match(regex);
+                  if (match) {
+                      const q = (match[1] === "" ? 1 : parseInt(match[1])) * critMult;
+                      formulaDano = `${q}d${match[2]}${match[3] || ''}`;
+                  }
+              }
+
+              const resDano = rollDiceExpression(formulaDano);
+              totalDanoSomado += resDano.total;
+              
+              detalhesDano.push(`#${i}: <strong>${resDano.total}</strong> <small>(${resDano.detail})</small>`);
+          }
+
+          // Monta o objeto visual para exibir
+          const attackRes = {
+              total: "-", // Não tem total único de ataque
+              text: "MÚLTIPLOS",
+              detail: detalhesAtaque.join('<br>'),
+              label: `${numFeixes} TIROS`
+          };
+
+          const damageRes = {
+              total: totalDanoSomado,
+              text: totalDanoSomado.toString(),
+              detail: detalhesDano.join('<br>'),
+              label: "DANO POTENCIAL",
+              isCrit: false // A cor roxa já foi aplicada individualmente na lista
+          };
+
+          showCombatResults(spellTitle, attackRes, damageRes);
+          return; // Encerra aqui para Rajada Mística
+      }
+      
+      // =========================================================
+      // LÓGICA DE MÍSSEIS MÁGICOS (Auto-Hit, sem ataque)
+      // =========================================================
       if (nomeLimpo.includes("mísseis mágicos") || nomeLimpo.includes("misseis magicos")) {
-        numProjectiles = 3 + (selectedLevel - baseLevel);
-        isMulti = true;
-      } else if (nomeLimpo.includes("raio ardente")) {
-        numProjectiles = 3 + (selectedLevel - baseLevel);
-        isMulti = true;
+        let numProjectiles = 3 + (selectedLevel - baseLevel);
+        let totalDamage = 0;
+        let allRollsDetails = [];
+        const damageText = s.damage || "1d4+1";
+
+        for (let i = 1; i <= numProjectiles; i++) {
+           let res = rollDiceExpression(damageText);
+           totalDamage += res.total;
+           allRollsDetails.push(`P${i}: ${res.text} <small>(${res.detail})</small>`);
+        }
+
+        const damageRes = {
+            total: totalDamage,
+            text: totalDamage.toString(),
+            detail: allRollsDetails.join('<br>'),
+            label: `${numProjectiles} PROJÉTEIS`
+        };
+        
+        // Mísseis não tem ataque
+        showCombatResults(spellTitle, null, damageRes);
+        
+        // Consome Slot (Cópia da lógica padrão de slot)
+        consumirSlotSeNecessario(selectedLevel); 
+        return;
       }
 
-      // --- ROLAGEM DE ATAQUE ---
+      // =========================================================
+      // CASO PADRÃO (Chama Sagrada, Raio de Fogo, Bola de Fogo, etc)
+      // =========================================================
+      
+      // 1. ROLAGEM DE ATAQUE (Se a magia pedir, ex: Raio de Fogo)
       let attackRes = null;
-      // Se não for mísseis (auto-hit), rola ataque
-      if (!nomeLimpo.includes("mísseis")) {
+      // Verifica se a magia tem "ataque" na descrição ou é um truque de ataque conhecido
+      // Ou simplesmente: se não for área/salvaguarda.
+      // Dica: No seu JSON, Raio de Fogo tem "alvo": "1 criatura". 
+      // Vamos assumir que rola ataque SEMPRE, exceto se for explicitamente "Resistência" no JSON.
+      
+      const usaResistencia = s.attrs?.resistencia && s.attrs.resistencia !== "-" && s.attrs.resistencia !== "";
+      
+      if (!usaResistencia) {
         const vals = getSpellAttackValues();
         if (vals) {
           const d20 = Math.floor(Math.random() * 20) + 1;
           const totalAttack = d20 + vals.prof + vals.mod + vals.extra;
           
-          // Usa margem configurada
           const isCrit = (d20 >= critRange);
           const isFumble = (d20 === 1);
           const d20Html = isCrit ? `<span class="dice-roll-max">${d20}</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
@@ -4939,94 +5074,44 @@ document.addEventListener('click', function(e) {
             detail: `${d20Html} + ${vals.mod} + ${vals.prof} + ${vals.extra}`,
             isCrit: isCrit,
             isFumble: isFumble,
-            label: isMulti ? "ATAQUE (1º RAIO)" : "ACERTO"
+            label: "ACERTO"
           };
         }
       }
 
-      // --- EXECUÇÃO DAS ROLAGENS (DANO) ---
-      let totalDamage = 0;
-      let allRollsDetails = [];
-      const damageText = spellCard.querySelector('.dynamic-damage-text')?.textContent.trim() || s.damage;
-
-      for (let i = 1; i <= numProjectiles; i++) {
-        if (damageText && damageText !== '-' && damageText !== '0') {
-          // Se for crítico no ataque, multiplica os dados
-          let exprFinal = damageText;
-          let isCritDamage = false;
-
-          // Se tiver ataque e for crítico, aplica o multiplicador configurado
+      // 2. ROLAGEM DE DANO
+      // Pega o texto que JÁ FOI CALCULADO no formatMySpellCard (Ex: "2d10" se for lv 5)
+      const damageTextElement = spellCard.querySelector('.dynamic-damage-text');
+      let damageFormula = damageTextElement ? damageTextElement.textContent : s.damage;
+      
+      let damageRes = null;
+      if (damageFormula && damageFormula !== '-' && damageFormula !== '0') {
+          
+          // Se houve Crítico no Ataque, dobra os dados
           if (attackRes && attackRes.isCrit) {
-             isCritDamage = true;
-             // Tenta multiplicar a quantidade de dados (ex: 1d10 -> 2d10)
-             // Regex simples para capturar XdY
              const regexDice = /^(\d*)d(\d+)(.*)$/i;
-             const match = damageText.match(regexDice);
-             
+             const match = damageFormula.match(regexDice);
              if (match) {
                  const qtd = match[1] === "" ? 1 : parseInt(match[1]);
                  const faces = match[2];
                  const resto = match[3] || "";
                  // Multiplica Qtd pelo critMult
                  const novaQtd = qtd * critMult;
-                 exprFinal = `${novaQtd}d${faces}${resto}`;
-             } else {
-                 // Se for dano fixo, multiplica o valor final
-                 // (Implementação simples: deixa rolar e depois multiplica se necessário, 
-                 // mas idealmente editamos a string aqui. Vamos assumir que é dado na maioria dos casos)
+                 damageFormula = `${novaQtd}d${faces}${resto}`;
              }
           }
 
-          let res = rollDiceExpression(exprFinal);
-          totalDamage += res.total;
-          
-          // Se não tiver ataque (ex: Bola de Fogo), não tem critico automático aqui,
-          // a menos que queira implementar clique + shift. Por padrão, magia de área não crita.
-
-          if (isMulti) {
-            allRollsDetails.push(`P${i}: ${res.text} <small>(${res.detail})</small>`);
-          } else {
-            allRollsDetails.push(res.detail);
+          damageRes = rollDiceExpression(damageFormula);
+          if (attackRes && attackRes.isCrit) {
+              damageRes.isCrit = true;
+              damageRes.label = `CRÍTICO (${critMult}x)`;
           }
-        }
       }
 
-      const damageRes = {
-        total: totalDamage,
-        text: totalDamage.toString(),
-        detail: allRollsDetails.join(isMulti ? '<br>' : ' + '),
-        label: isMulti ? `${numProjectiles} PROJÉTEIS` : (attackRes && attackRes.isCrit ? `CRÍTICO (${critMult}x)` : "DANO"),
-        isCrit: attackRes ? attackRes.isCrit : false // Pinta de roxo se foi critico
-      };
-
-      // Exibe
       showCombatResults(spellTitle, attackRes, damageRes);
-
-      // Consumo de Slot (Omissis - Mantém o código de consumo de slot igual ao anterior)
-      if (selectedLevel > 0) {
-        let slotConsumed = false;
-        const standardKey = String(selectedLevel);
-        if (state.spellSlots[standardKey] && state.spellSlots[standardKey].status) {
-          const availableIdx = state.spellSlots[standardKey].status.indexOf(false);
-          if (availableIdx !== -1) {
-            state.spellSlots[standardKey].status[availableIdx] = true;
-            slotConsumed = true;
-          }
-        }
-        if (!slotConsumed && state.spellSlots['pact'] && state.spellSlots['pact'].status) {
-          const pactAvailableIdx = state.spellSlots['pact'].status.indexOf(false);
-          if (pactAvailableIdx !== -1) {
-            state.spellSlots['pact'].status[pactAvailableIdx] = true;
-            slotConsumed = true;
-          }
-        }
-        if (slotConsumed) {
-          saveStateToServer();
-          renderActiveTab();
-        } else {
-          alert(`Sem slots de ${selectedLevel}º círculo!`);
-        }
-      }
+      
+      // Consome Slot
+      consumirSlotSeNecessario(selectedLevel);
       return;
     }
 
@@ -5346,4 +5431,40 @@ window.mesclarEstadoVisual = function (estadoAntigo, estadoNovo) {
   }
 
   return estadoNovo;
+}
+
+function consumirSlotSeNecessario(selectedLevel) {
+    if (selectedLevel > 0) {
+        let slotConsumed = false;
+        const standardKey = String(selectedLevel);
+        
+        // Tenta gastar slot normal
+        if (state.spellSlots[standardKey] && state.spellSlots[standardKey].status) {
+          const availableIdx = state.spellSlots[standardKey].status.indexOf(false);
+          if (availableIdx !== -1) {
+            state.spellSlots[standardKey].status[availableIdx] = true;
+            slotConsumed = true;
+          }
+        }
+        
+        // Tenta gastar slot de Pacto
+        if (!slotConsumed && state.spellSlots['pact'] && state.spellSlots['pact'].status) {
+           // Verifica se o nível do pacto é suficiente
+           if ((state.spellSlots['pact'].level || 0) >= selectedLevel) {
+              const pactAvailableIdx = state.spellSlots['pact'].status.indexOf(false);
+              if (pactAvailableIdx !== -1) {
+                state.spellSlots['pact'].status[pactAvailableIdx] = true;
+                slotConsumed = true;
+              }
+           }
+        }
+
+        if (slotConsumed) {
+          saveStateToServer();
+          renderActiveTab();
+        } else {
+          // Opcional: Avisar apenas se não for GM testando
+          // alert(`Sem slots de ${selectedLevel}º círculo!`);
+        }
+    }
 }
