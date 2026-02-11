@@ -206,20 +206,21 @@
         }
 
         /* =========================================================================
-           CSS DOS DADOS (CORRIGIDO: POSIÇÃO EXATA AO LADO DA BARRA)
+           CSS DOS DADOS
            ========================================================================= */
         .dice-area {
             position: absolute;
-            /* 460px coloca exatamente ao lado direito da barra de vida (que tem ~450px) */
+            /* O JS vai ajustar esse valor se houver mais de 2 dados */
             left: 460px;
-            right: auto;
             bottom: 12px;
             display: flex;
-            flex-direction: row; /* Garante Acerto Esquerda -> Dano Direita */
-            justify-content: flex-start;
+            flex-direction: row;
+            /* Alinhamento à esquerda garante que cresça na ordem normal (Acerto -> Dano) */
+            justify-content: flex-start; 
             gap: 10px;
             pointer-events: none;
             z-index: 20;
+            transition: left 0.3s ease; /* Suaviza o movimento para a esquerda */
         }
 
         .roll-card {
@@ -521,6 +522,31 @@
             const area = document.getElementById('dice-area');
             area.innerHTML = '';
 
+            // --- LÓGICA DE POSICIONAMENTO DINÂMICO ---
+            // Conta quantos dados teremos no total
+            let totalDados = 0;
+            let rolagensAtaque = [];
+            
+            if (data.ataque) {
+                rolagensAtaque = String(data.ataque.text).split(',').map(s => s.trim());
+                totalDados += rolagensAtaque.length;
+            }
+            if (data.dano) {
+                totalDados += 1;
+            }
+
+            // Se tiver mais de 2, movemos o 'left' para a esquerda
+            // 460px é a base. Para cada dado extra, subtraímos 60px (largura 50 + gap 10)
+            let baseLeft = 460;
+            if (totalDados > 2) {
+                const extra = totalDados - 2;
+                // Move para a esquerda para acomodar os novos dados, mantendo a "parede direita" visualmente
+                area.style.left = (baseLeft - (extra * 60)) + 'px';
+            } else {
+                area.style.left = baseLeft + 'px';
+            }
+            // -----------------------------------------
+
             const card = document.createElement('div');
             card.className = 'roll-card';
 
@@ -538,25 +564,18 @@
 
             // 1. DADO DE ATAQUE (D20 ou Múltiplos D20s)
             if (data.ataque) {
-                // Separa os valores se houver vírgula (Ex: "18, 22, 5")
-                const textoAtaque = String(data.ataque.text);
-                const rolagens = textoAtaque.split(',').map(s => s.trim());
-
                 let iconeUsado = ehPericia ? imgPericia : imgAcerto;
 
-                rolagens.forEach((val, index) => {
-                    // Remove tags HTML para exibir o número limpo no portrait
+                rolagensAtaque.forEach((val, index) => {
                     const numLimpo = val.replace(/<[^>]*>?/gm, '');
                     
-                    // Verifica classes enviadas pelo sistema (dice-roll-max/min) para definir cor
                     let classeCor = '';
-                    if (val.includes('dice-roll-max') || (rolagens.length === 1 && data.ataque.isCrit)) {
+                    if (val.includes('dice-roll-max') || (rolagensAtaque.length === 1 && data.ataque.isCrit)) {
                         classeCor = 'crit';
-                    } else if (val.includes('dice-roll-min') || (rolagens.length === 1 && data.ataque.isFumble)) {
+                    } else if (val.includes('dice-roll-min') || (rolagensAtaque.length === 1 && data.ataque.isFumble)) {
                         classeCor = 'fumble';
                     }
 
-                    // Adiciona delay para efeito cascata (0.1s entre cada dado)
                     const delay = index * 0.1;
 
                     conteudoHTML += `
@@ -575,8 +594,7 @@
                 const valClass = isCritDmg ? 'crit' : 'dmg-val';
                 const iconeUsado = imgDano;
 
-                // Se houver ataques, adiciona um delay maior para o dano aparecer depois
-                const delayDano = data.ataque ? (String(data.ataque.text).split(',').length * 0.1) : 0;
+                const delayDano = data.ataque ? (rolagensAtaque.length * 0.1) : 0;
 
                 conteudoHTML += `
                     <div class="dice-result-box" style="animation-delay: ${delayDano}s">
