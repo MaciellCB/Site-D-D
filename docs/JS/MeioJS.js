@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "FOR": "n6", "DEX": "n2", "CON": "n1", "INT": "n5", "SAB": "n3", "CAR": "n4"
     };
 
-    function renderizarPericias() {
+   function renderizarPericias() {
         if (!listaPericias || !state.pericias) return;
         listaPericias.innerHTML = "";
 
@@ -67,8 +67,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const li = document.createElement("li");
             li.className = "pericia-item";
             
+            // Adicionei a classe 'col-icon' na imagem para o CSS global bloquear o menu nativo do celular
             li.innerHTML = `
-                <img src="img/imagem-no-site/dado.png" class="col-icon" style="cursor:pointer; transition: transform 0.2s;" title="Botão Esq: Normal | Dir: Vantagem">
+                <img src="img/imagem-no-site/dado.png" class="col-icon" style="cursor:pointer; transition: transform 0.2s;" title="Toque: Rolar | Segurar: Vantagem">
                 <div class="col-nome" title="${nome}">${nome}</div>
                 <div class="col-dados">
                     <select class="atributo-select">
@@ -84,35 +85,52 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
             `;
 
-            // EVENTOS DO DADO
             const btnDado = li.querySelector('.col-icon');
             
-            // 1. CLIQUE ESQUERDO (Rolagem Normal Rápida)
+            // 1. CLIQUE ESQUERDO / TOQUE RÁPIDO (Rolagem Normal)
             btnDado.addEventListener('click', () => {
-                // Efeito visual
                 btnDado.style.transform = "scale(0.9)";
                 setTimeout(() => btnDado.style.transform = "scale(1)", 100);
 
                 const sinal = bonusTotal >= 0 ? '+' : '';
                 const expressao = `1d20 ${sinal} ${bonusTotal}`;
 
+                // Rola direto sem vantagem (normal)
                 if (typeof rollDiceExpression === 'function' && typeof showCombatResults === 'function') {
-                    const resultado = rollDiceExpression(expressao);
+                    // Usamos rollDiceExpression simples ou rollDiceWithAdvantage(..., 0, 0)
+                    // Como é clique rápido, vamos simular uma rolagem normal via advantage function pra manter padrão visual
+                    const resultado = (typeof rollDiceWithAdvantage === 'function') 
+                        ? rollDiceWithAdvantage(expressao, 0, 0) 
+                        : rollDiceExpression(expressao); // Fallback
+
                     showCombatResults(`Perícia: ${nome}`, resultado, null); 
                 } 
             });
 
-            // 2. CLIQUE DIREITO (Menu de Vantagem)
-            btnDado.addEventListener('contextmenu', (e) => {
-                const sinal = bonusTotal >= 0 ? '+' : '';
-                const expressao = `1d20 ${sinal} ${bonusTotal}`;
+            // 2. CORREÇÃO MOBILE: USAR addLongPressListener
+            // Isso garante que segurar no celular abra o menu de vantagem
+            if (typeof window.addLongPressListener === 'function') {
+                window.addLongPressListener(btnDado, (e) => {
+                    const sinal = bonusTotal >= 0 ? '+' : '';
+                    const expressao = `1d20 ${sinal} ${bonusTotal}`;
 
-                if (typeof window.abrirMenuRolagem === 'function') {
-                    window.abrirMenuRolagem(e, `Perícia: ${nome}`, expressao, null);
-                }
-            });
+                    if (typeof window.abrirMenuRolagem === 'function') {
+                        window.abrirMenuRolagem(e, `Perícia: ${nome}`, expressao, null);
+                    }
+                });
+            } else {
+                // Fallback para Desktop apenas se a função não existir (não deve acontecer)
+                btnDado.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    const sinal = bonusTotal >= 0 ? '+' : '';
+                    const expressao = `1d20 ${sinal} ${bonusTotal}`;
+                    if (typeof window.abrirMenuRolagem === 'function') {
+                        window.abrirMenuRolagem(e, `Perícia: ${nome}`, expressao, null);
+                    }
+                });
+            }
 
-            // OUTROS EVENTOS (Change/Input)
+            // OUTROS EVENTOS (Salvar estado)
             li.querySelector('.atributo-select').addEventListener('change', (e) => {
                 state.pericias[nome].atributo = e.target.value;
                 atualizarBonusVisual(li, nome);

@@ -5729,12 +5729,11 @@ function rollDiceWithAdvantage(expression, advCount, disCount) {
 // 2. Variáveis Globais de Estado do Menu
 let menuState = { adv: 0, dis: 0 };
 
-// 3. Criar Popup Arrastável (COM IMAGEM DADO.PNG)
+// 3. Criar Popup Arrastável (DESIGN FINAL: SEM BOTÃO NORMAL, BOTÃO RODAR COM ÍCONE)
 window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage = null) {
     if(e.preventDefault) e.preventDefault();
     if(e.stopPropagation) e.stopPropagation();
 
-    // Remove menu anterior
     const old = document.querySelector('.roll-context-menu');
     if (old) old.remove();
 
@@ -5743,28 +5742,22 @@ window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage
     const menu = document.createElement('div');
     menu.className = 'roll-context-menu';
     
-    // Posicionamento inteligente
     let posX = e.clientX || (e.touches && e.touches[0].clientX);
     let posY = e.clientY || (e.touches && e.touches[0].clientY);
 
-    // Evita sair da tela
     if (posX + 180 > window.innerWidth) posX = window.innerWidth - 190;
     if (posY + 280 > window.innerHeight) posY = window.innerHeight - 290;
 
     menu.style.left = `${posX}px`;
     menu.style.top = `${posY}px`;
 
-    // --- AQUI ESTÁ A TROCA: EMOJI -> IMAGEM ---
-    const imgDadoHtml = `<img src="img/imagem-no-site/dado.png" alt="dado" style="width:18px; vertical-align:middle;" />`;
+    // HTML da imagem do dado para reuso
+    const imgDado = `<img src="img/imagem-no-site/dado.png" alt="dado" style="width:18px; height:18px; vertical-align:middle; margin-bottom:2px;" />`;
 
     menu.innerHTML = `
         <div class="roll-ctx-header" id="roll-drag-handle">ROLAR ${titulo}</div>
         <div class="roll-ctx-body">
             
-            <button class="roll-ctx-btn" onclick="document.getElementById('btn-executar-rolagem-normal').click()">
-                Normal <span class="icon">${imgDadoHtml}</span>
-            </button>
-
             <div class="roll-row">
                 <div class="roll-label" style="color:#4caf50;">VANTAGEM</div>
                 <div class="roll-controls">
@@ -5783,15 +5776,14 @@ window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage
                 </div>
             </div>
 
-            <button class="btn-rodar-final" id="btn-executar-rolagem">RODAR COM AJUSTES</button>
-            
-            <button id="btn-executar-rolagem-normal" style="display:none;"></button>
+            <button class="btn-rodar-final" id="btn-executar-rolagem">
+                RODAR ${imgDado}
+            </button>
         </div>
     `;
 
     document.body.appendChild(menu);
 
-    // Lógica interna do menu
     window.alterarRolagem = (type, delta) => {
         if (type === 'adv') {
             menuState.adv = Math.max(0, menuState.adv + delta);
@@ -5802,9 +5794,10 @@ window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage
         }
     };
 
-    const executar = (isNormal) => {
-        let adv = isNormal ? 0 : menuState.adv;
-        let dis = isNormal ? 0 : menuState.dis;
+    const executar = () => {
+        // Se ambos forem 0, funciona como "Normal" automaticamente
+        let adv = menuState.adv;
+        let dis = menuState.dis;
         let attackRes = null;
         let damageRes = null;
 
@@ -5834,8 +5827,7 @@ window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage
         document.removeEventListener('mousedown', closeMenuOutside);
     };
 
-    document.getElementById('btn-executar-rolagem').onclick = () => executar(false);
-    document.getElementById('btn-executar-rolagem-normal').onclick = () => executar(true);
+    document.getElementById('btn-executar-rolagem').onclick = executar;
 
     tornarArrastavel(menu, document.getElementById('roll-drag-handle'));
 
