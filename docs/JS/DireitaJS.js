@@ -4490,7 +4490,7 @@ diceStyles.textContent = `
         border-bottom: 1px solid #333; padding-bottom: 5px;
     }
     .dice-row {
-        display: flex; justify-content: space-between; align-items: flex-start; /* Alinhado ao topo para multiline */
+        display: flex; justify-content: space-between; align-items: flex-start; /* Alinhamento topo para permitir quebra de linha */
         margin-bottom: 8px; padding: 4px 0; position: relative;
     }
     .dice-label { font-size: 13px; color: #bbb; font-weight: 600; margin-top: 4px; }
@@ -4501,13 +4501,14 @@ diceStyles.textContent = `
     
     .dice-value { 
         font-size: 24px; font-weight: 800; color: #fff; cursor: help; 
-        white-space: pre-wrap; /* Permite quebra de linha */
+        /* Configurações para quebrar linha se for muito grande */
+        white-space: pre-wrap; 
         word-break: break-word;
         line-height: 1.1;
         display: block;
     }
     
-    /* Se tiver muitos números (quebra de linha), diminui um pouco a fonte */
+    /* Reduz fonte se tiver quebra de linha */
     .dice-value:has(br), .dice-value span + span { font-size: 20px; }
 
     .dice-tooltip {
@@ -4520,7 +4521,7 @@ diceStyles.textContent = `
         margin-bottom: 5px; transition: opacity 0.2s;
         text-align: left;
         min-width: 150px; width: max-content; max-width: 280px;
-        max-height: 200px; overflow-y: auto; pointer-events: auto; /* Permite scroll/clique */
+        max-height: 200px; overflow-y: auto; pointer-events: auto; 
     }
     .dice-tooltip::-webkit-scrollbar { width: 4px; }
     .dice-tooltip::-webkit-scrollbar-thumb { background: #9c27b0; border-radius: 10px; }
@@ -4886,20 +4887,15 @@ function getSpellAttackValues() {
 
 
 /* =============================================================
-   4. ESCUTADOR GLOBAL DE CLIQUES (ATUALIZADO MULTI-ATAQUE)
+   4. ESCUTADOR GLOBAL DE CLIQUES (ATUALIZADO: ACERTO COM VÍRGULA + TOOLTIP LIMPO)
 ============================================================= */
 document.addEventListener('click', function(e) {
     
-    // =================================================================
     // CASO 1: CLIQUE NO ÍCONE DE DADO (IMAGEM)
-    // =================================================================
     if (e.target.classList.contains('dice-img')) {
         e.preventDefault(); 
         e.stopPropagation();
 
-        // -------------------------------------------------------------
-        // A. VERIFICA SE É MAGIA (SPELL CARD)
-        // -------------------------------------------------------------
         const spellCard = e.target.closest('.spell-card');
         if (spellCard) {
             const spellId = spellCard.getAttribute('data-id');
@@ -4913,7 +4909,6 @@ document.addEventListener('click', function(e) {
             const selectedLevel = selectSlot ? parseInt(selectSlot.value) : (s.levelNumber || 0);
             const baseLevel = s.levelNumber || 0;
 
-            // Configurações Globais
             const critRange = state.spellDCConfig.critRange || 20;
             const critMult = state.spellDCConfig.critMult || 2;
 
@@ -4923,7 +4918,6 @@ document.addEventListener('click', function(e) {
             let numRaios = 0;
             let isMultiAttack = false;
 
-            // A) Rajada Mística (Escala com Nível do Personagem)
             if (nomeLimpo.includes("rajada mística") || nomeLimpo.includes("eldritch blast")) {
                 const charLevel = getTotalCharacterLevel();
                 numRaios = 1;
@@ -4932,9 +4926,7 @@ document.addEventListener('click', function(e) {
                 if (charLevel >= 17) numRaios = 4;
                 isMultiAttack = true;
             }
-            // B) Raio Ardente (Escala com Slot)
             else if (nomeLimpo.includes("raio ardente") || nomeLimpo.includes("scorching ray")) {
-                // Base 3 raios no slot 2. +1 por slot acima.
                 const slotUsado = selectedLevel > 0 ? selectedLevel : 2;
                 numRaios = 3 + (slotUsado - 2);
                 isMultiAttack = true;
@@ -4944,8 +4936,8 @@ document.addEventListener('click', function(e) {
                 const vals = getSpellAttackValues();
                 if (!vals) { alert("Configure a DT/Atributo de conjuração primeiro!"); return; }
 
-                let listaAcertosNumeros = []; // Ex: ["18", "5", "NAT20"]
-                let listaDetalhesDano = [];   // Ex: "P1: 5 (Dano), P2: 10 (Crít)"
+                let listaAcertosNumeros = []; 
+                let listaDetalhesDano = [];   
                 let totalDano = 0;
                 let teveCriticoGeral = false;
                 let teveFalhaGeral = false;
@@ -4961,17 +4953,16 @@ document.addEventListener('click', function(e) {
                     if(isCrit) teveCriticoGeral = true;
                     if(isFumble) teveFalhaGeral = true;
 
-                    // Formatação do número de acerto individual (HTML para a Direita)
+                    // Formatação do número: <span class="cor">18</span>
                     let displayNum = atkTotal;
                     if (isCrit) displayNum = `<span class="dice-roll-max" title="Crítico!">${atkTotal}</span>`;
                     else if (isFumble) displayNum = `<span class="dice-roll-min" title="Falha!">${d20}</span>`; 
                     
                     listaAcertosNumeros.push(displayNum);
 
-                    // 2. ROLA DANO (Simula dano se acertasse)
+                    // 2. ROLA DANO
                     let formulaDano = s.damage || (nomeLimpo.includes("ardente") ? "2d6" : "1d10");
                     
-                    // Se CRÍTICO neste raio, dobra os dados
                     if (isCrit) {
                         const regex = /^(\d*)d(\d+)(.*)$/i;
                         const match = formulaDano.match(regex);
@@ -4984,16 +4975,14 @@ document.addEventListener('click', function(e) {
                     const resDano = rollDiceExpression(formulaDano);
                     totalDano += resDano.total;
                     
-                    const labelHit = isCrit ? "CRÍT" : (isFumble ? "ERRO" : "DANO");
-                    listaDetalhesDano.push(`<strong>#${i}:</strong> ${resDano.total} <small>(${labelHit})</small>`);
+                    // FORMATO LIMPO PEDIDO: "P1: 6"
+                    listaDetalhesDano.push(`<strong>P${i}:</strong> ${resDano.total}`);
                 }
 
-                // OBJETO ATAQUE (Texto limpo separado por espaços para o portrait ler)
-                // O .text enviamos puro para o socket tentar ler, ou mandamos HTML e limpamos lá.
-                // Aqui mandamos o HTML para a Direita renderizar bonito.
                 const attackRes = {
                     total: 0, 
-                    text: listaAcertosNumeros.join(' '), // Ex: "18 <span..>25</span> 5"
+                    // Junta com vírgula e espaço
+                    text: listaAcertosNumeros.join(', '), 
                     detail: "Valores individuais de ataque",
                     isCrit: teveCriticoGeral,
                     isFumble: teveFalhaGeral,
@@ -5004,7 +4993,7 @@ document.addEventListener('click', function(e) {
                     total: totalDano,
                     text: totalDano.toString(),
                     detail: listaDetalhesDano.join('<br>'),
-                    label: "DANO POTENCIAL",
+                    label: "DANO TOTAL",
                     isCrit: false 
                 };
 
@@ -5014,7 +5003,7 @@ document.addEventListener('click', function(e) {
             }
             
             // =========================================================
-            // 2. LÓGICA DE MÍSSEIS MÁGICOS (Auto-Hit)
+            // 2. LÓGICA DE MÍSSEIS MÁGICOS (Mantida)
             // =========================================================
             if (nomeLimpo.includes("mísseis mágicos") || nomeLimpo.includes("misseis magicos")) {
                 let numProjectiles = 3 + (selectedLevel - baseLevel);
@@ -5025,7 +5014,8 @@ document.addEventListener('click', function(e) {
                 for (let i = 1; i <= numProjectiles; i++) {
                    let res = rollDiceExpression(damageText);
                    totalDamage += res.total;
-                   allRollsDetails.push(`P${i}: ${res.text} <small>(${res.detail})</small>`);
+                   // FORMATO LIMPO: "P1: 4"
+                   allRollsDetails.push(`P${i}: ${res.text}`);
                 }
 
                 const damageRes = {
@@ -5097,7 +5087,7 @@ document.addEventListener('click', function(e) {
         }
 
         // -------------------------------------------------------------
-        // B. VERIFICA SE É ITEM (ARMA/INVENTÁRIO)
+        // B. VERIFICA SE É ITEM (ARMA/INVENTÁRIO) - MANTIDO IGUAL
         // -------------------------------------------------------------
         const itemCard = e.target.closest('.item-card');
         if (itemCard) {
@@ -5105,7 +5095,6 @@ document.addEventListener('click', function(e) {
             const item = state.inventory.find(i => String(i.id) === String(itemId));
 
             if (item) {
-                // 1. ROLA ATAQUE
                 let attackRes = null;
                 const margemCritico = parseInt(item.crit) || 20;
                 const temAtributoDefinido = item.attackAttribute && item.attackAttribute !== 'Nenhum';
@@ -5135,7 +5124,6 @@ document.addEventListener('click', function(e) {
                     };
                 }
 
-                // 2. ROLA DANO
                 let damageRes = null;
                 let expressionDano = "";
                 let baseDano = item.damage || '0';
@@ -5203,7 +5191,7 @@ document.addEventListener('click', function(e) {
         }
 
         // -------------------------------------------------------------
-        // C. VERIFICA SE É HABILIDADE
+        // C. VERIFICA SE É HABILIDADE (MANTIDO IGUAL)
         // -------------------------------------------------------------
         const habCard = e.target.closest('.hab-card');
         if (habCard) {

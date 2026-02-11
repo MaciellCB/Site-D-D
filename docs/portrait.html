@@ -59,15 +59,15 @@
             position: relative;
             z-index: 6;
             padding: 8px 30px 8px 10px;
-            /* Efeito de Tinta Preta */
+            /* Efeito de Tinta Preta: Fundo sólido com ponta recortada */
             background: #000;
-            /* Clip-path para criar a ponta rasgada de tinta */
             clip-path: polygon(0% 0%, 95% 0%, 100% 50%, 90% 100%, 0% 100%);
+            /* Opcional: Um leve gradiente para não parecer chapado demais */
             background: linear-gradient(90deg, #0a0a0a 0%, #1a1a1a 80%, #000 100%);
             min-width: 150px;
         }
 
-        /* --- BARRAS --- */
+        /* --- BARRAS DE VIDA --- */
         .stats-container {
             position: relative; margin-left: -40px; margin-bottom: 15px;
             z-index: 5; display: flex; flex-direction: column; width: 450px;
@@ -127,17 +127,22 @@
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* Cores dos Dados */
+        /* --- CORES DOS DADOS (MODIFICANDO O FUNDO) --- */
         .d-icon { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; }
         
-        /* Dado de Ataque (Esverdeado/Dourado) */
-        .d-attack-bg { filter: sepia(1) hue-rotate(60deg) saturate(3) brightness(0.8); }
+        /* Filtro para Acerto (Esverdeado/Dourado) */
+        .d-attack-bg { 
+            filter: sepia(1) hue-rotate(60deg) saturate(3) brightness(0.8); 
+        }
         
-        /* Dado de Dano (Avermelhado/Laranja) */
-        .d-damage-bg { filter: sepia(1) hue-rotate(-50deg) saturate(3) brightness(0.7); }
+        /* Filtro para Dano (Avermelhado/Laranja) */
+        .d-damage-bg { 
+            filter: sepia(1) hue-rotate(-50deg) saturate(3) brightness(0.7); 
+        }
 
         .d-val {
             position: relative; z-index: 2; font-size: 22px; font-weight: 900; color: #fff;
+            /* Borda preta sólida ao redor do número */
             text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000;
         }
         
@@ -254,8 +259,7 @@
 
             // 1. ATAQUE(S)
             if (data.ataque) {
-                // Tenta detectar múltiplos valores (ex: "18 25 5")
-                // Remove HTML básico para pegar números limpos
+                // Remove HTML básico para pegar números limpos ("18 <span...>20</span>" -> "18 20")
                 let rawText = data.ataque.text.replace(/<[^>]*>/g, ' '); 
                 let valores = rawText.split(/[\s,]+/).filter(x => x.trim() !== '');
 
