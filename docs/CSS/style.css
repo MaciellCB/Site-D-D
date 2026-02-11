@@ -370,3 +370,21 @@ header {
 
 .btn-rodar-final:hover { filter: brightness(1.2); }
 .btn-rodar-final:active { transform: scale(0.95); }
+
+/* =============================================================
+   CORREÇÃO CRÍTICA PARA MOBILE (IMPEDE MENU NATIVO)
+============================================================= */
+.dice-img, .col-icon {
+    -webkit-touch-callout: none !important; /* iPhone: Bloqueia menu nativo */
+    -webkit-user-select: none !important;   /* Bloqueia seleção de texto */
+    user-select: none !important;
+    touch-action: manipulation; /* Melhora resposta ao toque */
+}
+
+/* Estilo do ícone de dado dentro do Menu de Rolagem */
+.roll-ctx-btn img {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    opacity: 0.9;
+}

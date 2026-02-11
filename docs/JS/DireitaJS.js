@@ -2512,7 +2512,7 @@ function bindSpellEvents() {
         });
     };
 
-    // 3. Upcast Visual (Dropdown de Nível)
+    // 3. Upcast Visual
     document.querySelectorAll('.spell-slot-selector').forEach(sel => {
         sel.onclick = (ev) => ev.stopPropagation(); 
         sel.onchange = (ev) => {
@@ -2525,7 +2525,6 @@ function bindSpellEvents() {
             const card = ev.target.closest('.spell-card');
             const damageTextEl = card.querySelector('.dynamic-damage-text');
             
-            // Se tiver função de cálculo disponível, usa ela
             if (damageTextEl && scaling && baseDmg && typeof calculateNewDamage === 'function') {
                 const newDmg = calculateNewDamage(baseDmg, scaling, baseLvl, targetLvl);
                 damageTextEl.textContent = newDmg;
@@ -2536,31 +2535,24 @@ function bindSpellEvents() {
 
     // 4. EVENTOS DOS CARDS (MAGIAS)
     document.querySelectorAll('.spell-card').forEach(card => {
-        // PEGA O ID COMO STRING (NÃO NUMBER)
         const rawId = card.getAttribute('data-id');
         
         // A. EXPANDIR / COLAPSAR
         const header = card.querySelector('.card-header');
-        
         if (header) {
             header.onclick = (ev) => {
-                // Filtra cliques que NÃO devem expandir
                 if (ev.target.closest('.spell-right') || 
                     ev.target.closest('.check-ativar') || 
                     ev.target.closest('.cast-controls') ||
-                    ev.target.closest('.dice-img') || // Importante: não expandir ao clicar no dado
+                    ev.target.closest('.dice-img') || 
                     ev.target.tagName === 'SELECT' ||
                     ev.target.tagName === 'INPUT') {
                     return;
                 }
                 
-                // Busca a magia comparando STRING com STRING
                 const s = state.spells.find(x => String(x.id) === String(rawId));
-                
                 if (s) {
                     s.expanded = !s.expanded;
-                    
-                    // MANIPULAÇÃO DOM DIRETA
                     const body = card.querySelector('.card-body');
                     const caret = card.querySelector('.caret');
                     
@@ -2573,7 +2565,6 @@ function bindSpellEvents() {
                         card.classList.remove('expanded');
                         if(caret) caret.textContent = '▸';
                     }
-                    
                     saveStateToServer();
                 }
             };
@@ -2592,75 +2583,66 @@ function bindSpellEvents() {
             ch.onclick = ev => ev.stopPropagation();
         }
 
-        // C. NOVO: EVENTO HÍBRIDO (CLIQUE DIR / LONG PRESS)
+        // C. NOVO: EVENTO HÍBRIDO (MAGIAS) - CORRIGIDO
         const diceImg = card.querySelector('.dice-img');
         if (diceImg) {
-            // Clique Esquerdo Rápido (Opcional: Rolagem Normal Direta)
+            // Clique Esquerdo (Normal)
             diceImg.addEventListener('click', (e) => {
-                // Se quiser manter o clique esquerdo rolando normal direto:
-                const s = state.spells.find(x => String(x.id) === String(rawId));
-                if (!s) return;
-                const vals = getSpellAttackValues();
-                if(!vals) return;
-                
-                // Simples animação
+                // Animaçãozinha
                 diceImg.style.transform = "scale(0.8)";
                 setTimeout(()=>diceImg.style.transform="scale(1)", 100);
 
+                const s = state.spells.find(x => String(x.id) === String(rawId));
+                if (!s) return;
+
+                // Tenta pegar valores, se falhar, usa 0
+                const vals = getSpellAttackValues() || {prof:0, mod:0, extra:0};
                 const totalBonus = vals.prof + vals.mod + vals.extra;
                 const exprAtk = `1d20 + ${totalBonus}`;
+                
                 const damageTextElement = card.querySelector('.dynamic-damage-text');
                 const exprDano = damageTextElement ? damageTextElement.textContent : s.damage;
                 
                 // Rola normal (0 adv, 0 dis)
                 const atkRes = rollDiceWithAdvantage(exprAtk, 0, 0);
-                let dmgRes = rollDiceExpression(exprDano);
                 
-                if(atkRes.isCrit) {
-                     // Lógica de crítico simples
-                     // ... (pode copiar a lógica de critico da função do menu se quiser)
+                let dmgRes = null;
+                // Se o ataque for crítico, e tiver dano, calculamos aqui para o clique rápido
+                if (atkRes.isCrit && exprDano) {
+                     const regexDice = /^(\d*)d(\d+)(.*)$/i;
+                     const match = exprDano.match(regexDice);
+                     let dmgFormulaCrit = exprDano;
+                     if (match) {
+                        const qtd = (match[1] === "" ? 1 : parseInt(match[1])) * 2;
+                        dmgFormulaCrit = `${qtd}d${match[2]}${match[3] || ''}`;
+                     }
+                     dmgRes = rollDiceExpression(dmgFormulaCrit);
+                     dmgRes.isCrit = true;
+                     dmgRes.label = "DANO CRÍTICO";
+                } else if (exprDano) {
+                     dmgRes = rollDiceExpression(exprDano);
                 }
+
                 showCombatResults(s.name, atkRes, dmgRes);
             });
 
-            // 2. CLIQUE DIREITO / SEGURAR (Menu de Vantagem)
+            // Clique Direito / Segurar
             if (typeof window.addLongPressListener === 'function') {
-                window.addLongPressListener(btnDado, (e) => {
-                    const sinal = bonusTotal >= 0 ? '+' : '';
-                    const expressao = `1d20 ${sinal} ${bonusTotal}`;
+                window.addLongPressListener(diceImg, (e) => {
+                    const s = state.spells.find(x => String(x.id) === String(rawId));
+                    if (!s) return;
 
-                    if (typeof window.abrirMenuRolagem === 'function') {
-                        window.abrirMenuRolagem(e, `Perícia: ${nome}`, expressao, null);
-                    }
+                    const vals = getSpellAttackValues() || {prof:0, mod:0, extra:0};
+                    const totalBonus = vals.prof + vals.mod + vals.extra;
+                    
+                    const exprAtk = `1d20 + ${totalBonus}`;
+                    const damageTextElement = card.querySelector('.dynamic-damage-text');
+                    const exprDano = damageTextElement ? damageTextElement.textContent : s.damage;
+
+                    window.abrirMenuRolagem(e, s.name, exprAtk, exprDano);
                 });
             }
         }
-    });
-
-    // C. Remover
-    document.querySelectorAll('.remover-spell').forEach(a => {
-        a.onclick = (ev) => {
-            ev.preventDefault();
-            const id = a.getAttribute('data-id'); // String
-            state.spells = state.spells.filter(s => String(s.id) !== String(id));
-            
-            const card = a.closest('.spell-card');
-            if(card) {
-                card.style.opacity = '0';
-                setTimeout(() => card.remove(), 200);
-            }
-            saveStateToServer();
-        };
-    });
-    
-    // D. Editar
-    document.querySelectorAll('.editar-spell').forEach(a => {
-        a.onclick = (ev) => {
-            ev.preventDefault();
-            const id = a.getAttribute('data-id'); // String
-            const s = state.spells.find(x => String(x.id) === String(id));
-            if (s) openSpellModal(s);
-        };
     });
 }
 
@@ -5754,38 +5736,41 @@ function rollDiceWithAdvantage(expression, advCount, disCount) {
 // 2. Variáveis Globais de Estado do Menu
 let menuState = { adv: 0, dis: 0 };
 
-// 3. Criar Popup Arrastável
+// 3. Criar Popup Arrastável (ATUALIZADO COM IMAGEM)
 window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage = null) {
-    // Previne menu nativo e propagação
     if(e.preventDefault) e.preventDefault();
     if(e.stopPropagation) e.stopPropagation();
 
-    // Remove anterior
     const old = document.querySelector('.roll-context-menu');
     if (old) old.remove();
 
-    // Reseta estado
     menuState = { adv: 0, dis: 0 };
 
     const menu = document.createElement('div');
     menu.className = 'roll-context-menu';
     
-    // POSICIONAMENTO INTELIGENTE (Para não sair da tela)
-    // Usa clientX/Y que é relativo à janela visível
+    // Posicionamento
     let posX = e.clientX || (e.touches && e.touches[0].clientX);
     let posY = e.clientY || (e.touches && e.touches[0].clientY);
 
-    // Ajustes de borda
+    // Correção para não sair da tela
     if (posX + 180 > window.innerWidth) posX = window.innerWidth - 190;
-    if (posY + 250 > window.innerHeight) posY = window.innerHeight - 260;
+    if (posY + 280 > window.innerHeight) posY = window.innerHeight - 290;
 
     menu.style.left = `${posX}px`;
     menu.style.top = `${posY}px`;
+
+    // AQUI ESTÁ A TROCA DO EMOJI PELA IMAGEM
+    const imgDadoHtml = `<img src="img/imagem-no-site/dado.png" alt="dado" />`;
 
     menu.innerHTML = `
         <div class="roll-ctx-header" id="roll-drag-handle">ROLAR ${titulo}</div>
         <div class="roll-ctx-body">
             
+            <button class="roll-ctx-btn" onclick="document.getElementById('btn-executar-rolagem-normal').click()">
+                Normal <span class="icon">${imgDadoHtml}</span>
+            </button>
+
             <div class="roll-row">
                 <div class="roll-label" style="color:#4caf50;">VANTAGEM</div>
                 <div class="roll-controls">
@@ -5804,15 +5789,13 @@ window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage
                 </div>
             </div>
 
-            <button class="btn-rodar-final" id="btn-executar-rolagem">RODAR 🎲</button>
+            <button class="btn-rodar-final" id="btn-executar-rolagem">RODAR COM AJUSTES</button>
+            <button id="btn-executar-rolagem-normal" style="display:none;"></button>
         </div>
     `;
 
     document.body.appendChild(menu);
 
-    // --- LÓGICA DE INTERAÇÃO INTERNA ---
-    
-    // Atualiza valores visuais
     window.alterarRolagem = (type, delta) => {
         if (type === 'adv') {
             menuState.adv = Math.max(0, menuState.adv + delta);
@@ -5823,21 +5806,19 @@ window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage
         }
     };
 
-    // Botão Rodar
-    document.getElementById('btn-executar-rolagem').onclick = () => {
+    // Função de Execução
+    const executar = (isNormal) => {
+        let adv = isNormal ? 0 : menuState.adv;
+        let dis = isNormal ? 0 : menuState.dis;
         let attackRes = null;
         let damageRes = null;
 
-        // 1. Rola Ataque
         if (expressionAttack) {
-            attackRes = rollDiceWithAdvantage(expressionAttack, menuState.adv, menuState.dis);
+            attackRes = rollDiceWithAdvantage(expressionAttack, adv, dis);
         }
 
-        // 2. Rola Dano
         if (expressionDamage) {
             let formulaDano = expressionDamage;
-            
-            // Se for crítico, dobra dados
             if (attackRes && attackRes.isCrit) {
                 const regexDice = /^(\d*)d(\d+)(.*)$/i;
                 const match = formulaDano.match(regexDice);
@@ -5858,13 +5839,12 @@ window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage
         document.removeEventListener('mousedown', closeMenuOutside);
     };
 
-    // --- TORNAR ARRASTÁVEL ---
+    document.getElementById('btn-executar-rolagem').onclick = () => executar(false);
+    document.getElementById('btn-executar-rolagem-normal').onclick = () => executar(true);
+
     tornarArrastavel(menu, document.getElementById('roll-drag-handle'));
 
-    // Fechar ao clicar fora
-    setTimeout(() => {
-        document.addEventListener('mousedown', closeMenuOutside);
-    }, 100);
+    setTimeout(() => { document.addEventListener('mousedown', closeMenuOutside); }, 100);
 
     function closeMenuOutside(ev) {
         if (!menu.contains(ev.target)) {
@@ -5924,28 +5904,40 @@ function tornarArrastavel(element, handle) {
     }
 }
 
-// 5. Função Utilitária para Long Press (Segurar botão)
+// 5. Função Utilitária para Long Press (Segurar botão) - ATUALIZADA
 window.addLongPressListener = function(element, callback) {
     let timer;
-    const delay = 600; // Tempo em ms para considerar "segurar"
+    const delay = 500; // Meio segundo para ativar
 
-    // Bloqueia menu de contexto nativo
+    // 1. Bloqueia menu nativo (Desktop e Android)
     element.addEventListener('contextmenu', (e) => {
         e.preventDefault();
         e.stopPropagation();
         callback(e);
         return false;
-    });
+    }, false);
 
-    // Touch Start
+    // 2. Lógica de Toque (iOS/Android)
     element.addEventListener('touchstart', (e) => {
+        // NÃO use preventDefault aqui imediatamente, senão bloqueia o scroll
         timer = setTimeout(() => {
-            // Dispara o evento e passa o toque como referência
+            // Se segurou por 500ms, dispara nosso menu
             callback(e); 
         }, delay);
-    }, {passive: false});
+    }, {passive: true});
 
-    // Cancela se mover ou soltar
-    element.addEventListener('touchend', () => clearTimeout(timer));
-    element.addEventListener('touchmove', () => clearTimeout(timer));
+    // Se mover o dedo (scroll), cancela
+    element.addEventListener('touchmove', () => {
+        if (timer) clearTimeout(timer);
+    });
+
+    // Se soltar antes do tempo, cancela
+    element.addEventListener('touchend', () => {
+        if (timer) clearTimeout(timer);
+    });
+    
+    // Cancela se for cancelado pelo sistema
+    element.addEventListener('touchcancel', () => {
+        if (timer) clearTimeout(timer);
+    });
 };
