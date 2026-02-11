@@ -420,7 +420,7 @@
       "execucao": "1 ação",
       "alcance": "36m",
       "area": "-",
-      "alvo": "1 criatura",
+      "alvo": "quantos feixes tiver",
       "duracao": "Instantânea",
       "resistencia": "-"
     },
@@ -1329,7 +1329,7 @@
       "execucao": "1 ação",
       "alcance": "36m",
       "area": "-",
-      "alvo": "1 a 3 criaturas",
+      "alvo": "quantos mísseis invocar",
       "duracao": "Instantânea",
       "resistencia": "-"
     },
@@ -2638,7 +2638,7 @@
       "execucao": "1 ação",
       "alcance": "36m",
       "area": "-",
-      "alvo": "1 a 3 alvos",
+      "alvo": "quantos raios conjurar",
       "duracao": "Instantânea",
       "resistencia": "-"
     },

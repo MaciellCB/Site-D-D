@@ -1782,20 +1782,131 @@ window.addEventListener('sheet-updated', () => {
 
 function initSpellSlotsState() {
   if (!state.spellSlots) state.spellSlots = {};
-  if (!state.customResources) state.customResources = []; // Array para recursos extras
+  if (!state.customResources) state.customResources = [];
 
-  // Chaves padrão
+  // Chaves padrão do sistema
   const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'pact', 'ki', 'furia', 'sorcery', 'mutagen', 'blood_curse', 'infusions'];
 
-  // Adiciona chaves dos recursos customizados (ex: custom_0, custom_1)
+  // Adiciona chaves para recursos customizados usando prefixo seguro "custom_"
+  // Isso impede que um botão chamado "1 slot" afete a chave "1"
   state.customResources.forEach((res, idx) => {
     keys.push(`custom_${idx}`);
   });
 
   keys.forEach(k => {
-    if (!state.spellSlots[k]) state.spellSlots[k] = { status: [] };
+    if (!state.spellSlots[k]) state.spellSlots[k] = { status: [], max: 0, used: 0 };
     if (!Array.isArray(state.spellSlots[k].status)) state.spellSlots[k].status = [];
   });
+}
+
+function renderSpellSlotsHTML() {
+  initSpellSlotsState();
+
+  // Calcula Recursos Totais das classes (não afeta customizados)
+  const recursosTotais = calcularRecursosTotais(state.niveisClasses, state.abilities, state.atributos);
+
+  // Estado do Accordion
+  if (typeof state.isSlotsCollapsed === 'undefined') state.isSlotsCollapsed = false;
+  const isCollapsed = state.isSlotsCollapsed;
+  const arrowIcon = isCollapsed ? '▸' : '▾';
+  const containerClass = isCollapsed ? 'slots-container collapsed' : 'slots-container';
+
+  let html = `<div class="${containerClass}" style="border: 1px solid rgba(156, 39, 176, 0.3); background: #121212;">`;
+
+  html += `
+        <div class="slots-header-actions" id="headerSlotsToggle" style="cursor:pointer; user-select:none;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span style="color:#9c27b0; font-size:18px; width:15px;">${arrowIcon}</span>
+                <span class="slots-title">Recursos de Classe</span>
+            </div>
+            <div style="display:flex; gap: 5px; align-items:center;">
+                <button id="btnConfigRes" class="btn-config-gear" title="Adicionar/Editar Slots Extras">⚙️</button>
+                <button id="btnRestSlots" class="mini-btn-res" title="Recuperar Tudo" style="padding:4px 8px; width:auto; font-size:11px;">🌙</button>
+            </div>
+        </div>
+        
+        <div class="slots-body-content">
+            <div class="slots-grid">
+    `;
+
+  let hasAnySlot = false;
+
+  const renderPips = (key, maxVal, label, colorClass) => {
+    if (maxVal > 0) {
+      hasAnySlot = true;
+      const slotState = state.spellSlots[key];
+
+      // Garante tamanho do array de status
+      while (slotState.status.length < maxVal) slotState.status.push(false);
+      // Remove excessos se o max diminuiu
+      if(slotState.status.length > maxVal) slotState.status = slotState.status.slice(0, maxVal);
+
+      let contentHtml = '';
+      if (maxVal >= 99) {
+        contentHtml = `<div class="slot-pips"><span style="color:#fff; font-weight:bold; font-size:12px;">ILIMITADO</span></div>`;
+      } else {
+        let pips = '';
+        for (let i = 0; i < maxVal; i++) {
+          const isSpent = slotState.status[i];
+          // DATA-KEY AQUI É CRUCIAL PARA A SEPARAÇÃO
+          pips += `<span class="slot-pip ${colorClass} ${isSpent ? 'used' : 'available'}" data-key="${key}" data-idx="${i}"></span>`;
+        }
+        contentHtml = `<div class="slot-pips" style="flex-wrap: wrap;">${pips}</div>`;
+      }
+
+      html += `
+                <div class="slot-group ${key === 'pact' ? 'pact-group' : ''}">
+                    <div class="slot-label" style="${key === 'pact' ? 'color:#e0aaff;' : ''}">${label}</div>
+                    ${contentHtml}
+                </div>
+            `;
+    }
+  };
+
+  // 1. Slots Normais (Chaves "1" a "9")
+  for (let i = 1; i <= 9; i++) renderPips(String(i), recursosTotais.slots[i - 1], `${i}º Círculo`, '');
+  
+  // 2. Pacto e Classe
+  if (recursosTotais.pact.qtd > 0) renderPips('pact', recursosTotais.pact.qtd, `Pacto (${recursosTotais.pact.nivel}º)`, 'pact');
+  renderPips('ki', recursosTotais.ki, 'Ki', 'ki-pip');
+  renderPips('furia', recursosTotais.furia, 'Fúria', 'rage-pip');
+  renderPips('sorcery', recursosTotais.sorcery, 'Feitiçaria', 'sorc-pip');
+  renderPips('mutagen', recursosTotais.mutagen, 'Mutagênicos', 'mut-pip');
+  renderPips('infusions', recursosTotais.infusions, 'Infusões', 'infusion-pip');
+  renderPips('blood_curse', recursosTotais.blood_curse, 'Maldições', 'curse-pip');
+
+  // 3. Recursos Customizados (Chaves "custom_X")
+  // Independente do NOME que o usuário der, a chave interna será custom_0, custom_1, etc.
+  if (state.customResources && state.customResources.length > 0) {
+    state.customResources.forEach((res, idx) => {
+      renderPips(`custom_${idx}`, parseInt(res.max), res.name, 'custom-pip');
+    });
+  }
+
+  html += `</div>`; // Fecha grid
+
+  // Info Footer
+  if (recursosTotais.infoConjuracao.length > 0) {
+    html += `<div class="spell-info-footer" style="margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">`;
+    const infosUnicas = recursosTotais.infoConjuracao.filter((v, i, a) => a.findIndex(t => (t.classe === v.classe)) === i);
+    infosUnicas.forEach(info => {
+      let texto = `<strong style="color:#9c27b0;">${info.classe}</strong>: `;
+      let partes = [];
+      if (info.truques !== undefined) partes.push(`${info.truques} Truques`);
+      if (info.tipo === 'preparadas') partes.push(`${info.preparadas} Preparadas`);
+      else if (info.tipo === 'conhecidas' && info.conhecidas > 0) partes.push(`${info.conhecidas} Conhecidas`);
+      if (info.maldicoes !== undefined) partes.push(`${info.maldicoes} Maldições`);
+      if (info.extra) partes.push(info.extra);
+      texto += partes.join(' • ');
+      html += `<div style="font-size:12px; color:#ccc; margin-bottom:4px;">${texto}</div>`;
+    });
+    html += `</div>`;
+  }
+
+  html += `</div></div>`;
+  
+  if (!hasAnySlot && (!state.customResources || state.customResources.length === 0) && recursosTotais.infoConjuracao.length === 0) return '';
+  return html;
 }
 
 function renderSpellSlotsHTML() {
@@ -4927,7 +5038,12 @@ document.addEventListener('click', function(e) {
                 isMultiAttack = true;
             }
             else if (nomeLimpo.includes("raio ardente") || nomeLimpo.includes("scorching ray")) {
+                // Se a magia estiver configurada errada como Nível 1 no JSON,
+                // mas o dropdown (selectedLevel) estiver em 2, usa 2.
+                // Se selectedLevel for 0 (erro), assume 2 (base do Raio Ardente)
                 const slotUsado = selectedLevel > 0 ? selectedLevel : 2;
+                
+                // Fórmula Raio Ardente: 3 raios base (2º círculo) + 1 raio por nível acima
                 numRaios = 3 + (slotUsado - 2);
                 isMultiAttack = true;
             }
@@ -4998,7 +5114,7 @@ document.addEventListener('click', function(e) {
                 };
 
                 showCombatResults(spellTitle, attackRes, damageRes);
-                consumirSlotSeNecessario(selectedLevel);
+                consumirSlotSeNecessario(selectedLevel > 0 ? selectedLevel : 2);
                 return;
             }
             
@@ -5319,38 +5435,61 @@ window.mesclarEstadoVisual = function (estadoAntigo, estadoNovo) {
   return estadoNovo;
 }
 
+/* =============================================================
+   CORREÇÃO: CONSUMO DE SLOT COM AVISOS E TRAVA
+============================================================= */
 function consumirSlotSeNecessario(selectedLevel) {
-    if (selectedLevel > 0) {
-        let slotConsumed = false;
-        const standardKey = String(selectedLevel);
-        
-        // Tenta gastar slot normal
-        if (state.spellSlots[standardKey] && state.spellSlots[standardKey].status) {
-          const availableIdx = state.spellSlots[standardKey].status.indexOf(false);
-          if (availableIdx !== -1) {
-            state.spellSlots[standardKey].status[availableIdx] = true;
-            slotConsumed = true;
-          }
-        }
-        
-        // Tenta gastar slot de Pacto
-        if (!slotConsumed && state.spellSlots['pact'] && state.spellSlots['pact'].status) {
-           // Verifica se o nível do pacto é suficiente
-           if ((state.spellSlots['pact'].level || 0) >= selectedLevel) {
-              const pactAvailableIdx = state.spellSlots['pact'].status.indexOf(false);
-              if (pactAvailableIdx !== -1) {
-                state.spellSlots['pact'].status[pactAvailableIdx] = true;
-                slotConsumed = true;
-              }
-           }
-        }
+    // 0 = Truque (não gasta nada)
+    if (!selectedLevel || selectedLevel <= 0) return;
 
-        if (slotConsumed) {
-          saveStateToServer();
-          renderActiveTab();
+    const key = String(selectedLevel);
+    let slotGasto = false;
+    let tipoGasto = "";
+
+    // 1. Tenta Slot Normal (Ex: "1", "2", "3"...)
+    // Verifica se a chave existe e se tem o array de status
+    if (state.spellSlots[key] && Array.isArray(state.spellSlots[key].status)) {
+        // Encontra o primeiro índice que é 'false' (ou seja, disponível/não usado)
+        const idx = state.spellSlots[key].status.indexOf(false);
+        
+        if (idx !== -1) {
+            state.spellSlots[key].status[idx] = true; // Marca como usado
+            slotGasto = true;
+            tipoGasto = `${selectedLevel}º Círculo`;
+        }
+    }
+
+    // 2. Se não conseguiu slot normal, tenta Slot de Pacto (Bruxo/Blood Hunter)
+    if (!slotGasto && state.spellSlots['pact'] && Array.isArray(state.spellSlots['pact'].status)) {
+         const pactLvl = state.spellSlots['pact'].level || 0;
+         
+         // Só gasta pacto se o nível do pacto for igual ou maior que a magia pede
+         if (pactLvl >= selectedLevel) {
+             const idx = state.spellSlots['pact'].status.indexOf(false);
+             if (idx !== -1) {
+                 state.spellSlots['pact'].status[idx] = true;
+                 slotGasto = true;
+                 tipoGasto = `Pacto (${pactLvl}º)`;
+             }
+         }
+    }
+
+    if (slotGasto) {
+        saveStateToServer();
+        renderActiveTab(); // Atualiza visualmente as bolinhas
+        
+        // Feedback Visual (Sucesso)
+        if (typeof exibirAvisoTemporario === 'function') {
+            exibirAvisoTemporario(`Gasto: Espaço de ${tipoGasto}`);
+        }
+    } else {
+        // AVISO DE FALTA DE SLOT (Correção solicitada)
+        const msg = `ATENÇÃO: Você não tem espaços de ${selectedLevel}º Círculo (ou Pacto equivalente) disponíveis!`;
+        
+        if (typeof exibirAvisoTemporario === 'function') {
+            exibirAvisoTemporario(msg);
         } else {
-          // Opcional: Avisar apenas se não for GM testando
-          // alert(`Sem slots de ${selectedLevel}º círculo!`);
+            alert(msg);
         }
     }
 }
