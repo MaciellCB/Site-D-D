@@ -11,6 +11,7 @@
     <style>
         body,
         html {
+            /* Fundo Verde Chroma Key Padrão */
             background-color: #00f91f;
             margin: 0;
             padding: 0;
@@ -112,8 +113,11 @@
             font-size: 24px;
             text-transform: uppercase;
             text-shadow: 2px 2px 4px #000;
-            background: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0%, transparent 80%);
-            padding: 4px 20px 4px 25px;
+            
+            /* --- ATUALIZADO: FUNDO PRETO TIPO TINTA --- */
+            background: linear-gradient(90deg, #000 0%, #000 60%, transparent 100%);
+            padding: 4px 40px 4px 25px;
+            
             border-radius: 4px 4px 0 0;
             display: inline-block;
             align-self: flex-start;
@@ -206,12 +210,11 @@
         }
 
         /* =========================================================================
-           CSS DOS DADOS (VISUAL CORRIGIDO E LIMPO)
+           CSS DOS DADOS
            ========================================================================= */
         .dice-area {
             position: absolute;
             left: 475px;
-            /* Posição calculada matematicamente */
             bottom: 12px;
             display: flex;
             flex-direction: row;
@@ -274,25 +277,16 @@
         }
 
         @keyframes wobble {
-
-            0%,
-            100% {
-                transform: rotate(-3deg);
-            }
-
-            50% {
-                transform: rotate(3deg);
-            }
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
         }
 
-        /* --- ESTILO DO NÚMERO (CORRIGIDO) --- */
         .d-val {
             position: relative;
             z-index: 2;
             font-size: 20px;
             font-weight: 900;
             color: #fff;
-            /* Sombra limpa: cria uma borda preta sólida em volta do número branco */
             text-shadow:
                 2px 0 0 #000, -2px 0 0 #000,
                 0 2px 0 #000, 0 -2px 0 #000,
@@ -300,7 +294,6 @@
             font-family: 'Roboto', sans-serif;
         }
 
-        /* Cores especiais para Crítico e Falha (mantendo geometria) */
         .d-val.crit {
             color: #e040fb;
             text-shadow: 0 0 10px #e040fb, 2px 2px 0 #000;
@@ -311,10 +304,8 @@
             text-shadow: 0 0 10px #ff0000, 2px 2px 0 #000;
         }
 
-        /* CORRIGIDO: Dano agora usa o mesmo estilo padrão (sem brilho branco estranho) */
         .d-val.dmg-val {
             color: #fff;
-            /* Herda o text-shadow padrão do .d-val */
         }
 
         .d-label {
@@ -331,12 +322,9 @@
             border-radius: 4px;
         }
 
-        /* ... CSS existente ... */
-
-        /* --- DEATH SAVES NO PORTRAIT --- */
+        /* --- DEATH SAVES --- */
         .death-saves-wrapper {
             display: none;
-            /* Oculto por padrão */
             width: 100%;
             height: 100%;
             position: absolute;
@@ -345,7 +333,6 @@
             align-items: center;
             justify-content: space-evenly;
             background: #0f0f0f;
-            /* Fundo igual ao da barra */
             z-index: 10;
         }
 
@@ -353,11 +340,9 @@
             width: 24px;
             height: 24px;
             opacity: 0.2;
-            /* Inativo */
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* Sucessos (Escudos/Corações) */
         .ds-icon.success-icon {
             fill: #4caf50;
             filter: drop-shadow(0 0 2px #4caf50);
@@ -368,7 +353,6 @@
             transform: scale(1.3);
         }
 
-        /* Falhas (Caveiras) */
         .ds-icon.failure-icon {
             fill: #f44336;
             filter: drop-shadow(0 0 2px #f44336);
@@ -379,7 +363,6 @@
             transform: scale(1.3);
         }
 
-        /* Texto de Morte */
         .death-text {
             position: absolute;
             font-size: 10px;
@@ -421,31 +404,25 @@
                     <div class="death-text">DEATH SAVES</div>
 
                     <svg class="ds-icon success-icon" id="ds-s-1" viewBox="0 0 24 24">
-                        <path
-                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                     </svg>
                     <svg class="ds-icon success-icon" id="ds-s-2" viewBox="0 0 24 24">
-                        <path
-                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                     </svg>
                     <svg class="ds-icon success-icon" id="ds-s-3" viewBox="0 0 24 24">
-                        <path
-                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                     </svg>
 
                     <div style="width:1px; height:20px; background:#333;"></div>
 
                     <svg class="ds-icon failure-icon" id="ds-f-1" viewBox="0 0 24 24">
-                        <path
-                            d="M12 2C7 2 3 6 3 11c0 2.5 1.5 4.5 4 5.5V20c0 1 1 2 2 2h6c1 0 2-1 2-2v-3.5c2.5-1 4-3 4-5.5 0-5-4-9-9-9zM10 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm4 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" />
+                        <path d="M12 2C7 2 3 6 3 11c0 2.5 1.5 4.5 4 5.5V20c0 1 1 2 2 2h6c1 0 2-1 2-2v-3.5c2.5-1 4-3 4-5.5 0-5-4-9-9-9zM10 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm4 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" />
                     </svg>
                     <svg class="ds-icon failure-icon" id="ds-f-2" viewBox="0 0 24 24">
-                        <path
-                            d="M12 2C7 2 3 6 3 11c0 2.5 1.5 4.5 4 5.5V20c0 1 1 2 2 2h6c1 0 2-1 2-2v-3.5c2.5-1 4-3 4-5.5 0-5-4-9-9-9zM10 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm4 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" />
+                        <path d="M12 2C7 2 3 6 3 11c0 2.5 1.5 4.5 4 5.5V20c0 1 1 2 2 2h6c1 0 2-1 2-2v-3.5c2.5-1 4-3 4-5.5 0-5-4-9-9-9zM10 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm4 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" />
                     </svg>
                     <svg class="ds-icon failure-icon" id="ds-f-3" viewBox="0 0 24 24">
-                        <path
-                            d="M12 2C7 2 3 6 3 11c0 2.5 1.5 4.5 4 5.5V20c0 1 1 2 2 2h6c1 0 2-1 2-2v-3.5c2.5-1 4-3 4-5.5 0-5-4-9-9-9zM10 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm4 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" />
+                        <path d="M12 2C7 2 3 6 3 11c0 2.5 1.5 4.5 4 5.5V20c0 1 1 2 2 2h6c1 0 2-1 2-2v-3.5c2.5-1 4-3 4-5.5 0-5-4-9-9-9zM10 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm4 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" />
                     </svg>
                 </div>
 
@@ -499,16 +476,12 @@
                 if(hpText) hpText.style.display = 'none';
                 dsHud.style.display = 'flex';
 
-                // --- LÓGICA DE LEITURA (ARRAY ou NÚMERO) ---
                 const dsData = data.deathSaves || {};
                 
-                // Helper para verificar se o índice deve acender
                 const checkActive = (val, i) => {
                     if (Array.isArray(val)) {
-                        // Novo sistema (Array): verifica o índice exato (i-1)
                         return val[i-1] === true;
                     } else {
-                        // Sistema antigo (Número): verifica quantidade
                         return (parseInt(val) || 0) >= i;
                     }
                 };
@@ -550,7 +523,7 @@
             inspBadge.style.display = insp > 0 ? 'flex' : 'none';
         }
 
-        // --- ROLAGEM DE DADOS (VISUALIZAÇÃO LIMPA) ---
+        // --- ROLAGEM DE DADOS (VISUALIZAÇÃO LIMPA E ATUALIZADA) ---
         socket.on('dados_rolados', (data) => {
             if (data.personagem && data.personagem.toLowerCase() === nomeOriginalURL.toLowerCase()) {
                 criarPopUpDado(data);
@@ -560,15 +533,24 @@
         function criarPopUpDado(data) {
             const area = document.getElementById('dice-area');
 
-            // Limpa dados anteriores para não acumular
+            // Limpa dados anteriores
             area.innerHTML = '';
 
             const card = document.createElement('div');
             card.className = 'roll-card';
 
             let conteudoHTML = '';
-            // Ícone padrão do dado
-            const iconSrc = "img/imagem-no-site/fundo-dado-portrait.png";
+            
+            // --- CONFIGURAÇÃO DAS IMAGENS ---
+            const pathImagens = "img/imagem-no-site/";
+            const imgAcerto = pathImagens + "fundo-dado-portrait-acerto.png";
+            const imgDano = pathImagens + "fundo-dado-portrait-dano.png";
+            const imgPericia = pathImagens + "fundo-dado-portrait-pericia.png";
+            const imgPadrao = pathImagens + "fundo-dado-portrait.png"; // Fallback de segurança
+
+            // Verifica se é uma perícia olhando o título da rolagem
+            const titulo = (data.titulo || "").toLowerCase();
+            const ehPericia = titulo.includes("perícia") || titulo.includes("pericia");
 
             // 1. DADO DE ATAQUE (D20)
             if (data.ataque) {
@@ -576,9 +558,15 @@
                 const isFumble = data.ataque.isFumble;
                 const valClass = isCrit ? 'crit' : (isFumble ? 'fumble' : '');
 
+                // Define qual imagem usar: Perícia ou Acerto
+                let iconeUsado = imgAcerto; 
+                if (ehPericia) {
+                    iconeUsado = imgPericia;
+                }
+
                 conteudoHTML += `
                     <div class="dice-result-box">
-                        <img src="${iconSrc}" class="d-icon">
+                        <img src="${iconeUsado}" class="d-icon" onerror="this.src='${imgPadrao}'">
                         <div class="d-val ${valClass}">${data.ataque.text}</div>
                         <div class="d-label"></div>
                     </div>
@@ -590,10 +578,12 @@
                 const isCritDmg = data.dano.isCrit;
                 const valClass = isCritDmg ? 'crit' : 'dmg-val';
 
-                // Sem filtro de inversão, cor original (agora tratada no CSS com brightness)
+                // Dano sempre usa a imagem de dano
+                const iconeUsado = imgDano;
+
                 conteudoHTML += `
                     <div class="dice-result-box">
-                        <img src="${iconSrc}" class="d-icon">
+                        <img src="${iconeUsado}" class="d-icon" onerror="this.src='${imgPadrao}'">
                         <div class="d-val ${valClass}">${data.dano.text}</div>
                         <div class="d-label"></div>
                     </div>
