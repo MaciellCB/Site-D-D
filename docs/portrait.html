@@ -206,14 +206,19 @@
         }
 
         /* =========================================================================
-           CSS DOS DADOS
+           CSS DOS DADOS (CORRIGIDO PARA CRESCER PARA A ESQUERDA)
            ========================================================================= */
         .dice-area {
             position: absolute;
-            left: 475px;
+            /* Removemos o LEFT fixo e usamos RIGHT negativo para ancorar no fim */
+            left: auto;
+            right: -350px; 
             bottom: 12px;
             display: flex;
             flex-direction: row;
+            /* Isso alinha o conteúdo à direita, mas a ordem dos itens (flex-row) 
+               mantém Acerto na Esquerda e Dano na Direita visualmente */
+            justify-content: flex-end; 
             gap: 10px;
             pointer-events: none;
             z-index: 20;
@@ -223,10 +228,10 @@
             background: transparent;
             border: none;
             box-shadow: none;
-            /* A animação agora é feita individualmente por dado */
             display: flex;
             flex-direction: row;
             gap: 15px;
+            /* A animação agora é nos dados individuais */
         }
 
         .roll-card.fade-out {
@@ -234,7 +239,6 @@
             transform-origin: bottom center;
         }
 
-        /* Animação individual dos dados */
         .dice-result-box {
             position: relative;
             width: 50px;
@@ -244,6 +248,7 @@
             justify-content: center;
             opacity: 0;
             transform: scale(0.5);
+            /* Animação de entrada agora é aqui */
             animation: popInDice 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
@@ -268,7 +273,6 @@
             position: absolute;
             top: 0;
             left: 0;
-            /* Sem filtro, cor original */
             z-index: 1;
             animation: wobble 3s ease-in-out infinite;
         }
@@ -592,7 +596,7 @@
             setTimeout(() => {
                 card.classList.add('fade-out');
                 setTimeout(() => card.remove(), 1000);
-            }, 6000);
+            }, 15000);
         }
 
         async function carregarDados() {
