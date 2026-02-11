@@ -592,30 +592,44 @@ function bindInventoryCardEvents() {
             };
         }
 
-        // B. NOVO: CLIQUE DIREITO NO DADO (Item/Arma)
+        // B. NOVO: EVENTO HÍBRIDO (ITEM)
         const diceImg = card.querySelector('.dice-img');
         if (diceImg) {
-            diceImg.addEventListener('contextmenu', (e) => {
+            // Clique esquerdo (Normal)
+            diceImg.addEventListener('click', (e) => {
                 const item = state.inventory.find(i => String(i.id) === String(rawId));
-                if (!item) return;
-
-                // Calcula bônus total de ataque
+                if(!item) return;
+                
                 const { modAttr, profBonus, itemBonus } = getItemAttackValues(item);
                 const totalBonus = modAttr + profBonus + itemBonus;
-                
                 const exprAtk = `1d20 + ${totalBonus}`;
-                
-                // Pega Dano (Considera se está Versátil ativado visualmente)
                 const spanDano = card.querySelector('.spell-damage span');
                 const exprDano = spanDano ? spanDano.textContent : item.damage;
-
-                // Verifica se deve rolar ataque (Armas rolam, Itens gerais dependem de config)
                 const usaAtaque = (item.type === 'Arma' || (item.attackAttribute && item.attackAttribute !== 'Nenhum'));
+
+                const atkRes = usaAtaque ? rollDiceWithAdvantage(exprAtk, 0, 0) : null;
+                const dmgRes = rollDiceExpression(exprDano);
                 
-                if (typeof window.abrirMenuRolagem === 'function') {
-                    window.abrirMenuRolagem(e, item.name, usaAtaque ? exprAtk : null, exprDano);
-                }
+                showCombatResults(item.name, atkRes, dmgRes);
             });
+
+            // Clique Direito / Segurar (Menu)
+            if (typeof window.addLongPressListener === 'function') {
+                window.addLongPressListener(diceImg, (e) => {
+                    const item = state.inventory.find(i => String(i.id) === String(rawId));
+                    if (!item) return;
+
+                    const { modAttr, profBonus, itemBonus } = getItemAttackValues(item);
+                    const totalBonus = modAttr + profBonus + itemBonus;
+                    const exprAtk = `1d20 + ${totalBonus}`;
+                    
+                    const spanDano = card.querySelector('.spell-damage span');
+                    const exprDano = spanDano ? spanDano.textContent : item.damage;
+                    const usaAtaque = (item.type === 'Arma' || (item.attackAttribute && item.attackAttribute !== 'Nenhum'));
+                    
+                    window.abrirMenuRolagem(e, item.name, usaAtaque ? exprAtk : null, exprDano);
+                });
+            }
         }
     });
 
@@ -1490,28 +1504,14 @@ function bindAbilityEvents() {
             };
         }
 
-        // =================================================================
-        // 5. NOVO: CLIQUE DIREITO NO DADO (Menu Vantagem/Desvantagem)
-        // =================================================================
+        // 5. NOVO: EVENTO HÍBRIDO (HABILIDADE)
         const diceImg = card.querySelector('.dice-img');
         if (diceImg) {
-            // A. Clique Esquerdo (Rolagem Rápida / Normal)
+            // Clique Esquerdo (Normal)
             diceImg.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                // Simula clique no botão "Normal" do menu
-                // (Recria a lógica de cálculo aqui para ser instantâneo)
                 const hab = state.abilities.find(h => h.id === habId);
                 if (!hab) return;
                 
-                // Chama menu mas executa 'normal' direto? 
-                // Melhor abrir o menu com clique direito e usar clique esquerdo 
-                // para rolagem padrão, como no inventário.
-                
-                // Se preferir manter o padrão de "clique esquerdo = normal", use a lógica abaixo.
-                // Caso contrário, remova este bloco click.
-                
-                // Lógica de cálculo (Cópia simplificada para execução rápida)
                 let exprAtk = null;
                 if (hab.useStandardAttack) {
                     const prof = parseInt(document.getElementById('proficienciaValor')?.textContent || 2);
@@ -1524,46 +1524,34 @@ function bindAbilityEvents() {
                 const spanDano = card.querySelector('.spell-damage span');
                 const exprDano = spanDano ? spanDano.textContent : hab.damage;
 
-                // Executa rolagem normal direta
-                if (typeof showCombatResults === 'function' && typeof rollDiceWithAdvantage === 'function') {
-                    let atkRes = exprAtk ? rollDiceWithAdvantage(exprAtk, 'normal') : null;
-                    let dmgRes = exprDano ? rollDiceExpression(exprDano) : null;
-                    // Se foi critico, dobra dados do dano (simplificado)
-                    if(atkRes && atkRes.isCrit && dmgRes) {
-                         // Lógica de critico simples ou re-rolar
-                         dmgRes.label = "DANO (CRÍTICO NO ATAQUE)";
+                const atkRes = exprAtk ? rollDiceWithAdvantage(exprAtk, 0, 0) : null;
+                const dmgRes = rollDiceExpression(exprDano);
+                showCombatResults(hab.title, atkRes, dmgRes);
+            });
+
+            // Clique Direito / Segurar (Menu)
+            if (typeof window.addLongPressListener === 'function') {
+                window.addLongPressListener(diceImg, (e) => {
+                    const hab = state.abilities.find(h => h.id === habId);
+                    if (!hab) return;
+
+                    let exprAtk = null;
+                    if (hab.useStandardAttack) {
+                        const prof = parseInt(document.getElementById('proficienciaValor')?.textContent || 2);
+                        const mod = typeof getAttributeMod === 'function' ? getAttributeMod(hab.attackAttribute || 'Força') : 0;
+                        const extra = parseInt(hab.attackBonus) || 0;
+                        exprAtk = `1d20 + ${prof + mod + extra}`;
+                    } else if (hab.attackBonus && hab.attackBonus.trim() !== '') {
+                        const bonusLimpo = hab.attackBonus.replace('+', '').trim();
+                        exprAtk = `1d20 + ${parseInt(bonusLimpo)}`;
                     }
-                    showCombatResults(hab.title, atkRes, dmgRes);
-                }
-            });
 
-            // B. Clique Direito (Menu Contexto)
-            diceImg.addEventListener('contextmenu', (e) => {
-                const hab = state.abilities.find(h => h.id === habId);
-                if (!hab) return;
+                    const spanDano = card.querySelector('.spell-damage span');
+                    const exprDano = spanDano ? spanDano.textContent : hab.damage;
 
-                let exprAtk = null;
-                
-                // Lógica de cálculo de ataque da Habilidade
-                if (hab.useStandardAttack) {
-                    const prof = parseInt(document.getElementById('proficienciaValor')?.textContent || 2);
-                    const mod = typeof getAttributeMod === 'function' ? getAttributeMod(hab.attackAttribute || 'Força') : 0;
-                    const extra = parseInt(hab.attackBonus) || 0;
-                    exprAtk = `1d20 + ${prof + mod + extra}`;
-                } else if (hab.attackBonus && hab.attackBonus.trim() !== '') {
-                    // Remove '+' se houver para evitar "+ +5"
-                    const bonusLimpo = hab.attackBonus.replace('+', '').trim();
-                    exprAtk = `1d20 + ${parseInt(bonusLimpo)}`;
-                }
-
-                // Pega o dano visual (que já tem modificadores de atributos somados na renderização)
-                const spanDano = card.querySelector('.spell-damage span');
-                const exprDano = spanDano ? spanDano.textContent : hab.damage;
-
-                if (typeof window.abrirMenuRolagem === 'function') {
                     window.abrirMenuRolagem(e, hab.title, exprAtk, exprDano);
-                }
-            });
+                });
+            }
         }
     });
 }
@@ -2604,30 +2592,48 @@ function bindSpellEvents() {
             ch.onclick = ev => ev.stopPropagation();
         }
 
-        // C. NOVO: CLIQUE DIREITO NO DADO (Vantagem/Desvantagem)
+        // C. NOVO: EVENTO HÍBRIDO (CLIQUE DIR / LONG PRESS)
         const diceImg = card.querySelector('.dice-img');
         if (diceImg) {
-            diceImg.addEventListener('contextmenu', (e) => {
+            // Clique Esquerdo Rápido (Opcional: Rolagem Normal Direta)
+            diceImg.addEventListener('click', (e) => {
+                // Se quiser manter o clique esquerdo rolando normal direto:
                 const s = state.spells.find(x => String(x.id) === String(rawId));
                 if (!s) return;
-
-                // Pega valores de ataque
-                const vals = getSpellAttackValues(); // {prof, mod, extra}
+                const vals = getSpellAttackValues();
                 if(!vals) return;
+                
+                // Simples animação
+                diceImg.style.transform = "scale(0.8)";
+                setTimeout(()=>diceImg.style.transform="scale(1)", 100);
+
                 const totalBonus = vals.prof + vals.mod + vals.extra;
-                
-                // Expressão de Ataque: "1d20 + 7"
                 const exprAtk = `1d20 + ${totalBonus}`;
-                
-                // Expressão de Dano (Tenta pegar do visual atualizado pelo slot, ou do base)
                 const damageTextElement = card.querySelector('.dynamic-damage-text');
                 const exprDano = damageTextElement ? damageTextElement.textContent : s.damage;
-
-                // Abre o menu (Certifique-se que window.abrirMenuRolagem está definido)
-                if (typeof window.abrirMenuRolagem === 'function') {
-                    window.abrirMenuRolagem(e, s.name, exprAtk, exprDano);
+                
+                // Rola normal (0 adv, 0 dis)
+                const atkRes = rollDiceWithAdvantage(exprAtk, 0, 0);
+                let dmgRes = rollDiceExpression(exprDano);
+                
+                if(atkRes.isCrit) {
+                     // Lógica de crítico simples
+                     // ... (pode copiar a lógica de critico da função do menu se quiser)
                 }
+                showCombatResults(s.name, atkRes, dmgRes);
             });
+
+            // 2. CLIQUE DIREITO / SEGURAR (Menu de Vantagem)
+            if (typeof window.addLongPressListener === 'function') {
+                window.addLongPressListener(btnDado, (e) => {
+                    const sinal = bonusTotal >= 0 ? '+' : '';
+                    const expressao = `1d20 ${sinal} ${bonusTotal}`;
+
+                    if (typeof window.abrirMenuRolagem === 'function') {
+                        window.abrirMenuRolagem(e, `Perícia: ${nome}`, expressao, null);
+                    }
+                });
+            }
         }
     });
 
@@ -5677,116 +5683,162 @@ function consumirSlotSeNecessario(selectedLevel) {
     }
 }
 
-
 /* =============================================================
-   SISTEMA DE VANTAGEM / DESVANTAGEM (Botão Direito)
+   SISTEMA AVANÇADO DE ROLAGEM (POPUP ARRASTÁVEL + MOBILE)
 ============================================================= */
 
-// 1. Função Matemática
-function rollDiceWithAdvantage(expression, mode) {
-    // mode: 'normal', 'adv' (Vantagem), 'dis' (Desvantagem)
+// 1. Função Matemática Atualizada (Suporta N dados)
+function rollDiceWithAdvantage(expression, advCount, disCount) {
     const cleanExpr = expression.toLowerCase().trim();
     
-    // Tenta extrair o bônus: Ex: "1d20 + 5" ou apenas "+ 5" ou "5"
-    // Assumimos que o acerto sempre usa d20 base.
+    // Extrai modificador (Ex: "1d20+5" -> 5)
     let modifier = 0;
-    
-    // Remove "1d20" ou "d20" da string para achar o modificador
     let modStr = cleanExpr.replace(/1?d20/g, '').replace(/\s/g, '');
-    if (modStr) {
-        modifier = parseInt(modStr) || 0;
+    if (modStr) modifier = parseInt(modStr) || 0;
+
+    // Lógica do Saldo de Dados
+    // Saldo = Vantagens - Desvantagens
+    const net = advCount - disCount;
+    
+    let rolls = [];
+    let numDice = 1 + Math.abs(net); // Se net for 0, rola 1. Se 2, rola 3.
+    
+    // Rola os dados
+    for(let i=0; i<numDice; i++) {
+        rolls.push(Math.floor(Math.random() * 20) + 1);
     }
 
-    // Rola dois dados
-    const d1 = Math.floor(Math.random() * 20) + 1;
-    const d2 = Math.floor(Math.random() * 20) + 1;
-    
-    let chosenDie = d1;
-    let ignoredDie = d2;
+    let chosenDie = 0;
     let label = "ACERTO";
-    
-    if (mode === 'adv') {
-        chosenDie = Math.max(d1, d2);
-        ignoredDie = Math.min(d1, d2);
-        label = "VANTAGEM";
-    } else if (mode === 'dis') {
-        chosenDie = Math.min(d1, d2);
-        ignoredDie = Math.max(d1, d2);
-        label = "DESVANTAGEM";
+
+    if (net > 0) {
+        // Vantagem: Pega o maior
+        chosenDie = Math.max(...rolls);
+        label = `VANTAGEM (${net})`;
+    } else if (net < 0) {
+        // Desvantagem: Pega o menor
+        chosenDie = Math.min(...rolls);
+        label = `DESVANTAGEM (${Math.abs(net)})`;
+    } else {
+        // Normal
+        chosenDie = rolls[0];
+        label = "NORMAL";
     }
 
     const total = chosenDie + modifier;
     const isCrit = (chosenDie === 20);
     const isFumble = (chosenDie === 1);
 
-    // Formatação do Tooltip (Hover)
-    // Ex: [15, 4] + 5
-    let dieVisual = "";
-    if (mode === 'normal') {
-        dieVisual = `<span class="${isCrit?'dice-roll-max':(isFumble?'dice-roll-min':'')}">${chosenDie}</span>`;
-    } else {
-        // Mostra os dois, destaca o usado
-        const clsChosen = isCrit?'dice-roll-max':(isFumble?'dice-roll-min':'style="color:#fff; font-weight:bold;"');
-        dieVisual = `[<span ${clsChosen}>${chosenDie}</span>, <span style="color:#777; text-decoration:line-through;">${ignoredDie}</span>]`;
-    }
+    // Formatação do Tooltip: Mostra todos, destaca o escolhido
+    // Ex: [15, 4, 2] + 5
+    let dieVisual = rolls.map(r => {
+        if (r === chosenDie) {
+            // Se houver empates, destaca o primeiro encontrado ou todos (aqui todos iguais ganham cor)
+            return `<span class="${isCrit?'dice-roll-max':(isFumble?'dice-roll-min':'')}" style="font-weight:bold;text-decoration:underline;">${r}</span>`;
+        }
+        return `<span style="color:#777;">${r}</span>`;
+    }).join(', ');
 
-    const detailText = `${dieVisual} ${modifier >= 0 ? '+' : ''} ${modifier}`;
+    const detailText = `[${dieVisual}] ${modifier >= 0 ? '+' : ''} ${modifier}`;
 
     return {
         total: total,
         text: total.toString(),
-        detail: detailText, // HTML para o tooltip
+        detail: detailText,
         isCrit: isCrit,
         isFumble: isFumble,
         label: label
     };
 }
 
-// 2. Gerenciador do Menu de Contexto
-window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage = null) {
-    e.preventDefault(); // Bloqueia menu do navegador
-    e.stopPropagation();
+// 2. Variáveis Globais de Estado do Menu
+let menuState = { adv: 0, dis: 0 };
 
-    // Remove menu anterior se existir
+// 3. Criar Popup Arrastável
+window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage = null) {
+    // Previne menu nativo e propagação
+    if(e.preventDefault) e.preventDefault();
+    if(e.stopPropagation) e.stopPropagation();
+
+    // Remove anterior
     const old = document.querySelector('.roll-context-menu');
     if (old) old.remove();
 
+    // Reseta estado
+    menuState = { adv: 0, dis: 0 };
+
     const menu = document.createElement('div');
     menu.className = 'roll-context-menu';
-    menu.style.left = `${e.pageX}px`;
-    menu.style.top = `${e.pageY}px`;
+    
+    // POSICIONAMENTO INTELIGENTE (Para não sair da tela)
+    // Usa clientX/Y que é relativo à janela visível
+    let posX = e.clientX || (e.touches && e.touches[0].clientX);
+    let posY = e.clientY || (e.touches && e.touches[0].clientY);
+
+    // Ajustes de borda
+    if (posX + 180 > window.innerWidth) posX = window.innerWidth - 190;
+    if (posY + 250 > window.innerHeight) posY = window.innerHeight - 260;
+
+    menu.style.left = `${posX}px`;
+    menu.style.top = `${posY}px`;
 
     menu.innerHTML = `
-        <div class="roll-ctx-title">Rolar ${titulo}</div>
-        <button class="roll-ctx-btn" onclick="executarRolagemCtx('normal')">
-            Normal <span class="icon">🎲</span>
-        </button>
-        <button class="roll-ctx-btn" onclick="executarRolagemCtx('adv')">
-            Vantagem <span class="icon" style="color:#4caf50;">▲</span>
-        </button>
-        <button class="roll-ctx-btn" onclick="executarRolagemCtx('dis')">
-            Desvantagem <span class="icon" style="color:#f44336;">▼</span>
-        </button>
+        <div class="roll-ctx-header" id="roll-drag-handle">ROLAR ${titulo}</div>
+        <div class="roll-ctx-body">
+            
+            <div class="roll-row">
+                <div class="roll-label" style="color:#4caf50;">VANTAGEM</div>
+                <div class="roll-controls">
+                    <button class="tri-btn arrow-up-adv" onclick="alterarRolagem('adv', 1)">▲</button>
+                    <span id="val-adv" class="roll-val">0</span>
+                    <button class="tri-btn arrow-down-adv" onclick="alterarRolagem('adv', -1)">▼</button>
+                </div>
+            </div>
+
+            <div class="roll-row">
+                <div class="roll-label" style="color:#f44336;">DESVANTAGEM</div>
+                <div class="roll-controls">
+                    <button class="tri-btn arrow-up-dis" onclick="alterarRolagem('dis', 1)">▲</button>
+                    <span id="val-dis" class="roll-val">0</span>
+                    <button class="tri-btn arrow-down-dis" onclick="alterarRolagem('dis', -1)">▼</button>
+                </div>
+            </div>
+
+            <button class="btn-rodar-final" id="btn-executar-rolagem">RODAR 🎲</button>
+        </div>
     `;
 
     document.body.appendChild(menu);
 
-    // Função interna para executar a rolagem e fechar
-    window.executarRolagemCtx = (mode) => {
+    // --- LÓGICA DE INTERAÇÃO INTERNA ---
+    
+    // Atualiza valores visuais
+    window.alterarRolagem = (type, delta) => {
+        if (type === 'adv') {
+            menuState.adv = Math.max(0, menuState.adv + delta);
+            document.getElementById('val-adv').textContent = menuState.adv;
+        } else {
+            menuState.dis = Math.max(0, menuState.dis + delta);
+            document.getElementById('val-dis').textContent = menuState.dis;
+        }
+    };
+
+    // Botão Rodar
+    document.getElementById('btn-executar-rolagem').onclick = () => {
         let attackRes = null;
         let damageRes = null;
 
-        // Calcula Ataque (com vantagem/desvantagem)
+        // 1. Rola Ataque
         if (expressionAttack) {
-            attackRes = rollDiceWithAdvantage(expressionAttack, mode);
+            attackRes = rollDiceWithAdvantage(expressionAttack, menuState.adv, menuState.dis);
         }
 
-        // Calcula Dano (Se houver). Crítico dobra dados se attackRes for crítico
+        // 2. Rola Dano
         if (expressionDamage) {
             let formulaDano = expressionDamage;
-            // Se for crítico no ataque, ajusta fórmula de dano (simplificado)
+            
+            // Se for crítico, dobra dados
             if (attackRes && attackRes.isCrit) {
-                // Lógica de dobrar dados (ex: 1d8 -> 2d8)
                 const regexDice = /^(\d*)d(\d+)(.*)$/i;
                 const match = formulaDano.match(regexDice);
                 if (match) {
@@ -5803,18 +5855,97 @@ window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage
 
         showCombatResults(titulo, attackRes, damageRes);
         menu.remove();
-        document.removeEventListener('click', closeMenuOutside);
+        document.removeEventListener('mousedown', closeMenuOutside);
     };
+
+    // --- TORNAR ARRASTÁVEL ---
+    tornarArrastavel(menu, document.getElementById('roll-drag-handle'));
 
     // Fechar ao clicar fora
     setTimeout(() => {
-        document.addEventListener('click', closeMenuOutside);
-    }, 0);
+        document.addEventListener('mousedown', closeMenuOutside);
+    }, 100);
 
     function closeMenuOutside(ev) {
         if (!menu.contains(ev.target)) {
             menu.remove();
-            document.removeEventListener('click', closeMenuOutside);
+            document.removeEventListener('mousedown', closeMenuOutside);
         }
     }
+};
+
+// 4. Função Utilitária para Arrastar
+function tornarArrastavel(element, handle) {
+    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    
+    handle.onmousedown = dragMouseDown;
+    handle.ontouchstart = dragTouchStart; // Suporte Mobile
+
+    function dragMouseDown(e) {
+        e.preventDefault();
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
+    }
+
+    function elementDrag(e) {
+        e.preventDefault();
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        element.style.top = (element.offsetTop - pos2) + "px";
+        element.style.left = (element.offsetLeft - pos1) + "px";
+    }
+
+    function closeDragElement() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+    }
+
+    // Mobile Touch Drag
+    function dragTouchStart(e) {
+        const touch = e.touches[0];
+        pos3 = touch.clientX;
+        pos4 = touch.clientY;
+        document.ontouchend = closeDragElement;
+        document.ontouchmove = elementTouchDrag;
+    }
+
+    function elementTouchDrag(e) {
+        const touch = e.touches[0];
+        pos1 = pos3 - touch.clientX;
+        pos2 = pos4 - touch.clientY;
+        pos3 = touch.clientX;
+        pos4 = touch.clientY;
+        element.style.top = (element.offsetTop - pos2) + "px";
+        element.style.left = (element.offsetLeft - pos1) + "px";
+    }
+}
+
+// 5. Função Utilitária para Long Press (Segurar botão)
+window.addLongPressListener = function(element, callback) {
+    let timer;
+    const delay = 600; // Tempo em ms para considerar "segurar"
+
+    // Bloqueia menu de contexto nativo
+    element.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        callback(e);
+        return false;
+    });
+
+    // Touch Start
+    element.addEventListener('touchstart', (e) => {
+        timer = setTimeout(() => {
+            // Dispara o evento e passa o toque como referência
+            callback(e); 
+        }, delay);
+    }, {passive: false});
+
+    // Cancela se mover ou soltar
+    element.addEventListener('touchend', () => clearTimeout(timer));
+    element.addEventListener('touchmove', () => clearTimeout(timer));
 };
