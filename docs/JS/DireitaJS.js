@@ -4454,111 +4454,87 @@ const diceStyles = document.createElement('style');
 diceStyles.textContent = `
     #dice-results-container {
         position: fixed; 
-        bottom: 90px; /* <--- ALTERADO DE 20px PARA 90px (Para subir acima do menu) */
+        bottom: 90px;
         right: -350px; 
         min-width: 280px; max-width: 400px;
-        
         background: #0f0f0f; border: 1px solid #9c27b0; border-radius: 8px;
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.9);
         color: #fff; 
-        
-        /* AUMENTAMOS O Z-INDEX PARA GARANTIR QUE FIQUE ACIMA DE TUDO */
         z-index: 2147483647; 
-        
         transition: right 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); 
         font-family: 'Segoe UI', sans-serif;
-
-        display: flex; 
-        flex-direction: row; 
+        display: flex; flex-direction: row; 
     }
     #dice-results-container.active { right: 20px; }
 
-    /* Container para a Inspiração (Esquerda) */
     .inspiration-container {
-        width: 70px; 
-        flex-shrink: 0; 
+        width: 70px; flex-shrink: 0; 
         background-color: rgba(0, 0, 0, 0.5);
         background-image: radial-gradient(circle at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 70%, transparent 100%);
         border-right: 1px solid rgba(156, 39, 176, 0.5); 
-        
-        border-top-left-radius: 7px;
-        border-bottom-left-radius: 7px;
-        
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        border-top-left-radius: 7px; border-bottom-left-radius: 7px;
+        display: flex; align-items: center; justify-content: center;
     }
-
-    /* Ícone de Inspiração */
     .inspiration-icon {
-        font-size: 36px; 
-        color: #FFD700; 
-        text-shadow: 0 0 15px rgba(255, 215, 0, 0.8), 0 0 5px #fff;
-        cursor: help;
+        font-size: 36px; color: #FFD700; 
+        text-shadow: 0 0 15px rgba(255, 215, 0, 0.8), 0 0 5px #fff; cursor: help;
     }
 
-    /* Container para o Conteúdo Principal */
     .dice-content-wrapper {
-        flex-grow: 1; 
-        padding: 15px; 
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        flex-grow: 1; padding: 15px; padding-right: 25px;
+        display: flex; flex-direction: column; justify-content: center;
     }
-    
     .dice-header {
         font-size: 12px; color: #e1bee7; margin-bottom: 10px;
         font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
         border-bottom: 1px solid #333; padding-bottom: 5px;
     }
-    
     .dice-row {
-        display: flex; justify-content: space-between; align-items: center;
-        margin-bottom: 8px; padding: 4px 0;
-        position: relative;
+        display: flex; justify-content: space-between; align-items: flex-start; /* Alinhado ao topo para multiline */
+        margin-bottom: 8px; padding: 4px 0; position: relative;
     }
-    
-    .dice-label { font-size: 13px; color: #bbb; font-weight: 600; }
+    .dice-label { font-size: 13px; color: #bbb; font-weight: 600; margin-top: 4px; }
     
     .dice-value-wrapper {
-        position: relative;
-        text-align: right;
+        position: relative; text-align: right; max-width: 220px;
     }
     
     .dice-value { 
-        font-size: 24px; font-weight: 800; color: #fff; 
-        cursor: help; 
+        font-size: 24px; font-weight: 800; color: #fff; cursor: help; 
+        white-space: pre-wrap; /* Permite quebra de linha */
+        word-break: break-word;
+        line-height: 1.1;
+        display: block;
     }
     
-    /* TOOLTIP */
+    /* Se tiver muitos números (quebra de linha), diminui um pouco a fonte */
+    .dice-value:has(br), .dice-value span + span { font-size: 20px; }
+
     .dice-tooltip {
         visibility: hidden; opacity: 0;
         position: absolute; bottom: 100%; right: 0;
         background: #2a1a35; border: 1px solid #9c27b0; 
         padding: 8px 12px; border-radius: 6px;
-        font-size: 14px; font-weight: 500; white-space: nowrap; 
+        font-size: 14px; font-weight: 500; 
         z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.8); color: #ddd;
         margin-bottom: 5px; transition: opacity 0.2s;
-        pointer-events: none;
+        text-align: left;
+        min-width: 150px; width: max-content; max-width: 280px;
+        max-height: 200px; overflow-y: auto; pointer-events: auto; /* Permite scroll/clique */
     }
-    
-    .dice-value-wrapper:hover .dice-tooltip {
+    .dice-tooltip::-webkit-scrollbar { width: 4px; }
+    .dice-tooltip::-webkit-scrollbar-thumb { background: #9c27b0; border-radius: 10px; }
+
+    .dice-value-wrapper:hover .dice-tooltip,
+    .dice-value-wrapper:active .dice-tooltip,
+    .dice-value-wrapper:focus-within .dice-tooltip {
         visibility: visible; opacity: 1;
     }
 
-    /* --- DESTAQUES --- */
-    .dice-roll-max { color: #e040fb ; font-weight: bold; text-shadow: 0 0 5px #e040fb; } 
-    .dice-roll-min { color: #ff3333 ; font-weight: bold; text-shadow: 0 0 5px #ff3333; }
-    
-    .crit-total { 
-        color: #e040fb ; 
-        text-shadow: 0 0 10px rgba(224, 64, 251, 0.8), 0 0 20px rgba(224, 64, 251, 0.4);
-    }
-
-    .fumble-total {
-        color: #ff3333 ;
-        text-shadow: 0 0 10px rgba(255, 51, 51, 0.8), 0 0 20px rgba(255, 51, 51, 0.4);
-    }
+    .dice-roll-max { color: #e040fb; font-weight: bold; text-shadow: 0 0 5px #e040fb; } 
+    .dice-roll-min { color: #ff3333; font-weight: bold; text-shadow: 0 0 5px #ff3333; }
+    .crit-total { color: #e040fb; text-shadow: 0 0 10px rgba(224, 64, 251, 0.8); }
+    .fumble-total { color: #ff3333; text-shadow: 0 0 10px rgba(255, 51, 51, 0.8); }
 `;
 document.head.appendChild(diceStyles);
 
@@ -4909,7 +4885,9 @@ function getSpellAttackValues() {
 }
 
 
-/* 4. ESCUTADOR GLOBAL DE CLIQUES (COMPLETO E ATUALIZADO) */
+/* =============================================================
+   4. ESCUTADOR GLOBAL DE CLIQUES (ATUALIZADO MULTI-ATAQUE)
+============================================================= */
 document.addEventListener('click', function(e) {
     
     // =================================================================
@@ -4919,204 +4897,207 @@ document.addEventListener('click', function(e) {
         e.preventDefault(); 
         e.stopPropagation();
 
-    // -------------------------------------------------------------
-    // A. VERIFICA SE É MAGIA (SPELL CARD) - ATUALIZADO (TRUQUES & RAJADA MÍSTICA)
-    // -------------------------------------------------------------
-    const spellCard = e.target.closest('.spell-card');
-    if (spellCard) {
-      const spellId = spellCard.getAttribute('data-id');
-      const s = state.spells.find(x => String(x.id) === String(spellId));
-      if (!s) return;
+        // -------------------------------------------------------------
+        // A. VERIFICA SE É MAGIA (SPELL CARD)
+        // -------------------------------------------------------------
+        const spellCard = e.target.closest('.spell-card');
+        if (spellCard) {
+            const spellId = spellCard.getAttribute('data-id');
+            const s = state.spells.find(x => String(x.id) === String(spellId));
+            if (!s) return;
 
-      const spellTitle = s.name || "Magia";
-      const nomeLimpo = spellTitle.toLowerCase();
-      
-      const selectSlot = spellCard.querySelector('.spell-slot-selector');
-      const selectedLevel = selectSlot ? parseInt(selectSlot.value) : (s.levelNumber || 0);
-      const baseLevel = s.levelNumber || 0;
+            const spellTitle = s.name || "Magia";
+            const nomeLimpo = spellTitle.toLowerCase();
+            
+            const selectSlot = spellCard.querySelector('.spell-slot-selector');
+            const selectedLevel = selectSlot ? parseInt(selectSlot.value) : (s.levelNumber || 0);
+            const baseLevel = s.levelNumber || 0;
 
-      // Configurações Globais
-      const critRange = state.spellDCConfig.critRange || 20;
-      const critMult = state.spellDCConfig.critMult || 2;
+            // Configurações Globais
+            const critRange = state.spellDCConfig.critRange || 20;
+            const critMult = state.spellDCConfig.critMult || 2;
 
-      // =========================================================
-      // LÓGICA DE RAJADA MÍSTICA (Eldritch Blast)
-      // =========================================================
-      if (nomeLimpo.includes("rajada mística") || nomeLimpo.includes("eldritch blast")) {
-          const charLevel = getTotalCharacterLevel();
-          let numFeixes = 1;
-          if (charLevel >= 5) numFeixes = 2;
-          if (charLevel >= 11) numFeixes = 3;
-          if (charLevel >= 17) numFeixes = 4;
+            // =========================================================
+            // LÓGICA DE MULTI-RAIOS (Rajada Mística / Raio Ardente)
+            // =========================================================
+            let numRaios = 0;
+            let isMultiAttack = false;
 
-          const vals = getSpellAttackValues();
-          if (!vals) { alert("Configure a DT/Atributo de conjuração primeiro!"); return; }
+            // A) Rajada Mística (Escala com Nível do Personagem)
+            if (nomeLimpo.includes("rajada mística") || nomeLimpo.includes("eldritch blast")) {
+                const charLevel = getTotalCharacterLevel();
+                numRaios = 1;
+                if (charLevel >= 5) numRaios = 2;
+                if (charLevel >= 11) numRaios = 3;
+                if (charLevel >= 17) numRaios = 4;
+                isMultiAttack = true;
+            }
+            // B) Raio Ardente (Escala com Slot)
+            else if (nomeLimpo.includes("raio ardente") || nomeLimpo.includes("scorching ray")) {
+                // Base 3 raios no slot 2. +1 por slot acima.
+                const slotUsado = selectedLevel > 0 ? selectedLevel : 2;
+                numRaios = 3 + (slotUsado - 2);
+                isMultiAttack = true;
+            }
 
-          let detalhesAtaque = [];
-          let detalhesDano = [];
-          let totalDanoSomado = 0;
+            if (isMultiAttack) {
+                const vals = getSpellAttackValues();
+                if (!vals) { alert("Configure a DT/Atributo de conjuração primeiro!"); return; }
 
-          // Loop para cada feixe
-          for (let i = 1; i <= numFeixes; i++) {
-              // 1. Rola Ataque
-              const d20 = Math.floor(Math.random() * 20) + 1;
-              const atkTotal = d20 + vals.prof + vals.mod + vals.extra;
-              
-              let status = "Errou";
-              let classeCor = "";
-              let isCrit = (d20 >= critRange);
-              let isFumble = (d20 === 1);
+                let listaAcertosNumeros = []; // Ex: ["18", "5", "NAT20"]
+                let listaDetalhesDano = [];   // Ex: "P1: 5 (Dano), P2: 10 (Crít)"
+                let totalDano = 0;
+                let teveCriticoGeral = false;
+                let teveFalhaGeral = false;
 
-              if (isCrit) { status = "CRÍTICO!"; classeCor = "dice-roll-max"; }
-              else if (isFumble) { status = "FALHA"; classeCor = "dice-roll-min"; }
-              else { status = atkTotal; } // Mostra o valor total se for normal
+                for (let i = 1; i <= numRaios; i++) {
+                    // 1. ROLA ATAQUE
+                    const d20 = Math.floor(Math.random() * 20) + 1;
+                    const atkTotal = d20 + vals.prof + vals.mod + vals.extra;
+                    
+                    let isCrit = (d20 >= critRange);
+                    let isFumble = (d20 === 1);
+                    
+                    if(isCrit) teveCriticoGeral = true;
+                    if(isFumble) teveFalhaGeral = true;
 
-              detalhesAtaque.push(`#${i}: <strong class="${classeCor}">${status}</strong> <small>(${d20}${isCrit || isFumble ? '' : '+' + (vals.prof+vals.mod+vals.extra)})</small>`);
+                    // Formatação do número de acerto individual (HTML para a Direita)
+                    let displayNum = atkTotal;
+                    if (isCrit) displayNum = `<span class="dice-roll-max" title="Crítico!">${atkTotal}</span>`;
+                    else if (isFumble) displayNum = `<span class="dice-roll-min" title="Falha!">${d20}</span>`; 
+                    
+                    listaAcertosNumeros.push(displayNum);
 
-              // 2. Rola Dano (1d10 ou 1d10+CAR se tiver Agonizing Blast - assumimos base por enquanto)
-              // Se tiver modificadores extras no dano (ex: Hex), adicione aqui depois.
-              // Para simplificar, pegamos o dano base da magia (1d10)
-              
-              let formulaDano = s.damage || "1d10"; 
-              
-              // Se for crítico, dobra os dados
-              if (isCrit) {
-                  const regex = /^(\d*)d(\d+)(.*)$/i;
-                  const match = formulaDano.match(regex);
-                  if (match) {
-                      const q = (match[1] === "" ? 1 : parseInt(match[1])) * critMult;
-                      formulaDano = `${q}d${match[2]}${match[3] || ''}`;
-                  }
-              }
+                    // 2. ROLA DANO (Simula dano se acertasse)
+                    let formulaDano = s.damage || (nomeLimpo.includes("ardente") ? "2d6" : "1d10");
+                    
+                    // Se CRÍTICO neste raio, dobra os dados
+                    if (isCrit) {
+                        const regex = /^(\d*)d(\d+)(.*)$/i;
+                        const match = formulaDano.match(regex);
+                        if (match) {
+                            const q = (match[1] === "" ? 1 : parseInt(match[1])) * critMult;
+                            formulaDano = `${q}d${match[2]}${match[3] || ''}`;
+                        }
+                    }
 
-              const resDano = rollDiceExpression(formulaDano);
-              totalDanoSomado += resDano.total;
-              
-              detalhesDano.push(`#${i}: <strong>${resDano.total}</strong> <small>(${resDano.detail})</small>`);
-          }
+                    const resDano = rollDiceExpression(formulaDano);
+                    totalDano += resDano.total;
+                    
+                    const labelHit = isCrit ? "CRÍT" : (isFumble ? "ERRO" : "DANO");
+                    listaDetalhesDano.push(`<strong>#${i}:</strong> ${resDano.total} <small>(${labelHit})</small>`);
+                }
 
-          // Monta o objeto visual para exibir
-          const attackRes = {
-              total: "-", // Não tem total único de ataque
-              text: "MÚLTIPLOS",
-              detail: detalhesAtaque.join('<br>'),
-              label: `${numFeixes} TIROS`
-          };
+                // OBJETO ATAQUE (Texto limpo separado por espaços para o portrait ler)
+                // O .text enviamos puro para o socket tentar ler, ou mandamos HTML e limpamos lá.
+                // Aqui mandamos o HTML para a Direita renderizar bonito.
+                const attackRes = {
+                    total: 0, 
+                    text: listaAcertosNumeros.join(' '), // Ex: "18 <span..>25</span> 5"
+                    detail: "Valores individuais de ataque",
+                    isCrit: teveCriticoGeral,
+                    isFumble: teveFalhaGeral,
+                    label: "ACERTOS"
+                };
 
-          const damageRes = {
-              total: totalDanoSomado,
-              text: totalDanoSomado.toString(),
-              detail: detalhesDano.join('<br>'),
-              label: "DANO POTENCIAL",
-              isCrit: false // A cor roxa já foi aplicada individualmente na lista
-          };
+                const damageRes = {
+                    total: totalDano,
+                    text: totalDano.toString(),
+                    detail: listaDetalhesDano.join('<br>'),
+                    label: "DANO POTENCIAL",
+                    isCrit: false 
+                };
 
-          showCombatResults(spellTitle, attackRes, damageRes);
-          return; // Encerra aqui para Rajada Mística
-      }
-      
-      // =========================================================
-      // LÓGICA DE MÍSSEIS MÁGICOS (Auto-Hit, sem ataque)
-      // =========================================================
-      if (nomeLimpo.includes("mísseis mágicos") || nomeLimpo.includes("misseis magicos")) {
-        let numProjectiles = 3 + (selectedLevel - baseLevel);
-        let totalDamage = 0;
-        let allRollsDetails = [];
-        const damageText = s.damage || "1d4+1";
+                showCombatResults(spellTitle, attackRes, damageRes);
+                consumirSlotSeNecessario(selectedLevel);
+                return;
+            }
+            
+            // =========================================================
+            // 2. LÓGICA DE MÍSSEIS MÁGICOS (Auto-Hit)
+            // =========================================================
+            if (nomeLimpo.includes("mísseis mágicos") || nomeLimpo.includes("misseis magicos")) {
+                let numProjectiles = 3 + (selectedLevel - baseLevel);
+                let totalDamage = 0;
+                let allRollsDetails = [];
+                const damageText = s.damage || "1d4+1";
 
-        for (let i = 1; i <= numProjectiles; i++) {
-           let res = rollDiceExpression(damageText);
-           totalDamage += res.total;
-           allRollsDetails.push(`P${i}: ${res.text} <small>(${res.detail})</small>`);
+                for (let i = 1; i <= numProjectiles; i++) {
+                   let res = rollDiceExpression(damageText);
+                   totalDamage += res.total;
+                   allRollsDetails.push(`P${i}: ${res.text} <small>(${res.detail})</small>`);
+                }
+
+                const damageRes = {
+                    total: totalDamage,
+                    text: totalDamage.toString(),
+                    detail: allRollsDetails.join('<br>'),
+                    label: `${numProjectiles} PROJÉTEIS`
+                };
+                
+                showCombatResults(spellTitle, null, damageRes);
+                consumirSlotSeNecessario(selectedLevel); 
+                return;
+            }
+
+            // =========================================================
+            // 3. CASO PADRÃO (Magias Normais)
+            // =========================================================
+            let attackRes = null;
+            const usaResistencia = s.attrs?.resistencia && s.attrs.resistencia !== "-" && s.attrs.resistencia !== "";
+            
+            if (!usaResistencia) {
+                const vals = getSpellAttackValues();
+                if (vals) {
+                    const d20 = Math.floor(Math.random() * 20) + 1;
+                    const totalAttack = d20 + vals.prof + vals.mod + vals.extra;
+                    const isCrit = (d20 >= critRange);
+                    const isFumble = (d20 === 1);
+                    const d20Html = isCrit ? `<span class="dice-roll-max">${d20}</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
+
+                    attackRes = {
+                        total: totalAttack,
+                        text: totalAttack.toString(),
+                        detail: `${d20Html} + ${vals.mod} + ${vals.prof} + ${vals.extra}`,
+                        isCrit: isCrit,
+                        isFumble: isFumble,
+                        label: "ACERTO"
+                    };
+                }
+            }
+
+            // Rola Dano
+            const damageTextElement = spellCard.querySelector('.dynamic-damage-text');
+            let damageFormula = damageTextElement ? damageTextElement.textContent : s.damage;
+            
+            if(damageFormula.includes('(')) damageFormula = damageFormula.split('(')[0].trim();
+
+            let damageRes = null;
+            if (damageFormula && damageFormula !== '-' && damageFormula !== '0') {
+                if (attackRes && attackRes.isCrit) {
+                    const regexDice = /^(\d*)d(\d+)(.*)$/i;
+                    const match = damageFormula.match(regexDice);
+                    if (match) {
+                        const qtd = match[1] === "" ? 1 : parseInt(match[1]);
+                        const faces = match[2];
+                        const resto = match[3] || "";
+                        damageFormula = `${qtd * critMult}d${faces}${resto}`;
+                    }
+                }
+                damageRes = rollDiceExpression(damageFormula);
+                if (attackRes && attackRes.isCrit) {
+                    damageRes.isCrit = true;
+                    damageRes.label = `CRÍTICO (${critMult}x)`;
+                }
+            }
+
+            showCombatResults(spellTitle, attackRes, damageRes);
+            consumirSlotSeNecessario(selectedLevel);
+            return;
         }
 
-        const damageRes = {
-            total: totalDamage,
-            text: totalDamage.toString(),
-            detail: allRollsDetails.join('<br>'),
-            label: `${numProjectiles} PROJÉTEIS`
-        };
-        
-        // Mísseis não tem ataque
-        showCombatResults(spellTitle, null, damageRes);
-        
-        // Consome Slot (Cópia da lógica padrão de slot)
-        consumirSlotSeNecessario(selectedLevel); 
-        return;
-      }
-
-      // =========================================================
-      // CASO PADRÃO (Chama Sagrada, Raio de Fogo, Bola de Fogo, etc)
-      // =========================================================
-      
-      // 1. ROLAGEM DE ATAQUE (Se a magia pedir, ex: Raio de Fogo)
-      let attackRes = null;
-      // Verifica se a magia tem "ataque" na descrição ou é um truque de ataque conhecido
-      // Ou simplesmente: se não for área/salvaguarda.
-      // Dica: No seu JSON, Raio de Fogo tem "alvo": "1 criatura". 
-      // Vamos assumir que rola ataque SEMPRE, exceto se for explicitamente "Resistência" no JSON.
-      
-      const usaResistencia = s.attrs?.resistencia && s.attrs.resistencia !== "-" && s.attrs.resistencia !== "";
-      
-      if (!usaResistencia) {
-        const vals = getSpellAttackValues();
-        if (vals) {
-          const d20 = Math.floor(Math.random() * 20) + 1;
-          const totalAttack = d20 + vals.prof + vals.mod + vals.extra;
-          
-          const isCrit = (d20 >= critRange);
-          const isFumble = (d20 === 1);
-          const d20Html = isCrit ? `<span class="dice-roll-max">${d20}</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
-
-          attackRes = {
-            total: totalAttack,
-            text: totalAttack.toString(),
-            detail: `${d20Html} + ${vals.mod} + ${vals.prof} + ${vals.extra}`,
-            isCrit: isCrit,
-            isFumble: isFumble,
-            label: "ACERTO"
-          };
-        }
-      }
-
-      // 2. ROLAGEM DE DANO
-      // Pega o texto que JÁ FOI CALCULADO no formatMySpellCard (Ex: "2d10" se for lv 5)
-      const damageTextElement = spellCard.querySelector('.dynamic-damage-text');
-      let damageFormula = damageTextElement ? damageTextElement.textContent : s.damage;
-      
-      let damageRes = null;
-      if (damageFormula && damageFormula !== '-' && damageFormula !== '0') {
-          
-          // Se houve Crítico no Ataque, dobra os dados
-          if (attackRes && attackRes.isCrit) {
-             const regexDice = /^(\d*)d(\d+)(.*)$/i;
-             const match = damageFormula.match(regexDice);
-             if (match) {
-                 const qtd = match[1] === "" ? 1 : parseInt(match[1]);
-                 const faces = match[2];
-                 const resto = match[3] || "";
-                 // Multiplica Qtd pelo critMult
-                 const novaQtd = qtd * critMult;
-                 damageFormula = `${novaQtd}d${faces}${resto}`;
-             }
-          }
-
-          damageRes = rollDiceExpression(damageFormula);
-          if (attackRes && attackRes.isCrit) {
-              damageRes.isCrit = true;
-              damageRes.label = `CRÍTICO (${critMult}x)`;
-          }
-      }
-
-      showCombatResults(spellTitle, attackRes, damageRes);
-      
-      // Consome Slot
-      consumirSlotSeNecessario(selectedLevel);
-      return;
-    }
-
-      // -------------------------------------------------------------
-        // B. VERIFICA SE É ITEM (ARMA/INVENTÁRIO) - CRÍTICO CORRIGIDO (DADOS MULTIPLICADOS)
+        // -------------------------------------------------------------
+        // B. VERIFICA SE É ITEM (ARMA/INVENTÁRIO)
         // -------------------------------------------------------------
         const itemCard = e.target.closest('.item-card');
         if (itemCard) {
@@ -5127,16 +5108,13 @@ document.addEventListener('click', function(e) {
                 // 1. ROLA ATAQUE
                 let attackRes = null;
                 const margemCritico = parseInt(item.crit) || 20;
-                
                 const temAtributoDefinido = item.attackAttribute && item.attackAttribute !== 'Nenhum';
                 
                 if (item.type === 'Arma' || temAtributoDefinido) {
                     const { modAttr, profBonus, itemBonus, attrUsed } = getItemAttackValues(item);
-                    
                     const d20 = Math.floor(Math.random() * 20) + 1;
                     const totalAttack = d20 + modAttr + profBonus + itemBonus;
                     
-                    // Verifica Crítico
                     const isCrit = (d20 >= margemCritico); 
                     const isFumble = (d20 === 1);
                     const d20Html = isCrit ? `<span class="dice-roll-max">${d20}</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
@@ -5157,17 +5135,14 @@ document.addEventListener('click', function(e) {
                     };
                 }
 
-                // 2. PREPARA EXPRESSÃO DE DANO
+                // 2. ROLA DANO
                 let damageRes = null;
                 let expressionDano = "";
-
-                // a) Dano Base (Versátil)
                 let baseDano = item.damage || '0';
                 if (item.empunhadura === 'Versátil' && item.useTwoHands && item.damage2Hands) {
                     baseDano = item.damage2Hands;
                 }
 
-                // b) Modificadores
                 let modDano = 0;
                 if (item.damageAttribute && item.damageAttribute !== 'Nenhum') {
                     modDano = getAttributeMod(item.damageAttribute);
@@ -5178,7 +5153,6 @@ document.addEventListener('click', function(e) {
                 const bonusDano = parseInt(item.damageBonus) || 0;
                 const totalModDano = modDano + bonusDano;
 
-                // c) Monta Expressão Original (ex: 1d8+3)
                 if (totalModDano !== 0) {
                     const sinal = totalModDano >= 0 ? '+' : '';
                     expressionDano = `${baseDano}${sinal}${totalModDano}`;
@@ -5186,46 +5160,30 @@ document.addEventListener('click', function(e) {
                     expressionDano = baseDano;
                 }
                 
-                // d) Rola o Dano
                 if (expressionDano && expressionDano !== '-' && expressionDano !== '0') { 
-                    
-                    // === LÓGICA DE CRÍTICO: MULTIPLICAR DADOS ===
                     if (attackRes && attackRes.isCrit) {
-                        // 1. Ler o campo Multiplicador (ex: "2" ou "3+10")
                         const multStr = item.multiplicador ? String(item.multiplicador) : "2";
                         const partes = multStr.split('+');
-                        const fator = parseInt(partes[0]) || 2; // Quantas vezes roda o dado
-                        const bonusExtraCrit = partes.length > 1 ? (parseInt(partes[1]) || 0) : 0; // Soma no final
+                        const fator = parseInt(partes[0]) || 2;
+                        const bonusExtraCrit = partes.length > 1 ? (parseInt(partes[1]) || 0) : 0; 
 
-                        // 2. Analisar a expressão de dano (regex para achar XdY)
-                        // Procura algo como "1d8", "2d6", etc.
                         const regexDice = /^(\d*)d(\d+)(.*)$/i;
                         const match = expressionDano.match(regexDice);
 
                         if (match) {
-                            // É uma rolagem de dados (ex: 1d8+3)
-                            let qtdDados = match[1] === "" ? 1 : parseInt(match[1]); // ex: 1
-                            const faces = match[2]; // ex: 8
-                            const restoExpressao = match[3] || ""; // ex: "+3"
-
-                            // 3. Multiplica a quantidade de dados
-                            const novaQtd = qtdDados * fator; // ex: 1 * 2 = 2
-
-                            // 4. Monta nova expressão: 2d8 + 3 + BonusCrit
+                            let qtdDados = match[1] === "" ? 1 : parseInt(match[1]);
+                            const faces = match[2]; 
+                            const restoExpressao = match[3] || ""; 
+                            const novaQtd = qtdDados * fator;
                             let novaExpressao = `${novaQtd}d${faces}${restoExpressao}`;
-                            
-                            if (bonusExtraCrit > 0) {
-                                novaExpressao += `+${bonusExtraCrit}`;
-                            }
+                            if (bonusExtraCrit > 0) novaExpressao += `+${bonusExtraCrit}`;
 
                             damageRes = rollDiceExpression(novaExpressao);
                             damageRes.isCrit = true;
                             damageRes.label = `CRÍTICO (${fator}x DADOS)`;
                         } else {
-                            // Fallback: Se não for dado (ex: dano fixo "5"), multiplica o valor
                             let danoFixo = rollDiceExpression(expressionDano).total;
                             let totalCrit = (danoFixo * fator) + bonusExtraCrit;
-                            
                             damageRes = {
                                 total: totalCrit,
                                 text: totalCrit.toString(),
@@ -5234,9 +5192,7 @@ document.addEventListener('click', function(e) {
                                 label: "DANO CRÍTICO"
                             };
                         }
-
                     } else {
-                        // Dano Normal
                         damageRes = rollDiceExpression(expressionDano); 
                     }
                 }
@@ -5247,7 +5203,7 @@ document.addEventListener('click', function(e) {
         }
 
         // -------------------------------------------------------------
-        // C. VERIFICA SE É HABILIDADE (NOVO: LÓGICA DE ACERTO PADRÃO)
+        // C. VERIFICA SE É HABILIDADE
         // -------------------------------------------------------------
         const habCard = e.target.closest('.hab-card');
         if (habCard) {
@@ -5255,31 +5211,22 @@ document.addEventListener('click', function(e) {
             const hab = state.abilities.find(h => h.id === habId);
             
             if (hab) {
-                // 1. Rola o Dano (se houver)
                 let damageRes = null;
                 if (hab.damage && hab.damage !== '-' && hab.damage.trim() !== '') {
                     damageRes = rollDiceExpression(hab.damage);
                 }
 
-                // 2. Rola o Ataque
                 let attackRes = null;
-                
-                // --- CAMINHO A: ACERTO PADRÃO (Proficiência + Atributo + Extra) ---
                 if (hab.useStandardAttack) {
-                    // Pega Proficiência
                     let prof = 2;
                     const profEl = document.getElementById('proficienciaValor');
                     if (profEl) prof = parseInt(profEl.textContent) || 2;
 
-                    // Pega Modificador do Atributo Selecionado
                     const attrKeyMap = { 'Força': 'for', 'Destreza': 'dex', 'Constituição': 'con', 'Inteligência': 'int', 'Sabedoria': 'sab', 'Carisma': 'car' };
                     const attrKey = attrKeyMap[hab.attackAttribute || 'Força'];
                     const mod = getAttributeMod(attrKey);
-
-                    // Pega Bônus Extra (Input manual)
                     const extraBonus = parseInt(hab.attackBonus) || 0;
 
-                    // Rola
                     const d20 = Math.floor(Math.random() * 20) + 1;
                     const total = d20 + prof + mod + extraBonus;
                     
@@ -5287,7 +5234,6 @@ document.addEventListener('click', function(e) {
                     const isFumble = (d20 === 1);
                     const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
 
-                    // Monta detalhes: "15 + 2 + 3 + 1"
                     const detailParts = [d20Html];
                     if (prof !== 0) detailParts.push(`${prof} (Prof)`);
                     if (mod !== 0) detailParts.push(`${mod} (${hab.attackAttribute.substr(0,3)})`);
@@ -5301,14 +5247,11 @@ document.addEventListener('click', function(e) {
                         isFumble: isFumble
                     };
                 }
-                // --- CAMINHO B: BÔNUS SIMPLES (Legado ou Fixo) ---
                 else if (hab.attackBonus && hab.attackBonus.trim() !== '') {
                     const bonusStr = hab.attackBonus.replace('+', '').trim();
                     const bonus = parseInt(bonusStr) || 0;
-                    
                     const d20 = Math.floor(Math.random() * 20) + 1;
                     const total = d20 + bonus;
-                    
                     const isCrit = (d20 === 20);
                     const isFumble = (d20 === 1);
                     const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
@@ -5322,57 +5265,12 @@ document.addEventListener('click', function(e) {
                     };
                 }
 
-                // Se não tem dano, mas tem ataque, ou vice-versa, exibe o que tiver
                 if (damageRes || attackRes) {
                     showCombatResults(hab.title, attackRes, damageRes);
                 }
             }
             return;
         }
-    }
-
-    // =================================================================
-    // CASO 2: ATAQUE MÁGICO (BOTÃO CABEÇALHO)
-    // =================================================================
-    const btnHeader = e.target.closest('#btnRollSpellAttack_Header');
-    const btnPrep   = e.target.closest('#btnRollSpellAttack_PrepHeader');
-
-    if (btnHeader || btnPrep) {
-        e.preventDefault(); e.stopPropagation();
-        
-        const vals = getSpellAttackValues(); 
-        if (vals === null) { alert("⚠️ Configure a DT de Magia primeiro (ícone ⚙️)!"); return; }
-        
-        const d20 = Math.floor(Math.random() * 20) + 1;
-        const total = d20 + vals.prof + vals.mod + vals.extra;
-        const isCrit = (d20 === 20);
-        const isFumble = (d20 === 1); 
-
-        const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
-        const parts = [d20Html];
-        if (vals.mod !== 0) parts.push(vals.mod);     
-        if (vals.prof !== 0) parts.push(vals.prof);  
-        if (vals.extra !== 0) parts.push(vals.extra); 
-
-        const res = { 
-            total: total, 
-            text: total.toString(), 
-            detail: parts.join(' + '),
-            isCrit: isCrit, 
-            isFumble: isFumble 
-        };
-        
-        showCombatResults("Ataque Mágico", res, null);
-    }
-    
-    // =================================================================
-    // CASO 3: PERÍCIAS (CLIQUE NO DADO DA ESQUERDA)
-    // =================================================================
-    if (e.target.classList.contains('col-icon') && e.target.closest('.pericia-item')) {
-        e.preventDefault(); e.stopPropagation();
-        const itemLi = e.target.closest('.pericia-item');
-        
-        showCombatResults(nome, res, null);
     }
 });
 
