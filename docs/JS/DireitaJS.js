@@ -2491,10 +2491,6 @@ if (baseLevel === 0) return baseDamage;
 /* ---------------- EVENTOS DAS MAGIAS (LIMPO) ---------------- */
 
 
-/* =============================================================
-   CORREÇÃO DEFINITIVA: Magias (Expandir/Colapsar + ID Texto)
-   Substitua a função bindSpellEvents inteira:
-============================================================= */
 function bindSpellEvents() {
     // 1. Botões do topo
     const botAdd = document.getElementById('botAddSpell');
@@ -2583,19 +2579,17 @@ function bindSpellEvents() {
             ch.onclick = ev => ev.stopPropagation();
         }
 
-        // C. NOVO: EVENTO HÍBRIDO (MAGIAS) - CORRIGIDO
+        // C. EVENTO HÍBRIDO (MAGIAS) - CORRIGIDO
         const diceImg = card.querySelector('.dice-img');
         if (diceImg) {
-            // Clique Esquerdo (Normal)
+            // 1. Clique Esquerdo (Rápido)
             diceImg.addEventListener('click', (e) => {
-                // Animaçãozinha
                 diceImg.style.transform = "scale(0.8)";
                 setTimeout(()=>diceImg.style.transform="scale(1)", 100);
 
                 const s = state.spells.find(x => String(x.id) === String(rawId));
                 if (!s) return;
 
-                // Tenta pegar valores, se falhar, usa 0
                 const vals = getSpellAttackValues() || {prof:0, mod:0, extra:0};
                 const totalBonus = vals.prof + vals.mod + vals.extra;
                 const exprAtk = `1d20 + ${totalBonus}`;
@@ -2607,7 +2601,6 @@ function bindSpellEvents() {
                 const atkRes = rollDiceWithAdvantage(exprAtk, 0, 0);
                 
                 let dmgRes = null;
-                // Se o ataque for crítico, e tiver dano, calculamos aqui para o clique rápido
                 if (atkRes.isCrit && exprDano) {
                      const regexDice = /^(\d*)d(\d+)(.*)$/i;
                      const match = exprDano.match(regexDice);
@@ -2626,7 +2619,7 @@ function bindSpellEvents() {
                 showCombatResults(s.name, atkRes, dmgRes);
             });
 
-            // Clique Direito / Segurar
+            // 2. Clique Direito / Segurar (Menu Vantagem)
             if (typeof window.addLongPressListener === 'function') {
                 window.addLongPressListener(diceImg, (e) => {
                     const s = state.spells.find(x => String(x.id) === String(rawId));
@@ -5736,11 +5729,12 @@ function rollDiceWithAdvantage(expression, advCount, disCount) {
 // 2. Variáveis Globais de Estado do Menu
 let menuState = { adv: 0, dis: 0 };
 
-// 3. Criar Popup Arrastável (ATUALIZADO COM IMAGEM)
+// 3. Criar Popup Arrastável (COM IMAGEM DADO.PNG)
 window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage = null) {
     if(e.preventDefault) e.preventDefault();
     if(e.stopPropagation) e.stopPropagation();
 
+    // Remove menu anterior
     const old = document.querySelector('.roll-context-menu');
     if (old) old.remove();
 
@@ -5749,19 +5743,19 @@ window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage
     const menu = document.createElement('div');
     menu.className = 'roll-context-menu';
     
-    // Posicionamento
+    // Posicionamento inteligente
     let posX = e.clientX || (e.touches && e.touches[0].clientX);
     let posY = e.clientY || (e.touches && e.touches[0].clientY);
 
-    // Correção para não sair da tela
+    // Evita sair da tela
     if (posX + 180 > window.innerWidth) posX = window.innerWidth - 190;
     if (posY + 280 > window.innerHeight) posY = window.innerHeight - 290;
 
     menu.style.left = `${posX}px`;
     menu.style.top = `${posY}px`;
 
-    // AQUI ESTÁ A TROCA DO EMOJI PELA IMAGEM
-    const imgDadoHtml = `<img src="img/imagem-no-site/dado.png" alt="dado" />`;
+    // --- AQUI ESTÁ A TROCA: EMOJI -> IMAGEM ---
+    const imgDadoHtml = `<img src="img/imagem-no-site/dado.png" alt="dado" style="width:18px; vertical-align:middle;" />`;
 
     menu.innerHTML = `
         <div class="roll-ctx-header" id="roll-drag-handle">ROLAR ${titulo}</div>
@@ -5790,12 +5784,14 @@ window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage
             </div>
 
             <button class="btn-rodar-final" id="btn-executar-rolagem">RODAR COM AJUSTES</button>
+            
             <button id="btn-executar-rolagem-normal" style="display:none;"></button>
         </div>
     `;
 
     document.body.appendChild(menu);
 
+    // Lógica interna do menu
     window.alterarRolagem = (type, delta) => {
         if (type === 'adv') {
             menuState.adv = Math.max(0, menuState.adv + delta);
@@ -5806,7 +5802,6 @@ window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage
         }
     };
 
-    // Função de Execução
     const executar = (isNormal) => {
         let adv = isNormal ? 0 : menuState.adv;
         let dis = isNormal ? 0 : menuState.dis;
@@ -5904,39 +5899,40 @@ function tornarArrastavel(element, handle) {
     }
 }
 
-// 5. Função Utilitária para Long Press (Segurar botão) - ATUALIZADA
+// 5. Função Utilitária para Long Press (Segurar botão) - VERSÃO MOBILE CORRIGIDA
 window.addLongPressListener = function(element, callback) {
     let timer;
-    const delay = 500; // Meio segundo para ativar
+    const delay = 500; // Tempo para ativar (ms)
 
-    // 1. Bloqueia menu nativo (Desktop e Android)
-    element.addEventListener('contextmenu', (e) => {
+    // BLOQUEIA O MENU NATIVO (DIREITO E SEGURAR)
+    element.oncontextmenu = function(e) {
         e.preventDefault();
         e.stopPropagation();
-        callback(e);
+        callback(e); // No desktop, abre imediatamente com botão direito
         return false;
-    }, false);
+    };
 
-    // 2. Lógica de Toque (iOS/Android)
+    // TOUCH START
     element.addEventListener('touchstart', (e) => {
-        // NÃO use preventDefault aqui imediatamente, senão bloqueia o scroll
+        // Se a gente der preventDefault aqui, o scroll para de funcionar na imagem
+        // Então deixamos passar, MAS...
         timer = setTimeout(() => {
-            // Se segurou por 500ms, dispara nosso menu
+            // Se segurou tempo suficiente, abrimos nosso menu
             callback(e); 
         }, delay);
     }, {passive: true});
 
-    // Se mover o dedo (scroll), cancela
+    // Se mover o dedo (tentando dar scroll), cancela o timer
     element.addEventListener('touchmove', () => {
         if (timer) clearTimeout(timer);
     });
 
-    // Se soltar antes do tempo, cancela
+    // Se soltar o dedo antes do tempo, cancela
     element.addEventListener('touchend', () => {
         if (timer) clearTimeout(timer);
     });
     
-    // Cancela se for cancelado pelo sistema
+    // Se o sistema cancelar (ex: receber ligação), cancela
     element.addEventListener('touchcancel', () => {
         if (timer) clearTimeout(timer);
     });
