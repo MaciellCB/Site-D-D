@@ -67,9 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const li = document.createElement("li");
             li.className = "pericia-item";
             
-            // Adicionado style cursor:pointer na imagem
             li.innerHTML = `
-                <img src="img/imagem-no-site/dado.png" class="col-icon" style="cursor:pointer; transition: transform 0.2s;" title="Rolar ${nome}">
+                <img src="img/imagem-no-site/dado.png" class="col-icon" style="cursor:pointer; transition: transform 0.2s;" title="Botão Esq: Normal | Dir: Vantagem">
                 <div class="col-nome" title="${nome}">${nome}</div>
                 <div class="col-dados">
                     <select class="atributo-select">
@@ -85,27 +84,35 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
             `;
 
-            // --- NOVO: EVENTO DE ROLAGEM DE PERÍCIA ---
-            // --- NOVO: EVENTO DE ROLAGEM DE PERÍCIA ---
+            // EVENTOS DO DADO
             const btnDado = li.querySelector('.col-icon');
+            
+            // 1. CLIQUE ESQUERDO (Rolagem Normal Rápida)
             btnDado.addEventListener('click', () => {
-                // Efeito visual de clique
+                // Efeito visual
                 btnDado.style.transform = "scale(0.9)";
                 setTimeout(() => btnDado.style.transform = "scale(1)", 100);
 
-                // Monta a expressão: 1d20 + bonusTotal
                 const sinal = bonusTotal >= 0 ? '+' : '';
                 const expressao = `1d20 ${sinal} ${bonusTotal}`;
 
-                // CORREÇÃO: Agora chama showCombatResults, que alimenta o Histórico
                 if (typeof rollDiceExpression === 'function' && typeof showCombatResults === 'function') {
                     const resultado = rollDiceExpression(expressao);
-                    // Passamos o resultado como "Ataque", e null para "Dano"
                     showCombatResults(`Perícia: ${nome}`, resultado, null); 
                 } 
             });
-            // ------------------------------------------
 
+            // 2. CLIQUE DIREITO (Menu de Vantagem)
+            btnDado.addEventListener('contextmenu', (e) => {
+                const sinal = bonusTotal >= 0 ? '+' : '';
+                const expressao = `1d20 ${sinal} ${bonusTotal}`;
+
+                if (typeof window.abrirMenuRolagem === 'function') {
+                    window.abrirMenuRolagem(e, `Perícia: ${nome}`, expressao, null);
+                }
+            });
+
+            // OUTROS EVENTOS (Change/Input)
             li.querySelector('.atributo-select').addEventListener('change', (e) => {
                 state.pericias[nome].atributo = e.target.value;
                 atualizarBonusVisual(li, nome);

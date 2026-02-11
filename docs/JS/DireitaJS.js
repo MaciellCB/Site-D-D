@@ -550,49 +550,74 @@ function renderInventory() {
 function bindInventoryCardEvents() {
   const findItemById = (rawId) => state.inventory.find(x => String(x.id) === String(rawId));
 
-  // --- 1. EXPANDIR/RECOLHER ---
-  document.querySelectorAll('.item-card').forEach(card => {
-    const rawId = card.getAttribute('data-id');
-    
-    // O clique deve ser no header, mas precisamos filtrar os botões internos
-    const header = card.querySelector('.card-header');
-    
-    header.onclick = (ev) => {
-      // Lista de coisas que NÃO devem disparar o expandir
-      if (ev.target.closest('.header-equip') ||
-          ev.target.closest('.item-actions-footer') ||
-          ev.target.closest('.dice-img') ||
-          ev.target.closest('.spell-damage') ||
-          ev.target.closest('.versatile-check-inline') || // Checkbox 2 mãos
-          ev.target.closest('input') || // Qualquer input
-          ev.target.tagName === 'INPUT') { 
-        return;
-      }
+  // ITERAÇÃO DOS CARDS DE ITEM
+    document.querySelectorAll('.item-card').forEach(card => {
+        const rawId = card.getAttribute('data-id');
+        
+        // A. EXPANDIR/RECOLHER
+        const header = card.querySelector('.card-header');
+        if (header) {
+            header.onclick = (ev) => {
+                // Lista de coisas que NÃO devem disparar o expandir
+                if (ev.target.closest('.header-equip') ||
+                    ev.target.closest('.item-actions-footer') ||
+                    ev.target.closest('.dice-img') ||
+                    ev.target.closest('.spell-damage') ||
+                    ev.target.closest('.versatile-check-inline') || 
+                    ev.target.closest('input') || 
+                    ev.target.tagName === 'INPUT') { 
+                    return;
+                }
 
-      const it = findItemById(rawId);
-      if (!it) return;
+                const it = state.inventory.find(x => String(x.id) === String(rawId));
+                if (!it) return;
 
-      // Alterna estado
-      it.expanded = !it.expanded;
+                it.expanded = !it.expanded;
 
-      // Atualiza DOM localmente (Instantâneo)
-      const body = card.querySelector('.card-body');
-      const caret = card.querySelector('.caret');
+                // Atualiza DOM localmente
+                const body = card.querySelector('.card-body');
+                const caret = card.querySelector('.caret');
 
-      if (it.expanded) {
-        body.style.display = 'block';
-        if(caret) caret.textContent = '▾';
-        card.classList.add('expanded');
-      } else {
-        body.style.display = 'none';
-        if(caret) caret.textContent = '▸';
-        card.classList.remove('expanded');
-      }
-      
-      // Salva sem recarregar a tela (evita fechar outros cards)
-      saveStateToServer(); 
-    };
-  });
+                if (it.expanded) {
+                    body.style.display = 'block';
+                    if(caret) caret.textContent = '▾';
+                    card.classList.add('expanded');
+                } else {
+                    body.style.display = 'none';
+                    if(caret) caret.textContent = '▸';
+                    card.classList.remove('expanded');
+                }
+                
+                saveStateToServer(); 
+            };
+        }
+
+        // B. NOVO: CLIQUE DIREITO NO DADO (Item/Arma)
+        const diceImg = card.querySelector('.dice-img');
+        if (diceImg) {
+            diceImg.addEventListener('contextmenu', (e) => {
+                const item = state.inventory.find(i => String(i.id) === String(rawId));
+                if (!item) return;
+
+                // Calcula bônus total de ataque
+                const { modAttr, profBonus, itemBonus } = getItemAttackValues(item);
+                const totalBonus = modAttr + profBonus + itemBonus;
+                
+                const exprAtk = `1d20 + ${totalBonus}`;
+                
+                // Pega Dano (Considera se está Versátil ativado visualmente)
+                const spanDano = card.querySelector('.spell-damage span');
+                const exprDano = spanDano ? spanDano.textContent : item.damage;
+
+                // Verifica se deve rolar ataque (Armas rolam, Itens gerais dependem de config)
+                const usaAtaque = (item.type === 'Arma' || (item.attackAttribute && item.attackAttribute !== 'Nenhum'));
+                
+                if (typeof window.abrirMenuRolagem === 'function') {
+                    window.abrirMenuRolagem(e, item.name, usaAtaque ? exprAtk : null, exprDano);
+                }
+            });
+        }
+    });
 
   // --- 2. CHECKBOX EQUIPAR ---
   document.querySelectorAll('.item-equip-checkbox').forEach(ch => {
@@ -1344,76 +1369,203 @@ function bindAbilitySectionEvents() {
    Substitua a função bindAbilityEvents inteira por esta:
 ============================================================= */
 function bindAbilityEvents() {
-  // 1. Checkbox Ativar (DOM DIRETO)
-  document.querySelectorAll('.hab-activate').forEach(ch => {
-    ch.onchange = (ev) => {
-      const id = Number(ch.getAttribute('data-id'));
-      const hab = state.abilities.find(h => h.id === id);
-      if (hab) {
-        hab.active = ev.target.checked;
-        saveStateToServer();
+    // Itera sobre todos os cards de habilidade renderizados
+    document.querySelectorAll('.hab-card').forEach(card => {
+        const habId = Number(card.getAttribute('data-id'));
 
-        // Exclusividade Monge/Bárbaro (Defesa sem Armadura não acumula)
-        if (hab.active) {
-          if (hab.title.includes("Bárbaro")) {
-            const m = state.abilities.find(a => a.title.includes("Monge"));
-            if (m) { m.active = false; const mChk = document.querySelector(`.hab-activate[data-id="${m.id}"]`); if (mChk) mChk.checked = false; }
-          }
-          if (hab.title.includes("Monge")) {
-            const b = state.abilities.find(a => a.title.includes("Bárbaro"));
-            if (b) { b.active = false; const bChk = document.querySelector(`.hab-activate[data-id="${b.id}"]`); if (bChk) bChk.checked = false; }
-          }
+        // =================================================================
+        // 1. EXPANDIR / COLAPSAR CARD
+        // =================================================================
+        const header = card.querySelector('.card-header');
+        if (header) {
+            header.onclick = (ev) => {
+                // Impede que o card feche se clicar no checkbox, no dado ou nos botões de ação
+                if (ev.target.closest('.check-ativar') || 
+                    ev.target.closest('.dice-img') || 
+                    ev.target.closest('a')) {
+                    return;
+                }
+
+                const hab = state.abilities.find(h => h.id === habId);
+                if (hab) {
+                    hab.expanded = !hab.expanded;
+
+                    // Atualização DOM direta para performance
+                    const body = card.querySelector('.card-body');
+                    const caret = card.querySelector('.caret');
+
+                    if (hab.expanded) {
+                        body.style.display = 'block';
+                        card.classList.add('expanded');
+                        if (caret) caret.textContent = '▾';
+                    } else {
+                        body.style.display = 'none';
+                        card.classList.remove('expanded');
+                        if (caret) caret.textContent = '▸';
+                    }
+                    
+                    // Salva o estado (opcional, remova se quiser que reset ao recarregar)
+                    // saveStateToServer(); 
+                }
+            };
         }
 
-        // >>> GATILHO PARA A ESQUERDA ATUALIZAR A CA/STATUS <<<
-        if (typeof atualizarAC === 'function') atualizarAC();
-        if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
-      }
-    };
-  });
+        // =================================================================
+        // 2. CHECKBOX DE ATIVAÇÃO (Prepara/Ativa Habilidade)
+        // =================================================================
+        const chk = card.querySelector('.hab-activate');
+        if (chk) {
+            chk.onchange = (ev) => {
+                const hab = state.abilities.find(h => h.id === habId);
+                if (hab) {
+                    hab.active = ev.target.checked;
+                    saveStateToServer();
 
-  // 2. Expandir Card
-  document.querySelectorAll('.hab-card .left').forEach(leftDiv => {
-    leftDiv.onclick = () => {
-      const id = Number(leftDiv.getAttribute('data-id'));
-      const hab = state.abilities.find(h => h.id === id);
-      const card = leftDiv.closest('.hab-card');
-      if (hab) {
-        hab.expanded = !hab.expanded;
-        const body = card.querySelector('.card-body');
-        const caret = card.querySelector('.caret');
+                    // --- Lógica de Exclusividade (Defesa sem Armadura) ---
+                    if (hab.active) {
+                        if (hab.title.includes("Bárbaro")) {
+                            const m = state.abilities.find(a => a.title.includes("Monge"));
+                            if (m) { 
+                                m.active = false; 
+                                const mChk = document.querySelector(`.hab-activate[data-id="${m.id}"]`); 
+                                if (mChk) mChk.checked = false; 
+                            }
+                        }
+                        if (hab.title.includes("Monge")) {
+                            const b = state.abilities.find(a => a.title.includes("Bárbaro"));
+                            if (b) { 
+                                b.active = false; 
+                                const bChk = document.querySelector(`.hab-activate[data-id="${b.id}"]`); 
+                                if (bChk) bChk.checked = false; 
+                            }
+                        }
+                    }
 
-        body.style.display = hab.expanded ? 'block' : 'none';
-        caret.textContent = hab.expanded ? '▾' : '▸';
-        card.classList.toggle('expanded', hab.expanded);
-      }
-    };
-  });
+                    // Atualiza a CA (Esquerda) e renderiza a tela para refletir mudanças
+                    if (typeof atualizarAC === 'function') atualizarAC();
+                    if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
+                    
+                    // Se estiver na aba "Mag. Preparadas", redesenha para mostrar/esconder
+                    if (state.activeTab === 'Mag. Preparadas') renderActiveTab();
+                }
+            };
+            // Impede que o clique no checkbox propague para o header (fechando o card)
+            chk.onclick = (e) => e.stopPropagation();
+        }
 
-  // 3. REMOVER
-  document.querySelectorAll('.remover-hab').forEach(btn => {
-    btn.onclick = (e) => {
-      e.preventDefault();
-      const id = Number(btn.getAttribute('data-id'));
-      state.abilities = state.abilities.filter(h => h.id !== id);
-      renderActiveTab();
-      saveStateToServer();
-      
-      // Atualiza CA caso a habilidade removida desse bônus
-      if (typeof atualizarAC === 'function') atualizarAC();
-      window.dispatchEvent(new CustomEvent('sheet-updated'));
-    }
-  });
+        // =================================================================
+        // 3. REMOVER HABILIDADE
+        // =================================================================
+        const btnRemover = card.querySelector('.remover-hab');
+        if (btnRemover) {
+            btnRemover.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Remove do array
+                state.abilities = state.abilities.filter(h => h.id !== habId);
+                
+                // Animação visual de saída
+                card.style.transition = 'opacity 0.2s';
+                card.style.opacity = '0';
+                setTimeout(() => card.remove(), 200);
 
-  // 4. EDITAR
-  document.querySelectorAll('.editar-hab').forEach(btn => {
-    btn.onclick = (e) => {
-      e.preventDefault();
-      const id = Number(btn.getAttribute('data-id'));
-      const hab = state.abilities.find(h => h.id === id);
-      if (hab) openNewAbilityModal(hab);
-    }
-  });
+                saveStateToServer();
+                
+                if (typeof atualizarAC === 'function') atualizarAC();
+                window.dispatchEvent(new CustomEvent('sheet-updated'));
+            };
+        }
+
+        // =================================================================
+        // 4. EDITAR HABILIDADE
+        // =================================================================
+        const btnEditar = card.querySelector('.editar-hab');
+        if (btnEditar) {
+            btnEditar.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const hab = state.abilities.find(h => h.id === habId);
+                if (hab) openNewAbilityModal(hab);
+            };
+        }
+
+        // =================================================================
+        // 5. NOVO: CLIQUE DIREITO NO DADO (Menu Vantagem/Desvantagem)
+        // =================================================================
+        const diceImg = card.querySelector('.dice-img');
+        if (diceImg) {
+            // A. Clique Esquerdo (Rolagem Rápida / Normal)
+            diceImg.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // Simula clique no botão "Normal" do menu
+                // (Recria a lógica de cálculo aqui para ser instantâneo)
+                const hab = state.abilities.find(h => h.id === habId);
+                if (!hab) return;
+                
+                // Chama menu mas executa 'normal' direto? 
+                // Melhor abrir o menu com clique direito e usar clique esquerdo 
+                // para rolagem padrão, como no inventário.
+                
+                // Se preferir manter o padrão de "clique esquerdo = normal", use a lógica abaixo.
+                // Caso contrário, remova este bloco click.
+                
+                // Lógica de cálculo (Cópia simplificada para execução rápida)
+                let exprAtk = null;
+                if (hab.useStandardAttack) {
+                    const prof = parseInt(document.getElementById('proficienciaValor')?.textContent || 2);
+                    const mod = typeof getAttributeMod === 'function' ? getAttributeMod(hab.attackAttribute || 'Força') : 0;
+                    const extra = parseInt(hab.attackBonus) || 0;
+                    exprAtk = `1d20 + ${prof + mod + extra}`;
+                } else if (hab.attackBonus && hab.attackBonus.trim() !== '') {
+                    exprAtk = `1d20 + ${parseInt(hab.attackBonus)}`;
+                }
+                const spanDano = card.querySelector('.spell-damage span');
+                const exprDano = spanDano ? spanDano.textContent : hab.damage;
+
+                // Executa rolagem normal direta
+                if (typeof showCombatResults === 'function' && typeof rollDiceWithAdvantage === 'function') {
+                    let atkRes = exprAtk ? rollDiceWithAdvantage(exprAtk, 'normal') : null;
+                    let dmgRes = exprDano ? rollDiceExpression(exprDano) : null;
+                    // Se foi critico, dobra dados do dano (simplificado)
+                    if(atkRes && atkRes.isCrit && dmgRes) {
+                         // Lógica de critico simples ou re-rolar
+                         dmgRes.label = "DANO (CRÍTICO NO ATAQUE)";
+                    }
+                    showCombatResults(hab.title, atkRes, dmgRes);
+                }
+            });
+
+            // B. Clique Direito (Menu Contexto)
+            diceImg.addEventListener('contextmenu', (e) => {
+                const hab = state.abilities.find(h => h.id === habId);
+                if (!hab) return;
+
+                let exprAtk = null;
+                
+                // Lógica de cálculo de ataque da Habilidade
+                if (hab.useStandardAttack) {
+                    const prof = parseInt(document.getElementById('proficienciaValor')?.textContent || 2);
+                    const mod = typeof getAttributeMod === 'function' ? getAttributeMod(hab.attackAttribute || 'Força') : 0;
+                    const extra = parseInt(hab.attackBonus) || 0;
+                    exprAtk = `1d20 + ${prof + mod + extra}`;
+                } else if (hab.attackBonus && hab.attackBonus.trim() !== '') {
+                    // Remove '+' se houver para evitar "+ +5"
+                    const bonusLimpo = hab.attackBonus.replace('+', '').trim();
+                    exprAtk = `1d20 + ${parseInt(bonusLimpo)}`;
+                }
+
+                // Pega o dano visual (que já tem modificadores de atributos somados na renderização)
+                const spanDano = card.querySelector('.spell-damage span');
+                const exprDano = spanDano ? spanDano.textContent : hab.damage;
+
+                if (typeof window.abrirMenuRolagem === 'function') {
+                    window.abrirMenuRolagem(e, hab.title, exprAtk, exprDano);
+                }
+            });
+        }
+    });
 }
 
 // --- FUNÇÃO DE ABERTURA DO CATÁLOGO DE HABILIDADES (CORRIGIDA PARA SALVAR CATEGORIA) ---
@@ -2394,7 +2546,7 @@ function bindSpellEvents() {
         };
     });
 
-    // 4. EVENTOS DOS CARDS (CORRIGIDO ID STRING)
+    // 4. EVENTOS DOS CARDS (MAGIAS)
     document.querySelectorAll('.spell-card').forEach(card => {
         // PEGA O ID COMO STRING (NÃO NUMBER)
         const rawId = card.getAttribute('data-id');
@@ -2408,7 +2560,7 @@ function bindSpellEvents() {
                 if (ev.target.closest('.spell-right') || 
                     ev.target.closest('.check-ativar') || 
                     ev.target.closest('.cast-controls') ||
-                    ev.target.closest('.dice-img') ||
+                    ev.target.closest('.dice-img') || // Importante: não expandir ao clicar no dado
                     ev.target.tagName === 'SELECT' ||
                     ev.target.tagName === 'INPUT') {
                     return;
@@ -2450,6 +2602,32 @@ function bindSpellEvents() {
                 }
             };
             ch.onclick = ev => ev.stopPropagation();
+        }
+
+        // C. NOVO: CLIQUE DIREITO NO DADO (Vantagem/Desvantagem)
+        const diceImg = card.querySelector('.dice-img');
+        if (diceImg) {
+            diceImg.addEventListener('contextmenu', (e) => {
+                const s = state.spells.find(x => String(x.id) === String(rawId));
+                if (!s) return;
+
+                // Pega valores de ataque
+                const vals = getSpellAttackValues(); // {prof, mod, extra}
+                if(!vals) return;
+                const totalBonus = vals.prof + vals.mod + vals.extra;
+                
+                // Expressão de Ataque: "1d20 + 7"
+                const exprAtk = `1d20 + ${totalBonus}`;
+                
+                // Expressão de Dano (Tenta pegar do visual atualizado pelo slot, ou do base)
+                const damageTextElement = card.querySelector('.dynamic-damage-text');
+                const exprDano = damageTextElement ? damageTextElement.textContent : s.damage;
+
+                // Abre o menu (Certifique-se que window.abrirMenuRolagem está definido)
+                if (typeof window.abrirMenuRolagem === 'function') {
+                    window.abrirMenuRolagem(e, s.name, exprAtk, exprDano);
+                }
+            });
         }
     });
 
@@ -5498,3 +5676,145 @@ function consumirSlotSeNecessario(selectedLevel) {
         }
     }
 }
+
+
+/* =============================================================
+   SISTEMA DE VANTAGEM / DESVANTAGEM (Botão Direito)
+============================================================= */
+
+// 1. Função Matemática
+function rollDiceWithAdvantage(expression, mode) {
+    // mode: 'normal', 'adv' (Vantagem), 'dis' (Desvantagem)
+    const cleanExpr = expression.toLowerCase().trim();
+    
+    // Tenta extrair o bônus: Ex: "1d20 + 5" ou apenas "+ 5" ou "5"
+    // Assumimos que o acerto sempre usa d20 base.
+    let modifier = 0;
+    
+    // Remove "1d20" ou "d20" da string para achar o modificador
+    let modStr = cleanExpr.replace(/1?d20/g, '').replace(/\s/g, '');
+    if (modStr) {
+        modifier = parseInt(modStr) || 0;
+    }
+
+    // Rola dois dados
+    const d1 = Math.floor(Math.random() * 20) + 1;
+    const d2 = Math.floor(Math.random() * 20) + 1;
+    
+    let chosenDie = d1;
+    let ignoredDie = d2;
+    let label = "ACERTO";
+    
+    if (mode === 'adv') {
+        chosenDie = Math.max(d1, d2);
+        ignoredDie = Math.min(d1, d2);
+        label = "VANTAGEM";
+    } else if (mode === 'dis') {
+        chosenDie = Math.min(d1, d2);
+        ignoredDie = Math.max(d1, d2);
+        label = "DESVANTAGEM";
+    }
+
+    const total = chosenDie + modifier;
+    const isCrit = (chosenDie === 20);
+    const isFumble = (chosenDie === 1);
+
+    // Formatação do Tooltip (Hover)
+    // Ex: [15, 4] + 5
+    let dieVisual = "";
+    if (mode === 'normal') {
+        dieVisual = `<span class="${isCrit?'dice-roll-max':(isFumble?'dice-roll-min':'')}">${chosenDie}</span>`;
+    } else {
+        // Mostra os dois, destaca o usado
+        const clsChosen = isCrit?'dice-roll-max':(isFumble?'dice-roll-min':'style="color:#fff; font-weight:bold;"');
+        dieVisual = `[<span ${clsChosen}>${chosenDie}</span>, <span style="color:#777; text-decoration:line-through;">${ignoredDie}</span>]`;
+    }
+
+    const detailText = `${dieVisual} ${modifier >= 0 ? '+' : ''} ${modifier}`;
+
+    return {
+        total: total,
+        text: total.toString(),
+        detail: detailText, // HTML para o tooltip
+        isCrit: isCrit,
+        isFumble: isFumble,
+        label: label
+    };
+}
+
+// 2. Gerenciador do Menu de Contexto
+window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage = null) {
+    e.preventDefault(); // Bloqueia menu do navegador
+    e.stopPropagation();
+
+    // Remove menu anterior se existir
+    const old = document.querySelector('.roll-context-menu');
+    if (old) old.remove();
+
+    const menu = document.createElement('div');
+    menu.className = 'roll-context-menu';
+    menu.style.left = `${e.pageX}px`;
+    menu.style.top = `${e.pageY}px`;
+
+    menu.innerHTML = `
+        <div class="roll-ctx-title">Rolar ${titulo}</div>
+        <button class="roll-ctx-btn" onclick="executarRolagemCtx('normal')">
+            Normal <span class="icon">🎲</span>
+        </button>
+        <button class="roll-ctx-btn" onclick="executarRolagemCtx('adv')">
+            Vantagem <span class="icon" style="color:#4caf50;">▲</span>
+        </button>
+        <button class="roll-ctx-btn" onclick="executarRolagemCtx('dis')">
+            Desvantagem <span class="icon" style="color:#f44336;">▼</span>
+        </button>
+    `;
+
+    document.body.appendChild(menu);
+
+    // Função interna para executar a rolagem e fechar
+    window.executarRolagemCtx = (mode) => {
+        let attackRes = null;
+        let damageRes = null;
+
+        // Calcula Ataque (com vantagem/desvantagem)
+        if (expressionAttack) {
+            attackRes = rollDiceWithAdvantage(expressionAttack, mode);
+        }
+
+        // Calcula Dano (Se houver). Crítico dobra dados se attackRes for crítico
+        if (expressionDamage) {
+            let formulaDano = expressionDamage;
+            // Se for crítico no ataque, ajusta fórmula de dano (simplificado)
+            if (attackRes && attackRes.isCrit) {
+                // Lógica de dobrar dados (ex: 1d8 -> 2d8)
+                const regexDice = /^(\d*)d(\d+)(.*)$/i;
+                const match = formulaDano.match(regexDice);
+                if (match) {
+                    const qtd = (match[1] === "" ? 1 : parseInt(match[1])) * 2;
+                    formulaDano = `${qtd}d${match[2]}${match[3] || ''}`;
+                }
+                damageRes = rollDiceExpression(formulaDano);
+                damageRes.isCrit = true;
+                damageRes.label = "DANO CRÍTICO";
+            } else {
+                damageRes = rollDiceExpression(formulaDano);
+            }
+        }
+
+        showCombatResults(titulo, attackRes, damageRes);
+        menu.remove();
+        document.removeEventListener('click', closeMenuOutside);
+    };
+
+    // Fechar ao clicar fora
+    setTimeout(() => {
+        document.addEventListener('click', closeMenuOutside);
+    }, 0);
+
+    function closeMenuOutside(ev) {
+        if (!menu.contains(ev.target)) {
+            menu.remove();
+            document.removeEventListener('click', closeMenuOutside);
+        }
+    }
+};
