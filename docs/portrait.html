@@ -11,7 +11,6 @@
     <style>
         body,
         html {
-            /* Fundo Verde Chroma Key Padrão */
             background-color: #00f91f;
             margin: 0;
             padding: 0;
@@ -113,11 +112,8 @@
             font-size: 24px;
             text-transform: uppercase;
             text-shadow: 2px 2px 4px #000;
-            
-            /* --- ATUALIZADO: FUNDO PRETO TIPO TINTA --- */
             background: linear-gradient(90deg, #000 0%, #000 60%, transparent 100%);
             padding: 4px 40px 4px 25px;
-            
             border-radius: 4px 4px 0 0;
             display: inline-block;
             align-self: flex-start;
@@ -227,10 +223,7 @@
             background: transparent;
             border: none;
             box-shadow: none;
-            animation: popInDice 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            transform-origin: bottom center;
-            opacity: 0;
-            transform: scale(0.5);
+            /* A animação agora é feita individualmente por dado */
             display: flex;
             flex-direction: row;
             gap: 15px;
@@ -239,6 +232,19 @@
         .roll-card.fade-out {
             animation: floatUpFade 0.8s forwards;
             transform-origin: bottom center;
+        }
+
+        /* Animação individual dos dados */
+        .dice-result-box {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: scale(0.5);
+            animation: popInDice 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
         @keyframes popInDice {
@@ -256,22 +262,13 @@
             }
         }
 
-        .dice-result-box {
-            position: relative;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
         .d-icon {
             width: 100%;
             height: 100%;
             position: absolute;
             top: 0;
             left: 0;
-            filter: brightness(2.5);
+            /* Sem filtro, cor original */
             z-index: 1;
             animation: wobble 3s ease-in-out infinite;
         }
@@ -465,19 +462,16 @@
             const atual = parseInt(data.vidaAtual) || 0;
             const total = parseInt(data.vidaTotalCalculada) || 1;
 
-            // Elementos da UI
             const hpBar = document.getElementById('hp-bar');
             const hpText = document.getElementById('hp-text-container');
             const dsHud = document.getElementById('death-saves-hud');
 
             if (atual <= 0) {
-                // --- MODO MORTE ATIVADO ---
                 hpBar.style.display = 'none';
                 if(hpText) hpText.style.display = 'none';
                 dsHud.style.display = 'flex';
 
                 const dsData = data.deathSaves || {};
-                
                 const checkActive = (val, i) => {
                     if (Array.isArray(val)) {
                         return val[i-1] === true;
@@ -489,27 +483,19 @@
                 for(let i=1; i<=3; i++) {
                     const elS = document.getElementById(`ds-s-${i}`);
                     const elF = document.getElementById(`ds-f-${i}`);
-                    
-                    if(checkActive(dsData.successes, i)) elS.classList.add('active');
-                    else elS.classList.remove('active');
-
-                    if(checkActive(dsData.failures, i)) elF.classList.add('active');
-                    else elF.classList.remove('active');
+                    if(checkActive(dsData.successes, i)) elS.classList.add('active'); else elS.classList.remove('active');
+                    if(checkActive(dsData.failures, i)) elF.classList.add('active'); else elF.classList.remove('active');
                 }
-
             } else {
-                // --- MODO VIDA NORMAL ---
                 hpBar.style.display = 'block';
                 if(hpText) hpText.style.display = 'block';
                 dsHud.style.display = 'none';
-
                 document.getElementById('hp-atual').innerText = atual;
                 document.getElementById('hp-total').innerText = total;
                 const pct = Math.min(100, Math.max(0, (atual / total) * 100));
                 hpBar.style.width = pct + "%";
             }
 
-            // Atualiza barras secundárias
             const temp = parseInt(data.vidaTempAtual) || 0;
             const necro = parseInt(data.danoNecroAtual) || 0;
             document.getElementById('temp-bar').style.width = Math.min(100, temp) + "%";
@@ -523,7 +509,7 @@
             inspBadge.style.display = insp > 0 ? 'flex' : 'none';
         }
 
-        // --- ROLAGEM DE DADOS (VISUALIZAÇÃO LIMPA E ATUALIZADA) ---
+        // --- ROLAGEM DE DADOS ---
         socket.on('dados_rolados', (data) => {
             if (data.personagem && data.personagem.toLowerCase() === nomeOriginalURL.toLowerCase()) {
                 criarPopUpDado(data);
@@ -532,8 +518,6 @@
 
         function criarPopUpDado(data) {
             const area = document.getElementById('dice-area');
-
-            // Limpa dados anteriores
             area.innerHTML = '';
 
             const card = document.createElement('div');
@@ -541,48 +525,60 @@
 
             let conteudoHTML = '';
             
-            // --- CONFIGURAÇÃO DAS IMAGENS ---
+            // Configurações das Imagens
             const pathImagens = "img/imagem-no-site/";
             const imgAcerto = pathImagens + "fundo-dado-portrait-acerto.png";
             const imgDano = pathImagens + "fundo-dado-portrait-dano.png";
             const imgPericia = pathImagens + "fundo-dado-portrait-pericia.png";
-            const imgPadrao = pathImagens + "fundo-dado-portrait.png"; // Fallback de segurança
+            const imgPadrao = pathImagens + "fundo-dado-portrait.png";
 
-            // Verifica se é uma perícia olhando o título da rolagem
             const titulo = (data.titulo || "").toLowerCase();
             const ehPericia = titulo.includes("perícia") || titulo.includes("pericia");
 
-            // 1. DADO DE ATAQUE (D20)
+            // 1. DADO DE ATAQUE (D20 ou Múltiplos D20s)
             if (data.ataque) {
-                const isCrit = data.ataque.isCrit;
-                const isFumble = data.ataque.isFumble;
-                const valClass = isCrit ? 'crit' : (isFumble ? 'fumble' : '');
+                // Separa os valores se houver vírgula (Ex: "18, 22, 5")
+                const textoAtaque = String(data.ataque.text);
+                const rolagens = textoAtaque.split(',').map(s => s.trim());
 
-                // Define qual imagem usar: Perícia ou Acerto
-                let iconeUsado = imgAcerto; 
-                if (ehPericia) {
-                    iconeUsado = imgPericia;
-                }
+                let iconeUsado = ehPericia ? imgPericia : imgAcerto;
 
-                conteudoHTML += `
-                    <div class="dice-result-box">
-                        <img src="${iconeUsado}" class="d-icon" onerror="this.src='${imgPadrao}'">
-                        <div class="d-val ${valClass}">${data.ataque.text}</div>
-                        <div class="d-label"></div>
-                    </div>
-                `;
+                rolagens.forEach((val, index) => {
+                    // Remove tags HTML para exibir o número limpo no portrait
+                    const numLimpo = val.replace(/<[^>]*>?/gm, '');
+                    
+                    // Verifica classes enviadas pelo sistema (dice-roll-max/min) para definir cor
+                    let classeCor = '';
+                    if (val.includes('dice-roll-max') || (rolagens.length === 1 && data.ataque.isCrit)) {
+                        classeCor = 'crit';
+                    } else if (val.includes('dice-roll-min') || (rolagens.length === 1 && data.ataque.isFumble)) {
+                        classeCor = 'fumble';
+                    }
+
+                    // Adiciona delay para efeito cascata (0.1s entre cada dado)
+                    const delay = index * 0.1;
+
+                    conteudoHTML += `
+                        <div class="dice-result-box" style="animation-delay: ${delay}s">
+                            <img src="${iconeUsado}" class="d-icon" onerror="this.src='${imgPadrao}'">
+                            <div class="d-val ${classeCor}">${numLimpo}</div>
+                            ${index === 0 ? '<div class="d-label"></div>' : ''}
+                        </div>
+                    `;
+                });
             }
 
-            // 2. DADO DE DANO (Genérico)
+            // 2. DADO DE DANO (Sempre único, soma total)
             if (data.dano) {
                 const isCritDmg = data.dano.isCrit;
                 const valClass = isCritDmg ? 'crit' : 'dmg-val';
-
-                // Dano sempre usa a imagem de dano
                 const iconeUsado = imgDano;
 
+                // Se houver ataques, adiciona um delay maior para o dano aparecer depois
+                const delayDano = data.ataque ? (String(data.ataque.text).split(',').length * 0.1) : 0;
+
                 conteudoHTML += `
-                    <div class="dice-result-box">
+                    <div class="dice-result-box" style="animation-delay: ${delayDano}s">
                         <img src="${iconeUsado}" class="d-icon" onerror="this.src='${imgPadrao}'">
                         <div class="d-val ${valClass}">${data.dano.text}</div>
                         <div class="d-label"></div>
@@ -593,7 +589,6 @@
             card.innerHTML = conteudoHTML;
             area.appendChild(card);
 
-            // Some após 6 segundos
             setTimeout(() => {
                 card.classList.add('fade-out');
                 setTimeout(() => card.remove(), 1000);
