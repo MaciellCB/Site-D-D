@@ -3099,21 +3099,21 @@ window.adicionarAoHistorico = function(titulo, ataqueResult, danoResult) {
 };
 
 
-// =============================================================
-// SISTEMA DE TRACKER DE INICIATIVA (POPUP LOCAL + SINCRONIA)
-// =============================================================
-
+/* =============================================================
+   SISTEMA DE TRACKER DE INICIATIVA (POPUP LOCAL + SINCRONIA)
+============================================================= */
 let trackerListGlobal = [];
 let myGroupMembers = []; 
 let layoutCache = null;
 let tempImgSrc = "img/imagem-no-site/dado.png";
 
-// 1. ESCUTA DO SOCKET (Atualiza a lista quando qualquer um mexe)
+// 1. ESCUTA SOCKET (Garante que recebe e desenha)
 if (typeof socket !== 'undefined') {
     socket.on('sync_tracker_update', (novaLista) => {
+        console.log("Recebi lista de iniciativa:", novaLista); // Debug
         trackerListGlobal = novaLista;
         
-        // Se o popup estiver aberto, redesenha imediatamente
+        // Se o popup estiver aberto, redesenha
         const el = document.getElementById('tracker-overlay');
         if (el && el.style.display === 'flex') {
             renderTrackerPopup();
@@ -3121,66 +3121,35 @@ if (typeof socket !== 'undefined') {
     });
 }
 
-// 2. TOGGLE (Abrir/Fechar Popup NA TELA)
+// 2. TOGGLE POPUP (NA TELA)
 window.toggleTracker = async function() {
     const el = document.getElementById('tracker-overlay');
     const menuConfig = document.getElementById('popup-config-foto');
     
-    if (menuConfig) menuConfig.style.display = 'none'; // Fecha o menu da engrenagem
+    if (menuConfig) menuConfig.style.display = 'none';
 
     if (el.style.display === 'flex') {
         el.style.display = 'none';
     } else {
-        // Antes de abrir, tenta descobrir meu grupo para filtrar (visual opcional)
-        await carregarLayoutEGrupo();
+        // Tenta descobrir grupo
+        await carregarLayoutEGrupo(); 
         
         el.style.display = 'flex';
-        renderTrackerPopup(); // Desenha a lista atual
+        renderTrackerPopup();
         
-        // Torna arrastável (Função local definida abaixo)
+        // Drag
         const handle = document.getElementById('tracker-handle');
-        if(handle) {
-             tornarPopupArrastavel(el, handle); 
-        }
+        if(handle) tornarPopupArrastavel(el, handle);
     }
 };
 
-// 3. ADICIONAR MOB MANUALMENTE (Envia para o servidor)
-window.addMobToTracker = function() {
-    const nameInput = document.getElementById('new-mob-name');
-    const valInput = document.getElementById('new-mob-val');
-    
-    const nome = nameInput.value.trim() || "Inimigo";
-    const valor = parseInt(valInput.value) || 0;
-
-    const newItem = { 
-        id: Date.now(), 
-        name: nome, 
-        val: valor, 
-        img: tempImgSrc 
-    };
-
-    // Envia para o servidor. O servidor devolve a lista atualizada para todos.
-    if (typeof socket !== 'undefined') {
-        socket.emit('add_to_tracker', newItem);
-    }
-
-    // Limpa campos
-    nameInput.value = "";
-    valInput.value = "";
-    tempImgSrc = "img/imagem-no-site/dado.png";
-    const preview = document.getElementById('new-mob-preview');
-    if(preview) preview.src = tempImgSrc;
-    nameInput.focus();
-};
-
-// 4. RENDERIZAR O POPUP (Lista HTML)
+// 3. RENDERIZAR LISTA NO POPUP
 function renderTrackerPopup() {
     const container = document.getElementById('tracker-list');
     if(!container) return;
     container.innerHTML = "";
 
-    // Ordena localmente para exibição
+    // Ordena
     let listaExibicao = [...trackerListGlobal];
     listaExibicao.sort((a, b) => b.val - a.val);
 
@@ -3191,55 +3160,78 @@ function renderTrackerPopup() {
 
     listaExibicao.forEach(item => {
         const itemNome = item.name.toLowerCase();
-        
-        // Define cor da borda (Roxo para meu grupo, Vermelho para outros)
-        let styleBorder = "border-left: 4px solid #d32f2f;"; // Padrão Inimigo
-        
-        if (myGroupMembers.includes(itemNome)) {
-            styleBorder = "border-left: 4px solid #9c27b0;"; // Amigo
-        } else {
-             // Se não é do meu grupo, verifico se é player de outro grupo
-             // Se quiser esconder players de outro grupo no popup, ative a lógica abaixo.
-             // Por enquanto, mostra tudo (vermelho).
+        let styleBorder = "border-left: 4px solid #d32f2f;"; // Vermelho (Inimigo)
+
+        // Se eu sei meu grupo e ele está lá, é amigo
+        if (myGroupMembers.length > 0 && myGroupMembers.includes(itemNome)) {
+            styleBorder = "border-left: 4px solid #9c27b0;"; // Roxo (Amigo)
+        } 
+        // Se eu sou o próprio personagem (garantia caso o grupo falhe)
+        else if (itemNome === (state.nome || "").toLowerCase()) {
+            styleBorder = "border-left: 4px solid #9c27b0;";
         }
 
-        const div = document.createElement('div');
-        div.className = 'init-row';
-        div.style = `display:flex; align-items:center; background:#1a1a1a; padding:5px; margin-bottom:5px; border-radius:4px; ${styleBorder}`;
-        
-        div.innerHTML = `
-            <div class="init-val" style="width:30px; height:30px; background:#000; border:1px solid #555; color:#fff; display:flex; justify-content:center; align-items:center; border-radius:50%; font-weight:bold; margin-right:10px;">${item.val}</div>
-            <img src="${item.img}" class="init-img" id="tracker-img-${item.id}" title="Alterar Imagem" style="width:30px; height:30px; border-radius:50%; object-fit:cover; border:1px solid #555; cursor:pointer; margin-right:10px;">
-            <div class="init-name" style="flex:1; font-weight:bold; color:#ddd; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${item.name}</div>
-            <button onclick="removeTrackerItem(${item.id})" style="background:none; border:none; color:#f44336; font-weight:bold; cursor:pointer; font-size:16px;">×</button>
-        `;
-        
-        container.appendChild(div);
+        // --- LÓGICA DE VISIBILIDADE NO POPUP ---
+        // Se quiser ver TUDO (modo simples), deixe show = true.
+        // Se quiser esconder outros grupos, use a lógica abaixo.
+        // Vamos deixar ver TUDO por enquanto para você ter certeza que funciona.
+        let show = true; 
 
-        // Link para trocar imagem (Upload/Paste)
-        const imgEl = document.getElementById(`tracker-img-${item.id}`);
-        if(imgEl) {
-            imgEl.onclick = () => {
-                if(typeof abrirPopupImagem === 'function') {
-                    abrirPopupImagem((novaImg) => {
-                        // Atualiza objeto e reenvia pro server
-                        item.img = novaImg;
-                        socket.emit('add_to_tracker', item); 
-                    });
-                }
-            };
+        if (show) {
+            const div = document.createElement('div');
+            div.className = 'init-row';
+            div.style = `display:flex; align-items:center; background:#1a1a1a; padding:5px; margin-bottom:5px; border-radius:4px; ${styleBorder}`;
+            
+            div.innerHTML = `
+                <div class="init-val" style="width:30px; height:30px; background:#000; border:1px solid #555; color:#fff; display:flex; justify-content:center; align-items:center; border-radius:50%; font-weight:bold; margin-right:10px;">${item.val}</div>
+                <img src="${item.img}" class="init-img" id="tracker-img-${item.id}" title="Alterar Imagem" style="width:30px; height:30px; border-radius:50%; object-fit:cover; border:1px solid #555; cursor:pointer; margin-right:10px;">
+                <div class="init-name" style="flex:1; font-weight:bold; color:#ddd; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${item.name}</div>
+                <button onclick="removeTrackerItem(${item.id})" style="background:none; border:none; color:#f44336; font-weight:bold; cursor:pointer; font-size:16px;">×</button>
+            `;
+            container.appendChild(div);
+
+            const imgEl = document.getElementById(`tracker-img-${item.id}`);
+            if(imgEl) {
+                imgEl.onclick = () => {
+                    if(typeof abrirPopupImagem === 'function') {
+                        abrirPopupImagem((novaImg) => {
+                            item.img = novaImg;
+                            socket.emit('add_to_tracker', item);
+                        });
+                    }
+                };
+            }
         }
     });
 }
 
-// 5. FUNÇÕES AUXILIARES
+// 4. AÇÕES
+window.addMobToTracker = function() {
+    const nameInput = document.getElementById('new-mob-name');
+    const valInput = document.getElementById('new-mob-val');
+    
+    const nome = nameInput.value.trim() || "Inimigo";
+    const valor = parseInt(valInput.value) || 0;
+
+    const newItem = { id: Date.now(), name: nome, val: valor, img: tempImgSrc };
+    
+    console.log("Enviando mob:", newItem);
+    socket.emit('add_to_tracker', newItem);
+
+    nameInput.value = "";
+    valInput.value = "";
+    tempImgSrc = "img/imagem-no-site/dado.png";
+    const pv = document.getElementById('new-mob-preview');
+    if(pv) pv.src = tempImgSrc;
+};
+
 window.removeTrackerItem = function(id) {
     const novaLista = trackerListGlobal.filter(x => x.id !== id);
     socket.emit('update_tracker', novaLista);
 };
 
 window.limparTracker = function() {
-    socket.emit('update_tracker', []);
+    socket.emit('update_tracker', []); 
 };
 
 window.sortTracker = function() {
@@ -3247,12 +3239,33 @@ window.sortTracker = function() {
     socket.emit('update_tracker', trackerListGlobal);
 };
 
-// 6. FUNÇÃO PARA ARRASTAR (DRAGGABLE SIMPLES)
+// 5. DRAG
 function tornarPopupArrastavel(elmnt, handle) {
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     handle.onmousedown = dragMouseDown;
-    // Suporte Mobile
-    handle.ontouchstart = (e) => {
+    handle.ontouchstart = dragTouchStart;
+
+    function dragMouseDown(e) {
+        e.preventDefault();
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
+    }
+    function elementDrag(e) {
+        e.preventDefault();
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    }
+    function closeDragElement() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+    }
+    function dragTouchStart(e) {
         const touch = e.touches[0];
         pos3 = touch.clientX; pos4 = touch.clientY;
         document.ontouchend = closeDragElement;
@@ -3263,76 +3276,44 @@ function tornarPopupArrastavel(elmnt, handle) {
             elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
             elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
         };
-    };
-
-    function dragMouseDown(e) {
-        e.preventDefault();
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        document.onmouseup = closeDragElement;
-        document.onmousemove = elementDrag;
-    }
-
-    function elementDrag(e) {
-        e.preventDefault();
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-    }
-
-    function closeDragElement() {
-        document.onmouseup = null;
-        document.onmousemove = null;
-        document.ontouchend = null;
-        document.ontouchmove = null;
     }
 }
 
-// 7. DESCOBRIR MEU GRUPO (Para colorir roxo/vermelho)
+// 6. CARREGAR GRUPO
 async function carregarLayoutEGrupo() {
     try {
         const res = await fetch(`${API_URL}/layout`);
         layoutCache = await res.json();
-        
         const myName = (state.personagem || state.nome || "").toLowerCase();
         myGroupMembers = [];
 
         if (layoutCache && layoutCache.folders) {
             const folder = layoutCache.folders.find(f => f.items.some(n => n.toLowerCase() === myName));
-            if (folder) {
-                myGroupMembers = folder.items.map(n => n.toLowerCase());
-            } else {
-                if(layoutCache.uncategorized) {
-                    myGroupMembers = layoutCache.uncategorized.map(n => n.toLowerCase());
-                }
+            if (folder) myGroupMembers = folder.items.map(n => n.toLowerCase());
+            else {
+                if(layoutCache.uncategorized) myGroupMembers = layoutCache.uncategorized.map(n => n.toLowerCase());
                 myGroupMembers.push(myName);
             }
         }
     } catch (e) { console.error("Erro layout", e); }
 }
 
-// 8. FUNÇÃO EXTERNA (Chamada pelo botão rolar da Esquerda)
+// 7. FUNÇÃO EXTERNA (Chamada pelo botão rolar da Esquerda)
 window.adicionarAoTrackerExterno = function(valor) {
     const nome = state.personagem || state.nome || "Personagem";
     const foto = (state.fotoPerfil && state.fotoPerfil.length > 50) ? state.fotoPerfil : "img/imagem-no-site/personagem.png";
 
     const newItem = { id: Date.now(), name: nome, val: valor, img: foto };
     
-    if (typeof socket !== 'undefined') {
-        socket.emit('add_to_tracker', newItem);
-    }
+    socket.emit('add_to_tracker', newItem);
     
-    // Abre popup se fechado
     const el = document.getElementById('tracker-overlay');
     if (el && el.style.display !== 'flex') {
         toggleTracker(); 
     }
 };
 
-// 9. LIGA PASTE NA IMAGEM DE PREVIEW
+// 8. LIGA PASTE
 document.addEventListener('DOMContentLoaded', () => {
     const prev = document.getElementById('new-mob-preview');
     if(prev) {
@@ -3348,14 +3329,7 @@ document.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('sheet-updated', () => {
     if (state.iniciativaAtual !== undefined && state.iniciativaAtual !== null && !window.iniciativaCarregada) {
         window.iniciativaCarregada = true;
-        const nome = (state.personagem || state.nome || "Personagem").toLowerCase();
-        
-        // Verifica se já existe na lista global
-        const jaExiste = trackerListGlobal.find(x => x.name.toLowerCase() === nome);
-        
-        if (!jaExiste) {
-             // Apenas envia, não abre o popup sozinho
-             window.adicionarAoTrackerExterno(state.iniciativaAtual);
-        }
+        // Não adiciona de novo automaticamente para não duplicar no server, 
+        // mas garante que se o server já tiver, mostre.
     }
 });
