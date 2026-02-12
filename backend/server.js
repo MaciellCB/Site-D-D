@@ -53,18 +53,42 @@ const LayoutSchema = new mongoose.Schema({
 
 const Layout = mongoose.model('Layout', LayoutSchema);
 
+// ... (imports e configs iniciais iguais) ...
+
+// --- VARIÁVEL DE MEMÓRIA DO TRACKER ---
+let serverTrackerList = []; // <--- ADICIONE ISSO AQUI, ANTES DO IO.ON
+
 // --- SOCKET.IO ---
 io.on('connection', (socket) => {
     console.log('Cliente conectado:', socket.id);
 
+    // 1. Assim que conecta, envia a lista atual para quem entrou
+    socket.emit('sync_tracker_update', serverTrackerList);
+
     socket.on('dados_rolados', (data) => {
         io.emit('dados_rolados', data); 
     });
-socket.on('update_tracker', (lista) => {
-        // Envia para todos os conectados (incluindo a página do OBS)
-        io.emit('sync_tracker_update', lista);
+
+    // 2. Recebe atualização total (alguém deletou ou reordenou)
+    socket.on('update_tracker', (lista) => {
+        serverTrackerList = lista;
+        io.emit('sync_tracker_update', serverTrackerList);
+    });
+
+    // 3. Recebe adição individual (alguém rolou iniciativa)
+    socket.on('add_to_tracker', (item) => {
+        // Remove duplicata do mesmo personagem se houver, para atualizar o valor
+        const idx = serverTrackerList.findIndex(x => x.name === item.name);
+        if (idx >= 0) {
+            serverTrackerList[idx] = item; // Atualiza
+        } else {
+            serverTrackerList.push(item); // Adiciona novo
+        }
+        // Envia a lista nova para todos
+        io.emit('sync_tracker_update', serverTrackerList);
     });
 });
+
 
 // =================================================================
 // ROTAS GERAIS

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciativa</title>
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;900&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; padding: 15px; background-color: #0a0a0a; color: white; font-family: 'Roboto', sans-serif; }
+        
+        h2 { color: #9c27b0; text-transform: uppercase; margin: 0 0 20px 0; text-align: center; font-size: 18px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+
+        #tracker-container { display: flex; flex-direction: column; gap: 10px; }
+
+        .init-card {
+            display: flex; align-items: center; background: #151515;
+            border: 1px solid #333; border-left: 5px solid #555;
+            border-radius: 6px; padding: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .init-card.my-group { border-left-color: #9c27b0; background: linear-gradient(90deg, #180818, #151515); }
+        .init-card.enemy { border-left-color: #d32f2f; background: linear-gradient(90deg, #180808, #151515); }
+
+        .init-val {
+            width: 40px; height: 40px; border-radius: 50%; background: #000;
+            border: 2px solid #555; color: #fff; font-weight: 900; font-size: 20px;
+            display: flex; justify-content: center; align-items: center; margin-right: 12px;
+        }
+        .my-group .init-val { border-color: #9c27b0; color: #e0aaff; }
+        .enemy .init-val { border-color: #d32f2f; color: #ff8a80; }
+
+        .init-img {
+            width: 45px; height: 45px; border-radius: 50%; object-fit: cover;
+            border: 2px solid #333; background: #000; margin-right: 12px;
+        }
+        .init-name { font-size: 16px; font-weight: bold; color: #eee; flex: 1; }
+        .empty-msg { text-align: center; color: #666; margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+    <h2 id="page-title">Iniciativa</h2>
+    <div id="tracker-container"><div class="empty-msg">Carregando...</div></div>
+
+    <script>
+        const socket = io('https://dandd-chan.onrender.com');
+        const params = new URLSearchParams(window.location.search);
+        
+        // Pega membros da URL (enviados pelo mestre.html)
+        const rawMembros = params.get('membros') || "";
+        const listaMembros = rawMembros.toLowerCase().split(',').map(s => s.trim()).filter(s => s !== "");
+        const nomeGrupo = params.get('grupo') || "Combate";
+
+        document.title = `Iniciativa - ${nomeGrupo}`;
+        document.getElementById('page-title').innerText = nomeGrupo;
+
+        // Ao conectar, o servidor já manda o 'sync_tracker_update' automaticamente (configuramos no server.js)
+        socket.on('sync_tracker_update', (lista) => {
+            render(lista);
+        });
+
+        function render(lista) {
+            const container = document.getElementById('tracker-container');
+            container.innerHTML = "";
+
+            if (!lista || lista.length === 0) {
+                container.innerHTML = '<div class="empty-msg">Aguardando combate...</div>';
+                return;
+            }
+
+            // Ordena
+            lista.sort((a, b) => b.val - a.val);
+
+            let visibleCount = 0;
+
+            lista.forEach((item, index) => {
+                const nomeItem = item.name.toLowerCase().trim();
+                
+                // --- LÓGICA DE FILTRAGEM ---
+                // Mostra se: 
+                // 1. É um membro do grupo (Passado na URL)
+                // 2. OU NÃO é membro de NENHUM grupo conhecido (Mobs/Inimigos adicionados manualmente)
+                //    (Como essa página não tem acesso ao layout completo do banco, assumimos que 
+                //     se não está na lista de membros, é inimigo. O problema é se aparecer player de outro grupo.
+                //     Para resolver 100%, precisaríamos baixar o layout aqui também, mas vamos simplificar:
+                //     Mostra tudo, mas destaca quem é do grupo).
+                
+                const ehDoGrupo = listaMembros.includes(nomeItem);
+                
+                // Se quiser esconder players de outros grupos, precisaríamos baixar o layout. 
+                // Vamos assumir que o mestre limpa o tracker entre combates de grupos diferentes.
+                // Então mostramos TUDO que está no tracker global, destacando os do grupo.
+                
+                const cssClass = ehDoGrupo ? 'my-group' : 'enemy';
+                
+                const div = document.createElement('div');
+                div.className = `init-card ${cssClass}`;
+                div.innerHTML = `
+                    <div class="init-val">${item.val}</div>
+                    <img class="init-img" src="${item.img}" onerror="this.src='img/imagem-no-site/dado.png'">
+                    <div class="init-name">${item.name}</div>
+                `;
+                container.appendChild(div);
+                visibleCount++;
+            });
+
+            if (visibleCount === 0) container.innerHTML = '<div class="empty-msg">Nenhum combatente.</div>';
+        }
+    </script>
+</body>
+</html>

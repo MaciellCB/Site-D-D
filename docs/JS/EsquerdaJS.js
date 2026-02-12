@@ -1343,7 +1343,7 @@ document.getElementById('inspiraLeft').onclick = () => { state.inspiracao = Math
 document.getElementById('inspiraRight').onclick = () => { state.inspiracao = (parseInt(state.inspiracao) || 0) + 1; document.getElementById('inspiraValor').textContent = state.inspiracao; saveStateToServer(); };
 
 /* =============================================================
-   LÓGICA DO BOTÃO DE INICIATIVA (SALVANDO NA FICHA)
+   LÓGICA DO BOTÃO DE INICIATIVA (ESQUERDA)
 ============================================================= */
 document.addEventListener('DOMContentLoaded', () => {
     const btnIni = document.getElementById('btn-roll-ini');
@@ -1353,11 +1353,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const bonus = parseInt(document.getElementById('iniciativaBonus').value) || 0;
             const dexScore = state.atributos?.n2 || 10;
             const dexMod = Math.floor((parseInt(dexScore) - 10) / 2);
-            const totalBonus = dexMod + bonus;
-            return `1d20 + ${totalBonus}`;
+            return `1d20 + ${dexMod + bonus}`;
         };
 
-        // 1. CLIQUE ESQUERDO: Rola, Salva e Adiciona ao Tracker
+        // CLIQUE ESQUERDO: Rola e Abre a Página
         btnIni.addEventListener('click', (e) => {
             e.preventDefault();
             btnIni.style.transform = "scale(0.95)";
@@ -1365,35 +1364,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const expressao = getExpr();
 
-            if (typeof rollDiceExpression === 'function' && typeof showCombatResults === 'function') {
+            if (typeof rollDiceExpression === 'function') {
                 const res = rollDiceExpression(expressao);
-                
                 showCombatResults("Iniciativa", res, null);
 
-                // --- SALVAMENTO NOVO ---
-                state.iniciativaAtual = res.total; // Guarda na memória
-                saveStateToServer(); // Salva no banco de dados
-                // -----------------------
+                // 1. Salva na Ficha
+                state.iniciativaAtual = res.total;
+                saveStateToServer();
 
-                if (typeof window.adicionarAoTrackerExterno === 'function') {
-                    window.adicionarAoTrackerExterno(res.total);
+                // 2. Envia para o Tracker Global (Servidor -> Todos)
+                if (typeof socket !== 'undefined') {
+                    const nome = state.personagem || state.nome;
+                    const foto = state.fotoPerfil || "img/imagem-no-site/personagem.png";
+                    
+                    const itemData = {
+                        id: Date.now(), // ID único para o tracker
+                        name: nome,
+                        val: res.total,
+                        img: foto
+                    };
+                    
+                    // Emite evento específico para adicionar/atualizar
+                    socket.emit('add_to_tracker', itemData);
                 }
+
+                // 3. Abre a Página de Iniciativa (Se não estiver aberta)
+                const nomeUrl = encodeURIComponent(state.nome || "");
+                const winName = `Iniciativa_${state.nome}`;
+                window.open(`iniciativa.html?char=${nomeUrl}`, winName, "width=500,height=800");
             }
         });
 
-        // 2. BOTÃO DIREITO / SEGURAR: Abre Menu
+        // CLIQUE DIREITO: Menu (Vantagem) - Mantido
         if (typeof window.addLongPressListener === 'function') {
             window.addLongPressListener(btnIni, (e) => {
-                const expressao = getExpr();
-                if (typeof window.abrirMenuRolagem === 'function') {
-                    window.abrirMenuRolagem(e, "Iniciativa", expressao, null);
-                }
-            });
-        } else {
-            btnIni.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                const expressao = getExpr();
-                window.abrirMenuRolagem(e, "Iniciativa", expressao, null);
+                window.abrirMenuRolagem(e, "Iniciativa", getExpr(), null);
             });
         }
     }

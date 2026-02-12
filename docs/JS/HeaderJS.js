@@ -3091,191 +3091,162 @@ window.adicionarAoHistorico = function(titulo, ataqueResult, danoResult) {
 
 
 /* =============================================================
-   SISTEMA DE TRACKER DE INICIATIVA (SINCRONIZADO)
+   SISTEMA DE TRACKER (POPUP PLAYER) - FILTRADO POR GRUPO
 ============================================================= */
-let trackerList = [];
+let trackerListGlobal = [];
+let myGroupMembers = [];
+let layoutCache = null;
 let tempImgSrc = "img/imagem-no-site/dado.png";
 
-// --- ESCUTA DO SOCKET (SINCRONIZAÇÃO EM TEMPO REAL) ---
+// 1. Inicialização e Escuta
 if (typeof socket !== 'undefined') {
-    // Quando o servidor mandar a lista atualizada (vinda de qualquer pessoa)
     socket.on('sync_tracker_update', (novaLista) => {
-        trackerList = novaLista;
-        renderTrackerLocalOnly(); // Apenas desenha, não re-emite socket
-    });
-}
-
-// 1. Função chamada ao rolar iniciativa (Envia para todos)
-window.adicionarAoTrackerExterno = function(valor) {
-    const nome = state.personagem || state.nome || "Personagem";
-    const foto = (state.fotoPerfil && state.fotoPerfil.length > 50) 
-                 ? state.fotoPerfil 
-                 : "img/imagem-no-site/personagem.png";
-
-    const existingIdx = trackerList.findIndex(x => x.name === nome);
-    
-    if (existingIdx >= 0) {
-        trackerList[existingIdx].val = valor;
-        trackerList[existingIdx].img = foto;
-    } else {
-        trackerList.push({
-            id: Date.now(),
-            name: nome,
-            val: valor,
-            img: foto
-        });
-    }
-    
-    // Abre se fechado
-    const el = document.getElementById('tracker-overlay');
-    if (el && el.style.display !== 'flex') el.style.display = 'flex';
-
-    // Salva e Sincroniza com TODOS
-    trackerList.sort((a, b) => b.val - a.val);
-    renderTrackerLocalOnly();
-    emitirTrackerUpdate();
-};
-
-// Função auxiliar para emitir ao servidor
-function emitirTrackerUpdate() {
-    if (typeof socket !== 'undefined') {
-        socket.emit('update_tracker', trackerList);
-    }
-}
-
-// Renderiza sem emitir (para não criar loop infinito)
-function renderTrackerLocalOnly() {
-    const container = document.getElementById('tracker-list');
-    if(!container) return;
-    container.innerHTML = "";
-
-    trackerList.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'init-row';
-        div.innerHTML = `
-            <div class="init-val">${item.val}</div>
-            <img src="${item.img}" class="init-img" id="tracker-img-${item.id}" title="Alterar Imagem">
-            <div class="init-name">${item.name}</div>
-            <button onclick="removeTrackerItem(${item.id})" style="background:none; border:none; color:#f44336; cursor:pointer; font-weight:bold;">×</button>
-        `;
-        
-        container.appendChild(div);
-
-        // Evento de Clique na Imagem do Tracker (Problema 3)
-        const imgEl = document.getElementById(`tracker-img-${item.id}`);
-        if(imgEl) {
-            imgEl.onclick = () => {
-                abrirPopupImagem((novaImg) => {
-                    item.img = novaImg;
-                    renderTrackerLocalOnly();
-                    emitirTrackerUpdate();
-                });
-            };
+        trackerListGlobal = novaLista;
+        // Se o tracker estiver aberto, re-renderiza
+        const el = document.getElementById('tracker-overlay');
+        if (el && el.style.display === 'flex') {
+            renderTrackerPopup();
         }
     });
 }
 
-// 2. Toggle Visibilidade
-window.toggleTracker = function() {
+// 2. Abrir o Popup (Header)
+window.toggleTracker = async function() {
     const el = document.getElementById('tracker-overlay');
     if (el.style.display === 'flex') {
         el.style.display = 'none';
     } else {
+        // Carrega layout para saber quem é meu grupo
+        await carregarLayoutEGrupo(); 
+        
         el.style.display = 'flex';
-        // Torna arrastável usando handle
+        renderTrackerPopup();
+        
+        // Torna arrastável
         if(typeof window.tornarPainelArrastavel === 'function') {
-             // Usa lógica simples se a complexa falhar
-             const handle = document.getElementById('tracker-handle');
-             let isDown = false;
-             let offset = [0,0];
-             handle.onmousedown = (e) => { isDown = true; offset = [el.offsetLeft - e.clientX, el.offsetTop - e.clientY]; };
-             document.addEventListener('mouseup', () => { isDown = false; });
-             document.addEventListener('mousemove', (e) => {
-                 if (isDown) {
-                     e.preventDefault();
-                     el.style.left = (e.clientX + offset[0]) + 'px';
-                     el.style.top  = (e.clientY + offset[1]) + 'px';
-                 }
-             });
+             tornarPainelArrastavel(el); // Reusa função da EsquerdaJS se existir
         }
         document.getElementById('popup-config-foto').style.display = 'none';
     }
 };
 
-// 3. Adicionar Manualmente (Botão +)
-window.addMobToTracker = function() {
-    const nameInput = document.getElementById('new-mob-name');
-    const valInput = document.getElementById('new-mob-val');
-    
-    const nome = nameInput.value.trim() || "Inimigo";
-    const valor = parseInt(valInput.value) || 0;
+// 3. Descobre meu grupo
+async function carregarLayoutEGrupo() {
+    try {
+        const res = await fetch(`${API_URL}/layout`);
+        layoutCache = await res.json();
+        
+        const myName = (state.personagem || state.nome || "").toLowerCase();
+        myGroupMembers = [];
 
-    trackerList.push({
-        id: Date.now(),
-        name: nome,
-        val: valor,
-        img: tempImgSrc
-    });
+        // Procura em qual pasta estou
+        if (layoutCache && layoutCache.folders) {
+            const folder = layoutCache.folders.find(f => f.items.some(n => n.toLowerCase() === myName));
+            if (folder) {
+                myGroupMembers = folder.items.map(n => n.toLowerCase());
+            } else {
+                // Se não estou em pasta, vejo uncategorized + eu mesmo
+                if(layoutCache.uncategorized) {
+                    myGroupMembers = layoutCache.uncategorized.map(n => n.toLowerCase());
+                }
+                myGroupMembers.push(myName);
+            }
+        }
+    } catch (e) { console.error("Erro layout tracker", e); }
+}
 
-    renderTracker();
-    
-    // Reset
-    nameInput.value = "";
-    valInput.value = "";
-    tempImgSrc = "img/imagem-no-site/dado.png";
-    document.getElementById('new-mob-preview').src = tempImgSrc;
-    nameInput.focus();
-};
-
-// 4. Renderizar
-// --- No final do HeaderJS.js, onde está a lógica do Tracker ---
-
-function renderTracker() {
+// 4. Renderiza o Popup (Com filtro)
+function renderTrackerPopup() {
     const container = document.getElementById('tracker-list');
     if(!container) return;
     container.innerHTML = "";
 
-    // Ordena decrescente
-    trackerList.sort((a, b) => b.val - a.val);
+    // Ordena
+    let listaExibicao = [...trackerListGlobal];
+    listaExibicao.sort((a, b) => b.val - a.val);
 
-    trackerList.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'init-row';
-        div.innerHTML = `
-            <div class="init-val">${item.val}</div>
-            <img src="${item.img}" class="init-img" onclick="changeMobImage(${item.id})" title="Trocar Imagem">
-            <div class="init-name">${item.name}</div>
-            <button onclick="removeTrackerItem(${item.id})" style="background:none; border:none; color:#f44336; cursor:pointer; font-weight:bold;">×</button>
-        `;
-        container.appendChild(div);
+    listaExibicao.forEach(item => {
+        const itemNome = item.name.toLowerCase();
+        let show = true;
+        let styleBorder = "border-left: 4px solid #d32f2f;"; // Vermelho (Inimigo)
+
+        // Se o nome está no meu grupo
+        if (myGroupMembers.includes(itemNome)) {
+            styleBorder = "border-left: 4px solid #9c27b0;"; // Roxo (Amigo)
+        } else {
+            // Se NÃO é do meu grupo, verifico se é player de OUTRO grupo
+            // Se for player de outro grupo -> ESCONDE. Se for mob (não está em pasta nenhuma) -> MOSTRA.
+            
+            let isOtherPlayer = false;
+            if (layoutCache) {
+                // Verifica se está em alguma pasta
+                const isInAnyFolder = layoutCache.folders.some(f => f.items.some(n => n.toLowerCase() === itemNome));
+                // Verifica se está nos sem grupo
+                const isUncat = layoutCache.uncategorized.some(n => n.toLowerCase() === itemNome);
+                
+                // Se é um personagem conhecido do sistema (está em alguma lista), mas não é do meu grupo -> É player de outro grupo
+                if (isInAnyFolder || isUncat) {
+                    isOtherPlayer = true;
+                }
+            }
+            
+            if (isOtherPlayer) show = false; 
+        }
+
+        if (show) {
+            const div = document.createElement('div');
+            div.className = 'init-row';
+            div.style = `display:flex; align-items:center; background:#1a1a1a; padding:5px; margin-bottom:5px; border-radius:4px; ${styleBorder}`;
+            div.innerHTML = `
+                <div class="init-val" style="width:30px; height:30px; background:#000; border:1px solid #555; color:#fff; display:flex; justify-content:center; align-items:center; border-radius:50%; font-weight:bold; margin-right:10px;">${item.val}</div>
+                <img src="${item.img}" class="init-img" onclick="changeMobImage(${item.id})" style="width:30px; height:30px; border-radius:50%; object-fit:cover; border:1px solid #555; cursor:pointer; margin-right:10px;">
+                <div class="init-name" style="flex:1; font-weight:bold; color:#ddd; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${item.name}</div>
+                <button onclick="removeTrackerItem(${item.id})" style="background:none; border:none; color:#f44336; font-weight:bold; cursor:pointer;">×</button>
+            `;
+            container.appendChild(div);
+        }
     });
-
-    // --- NOVO: ENVIA ATUALIZAÇÃO VIA SOCKET PARA O OBS ---
-    if (typeof socket !== 'undefined') {
-        // Emite um evento personalizado 'update_tracker' com a lista completa
-        socket.emit('update_tracker', trackerList);
-    }
 }
 
+// 5. Ações (Adicionar/Remover/Limpar) - Atualizam via Socket
+window.addMobToTracker = function() {
+    const nameInput = document.getElementById('new-mob-name');
+    const valInput = document.getElementById('new-mob-val');
+    const nome = nameInput.value.trim() || "Inimigo";
+    const valor = parseInt(valInput.value) || 0;
+
+    const newItem = { id: Date.now(), name: nome, val: valor, img: tempImgSrc };
+    
+    // Envia ao servidor (que vai atualizar serverTrackerList e devolver sync_tracker_update)
+    socket.emit('add_to_tracker', newItem);
+
+    nameInput.value = "";
+    valInput.value = "";
+};
+
 window.removeTrackerItem = function(id) {
-    trackerList = trackerList.filter(x => x.id !== id);
-    renderTrackerLocalOnly();
-    emitirTrackerUpdate();
+    // Filtra localmente e envia a lista nova inteira (método update_tracker)
+    const novaLista = trackerListGlobal.filter(x => x.id !== id);
+    socket.emit('update_tracker', novaLista);
 };
 
 window.limparTracker = function() {
-    if(confirm("Limpar todas as iniciativas para todos?")) {
-        trackerList = [];
-        renderTrackerLocalOnly();
-        emitirTrackerUpdate();
+    // Removemos o 'confirm'. Agora limpa direto.
+    if (typeof socket !== 'undefined') {
+        socket.emit('update_tracker', []); // Envia lista vazia para o servidor
     }
+    
+    // Opcional: Limpa visualmente local também para resposta instantânea
+    trackerListGlobal = [];
+    renderTrackerPopup();
+};
+window.sortTracker = function() {
+    // A renderização já ordena, mas se quiser forçar a ordem no servidor:
+    trackerListGlobal.sort((a, b) => b.val - a.val);
+    socket.emit('update_tracker', trackerListGlobal);
 };
 
-window.sortTracker = function() {
-    trackerList.sort((a, b) => b.val - a.val);
-    renderTrackerLocalOnly();
-    emitirTrackerUpdate();
-};
+// ... (Mantenha as funções de Colar Imagem e Upload aqui: changeMobImage, abrirPopupImagem, etc) ...
 
 // Adicionar Mob Manualmente
 window.addMobToTracker = function() {
@@ -3425,3 +3396,12 @@ window.addEventListener('sheet-updated', () => {
         }
     }
 });
+
+
+
+// Adicione isso no HeaderJS.js
+window.abrirPaginaIniciativa = function() {
+    const nome = state.personagem || state.nome || "";
+    const winName = `Iniciativa_${nome}`;
+    window.open(`iniciativa.html?char=${encodeURIComponent(nome)}`, winName, "width=500,height=800");
+};
