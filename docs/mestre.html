@@ -485,18 +485,26 @@
     </div>
 
     <div id="modal-add-init" class="modal-overlay">
-        <div class="modal-box" style="width: 300px;">
-            <h3 class="modal-titulo">Adicionar Criatura</h3>
-            <input type="text" id="manual-init-name" class="modal-input" placeholder="Nome (Ex: Goblin 1)"
-                autocomplete="off">
-            <input type="number" id="manual-init-val" class="modal-input" placeholder="Valor de Iniciativa"
-                autocomplete="off">
-            <div class="modal-buttons">
-                <button class="btn-modal btn-cancelar" onclick="fecharModalInit()">Cancelar</button>
-                <button class="btn-modal btn-confirmar" onclick="confirmarAddInit()">Adicionar</button>
-            </div>
-        </div>
-    </div>
+      <div class="modal-box" style="width: 350px;">
+          <h3 class="modal-titulo">Adicionar Criatura</h3>
+          
+          <div style="display:flex; justify-content:center; margin-bottom:15px;">
+              <div style="width:80px; height:80px; border-radius:50%; border:2px dashed #444; overflow:hidden; position:relative; cursor:pointer;" onclick="document.getElementById('manual-init-file').click()">
+                  <img id="manual-init-preview" src="img/imagem-no-site/dado.png" style="width:100%; height:100%; object-fit:cover;">
+                  <div style="position:absolute; bottom:0; width:100%; background:rgba(0,0,0,0.6); font-size:10px; color:#fff;">Alterar</div>
+              </div>
+              <input type="file" id="manual-init-file" accept="image/*" style="display:none;" onchange="previewManualInitImage(this)">
+          </div>
+
+          <input type="text" id="manual-init-name" class="modal-input" placeholder="Nome (Ex: Goblin 1)" autocomplete="off">
+          <input type="number" id="manual-init-val" class="modal-input" placeholder="Valor de Iniciativa" autocomplete="off">
+          
+          <div class="modal-buttons">
+              <button class="btn-modal btn-cancelar" onclick="fecharModalInit()">Cancelar</button>
+              <button class="btn-modal btn-confirmar" onclick="confirmarAddInit()">Adicionar</button>
+          </div>
+      </div>
+  </div>
 
     <script>
         const API_URL = 'https://dandd-chan.onrender.com/api';
@@ -505,6 +513,70 @@
         let nomeDelecaoPendente = '';
         let nomeEdicaoPendente = '';
         let pastaIdDelecaoPendente = '';
+
+        // --- FUNÇÕES DO MODAL DE INICIATIVA MANUAL ---
+    let currentInitImage = 'img/imagem-no-site/dado.png';
+
+    function fecharModalInit() {
+        document.getElementById('modal-add-init').style.display = 'none';
+        document.getElementById('manual-init-name').value = '';
+        document.getElementById('manual-init-val').value = '';
+        document.getElementById('manual-init-preview').src = 'img/imagem-no-site/dado.png';
+        currentInitImage = 'img/imagem-no-site/dado.png';
+    }
+
+    function previewManualInitImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('manual-init-preview').src = e.target.result;
+                currentInitImage = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Suporte a Paste no Modal de Iniciativa
+    document.addEventListener('paste', function(e) {
+        if (document.getElementById('modal-add-init').style.display === 'flex') {
+            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+            for (let index in items) {
+                const item = items[index];
+                if (item.kind === 'file' && item.type.includes('image/')) {
+                    const blob = item.getAsFile();
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        document.getElementById('manual-init-preview').src = event.target.result;
+                        currentInitImage = event.target.result;
+                    };
+                    reader.readAsDataURL(blob);
+                    e.preventDefault(); 
+                }
+            }
+        }
+    });
+
+    async function confirmarAddInit() {
+        const nome = document.getElementById('manual-init-name').value.trim();
+        const val = parseInt(document.getElementById('manual-init-val').value) || 0;
+        
+        if (nome) {
+            // Usa o socket global (definido ou importado)
+            // Se o mestre.html não tiver socket, precisaria conectar aqui.
+            // Assumindo que você tem <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"> no head
+            if (!window.socket) window.socket = io('https://dandd-chan.onrender.com');
+
+            window.socket.emit('add_to_tracker', {
+                id: Date.now(),
+                name: nome,
+                val: val,
+                img: currentInitImage
+            });
+            fecharModalInit();
+        } else {
+            mostrarAviso("Nome é obrigatório.");
+        }
+    }
 
         // DADOS GLOBAIS
         let layoutAtual = { folders: [], uncategorized: [] };
@@ -599,11 +671,6 @@
         }
 
        
-
-        // Variável para guardar o socket se necessário (ou use window.socket se já tiver)
-    // Se não tiver socket no mestre.html, adicione: <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"><\/script> no head
-    // e const socket = io('https://dandd-chan.onrender.com'); no script.
-
     // Função de fechar modal
     function fecharModalInit() {
         document.getElementById('modal-add-init').style.display = 'none';
@@ -630,7 +697,7 @@
         }
     }
 
-    function criarElementoPasta(titulo, itens, id, permiteDeletar) {
+   function criarElementoPasta(titulo, itens, id, permiteDeletar) {
         const col = document.createElement('div');
         col.className = 'folder-container';
         col.dataset.id = id;
@@ -644,6 +711,7 @@
             const btnDel = document.createElement('button');
             btnDel.className = 'btn-del-folder';
             btnDel.innerHTML = '✕'; 
+            btnDel.title = 'Excluir Pasta';
             btnDel.onclick = () => abrirModalDeletarPasta(id);
             header.appendChild(btnDel);
         }
@@ -669,20 +737,20 @@
         // --- RODAPÉ COM BOTÕES ---
         const footer = document.createElement('div');
         footer.style.cssText = `
-            padding: 10px;
+            padding: 8px;
             background: #1a1a1a;
             border-top: 1px solid #333;
             border-radius: 0 0 8px 8px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         `;
 
         // 1. Botão Principal (Abre Web)
         const btnObs = document.createElement('button');
-        btnObs.innerHTML = "🎥 Abrir Iniciativa (Web)";
+        btnObs.innerHTML = "🎥 Iniciativa (Web)";
         btnObs.style.cssText = `
-            width: 100%; padding: 8px; background: linear-gradient(45deg, #1f1f1f, #2a2a2a);
+            width: 100%; padding: 6px; background: linear-gradient(45deg, #1f1f1f, #2a2a2a);
             border: 1px solid #9c27b0; color: #e0aaff; border-radius: 4px;
             font-weight: bold; cursor: pointer; font-size: 11px; text-transform: uppercase;
         `;
@@ -695,23 +763,28 @@
             );
         };
 
-        // 2. Botões Menores (Add e Limpar)
+        // 2. Container para botões menores
         const rowSmallBtns = document.createElement('div');
-        rowSmallBtns.style.cssText = "display: flex; gap: 5px;";
+        rowSmallBtns.style.cssText = "display: flex; gap: 4px;";
 
+        // Botão Add Manual
         const btnAdd = document.createElement('button');
-        btnAdd.innerHTML = "➕ Add";
-        btnAdd.style.cssText = "flex: 1; background: #333; border: 1px solid #555; color: #fff; padding: 4px; font-size: 10px; cursor: pointer; border-radius: 4px;";
+        btnAdd.innerHTML = "➕";
+        btnAdd.title = "Adicionar criatura manualmente";
+        btnAdd.style.cssText = "flex: 1; background: #222; border: 1px solid #444; color: #ccc; padding: 4px; font-size: 10px; cursor: pointer; border-radius: 4px;";
         btnAdd.onclick = () => {
             document.getElementById('modal-add-init').style.display = 'flex';
             document.getElementById('manual-init-name').focus();
         };
 
+        // Botão Limpar
         const btnClear = document.createElement('button');
-        btnClear.innerHTML = "🗑️ Limpar";
-        btnClear.style.cssText = "flex: 1; background: #5a1a1a; border: 1px solid #b71c1c; color: #ff9999; padding: 4px; font-size: 10px; cursor: pointer; border-radius: 4px;";
+        btnClear.innerHTML = "🗑️";
+        btnClear.title = "Limpar Iniciativa de Todos";
+        btnClear.style.cssText = "width: 30px; background: #3a1a1a; border: 1px solid #b71c1c; color: #ff9999; padding: 4px; font-size: 10px; cursor: pointer; border-radius: 4px;";
         btnClear.onclick = () => {
-             if(typeof socket !== 'undefined') socket.emit('update_tracker', []);
+             if (!window.socket) window.socket = io('https://dandd-chan.onrender.com');
+             window.socket.emit('update_tracker', []);
         };
 
         rowSmallBtns.appendChild(btnAdd);
@@ -723,7 +796,6 @@
 
         return col;
     }
-
         function criarCardHTML(nome) {
             const card = document.createElement('div');
             card.className = 'card-personagem';
