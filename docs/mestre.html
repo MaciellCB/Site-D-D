@@ -402,7 +402,7 @@ function criarElementoPasta(titulo, itens, id, permiteDeletar) {
     col.className = 'folder-container';
     col.dataset.id = id;
 
-    // Cabeçalho
+    // --- CABEÇALHO ---
     const header = document.createElement('div');
     header.className = 'folder-header';
     header.innerHTML = `<span>${titulo}</span>`;
@@ -412,13 +412,12 @@ function criarElementoPasta(titulo, itens, id, permiteDeletar) {
         btnDel.className = 'btn-del-folder';
         btnDel.innerHTML = '✕'; 
         btnDel.title = 'Excluir Pasta';
-        // Chama modal de deletar pasta (certifique-se que essa função existe no seu código)
         btnDel.onclick = () => abrirModalDeletarPasta(id);
         header.appendChild(btnDel);
     }
     col.appendChild(header);
 
-    // Conteúdo (Lista de Cards)
+    // --- CONTEÚDO (CARDS) ---
     const content = document.createElement('div');
     content.className = 'folder-content';
     
@@ -428,7 +427,6 @@ function criarElementoPasta(titulo, itens, id, permiteDeletar) {
             content.appendChild(card);
         }
     });
-
     col.appendChild(content);
 
     // Sortable (Arrastar e Soltar)
@@ -441,55 +439,83 @@ function criarElementoPasta(titulo, itens, id, permiteDeletar) {
         onEnd: function (evt) { salvarNovoLayout(); }
     });
 
-    // --- NOVO: RODAPÉ COM BOTÃO OBS ---
+    // --- RODAPÉ COM BOTÕES DE CONTROLE (Iniciativa) ---
     const footer = document.createElement('div');
     footer.style.cssText = `
         padding: 10px;
         background: #1a1a1a;
         border-top: 1px solid #333;
         border-radius: 0 0 8px 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
     `;
 
+    // 1. Botão OBS (Abre Nova Guia)
     const btnObs = document.createElement('button');
-    btnObs.innerHTML = "🎥 Iniciativa OBS";
-    btnObs.title = "Abrir janela de iniciativa apenas para este grupo";
+    btnObs.innerHTML = "🎥 Abrir Iniciativa (OBS)";
     btnObs.style.cssText = `
-        width: 100%;
-        padding: 8px;
-        background: linear-gradient(45deg, #1f1f1f, #2a2a2a);
-        border: 1px solid #9c27b0;
-        color: #e0aaff;
-        border-radius: 4px;
-        font-weight: bold;
-        cursor: pointer;
-        font-size: 11px;
-        text-transform: uppercase;
-        transition: 0.2s;
+        width: 100%; padding: 8px; background: linear-gradient(45deg, #1f1f1f, #2a2a2a);
+        border: 1px solid #9c27b0; color: #e0aaff; border-radius: 4px;
+        font-weight: bold; cursor: pointer; font-size: 11px; text-transform: uppercase;
     `;
-
-    btnObs.onmouseover = () => { btnObs.style.background = "#9c27b0"; btnObs.style.color = "#fff"; };
-    btnObs.onmouseout = () => { btnObs.style.background = "linear-gradient(45deg, #1f1f1f, #2a2a2a)"; btnObs.style.color = "#e0aaff"; };
-
-    // AÇÃO: Abrir a janela de OBS filtrada
-    // AÇÃO: Abrir a janela de OBS filtrada
     btnObs.onclick = () => {
-        // Coleta os nomes atuais que estão visualmente nesta pasta
+        // Coleta apenas os membros desta pasta
         const cards = content.querySelectorAll('.card-personagem');
         const nomesMembros = Array.from(cards).map(c => c.dataset.nome).join(',');
         
-        // CORREÇÃO: Abre 'iniciativa.html' em uma NOVA GUIA ('_blank')
-        // Passa o nome do grupo e os membros para filtrar
+        // Abre em NOVA GUIA (_blank)
         window.open(
             `iniciativa.html?grupo=${encodeURIComponent(titulo)}&membros=${encodeURIComponent(nomesMembros)}&master=true`, 
-            '_blank' // Isso força abrir em nova guia
+            '_blank'
         );
     };
+
+    // Container para os botões menores
+    const extraControls = document.createElement('div');
+    extraControls.style.display = "flex";
+    extraControls.style.gap = "5px";
+
+    // 2. Botão Adicionar Manual
+    const btnAddManual = document.createElement('button');
+    btnAddManual.innerHTML = "➕ Add";
+    btnAddManual.title = "Adicionar criatura manualmente";
+    btnAddManual.style.cssText = "flex: 1; background: #333; border: 1px solid #555; color: white; border-radius: 4px; cursor: pointer; padding: 5px; font-size: 11px; font-weight: bold;";
+    btnAddManual.onclick = () => {
+        const nome = prompt("Nome da Criatura:");
+        if(!nome) return;
+        const valor = prompt("Valor de Iniciativa:");
+        if(!valor) return;
+        
+        // Envia direto via socket global
+        if(typeof socket !== 'undefined') {
+            socket.emit('add_to_tracker', {
+                id: Date.now(),
+                name: nome,
+                val: parseInt(valor),
+                img: 'img/imagem-no-site/dado.png' // Imagem padrão
+            });
+        }
+    };
+
+    // 3. Botão Limpar
+    const btnClear = document.createElement('button');
+    btnClear.innerHTML = "🗑️ Limpar";
+    btnClear.title = "Limpar Iniciativa de Todos";
+    btnClear.style.cssText = "flex: 1; background: #b71c1c; border: none; color: white; border-radius: 4px; cursor: pointer; padding: 5px; font-size: 11px; font-weight: bold;";
+    btnClear.onclick = () => {
+        if(typeof socket !== 'undefined') socket.emit('update_tracker', []);
+    };
+
+    extraControls.appendChild(btnAddManual);
+    extraControls.appendChild(btnClear);
+
     footer.appendChild(btnObs);
+    footer.appendChild(extraControls);
     col.appendChild(footer);
 
     return col;
 }
-
 // Cria o HTML do Card de Personagem
     function criarCardHTML(nome) {
         const card = document.createElement('div');
