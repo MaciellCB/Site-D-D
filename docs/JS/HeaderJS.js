@@ -26,6 +26,115 @@ function syncOrdemClasses() {
     });
 }
 
+/* =============================================================
+   NOVO: POPUP DE GESTÃO DE IMAGEM (UPLOAD / COLAR)
+============================================================= */
+function abrirPopupImagem(callbackImagemDefinida) {
+    const overlay = document.createElement('div');
+    overlay.className = 'spell-modal-overlay'; // Reusa estilo existente
+    overlay.style.zIndex = '70000';
+
+    overlay.innerHTML = `
+        <div class="spell-modal" style="width: 400px; height: auto; text-align: center;">
+            <div class="modal-header">
+                <h3>Alterar Imagem</h3>
+                <button class="modal-close">✖</button>
+            </div>
+            <div class="modal-body" style="gap: 20px; padding: 20px;">
+                
+                <p style="color:#bbb; font-size:13px;">
+                    Você pode <strong>Colar (Ctrl+V)</strong> uma imagem agora ou clicar abaixo para buscar no computador.
+                </p>
+
+                <div id="paste-area" style="
+                    width: 100%; height: 150px; 
+                    border: 2px dashed #444; 
+                    border-radius: 8px; 
+                    display: flex; align-items: center; justify-content: center;
+                    background: #0a0a0a; color: #666; font-weight: bold;
+                    transition: all 0.2s; position: relative; overflow: hidden;
+                ">
+                    <span id="paste-text">Cole (Ctrl+V) aqui...</span>
+                    <img id="paste-preview" style="position:absolute; width:100%; height:100%; object-fit:contain; display:none;">
+                </div>
+
+                <div style="display:flex; gap: 10px;">
+                    <button id="btn-upload-file" class="btn-add" style="flex:1; background:#333; border:1px solid #555;">📁 Buscar Arquivo</button>
+                    <button id="btn-confirm-img" class="btn-add btn-save-modal" style="flex:1;" disabled>Confirmar</button>
+                </div>
+                
+                <input type="file" id="hidden-file-input" accept="image/*" style="display:none;">
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    let imgDataFinal = null;
+    const pasteArea = overlay.querySelector('#paste-area');
+    const preview = overlay.querySelector('#paste-preview');
+    const pasteText = overlay.querySelector('#paste-text');
+    const btnConfirm = overlay.querySelector('#btn-confirm-img');
+    const btnUpload = overlay.querySelector('#btn-upload-file');
+    const fileInput = overlay.querySelector('#hidden-file-input');
+
+    // Fechar
+    const fechar = () => overlay.remove();
+    overlay.querySelector('.modal-close').onclick = fechar;
+
+    // Função para definir imagem válida
+    const setImagem = (src) => {
+        imgDataFinal = src;
+        preview.src = src;
+        preview.style.display = 'block';
+        pasteText.style.display = 'none';
+        pasteArea.style.borderColor = '#9c27b0';
+        btnConfirm.removeAttribute('disabled');
+        btnConfirm.style.background = '#9c27b0';
+    };
+
+    // 1. Upload via Botão
+    btnUpload.onclick = () => fileInput.click();
+    fileInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (ev) => setImagem(ev.target.result);
+            reader.readAsDataURL(file);
+        }
+    };
+
+    // 2. Colar (Paste) Global (enquanto o modal estiver aberto)
+    const pasteHandler = (e) => {
+        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+        for (let index in items) {
+            const item = items[index];
+            if (item.kind === 'file' && item.type.includes('image/')) {
+                const blob = item.getAsFile();
+                const reader = new FileReader();
+                reader.onload = (ev) => setImagem(ev.target.result);
+                reader.readAsDataURL(blob);
+                e.preventDefault();
+            }
+        }
+    };
+    document.addEventListener('paste', pasteHandler);
+
+    // Confirmar
+    btnConfirm.onclick = () => {
+        if (imgDataFinal) {
+            callbackImagemDefinida(imgDataFinal);
+            document.removeEventListener('paste', pasteHandler); // Limpa evento
+            fechar();
+        }
+    };
+
+    // Limpa evento se fechar sem salvar
+    overlay.querySelector('.modal-close').addEventListener('click', () => {
+        document.removeEventListener('paste', pasteHandler);
+    });
+}
+
 // Tipos de Criatura e Tamanhos
 const CREATURE_TYPES = ['Humanoide', 'Construto', 'Fada', 'Dragão', 'Monstruosidade', 'Morto-vivo', 'Celestial', 'Corruptor', 'Elemental', 'Besta', 'Planta', 'Gigante', 'Limo', 'Aberração', 'Gosma'];
 const CREATURE_SIZES = ['Minúsculo', 'Pequeno', 'Médio', 'Grande', 'Enorme', 'Imenso'];
@@ -2982,25 +3091,32 @@ window.adicionarAoHistorico = function(titulo, ataqueResult, danoResult) {
 
 
 /* =============================================================
-   SISTEMA DE TRACKER DE INICIATIVA
+   SISTEMA DE TRACKER DE INICIATIVA (SINCRONIZADO)
 ============================================================= */
 let trackerList = [];
 let tempImgSrc = "img/imagem-no-site/dado.png";
 
-// 1. Função chamada pela EsquerdaJS ao rolar iniciativa
+// --- ESCUTA DO SOCKET (SINCRONIZAÇÃO EM TEMPO REAL) ---
+if (typeof socket !== 'undefined') {
+    // Quando o servidor mandar a lista atualizada (vinda de qualquer pessoa)
+    socket.on('sync_tracker_update', (novaLista) => {
+        trackerList = novaLista;
+        renderTrackerLocalOnly(); // Apenas desenha, não re-emite socket
+    });
+}
+
+// 1. Função chamada ao rolar iniciativa (Envia para todos)
 window.adicionarAoTrackerExterno = function(valor) {
     const nome = state.personagem || state.nome || "Personagem";
     const foto = (state.fotoPerfil && state.fotoPerfil.length > 50) 
                  ? state.fotoPerfil 
                  : "img/imagem-no-site/personagem.png";
 
-    // Verifica se já existe para atualizar
     const existingIdx = trackerList.findIndex(x => x.name === nome);
     
     if (existingIdx >= 0) {
         trackerList[existingIdx].val = valor;
         trackerList[existingIdx].img = foto;
-        // Move para o topo visualmente ou reordena depois? Por enquanto só atualiza.
     } else {
         trackerList.push({
             id: Date.now(),
@@ -3010,16 +3126,54 @@ window.adicionarAoTrackerExterno = function(valor) {
         });
     }
     
-    // Abre se estiver fechado
+    // Abre se fechado
     const el = document.getElementById('tracker-overlay');
-    if (el && el.style.display !== 'flex') {
-        el.style.display = 'flex';
-    }
-    
-    renderTracker();
-    // Ordena automático ao adicionar? Geralmente é bom.
-    sortTracker(); 
+    if (el && el.style.display !== 'flex') el.style.display = 'flex';
+
+    // Salva e Sincroniza com TODOS
+    trackerList.sort((a, b) => b.val - a.val);
+    renderTrackerLocalOnly();
+    emitirTrackerUpdate();
 };
+
+// Função auxiliar para emitir ao servidor
+function emitirTrackerUpdate() {
+    if (typeof socket !== 'undefined') {
+        socket.emit('update_tracker', trackerList);
+    }
+}
+
+// Renderiza sem emitir (para não criar loop infinito)
+function renderTrackerLocalOnly() {
+    const container = document.getElementById('tracker-list');
+    if(!container) return;
+    container.innerHTML = "";
+
+    trackerList.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'init-row';
+        div.innerHTML = `
+            <div class="init-val">${item.val}</div>
+            <img src="${item.img}" class="init-img" id="tracker-img-${item.id}" title="Alterar Imagem">
+            <div class="init-name">${item.name}</div>
+            <button onclick="removeTrackerItem(${item.id})" style="background:none; border:none; color:#f44336; cursor:pointer; font-weight:bold;">×</button>
+        `;
+        
+        container.appendChild(div);
+
+        // Evento de Clique na Imagem do Tracker (Problema 3)
+        const imgEl = document.getElementById(`tracker-img-${item.id}`);
+        if(imgEl) {
+            imgEl.onclick = () => {
+                abrirPopupImagem((novaImg) => {
+                    item.img = novaImg;
+                    renderTrackerLocalOnly();
+                    emitirTrackerUpdate();
+                });
+            };
+        }
+    });
+}
 
 // 2. Toggle Visibilidade
 window.toggleTracker = function() {
@@ -3105,18 +3259,44 @@ function renderTracker() {
 
 window.removeTrackerItem = function(id) {
     trackerList = trackerList.filter(x => x.id !== id);
-    renderTracker();
+    renderTrackerLocalOnly();
+    emitirTrackerUpdate();
 };
 
 window.limparTracker = function() {
-    if(confirm("Limpar lista?")) {
+    if(confirm("Limpar todas as iniciativas para todos?")) {
         trackerList = [];
-        renderTracker();
+        renderTrackerLocalOnly();
+        emitirTrackerUpdate();
     }
 };
 
 window.sortTracker = function() {
-    renderTracker(); // Já ordena na renderização
+    trackerList.sort((a, b) => b.val - a.val);
+    renderTrackerLocalOnly();
+    emitirTrackerUpdate();
+};
+
+// Adicionar Mob Manualmente
+window.addMobToTracker = function() {
+    const nameInput = document.getElementById('new-mob-name');
+    const valInput = document.getElementById('new-mob-val');
+    const nome = nameInput.value.trim() || "Inimigo";
+    const valor = parseInt(valInput.value) || 0;
+
+    trackerList.push({ id: Date.now(), name: nome, val: valor, img: tempImgSrc });
+    
+    // Ordena, renderiza e sincroniza
+    trackerList.sort((a, b) => b.val - a.val);
+    renderTrackerLocalOnly();
+    emitirTrackerUpdate();
+    
+    // Reset
+    nameInput.value = "";
+    valInput.value = "";
+    tempImgSrc = "img/imagem-no-site/dado.png";
+    document.getElementById('new-mob-preview').src = tempImgSrc;
+    nameInput.focus();
 };
 
 // 5. Trocar imagem do Mob (Upload/Input Oculto)
@@ -3146,22 +3326,31 @@ window.changeMobImage = function(id) {
 };
 
 // Clique na imagem de preview para upload (Adicionar Novo)
+// LIGA O POPUP DE IMAGEM À FOTO DE PERFIL
 document.addEventListener('DOMContentLoaded', () => {
-    const preview = document.getElementById('new-mob-preview');
-    if(preview) {
-        preview.onclick = () => {
-             fileInputTracker.onchange = (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (ev) => {
-                        tempImgSrc = ev.target.result;
-                        preview.src = tempImgSrc;
-                    };
-                    reader.readAsDataURL(file);
+    const imgPerfil = document.getElementById('img-personagem-visual');
+    if (imgPerfil) {
+        imgPerfil.onclick = () => {
+            abrirPopupImagem((novaImg) => {
+                // Atualiza visual
+                imgPerfil.src = novaImg;
+                // Salva na ficha
+                if (typeof state !== 'undefined') {
+                    state.fotoPerfil = novaImg;
+                    if (typeof saveStateToServer === 'function') saveStateToServer();
                 }
-            };
-            fileInputTracker.click();
+            });
+        };
+    }
+    
+    // Liga também na imagem de preview do tracker (para adicionar mobs)
+    const imgPreviewMob = document.getElementById('new-mob-preview');
+    if (imgPreviewMob) {
+        imgPreviewMob.onclick = () => {
+            abrirPopupImagem((novaImg) => {
+                tempImgSrc = novaImg;
+                imgPreviewMob.src = novaImg;
+            });
         };
     }
 });
@@ -3208,3 +3397,4 @@ document.addEventListener('paste', function(e) {
          }
     }
 });
+

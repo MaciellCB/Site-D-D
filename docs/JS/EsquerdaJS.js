@@ -1343,45 +1343,7 @@ document.getElementById('inspiraLeft').onclick = () => { state.inspiracao = Math
 document.getElementById('inspiraRight').onclick = () => { state.inspiracao = (parseInt(state.inspiracao) || 0) + 1; document.getElementById('inspiraValor').textContent = state.inspiracao; saveStateToServer(); };
 
 /* =============================================================
-   LÓGICA DO BOTÃO DE INICIATIVA DA ESQUERDA
-============================================================= */
-document.addEventListener('DOMContentLoaded', () => {
-    const btnIni = document.getElementById('btn-roll-ini');
-    if (btnIni) {
-        // Evento híbrido: Clique Esquerdo e Direito abrem o popup de rolagem
-        // (Já que iniciativa é um teste puro de atributo)
-        
-        const acaoRolar = (e) => {
-            const bonus = parseInt(document.getElementById('iniciativaBonus').value) || 0;
-            const dexScore = state.atributos?.n2 || 10;
-            const dexMod = Math.floor((parseInt(dexScore) - 10) / 2);
-            const totalBonus = dexMod + bonus;
-            
-            const expressao = `1d20 + ${totalBonus}`;
-            
-            if (typeof window.abrirMenuRolagem === 'function') {
-                window.abrirMenuRolagem(e, "Iniciativa", expressao, null);
-            }
-        };
-
-        btnIni.addEventListener('click', acaoRolar);
-        
-        // Suporte Mobile Long Press
-        if(typeof window.addLongPressListener === 'function') {
-            window.addLongPressListener(btnIni, acaoRolar);
-        } else {
-            btnIni.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                acaoRolar(e);
-            });
-        }
-    }
-});
-
-
-
-/* =============================================================
-   LÓGICA DO BOTÃO DE INICIATIVA (ESQUERDA)
+   LÓGICA DO BOTÃO DE INICIATIVA (CORRIGIDA)
 ============================================================= */
 document.addEventListener('DOMContentLoaded', () => {
     const btnIni = document.getElementById('btn-roll-ini');
@@ -1391,35 +1353,37 @@ document.addEventListener('DOMContentLoaded', () => {
             const bonus = parseInt(document.getElementById('iniciativaBonus').value) || 0;
             const dexScore = state.atributos?.n2 || 10;
             const dexMod = Math.floor((parseInt(dexScore) - 10) / 2);
-            return `1d20 + ${dexMod + bonus}`;
+            const totalBonus = dexMod + bonus;
+            return `1d20 + ${totalBonus}`;
         };
 
-        // 1. CLIQUE ESQUERDO: Rola Normal + Adiciona ao Tracker
+        // 1. CLIQUE ESQUERDO: Rola IMEDIATAMENTE (Sem Menu)
         btnIni.addEventListener('click', (e) => {
-            e.preventDefault();
+            // Se estiver segurando no mobile, o evento 'contextmenu' vai disparar.
+            // Precisamos garantir que não dispare o click normal se for um long-press simulado.
+            // Mas com a separação nativa, o click é click.
+            
             // Animação
             btnIni.style.transform = "scale(0.95)";
             setTimeout(() => btnIni.style.transform = "scale(1)", 100);
 
             const expressao = getExpr();
 
-            // Rola direto
+            // Rola direto usando a função base
             if (typeof rollDiceExpression === 'function' && typeof showCombatResults === 'function') {
-                // Rola normal (0 vantagem, 0 desvantagem)
-                const res = (typeof rollDiceWithAdvantage === 'function') 
-                    ? rollDiceWithAdvantage(expressao, 0, 0)
-                    : rollDiceExpression(expressao);
+                // Força rolagem normal
+                const res = rollDiceExpression(expressao);
                 
                 showCombatResults("Iniciativa", res, null);
 
-                // --- ADICIONA DIRETO AO TRACKER ---
+                // Adiciona ao tracker global
                 if (typeof window.adicionarAoTrackerExterno === 'function') {
                     window.adicionarAoTrackerExterno(res.total);
                 }
             }
         });
 
-        // 2. BOTÃO DIREITO / SEGURAR: Abre Menu
+        // 2. BOTÃO DIREITO / SEGURAR (Mobile): Abre Menu Vantagem
         if (typeof window.addLongPressListener === 'function') {
             window.addLongPressListener(btnIni, (e) => {
                 const expressao = getExpr();
@@ -1428,7 +1392,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         } else {
-            // Fallback
+            // Fallback Desktop
             btnIni.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
                 const expressao = getExpr();
