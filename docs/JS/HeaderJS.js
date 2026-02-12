@@ -3089,9 +3089,8 @@ window.adicionarAoHistorico = function(titulo, ataqueResult, danoResult) {
 
 
 
-
 /* =============================================================
-   SISTEMA DE TRACKER DE INICIATIVA (POPUP + SINCRONIA)
+   SISTEMA DE TRACKER DE INICIATIVA (POPUP LOCAL + SINCRONIA)
 ============================================================= */
 let trackerListGlobal = [];
 let myGroupMembers = []; // Cache dos membros do meu grupo
@@ -3111,7 +3110,7 @@ if (typeof socket !== 'undefined') {
     });
 }
 
-// 2. TOGGLE (Abrir/Fechar Popup)
+// 2. TOGGLE (Abrir/Fechar Popup NA TELA)
 window.toggleTracker = async function() {
     const el = document.getElementById('tracker-overlay');
     const menuConfig = document.getElementById('popup-config-foto');
@@ -3127,14 +3126,10 @@ window.toggleTracker = async function() {
         el.style.display = 'flex';
         renderTrackerPopup(); // Desenha a lista atual
         
-        // Torna arrastável
-        if(typeof window.tornarPainelArrastavel === 'function') {
-             // Tenta usar a função global se existir, senão usa lógica simples
-             const handle = document.getElementById('tracker-handle');
-             if(handle) {
-                 // Simples drag nativo se necessário, ou a função da esquerda
-                 window.tornarPainelArrastavel(el); 
-             }
+        // Torna arrastável (Função local definida abaixo)
+        const handle = document.getElementById('tracker-handle');
+        if(handle) {
+             tornarPopupArrastavel(el, handle); 
         }
     }
 };
@@ -3154,9 +3149,7 @@ window.addMobToTracker = function() {
         img: tempImgSrc 
     };
 
-    // AQUI ESTÁ A MÁGICA: Envia para o servidor.
-    // O servidor vai atualizar a lista dele e devolver 'sync_tracker_update'
-    // que vai atualizar tanto o seu popup quanto a página web do mestre.
+    // Envia para o servidor. O servidor devolve a lista atualizada para todos.
     if (typeof socket !== 'undefined') {
         socket.emit('add_to_tracker', newItem);
     }
@@ -3165,11 +3158,12 @@ window.addMobToTracker = function() {
     nameInput.value = "";
     valInput.value = "";
     tempImgSrc = "img/imagem-no-site/dado.png";
-    document.getElementById('new-mob-preview').src = tempImgSrc;
+    const preview = document.getElementById('new-mob-preview');
+    if(preview) preview.src = tempImgSrc;
     nameInput.focus();
 };
 
-// 4. RENDERIZAR O POPUP (Lista)
+// 4. RENDERIZAR O POPUP (Lista HTML)
 function renderTrackerPopup() {
     const container = document.getElementById('tracker-list');
     if(!container) return;
@@ -3192,10 +3186,6 @@ function renderTrackerPopup() {
         
         if (myGroupMembers.includes(itemNome)) {
             styleBorder = "border-left: 4px solid #9c27b0;"; // Amigo
-        } else {
-             // Se não é do meu grupo, verifico se é player de outro grupo
-             // (Lógica opcional: se quiser esconder players de outro grupo no popup também)
-             // Por enquanto, mostra tudo no popup para garantir que você veja o que está acontecendo.
         }
 
         const div = document.createElement('div');
@@ -3203,23 +3193,25 @@ function renderTrackerPopup() {
         div.style = `display:flex; align-items:center; background:#1a1a1a; padding:5px; margin-bottom:5px; border-radius:4px; ${styleBorder}`;
         
         div.innerHTML = `
-            <div class="init-val">${item.val}</div>
-            <img src="${item.img}" class="init-img" id="tracker-img-${item.id}" title="Alterar Imagem" style="cursor:pointer;">
-            <div class="init-name">${item.name}</div>
-            <button onclick="removeTrackerItem(${item.id})" style="background:none; border:none; color:#f44336; cursor:pointer; font-weight:bold; font-size:16px;">×</button>
+            <div class="init-val" style="width:30px; height:30px; background:#000; border:1px solid #555; color:#fff; display:flex; justify-content:center; align-items:center; border-radius:50%; font-weight:bold; margin-right:10px;">${item.val}</div>
+            <img src="${item.img}" class="init-img" id="tracker-img-${item.id}" title="Alterar Imagem" style="width:30px; height:30px; border-radius:50%; object-fit:cover; border:1px solid #555; cursor:pointer; margin-right:10px;">
+            <div class="init-name" style="flex:1; font-weight:bold; color:#ddd; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${item.name}</div>
+            <button onclick="removeTrackerItem(${item.id})" style="background:none; border:none; color:#f44336; font-weight:bold; cursor:pointer; font-size:16px;">×</button>
         `;
         
         container.appendChild(div);
 
-        // Link para trocar imagem
+        // Link para trocar imagem (Upload/Paste)
         const imgEl = document.getElementById(`tracker-img-${item.id}`);
         if(imgEl) {
             imgEl.onclick = () => {
-                abrirPopupImagem((novaImg) => {
-                    // Atualiza localmente e envia pro server
-                    item.img = novaImg;
-                    socket.emit('add_to_tracker', item); // Reenvia o item com imagem nova (o server atualiza pelo nome/id)
-                });
+                if(typeof abrirPopupImagem === 'function') {
+                    abrirPopupImagem((novaImg) => {
+                        // Atualiza objeto e reenvia pro server
+                        item.img = novaImg;
+                        socket.emit('add_to_tracker', item); 
+                    });
+                }
             };
         }
     });
@@ -3227,23 +3219,49 @@ function renderTrackerPopup() {
 
 // 5. FUNÇÕES AUXILIARES
 window.removeTrackerItem = function(id) {
-    // Filtra e envia a lista nova completa
     const novaLista = trackerListGlobal.filter(x => x.id !== id);
     socket.emit('update_tracker', novaLista);
 };
 
 window.limparTracker = function() {
-    // Limpa sem confirmar (conforme pedido)
     socket.emit('update_tracker', []);
 };
 
 window.sortTracker = function() {
-    // Força ordenação no servidor e reenvia
     trackerListGlobal.sort((a, b) => b.val - a.val);
     socket.emit('update_tracker', trackerListGlobal);
 };
 
-// 6. FUNÇÃO PARA DESCOBRIR MEU GRUPO (Usada no render para colorir)
+// 6. FUNÇÃO PARA ARRASTAR (DRAGGABLE)
+function tornarPopupArrastavel(elmnt, handle) {
+    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    handle.onmousedown = dragMouseDown;
+
+    function dragMouseDown(e) {
+        e.preventDefault();
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
+    }
+
+    function elementDrag(e) {
+        e.preventDefault();
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    }
+
+    function closeDragElement() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+    }
+}
+
+// 7. DESCOBRIR MEU GRUPO (Para colorir roxo/vermelho)
 async function carregarLayoutEGrupo() {
     try {
         const res = await fetch(`${API_URL}/layout`);
@@ -3253,12 +3271,10 @@ async function carregarLayoutEGrupo() {
         myGroupMembers = [];
 
         if (layoutCache && layoutCache.folders) {
-            // Procura em qual pasta estou
             const folder = layoutCache.folders.find(f => f.items.some(n => n.toLowerCase() === myName));
             if (folder) {
                 myGroupMembers = folder.items.map(n => n.toLowerCase());
             } else {
-                // Se não estou em pasta, talvez seja 'uncategorized' + eu mesmo
                 if(layoutCache.uncategorized) {
                     myGroupMembers = layoutCache.uncategorized.map(n => n.toLowerCase());
                 }
@@ -3268,6 +3284,46 @@ async function carregarLayoutEGrupo() {
     } catch (e) { console.error("Erro ao carregar layout", e); }
 }
 
+// 8. FUNÇÃO CHAMADA PELO ESQUERDA.JS (BOTÃO ROLAR)
+// Essa função é vital para o botão da esquerda funcionar e abrir o popup
+window.adicionarAoTrackerExterno = function(valor) {
+    const nome = state.personagem || state.nome || "Personagem";
+    const foto = (state.fotoPerfil && state.fotoPerfil.length > 50) ? state.fotoPerfil : "img/imagem-no-site/personagem.png";
+
+    // Cria objeto
+    const newItem = { 
+        id: Date.now(), 
+        name: nome, 
+        val: valor, 
+        img: foto 
+    };
+
+    // Envia ao servidor
+    if (typeof socket !== 'undefined') {
+        socket.emit('add_to_tracker', newItem);
+    }
+
+    // Abre o popup visualmente (se estiver fechado)
+    const el = document.getElementById('tracker-overlay');
+    if (el && el.style.display !== 'flex') {
+        toggleTracker(); 
+    }
+};
+
+// 9. LIGA O PASTE NA IMAGEM DE PREVIEW
+document.addEventListener('DOMContentLoaded', () => {
+    const imgPreviewMob = document.getElementById('new-mob-preview');
+    if (imgPreviewMob) {
+        imgPreviewMob.onclick = () => {
+            if(typeof abrirPopupImagem === 'function') {
+                abrirPopupImagem((novaImg) => {
+                    tempImgSrc = novaImg;
+                    imgPreviewMob.src = novaImg;
+                });
+            }
+        };
+    }
+});
 
 
 
