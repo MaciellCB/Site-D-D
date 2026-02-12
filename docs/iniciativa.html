@@ -2,11 +2,11 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Iniciativa OBS</title>
+    <title>Iniciativa - Web View</title>
     <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;900&display=swap" rel="stylesheet">
     <style>
-        /* FUNDO VERDE CHROMA KEY */
+        /* Fundo Verde Chroma Key */
         body { 
             margin: 0; 
             padding: 10px; 
@@ -14,108 +14,84 @@
             font-family: 'Roboto', sans-serif; 
             height: 100vh;
             width: 100vw;
-            overflow: hidden; /* Evita scrollbars padrão */
+            overflow: hidden; 
             box-sizing: border-box;
         }
 
-        /* Título do Grupo (Opcional, pode remover se quiser só os cards) */
-        h2 {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%;
-            text-align: center;
-            color: rgba(0,0,0,0.5);
-            font-size: 12px;
-            margin: 0;
-            padding: 2px;
-            text-transform: uppercase;
-            z-index: 0;
-        }
-
-        /* CONTAINER QUE PERMITE COLUNAS LATERAIS */
+        /* Container Flex para colunas */
         #tracker-container {
             display: flex;
             flex-direction: column;
-            flex-wrap: wrap; /* ISSO FAZ IR PARA O LADO */
-            align-content: flex-start; /* Alinha colunas à esquerda */
-            height: 100%; /* Ocupa altura total para forçar a quebra */
-            gap: 10px;
-            padding-top: 15px;
-            box-sizing: border-box;
+            flex-wrap: wrap; /* Permite ir para a próxima coluna */
+            align-content: flex-start;
+            height: 100%;
+            gap: 8px;
+            padding-top: 5px;
         }
 
-        /* CARD COMPACTO E BONITO */
+        /* Card Compacto */
         .init-card {
-            width: 260px; /* Largura fixa para colunas alinhadas */
-            height: 60px;
+            width: 220px; /* Mais estreito */
+            height: 50px; /* Mais baixo */
             background: #111;
             border: 2px solid #333;
-            border-radius: 30px 10px 10px 30px; /* Arredondado na esquerda */
+            border-radius: 25px 5px 5px 25px; 
             display: flex;
             align-items: center;
             padding: 0;
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.4);
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.5);
             position: relative;
-            overflow: visible; /* Para a imagem sair um pouco se quiser */
-            animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation: slideIn 0.3s ease-out forwards;
             opacity: 0;
-            flex-shrink: 0; /* Não esmaga */
+            flex-shrink: 0;
+            margin-right: 10px; /* Espaço lateral se quebrar coluna */
         }
 
         @keyframes slideIn {
-            from { transform: translateX(-50px); opacity: 0; }
+            from { transform: translateX(-30px); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
 
-        /* Borda colorida baseada no grupo */
+        /* Cores */
         .init-card.my-group { border-color: #9c27b0; }
         .init-card.enemy { border-color: #b71c1c; }
 
-        /* Valor da Iniciativa (Bolinha) */
+        /* Valor */
         .init-val {
-            width: 50px;
-            height: 50px;
+            width: 42px; height: 42px;
             border-radius: 50%;
             background: #000;
             color: #fff;
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 900;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-left: 5px;
-            border: 3px solid;
+            display: flex; justify-content: center; align-items: center;
+            margin-left: 4px;
+            border: 2px solid;
             z-index: 2;
-            box-shadow: 0 0 10px rgba(0,0,0,0.8);
         }
         .my-group .init-val { border-color: #9c27b0; color: #e0aaff; }
         .enemy .init-val { border-color: #b71c1c; color: #ff8a80; }
 
-        /* Imagem do Personagem */
+        /* Imagem */
         .init-img {
-            width: 46px;
-            height: 46px;
+            width: 38px; height: 38px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid #222;
             background: #000;
-            margin-left: -10px; /* Sobrepõe levemente o valor */
+            margin-left: -8px; 
             z-index: 1;
         }
 
-        /* Nome do Personagem */
+        /* Nome */
         .init-info {
             flex: 1;
-            padding-left: 10px;
-            padding-right: 10px;
+            padding: 0 10px;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            display: flex; flex-direction: column; justify-content: center;
         }
-
         .init-name {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: 800;
             color: #eee;
             text-transform: uppercase;
@@ -125,40 +101,46 @@
             text-shadow: 1px 1px 0 #000;
         }
 
-        /* Efeito de brilho para o atual (Opcional - primeiro da lista) */
-        #tracker-container div:first-child .init-card {
-            transform: scale(1.05);
-            margin-left: 10px;
-            border-width: 3px;
-        }
-
         .empty-msg {
-            color: rgba(0,0,0,0.5);
-            font-weight: bold;
-            font-size: 20px;
-            width: 100%;
-            text-align: center;
-            margin-top: 50px;
+            font-size: 24px; font-weight: 900; color: rgba(0,0,0,0.4);
+            text-align: center; width: 100%; margin-top: 50px;
+            text-transform: uppercase;
         }
     </style>
 </head>
 <body>
 
-    <h2 id="page-title">Grupo</h2>
     <div id="tracker-container">
-        <div class="empty-msg">AGUARDANDO COMBATE...</div>
+        <div class="empty-msg">Aguardando...</div>
     </div>
 
     <script>
         const socket = io('https://dandd-chan.onrender.com');
         const params = new URLSearchParams(window.location.search);
         
+        // Membros do grupo atual (vindo da URL do mestre)
         const rawMembros = params.get('membros') || "";
+        // Cria array de nomes em minúsculo
         const listaMembros = rawMembros.toLowerCase().split(',').map(s => s.trim()).filter(s => s !== "");
         const nomeGrupo = params.get('grupo') || "Combate";
 
-        document.title = `Iniciativa - ${nomeGrupo}`;
-        document.getElementById('page-title').innerText = nomeGrupo;
+        document.title = `Iniciativa: ${nomeGrupo}`;
+
+        // Lista de todos os personagens conhecidos (para filtrar quem é de outro grupo)
+        // Como esta página é isolada, vamos fazer um fetch rápido na API para saber quem são "Jogadores"
+        let todosJogadores = [];
+
+        async function init() {
+            try {
+                // Pega a lista de todos os fichas do banco para saber quem é player
+                const res = await fetch('https://dandd-chan.onrender.com/api/lista-personagens');
+                if(res.ok) {
+                    const lista = await res.json();
+                    todosJogadores = lista.map(n => n.toLowerCase());
+                }
+            } catch(e) {}
+        }
+        init();
 
         socket.on('sync_tracker_update', (lista) => {
             render(lista);
@@ -169,7 +151,7 @@
             container.innerHTML = "";
 
             if (!lista || lista.length === 0) {
-                container.innerHTML = '<div class="empty-msg">AGUARDANDO COMBATE...</div>';
+                container.innerHTML = '<div class="empty-msg">Aguardando...</div>';
                 return;
             }
 
@@ -178,23 +160,37 @@
 
             lista.forEach((item, index) => {
                 const nomeItem = item.name.toLowerCase().trim();
-                const ehDoGrupo = listaMembros.includes(nomeItem);
-                const cssClass = ehDoGrupo ? 'my-group' : 'enemy';
                 
-                const div = document.createElement('div');
-                // Wrapper para animação funcionar melhor com flex-wrap
-                div.style.marginBottom = "5px"; 
-                
-                div.innerHTML = `
-                    <div class="init-card ${cssClass}" style="animation-delay: ${index * 0.1}s">
+                // --- FILTRAGEM RÍGIDA ---
+                let mostrar = false;
+                let cssClass = "enemy"; // Vermelho por padrão (Monstros)
+
+                // 1. É membro deste grupo?
+                if (listaMembros.includes(nomeItem)) {
+                    mostrar = true;
+                    cssClass = "my-group"; // Roxo
+                }
+                // 2. É um monstro/NPC (não é um jogador registrado no banco)?
+                else if (!todosJogadores.includes(nomeItem)) {
+                    mostrar = true; 
+                    // Monstros aparecem para todos os grupos
+                }
+                // 3. É jogador de OUTRO grupo? -> mostrar = false (já é o padrão)
+
+                if (mostrar) {
+                    const div = document.createElement('div');
+                    div.className = `init-card ${cssClass}`;
+                    div.style.animationDelay = `${index * 0.05}s`; // Cascata rápida
+                    
+                    div.innerHTML = `
                         <div class="init-val">${item.val}</div>
                         <img class="init-img" src="${item.img}" onerror="this.src='img/imagem-no-site/dado.png'">
                         <div class="init-info">
                             <div class="init-name">${item.name}</div>
                         </div>
-                    </div>
-                `;
-                container.appendChild(div);
+                    `;
+                    container.appendChild(div);
+                }
             });
         }
     </script>
