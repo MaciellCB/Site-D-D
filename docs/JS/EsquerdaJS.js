@@ -1343,7 +1343,7 @@ document.getElementById('inspiraLeft').onclick = () => { state.inspiracao = Math
 document.getElementById('inspiraRight').onclick = () => { state.inspiracao = (parseInt(state.inspiracao) || 0) + 1; document.getElementById('inspiraValor').textContent = state.inspiracao; saveStateToServer(); };
 
 /* =============================================================
-   LÓGICA DO BOTÃO DE INICIATIVA (CORRIGIDA)
+   LÓGICA DO BOTÃO DE INICIATIVA (SALVANDO NA FICHA)
 ============================================================= */
 document.addEventListener('DOMContentLoaded', () => {
     const btnIni = document.getElementById('btn-roll-ini');
@@ -1357,33 +1357,31 @@ document.addEventListener('DOMContentLoaded', () => {
             return `1d20 + ${totalBonus}`;
         };
 
-        // 1. CLIQUE ESQUERDO: Rola IMEDIATAMENTE (Sem Menu)
+        // 1. CLIQUE ESQUERDO: Rola, Salva e Adiciona ao Tracker
         btnIni.addEventListener('click', (e) => {
-            // Se estiver segurando no mobile, o evento 'contextmenu' vai disparar.
-            // Precisamos garantir que não dispare o click normal se for um long-press simulado.
-            // Mas com a separação nativa, o click é click.
-            
-            // Animação
+            e.preventDefault();
             btnIni.style.transform = "scale(0.95)";
             setTimeout(() => btnIni.style.transform = "scale(1)", 100);
 
             const expressao = getExpr();
 
-            // Rola direto usando a função base
             if (typeof rollDiceExpression === 'function' && typeof showCombatResults === 'function') {
-                // Força rolagem normal
                 const res = rollDiceExpression(expressao);
                 
                 showCombatResults("Iniciativa", res, null);
 
-                // Adiciona ao tracker global
+                // --- SALVAMENTO NOVO ---
+                state.iniciativaAtual = res.total; // Guarda na memória
+                saveStateToServer(); // Salva no banco de dados
+                // -----------------------
+
                 if (typeof window.adicionarAoTrackerExterno === 'function') {
                     window.adicionarAoTrackerExterno(res.total);
                 }
             }
         });
 
-        // 2. BOTÃO DIREITO / SEGURAR (Mobile): Abre Menu Vantagem
+        // 2. BOTÃO DIREITO / SEGURAR: Abre Menu
         if (typeof window.addLongPressListener === 'function') {
             window.addLongPressListener(btnIni, (e) => {
                 const expressao = getExpr();
@@ -1392,7 +1390,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         } else {
-            // Fallback Desktop
             btnIni.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
                 const expressao = getExpr();

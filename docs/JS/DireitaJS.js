@@ -5867,12 +5867,20 @@ window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage
 
         showCombatResults(titulo, attackRes, damageRes);
         
-        // SE FOR INICIATIVA, MANDA PRO TRACKER
+        // SE FOR INICIATIVA, SALVA NA FICHA E MANDA PRO TRACKER
         if (titulo === "Iniciativa" && attackRes) {
+             // Salva na ficha
+             if (typeof state !== 'undefined') {
+                 state.iniciativaAtual = attackRes.total;
+                 if (typeof saveStateToServer === 'function') saveStateToServer();
+             }
+
+             // Manda pro tracker
              if (typeof window.adicionarAoTrackerExterno === 'function') {
                 window.adicionarAoTrackerExterno(attackRes.total);
             }
         }
+        // -------------------------
 
         menu.remove();
         document.removeEventListener('mousedown', closeMenuOutside);

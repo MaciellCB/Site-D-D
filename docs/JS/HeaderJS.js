@@ -3398,3 +3398,30 @@ document.addEventListener('paste', function(e) {
     }
 });
 
+/* =============================================================
+   RECUPERAÇÃO DE INICIATIVA SALVA (AO DAR REFRESH)
+============================================================= */
+window.addEventListener('sheet-updated', () => {
+    // Verifica se já carregamos a iniciativa salva para não ficar loopando
+    if (state.iniciativaAtual !== undefined && state.iniciativaAtual !== null && !window.iniciativaCarregada) {
+        
+        // Marca que já carregamos para não duplicar visualmente se a ficha atualizar de novo
+        window.iniciativaCarregada = true;
+
+        const nome = state.personagem || state.nome || "Personagem";
+        
+        // Verifica se já está no tracker visual (ex: via socket) para não duplicar
+        const jaExiste = trackerList.find(x => x.name === nome);
+        
+        if (!jaExiste) {
+            console.log("Restaurando iniciativa salva:", state.iniciativaAtual);
+            // Adiciona ao tracker sem abrir o popup (false no segundo parametro se implementar, ou apenas chama)
+            adicionarAoTrackerExterno(state.iniciativaAtual);
+            
+            // Força o popup a fechar se tiver aberto sozinho no refresh (opcional)
+            const el = document.getElementById('tracker-overlay');
+            // Se quiser que ele inicie fechado, descomente a linha abaixo:
+            // if (el) el.style.display = 'none'; 
+        }
+    }
+});
