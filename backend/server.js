@@ -28,7 +28,7 @@ if (!mongoURI) {
         .catch(err => console.error("❌ Erro ao conectar no MongoDB:", err));
 }
 
-// --- MODELO DA FICHA ---
+// --- MODELOS MONGO ---
 const FichaSchema = new mongoose.Schema({
     nome: { type: String, required: true, unique: true }, 
     senha: { type: String, required: true },
@@ -37,8 +37,6 @@ const FichaSchema = new mongoose.Schema({
 
 const Ficha = mongoose.model('Ficha', FichaSchema);
 
-// --- MODELO DO LAYOUT (PASTAS) ---
-// Isso salva a organização do mestre
 const LayoutSchema = new mongoose.Schema({
     id: { type: String, default: "master_layout" },
     folders: [
@@ -53,10 +51,8 @@ const LayoutSchema = new mongoose.Schema({
 
 const Layout = mongoose.model('Layout', LayoutSchema);
 
-// ... (imports e configs iniciais iguais) ...
-
-// --- VARIÁVEL DE MEMÓRIA DO TRACKER ---
-let serverTrackerList = []; // <--- ADICIONE ISSO AQUI, ANTES DO IO.ON
+// --- MEMÓRIA DA INICIATIVA (SERVER SIDE) ---
+let serverTrackerList = []; 
 
 // --- SOCKET.IO ---
 io.on('connection', (socket) => {
@@ -65,22 +61,23 @@ io.on('connection', (socket) => {
     // 1. Assim que conecta, envia a lista atual para quem entrou
     socket.emit('sync_tracker_update', serverTrackerList);
 
+    // 2. Rolagem de Dados Visual
     socket.on('dados_rolados', (data) => {
         io.emit('dados_rolados', data); 
     });
 
-    // 2. Recebe atualização total (alguém deletou ou reordenou)
+    // 3. Recebe atualização total (alguém deletou ou reordenou)
     socket.on('update_tracker', (lista) => {
         serverTrackerList = lista;
         io.emit('sync_tracker_update', serverTrackerList);
     });
 
-    // 3. Recebe adição individual (alguém rolou iniciativa)
+    // 4. Recebe adição individual (alguém rolou iniciativa)
     socket.on('add_to_tracker', (item) => {
         // Remove duplicata do mesmo personagem se houver, para atualizar o valor
         const idx = serverTrackerList.findIndex(x => x.name === item.name);
         if (idx >= 0) {
-            serverTrackerList[idx] = item; // Atualiza
+            serverTrackerList[idx] = item; // Atualiza existente
         } else {
             serverTrackerList.push(item); // Adiciona novo
         }
@@ -88,7 +85,6 @@ io.on('connection', (socket) => {
         io.emit('sync_tracker_update', serverTrackerList);
     });
 });
-
 
 // =================================================================
 // ROTAS GERAIS
@@ -129,7 +125,6 @@ app.get('/api/layout', async (req, res) => {
     try {
         let layout = await Layout.findOne({ id: "master_layout" });
         if (!layout) {
-            // Se não existir, cria padrão
             layout = new Layout({ folders: [], uncategorized: [] });
             await layout.save();
         }
@@ -140,7 +135,7 @@ app.get('/api/layout', async (req, res) => {
     }
 });
 
-// 2. SALVAR LAYOUT (Ao arrastar ou criar pasta)
+// 2. SALVAR LAYOUT
 app.post('/api/save-layout', async (req, res) => {
     try {
         const { folders, uncategorized } = req.body;
@@ -161,7 +156,7 @@ app.post('/api/save-layout', async (req, res) => {
 // ROTAS DE PERSONAGEM
 // =================================================================
 
-// 1. LISTAR PERSONAGENS (NOMES)
+// 1. LISTAR PERSONAGENS
 app.get('/api/lista-personagens', async (req, res) => {
     try {
         const fichas = await Ficha.find({}, 'nome');
@@ -172,30 +167,21 @@ app.get('/api/lista-personagens', async (req, res) => {
     }
 });
 
-// 2. CRIAR NOVA FICHA (CORRIGIDO)
+// 2. CRIAR NOVA FICHA
 app.post('/api/criar-ficha', async (req, res) => {
     try {
-        // Pega nome e senha para validação
         const { nome, senha } = req.body;
         
         if (!nome || !senha) {
             return res.status(400).json({ error: "Nome e senha obrigatórios" });
         }
 
-        // Verifica duplicidade
         const existe = await Ficha.findOne({ nome: { $regex: new RegExp(`^${nome}$`, 'i') } });
         if (existe) {
             return res.status(400).json({ error: "Já existe!" });
         }
 
-        // --- A MÁGICA ACONTECE AQUI ---
-        // Em vez de definir campo por campo manualmente e deixar vazio,
-        // nós pegamos TUDO o que o mestre.html enviou (...req.body)
-        // e usamos para criar a ficha.
         const novaFicha = new Ficha(req.body);
-
-        // Se por acaso o frontend mandou sem ID ou algo assim, o Mongo resolve.
-        // Mas garantimos que nome e senha estão lá.
         novaFicha.nome = nome;
         novaFicha.senha = senha;
 
