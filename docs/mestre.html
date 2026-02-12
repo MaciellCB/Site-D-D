@@ -471,17 +471,19 @@ function criarElementoPasta(titulo, itens, id, permiteDeletar) {
     btnObs.onmouseout = () => { btnObs.style.background = "linear-gradient(45deg, #1f1f1f, #2a2a2a)"; btnObs.style.color = "#e0aaff"; };
 
     // AÇÃO: Abrir a janela de OBS filtrada
+    // AÇÃO: Abrir a janela de OBS filtrada
     btnObs.onclick = () => {
-        // Coleta os nomes que estão VISUALMENTE nesta pasta agora
+        // Coleta os nomes atuais que estão visualmente nesta pasta
         const cards = content.querySelectorAll('.card-personagem');
         const nomesMembros = Array.from(cards).map(c => c.dataset.nome).join(',');
         
-        // Abre a janela passando os membros na URL
-        const winId = `OBS_INIT_${id}`;
-        // Tamanho ajustado para caber a lista lateral
-        window.open(`iniciativa_obs.html?grupo=${encodeURIComponent(titulo)}&membros=${encodeURIComponent(nomesMembros)}`, winId, "width=360,height=600");
+        // CORREÇÃO: Abre 'iniciativa.html' em uma NOVA GUIA ('_blank')
+        // Passa o nome do grupo e os membros para filtrar
+        window.open(
+            `iniciativa.html?grupo=${encodeURIComponent(titulo)}&membros=${encodeURIComponent(nomesMembros)}&master=true`, 
+            '_blank' // Isso força abrir em nova guia
+        );
     };
-
     footer.appendChild(btnObs);
     col.appendChild(footer);
 
