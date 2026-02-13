@@ -1379,13 +1379,16 @@ function bindAbilitySectionEvents() {
 
 
 /* =============================================================
-   CORREÇÃO: Eventos de Habilidades (Com gatilho para CA)
-   Substitua a função bindAbilityEvents inteira por esta:
+   CORREÇÃO: Eventos de Habilidades (Fix ID String)
 ============================================================= */
 function bindAbilityEvents() {
     // Itera sobre todos os cards de habilidade renderizados
     document.querySelectorAll('.hab-card').forEach(card => {
-        const habId = Number(card.getAttribute('data-id'));
+        // CORREÇÃO: Removemos o Number() pois o ID gerado por uid() é String
+        const habId = card.getAttribute('data-id');
+
+        // Função auxiliar para achar a habilidade garantindo comparação de String
+        const findHab = () => state.abilities.find(h => String(h.id) === String(habId));
 
         // =================================================================
         // 1. EXPANDIR / COLAPSAR CARD
@@ -1400,7 +1403,7 @@ function bindAbilityEvents() {
                     return;
                 }
 
-                const hab = state.abilities.find(h => h.id === habId);
+                const hab = findHab();
                 if (hab) {
                     hab.expanded = !hab.expanded;
 
@@ -1418,19 +1421,18 @@ function bindAbilityEvents() {
                         if (caret) caret.textContent = '▸';
                     }
                     
-                    // Salva o estado (opcional, remova se quiser que reset ao recarregar)
                     // saveStateToServer(); 
                 }
             };
         }
 
         // =================================================================
-        // 2. CHECKBOX DE ATIVAÇÃO (Prepara/Ativa Habilidade)
+        // 2. CHECKBOX DE ATIVAÇÃO
         // =================================================================
         const chk = card.querySelector('.hab-activate');
         if (chk) {
             chk.onchange = (ev) => {
-                const hab = state.abilities.find(h => h.id === habId);
+                const hab = findHab();
                 if (hab) {
                     hab.active = ev.target.checked;
                     saveStateToServer();
@@ -1455,15 +1457,11 @@ function bindAbilityEvents() {
                         }
                     }
 
-                    // Atualiza a CA (Esquerda) e renderiza a tela para refletir mudanças
                     if (typeof atualizarAC === 'function') atualizarAC();
                     if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
-                    
-                    // Se estiver na aba "Mag. Preparadas", redesenha para mostrar/esconder
                     if (state.activeTab === 'Mag. Preparadas') renderActiveTab();
                 }
             };
-            // Impede que o clique no checkbox propague para o header (fechando o card)
             chk.onclick = (e) => e.stopPropagation();
         }
 
@@ -1476,10 +1474,9 @@ function bindAbilityEvents() {
                 e.preventDefault();
                 e.stopPropagation();
                 
-                // Remove do array
-                state.abilities = state.abilities.filter(h => h.id !== habId);
+                // Remove do array comparando string
+                state.abilities = state.abilities.filter(h => String(h.id) !== String(habId));
                 
-                // Animação visual de saída
                 card.style.transition = 'opacity 0.2s';
                 card.style.opacity = '0';
                 setTimeout(() => card.remove(), 200);
@@ -1492,24 +1489,24 @@ function bindAbilityEvents() {
         }
 
         // =================================================================
-        // 4. EDITAR HABILIDADE
+        // 4. EDITAR HABILIDADE (CORREÇÃO APLICADA AQUI TAMBÉM)
         // =================================================================
         const btnEditar = card.querySelector('.editar-hab');
         if (btnEditar) {
             btnEditar.onclick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                const hab = state.abilities.find(h => h.id === habId);
+                const hab = findHab();
                 if (hab) openNewAbilityModal(hab);
             };
         }
 
-        // 5. NOVO: EVENTO HÍBRIDO (HABILIDADE)
+        // 5. EVENTO HÍBRIDO (DADO)
         const diceImg = card.querySelector('.dice-img');
         if (diceImg) {
-            // Clique Esquerdo (Normal)
+            // Clique Esquerdo
             diceImg.addEventListener('click', (e) => {
-                const hab = state.abilities.find(h => h.id === habId);
+                const hab = findHab();
                 if (!hab) return;
                 
                 let exprAtk = null;
@@ -1529,10 +1526,10 @@ function bindAbilityEvents() {
                 showCombatResults(hab.title, atkRes, dmgRes);
             });
 
-            // Clique Direito / Segurar (Menu)
+            // Clique Direito
             if (typeof window.addLongPressListener === 'function') {
                 window.addLongPressListener(diceImg, (e) => {
-                    const hab = state.abilities.find(h => h.id === habId);
+                    const hab = findHab();
                     if (!hab) return;
 
                     let exprAtk = null;
@@ -2531,6 +2528,7 @@ function bindSpellEvents() {
 
     // 4. EVENTOS DOS CARDS (MAGIAS)
     document.querySelectorAll('.spell-card').forEach(card => {
+        // CORREÇÃO: Pega o ID como STRING
         const rawId = card.getAttribute('data-id');
         
         // A. EXPANDIR / COLAPSAR
@@ -2541,11 +2539,13 @@ function bindSpellEvents() {
                     ev.target.closest('.check-ativar') || 
                     ev.target.closest('.cast-controls') ||
                     ev.target.closest('.dice-img') || 
+                    ev.target.closest('a') || // Importante para não expandir ao clicar em editar
                     ev.target.tagName === 'SELECT' ||
                     ev.target.tagName === 'INPUT') {
                     return;
                 }
                 
+                // Comparação como String
                 const s = state.spells.find(x => String(x.id) === String(rawId));
                 if (s) {
                     s.expanded = !s.expanded;
@@ -2579,10 +2579,32 @@ function bindSpellEvents() {
             ch.onclick = ev => ev.stopPropagation();
         }
 
-        // C. EVENTO HÍBRIDO (MAGIAS) - CORRIGIDO
+        // C. REMOVER (Eventos dentro do card body)
+        const btnRemove = card.querySelector('.remover-spell');
+        if (btnRemove) {
+            btnRemove.onclick = (ev) => {
+                ev.preventDefault();
+                // Comparação String
+                state.spells = state.spells.filter(s => String(s.id) !== String(rawId));
+                card.remove();
+                saveStateToServer();
+            }
+        }
+
+        // D. EDITAR (Eventos dentro do card body) - CORREÇÃO CRÍTICA AQUI
+        const btnEdit = card.querySelector('.editar-spell');
+        if (btnEdit) {
+            btnEdit.onclick = (ev) => {
+                ev.preventDefault();
+                // Comparação String
+                const s = state.spells.find(x => String(x.id) === String(rawId));
+                if (s) openSpellModal(s);
+            }
+        }
+
+        // E. EVENTO HÍBRIDO (MAGIAS) - DADO
         const diceImg = card.querySelector('.dice-img');
         if (diceImg) {
-            // 1. Clique Esquerdo (Rápido)
             diceImg.addEventListener('click', (e) => {
                 diceImg.style.transform = "scale(0.8)";
                 setTimeout(()=>diceImg.style.transform="scale(1)", 100);
@@ -2597,7 +2619,6 @@ function bindSpellEvents() {
                 const damageTextElement = card.querySelector('.dynamic-damage-text');
                 const exprDano = damageTextElement ? damageTextElement.textContent : s.damage;
                 
-                // Rola normal (0 adv, 0 dis)
                 const atkRes = rollDiceWithAdvantage(exprAtk, 0, 0);
                 
                 let dmgRes = null;
@@ -2619,7 +2640,6 @@ function bindSpellEvents() {
                 showCombatResults(s.name, atkRes, dmgRes);
             });
 
-            // 2. Clique Direito / Segurar (Menu Vantagem)
             if (typeof window.addLongPressListener === 'function') {
                 window.addLongPressListener(diceImg, (e) => {
                     const s = state.spells.find(x => String(x.id) === String(rawId));
@@ -2627,7 +2647,6 @@ function bindSpellEvents() {
 
                     const vals = getSpellAttackValues() || {prof:0, mod:0, extra:0};
                     const totalBonus = vals.prof + vals.mod + vals.extra;
-                    
                     const exprAtk = `1d20 + ${totalBonus}`;
                     const damageTextElement = card.querySelector('.dynamic-damage-text');
                     const exprDano = damageTextElement ? damageTextElement.textContent : s.damage;
@@ -2638,7 +2657,6 @@ function bindSpellEvents() {
         }
     });
 }
-
 
 /* =============================================================
    CORREÇÃO 3: Modal de DT com Margem de Crítico e Multiplicador
