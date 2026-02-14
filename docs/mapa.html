@@ -9,17 +9,17 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
-        /* ================= ESTILO GERAL DARK & CLEAN ================= */
+        /* ================= ESTILO GERAL ================= */
         :root {
             --bg-dark: #0a0a0a;
-            --bg-panel: rgba(20, 20, 20, 0.90);
+            --bg-panel: rgba(20, 20, 20, 0.95);
             --border: #333;
             --accent: #9c27b0;
+            --danger: #d32f2f;
             --text-main: #e0e0e0;
-            --text-dim: #aaa;
         }
 
-        body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; color: var(--text-main); }
+        body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Segoe UI', Tahoma, sans-serif; overflow: hidden; color: var(--text-main); }
         
         #map { width: 100vw; height: 100vh; background: var(--bg-dark); z-index: 1; cursor: default; }
 
@@ -29,7 +29,7 @@
         ::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
-        /* ================= SIDEBAR LATERAL ================= */
+        /* ================= SIDEBAR ================= */
         .sidebar {
             position: fixed; top: 20px; right: 20px; width: 340px; height: calc(100vh - 40px);
             background: var(--bg-panel); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
@@ -48,34 +48,33 @@
         .sidebar-toggle:hover { color: #fff; background: var(--accent); border-color: var(--accent); padding-right: 5px; }
 
         .sidebar-header {
-            padding: 20px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); border-radius: 12px 12px 0 0;
+            padding: 20px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); border-radius: 12px 12px 0 0; flex-shrink: 0;
         }
         .sidebar-header h2 { margin: 0; font-size: 16px; color: #fff; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; display:flex; align-items:center; gap:10px; }
-        .sidebar-header h2::before { content: '🗺️'; font-size: 20px; }
 
-        .sidebar-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 25px; }
+        .sidebar-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
 
-        /* Inputs (Correção do Fundo Branco) */
+        /* Inputs */
         .input-dark {
             width: 100%; background: #050505 !important; border: 1px solid #444; color: #fff !important;
             padding: 12px; border-radius: 6px; box-sizing: border-box; transition: 0.2s; font-size: 14px;
-            color-scheme: dark; /* Força ícones do sistema a serem dark */
+            color-scheme: dark;
         }
-        .input-dark:focus { outline: none; border-color: var(--accent); background: #000 !important; box-shadow: 0 0 0 2px rgba(156, 39, 176, 0.2); }
-        textarea.input-dark { resize: vertical; min-height: 80px; font-family: inherit; line-height: 1.5; }
+        .input-dark:focus { outline: none; border-color: var(--accent); background: #000 !important; }
+        textarea.input-dark { resize: vertical; min-height: 80px; line-height: 1.5; }
 
-        /* Search Box */
-        .search-box { position: relative; }
+        .search-box { position: relative; margin-bottom: 10px; }
         .search-box span { position: absolute; right: 12px; top: 12px; color: #666; pointer-events: none; }
 
         /* Lista de Locais */
+        .locais-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; min-height: 150px; }
         .location-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
         .location-item {
             padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid transparent; border-radius: 6px;
             cursor: pointer; font-size: 14px; transition: 0.2s; display: flex; align-items: center; gap: 12px;
         }
         .location-item:hover { border-color: #555; background: rgba(255,255,255,0.08); transform: translateX(2px); }
-        .loc-icon { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; background: #000; border: 1px solid #555; }
+        .loc-icon-small { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; background: #000; border: 1px solid #555; }
 
         /* Botões */
         .btn-action {
@@ -86,26 +85,18 @@
         .btn-action:hover { background: #333; color: #fff; border-color: #666; }
         .btn-action.primary { background: var(--accent); color: white; border: none; }
         .btn-action.primary:hover { filter: brightness(1.2); box-shadow: 0 0 15px rgba(156, 39, 176, 0.4); }
+        .btn-action.danger { background: #441111; color: #ff9999; border: 1px solid #662222; }
+        .btn-action.danger:hover { background: var(--danger); color: white; }
         .btn-action.active { background: var(--accent); color: #fff; border-color: #d05ce3; }
 
-        /* Planos (Accordion Style) */
-        .planes-section { border-top: 1px solid var(--border); padding-top: 20px; }
-        .plane-card { 
-            background: #111; border: 1px solid #333; border-radius: 6px; margin-bottom: 8px; overflow: hidden; 
-            transition: 0.2s;
-        }
-        .plane-header { 
-            padding: 12px; cursor: pointer; font-weight: bold; font-size: 13px; color: #bbb; 
-            display: flex; justify-content: space-between; background: #1a1a1a; transition: 0.2s;
-        }
+        /* Planos (Accordion) */
+        .planes-section { border-top: 1px solid var(--border); padding-top: 15px; margin-top: auto; flex-shrink: 0; }
+        .plane-card { background: #111; border: 1px solid #333; border-radius: 6px; margin-bottom: 5px; overflow: hidden; transition: 0.2s; }
+        .plane-header { padding: 10px; cursor: pointer; font-weight: bold; font-size: 12px; color: #888; display: flex; justify-content: space-between; background: #1a1a1a; transition: 0.2s; }
         .plane-header:hover { color: #fff; background: #222; }
-        .plane-body { 
-            padding: 15px; font-size: 13px; color: #999; line-height: 1.6; display: none; 
-            border-top: 1px solid #222; background: #0e0e0e; 
-        }
+        .plane-body { padding: 12px; font-size: 12px; color: #999; line-height: 1.5; display: none; border-top: 1px solid #222; background: #0e0e0e; }
         .plane-card.open .plane-body { display: block; animation: fadeIn 0.3s; }
         .plane-card.open .plane-header { color: var(--accent); background: #222; border-bottom: 1px solid #333; }
-        .plane-card.open { border-color: var(--accent); }
 
         /* Context Menu & Modals */
         #ctx-menu {
@@ -127,9 +118,9 @@
         }
         .modal-header { padding: 20px; background: #151515; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; border-radius: 12px 12px 0 0; }
         .modal-body { padding: 25px; overflow-y: auto; max-height: 70vh; display: flex; flex-direction: column; gap: 20px; }
-        .modal-footer { padding: 20px; background: #151515; border-top: 1px solid #333; display: flex; justify-content: flex-end; gap: 10px; border-radius: 0 0 12px 12px; }
+        .modal-footer { padding: 20px; background: #151515; border-top: 1px solid #333; display: flex; justify-content: space-between; gap: 10px; border-radius: 0 0 12px 12px; }
 
-        /* Upload Area */
+        /* Upload Area Focusable */
         .upload-area {
             border: 2px dashed #444; background: #080808; border-radius: 8px; padding: 0;
             text-align: center; cursor: pointer; transition: 0.2s; position: relative; overflow: hidden;
@@ -137,7 +128,14 @@
             min-height: 100px;
         }
         .upload-area:hover { border-color: #777; background: #111; }
-        .upload-area.has-file { border-style: solid; border-color: var(--accent); }
+        .upload-area.has-file { border-style: solid; border-color: #555; }
+        
+        /* ESTILO DO FOCUS PASTE */
+        .upload-area.paste-active { border-color: var(--accent); box-shadow: 0 0 15px rgba(156, 39, 176, 0.3); background: #150515; }
+        .upload-area.paste-active::after {
+            content: 'CTRL+V ATIVO'; position: absolute; bottom: 5px; font-size: 10px; color: var(--accent); font-weight: bold; background: rgba(0,0,0,0.8); padding: 2px 6px; border-radius: 4px;
+        }
+
         .upload-placeholder { padding: 20px; pointer-events: none; }
         .preview-img { width: 100%; height: 100%; object-fit: cover; display:block; }
 
@@ -155,16 +153,23 @@
             display: flex; align-items: center; justify-content: center; font-weight: bold;
         }
 
-        /* Leaflet Popups */
+        /* Custom Popup Leaflet */
         .leaflet-popup-content-wrapper { background: #151515; border: 1px solid var(--accent); color: #ddd; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
         .leaflet-popup-tip { background: var(--accent); }
-        .leaflet-popup-content { margin: 15px; width: 300px !important; }
+        .leaflet-popup-content { margin: 10px; width: 300px !important; }
+        
+        .popup-header { display:flex; align-items:center; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; margin-bottom: 8px; }
+        .popup-header-icon { width: 32px; height: 32px; border-radius: 50%; object-fit:cover; border:1px solid #555; background:#000; }
+        .popup-title { font-weight: bold; color: var(--accent); font-size: 15px; flex:1; }
+        .popup-edit-btn { background: none; border: none; color: #777; cursor: pointer; font-size: 16px; transition: 0.2s; }
+        .popup-edit-btn:hover { color: #fff; transform: scale(1.1); }
+
         .popup-img-main { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; margin-bottom: 12px; cursor: zoom-in; border: 1px solid #333; }
         .popup-gallery { display: flex; gap: 8px; overflow-x: auto; margin-top: 12px; padding-bottom: 5px; }
         .popup-thumb { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; border: 1px solid #444; cursor: pointer; flex-shrink: 0; transition: 0.2s; }
         .popup-thumb:hover { border-color: var(--accent); transform: scale(1.1); }
 
-        /* Icon */
+        /* Icon Marker */
         .custom-map-icon { 
             border: 2px solid #fff; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.8); 
             transition: transform 0.2s; background: #000; 
@@ -184,7 +189,7 @@
     <div id="map"></div>
 
     <div class="sidebar" id="sidebar">
-        <div class="sidebar-toggle" onclick="toggleSidebar()" title="Recolher Painel">⚙</div>
+        <div class="sidebar-toggle" onclick="toggleSidebar()">⚙</div>
         
         <div class="sidebar-header">
             <h2>Atlas do Mundo</h2>
@@ -208,29 +213,27 @@
                 <span style="position: absolute; right: 12px; top: 12px; color: #666;">🔍</span>
             </div>
 
-            <div style="flex:1; overflow:hidden; display:flex; flex-direction:column;">
+            <div class="locais-container">
                 <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:8px; display:block;">LOCAIS DESCOBERTOS</label>
-                <div style="overflow-y:auto; flex:1; padding-right:5px;">
-                    <ul id="lista-locais" class="location-list">
-                        </ul>
-                </div>
+                <ul id="lista-locais" class="location-list">
+                    </ul>
             </div>
 
             <div class="planes-section">
-                <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:10px; display:block;">PLANOS DE EXISTÊNCIA (LORE)</label>
+                <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:10px; display:block;">PLANOS DE EXISTÊNCIA</label>
                 <div id="planes-container"></div>
             </div>
         </div>
     </div>
 
     <div id="ctx-menu">
-        <div class="ctx-item" onclick="abrirCriarPin()">📍 Criar Ponto Aqui</div>
+        <div class="ctx-item" onclick="abrirModal(null)">📍 Criar Ponto Aqui</div>
     </div>
 
-    <div class="modal-overlay" id="modal-criar">
+    <div class="modal-overlay" id="modal-form">
         <div class="modal">
             <div class="modal-header">
-                <h3 style="margin:0; color:#fff;">Novo Local</h3>
+                <h3 style="margin:0; color:#fff;" id="modal-title">Novo Local</h3>
                 <button onclick="fecharModal()" style="background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">✖</button>
             </div>
             <div class="modal-body">
@@ -241,11 +244,11 @@
 
                 <div style="display:flex; gap:20px;">
                     <div style="flex: 0 0 130px;">
-                        <label style="display:block; color:#e0aaff; font-size:12px; margin-bottom:5px; font-weight:bold;">ÍCONE DO MAPA</label>
-                        <div class="upload-area" id="area-icon" title="Clique para trocar o ícone">
+                        <label style="display:block; color:#e0aaff; font-size:12px; margin-bottom:5px; font-weight:bold;">ÍCONE (Clique p/ Focar)</label>
+                        <div class="upload-area" id="area-icon" onclick="setPasteTarget('icon')" title="Clique aqui, depois Ctrl+V para colar">
                             <div class="upload-placeholder" id="placeholder-icon" style="display:flex; flex-direction:column; align-items:center;">
                                 <span style="font-size:24px; margin-bottom:5px;">📍</span>
-                                <span style="font-size:11px; color:#666;">Clique para<br>upload</span>
+                                <span style="font-size:11px; color:#666;">Clique p/ Upload<br>ou Cole</span>
                             </div>
                             <img id="preview-icon" class="preview-img" style="display:none;">
                         </div>
@@ -253,10 +256,10 @@
                     </div>
 
                     <div style="flex:1;">
-                        <label style="display:block; color:#aaa; font-size:12px; margin-bottom:5px; font-weight:bold;">GALERIA (DETALHES)</label>
-                        <div class="upload-area" id="area-gallery" style="height:70px; min-height:auto; border-style:dashed;">
+                        <label style="display:block; color:#aaa; font-size:12px; margin-bottom:5px; font-weight:bold;">GALERIA (Clique p/ Focar)</label>
+                        <div class="upload-area" id="area-gallery" style="height:70px; min-height:auto; border-style:dashed;" onclick="setPasteTarget('gallery')">
                             <div class="upload-placeholder" style="padding:10px;">
-                                <span style="font-size:12px; color:#888;">Cole (Ctrl+V) imagens aqui ou clique para adicionar</span>
+                                <span style="font-size:12px; color:#888;">Clique aqui e use <strong>Ctrl+V</strong> ou selecione arquivos</span>
                             </div>
                         </div>
                         <div class="gallery-grid" id="gallery-container"></div>
@@ -270,6 +273,8 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button onclick="deletarPin()" id="btn-delete" class="btn-action danger" style="width:auto; padding:10px 20px; display:none;">🗑️ Apagar Point</button>
+                <div style="flex:1;"></div>
                 <button onclick="salvarPin()" class="btn-action primary" style="width:auto; padding: 10px 30px;">Salvar Local</button>
             </div>
         </div>
@@ -283,15 +288,19 @@
     
     <script>
         const IMG_MAPA = 'img/imagem-no-site/mapa-runeterra.jpg';
-        const IMG_DEFAULT_ICON = 'https://cdn-icons-png.flaticon.com/512/684/684908.png'; // Pin padrão vermelho
+        const IMG_DEFAULT_ICON = 'https://cdn-icons-png.flaticon.com/512/684/684908.png';
         
         let map;
-        let markers = [];
-        let tempCoords = null;
-        let galleryImages = [];
+        let markers = []; // Dados dos Pins
+        let tempCoords = null; // Onde clicou para criar
+        let editId = null; // ID do pin sendo editado
+        
+        // Dados Temporários do Formulário
+        let galleryImages = []; 
         let iconImage = null;
+        let pasteTarget = 'gallery'; // 'icon' ou 'gallery'
 
-        // Medição
+        // Ferramenta de Medição
         let medindo = false;
         let p1 = null;
         let line = null;
@@ -309,14 +318,13 @@
                 crs: L.CRS.Simple, minZoom: -2, maxZoom: 2, zoomControl: false, attributionControl: false
             });
 
-            // Carrega Imagem
-            const w = 1920, h = 1080; // Ajuste se seu mapa for diferente
+            const w = 1920, h = 1080;
             const bounds = [[0,0], [h,w]];
             L.imageOverlay(IMG_MAPA, bounds).addTo(map);
             map.fitBounds(bounds);
             L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-            // Eventos do Mapa
+            // EVENTOS DO MAPA
             map.on('contextmenu', function(e) {
                 if(medindo) return;
                 tempCoords = e.latlng;
@@ -331,17 +339,28 @@
                 if(medindo) medicaoClick(e);
             });
             
+            // Medição dinâmica (ponteiro segue o mouse)
+            map.on('mousemove', (e) => {
+                if(medindo && p1 && !line) {
+                    // Opcional: mostrar linha "fantasma" antes de clicar, 
+                    // mas Leaflet desenha melhor com click. Vamos atualizar só o texto.
+                    const distPixels = map.project(p1).distanceTo(map.project(e.latlng));
+                    const distMetros = (distPixels * 0.015).toFixed(1);
+                    document.getElementById('distancia-res').innerText = `Distância: ${distMetros}m...`;
+                }
+            });
+
             map.on('movestart', () => document.getElementById('ctx-menu').style.display = 'none');
 
             // Renderiza Inicial
             renderPlanes();
             
-            // Exemplos iniciais
+            // Dados Exemplo
             criarMarcador(700, 1100, "Noxus", "O Bastião Imortal.", null, []);
             criarMarcador(650, 450, "Demacia", "Reino da Honra.", null, []);
         };
 
-        // --- MEDIÇÃO ---
+        /* ================= MEDIÇÃO ================= */
         function toggleMedicao() {
             medindo = !medindo;
             const btn = document.getElementById('btn-medir');
@@ -373,12 +392,11 @@
             
             if(!p1) {
                 p1 = e.latlng;
-                document.getElementById('distancia-res').innerText = "Clique no destino...";
+                document.getElementById('distancia-res').innerText = "Arraste até o ponto B...";
             } else {
                 if(line) map.removeLayer(line);
                 line = L.polyline([p1, e.latlng], {color: '#9c27b0', dashArray: '10, 10'}).addTo(map);
                 
-                // Conversão arbitrária: 100 pixels = 1.5 metros (exemplo)
                 const distPixels = map.project(p1).distanceTo(map.project(e.latlng));
                 const distMetros = (distPixels * 0.015).toFixed(1); 
                 
@@ -387,122 +405,229 @@
             }
         }
 
-        // --- PINS & MODAL ---
-        function abrirCriarPin() {
-            if(!tempCoords) return; // Segurança
+        /* ================= PINS & MODAL ================= */
+        
+        // Abre modal para CRIAR ou EDITAR (se passar pinId)
+        function abrirModal(pinId) {
             document.getElementById('ctx-menu').style.display = 'none';
-            document.getElementById('modal-criar').style.display = 'flex';
+            document.getElementById('modal-form').style.display = 'flex';
             
-            // Reset
-            document.getElementById('input-nome').value = "";
-            document.getElementById('input-desc').value = "";
-            galleryImages = [];
-            iconImage = null;
-            
-            // Visual Reset
-            document.getElementById('gallery-container').innerHTML = "";
-            document.getElementById('preview-icon').style.display = 'none';
-            document.getElementById('placeholder-icon').style.display = 'flex';
-            document.getElementById('area-icon').classList.remove('has-file');
-            
-            setTimeout(() => document.getElementById('input-nome').focus(), 100);
+            if (pinId) {
+                // MODO EDIÇÃO
+                editId = pinId;
+                const pin = markers.find(m => m.id === pinId);
+                
+                document.getElementById('modal-title').innerText = "Editar Local";
+                document.getElementById('btn-delete').style.display = 'block';
+                document.getElementById('input-nome').value = pin.nome;
+                document.getElementById('input-desc').value = pin.desc;
+                
+                galleryImages = [...(pin.gallery || [])];
+                iconImage = pin.icon;
+                
+            } else {
+                // MODO CRIAÇÃO
+                editId = null;
+                document.getElementById('modal-title').innerText = "Novo Local";
+                document.getElementById('btn-delete').style.display = 'none';
+                document.getElementById('input-nome').value = "";
+                document.getElementById('input-desc').value = "";
+                galleryImages = [];
+                iconImage = null;
+                
+                setTimeout(() => document.getElementById('input-nome').focus(), 100);
+            }
+
+            renderFormVisuals();
+            setPasteTarget('gallery'); // Reset foco paste
         }
 
-        function fecharModal() { document.getElementById('modal-criar').style.display = 'none'; }
+        function renderFormVisuals() {
+            // Renderiza Galeria
+            const container = document.getElementById('gallery-container');
+            container.innerHTML = "";
+            galleryImages.forEach((img, idx) => {
+                const div = document.createElement('div');
+                div.className = 'gallery-item';
+                div.innerHTML = `<img src="${img}"><button class="gallery-remove" onclick="removeImg(event, ${idx})">×</button>`;
+                container.appendChild(div);
+            });
+
+            // Renderiza Ícone
+            const prevIcon = document.getElementById('preview-icon');
+            const placeIcon = document.getElementById('placeholder-icon');
+            const areaIcon = document.getElementById('area-icon');
+
+            if(iconImage && iconImage !== IMG_DEFAULT_ICON) {
+                prevIcon.src = iconImage;
+                prevIcon.style.display = 'block';
+                placeIcon.style.display = 'none';
+                areaIcon.classList.add('has-file');
+            } else {
+                prevIcon.style.display = 'none';
+                placeIcon.style.display = 'flex';
+                areaIcon.classList.remove('has-file');
+            }
+        }
+
+        function fecharModal() { document.getElementById('modal-form').style.display = 'none'; }
+
+        function deletarPin() {
+            if(!editId) return;
+            if(confirm("Tem certeza que deseja apagar este local?")) {
+                const index = markers.findIndex(m => m.id === editId);
+                if(index > -1) {
+                    map.removeLayer(markers[index].marker); // Remove do mapa
+                    markers.splice(index, 1); // Remove da memória
+                    atualizarListaLateral();
+                }
+                fecharModal();
+            }
+        }
 
         function salvarPin() {
             const nome = document.getElementById('input-nome').value;
             const desc = document.getElementById('input-desc').value;
             
-            // Validação simples
-            if(!nome) { 
-                alert("Por favor, dê um nome ao local!"); 
-                document.getElementById('input-nome').focus();
-                return; 
-            }
-            if(!tempCoords) {
-                alert("Erro de coordenadas. Tente clicar com botão direito novamente.");
-                fecharModal();
-                return;
-            }
+            if(!nome) { alert("Nome é obrigatório!"); return; }
 
             const finalIcon = iconImage || IMG_DEFAULT_ICON;
-            criarMarcador(tempCoords.lat, tempCoords.lng, nome, desc, finalIcon, galleryImages);
+
+            if (editId) {
+                // ATUALIZAR EXISTENTE
+                const pin = markers.find(m => m.id === editId);
+                pin.nome = nome;
+                pin.desc = desc;
+                pin.icon = finalIcon;
+                pin.gallery = galleryImages;
+                
+                // Recria o popup e ícone
+                refreshMarkerVisuals(pin);
+            } else {
+                // CRIAR NOVO
+                if(!tempCoords) { alert("Erro de posição."); return; }
+                criarMarcador(tempCoords.lat, tempCoords.lng, nome, desc, finalIcon, galleryImages);
+            }
+            
             fecharModal();
+            atualizarListaLateral();
         }
 
+        // Função que cria o objeto marker do zero
         function criarMarcador(lat, lng, nome, desc, iconSrc, galeria) {
             const safeIcon = iconSrc || IMG_DEFAULT_ICON;
-            
-            // HTML do Ícone no Mapa
+            const pinId = Date.now(); // ID único
+
+            // Ícone HTML
             const iconHtml = `<img src="${safeIcon}" class="custom-map-icon" style="width:40px; height:40px; object-fit:cover;">`;
             const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -20] });
             
             const marker = L.marker([lat, lng], {icon: customIcon}).addTo(map);
 
-            // Conteúdo do Popup
-            let popupHtml = `<h3 style="margin:0 0 8px 0; color:#e0aaff; border-bottom:1px solid #333; padding-bottom:8px; font-size:16px;">${nome}</h3>`;
+            // Objeto de dados
+            const pinData = { id: pinId, marker, lat, lng, nome, desc, icon: safeIcon, gallery: galeria };
             
-            // Se tem galeria, a primeira imagem é destaque. Se não, usa o ícone (se não for o padrão)
-            if(galeria && galeria.length > 0) {
-                popupHtml += `<img src="${galeria[0]}" class="popup-img-main" onclick="verFull('${galeria[0]}')">`;
-            } else if (safeIcon !== IMG_DEFAULT_ICON) {
-                popupHtml += `<img src="${safeIcon}" class="popup-img-main" onclick="verFull('${safeIcon}')">`;
-            }
-
-            popupHtml += `<p style="font-size:13px; color:#ccc; margin:0; line-height:1.5;">${desc || "Sem descrição."}</p>`;
-
-            if(galeria && galeria.length > 1) {
-                popupHtml += `<div class="popup-gallery">`;
-                galeria.forEach(img => { 
-                    popupHtml += `<img src="${img}" class="popup-thumb" onclick="verFull('${img}')">`; 
-                });
-                popupHtml += `</div>`;
-            }
-
-            marker.bindPopup(popupHtml);
+            // Vincula Popup
+            marker.bindPopup(gerarPopupContent(pinData));
             
-            // Salva na memória
-            markers.push({ id: Date.now(), marker, lat, lng, nome, desc, icon: safeIcon });
+            markers.push(pinData);
             atualizarListaLateral();
         }
 
-        // --- UPLOAD & PASTE ---
-        const fileIcon = document.getElementById('file-icon');
-        const fileGallery = document.getElementById('file-gallery');
+        // Atualiza visual de um pin existente (ao editar)
+        function refreshMarkerVisuals(pin) {
+            // Atualiza Ícone no Mapa
+            const iconHtml = `<img src="${pin.icon}" class="custom-map-icon" style="width:40px; height:40px; object-fit:cover;">`;
+            const newIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -20] });
+            pin.marker.setIcon(newIcon);
 
-        // Ícone: Clique no container ativa o input file
-        document.getElementById('area-icon').addEventListener('click', () => fileIcon.click());
+            // Atualiza Popup
+            pin.marker.setPopupContent(gerarPopupContent(pin));
+        }
+
+        function gerarPopupContent(pin) {
+            // Header: Ícone + Nome + Botão Edit
+            let html = `
+                <div class="popup-header">
+                    <img src="${pin.icon}" class="popup-header-icon">
+                    <span class="popup-title">${pin.nome}</span>
+                    <button class="popup-edit-btn" onclick="abrirModal(${pin.id})" title="Editar Local">✏️</button>
+                </div>
+            `;
+            
+            // Imagem Principal
+            if(pin.gallery && pin.gallery.length > 0) {
+                html += `<img src="${pin.gallery[0]}" class="popup-img-main" onclick="verFull('${pin.gallery[0]}')">`;
+            } else if (pin.icon !== IMG_DEFAULT_ICON) {
+                html += `<img src="${pin.icon}" class="popup-img-main" onclick="verFull('${pin.icon}')">`;
+            }
+
+            // Descrição
+            html += `<div style="font-size:13px; color:#ccc; line-height:1.5; max-height:100px; overflow-y:auto;">${pin.desc || "Sem descrição."}</div>`;
+
+            // Galeria
+            if(pin.gallery && pin.gallery.length > 1) {
+                html += `<div class="popup-gallery">`;
+                pin.gallery.forEach(img => { 
+                    html += `<img src="${img}" class="popup-thumb" onclick="verFull('${img}')">`; 
+                });
+                html += `</div>`;
+            }
+            return html;
+        }
+
+        // --- UPLOAD & PASTE SYSTEM ---
         
-        fileIcon.addEventListener('change', (e) => {
+        // Define onde o Paste vai cair (Icon ou Gallery)
+        function setPasteTarget(target) {
+            pasteTarget = target;
+            document.getElementById('area-icon').classList.remove('paste-active');
+            document.getElementById('area-gallery').classList.remove('paste-active');
+            
+            document.getElementById(`area-${target}`).classList.add('paste-active');
+        }
+
+        // Inputs de Arquivo
+        document.getElementById('area-icon').addEventListener('click', (e) => {
+            // Se clicar no placeholder ou img, abre file dialog
+            // Mas também define o foco para paste
+            setPasteTarget('icon');
+            // Só abre dialog se clicar no elemento em si, não via paste
+            if(e.detail !== 0) document.getElementById('file-icon').click(); 
+        });
+
+        document.getElementById('file-icon').addEventListener('change', (e) => {
             const file = e.target.files[0];
-            if(file) lerArquivo(file, (res) => {
-                iconImage = res;
-                document.getElementById('preview-icon').src = res;
-                document.getElementById('preview-icon').style.display = 'block';
-                document.getElementById('placeholder-icon').style.display = 'none';
-                document.getElementById('area-icon').classList.add('has-file');
-            });
+            if(file) lerArquivo(file, (res) => { iconImage = res; renderFormVisuals(); });
         });
 
-        // Galeria: Clique no container
-        document.getElementById('area-gallery').addEventListener('click', () => fileGallery.click());
-        
-        fileGallery.addEventListener('change', (e) => {
+        document.getElementById('area-gallery').addEventListener('click', (e) => {
+            setPasteTarget('gallery');
+            if(e.detail !== 0) document.getElementById('file-gallery').click();
+        });
+
+        document.getElementById('file-gallery').addEventListener('change', (e) => {
             Array.from(e.target.files).forEach(file => { 
-                lerArquivo(file, (res) => { galleryImages.push(res); renderGallery(); }); 
+                lerArquivo(file, (res) => { galleryImages.push(res); renderFormVisuals(); }); 
             });
         });
 
-        // Paste Global (Só funciona se o modal estiver visível)
+        // Global Paste Listener
         document.addEventListener('paste', (e) => {
-            if(document.getElementById('modal-criar').style.display !== 'flex') return;
+            if(document.getElementById('modal-form').style.display !== 'flex') return;
             
             const items = (e.clipboardData || e.originalEvent.clipboardData).items;
             for (let index in items) {
                 const item = items[index];
                 if (item.kind === 'file' && item.type.includes('image/')) {
-                    lerArquivo(item.getAsFile(), (res) => { galleryImages.push(res); renderGallery(); });
+                    lerArquivo(item.getAsFile(), (res) => {
+                        if(pasteTarget === 'icon') {
+                            iconImage = res;
+                        } else {
+                            galleryImages.push(res);
+                        }
+                        renderFormVisuals();
+                    });
                 }
             }
         });
@@ -513,24 +638,10 @@
             reader.readAsDataURL(file);
         }
 
-        function renderGallery() {
-            const container = document.getElementById('gallery-container');
-            container.innerHTML = "";
-            galleryImages.forEach((img, idx) => {
-                const div = document.createElement('div');
-                div.className = 'gallery-item';
-                div.innerHTML = `
-                    <img src="${img}">
-                    <button class="gallery-remove" onclick="removeImg(event, ${idx})">×</button>
-                `;
-                container.appendChild(div);
-            });
-        }
-
         window.removeImg = function(e, idx) {
-            e.stopPropagation(); // Impede abrir o lightbox ou upload ao clicar no X
+            e.stopPropagation();
             galleryImages.splice(idx, 1);
-            renderGallery();
+            renderFormVisuals();
         };
 
         // --- INTERFACE GERAL ---
@@ -541,12 +652,14 @@
             lista.innerHTML = "";
             markers.forEach(pin => {
                 const termo = document.getElementById('search-input').value.toLowerCase();
-                if(termo && !pin.nome.toLowerCase().includes(termo)) return;
+                const textoCompleto = (pin.nome + " " + pin.desc).toLowerCase();
+                
+                if(termo && !textoCompleto.includes(termo)) return;
                 
                 const li = document.createElement('li');
                 li.className = 'location-item';
                 const iconSrc = pin.icon || IMG_DEFAULT_ICON;
-                li.innerHTML = `<img src="${iconSrc}" class="loc-icon"> <span>${pin.nome}</span>`;
+                li.innerHTML = `<img src="${iconSrc}" class="loc-icon-small"> <span>${pin.nome}</span>`;
                 li.onclick = () => { 
                     map.flyTo([pin.lat, pin.lng], 1); 
                     pin.marker.openPopup(); 
