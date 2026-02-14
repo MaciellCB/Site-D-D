@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Atlas de Runeterra</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        /* ================= ESTILO GERAL DARK & CLEAN ================= */
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-panel: rgba(20, 20, 20, 0.90);
+            --border: #333;
+            --accent: #9c27b0;
+            --text-main: #e0e0e0;
+            --text-dim: #aaa;
+        }
+
+        body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; color: var(--text-main); }
+        
+        #map { width: 100vw; height: 100vh; background: var(--bg-dark); z-index: 1; cursor: default; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        /* ================= SIDEBAR LATERAL ================= */
+        .sidebar {
+            position: fixed; top: 20px; right: 20px; width: 340px; height: calc(100vh - 40px);
+            background: var(--bg-panel); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--border); border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9); z-index: 2000;
+            display: flex; flex-direction: column; transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .sidebar.collapsed { transform: translateX(380px); }
+
+        .sidebar-toggle {
+            position: absolute; left: -40px; top: 20px; width: 40px; height: 40px;
+            background: #151515; border: 1px solid var(--border); border-right: none; border-radius: 8px 0 0 8px;
+            color: var(--accent); cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 20px; box-shadow: -5px 5px 15px rgba(0,0,0,0.3); transition: 0.2s;
+        }
+        .sidebar-toggle:hover { color: #fff; background: var(--accent); border-color: var(--accent); padding-right: 5px; }
+
+        .sidebar-header {
+            padding: 20px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); border-radius: 12px 12px 0 0;
+        }
+        .sidebar-header h2 { margin: 0; font-size: 16px; color: #fff; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; display:flex; align-items:center; gap:10px; }
+        .sidebar-header h2::before { content: '🗺️'; font-size: 20px; }
+
+        .sidebar-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 25px; }
+
+        /* Inputs (Correção do Fundo Branco) */
+        .input-dark {
+            width: 100%; background: #050505 !important; border: 1px solid #444; color: #fff !important;
+            padding: 12px; border-radius: 6px; box-sizing: border-box; transition: 0.2s; font-size: 14px;
+            color-scheme: dark; /* Força ícones do sistema a serem dark */
+        }
+        .input-dark:focus { outline: none; border-color: var(--accent); background: #000 !important; box-shadow: 0 0 0 2px rgba(156, 39, 176, 0.2); }
+        textarea.input-dark { resize: vertical; min-height: 80px; font-family: inherit; line-height: 1.5; }
+
+        /* Search Box */
+        .search-box { position: relative; }
+        .search-box span { position: absolute; right: 12px; top: 12px; color: #666; pointer-events: none; }
+
+        /* Lista de Locais */
+        .location-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+        .location-item {
+            padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid transparent; border-radius: 6px;
+            cursor: pointer; font-size: 14px; transition: 0.2s; display: flex; align-items: center; gap: 12px;
+        }
+        .location-item:hover { border-color: #555; background: rgba(255,255,255,0.08); transform: translateX(2px); }
+        .loc-icon { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; background: #000; border: 1px solid #555; }
+
+        /* Botões */
+        .btn-action {
+            width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #ccc;
+            border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 13px;
+            display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase;
+        }
+        .btn-action:hover { background: #333; color: #fff; border-color: #666; }
+        .btn-action.primary { background: var(--accent); color: white; border: none; }
+        .btn-action.primary:hover { filter: brightness(1.2); box-shadow: 0 0 15px rgba(156, 39, 176, 0.4); }
+        .btn-action.active { background: var(--accent); color: #fff; border-color: #d05ce3; }
+
+        /* Planos (Accordion Style) */
+        .planes-section { border-top: 1px solid var(--border); padding-top: 20px; }
+        .plane-card { 
+            background: #111; border: 1px solid #333; border-radius: 6px; margin-bottom: 8px; overflow: hidden; 
+            transition: 0.2s;
+        }
+        .plane-header { 
+            padding: 12px; cursor: pointer; font-weight: bold; font-size: 13px; color: #bbb; 
+            display: flex; justify-content: space-between; background: #1a1a1a; transition: 0.2s;
+        }
+        .plane-header:hover { color: #fff; background: #222; }
+        .plane-body { 
+            padding: 15px; font-size: 13px; color: #999; line-height: 1.6; display: none; 
+            border-top: 1px solid #222; background: #0e0e0e; 
+        }
+        .plane-card.open .plane-body { display: block; animation: fadeIn 0.3s; }
+        .plane-card.open .plane-header { color: var(--accent); background: #222; border-bottom: 1px solid #333; }
+        .plane-card.open { border-color: var(--accent); }
+
+        /* Context Menu & Modals */
+        #ctx-menu {
+            position: absolute; background: #151515; border: 1px solid var(--accent);
+            border-radius: 6px; padding: 5px 0; min-width: 180px; z-index: 9999; display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+        .ctx-item { padding: 10px 15px; color: #fff; font-size: 14px; cursor: pointer; transition: 0.2s; display:flex; gap:10px; align-items:center; }
+        .ctx-item:hover { background: var(--accent); }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000;
+            display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px);
+        }
+        .modal {
+            background: #111; border: 1px solid #444; width: 650px; max-width: 90%;
+            border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,1); display: flex; flex-direction: column;
+            animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal-header { padding: 20px; background: #151515; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; border-radius: 12px 12px 0 0; }
+        .modal-body { padding: 25px; overflow-y: auto; max-height: 70vh; display: flex; flex-direction: column; gap: 20px; }
+        .modal-footer { padding: 20px; background: #151515; border-top: 1px solid #333; display: flex; justify-content: flex-end; gap: 10px; border-radius: 0 0 12px 12px; }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #444; background: #080808; border-radius: 8px; padding: 0;
+            text-align: center; cursor: pointer; transition: 0.2s; position: relative; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 100px;
+        }
+        .upload-area:hover { border-color: #777; background: #111; }
+        .upload-area.has-file { border-style: solid; border-color: var(--accent); }
+        .upload-placeholder { padding: 20px; pointer-events: none; }
+        .preview-img { width: 100%; height: 100%; object-fit: cover; display:block; }
+
+        /* Gallery */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; margin-top: 10px; }
+        .gallery-item { 
+            height: 90px; border-radius: 6px; border: 1px solid #444; overflow: hidden; position: relative; 
+            transition: transform 0.2s;
+        }
+        .gallery-item:hover { border-color: var(--accent); transform: scale(1.05); }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+        .gallery-remove { 
+            position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.8); color: #f44336; 
+            border: none; cursor: pointer; width: 20px; height: 20px; border-radius: 3px; 
+            display: flex; align-items: center; justify-content: center; font-weight: bold;
+        }
+
+        /* Leaflet Popups */
+        .leaflet-popup-content-wrapper { background: #151515; border: 1px solid var(--accent); color: #ddd; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+        .leaflet-popup-tip { background: var(--accent); }
+        .leaflet-popup-content { margin: 15px; width: 300px !important; }
+        .popup-img-main { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; margin-bottom: 12px; cursor: zoom-in; border: 1px solid #333; }
+        .popup-gallery { display: flex; gap: 8px; overflow-x: auto; margin-top: 12px; padding-bottom: 5px; }
+        .popup-thumb { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; border: 1px solid #444; cursor: pointer; flex-shrink: 0; transition: 0.2s; }
+        .popup-thumb:hover { border-color: var(--accent); transform: scale(1.1); }
+
+        /* Icon */
+        .custom-map-icon { 
+            border: 2px solid #fff; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.8); 
+            transition: transform 0.2s; background: #000; 
+        }
+        .custom-map-icon:hover { transform: scale(1.3); border-color: var(--accent); z-index: 1000 !important; }
+
+        /* Lightbox */
+        .lightbox { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index: 10000; display:none; justify-content:center; align-items:center; cursor: zoom-out; animation: fadeIn 0.2s; }
+        .lightbox img { max-width: 95%; max-height: 95%; border: 2px solid #333; box-shadow: 0 0 50px black; border-radius: 4px; }
+
+        @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-toggle" onclick="toggleSidebar()" title="Recolher Painel">⚙</div>
+        
+        <div class="sidebar-header">
+            <h2>Atlas do Mundo</h2>
+        </div>
+
+        <div class="sidebar-content">
+            
+            <div>
+                <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:5px; display:block;">FERRAMENTAS</label>
+                <div style="display:flex; gap: 8px;">
+                    <button class="btn-action" id="btn-medir" onclick="toggleMedicao()" style="flex:1;">📏 Medir Distância</button>
+                    <button class="btn-action" onclick="limparMedicao()" style="width: auto; background: #221111; border-color: #442222; color: #ff8888;" title="Limpar Medição">🗑️</button>
+                </div>
+                <div id="distancia-res" style="font-size: 13px; color: #e0aaff; margin-top: 8px; text-align: center; min-height: 18px; font-weight: bold; font-family: monospace;"></div>
+            </div>
+
+            <hr style="border:0; border-top:1px solid #333; width:100%; margin:0;">
+
+            <div class="search-box">
+                <input type="text" id="search-input" class="input-dark" placeholder="Pesquisar local..." onkeyup="filtrarLocais()">
+                <span style="position: absolute; right: 12px; top: 12px; color: #666;">🔍</span>
+            </div>
+
+            <div style="flex:1; overflow:hidden; display:flex; flex-direction:column;">
+                <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:8px; display:block;">LOCAIS DESCOBERTOS</label>
+                <div style="overflow-y:auto; flex:1; padding-right:5px;">
+                    <ul id="lista-locais" class="location-list">
+                        </ul>
+                </div>
+            </div>
+
+            <div class="planes-section">
+                <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:10px; display:block;">PLANOS DE EXISTÊNCIA (LORE)</label>
+                <div id="planes-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="ctx-menu">
+        <div class="ctx-item" onclick="abrirCriarPin()">📍 Criar Ponto Aqui</div>
+    </div>
+
+    <div class="modal-overlay" id="modal-criar">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 style="margin:0; color:#fff;">Novo Local</h3>
+                <button onclick="fecharModal()" style="background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">✖</button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label style="display:block; color:#aaa; font-size:12px; margin-bottom:5px; font-weight:bold;">NOME DO LOCAL</label>
+                    <input type="text" id="input-nome" class="input-dark" placeholder="Ex: Fortaleza Noxkraya">
+                </div>
+
+                <div style="display:flex; gap:20px;">
+                    <div style="flex: 0 0 130px;">
+                        <label style="display:block; color:#e0aaff; font-size:12px; margin-bottom:5px; font-weight:bold;">ÍCONE DO MAPA</label>
+                        <div class="upload-area" id="area-icon" title="Clique para trocar o ícone">
+                            <div class="upload-placeholder" id="placeholder-icon" style="display:flex; flex-direction:column; align-items:center;">
+                                <span style="font-size:24px; margin-bottom:5px;">📍</span>
+                                <span style="font-size:11px; color:#666;">Clique para<br>upload</span>
+                            </div>
+                            <img id="preview-icon" class="preview-img" style="display:none;">
+                        </div>
+                        <input type="file" id="file-icon" accept="image/*" style="display:none;">
+                    </div>
+
+                    <div style="flex:1;">
+                        <label style="display:block; color:#aaa; font-size:12px; margin-bottom:5px; font-weight:bold;">GALERIA (DETALHES)</label>
+                        <div class="upload-area" id="area-gallery" style="height:70px; min-height:auto; border-style:dashed;">
+                            <div class="upload-placeholder" style="padding:10px;">
+                                <span style="font-size:12px; color:#888;">Cole (Ctrl+V) imagens aqui ou clique para adicionar</span>
+                            </div>
+                        </div>
+                        <div class="gallery-grid" id="gallery-container"></div>
+                        <input type="file" id="file-gallery" accept="image/*" style="display:none;" multiple>
+                    </div>
+                </div>
+
+                <div>
+                    <label style="display:block; color:#aaa; font-size:12px; margin-bottom:5px; font-weight:bold;">DESCRIÇÃO / LORE</label>
+                    <textarea id="input-desc" class="input-dark" style="height:120px;" placeholder="História, perigos, NPCs importantes..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="salvarPin()" class="btn-action primary" style="width:auto; padding: 10px 30px;">Salvar Local</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="lightbox" id="lightbox" onclick="this.style.display='none'">
+        <img id="lightbox-img">
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        const IMG_MAPA = 'img/imagem-no-site/mapa-runeterra.jpg';
+        const IMG_DEFAULT_ICON = 'https://cdn-icons-png.flaticon.com/512/684/684908.png'; // Pin padrão vermelho
+        
+        let map;
+        let markers = [];
+        let tempCoords = null;
+        let galleryImages = [];
+        let iconImage = null;
+
+        // Medição
+        let medindo = false;
+        let p1 = null;
+        let line = null;
+
+        const PLANES_DATA = [
+            { id: 'shadowfell', name: 'Pendor das Sombras', desc: 'Um eco escuro e distorcido do Plano Material. Um lugar de decadência, morte e melancolia, onde as cores são desbotadas.' },
+            { id: 'feywild', name: 'Agréstia das Fadas', desc: 'Um eco vibrante e mágico do mundo. Lar de fadas, emoções intensas e beleza perigosa. O tempo passa diferente aqui.' },
+            { id: 'astral', name: 'Plano Astral', desc: 'O espaço entre os planos. Um vazio prateado de pensamento e sonho, onde os viajantes não envelhecem.' },
+            { id: 'ethereal', name: 'Plano Etéreo', desc: 'Uma névoa fantasmagórica que se sobrepõe ao Material. Usado por fantasmas e magias de transporte.' }
+        ];
+
+        window.onload = function() {
+            // Inicializa Mapa
+            map = L.map('map', {
+                crs: L.CRS.Simple, minZoom: -2, maxZoom: 2, zoomControl: false, attributionControl: false
+            });
+
+            // Carrega Imagem
+            const w = 1920, h = 1080; // Ajuste se seu mapa for diferente
+            const bounds = [[0,0], [h,w]];
+            L.imageOverlay(IMG_MAPA, bounds).addTo(map);
+            map.fitBounds(bounds);
+            L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+            // Eventos do Mapa
+            map.on('contextmenu', function(e) {
+                if(medindo) return;
+                tempCoords = e.latlng;
+                const menu = document.getElementById('ctx-menu');
+                menu.style.display = 'block';
+                menu.style.left = e.containerPoint.x + 'px';
+                menu.style.top = e.containerPoint.y + 'px';
+            });
+
+            map.on('click', (e) => { 
+                document.getElementById('ctx-menu').style.display = 'none';
+                if(medindo) medicaoClick(e);
+            });
+            
+            map.on('movestart', () => document.getElementById('ctx-menu').style.display = 'none');
+
+            // Renderiza Inicial
+            renderPlanes();
+            
+            // Exemplos iniciais
+            criarMarcador(700, 1100, "Noxus", "O Bastião Imortal.", null, []);
+            criarMarcador(650, 450, "Demacia", "Reino da Honra.", null, []);
+        };
+
+        // --- MEDIÇÃO ---
+        function toggleMedicao() {
+            medindo = !medindo;
+            const btn = document.getElementById('btn-medir');
+            if(medindo) {
+                btn.classList.add('active');
+                document.getElementById('map').style.cursor = 'crosshair';
+                document.getElementById('distancia-res').innerText = "Clique no ponto A...";
+            } else {
+                desativarMedicao(btn);
+            }
+        }
+
+        function limparMedicao() {
+            if(line) map.removeLayer(line);
+            line = null;
+            p1 = null;
+            document.getElementById('distancia-res').innerText = medindo ? "Clique no ponto A..." : "";
+        }
+
+        function desativarMedicao(btn) {
+            medindo = false;
+            btn.classList.remove('active');
+            document.getElementById('map').style.cursor = 'default';
+            if(!line) document.getElementById('distancia-res').innerText = "";
+        }
+
+        function medicaoClick(e) {
+            if(!medindo || !e) return;
+            
+            if(!p1) {
+                p1 = e.latlng;
+                document.getElementById('distancia-res').innerText = "Clique no destino...";
+            } else {
+                if(line) map.removeLayer(line);
+                line = L.polyline([p1, e.latlng], {color: '#9c27b0', dashArray: '10, 10'}).addTo(map);
+                
+                // Conversão arbitrária: 100 pixels = 1.5 metros (exemplo)
+                const distPixels = map.project(p1).distanceTo(map.project(e.latlng));
+                const distMetros = (distPixels * 0.015).toFixed(1); 
+                
+                document.getElementById('distancia-res').innerText = `${distMetros}m`;
+                p1 = null; // Reseta para medir de novo
+            }
+        }
+
+        // --- PINS & MODAL ---
+        function abrirCriarPin() {
+            if(!tempCoords) return; // Segurança
+            document.getElementById('ctx-menu').style.display = 'none';
+            document.getElementById('modal-criar').style.display = 'flex';
+            
+            // Reset
+            document.getElementById('input-nome').value = "";
+            document.getElementById('input-desc').value = "";
+            galleryImages = [];
+            iconImage = null;
+            
+            // Visual Reset
+            document.getElementById('gallery-container').innerHTML = "";
+            document.getElementById('preview-icon').style.display = 'none';
+            document.getElementById('placeholder-icon').style.display = 'flex';
+            document.getElementById('area-icon').classList.remove('has-file');
+            
+            setTimeout(() => document.getElementById('input-nome').focus(), 100);
+        }
+
+        function fecharModal() { document.getElementById('modal-criar').style.display = 'none'; }
+
+        function salvarPin() {
+            const nome = document.getElementById('input-nome').value;
+            const desc = document.getElementById('input-desc').value;
+            
+            // Validação simples
+            if(!nome) { 
+                alert("Por favor, dê um nome ao local!"); 
+                document.getElementById('input-nome').focus();
+                return; 
+            }
+            if(!tempCoords) {
+                alert("Erro de coordenadas. Tente clicar com botão direito novamente.");
+                fecharModal();
+                return;
+            }
+
+            const finalIcon = iconImage || IMG_DEFAULT_ICON;
+            criarMarcador(tempCoords.lat, tempCoords.lng, nome, desc, finalIcon, galleryImages);
+            fecharModal();
+        }
+
+        function criarMarcador(lat, lng, nome, desc, iconSrc, galeria) {
+            const safeIcon = iconSrc || IMG_DEFAULT_ICON;
+            
+            // HTML do Ícone no Mapa
+            const iconHtml = `<img src="${safeIcon}" class="custom-map-icon" style="width:40px; height:40px; object-fit:cover;">`;
+            const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -20] });
+            
+            const marker = L.marker([lat, lng], {icon: customIcon}).addTo(map);
+
+            // Conteúdo do Popup
+            let popupHtml = `<h3 style="margin:0 0 8px 0; color:#e0aaff; border-bottom:1px solid #333; padding-bottom:8px; font-size:16px;">${nome}</h3>`;
+            
+            // Se tem galeria, a primeira imagem é destaque. Se não, usa o ícone (se não for o padrão)
+            if(galeria && galeria.length > 0) {
+                popupHtml += `<img src="${galeria[0]}" class="popup-img-main" onclick="verFull('${galeria[0]}')">`;
+            } else if (safeIcon !== IMG_DEFAULT_ICON) {
+                popupHtml += `<img src="${safeIcon}" class="popup-img-main" onclick="verFull('${safeIcon}')">`;
+            }
+
+            popupHtml += `<p style="font-size:13px; color:#ccc; margin:0; line-height:1.5;">${desc || "Sem descrição."}</p>`;
+
+            if(galeria && galeria.length > 1) {
+                popupHtml += `<div class="popup-gallery">`;
+                galeria.forEach(img => { 
+                    popupHtml += `<img src="${img}" class="popup-thumb" onclick="verFull('${img}')">`; 
+                });
+                popupHtml += `</div>`;
+            }
+
+            marker.bindPopup(popupHtml);
+            
+            // Salva na memória
+            markers.push({ id: Date.now(), marker, lat, lng, nome, desc, icon: safeIcon });
+            atualizarListaLateral();
+        }
+
+        // --- UPLOAD & PASTE ---
+        const fileIcon = document.getElementById('file-icon');
+        const fileGallery = document.getElementById('file-gallery');
+
+        // Ícone: Clique no container ativa o input file
+        document.getElementById('area-icon').addEventListener('click', () => fileIcon.click());
+        
+        fileIcon.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(file) lerArquivo(file, (res) => {
+                iconImage = res;
+                document.getElementById('preview-icon').src = res;
+                document.getElementById('preview-icon').style.display = 'block';
+                document.getElementById('placeholder-icon').style.display = 'none';
+                document.getElementById('area-icon').classList.add('has-file');
+            });
+        });
+
+        // Galeria: Clique no container
+        document.getElementById('area-gallery').addEventListener('click', () => fileGallery.click());
+        
+        fileGallery.addEventListener('change', (e) => {
+            Array.from(e.target.files).forEach(file => { 
+                lerArquivo(file, (res) => { galleryImages.push(res); renderGallery(); }); 
+            });
+        });
+
+        // Paste Global (Só funciona se o modal estiver visível)
+        document.addEventListener('paste', (e) => {
+            if(document.getElementById('modal-criar').style.display !== 'flex') return;
+            
+            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+            for (let index in items) {
+                const item = items[index];
+                if (item.kind === 'file' && item.type.includes('image/')) {
+                    lerArquivo(item.getAsFile(), (res) => { galleryImages.push(res); renderGallery(); });
+                }
+            }
+        });
+
+        function lerArquivo(file, callback) {
+            const reader = new FileReader();
+            reader.onload = (e) => callback(e.target.result);
+            reader.readAsDataURL(file);
+        }
+
+        function renderGallery() {
+            const container = document.getElementById('gallery-container');
+            container.innerHTML = "";
+            galleryImages.forEach((img, idx) => {
+                const div = document.createElement('div');
+                div.className = 'gallery-item';
+                div.innerHTML = `
+                    <img src="${img}">
+                    <button class="gallery-remove" onclick="removeImg(event, ${idx})">×</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        window.removeImg = function(e, idx) {
+            e.stopPropagation(); // Impede abrir o lightbox ou upload ao clicar no X
+            galleryImages.splice(idx, 1);
+            renderGallery();
+        };
+
+        // --- INTERFACE GERAL ---
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
+        
+        function atualizarListaLateral() {
+            const lista = document.getElementById('lista-locais');
+            lista.innerHTML = "";
+            markers.forEach(pin => {
+                const termo = document.getElementById('search-input').value.toLowerCase();
+                if(termo && !pin.nome.toLowerCase().includes(termo)) return;
+                
+                const li = document.createElement('li');
+                li.className = 'location-item';
+                const iconSrc = pin.icon || IMG_DEFAULT_ICON;
+                li.innerHTML = `<img src="${iconSrc}" class="loc-icon"> <span>${pin.nome}</span>`;
+                li.onclick = () => { 
+                    map.flyTo([pin.lat, pin.lng], 1); 
+                    pin.marker.openPopup(); 
+                };
+                lista.appendChild(li);
+            });
+        }
+        
+        function filtrarLocais() { atualizarListaLateral(); }
+        
+        function renderPlanes() {
+            document.getElementById('planes-container').innerHTML = PLANES_DATA.map(p => `
+                <div class="plane-card" onclick="this.classList.toggle('open')">
+                    <div class="plane-header"><span>${p.name}</span> <span>▼</span></div>
+                    <div class="plane-body">${p.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        window.verFull = function(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').style.display = 'flex';
+        };
+    </script>
+</body>
+</html>
