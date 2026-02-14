@@ -689,15 +689,94 @@
   <script src="JS/MagicSystem.js"></script>
 
 
-  <div id="mapa-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:90000; flex-direction:column;">
-      
-      <div style="height:50px; background:#111; border-bottom:1px solid #333; display:flex; align-items:center; justify-content:space-between; padding:0 20px;">
-          <h3 style="color:#e0aaff; margin:0;">Mapa de Runeterra</h3>
-          <button onclick="fecharMapaMundi()" style="background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">✖</button>
-      </div>
+  <div id="mapa-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#0a0a0a; z-index:90000; overflow:hidden;">
+    
+    <div id="leaflet-map-container" style="width:100%; height:100%; background:#0a0a0a; cursor: crosshair;"></div>
 
-      <div id="leaflet-map-container" style="flex:1; width:100%; height:100%; background:#1a1a1a;"></div>
-  </div>
+    <div id="map-sidebar" class="map-sidebar">
+        <button id="btn-toggle-sidebar" onclick="toggleMapSidebar()">▶</button>
+
+        <div class="sidebar-header">
+            <h3>Ferramentas</h3>
+            <button onclick="fecharMapaMundi()" class="btn-close-map">✖ Sair</button>
+        </div>
+
+        <div class="sidebar-content">
+            <div class="tool-section">
+                <button onclick="ativarRegua()" id="btn-regua" class="sidebar-btn">📏 Medir Distância</button>
+                <div id="medida-result" style="font-size:12px; color:#e0aaff; margin-top:5px; display:none;">Distância: 0m</div>
+            </div>
+
+            <hr class="sidebar-divider">
+
+            <div class="search-section">
+                <label>Pesquisar Local</label>
+                <div style="display:flex; gap:5px; margin-bottom:5px;">
+                    <input type="text" id="map-search-input" placeholder="Nome ou descrição..." onkeyup="filtrarPinsMap()">
+                </div>
+                <div style="font-size:11px; color:#666;">
+                    <input type="radio" name="searchType" value="nome" checked onchange="filtrarPinsMap()"> Nome
+                    <input type="radio" name="searchType" value="desc" onchange="filtrarPinsMap()"> Descrição
+                </div>
+            </div>
+
+            <hr class="sidebar-divider">
+
+            <div class="locais-section">
+                <label>Locais Ativos</label>
+                <ul id="lista-locais-sidebar" class="sidebar-list">
+                    </ul>
+            </div>
+        </div>
+
+        <div class="planes-footer">
+            <label>Plano de Existência</label>
+            <select id="select-plano" onchange="mudarPlano(this.value)">
+                <option value="material">Plano Material (Runeterra)</option>
+                <option value="shadowfell">Pendor das Sombras</option>
+                <option value="feywild">Agréstia das Fadas</option>
+                <option value="astral">Plano Astral</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="map-context-menu" class="context-menu" style="display:none;">
+        <div class="ctx-item" onclick="abrirModalCriarPin()">📍 Criar Ponto Aqui</div>
+    </div>
+
+    <div id="modal-criar-pin" class="spell-modal-overlay" style="display:none; z-index:91000;">
+        <div class="spell-modal" style="width: 500px; height: auto;">
+            <div class="modal-header">
+                <h3>Novo Ponto de Interesse</h3>
+                <button class="modal-close" onclick="fecharModalCriarPin()">✖</button>
+            </div>
+            <div class="modal-body" style="padding: 20px; display:flex; flex-direction:column; gap:15px;">
+                <div>
+                    <label style="color:#aaa; font-size:12px;">Nome do Local</label>
+                    <input type="text" id="pin-nome" class="wizard-input-main" placeholder="Ex: Bastion">
+                </div>
+                <div>
+                    <label style="color:#aaa; font-size:12px;">Descrição</label>
+                    <textarea id="pin-desc" class="wizard-textarea" style="height:100px;" placeholder="História, perigos, NPCs..."></textarea>
+                </div>
+                
+                <div>
+                    <label style="color:#aaa; font-size:12px;">Imagem (Cole com Ctrl+V aqui)</label>
+                    <div id="pin-paste-area" tabindex="0" class="paste-area-box">
+                        <span id="pin-paste-text">Clique e Cole (Ctrl+V) ou clique para Upload</span>
+                        <img id="pin-img-preview" style="display:none;">
+                        <input type="file" id="pin-file-input" accept="image/*" style="display:none;">
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px;">
+                    <button onclick="salvarNovoPin()" class="btn-add" style="background:#9c27b0;">Salvar Ponto</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
   <script>
     /* =================================================================
        LÓGICA DO MODO MOBILE
