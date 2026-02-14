@@ -63,8 +63,13 @@
         .input-dark:focus { outline: none; border-color: var(--accent); background: #000 !important; }
         textarea.input-dark { resize: vertical; min-height: 80px; line-height: 1.5; }
 
-        .search-box { position: relative; margin-bottom: 10px; }
+        /* Search Section */
+        .search-container { display: flex; flex-direction: column; gap: 8px; }
+        .search-box { position: relative; }
         .search-box span { position: absolute; right: 12px; top: 12px; color: #666; pointer-events: none; }
+        .search-options { display: flex; gap: 15px; font-size: 12px; color: #aaa; }
+        .search-options label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        .search-options input { accent-color: var(--accent); }
 
         /* Lista de Locais */
         .locais-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; min-height: 150px; }
@@ -76,6 +81,11 @@
         .location-item:hover { border-color: #555; background: rgba(255,255,255,0.08); transform: translateX(2px); }
         .loc-icon-small { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; background: #000; border: 1px solid #555; }
 
+        /* Ferramentas de Medição */
+        .measure-tools { display: flex; flex-direction: column; gap: 10px; background: #111; padding: 10px; border-radius: 8px; border: 1px solid #333; }
+        .measure-options { display: flex; gap: 10px; font-size: 11px; color: #ccc; justify-content: center; }
+        .measure-options label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+        
         /* Botões */
         .btn-action {
             width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #ccc;
@@ -129,22 +139,16 @@
         }
         .upload-area:hover { border-color: #777; background: #111; }
         .upload-area.has-file { border-style: solid; border-color: #555; }
-        
-        /* ESTILO DO FOCUS PASTE */
         .upload-area.paste-active { border-color: var(--accent); box-shadow: 0 0 15px rgba(156, 39, 176, 0.3); background: #150515; }
         .upload-area.paste-active::after {
             content: 'CTRL+V ATIVO'; position: absolute; bottom: 5px; font-size: 10px; color: var(--accent); font-weight: bold; background: rgba(0,0,0,0.8); padding: 2px 6px; border-radius: 4px;
         }
-
         .upload-placeholder { padding: 20px; pointer-events: none; }
         .preview-img { width: 100%; height: 100%; object-fit: cover; display:block; }
 
         /* Gallery */
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; margin-top: 10px; }
-        .gallery-item { 
-            height: 90px; border-radius: 6px; border: 1px solid #444; overflow: hidden; position: relative; 
-            transition: transform 0.2s;
-        }
+        .gallery-item { height: 90px; border-radius: 6px; border: 1px solid #444; overflow: hidden; position: relative; transition: transform 0.2s; }
         .gallery-item:hover { border-color: var(--accent); transform: scale(1.05); }
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
         .gallery-remove { 
@@ -156,16 +160,23 @@
         /* Custom Popup Leaflet */
         .leaflet-popup-content-wrapper { background: #151515; border: 1px solid var(--accent); color: #ddd; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
         .leaflet-popup-tip { background: var(--accent); }
-        .leaflet-popup-content { margin: 10px; width: 300px !important; }
+        .leaflet-popup-content { margin: 10px; width: 320px !important; }
         
         .popup-header { display:flex; align-items:center; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; margin-bottom: 8px; }
         .popup-header-icon { width: 32px; height: 32px; border-radius: 50%; object-fit:cover; border:1px solid #555; background:#000; }
-        .popup-title { font-weight: bold; color: var(--accent); font-size: 15px; flex:1; }
+        .popup-title { font-weight: bold; color: var(--accent); font-size: 15px; flex:1; text-transform: uppercase; }
         .popup-edit-btn { background: none; border: none; color: #777; cursor: pointer; font-size: 16px; transition: 0.2s; }
         .popup-edit-btn:hover { color: #fff; transform: scale(1.1); }
 
-        .popup-img-main { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; margin-bottom: 12px; cursor: zoom-in; border: 1px solid #333; }
-        .popup-gallery { display: flex; gap: 8px; overflow-x: auto; margin-top: 12px; padding-bottom: 5px; }
+        /* Popup Content Order Fix */
+        .popup-desc { 
+            font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 12px; 
+            max-height: 200px; overflow-y: auto; padding-right: 5px; 
+            border-bottom: 1px dashed #333; padding-bottom: 10px;
+        }
+        
+        .popup-img-main { width: 100%; height: 180px; object-fit: cover; border-radius: 6px; margin-bottom: 8px; cursor: zoom-in; border: 1px solid #333; display: block; }
+        .popup-gallery { display: flex; gap: 8px; overflow-x: auto; margin-top: 8px; padding-bottom: 5px; }
         .popup-thumb { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; border: 1px solid #444; cursor: pointer; flex-shrink: 0; transition: 0.2s; }
         .popup-thumb:hover { border-color: var(--accent); transform: scale(1.1); }
 
@@ -197,20 +208,32 @@
 
         <div class="sidebar-content">
             
-            <div>
-                <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:5px; display:block;">FERRAMENTAS</label>
+            <div class="measure-tools">
+                <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:5px; display:block;">FERRAMENTA DE MEDIÇÃO</label>
+                
+                <div class="measure-options">
+                    <label><input type="radio" name="measure-mode" value="line" checked> Reta</label>
+                    <label><input type="radio" name="measure-mode" value="draw"> Desenho</label>
+                </div>
+
                 <div style="display:flex; gap: 8px;">
-                    <button class="btn-action" id="btn-medir" onclick="toggleMedicao()" style="flex:1;">📏 Medir Distância</button>
+                    <button class="btn-action" id="btn-medir" onclick="toggleMedicao()" style="flex:1;">📏 Segure e Arraste</button>
                     <button class="btn-action" onclick="limparMedicao()" style="width: auto; background: #221111; border-color: #442222; color: #ff8888;" title="Limpar Medição">🗑️</button>
                 </div>
-                <div id="distancia-res" style="font-size: 13px; color: #e0aaff; margin-top: 8px; text-align: center; min-height: 18px; font-weight: bold; font-family: monospace;"></div>
+                <div id="distancia-res" style="font-size: 13px; color: #e0aaff; margin-top: 5px; text-align: center; min-height: 18px; font-weight: bold; font-family: monospace;"></div>
             </div>
 
             <hr style="border:0; border-top:1px solid #333; width:100%; margin:0;">
 
-            <div class="search-box">
-                <input type="text" id="search-input" class="input-dark" placeholder="Pesquisar local..." onkeyup="filtrarLocais()">
-                <span style="position: absolute; right: 12px; top: 12px; color: #666;">🔍</span>
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="search-input" class="input-dark" placeholder="Pesquisar local..." onkeyup="filtrarLocais()">
+                    <span style="position: absolute; right: 12px; top: 12px; color: #666;">🔍</span>
+                </div>
+                <div class="search-options">
+                    <label><input type="radio" name="search-filter" value="nome" checked onchange="filtrarLocais()"> Por Nome</label>
+                    <label><input type="radio" name="search-filter" value="desc" onchange="filtrarLocais()"> Por Descrição</label>
+                </div>
             </div>
 
             <div class="locais-container">
@@ -291,29 +314,26 @@
         const IMG_DEFAULT_ICON = 'https://cdn-icons-png.flaticon.com/512/684/684908.png';
         
         let map;
-        let markers = []; // Dados dos Pins
-        let tempCoords = null; // Onde clicou para criar
-        let editId = null; // ID do pin sendo editado
-        
-        // Dados Temporários do Formulário
+        let markers = [];
+        let tempCoords = null;
+        let editId = null;
         let galleryImages = []; 
         let iconImage = null;
-        let pasteTarget = 'gallery'; // 'icon' ou 'gallery'
+        let pasteTarget = 'gallery'; 
 
-        // Ferramenta de Medição
+        // Medição V2
         let medindo = false;
-        let p1 = null;
-        let line = null;
+        let isDrawing = false;
+        let measureLine = null;
+        let measurePoints = [];
 
         const PLANES_DATA = [
-            { id: 'shadowfell', name: 'Pendor das Sombras', desc: 'Um eco escuro e distorcido do Plano Material. Um lugar de decadência, morte e melancolia, onde as cores são desbotadas.' },
-            { id: 'feywild', name: 'Agréstia das Fadas', desc: 'Um eco vibrante e mágico do mundo. Lar de fadas, emoções intensas e beleza perigosa. O tempo passa diferente aqui.' },
-            { id: 'astral', name: 'Plano Astral', desc: 'O espaço entre os planos. Um vazio prateado de pensamento e sonho, onde os viajantes não envelhecem.' },
-            { id: 'ethereal', name: 'Plano Etéreo', desc: 'Uma névoa fantasmagórica que se sobrepõe ao Material. Usado por fantasmas e magias de transporte.' }
+            { id: 'shadowfell', name: 'Pendor das Sombras', desc: 'Um eco escuro e distorcido do Plano Material. Um lugar de decadência, morte e melancolia.' },
+            { id: 'feywild', name: 'Agréstia das Fadas', desc: 'Um eco vibrante e mágico do mundo. Lar de fadas, emoções intensas e beleza perigosa.' },
+            { id: 'astral', name: 'Plano Astral', desc: 'O espaço entre os planos. Um vazio prateado de pensamento e sonho.' }
         ];
 
         window.onload = function() {
-            // Inicializa Mapa
             map = L.map('map', {
                 crs: L.CRS.Simple, minZoom: -2, maxZoom: 2, zoomControl: false, attributionControl: false
             });
@@ -324,7 +344,7 @@
             map.fitBounds(bounds);
             L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-            // EVENTOS DO MAPA
+            // Context Menu
             map.on('contextmenu', function(e) {
                 if(medindo) return;
                 tempCoords = e.latlng;
@@ -334,99 +354,108 @@
                 menu.style.top = e.containerPoint.y + 'px';
             });
 
-            map.on('click', (e) => { 
-                document.getElementById('ctx-menu').style.display = 'none';
-                if(medindo) medicaoClick(e);
-            });
+            map.on('click', () => document.getElementById('ctx-menu').style.display = 'none');
             
-            // Medição dinâmica (ponteiro segue o mouse)
-            map.on('mousemove', (e) => {
-                if(medindo && p1 && !line) {
-                    // Opcional: mostrar linha "fantasma" antes de clicar, 
-                    // mas Leaflet desenha melhor com click. Vamos atualizar só o texto.
-                    const distPixels = map.project(p1).distanceTo(map.project(e.latlng));
+            // --- EVENTOS DE MEDIÇÃO (DRAG) ---
+            map.on('mousedown', function(e) {
+                if (!medindo) return;
+                
+                // Limpa anterior se começar novo clique
+                if(measureLine) map.removeLayer(measureLine);
+                measurePoints = [e.latlng];
+                isDrawing = true;
+                
+                // Cria a linha inicial
+                measureLine = L.polyline(measurePoints, {color: '#9c27b0', weight: 4, dashArray: '5, 10'}).addTo(map);
+            });
+
+            map.on('mousemove', function(e) {
+                if (!medindo || !isDrawing) return;
+
+                const mode = document.querySelector('input[name="measure-mode"]:checked').value;
+
+                if (mode === 'line') {
+                    // Modo Linha: Atualiza apenas o ponto final
+                    const startPoint = measurePoints[0];
+                    measureLine.setLatLngs([startPoint, e.latlng]);
+                    
+                    const distPixels = map.project(startPoint).distanceTo(map.project(e.latlng));
                     const distMetros = (distPixels * 0.015).toFixed(1);
-                    document.getElementById('distancia-res').innerText = `Distância: ${distMetros}m...`;
+                    document.getElementById('distancia-res').innerText = `${distMetros}m`;
+                } 
+                else {
+                    // Modo Desenho: Adiciona pontos ao rastro
+                    measurePoints.push(e.latlng);
+                    measureLine.setLatLngs(measurePoints);
+                    
+                    // Calcula total
+                    let totalPixels = 0;
+                    for(let i = 0; i < measurePoints.length - 1; i++) {
+                        totalPixels += map.project(measurePoints[i]).distanceTo(map.project(measurePoints[i+1]));
+                    }
+                    const distMetros = (totalPixels * 0.015).toFixed(1);
+                    document.getElementById('distancia-res').innerText = `${distMetros}m`;
                 }
             });
 
-            map.on('movestart', () => document.getElementById('ctx-menu').style.display = 'none');
+            map.on('mouseup', function() {
+                if (medindo && isDrawing) {
+                    isDrawing = false;
+                    // Desativa medição após terminar (solicitação do usuário)
+                    desativarMedicao(document.getElementById('btn-medir'));
+                }
+            });
 
-            // Renderiza Inicial
             renderPlanes();
-            
-            // Dados Exemplo
             criarMarcador(700, 1100, "Noxus", "O Bastião Imortal.", null, []);
             criarMarcador(650, 450, "Demacia", "Reino da Honra.", null, []);
         };
 
-        /* ================= MEDIÇÃO ================= */
+        // --- MEDIÇÃO ---
         function toggleMedicao() {
             medindo = !medindo;
             const btn = document.getElementById('btn-medir');
             if(medindo) {
                 btn.classList.add('active');
                 document.getElementById('map').style.cursor = 'crosshair';
-                document.getElementById('distancia-res').innerText = "Clique no ponto A...";
+                document.getElementById('distancia-res').innerText = "Segure e Arraste...";
+                // Desabilita arrastar o mapa para poder desenhar
+                map.dragging.disable();
             } else {
                 desativarMedicao(btn);
             }
         }
 
         function limparMedicao() {
-            if(line) map.removeLayer(line);
-            line = null;
-            p1 = null;
-            document.getElementById('distancia-res').innerText = medindo ? "Clique no ponto A..." : "";
+            if(measureLine) map.removeLayer(measureLine);
+            measureLine = null;
+            measurePoints = [];
+            document.getElementById('distancia-res').innerText = "";
         }
 
         function desativarMedicao(btn) {
             medindo = false;
+            isDrawing = false;
             btn.classList.remove('active');
             document.getElementById('map').style.cursor = 'default';
-            if(!line) document.getElementById('distancia-res').innerText = "";
+            map.dragging.enable(); // Reabilita arrastar o mapa
         }
 
-        function medicaoClick(e) {
-            if(!medindo || !e) return;
-            
-            if(!p1) {
-                p1 = e.latlng;
-                document.getElementById('distancia-res').innerText = "Arraste até o ponto B...";
-            } else {
-                if(line) map.removeLayer(line);
-                line = L.polyline([p1, e.latlng], {color: '#9c27b0', dashArray: '10, 10'}).addTo(map);
-                
-                const distPixels = map.project(p1).distanceTo(map.project(e.latlng));
-                const distMetros = (distPixels * 0.015).toFixed(1); 
-                
-                document.getElementById('distancia-res').innerText = `${distMetros}m`;
-                p1 = null; // Reseta para medir de novo
-            }
-        }
-
-        /* ================= PINS & MODAL ================= */
-        
-        // Abre modal para CRIAR ou EDITAR (se passar pinId)
+        // --- PINS & MODAL ---
         function abrirModal(pinId) {
             document.getElementById('ctx-menu').style.display = 'none';
             document.getElementById('modal-form').style.display = 'flex';
             
             if (pinId) {
-                // MODO EDIÇÃO
                 editId = pinId;
                 const pin = markers.find(m => m.id === pinId);
-                
                 document.getElementById('modal-title').innerText = "Editar Local";
                 document.getElementById('btn-delete').style.display = 'block';
                 document.getElementById('input-nome').value = pin.nome;
                 document.getElementById('input-desc').value = pin.desc;
-                
                 galleryImages = [...(pin.gallery || [])];
                 iconImage = pin.icon;
-                
             } else {
-                // MODO CRIAÇÃO
                 editId = null;
                 document.getElementById('modal-title').innerText = "Novo Local";
                 document.getElementById('btn-delete').style.display = 'none';
@@ -434,16 +463,13 @@
                 document.getElementById('input-desc').value = "";
                 galleryImages = [];
                 iconImage = null;
-                
                 setTimeout(() => document.getElementById('input-nome').focus(), 100);
             }
-
             renderFormVisuals();
-            setPasteTarget('gallery'); // Reset foco paste
+            setPasteTarget('gallery');
         }
 
         function renderFormVisuals() {
-            // Renderiza Galeria
             const container = document.getElementById('gallery-container');
             container.innerHTML = "";
             galleryImages.forEach((img, idx) => {
@@ -453,7 +479,6 @@
                 container.appendChild(div);
             });
 
-            // Renderiza Ícone
             const prevIcon = document.getElementById('preview-icon');
             const placeIcon = document.getElementById('placeholder-icon');
             const areaIcon = document.getElementById('area-icon');
@@ -477,8 +502,8 @@
             if(confirm("Tem certeza que deseja apagar este local?")) {
                 const index = markers.findIndex(m => m.id === editId);
                 if(index > -1) {
-                    map.removeLayer(markers[index].marker); // Remove do mapa
-                    markers.splice(index, 1); // Remove da memória
+                    map.removeLayer(markers[index].marker);
+                    markers.splice(index, 1);
                     atualizarListaLateral();
                 }
                 fecharModal();
@@ -488,65 +513,46 @@
         function salvarPin() {
             const nome = document.getElementById('input-nome').value;
             const desc = document.getElementById('input-desc').value;
-            
             if(!nome) { alert("Nome é obrigatório!"); return; }
-
             const finalIcon = iconImage || IMG_DEFAULT_ICON;
 
             if (editId) {
-                // ATUALIZAR EXISTENTE
                 const pin = markers.find(m => m.id === editId);
                 pin.nome = nome;
                 pin.desc = desc;
                 pin.icon = finalIcon;
                 pin.gallery = galleryImages;
-                
-                // Recria o popup e ícone
                 refreshMarkerVisuals(pin);
             } else {
-                // CRIAR NOVO
                 if(!tempCoords) { alert("Erro de posição."); return; }
                 criarMarcador(tempCoords.lat, tempCoords.lng, nome, desc, finalIcon, galleryImages);
             }
-            
             fecharModal();
             atualizarListaLateral();
         }
 
-        // Função que cria o objeto marker do zero
         function criarMarcador(lat, lng, nome, desc, iconSrc, galeria) {
             const safeIcon = iconSrc || IMG_DEFAULT_ICON;
-            const pinId = Date.now(); // ID único
-
-            // Ícone HTML
+            const pinId = Date.now();
             const iconHtml = `<img src="${safeIcon}" class="custom-map-icon" style="width:40px; height:40px; object-fit:cover;">`;
             const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -20] });
-            
             const marker = L.marker([lat, lng], {icon: customIcon}).addTo(map);
-
-            // Objeto de dados
+            
             const pinData = { id: pinId, marker, lat, lng, nome, desc, icon: safeIcon, gallery: galeria };
-            
-            // Vincula Popup
             marker.bindPopup(gerarPopupContent(pinData));
-            
             markers.push(pinData);
             atualizarListaLateral();
         }
 
-        // Atualiza visual de um pin existente (ao editar)
         function refreshMarkerVisuals(pin) {
-            // Atualiza Ícone no Mapa
             const iconHtml = `<img src="${pin.icon}" class="custom-map-icon" style="width:40px; height:40px; object-fit:cover;">`;
             const newIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -20] });
             pin.marker.setIcon(newIcon);
-
-            // Atualiza Popup
             pin.marker.setPopupContent(gerarPopupContent(pin));
         }
 
         function gerarPopupContent(pin) {
-            // Header: Ícone + Nome + Botão Edit
+            // Header (Ícone + Nome + Botão Edit)
             let html = `
                 <div class="popup-header">
                     <img src="${pin.icon}" class="popup-header-icon">
@@ -555,17 +561,17 @@
                 </div>
             `;
             
-            // Imagem Principal
+            // 1. Descrição (Com destaque e altura máxima)
+            html += `<div class="popup-desc">${pin.desc || "Sem descrição."}</div>`;
+
+            // 2. Imagem Principal (Se tiver galeria ou ícone customizado)
             if(pin.gallery && pin.gallery.length > 0) {
                 html += `<img src="${pin.gallery[0]}" class="popup-img-main" onclick="verFull('${pin.gallery[0]}')">`;
             } else if (pin.icon !== IMG_DEFAULT_ICON) {
                 html += `<img src="${pin.icon}" class="popup-img-main" onclick="verFull('${pin.icon}')">`;
             }
 
-            // Descrição
-            html += `<div style="font-size:13px; color:#ccc; line-height:1.5; max-height:100px; overflow-y:auto;">${pin.desc || "Sem descrição."}</div>`;
-
-            // Galeria
+            // 3. Thumbnails da Galeria
             if(pin.gallery && pin.gallery.length > 1) {
                 html += `<div class="popup-gallery">`;
                 pin.gallery.forEach(img => { 
@@ -577,55 +583,40 @@
         }
 
         // --- UPLOAD & PASTE SYSTEM ---
-        
-        // Define onde o Paste vai cair (Icon ou Gallery)
         function setPasteTarget(target) {
             pasteTarget = target;
             document.getElementById('area-icon').classList.remove('paste-active');
             document.getElementById('area-gallery').classList.remove('paste-active');
-            
             document.getElementById(`area-${target}`).classList.add('paste-active');
         }
 
-        // Inputs de Arquivo
         document.getElementById('area-icon').addEventListener('click', (e) => {
-            // Se clicar no placeholder ou img, abre file dialog
-            // Mas também define o foco para paste
             setPasteTarget('icon');
-            // Só abre dialog se clicar no elemento em si, não via paste
             if(e.detail !== 0) document.getElementById('file-icon').click(); 
         });
-
         document.getElementById('file-icon').addEventListener('change', (e) => {
             const file = e.target.files[0];
             if(file) lerArquivo(file, (res) => { iconImage = res; renderFormVisuals(); });
         });
-
         document.getElementById('area-gallery').addEventListener('click', (e) => {
             setPasteTarget('gallery');
             if(e.detail !== 0) document.getElementById('file-gallery').click();
         });
-
         document.getElementById('file-gallery').addEventListener('change', (e) => {
             Array.from(e.target.files).forEach(file => { 
                 lerArquivo(file, (res) => { galleryImages.push(res); renderFormVisuals(); }); 
             });
         });
 
-        // Global Paste Listener
         document.addEventListener('paste', (e) => {
             if(document.getElementById('modal-form').style.display !== 'flex') return;
-            
             const items = (e.clipboardData || e.originalEvent.clipboardData).items;
             for (let index in items) {
                 const item = items[index];
                 if (item.kind === 'file' && item.type.includes('image/')) {
                     lerArquivo(item.getAsFile(), (res) => {
-                        if(pasteTarget === 'icon') {
-                            iconImage = res;
-                        } else {
-                            galleryImages.push(res);
-                        }
+                        if(pasteTarget === 'icon') iconImage = res;
+                        else galleryImages.push(res);
                         renderFormVisuals();
                     });
                 }
@@ -650,11 +641,15 @@
         function atualizarListaLateral() {
             const lista = document.getElementById('lista-locais');
             lista.innerHTML = "";
+            const termo = document.getElementById('search-input').value.toLowerCase();
+            const filterType = document.querySelector('input[name="search-filter"]:checked').value;
+
             markers.forEach(pin => {
-                const termo = document.getElementById('search-input').value.toLowerCase();
-                const textoCompleto = (pin.nome + " " + pin.desc).toLowerCase();
+                let match = false;
+                if(filterType === 'nome') match = pin.nome.toLowerCase().includes(termo);
+                else match = (pin.desc || "").toLowerCase().includes(termo);
                 
-                if(termo && !textoCompleto.includes(termo)) return;
+                if(!match && termo !== "") return;
                 
                 const li = document.createElement('li');
                 li.className = 'location-item';
