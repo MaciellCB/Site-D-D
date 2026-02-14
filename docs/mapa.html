@@ -63,9 +63,7 @@
         .input-dark:focus { outline: none; border-color: var(--accent); background: #000 !important; }
         textarea.input-dark { resize: vertical; min-height: 80px; line-height: 1.5; }
 
-        /* Search Section */
-        .search-container { display: flex; flex-direction: column; gap: 8px; }
-        .search-box { position: relative; }
+        .search-box { position: relative; margin-bottom: 10px; }
         .search-box span { position: absolute; right: 12px; top: 12px; color: #666; pointer-events: none; }
         .search-options { display: flex; gap: 15px; font-size: 12px; color: #aaa; }
         .search-options label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
@@ -160,22 +158,28 @@
         /* Custom Popup Leaflet */
         .leaflet-popup-content-wrapper { background: #151515; border: 1px solid var(--accent); color: #ddd; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
         .leaflet-popup-tip { background: var(--accent); }
-        .leaflet-popup-content { margin: 10px; width: 320px !important; }
+        .leaflet-popup-content { margin: 15px; width: 320px !important; }
         
-        .popup-header { display:flex; align-items:center; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; margin-bottom: 8px; }
+        .popup-header { display:flex; align-items:center; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; margin-bottom: 12px; }
         .popup-header-icon { width: 32px; height: 32px; border-radius: 50%; object-fit:cover; border:1px solid #555; background:#000; }
         .popup-title { font-weight: bold; color: var(--accent); font-size: 15px; flex:1; text-transform: uppercase; }
         .popup-edit-btn { background: none; border: none; color: #777; cursor: pointer; font-size: 16px; transition: 0.2s; }
         .popup-edit-btn:hover { color: #fff; transform: scale(1.1); }
 
-        /* Popup Content Order Fix */
+        /* === AJUSTES PEDIDOS NO POPUP === */
         .popup-desc { 
-            font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 12px; 
-            max-height: 200px; overflow-y: auto; padding-right: 5px; 
-            border-bottom: 1px dashed #333; padding-bottom: 10px;
+            font-size: 14px; color: #ccc; line-height: 1.6; 
+            margin-bottom: 20px; /* Mais espaço pra baixo antes da foto */
+            padding-bottom: 10px; border-bottom: 1px dashed #333;
+            max-height: 200px; overflow-y: auto; 
         }
         
-        .popup-img-main { width: 100%; height: 180px; object-fit: cover; border-radius: 6px; margin-bottom: 8px; cursor: zoom-in; border: 1px solid #333; display: block; }
+        /* Imagem principal menor */
+        .popup-img-main { 
+            width: 100%; height: 120px; /* Reduzido de 160/180px */
+            object-fit: cover; border-radius: 6px; margin-bottom: 8px; cursor: zoom-in; border: 1px solid #333; display: block; 
+        }
+        
         .popup-gallery { display: flex; gap: 8px; overflow-x: auto; margin-top: 8px; padding-bottom: 5px; }
         .popup-thumb { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; border: 1px solid #444; cursor: pointer; flex-shrink: 0; transition: 0.2s; }
         .popup-thumb:hover { border-color: var(--accent); transform: scale(1.1); }
@@ -217,7 +221,7 @@
                 </div>
 
                 <div style="display:flex; gap: 8px;">
-                    <button class="btn-action" id="btn-medir" onclick="toggleMedicao()" style="flex:1;">📏 Segure e Arraste</button>
+                    <button class="btn-action" id="btn-medir" onclick="toggleMedicao()" style="flex:1;">📏 Ativar (Clique A -> B)</button>
                     <button class="btn-action" onclick="limparMedicao()" style="width: auto; background: #221111; border-color: #442222; color: #ff8888;" title="Limpar Medição">🗑️</button>
                 </div>
                 <div id="distancia-res" style="font-size: 13px; color: #e0aaff; margin-top: 5px; text-align: center; min-height: 18px; font-weight: bold; font-family: monospace;"></div>
@@ -321,11 +325,11 @@
         let iconImage = null;
         let pasteTarget = 'gallery'; 
 
-        // Medição V2
-        let medindo = false;
-        let isDrawing = false;
-        let measureLine = null;
-        let measurePoints = [];
+        // Variáveis de Medição
+        let isMeasuringSession = false; // Ferramenta Ativa
+        let isDrawing = false; // Desenhando no momento
+        let measureLine = null; // Objeto da linha no mapa
+        let measurePoints = []; // Pontos da linha
 
         const PLANES_DATA = [
             { id: 'shadowfell', name: 'Pendor das Sombras', desc: 'Um eco escuro e distorcido do Plano Material. Um lugar de decadência, morte e melancolia.' },
@@ -346,7 +350,7 @@
 
             // Context Menu
             map.on('contextmenu', function(e) {
-                if(medindo) return;
+                if(isMeasuringSession) return;
                 tempCoords = e.latlng;
                 const menu = document.getElementById('ctx-menu');
                 menu.style.display = 'block';
@@ -354,57 +358,68 @@
                 menu.style.top = e.containerPoint.y + 'px';
             });
 
-            map.on('click', () => document.getElementById('ctx-menu').style.display = 'none');
-            
-            // --- EVENTOS DE MEDIÇÃO (DRAG) ---
-            map.on('mousedown', function(e) {
-                if (!medindo) return;
-                
-                // Limpa anterior se começar novo clique
-                if(measureLine) map.removeLayer(measureLine);
-                measurePoints = [e.latlng];
-                isDrawing = true;
-                
-                // Cria a linha inicial
-                measureLine = L.polyline(measurePoints, {color: '#9c27b0', weight: 4, dashArray: '5, 10'}).addTo(map);
-            });
+            // 1. CLIQUE NO MAPA (Lógica Central)
+            map.on('click', function(e) {
+                // Fecha menu de contexto sempre
+                document.getElementById('ctx-menu').style.display = 'none';
 
-            map.on('mousemove', function(e) {
-                if (!medindo || !isDrawing) return;
-
-                const mode = document.querySelector('input[name="measure-mode"]:checked').value;
-
-                if (mode === 'line') {
-                    // Modo Linha: Atualiza apenas o ponto final
-                    const startPoint = measurePoints[0];
-                    measureLine.setLatLngs([startPoint, e.latlng]);
+                // Lógica de Medição
+                if (isMeasuringSession) {
+                    const mode = document.querySelector('input[name="measure-mode"]:checked').value;
                     
-                    const distPixels = map.project(startPoint).distanceTo(map.project(e.latlng));
-                    const distMetros = (distPixels * 0.015).toFixed(1);
-                    document.getElementById('distancia-res').innerText = `${distMetros}m`;
-                } 
-                else {
-                    // Modo Desenho: Adiciona pontos ao rastro
-                    measurePoints.push(e.latlng);
-                    measureLine.setLatLngs(measurePoints);
-                    
-                    // Calcula total
-                    let totalPixels = 0;
-                    for(let i = 0; i < measurePoints.length - 1; i++) {
-                        totalPixels += map.project(measurePoints[i]).distanceTo(map.project(measurePoints[i+1]));
+                    if (!isDrawing) {
+                        // CLIQUE 1: INICIAR
+                        isDrawing = true;
+                        measurePoints = [e.latlng]; // Ponto inicial
+                        
+                        // Limpa linha anterior
+                        if (measureLine) map.removeLayer(measureLine);
+                        
+                        // Cria nova linha
+                        measureLine = L.polyline(measurePoints, {color: '#9c27b0', dashArray: '10, 10'}).addTo(map);
+                        document.getElementById('distancia-res').innerText = "Clique no destino para finalizar...";
+                    } else {
+                        // CLIQUE 2: FINALIZAR
+                        isDrawing = false;
+                        document.getElementById('distancia-res').innerText += " (Finalizado)";
+                        // Auto-desativa a ferramenta como pedido
+                        desativarMedicao(document.getElementById('btn-medir'));
                     }
-                    const distMetros = (totalPixels * 0.015).toFixed(1);
-                    document.getElementById('distancia-res').innerText = `${distMetros}m`;
+                }
+            });
+            
+            // 2. MOVIMENTO DO MOUSE (Atualização da Linha)
+            map.on('mousemove', (e) => {
+                if(isMeasuringSession && isDrawing) {
+                    const mode = document.querySelector('input[name="measure-mode"]:checked').value;
+                    
+                    if (mode === 'line') {
+                        // Modo Reta: Atualiza apenas o último ponto
+                        // Array fica sempre [Inicio, MouseAtual]
+                        measureLine.setLatLngs([measurePoints[0], e.latlng]);
+                        
+                        // Calcula distância reta
+                        const distPixels = map.project(measurePoints[0]).distanceTo(map.project(e.latlng));
+                        const distMetros = (distPixels * 0.015).toFixed(1);
+                        document.getElementById('distancia-res').innerText = `${distMetros}m`;
+                    } 
+                    else {
+                        // Modo Desenho: Adiciona rastro
+                        measurePoints.push(e.latlng);
+                        measureLine.setLatLngs(measurePoints);
+                        
+                        // Calcula distância acumulada
+                        let totalPixels = 0;
+                        for(let i = 0; i < measurePoints.length - 1; i++) {
+                            totalPixels += map.project(measurePoints[i]).distanceTo(map.project(measurePoints[i+1]));
+                        }
+                        const distMetros = (totalPixels * 0.015).toFixed(1);
+                        document.getElementById('distancia-res').innerText = `${distMetros}m`;
+                    }
                 }
             });
 
-            map.on('mouseup', function() {
-                if (medindo && isDrawing) {
-                    isDrawing = false;
-                    // Desativa medição após terminar (solicitação do usuário)
-                    desativarMedicao(document.getElementById('btn-medir'));
-                }
-            });
+            map.on('movestart', () => document.getElementById('ctx-menu').style.display = 'none');
 
             renderPlanes();
             criarMarcador(700, 1100, "Noxus", "O Bastião Imortal.", null, []);
@@ -413,14 +428,14 @@
 
         // --- MEDIÇÃO ---
         function toggleMedicao() {
-            medindo = !medindo;
+            isMeasuringSession = !isMeasuringSession;
             const btn = document.getElementById('btn-medir');
-            if(medindo) {
+            
+            if(isMeasuringSession) {
                 btn.classList.add('active');
                 document.getElementById('map').style.cursor = 'crosshair';
-                document.getElementById('distancia-res').innerText = "Segure e Arraste...";
-                // Desabilita arrastar o mapa para poder desenhar
-                map.dragging.disable();
+                document.getElementById('distancia-res').innerText = "Clique no ponto A para começar...";
+                isDrawing = false;
             } else {
                 desativarMedicao(btn);
             }
@@ -430,15 +445,16 @@
             if(measureLine) map.removeLayer(measureLine);
             measureLine = null;
             measurePoints = [];
-            document.getElementById('distancia-res').innerText = "";
+            isDrawing = false;
+            document.getElementById('distancia-res').innerText = isMeasuringSession ? "Clique no ponto A..." : "";
         }
 
         function desativarMedicao(btn) {
-            medindo = false;
+            isMeasuringSession = false;
             isDrawing = false;
             btn.classList.remove('active');
             document.getElementById('map').style.cursor = 'default';
-            map.dragging.enable(); // Reabilita arrastar o mapa
+            // Mantém o texto do resultado na tela até limpar
         }
 
         // --- PINS & MODAL ---
