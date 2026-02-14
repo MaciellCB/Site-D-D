@@ -3337,3 +3337,82 @@ window.addEventListener('sheet-updated', () => {
         }
     }
 });
+
+
+/* =============================================================
+   SISTEMA DE MAPA (LEAFLET)
+============================================================= */
+let mapInstance = null; // Variável global para guardar o mapa
+
+function abrirMapaMundi() {
+    // 1. Fecha o popup da engrenagem
+    document.getElementById('popup-config-foto').style.display = 'none';
+
+    // 2. Mostra o overlay do mapa
+    const overlay = document.getElementById('mapa-overlay');
+    overlay.style.display = 'flex';
+
+    // 3. Inicializa o mapa apenas na primeira vez
+    if (!mapInstance) {
+        initLeafletMap();
+    } else {
+        // Se já existe, apenas recalcula o tamanho (bug comum do leaflet em elementos hidden)
+        setTimeout(() => {
+            mapInstance.invalidateSize();
+        }, 100);
+    }
+}
+
+function fecharMapaMundi() {
+    document.getElementById('mapa-overlay').style.display = 'none';
+}
+
+function initLeafletMap() {
+    // Configurações da imagem
+    // IMPORTANTE: Coloque sua imagem na pasta correta e ajuste o nome abaixo
+    const imageUrl = 'img/imagem-no-site/mapa-runeterra.jpg'; 
+    
+    // Tamanho original da imagem (clique direito no arquivo -> propriedades -> detalhes)
+    // Se não souber, chute valores altos como 2000x2000, mas o ideal é ser exato
+    const imageWidth = 1920; 
+    const imageHeight = 1080;
+
+    // Cria o mapa
+    mapInstance = L.map('leaflet-map-container', {
+        crs: L.CRS.Simple, // Sistema de coordenadas simples (plano)
+        minZoom: -2,
+        maxZoom: 2,
+        zoomControl: true
+    });
+
+    const bounds = [[0, 0], [imageHeight, imageWidth]];
+    
+    // Adiciona a imagem
+    L.imageOverlay(imageUrl, bounds).addTo(mapInstance);
+    
+    // Centraliza
+    mapInstance.fitBounds(bounds);
+
+    // --- ADICIONAR PINOS (EXEMPLOS) ---
+    // O formato é [Y (Altura), X (Largura)]
+    // Dica: Clique no mapa e olhe o console para ver as coordenadas (código abaixo)
+    
+    criarPino(700, 1100, "Noxus", "O Bastião Imortal. Império expansionista e militar.");
+    criarPino(650, 450, "Demacia", "Reino da justiça e honra, avesso à magia.");
+    criarPino(300, 950, "Shurima", "O império das areias ressurgido.");
+    criarPino(850, 1600, "Ionia", "As Primeiras Terras. Magia selvagem e equilíbrio.");
+
+    // Evento de clique para descobrir coordenadas (Aparece no Console F12)
+    mapInstance.on('click', function(e){
+        var coord = e.latlng;
+        console.log(`Coordenada: [${coord.lat.toFixed(0)}, ${coord.lng.toFixed(0)}]`);
+    });
+}
+
+function criarPino(y, x, titulo, desc) {
+    // Cria um marcador padrão
+    const marker = L.marker([y, x]).addTo(mapInstance);
+    
+    // Adiciona o popup
+    marker.bindPopup(`<h3>${titulo}</h3><p>${desc}</p>`);
+}

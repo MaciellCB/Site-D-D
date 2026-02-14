@@ -531,3 +531,42 @@ header {
     height: 35px; /* Um pouco menor no celular */
   }
 }
+
+
+/* =============================================================
+   ESTILOS DO MAPA (LEAFLET CUSTOMIZADO)
+============================================================= */
+.leaflet-popup-content-wrapper {
+    background: #151515 !important;
+    border: 1px solid #9c27b0 !important;
+    color: #ddd !important;
+    border-radius: 4px !important;
+}
+
+.leaflet-popup-tip {
+    background: #9c27b0 !important;
+}
+
+.leaflet-popup-content h3 {
+    color: #e0aaff !important;
+    margin: 0 0 5px 0 !important;
+    border-bottom: 1px dashed #333;
+    padding-bottom: 5px;
+    font-size: 16px;
+}
+
+.leaflet-popup-content p {
+    margin: 0 !important;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* Remove botões de zoom padrão feios e deixa clean, se quiser pode manter */
+.leaflet-bar a {
+    background-color: #222 !important;
+    color: #fff !important;
+    border-bottom: 1px solid #444 !important;
+}
+.leaflet-bar a:hover {
+    background-color: #9c27b0 !important;
+}

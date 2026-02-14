@@ -5,8 +5,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Herdeiros do Caos</title>
-
   <link rel="icon" type="image/png" href="img/imagem-no-site/logo.png" />
+  
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <link rel="stylesheet" href="CSS/style.css" />
   <link rel="stylesheet" href="CSS/esquerdaCS.css">
@@ -292,14 +294,14 @@
         </button>
 
         <div id="popup-config-foto" class="popup-config-foto">
-    <button onclick="abrirPortraitOBS()">🔗 Abrir OBS</button>
-    <div style="height: 1px; background: #333; margin: 4px 0;"></div>
-    
-    <button onclick="toggleTracker()">⚔️ Iniciativas</button>
-    
-    <button onclick="abrirHistoricoDados()">🎲 Histórico de Dados</button>
-    <button onclick="abrirAjudaSistema()">❓ Ajuda sobre Sistema</button>
-</div>
+            <button onclick="abrirPortraitOBS()">🔗 Abrir OBS</button>
+            <div style="height: 1px; background: #333; margin: 4px 0;"></div>
+            
+            <button onclick="abrirMapaMundi()">🗺️ Abrir Mapa</button> 
+            <button onclick="toggleTracker()">⚔️ Iniciativas</button>
+            <button onclick="abrirHistoricoDados()">🎲 Histórico de Dados</button>
+            <button onclick="abrirAjudaSistema()">❓ Ajuda sobre Sistema</button>
+        </div>
       </div>
 
       <input type="file" id="input-foto-upload" accept="image/*" style="display: none;" />
@@ -686,6 +688,16 @@
   <script src="JS/HeaderJS.js"></script>
   <script src="JS/MagicSystem.js"></script>
 
+
+  <div id="mapa-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:90000; flex-direction:column;">
+      
+      <div style="height:50px; background:#111; border-bottom:1px solid #333; display:flex; align-items:center; justify-content:space-between; padding:0 20px;">
+          <h3 style="color:#e0aaff; margin:0;">Mapa de Runeterra</h3>
+          <button onclick="fecharMapaMundi()" style="background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">✖</button>
+      </div>
+
+      <div id="leaflet-map-container" style="flex:1; width:100%; height:100%; background:#1a1a1a;"></div>
+  </div>
   <script>
     /* =================================================================
        LÓGICA DO MODO MOBILE
