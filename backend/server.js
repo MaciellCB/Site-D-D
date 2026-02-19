@@ -15,7 +15,10 @@ const io = new Server(server, {
     cors: { origin: "*", methods: ["GET", "POST"] }
 });
 app.use(cors());
-app.use(express.json({ limit: '10mb' }));
+
+// AUMENTADO PARA 50MB PARA AGUENTAR IMAGENS E ÍCONES BASE64 SEM DAR ERRO
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // --- CONEXÃO COM O MONGODB ---
 const mongoURI = process.env.MONGO_URI; 
@@ -41,7 +44,6 @@ const LayoutSchema = new mongoose.Schema({
     uncategorized: [String]
 });
 const Layout = mongoose.model('Layout', LayoutSchema);
-
 
 // --- MODELO DO MAPA (PINS) ---
 const PinSchema = new mongoose.Schema({
@@ -78,7 +80,6 @@ io.on('connection', (socket) => {
 
     // 4. Adição Individual (Rolar Iniciativa/Adicionar Mob)
     socket.on('add_to_tracker', (item) => {
-        // Verifica se já existe para atualizar, senão adiciona
         const idx = serverTrackerList.findIndex(x => x.name === item.name);
         if (idx >= 0) {
             serverTrackerList[idx] = item; 
@@ -191,7 +192,6 @@ app.post('/api/editar-credenciais', async (req, res) => {
 // ROTAS DO MAPA DE RUNETERRA
 // =================================================================
 
-// Buscar todos os marcadores
 app.get('/api/mapa-pins', async (req, res) => {
     try {
         const pins = await Pin.find({});
@@ -199,23 +199,22 @@ app.get('/api/mapa-pins', async (req, res) => {
     } catch (error) { res.status(500).json({ error: 'Erro ao buscar pins' }); }
 });
 
-// Salvar ou Atualizar um marcador
 app.post('/api/mapa-pins', async (req, res) => {
     try {
         await Pin.findOneAndUpdate({ id: req.body.id }, req.body, { upsert: true, new: true });
         res.json({ ok: true });
-    } catch (error) { res.status(500).json({ error: 'Erro ao salvar pin' }); }
+    } catch (error) { 
+        console.error("Erro ao salvar no banco:", error);
+        res.status(500).json({ error: 'Erro ao salvar pin' }); 
+    }
 });
 
-// Deletar um marcador
 app.delete('/api/mapa-pins/:id', async (req, res) => {
     try {
         await Pin.findOneAndDelete({ id: req.params.id });
         res.json({ ok: true });
     } catch (error) { res.status(500).json({ error: 'Erro ao deletar pin' }); }
 });
-
-
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`Rodando na porta ${PORT}`));

@@ -30,7 +30,6 @@
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
         /* ================= SIDEBAR ================= */
-        /* Sidebar agora inicia colada na direita (right: 0) e com bordas retas desse lado */
         .sidebar {
             position: fixed; top: 20px; right: 0; width: 340px; height: calc(100vh - 40px);
             background: var(--bg-panel); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
@@ -38,7 +37,7 @@
             box-shadow: -10px 20px 50px rgba(0,0,0,0.8); z-index: 2000;
             display: flex; flex-direction: column; transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .sidebar.collapsed { transform: translateX(100%); } /* Oculta totalmente na direita */
+        .sidebar.collapsed { transform: translateX(100%); }
 
         .sidebar-toggle {
             position: absolute; left: -40px; top: 20px; width: 40px; height: 40px;
@@ -55,7 +54,6 @@
 
         .sidebar-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
 
-        /* Inputs */
         .input-dark {
             width: 100%; background: #050505 !important; border: 1px solid #444; color: #fff !important;
             padding: 12px; border-radius: 6px; box-sizing: border-box; transition: 0.2s; font-size: 14px;
@@ -70,7 +68,6 @@
         .search-options label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
         .search-options input { accent-color: var(--accent); }
 
-        /* Lista de Locais */
         .locais-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; min-height: 150px; }
         .location-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
         .location-item {
@@ -80,12 +77,10 @@
         .location-item:hover { border-color: #555; background: rgba(255,255,255,0.08); transform: translateX(2px); }
         .loc-icon-small { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; background: #000; border: 1px solid #555; }
 
-        /* Ferramentas de Medição */
         .measure-tools { display: flex; flex-direction: column; gap: 10px; background: #111; padding: 10px; border-radius: 8px; border: 1px solid #333; }
         .measure-options { display: flex; gap: 10px; font-size: 11px; color: #ccc; justify-content: center; }
         .measure-options label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
         
-        /* Botões */
         .btn-action {
             width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #ccc;
             border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 13px;
@@ -98,7 +93,6 @@
         .btn-action.danger:hover { background: var(--danger); color: white; }
         .btn-action.active { background: var(--accent); color: #fff; border-color: #d05ce3; }
 
-        /* Planos (Accordion) */
         .planes-section { border-top: 1px solid var(--border); padding-top: 15px; margin-top: auto; flex-shrink: 0; }
         .plane-card { background: #111; border: 1px solid #333; border-radius: 6px; margin-bottom: 5px; overflow: hidden; transition: 0.2s; }
         .plane-header { padding: 10px; cursor: pointer; font-weight: bold; font-size: 12px; color: #888; display: flex; justify-content: space-between; background: #1a1a1a; transition: 0.2s; }
@@ -107,7 +101,6 @@
         .plane-card.open .plane-body { display: block; animation: fadeIn 0.3s; }
         .plane-card.open .plane-header { color: var(--accent); background: #222; border-bottom: 1px solid #333; }
 
-        /* Context Menu & Modals */
         #ctx-menu {
             position: absolute; background: #151515; border: 1px solid var(--accent);
             border-radius: 6px; padding: 5px 0; min-width: 180px; z-index: 9999; display: none;
@@ -129,7 +122,6 @@
         .modal-body { padding: 25px; overflow-y: auto; max-height: 70vh; display: flex; flex-direction: column; gap: 20px; }
         .modal-footer { padding: 20px; background: #151515; border-top: 1px solid #333; display: flex; justify-content: space-between; gap: 10px; border-radius: 0 0 12px 12px; }
 
-        /* Upload Area Focusable */
         .upload-area {
             border: 2px dashed #444; background: #080808; border-radius: 8px; padding: 0;
             text-align: center; cursor: pointer; transition: 0.2s; position: relative; overflow: hidden;
@@ -145,7 +137,6 @@
         .upload-placeholder { padding: 20px; pointer-events: none; }
         .preview-img { width: 100%; height: 100%; object-fit: cover; display:block; }
 
-        /* Gallery */
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; margin-top: 10px; }
         .gallery-item { height: 90px; border-radius: 6px; border: 1px solid #444; overflow: hidden; position: relative; transition: transform 0.2s; }
         .gallery-item:hover { border-color: var(--accent); transform: scale(1.05); }
@@ -156,30 +147,33 @@
             display: flex; align-items: center; justify-content: center; font-weight: bold;
         }
 
-        /* Custom Popup Leaflet */
         .leaflet-popup-content-wrapper { background: #151515; border: 1px solid var(--accent); color: #ddd; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
         .leaflet-popup-tip { background: var(--accent); }
         .leaflet-popup-content { margin: 15px; width: 320px !important; }
         
-        .popup-header { display:flex; align-items:center; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; margin-bottom: 12px; }
+        .popup-header { display:flex; align-items:center; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; margin-bottom: 10px; }
         .popup-header-icon { width: 32px; height: 32px; border-radius: 50%; object-fit:cover; border:1px solid #555; background:#000; }
         .popup-title { font-weight: bold; color: var(--accent); font-size: 15px; flex:1; text-transform: uppercase; }
         .popup-edit-btn { background: none; border: none; color: #777; cursor: pointer; font-size: 16px; transition: 0.2s; }
         .popup-edit-btn:hover { color: #fff; transform: scale(1.1); }
 
-        /* === AJUSTES PEDIDOS NO POPUP E ICONE === */
-        
-        /* Agora a descrição permite Pular Linhas, tem mais altura e preserva formato! */
+        /* === SISTEMA DE EXPANDIR E ENCOLHER O LORE === */
         .popup-desc { 
             font-size: 14px; color: #ccc; line-height: 1.6; 
-            margin-bottom: 20px; 
-            padding-bottom: 10px; border-bottom: 1px dashed #333;
-            max-height: 250px; /* Aumentado o espaço para o texto */
-            overflow-y: auto; 
-            white-space: pre-wrap; /* Mantém as quebras de linha que o usuário digitou */
+            margin-bottom: 5px; padding-bottom: 10px; border-bottom: 1px dashed #333;
+            max-height: 120px; /* Limite de altura base */
+            overflow: hidden; /* Esconde o que passar do limite */
+            white-space: pre-wrap; transition: max-height 0.3s ease;
         }
+        .popup-desc.expanded {
+            max-height: 2000px; /* Abre para mostrar tudo */
+        }
+        .btn-toggle-desc {
+            background: none; border: none; color: var(--accent); cursor: pointer; font-weight: bold;
+            font-size: 12px; margin-bottom: 15px; padding: 0; display: inline-block;
+        }
+        .btn-toggle-desc:hover { color: #fff; text-decoration: underline; }
         
-        /* Imagem principal do Popup */
         .popup-img-main { 
             width: 100%; height: 140px; 
             object-fit: cover; border-radius: 6px; margin-bottom: 8px; cursor: pointer; border: 1px solid #333; display: block; 
@@ -191,18 +185,12 @@
         .popup-thumb { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; border: 1px solid #444; cursor: pointer; flex-shrink: 0; transition: 0.2s; }
         .popup-thumb:hover { border-color: var(--accent); transform: scale(1.1); }
 
-        /* Icon Marker Modificado: Fundo preto, imagem um pouco menor centralizada */
         .custom-map-icon { 
             border: 2px solid #fff; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.8); 
-            transition: transform 0.2s; 
-            background: #111; 
-            box-sizing: border-box;
-            padding: 4px; /* Isso faz a imagem ficar menor dentro da borda */
-            object-fit: contain !important; /* Encaixa a imagem inteira, sem cortar */
+            transition: transform 0.2s; background: #111; box-sizing: border-box; padding: 4px; object-fit: contain !important; 
         }
         .custom-map-icon:hover { transform: scale(1.3); border-color: var(--accent); z-index: 1000 !important; }
 
-        /* Lightbox */
         .lightbox { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index: 10000; display:none; justify-content:center; align-items:center; cursor: zoom-out; animation: fadeIn 0.2s; }
         .lightbox img { max-width: 95%; max-height: 95%; border: 2px solid #333; box-shadow: 0 0 50px black; border-radius: 4px; }
 
@@ -336,7 +324,6 @@
         let iconImage = null;
         let pasteTarget = 'gallery'; 
 
-        // Variáveis de Medição
         let isMeasuringSession = false; 
         let isDrawing = false; 
         let measureLine = null; 
@@ -357,12 +344,11 @@
             const bounds = [[0,0], [h,w]];
             L.imageOverlay(IMG_MAPA, bounds).addTo(map);
             
-            // Centralizando o mapa no carregamento inicial (metade da altura e metade da largura)
-            map.setView([h/2, w/2], 0); 
+            // Usando fitBounds para enquadrar a imagem inteira na tela automaticamente
+            map.fitBounds(bounds);
             
             L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-            // Context Menu
             map.on('contextmenu', function(e) {
                 if(isMeasuringSession) return;
                 tempCoords = e.latlng;
@@ -419,7 +405,6 @@
 
             renderPlanes();
             
-            // BUSCAR MARCADORES SALVOS NO BANCO DE DADOS
             fetch('/api/mapa-pins')
                 .then(res => res.json())
                 .then(pinsSalvos => {
@@ -430,7 +415,6 @@
                 .catch(err => console.error("Erro ao carregar mapa:", err));
         };
 
-        // --- MEDIÇÃO ---
         function toggleMedicao() {
             isMeasuringSession = !isMeasuringSession;
             const btn = document.getElementById('btn-medir');
@@ -460,7 +444,6 @@
             document.getElementById('map').style.cursor = 'default';
         }
 
-        // --- PINS & MODAL ---
         function abrirModal(pinId) {
             document.getElementById('ctx-menu').style.display = 'none';
             document.getElementById('modal-form').style.display = 'flex';
@@ -546,18 +529,18 @@
                 pin.nome = nome;
                 pin.desc = desc;
                 pin.icon = finalIcon;
-                pin.gallery = galleryImages;
+                pin.gallery = [...galleryImages]; // Copia o array para evitar bug de referência
                 refreshMarkerVisuals(pin);
                 pinData = pin;
             } else {
                 if(!tempCoords) { alert("Erro de posição."); return; }
                 const novoPinId = Date.now();
-                criarMarcador(tempCoords.lat, tempCoords.lng, nome, desc, finalIcon, galleryImages, novoPinId);
+                criarMarcador(tempCoords.lat, tempCoords.lng, nome, desc, finalIcon, [...galleryImages], novoPinId);
                 pinData = markers.find(m => m.id === novoPinId);
             }
 
             try {
-                await fetch('/api/mapa-pins', {
+                const res = await fetch('/api/mapa-pins', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -570,7 +553,10 @@
                         gallery: pinData.gallery
                     })
                 });
-            } catch(e) { console.error("Erro ao salvar no banco", e); }
+                if(!res.ok) alert("Houve um erro no servidor ao salvar (talvez as imagens sejam muito grandes).");
+            } catch(e) { 
+                console.error("Erro ao salvar no banco", e); 
+            }
 
             fecharModal();
             atualizarListaLateral();
@@ -596,10 +582,22 @@
             pin.marker.setPopupContent(gerarPopupContent(pin));
         }
 
-        // Função global para trocar a imagem principal quando clica num thumbnail
         window.trocarImagemPrincipal = function(pinId, imgSrc) {
             const mainImg = document.getElementById(`main-img-${pinId}`);
             if(mainImg) mainImg.src = imgSrc;
+        };
+
+        // Função de expandir/encolher o texto do Lore
+        window.toggleDesc = function(pinId) {
+            const desc = document.getElementById(`desc-text-${pinId}`);
+            const btn = document.getElementById(`desc-btn-${pinId}`);
+            if(desc.classList.contains('expanded')) {
+                desc.classList.remove('expanded');
+                btn.innerText = 'Ler mais ▼';
+            } else {
+                desc.classList.add('expanded');
+                btn.innerText = 'Mostrar menos ▲';
+            }
         };
 
         function gerarPopupContent(pin) {
@@ -609,24 +607,27 @@
                     <span class="popup-title">${pin.nome}</span>
                     <button class="popup-edit-btn" onclick="abrirModal(${pin.id})" title="Editar Local">✏️</button>
                 </div>
-                <div class="popup-desc">${pin.desc || "Sem descrição."}</div>
             `;
             
-            // Juntar o ícone com a galeria e remover duplicados para formar a lista de imagens exibidas
+            // Adiciona a div de descrição
+            let descHtml = pin.desc || "Sem descrição.";
+            html += `<div class="popup-desc" id="desc-text-${pin.id}">${descHtml}</div>`;
+            
+            // Se o texto for grande (mais de 150 caracteres ou muitas quebras de linha), mostra o botão "Ler mais"
+            let isLongText = (descHtml.length > 150) || (descHtml.split('\n').length > 4);
+            if (isLongText) {
+                html += `<button class="btn-toggle-desc" id="desc-btn-${pin.id}" onclick="toggleDesc(${pin.id})">Ler mais ▼</button>`;
+            }
+            
             let todasImagens = [];
             if(pin.icon !== IMG_DEFAULT_ICON) todasImagens.push(pin.icon);
             if(pin.gallery && pin.gallery.length > 0) todasImagens.push(...pin.gallery);
             
-            // Remove duplicados (caso o ícone seja a mesma foto da galeria)
             todasImagens = [...new Set(todasImagens)];
-            
-            // Se o local não tem imagens customizadas, colocamos o ícone padrão na lista
             if(todasImagens.length === 0) todasImagens.push(IMG_DEFAULT_ICON);
 
-            // Imagem Principal (A primeira da lista sempre)
             html += `<img src="${todasImagens[0]}" id="main-img-${pin.id}" class="popup-img-main" onclick="verFull(this.src)">`;
 
-            // Thumbnails (Apenas aparece se tiver mais de 1 imagem no total)
             if(todasImagens.length > 1) {
                 html += `<div class="popup-gallery">`;
                 todasImagens.forEach(img => { 
@@ -638,7 +639,6 @@
             return html;
         }
 
-        // --- UPLOAD & PASTE SYSTEM (Lógica de 2 Cliques) ---
         function setPasteTarget(target) {
             pasteTarget = target;
             document.getElementById('area-icon').classList.remove('paste-active');
@@ -646,29 +646,19 @@
             document.getElementById(`area-${target}`).classList.add('paste-active');
         }
 
-        // Evento Área do Ícone
         document.getElementById('area-icon').addEventListener('click', (e) => {
-            if (pasteTarget !== 'icon') {
-                setPasteTarget('icon'); // Clique 1: Seleciona a área
-            } else {
-                document.getElementById('file-icon').click(); // Clique 2: Abre a janela de arquivo
-            }
+            if (pasteTarget !== 'icon') { setPasteTarget('icon'); } 
+            else { document.getElementById('file-icon').click(); }
         });
-        
         document.getElementById('file-icon').addEventListener('change', (e) => {
             const file = e.target.files[0];
             if(file) lerArquivo(file, (res) => { iconImage = res; renderFormVisuals(); });
         });
 
-        // Evento Área da Galeria
         document.getElementById('area-gallery').addEventListener('click', (e) => {
-            if (pasteTarget !== 'gallery') {
-                setPasteTarget('gallery'); // Clique 1: Seleciona a área
-            } else {
-                document.getElementById('file-gallery').click(); // Clique 2: Abre a janela de arquivo
-            }
+            if (pasteTarget !== 'gallery') { setPasteTarget('gallery'); } 
+            else { document.getElementById('file-gallery').click(); }
         });
-        
         document.getElementById('file-gallery').addEventListener('change', (e) => {
             Array.from(e.target.files).forEach(file => { 
                 lerArquivo(file, (res) => { galleryImages.push(res); renderFormVisuals(); }); 
@@ -702,7 +692,6 @@
             renderFormVisuals();
         };
 
-        // --- INTERFACE GERAL ---
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
         
         function atualizarListaLateral() {
@@ -715,17 +704,13 @@
                 let match = false;
                 if(filterType === 'nome') match = pin.nome.toLowerCase().includes(termo);
                 else match = (pin.desc || "").toLowerCase().includes(termo);
-                
                 if(!match && termo !== "") return;
                 
                 const li = document.createElement('li');
                 li.className = 'location-item';
                 const iconSrc = pin.icon || IMG_DEFAULT_ICON;
                 li.innerHTML = `<img src="${iconSrc}" class="loc-icon-small"> <span>${pin.nome}</span>`;
-                li.onclick = () => { 
-                    map.flyTo([pin.lat, pin.lng], 1); 
-                    pin.marker.openPopup(); 
-                };
+                li.onclick = () => { map.flyTo([pin.lat, pin.lng], 1); pin.marker.openPopup(); };
                 lista.appendChild(li);
             });
         }
