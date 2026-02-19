@@ -30,14 +30,15 @@
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
         /* ================= SIDEBAR ================= */
+        /* Sidebar agora inicia colada na direita (right: 0) e com bordas retas desse lado */
         .sidebar {
-            position: fixed; top: 20px; right: 20px; width: 340px; height: calc(100vh - 40px);
+            position: fixed; top: 20px; right: 0; width: 340px; height: calc(100vh - 40px);
             background: var(--bg-panel); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid var(--border); border-radius: 12px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.9); z-index: 2000;
+            border: 1px solid var(--border); border-right: none; border-radius: 12px 0 0 12px;
+            box-shadow: -10px 20px 50px rgba(0,0,0,0.8); z-index: 2000;
             display: flex; flex-direction: column; transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .sidebar.collapsed { transform: translateX(380px); }
+        .sidebar.collapsed { transform: translateX(100%); } /* Oculta totalmente na direita */
 
         .sidebar-toggle {
             position: absolute; left: -40px; top: 20px; width: 40px; height: 40px;
@@ -48,7 +49,7 @@
         .sidebar-toggle:hover { color: #fff; background: var(--accent); border-color: var(--accent); padding-right: 5px; }
 
         .sidebar-header {
-            padding: 20px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); border-radius: 12px 12px 0 0; flex-shrink: 0;
+            padding: 20px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); border-radius: 12px 0 0 0; flex-shrink: 0;
         }
         .sidebar-header h2 { margin: 0; font-size: 16px; color: #fff; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; display:flex; align-items:center; gap:10px; }
 
@@ -139,7 +140,7 @@
         .upload-area.has-file { border-style: solid; border-color: #555; }
         .upload-area.paste-active { border-color: var(--accent); box-shadow: 0 0 15px rgba(156, 39, 176, 0.3); background: #150515; }
         .upload-area.paste-active::after {
-            content: 'CTRL+V ATIVO'; position: absolute; bottom: 5px; font-size: 10px; color: var(--accent); font-weight: bold; background: rgba(0,0,0,0.8); padding: 2px 6px; border-radius: 4px;
+            content: 'SELECIONADO (CLIQUE P/ ABRIR OU CTRL+V)'; position: absolute; bottom: 5px; font-size: 9px; color: var(--accent); font-weight: bold; background: rgba(0,0,0,0.8); padding: 2px 6px; border-radius: 4px; width: calc(100% - 12px); box-sizing: border-box; text-align: center;
         }
         .upload-placeholder { padding: 20px; pointer-events: none; }
         .preview-img { width: 100%; height: 100%; object-fit: cover; display:block; }
@@ -166,28 +167,38 @@
         .popup-edit-btn { background: none; border: none; color: #777; cursor: pointer; font-size: 16px; transition: 0.2s; }
         .popup-edit-btn:hover { color: #fff; transform: scale(1.1); }
 
-        /* === AJUSTES PEDIDOS NO POPUP === */
+        /* === AJUSTES PEDIDOS NO POPUP E ICONE === */
+        
+        /* Agora a descrição permite Pular Linhas, tem mais altura e preserva formato! */
         .popup-desc { 
             font-size: 14px; color: #ccc; line-height: 1.6; 
-            margin-bottom: 20px; /* Mais espaço pra baixo antes da foto */
+            margin-bottom: 20px; 
             padding-bottom: 10px; border-bottom: 1px dashed #333;
-            max-height: 200px; overflow-y: auto; 
+            max-height: 250px; /* Aumentado o espaço para o texto */
+            overflow-y: auto; 
+            white-space: pre-wrap; /* Mantém as quebras de linha que o usuário digitou */
         }
         
-        /* Imagem principal menor */
+        /* Imagem principal do Popup */
         .popup-img-main { 
-            width: 100%; height: 120px; /* Reduzido de 160/180px */
-            object-fit: cover; border-radius: 6px; margin-bottom: 8px; cursor: zoom-in; border: 1px solid #333; display: block; 
+            width: 100%; height: 140px; 
+            object-fit: cover; border-radius: 6px; margin-bottom: 8px; cursor: pointer; border: 1px solid #333; display: block; 
+            transition: 0.2s;
         }
+        .popup-img-main:hover { border-color: var(--accent); }
         
         .popup-gallery { display: flex; gap: 8px; overflow-x: auto; margin-top: 8px; padding-bottom: 5px; }
         .popup-thumb { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; border: 1px solid #444; cursor: pointer; flex-shrink: 0; transition: 0.2s; }
         .popup-thumb:hover { border-color: var(--accent); transform: scale(1.1); }
 
-        /* Icon Marker */
+        /* Icon Marker Modificado: Fundo preto, imagem um pouco menor centralizada */
         .custom-map-icon { 
             border: 2px solid #fff; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.8); 
-            transition: transform 0.2s; background: #000; 
+            transition: transform 0.2s; 
+            background: #111; 
+            box-sizing: border-box;
+            padding: 4px; /* Isso faz a imagem ficar menor dentro da borda */
+            object-fit: contain !important; /* Encaixa a imagem inteira, sem cortar */
         }
         .custom-map-icon:hover { transform: scale(1.3); border-color: var(--accent); z-index: 1000 !important; }
 
@@ -203,7 +214,7 @@
 
     <div id="map"></div>
 
-    <div class="sidebar" id="sidebar">
+    <div class="sidebar collapsed" id="sidebar">
         <div class="sidebar-toggle" onclick="toggleSidebar()">⚙</div>
         
         <div class="sidebar-header">
@@ -272,10 +283,10 @@
                 <div style="display:flex; gap:20px;">
                     <div style="flex: 0 0 130px;">
                         <label style="display:block; color:#e0aaff; font-size:12px; margin-bottom:5px; font-weight:bold;">ÍCONE (Clique p/ Focar)</label>
-                        <div class="upload-area" id="area-icon" onclick="setPasteTarget('icon')" title="Clique aqui, depois Ctrl+V para colar">
+                        <div class="upload-area" id="area-icon" title="Clique para selecionar, e depois clique de novo para abrir">
                             <div class="upload-placeholder" id="placeholder-icon" style="display:flex; flex-direction:column; align-items:center;">
                                 <span style="font-size:24px; margin-bottom:5px;">📍</span>
-                                <span style="font-size:11px; color:#666;">Clique p/ Upload<br>ou Cole</span>
+                                <span style="font-size:11px; color:#666;">Clique p/ Selecionar</span>
                             </div>
                             <img id="preview-icon" class="preview-img" style="display:none;">
                         </div>
@@ -284,9 +295,9 @@
 
                     <div style="flex:1;">
                         <label style="display:block; color:#aaa; font-size:12px; margin-bottom:5px; font-weight:bold;">GALERIA (Clique p/ Focar)</label>
-                        <div class="upload-area" id="area-gallery" style="height:70px; min-height:auto; border-style:dashed;" onclick="setPasteTarget('gallery')">
+                        <div class="upload-area" id="area-gallery" style="height:70px; min-height:auto; border-style:dashed;">
                             <div class="upload-placeholder" style="padding:10px;">
-                                <span style="font-size:12px; color:#888;">Clique aqui e use <strong>Ctrl+V</strong> ou selecione arquivos</span>
+                                <span style="font-size:12px; color:#888;">Clique aqui para selecionar. Após ativo, use <strong>Ctrl+V</strong> ou Clique novamente</span>
                             </div>
                         </div>
                         <div class="gallery-grid" id="gallery-container"></div>
@@ -296,7 +307,7 @@
 
                 <div>
                     <label style="display:block; color:#aaa; font-size:12px; margin-bottom:5px; font-weight:bold;">DESCRIÇÃO / LORE</label>
-                    <textarea id="input-desc" class="input-dark" style="height:120px;" placeholder="História, perigos, NPCs importantes..."></textarea>
+                    <textarea id="input-desc" class="input-dark" style="height:120px;" placeholder="História, perigos, NPCs importantes... (Aperte Enter para pular linha!)"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
@@ -326,10 +337,10 @@
         let pasteTarget = 'gallery'; 
 
         // Variáveis de Medição
-        let isMeasuringSession = false; // Ferramenta Ativa
-        let isDrawing = false; // Desenhando no momento
-        let measureLine = null; // Objeto da linha no mapa
-        let measurePoints = []; // Pontos da linha
+        let isMeasuringSession = false; 
+        let isDrawing = false; 
+        let measureLine = null; 
+        let measurePoints = []; 
 
         const PLANES_DATA = [
             { id: 'shadowfell', name: 'Pendor das Sombras', desc: 'Um eco escuro e distorcido do Plano Material. Um lugar de decadência, morte e melancolia.' },
@@ -345,7 +356,10 @@
             const w = 1920, h = 1080;
             const bounds = [[0,0], [h,w]];
             L.imageOverlay(IMG_MAPA, bounds).addTo(map);
-            map.fitBounds(bounds);
+            
+            // Centralizando o mapa no carregamento inicial (metade da altura e metade da largura)
+            map.setView([h/2, w/2], 0); 
+            
             L.control.zoom({ position: 'bottomright' }).addTo(map);
 
             // Context Menu
@@ -358,57 +372,39 @@
                 menu.style.top = e.containerPoint.y + 'px';
             });
 
-            // 1. CLIQUE NO MAPA (Lógica Central)
             map.on('click', function(e) {
-                // Fecha menu de contexto sempre
                 document.getElementById('ctx-menu').style.display = 'none';
 
-                // Lógica de Medição
                 if (isMeasuringSession) {
                     const mode = document.querySelector('input[name="measure-mode"]:checked').value;
                     
                     if (!isDrawing) {
-                        // CLIQUE 1: INICIAR
                         isDrawing = true;
-                        measurePoints = [e.latlng]; // Ponto inicial
-                        
-                        // Limpa linha anterior
+                        measurePoints = [e.latlng]; 
                         if (measureLine) map.removeLayer(measureLine);
-                        
-                        // Cria nova linha
                         measureLine = L.polyline(measurePoints, {color: '#9c27b0', dashArray: '10, 10'}).addTo(map);
                         document.getElementById('distancia-res').innerText = "Clique no destino para finalizar...";
                     } else {
-                        // CLIQUE 2: FINALIZAR
                         isDrawing = false;
                         document.getElementById('distancia-res').innerText += " (Finalizado)";
-                        // Auto-desativa a ferramenta como pedido
                         desativarMedicao(document.getElementById('btn-medir'));
                     }
                 }
             });
             
-            // 2. MOVIMENTO DO MOUSE (Atualização da Linha)
             map.on('mousemove', (e) => {
                 if(isMeasuringSession && isDrawing) {
                     const mode = document.querySelector('input[name="measure-mode"]:checked').value;
                     
                     if (mode === 'line') {
-                        // Modo Reta: Atualiza apenas o último ponto
-                        // Array fica sempre [Inicio, MouseAtual]
                         measureLine.setLatLngs([measurePoints[0], e.latlng]);
-                        
-                        // Calcula distância reta
                         const distPixels = map.project(measurePoints[0]).distanceTo(map.project(e.latlng));
                         const distMetros = (distPixels * 0.015).toFixed(1);
                         document.getElementById('distancia-res').innerText = `${distMetros}m`;
                     } 
                     else {
-                        // Modo Desenho: Adiciona rastro
                         measurePoints.push(e.latlng);
                         measureLine.setLatLngs(measurePoints);
-                        
-                        // Calcula distância acumulada
                         let totalPixels = 0;
                         for(let i = 0; i < measurePoints.length - 1; i++) {
                             totalPixels += map.project(measurePoints[i]).distanceTo(map.project(measurePoints[i+1]));
@@ -428,7 +424,6 @@
                 .then(res => res.json())
                 .then(pinsSalvos => {
                     pinsSalvos.forEach(p => {
-                        // Passamos o ID salvo no banco para não gerar um novo
                         criarMarcador(p.lat, p.lng, p.nome, p.desc, p.icon, p.gallery, p.id);
                     });
                 })
@@ -463,7 +458,6 @@
             isDrawing = false;
             btn.classList.remove('active');
             document.getElementById('map').style.cursor = 'default';
-            // Mantém o texto do resultado na tela até limpar
         }
 
         // --- PINS & MODAL ---
@@ -532,10 +526,8 @@
                     atualizarListaLateral();
                 }
                 
-                // DELETAR NO BANCO DE DADOS
-                try {
-                    await fetch(`/api/mapa-pins/${editId}`, { method: 'DELETE' });
-                } catch(e) { console.error("Erro ao deletar no banco", e); }
+                try { await fetch(`/api/mapa-pins/${editId}`, { method: 'DELETE' }); } 
+                catch(e) { console.error("Erro ao deletar no banco", e); }
 
                 fecharModal();
             }
@@ -564,7 +556,6 @@
                 pinData = markers.find(m => m.id === novoPinId);
             }
 
-            // ENVIAR PARA O BANCO DE DADOS
             try {
                 await fetch('/api/mapa-pins', {
                     method: 'POST',
@@ -587,56 +578,67 @@
 
         function criarMarcador(lat, lng, nome, desc, iconSrc, galeria, idExistente = null) {
             const safeIcon = iconSrc || IMG_DEFAULT_ICON;
-            const pinId = idExistente || Date.now(); // Usa o ID do banco ou cria um novo
-            const iconHtml = `<img src="${safeIcon}" class="custom-map-icon" style="width:40px; height:40px; object-fit:cover;">`;
+            const pinId = idExistente || Date.now(); 
+            const iconHtml = `<img src="${safeIcon}" class="custom-map-icon" style="width:40px; height:40px;">`;
             const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -20] });
             const marker = L.marker([lat, lng], {icon: customIcon}).addTo(map);
             
-            const pinData = { id: pinId, marker, lat, lng, nome, desc, icon: safeIcon, gallery: galeria };
+            const pinData = { id: pinId, marker, lat, lng, nome, desc, icon: safeIcon, gallery: galeria || [] };
             marker.bindPopup(gerarPopupContent(pinData));
             markers.push(pinData);
             atualizarListaLateral();
         }
 
         function refreshMarkerVisuals(pin) {
-            const iconHtml = `<img src="${pin.icon}" class="custom-map-icon" style="width:40px; height:40px; object-fit:cover;">`;
+            const iconHtml = `<img src="${pin.icon}" class="custom-map-icon" style="width:40px; height:40px;">`;
             const newIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -20] });
             pin.marker.setIcon(newIcon);
             pin.marker.setPopupContent(gerarPopupContent(pin));
         }
 
+        // Função global para trocar a imagem principal quando clica num thumbnail
+        window.trocarImagemPrincipal = function(pinId, imgSrc) {
+            const mainImg = document.getElementById(`main-img-${pinId}`);
+            if(mainImg) mainImg.src = imgSrc;
+        };
+
         function gerarPopupContent(pin) {
-            // Header (Ícone + Nome + Botão Edit)
             let html = `
                 <div class="popup-header">
                     <img src="${pin.icon}" class="popup-header-icon">
                     <span class="popup-title">${pin.nome}</span>
                     <button class="popup-edit-btn" onclick="abrirModal(${pin.id})" title="Editar Local">✏️</button>
                 </div>
+                <div class="popup-desc">${pin.desc || "Sem descrição."}</div>
             `;
             
-            // 1. Descrição (Com destaque e altura máxima)
-            html += `<div class="popup-desc">${pin.desc || "Sem descrição."}</div>`;
+            // Juntar o ícone com a galeria e remover duplicados para formar a lista de imagens exibidas
+            let todasImagens = [];
+            if(pin.icon !== IMG_DEFAULT_ICON) todasImagens.push(pin.icon);
+            if(pin.gallery && pin.gallery.length > 0) todasImagens.push(...pin.gallery);
+            
+            // Remove duplicados (caso o ícone seja a mesma foto da galeria)
+            todasImagens = [...new Set(todasImagens)];
+            
+            // Se o local não tem imagens customizadas, colocamos o ícone padrão na lista
+            if(todasImagens.length === 0) todasImagens.push(IMG_DEFAULT_ICON);
 
-            // 2. Imagem Principal (Se tiver galeria ou ícone customizado)
-            if(pin.gallery && pin.gallery.length > 0) {
-                html += `<img src="${pin.gallery[0]}" class="popup-img-main" onclick="verFull('${pin.gallery[0]}')">`;
-            } else if (pin.icon !== IMG_DEFAULT_ICON) {
-                html += `<img src="${pin.icon}" class="popup-img-main" onclick="verFull('${pin.icon}')">`;
-            }
+            // Imagem Principal (A primeira da lista sempre)
+            html += `<img src="${todasImagens[0]}" id="main-img-${pin.id}" class="popup-img-main" onclick="verFull(this.src)">`;
 
-            // 3. Thumbnails da Galeria
-            if(pin.gallery && pin.gallery.length > 1) {
+            // Thumbnails (Apenas aparece se tiver mais de 1 imagem no total)
+            if(todasImagens.length > 1) {
                 html += `<div class="popup-gallery">`;
-                pin.gallery.forEach(img => { 
-                    html += `<img src="${img}" class="popup-thumb" onclick="verFull('${img}')">`; 
+                todasImagens.forEach(img => { 
+                    html += `<img src="${img}" class="popup-thumb" onclick="trocarImagemPrincipal(${pin.id}, '${img}')">`; 
                 });
                 html += `</div>`;
             }
+
             return html;
         }
 
-        // --- UPLOAD & PASTE SYSTEM ---
+        // --- UPLOAD & PASTE SYSTEM (Lógica de 2 Cliques) ---
         function setPasteTarget(target) {
             pasteTarget = target;
             document.getElementById('area-icon').classList.remove('paste-active');
@@ -644,18 +646,29 @@
             document.getElementById(`area-${target}`).classList.add('paste-active');
         }
 
+        // Evento Área do Ícone
         document.getElementById('area-icon').addEventListener('click', (e) => {
-            setPasteTarget('icon');
-            if(e.detail !== 0) document.getElementById('file-icon').click(); 
+            if (pasteTarget !== 'icon') {
+                setPasteTarget('icon'); // Clique 1: Seleciona a área
+            } else {
+                document.getElementById('file-icon').click(); // Clique 2: Abre a janela de arquivo
+            }
         });
+        
         document.getElementById('file-icon').addEventListener('change', (e) => {
             const file = e.target.files[0];
             if(file) lerArquivo(file, (res) => { iconImage = res; renderFormVisuals(); });
         });
+
+        // Evento Área da Galeria
         document.getElementById('area-gallery').addEventListener('click', (e) => {
-            setPasteTarget('gallery');
-            if(e.detail !== 0) document.getElementById('file-gallery').click();
+            if (pasteTarget !== 'gallery') {
+                setPasteTarget('gallery'); // Clique 1: Seleciona a área
+            } else {
+                document.getElementById('file-gallery').click(); // Clique 2: Abre a janela de arquivo
+            }
         });
+        
         document.getElementById('file-gallery').addEventListener('change', (e) => {
             Array.from(e.target.files).forEach(file => { 
                 lerArquivo(file, (res) => { galleryImages.push(res); renderFormVisuals(); }); 
