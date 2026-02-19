@@ -7,7 +7,9 @@
     <title>Painel do Mestre - Gerenciamento</title>
     <link rel="stylesheet" href="CSS/style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
-
+    
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    
     <style>
         /* --- ESTILOS GERAIS --- */
         body {
@@ -510,6 +512,8 @@
             const API_URL = 'https://dandd-chan.onrender.com/api';
             // const API_URL = 'http://localhost:3000/api'; // Teste Local
 
+            // ADICIONE ESTA LINHA: Inicia o socket globalmente no painel do mestre
+            window.socket = io('https://dandd-chan.onrender.com');
             let nomeDelecaoPendente = '';
             let nomeEdicaoPendente = '';
             let pastaIdDelecaoPendente = '';
@@ -669,32 +673,7 @@
             }
 
         
-        // Função de fechar modal
-        function fecharModalInit() {
-            document.getElementById('modal-add-init').style.display = 'none';
-            document.getElementById('manual-init-name').value = '';
-            document.getElementById('manual-init-val').value = '';
-        }
-
-        async function confirmarAddInit() {
-            const nome = document.getElementById('manual-init-name').value.trim();
-            const val = parseInt(document.getElementById('manual-init-val').value) || 0;
-            
-            if (nome) {
-                // Envia para o servidor (que vai atualizar todas as telas)
-                // Certifique-se que o socket está iniciado no mestre.html
-                if (typeof socket !== 'undefined') {
-                    socket.emit('add_to_tracker', {
-                        id: Date.now(),
-                        name: nome,
-                        val: val,
-                        img: 'img/imagem-no-site/dado.png' // Imagem padrão
-                    });
-                }
-                fecharModalInit();
-            }
-        }
-
+       
     function criarElementoPasta(titulo, itens, id, permiteDeletar) {
             const col = document.createElement('div');
             col.className = 'folder-container';
