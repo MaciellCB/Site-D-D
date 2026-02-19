@@ -422,8 +422,17 @@
             map.on('movestart', () => document.getElementById('ctx-menu').style.display = 'none');
 
             renderPlanes();
-            criarMarcador(700, 1100, "Noxus", "O Bastião Imortal.", null, []);
-            criarMarcador(650, 450, "Demacia", "Reino da Honra.", null, []);
+            
+            // BUSCAR MARCADORES SALVOS NO BANCO DE DADOS
+            fetch('/api/mapa-pins')
+                .then(res => res.json())
+                .then(pinsSalvos => {
+                    pinsSalvos.forEach(p => {
+                        // Passamos o ID salvo no banco para não gerar um novo
+                        criarMarcador(p.lat, p.lng, p.nome, p.desc, p.icon, p.gallery, p.id);
+                    });
+                })
+                .catch(err => console.error("Erro ao carregar mapa:", err));
         };
 
         // --- MEDIÇÃO ---
@@ -513,7 +522,7 @@
 
         function fecharModal() { document.getElementById('modal-form').style.display = 'none'; }
 
-        function deletarPin() {
+        async function deletarPin() {
             if(!editId) return;
             if(confirm("Tem certeza que deseja apagar este local?")) {
                 const index = markers.findIndex(m => m.id === editId);
@@ -522,15 +531,23 @@
                     markers.splice(index, 1);
                     atualizarListaLateral();
                 }
+                
+                // DELETAR NO BANCO DE DADOS
+                try {
+                    await fetch(`/api/mapa-pins/${editId}`, { method: 'DELETE' });
+                } catch(e) { console.error("Erro ao deletar no banco", e); }
+
                 fecharModal();
             }
         }
 
-        function salvarPin() {
+        async function salvarPin() {
             const nome = document.getElementById('input-nome').value;
             const desc = document.getElementById('input-desc').value;
             if(!nome) { alert("Nome é obrigatório!"); return; }
             const finalIcon = iconImage || IMG_DEFAULT_ICON;
+
+            let pinData;
 
             if (editId) {
                 const pin = markers.find(m => m.id === editId);
@@ -539,17 +556,38 @@
                 pin.icon = finalIcon;
                 pin.gallery = galleryImages;
                 refreshMarkerVisuals(pin);
+                pinData = pin;
             } else {
                 if(!tempCoords) { alert("Erro de posição."); return; }
-                criarMarcador(tempCoords.lat, tempCoords.lng, nome, desc, finalIcon, galleryImages);
+                const novoPinId = Date.now();
+                criarMarcador(tempCoords.lat, tempCoords.lng, nome, desc, finalIcon, galleryImages, novoPinId);
+                pinData = markers.find(m => m.id === novoPinId);
             }
+
+            // ENVIAR PARA O BANCO DE DADOS
+            try {
+                await fetch('/api/mapa-pins', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id: pinData.id,
+                        lat: pinData.lat,
+                        lng: pinData.lng,
+                        nome: pinData.nome,
+                        desc: pinData.desc,
+                        icon: pinData.icon,
+                        gallery: pinData.gallery
+                    })
+                });
+            } catch(e) { console.error("Erro ao salvar no banco", e); }
+
             fecharModal();
             atualizarListaLateral();
         }
 
-        function criarMarcador(lat, lng, nome, desc, iconSrc, galeria) {
+        function criarMarcador(lat, lng, nome, desc, iconSrc, galeria, idExistente = null) {
             const safeIcon = iconSrc || IMG_DEFAULT_ICON;
-            const pinId = Date.now();
+            const pinId = idExistente || Date.now(); // Usa o ID do banco ou cria um novo
             const iconHtml = `<img src="${safeIcon}" class="custom-map-icon" style="width:40px; height:40px; object-fit:cover;">`;
             const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -20] });
             const marker = L.marker([lat, lng], {icon: customIcon}).addTo(map);

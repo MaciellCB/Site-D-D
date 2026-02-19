@@ -42,6 +42,19 @@ const LayoutSchema = new mongoose.Schema({
 });
 const Layout = mongoose.model('Layout', LayoutSchema);
 
+
+// --- MODELO DO MAPA (PINS) ---
+const PinSchema = new mongoose.Schema({
+    id: { type: Number, required: true, unique: true },
+    lat: Number,
+    lng: Number,
+    nome: String,
+    desc: String,
+    icon: String,
+    gallery: [String]
+});
+const Pin = mongoose.model('Pin', PinSchema);
+
 // --- MEMÓRIA DA INICIATIVA ---
 let serverTrackerList = []; 
 
@@ -173,6 +186,36 @@ app.post('/api/editar-credenciais', async (req, res) => {
         res.json({ ok: true });
     } catch (error) { res.status(500).json({ error: "Erro ao editar." }); }
 });
+
+// =================================================================
+// ROTAS DO MAPA DE RUNETERRA
+// =================================================================
+
+// Buscar todos os marcadores
+app.get('/api/mapa-pins', async (req, res) => {
+    try {
+        const pins = await Pin.find({});
+        res.json(pins);
+    } catch (error) { res.status(500).json({ error: 'Erro ao buscar pins' }); }
+});
+
+// Salvar ou Atualizar um marcador
+app.post('/api/mapa-pins', async (req, res) => {
+    try {
+        await Pin.findOneAndUpdate({ id: req.body.id }, req.body, { upsert: true, new: true });
+        res.json({ ok: true });
+    } catch (error) { res.status(500).json({ error: 'Erro ao salvar pin' }); }
+});
+
+// Deletar um marcador
+app.delete('/api/mapa-pins/:id', async (req, res) => {
+    try {
+        await Pin.findOneAndDelete({ id: req.params.id });
+        res.json({ ok: true });
+    } catch (error) { res.status(500).json({ error: 'Erro ao deletar pin' }); }
+});
+
+
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`Rodando na porta ${PORT}`));
