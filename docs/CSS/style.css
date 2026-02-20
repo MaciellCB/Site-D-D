@@ -606,7 +606,7 @@ header {
 }
 
 /* ==========================================================================
-   FILTROS DE MAGIAS (PILLS AVANÇADOS)
+   FILTROS DE MAGIAS E COMPORTAMENTO DO CATÁLOGO (PC E MOBILE)
    ========================================================================== */
 .filter-pill {
     background: #1a1a1a;
@@ -620,7 +620,7 @@ header {
     transition: all 0.2s ease;
     margin: 0;
     outline: none;
-    white-space: nowrap;
+    white-space: nowrap; /* Evita quebra de linha dentro do botão */
 }
 
 .filter-pill:hover {
@@ -635,50 +635,83 @@ header {
     box-shadow: 0 0 8px rgba(156, 39, 176, 0.4);
 }
 
-/* Área rolável horizontal para filtros no desktop */
+/* Scroll interno para os filtros (evita ocupar muita tela) */
 .filter-container-scroll {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+    max-height: 120px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+.filter-container-scroll::-webkit-scrollbar { width: 4px; }
+.filter-container-scroll::-webkit-scrollbar-thumb { background: #9c27b0; border-radius: 10px; }
+
+/* Configuração do Catálogo no PC (Cresce ao abrir filtro) */
+.catalog-large {
+    width: 920px;
+    max-width: calc(100% - 40px);
+    height: 75vh; /* Inicia um pouco menor */
+    max-height: 95vh;
+    background: #121212;
+    border-radius: 10px;
+    padding: 18px;
+    box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    display: flex;
+    flex-direction: column;
+    transition: height 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Animação de crescimento */
+}
+
+.catalog-large.filters-open {
+    height: 95vh; /* Cresce para baixo quando o filtro abre */
+}
+
+.catalog-large-list {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 150px;
+    padding-right: 8px;
 }
 
 /* ==========================================================================
-   CORREÇÃO DO CATÁLOGO DE MAGIAS NO MOBILE (DESTRAVAR SCROLL)
+   MODO MOBILE: ESTILO PROMPT COM FOLGA E SCROLL DESTRAVADO
    ========================================================================== */
 @media (max-width: 768px) {
-    /* Coloca o fundo do catálogo acima de tudo, inclusive do menu inferior */
     .catalog-overlay-large {
         z-index: 2147483647 !important; 
-        padding: 0 !important;
-        background: #121212 !important;
+        padding: 15px !important; /* FOLGA DOS LADOS */
+        background: rgba(0, 0, 0, 0.85) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
 
-    /* Remove o modo Flex travado e deixa a página rolar naturalmente */
     .catalog-large {
-        display: block !important; 
-        width: 100% !important;
-        height: 100% !important;
-        max-height: none !important;
-        border-radius: 0 !important;
-        margin: 0 !important;
+        width: 100% !important; /* Preenche a área interna da folga */
+        height: 80vh !important; /* Tamanho inicial no mobile */
+        max-height: 90vh !important;
+        border-radius: 12px !important; /* Visual de prompt flutuante */
+        margin: auto !important;
         padding: 15px !important;
-        border: none !important;
-        overflow-y: auto !important; /* ESSENCIAL PARA ROLAR TUDO */
-        -webkit-overflow-scrolling: touch;
+        border: 1px solid #9c27b0 !important; /* Borda destacada roxa */
     }
 
-    .catalog-large-list {
-        overflow-y: visible !important; /* Deixa o contêiner pai cuidar do scroll */
-        padding-bottom: 60px !important;
+    .catalog-large.filters-open {
+        height: 92vh !important; /* Cresce no mobile também */
     }
 
-    /* Corrige o layout da barra de pesquisa no mobile */
     .catalog-large-search > div {
         flex-direction: column;
+        gap: 8px;
     }
     
     .catalog-large-search input {
         width: 100% !important;
+    }
+    
+    .catalog-large-list {
+        padding-bottom: 20px !important; /* Permite rolar até o fim */
     }
 }
