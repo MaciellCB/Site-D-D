@@ -531,3 +531,76 @@ header {
     height: 35px; /* Um pouco menor no celular */
   }
 }
+
+
+
+
+/* =========================================================================
+   CORREÇÃO DOS MODAIS E SELETORES (RAÇA, CLASSE, ANTECEDENTE) PARA MOBILE
+   ========================================================================= */
+@media (max-width: 768px) {
+  /* 1. Força todos os modais a respeitarem a tela, ignorando os 'px' fixos do JS */
+  .spell-modal {
+    width: 95% !important;
+    max-width: none !important;
+    height: 90vh !important;
+    max-height: 90vh !important;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+  }
+
+  /* 2. Catálogo de Raças/Classes: Empilha a lista em cima e a descrição embaixo */
+  .race-catalog-container {
+    flex-direction: column !important;
+    overflow: hidden;
+  }
+
+  /* 3. A lista de seleção vira uma área "scrollável" no topo */
+  .race-list-col {
+    flex: none !important;
+    height: 30vh !important; /* Ocupa 30% da altura do modal */
+    width: 100% !important;
+    border-right: none !important;
+    border-bottom: 2px solid #9c27b0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* 4. A descrição ocupa o resto do espaço embaixo */
+  .race-details-col {
+    flex: 1 !important;
+    width: 100% !important;
+    padding: 15px 5px !important;
+  }
+
+  /* 5. Ajusta o cabeçalho dos detalhes (onde fica a foto da raça/classe) */
+  .race-detail-header {
+    flex-direction: column !important; /* Foto em cima, título embaixo */
+    align-items: center !important;
+    text-align: center;
+    gap: 15px !important;
+  }
+
+  .race-img-container {
+    width: 120px !important;
+    height: 120px !important;
+  }
+
+  /* 6. Arruma o Grid de Alinhamento (que era 3x3 apertado) */
+  .alignment-grid-container {
+    grid-template-columns: 1fr 1fr !important; /* Vira 2 colunas para os botões não sumirem */
+    gap: 5px !important;
+    padding: 10px !important;
+    overflow-y: auto;
+  }
+  
+  /* Faz o botão "Neutro" (ou o último) ocupar a linha inteira para não ficar torto */
+  .alignment-option-card:last-child {
+    grid-column: span 2;
+  }
+
+  /* 7. Wizard de Criação Customizada */
+  #wizard-content-area > div > div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important; /* Empilha Tipo e Tamanho */
+  }
+}

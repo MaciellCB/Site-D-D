@@ -147,47 +147,50 @@
         }
 
         /* Leaflet e Popup Customizado */
-        .leaflet-popup-content-wrapper { background: #151515; border: 1px solid var(--accent); color: #ddd; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); padding: 0; overflow: hidden; }
+        .leaflet-popup-content-wrapper { 
+            background: #151515; border: 1px solid var(--accent); color: #ddd; 
+            border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); padding: 0; 
+            
+            /* Esta propriedade é o segredo. O popup inteiro cresce ao ser puxado da barra debaixo */
+            resize: vertical; overflow: hidden; min-height: 100px;
+        }
         .leaflet-popup-tip { background: var(--accent); }
-        .leaflet-popup-content { margin: 15px; width: 320px !important; }
         
-        .popup-header { display:flex; align-items:center; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; margin-bottom: 10px; }
+        .leaflet-popup-content { margin: 0 !important; width: 340px !important; display: flex; flex-direction: column; height: 100%; }
+        
+        .popup-inner-content { padding: 15px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+        .popup-inner-content::-webkit-scrollbar { width: 4px; }
+        .popup-inner-content::-webkit-scrollbar-thumb { background: #555; border-radius: 2px; }
+
+        .popup-header { display:flex; align-items:center; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; margin-bottom: 10px; flex-shrink: 0; }
         .popup-header-icon { width: 32px; height: 32px; border-radius: 50%; object-fit:cover; border:1px solid #555; background:#000; }
         .popup-title { font-weight: bold; color: var(--accent); font-size: 15px; flex:1; text-transform: uppercase; }
         .popup-edit-btn { background: none; border: none; color: #777; cursor: pointer; font-size: 16px; transition: 0.2s; }
         .popup-edit-btn:hover { color: #fff; transform: scale(1.1); }
 
-        /* === SISTEMA DE ARRASTAR O LORE EXPLÍCITO === */
-        .popup-desc-container {
-            width: 100%; display: flex; flex-direction: column; margin-bottom: 10px;
-            border: 1px solid #333; border-radius: 6px; overflow: hidden; background: #0a0a0a;
-            /* Permite arrastar TUDO puxando a barra debaixo */
-            resize: vertical; overflow: hidden; 
-            height: 90px; /* Altura inicial para +- 3 linhas e a barra */
-            min-height: 70px; max-height: 400px;
-        }
+        /* A visualização do texto - Se ajusta ao tamanho do popup que for puxado */
         .popup-desc-view {
-            width: 100%; flex: 1; padding: 10px; margin: 0; border: none; background: transparent; 
+            width: 100%; margin: 0 0 10px 0; border: none; background: transparent; 
             color: #ccc; font-size: 14px; font-family: inherit; line-height: 1.6; outline: none;
-            resize: none; /* Desativa o resize próprio, pois a div inteira que cresce */
-            overflow-y: auto; white-space: pre-wrap; cursor: text;
+            overflow-y: auto; white-space: pre-wrap;
+            flex: 1; /* Ocupa o espaço disponível no container vertical */
+            min-height: 60px; /* Começa com tamanho para 3 linhas */
         }
-        .popup-desc-view::-webkit-scrollbar { width: 4px; }
-        .popup-desc-view::-webkit-scrollbar-thumb { background: #555; border-radius: 2px; }
         
-        /* A barra visual que fica na base ensinando que dá pra puxar */
+        /* A barra explicita que fica na base do Popup para arrastar */
         .popup-drag-handle {
-            background: #1a1a1a; color: #555; text-align: center; font-size: 9px; font-weight: bold; 
-            padding: 3px 0; border-top: 1px solid #333; width: 100%; user-select: none;
-            letter-spacing: 1px; flex-shrink: 0; pointer-events: none; /* A div pai que tem a hitbox do resize */
+            background: #1a1a1a; color: #666; text-align: center; font-size: 10px; font-weight: bold; 
+            padding: 4px 0; border-top: 1px solid #333; width: 100%; 
+            cursor: ns-resize; user-select: none; letter-spacing: 2px; transition: 0.2s; flex-shrink: 0;
+            pointer-events: none; /* Deixa o evento de mouse passar pro resize natural do popup */
         }
         
         .popup-img-main { 
-            width: 100%; height: 160px; object-fit: cover; border-radius: 6px; margin-bottom: 8px; cursor: pointer; border: 1px solid #333; display: block; transition: 0.2s;
+            width: 100%; height: 160px; object-fit: cover; border-radius: 6px; margin-bottom: 8px; cursor: pointer; border: 1px solid #333; display: block; transition: 0.2s; flex-shrink: 0;
         }
         .popup-img-main:hover { border-color: var(--accent); }
         
-        .popup-gallery { display: flex; gap: 8px; overflow-x: auto; margin-top: 8px; padding-bottom: 5px; }
+        .popup-gallery { display: flex; gap: 8px; overflow-x: auto; margin-top: 8px; padding-bottom: 5px; flex-shrink: 0; }
         .popup-thumb { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; border: 1px solid #444; cursor: pointer; flex-shrink: 0; transition: 0.2s; }
         .popup-thumb:hover { border-color: var(--accent); transform: scale(1.1); }
 
@@ -522,40 +525,42 @@
             if(!nome) { alert("Nome é obrigatório!"); return; }
             const finalIcon = iconImage || IMG_DEFAULT_ICON;
 
-            let pinData;
+            // Extraimos estritamente os DADOS, sem passar nenhum objeto ou "marker" do mapa!
+            // Isso previne que o JavaScript tente enviar referências circulares pro banco de dados
+            const dadosLimpos = {
+                id: editId || Date.now(),
+                lat: tempCoords ? tempCoords.lat : 0,
+                lng: tempCoords ? tempCoords.lng : 0,
+                nome: nome,
+                desc: desc,
+                icon: finalIcon,
+                gallery: [...galleryImages]
+            };
 
             if (editId) {
                 const pin = markers.find(m => m.id === editId);
-                pin.nome = nome;
-                pin.desc = desc;
-                pin.icon = finalIcon;
-                pin.gallery = [...galleryImages]; 
+                pin.nome = dadosLimpos.nome;
+                pin.desc = dadosLimpos.desc;
+                pin.icon = dadosLimpos.icon;
+                pin.gallery = dadosLimpos.gallery; 
                 refreshMarkerVisuals(pin);
-                pinData = pin;
+                // Se estamos editando, já sabemos onde ele tá
+                dadosLimpos.lat = pin.lat;
+                dadosLimpos.lng = pin.lng;
             } else {
                 if(!tempCoords) { alert("Erro de posição."); return; }
-                const novoPinId = Date.now();
-                criarMarcador(tempCoords.lat, tempCoords.lng, nome, desc, finalIcon, [...galleryImages], novoPinId);
-                pinData = markers.find(m => m.id === novoPinId);
+                criarMarcador(dadosLimpos.lat, dadosLimpos.lng, dadosLimpos.nome, dadosLimpos.desc, dadosLimpos.icon, dadosLimpos.gallery, dadosLimpos.id);
             }
 
             try {
                 const res = await fetch('/api/mapa-pins', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        id: pinData.id,
-                        lat: pinData.lat,
-                        lng: pinData.lng,
-                        nome: pinData.nome,
-                        desc: pinData.desc,
-                        icon: pinData.icon,
-                        gallery: pinData.gallery
-                    })
+                    body: JSON.stringify(dadosLimpos)
                 });
                 
                 if(!res.ok) {
-                    alert("Aviso: O pin apareceu no mapa, mas falhou ao salvar no servidor! Tente imagens menores. O erro continua.");
+                    alert("Aviso: O pin apareceu no mapa, mas falhou ao salvar no servidor! Tente imagens menores.");
                 }
             } catch(e) { 
                 console.error("Erro ao salvar no banco", e);
@@ -586,59 +591,52 @@
             pin.marker.setPopupContent(gerarPopupContent(pin));
         }
 
-        // Função segura para trocar a imagem sem quebrar o DOM com strings gigantes
         window.trocarImagemPrincipal = function(element, pinId) {
             const mainImg = document.getElementById(`main-img-${pinId}`);
-            if(mainImg) {
-                // Ao invés de passar a string toda por parâmetro no HTML, nós pegamos o 'src' diretamente do elemento que foi clicado.
-                mainImg.src = element.src; 
-            }
+            if(mainImg) { mainImg.src = element.src; }
         };
 
         function gerarPopupContent(pin) {
+            // O HTML agora foi estruturado para caber certinho no Popup.
+            // A barra final ".popup-drag-handle" é a que expande toda a aba!
             let html = `
-                <div class="popup-header">
-                    <img src="${pin.icon}" class="popup-header-icon">
-                    <span class="popup-title">${pin.nome}</span>
-                    <button class="popup-edit-btn" onclick="abrirModal(${pin.id})" title="Editar Local">✏️</button>
-                </div>
+                <div class="popup-inner-content">
+                    <div class="popup-header">
+                        <img src="${pin.icon}" class="popup-header-icon">
+                        <span class="popup-title">${pin.nome}</span>
+                        <button class="popup-edit-btn" onclick="abrirModal(${pin.id})" title="Editar Local">✏️</button>
+                    </div>
             `;
             
-            // LORE CONTAINER ARRASTÁVEL: Engloba o texto e a barra inferior para ficar óbvio
             let descHtml = pin.desc || "Sem descrição.";
-            html += `
-                <div class="popup-desc-container">
-                    <textarea readonly class="popup-desc-view">${descHtml}</textarea>
-                    <div class="popup-drag-handle">[ ||| Arraste para expandir ||| ]</div>
-                </div>
-            `;
+            html += `<div class="popup-desc-view">${descHtml}</div>`;
             
-            // PREPARA AS IMAGENS: Evita duplicados entre o Ícone e a Galeria
             let todasImagens = [];
             
             if(pin.gallery && pin.gallery.length > 0) {
                 todasImagens.push(...pin.gallery);
             }
             if(pin.icon !== IMG_DEFAULT_ICON && !todasImagens.includes(pin.icon)) {
-                todasImagens.unshift(pin.icon); // Coloca o ícone customizado no início se não estiver na galeria
+                todasImagens.unshift(pin.icon); 
             }
             if(todasImagens.length === 0) {
-                todasImagens.push(IMG_DEFAULT_ICON); // Previne erros caso não tenha imagem nenhuma
+                todasImagens.push(IMG_DEFAULT_ICON); 
             }
 
-            // IMAGEM PRINCIPAL
             html += `<img src="${todasImagens[0]}" id="main-img-${pin.id}" class="popup-img-main" onclick="verFull(this.src)">`;
 
-            // THUMBNAILS (GALERIA EXTRA)
             if(todasImagens.length > 1) {
                 html += `<div class="popup-gallery">`;
-                // Passamos "this" no onclick para pegar o objeto seguro
                 todasImagens.forEach((img) => { 
                     html += `<img src="${img}" class="popup-thumb" onclick="trocarImagemPrincipal(this, ${pin.id})">`; 
                 });
                 html += `</div>`;
             }
 
+            html += `</div>`; // Fim de popup-inner-content
+            
+            // Aqui entra a barra arrastável na base do Popup!
+            html += `<div class="popup-drag-handle">[ ||| Arraste para expandir ||| ]</div>`;
             return html;
         }
 
@@ -649,7 +647,7 @@
             document.getElementById(`area-${target}`).classList.add('paste-active');
         }
 
-        // === COMPRESSOR DE IMAGENS AUTOMÁTICO (Resolve o erro do Servidor) ===
+        // === COMPRESSOR DE IMAGENS AUTOMÁTICO ===
         function comprimirImagem(file, callback) {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -658,9 +656,8 @@
                 img.src = event.target.result;
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    // Reduz para no máximo 800px de largura/altura para salvar tranquilo no banco
-                    const MAX_WIDTH = 800;
-                    const MAX_HEIGHT = 800;
+                    const MAX_WIDTH = 500;
+                    const MAX_HEIGHT = 500;
                     let width = img.width;
                     let height = img.height;
 
@@ -675,8 +672,7 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
                     
-                    // Retorna um WebP comprimido a 70% de qualidade
-                    const dataUrl = canvas.toDataURL('image/webp', 0.7);
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
                     callback(dataUrl);
                 }
             }
@@ -688,7 +684,6 @@
         });
         document.getElementById('file-icon').addEventListener('change', (e) => {
             const file = e.target.files[0];
-            // Usa o compressor agora!
             if(file) comprimirImagem(file, (res) => { iconImage = res; renderFormVisuals(); });
         });
 
@@ -698,7 +693,6 @@
         });
         document.getElementById('file-gallery').addEventListener('change', (e) => {
             Array.from(e.target.files).forEach(file => { 
-                // Usa o compressor agora!
                 comprimirImagem(file, (res) => { galleryImages.push(res); renderFormVisuals(); }); 
             });
         });
@@ -710,7 +704,6 @@
                 const item = items[index];
                 if (item.kind === 'file' && item.type.includes('image/')) {
                     const file = item.getAsFile();
-                    // Usa o compressor agora!
                     comprimirImagem(file, (res) => {
                         if(pasteTarget === 'icon') iconImage = res;
                         else galleryImages.push(res);
