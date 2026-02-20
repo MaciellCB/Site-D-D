@@ -2470,17 +2470,14 @@ function renderSpells() {
   state.dtMagias = calculateSpellDC();
   const slotsHTML = renderSpellSlotsHTML();
 
-  // Inicializa o estado dos filtros se não existir
   if (!state.spellFilters) {
       state.spellFilters = { classes: [], schools: [], text: '' };
   }
 
-  // Controle visual que NÃO vai para o servidor (Sempre começa fechado ao carregar a página)
   if (typeof window.isMagiasFiltroExpanded === 'undefined') {
       window.isMagiasFiltroExpanded = false;
   }
 
-  // Extrair dinamicamente as Escolas e Classes únicas baseadas nas magias que o personagem possui
   const escolasUnicas = [...new Set(state.spells.map(s => s.school).filter(Boolean))].sort();
   
   let classesSet = new Set();
@@ -2504,15 +2501,14 @@ function renderSpells() {
       ${slotsHTML ? '<hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 15px 0;">' : ''}
 
       <div class="spells-controls controls-row" style="flex-wrap: wrap; gap: 8px;">
-        <div style="display:flex; flex:1; min-width: 200px; gap:8px;">
+        <div style="display:flex; flex:1; width: 100%; gap:8px;">
             <input id="filterMagias" placeholder="Buscar magia..." value="${escapeHtml(state.spellFilters.text)}" style="flex:1;" />
-            <button id="btnToggleFiltros" style="background:#1a1a1a; border:1px solid #333; color:#ccc; border-radius:4px; padding:0 12px; cursor:pointer; font-weight:bold; transition: 0.2s;">
+            <button id="btnToggleFiltros" style="background:#1a1a1a; border:1px solid #333; color:#ccc; border-radius:4px; padding:0 12px; cursor:pointer; font-weight:bold; transition: 0.2s; white-space: nowrap;">
                Filtros ${window.isMagiasFiltroExpanded ? '▴' : '▾'}
             </button>
         </div>
-        <div class="right-controls">
+        <div class="right-controls" style="display:flex; justify-content:space-between; width:100%; margin-top:5px;">
           <button id="botAddSpell" class="btn-add">Nova Magia</button>
-          
           <div class="dt-magias" id="btnOpenDTConfig" style="cursor:pointer;" title="Clique para configurar">
             <label style="cursor:pointer; color:#9c27b0;">DT DE MAGIAS ⚙️</label>
             <input id="dtMagiasInput" type="text" value="${state.dtMagias}" readonly 
@@ -2523,19 +2519,18 @@ function renderSpells() {
 
       <div id="painelFiltrosMagias" style="${window.isMagiasFiltroExpanded ? 'display:block;' : 'display:none;'} background:#121212; padding:12px; border-radius:6px; border:1px solid rgba(156, 39, 176, 0.3); margin-bottom:12px;">
          <div style="margin-bottom: 8px;"><strong style="color:#9c27b0; font-size:11px; text-transform:uppercase;">Filtrar por Escola</strong></div>
-         <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:15px;" id="containerFiltrosEscola">
+         <div class="filter-container-scroll" id="containerFiltrosEscola">
             ${renderPills(escolasUnicas, state.spellFilters.schools, 'school')}
          </div>
          
          <div style="margin-bottom: 8px;"><strong style="color:#9c27b0; font-size:11px; text-transform:uppercase;">Filtrar por Classe</strong></div>
-         <div style="display:flex; flex-wrap:wrap; gap:6px;" id="containerFiltrosClasse">
+         <div class="filter-container-scroll" id="containerFiltrosClasse" style="margin-bottom:0;">
             ${renderPills(classesUnicas, state.spellFilters.classes, 'class')}
          </div>
       </div>
 
       <div style="display:flex; align-items:center; margin:15px 0 10px 4px;">
           <h4 style="margin:0; color:#ddd; font-size:16px;">Minhas Magias</h4>
-          
           <div id="btnRollSpellAttack_Header" title="Rolar Ataque Mágico (1d20 + Prof + Mod)" style="cursor:pointer; margin-left:10px; transition: transform 0.2s;">
               <img src="img/imagem-no-site/dado.png" alt="Rolar Ataque" style="width:26px; height:26px; display:block; opacity:0.9; filter: drop-shadow(0 0 2px rgba(156, 39, 176, 0.5));" />
           </div>
@@ -2552,7 +2547,6 @@ function renderSpells() {
   bindSlotEvents();
   aplicarFiltrosMagias(); 
   
-  // Restaura o foco no input caso ele estivesse digitando
   const inputFiltro = document.getElementById('filterMagias');
   if (inputFiltro && state.spellFilters.text.length > 0) {
       inputFiltro.focus();
