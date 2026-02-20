@@ -2451,17 +2451,22 @@ function aplicarFiltrosMagias() {
         // 1. Filtro de Texto (Nome)
         if (q && !(s.name || '').toLowerCase().includes(q)) show = false;
         
-        // 2. Filtro de Escola (Mostra se a escola da magia bater com QUALQUER UMA das escolas selecionadas)
+        // 2. Filtro de Escola
         if (show && schools.length > 0 && !schools.includes(s.school)) show = false;
         
-        // 3. Filtro de Classe (Mostra se a magia pertencer a QUALQUER UMA das classes selecionadas)
+        // 3. Filtro de Classe
         if (show && classes.length > 0) {
             const spellClasses = (s.spellClass || '').split(',').map(c => c.trim());
             const temClasse = classes.some(c => spellClasses.includes(c));
             if (!temClasse) show = false;
         }
 
-        card.style.display = show ? '' : 'none';
+        // A CORREÇÃO MÁGICA AQUI: Bate de frente com o !important do CSS mobile
+        if (show) {
+            card.style.removeProperty('display'); // Deixa o CSS normal assumir
+        } else {
+            card.style.setProperty('display', 'none', 'important'); // Força ocultar no mobile
+        }
     });
 }
 
@@ -3206,7 +3211,7 @@ function openSpellCatalogOverlay(parentModal = null) {
   const inputSearch = overlay.querySelector('#catalogLargeSearch');
   inputSearch.oninput = triggerSearch;
 
-  // LÓGICA PRINCIPAL DE FILTRAGEM
+// LÓGICA PRINCIPAL DE FILTRAGEM
   function triggerSearch() {
     const q = inputSearch.value.toLowerCase();
     const searchTerms = q.split(',').map(t => t.trim()).filter(t => t);
@@ -3254,10 +3259,14 @@ function openSpellCatalogOverlay(parentModal = null) {
           show = card.textContent.toLowerCase().includes(searchTerms[0]);
       }
 
-      card.style.display = show ? '' : 'none';
+      // A CORREÇÃO MÁGICA AQUI TAMBÉM:
+      if (show) {
+          card.style.removeProperty('display');
+      } else {
+          card.style.setProperty('display', 'none', 'important');
+      }
     });
   }
-
   // BOTÃO ADICIONAR (+)
   overlay.querySelectorAll('.catalog-add-btn').forEach(btn => {
     btn.onclick = (ev) => {
@@ -3467,14 +3476,19 @@ function renderPreparedSpells() {
 
   // REMOVIDO: bindSpellAttackEvents(); -> Essa função não existe e estava travando o código.
 
-  // 2. Filtro Rápido
+  // 2. Filtro Rápido (Corrigido para Mobile)
   const filterInput = document.getElementById('filterPrepared');
   if (filterInput) {
     filterInput.addEventListener('input', (e) => {
       const val = e.target.value.toLowerCase();
       conteudoEl.querySelectorAll('.card').forEach(c => {
         const txt = c.textContent.toLowerCase();
-        c.style.display = txt.includes(val) ? '' : 'none';
+        
+        if (txt.includes(val)) {
+            c.style.removeProperty('display');
+        } else {
+            c.style.setProperty('display', 'none', 'important');
+        }
       });
     });
   }
