@@ -690,22 +690,21 @@
   <script src="JS/MagicSystem.js"></script>
 
  <script>
-    // Configuração Global da API
+    // Configuração da API - Garanta que esta URL esteja correta
     const API_URL = 'https://dandd-chan.onrender.com/api';
+    const socket = io('https://dandd-chan.onrender.com');
 
     /* =================================================================
-       1. INICIALIZAÇÃO E MODO MESTRE
+       1. INICIALIZAÇÃO E ACESSO (JOGADOR E MESTRE)
        ================================================================= */
     window.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
       const masterChar = params.get('masterView');
 
       if (masterChar) {
-        console.log("Modo Mestre detectado para:", masterChar);
-        // Remove o bloqueio de login imediatamente
+        // Se for visualização do Mestre, remove o bloqueio e carrega
         const overlay = document.getElementById('login-overlay');
         if (overlay) overlay.style.display = 'none';
-        
         const linkVoltar = document.getElementById('link-voltar-painel');
         if (linkVoltar) linkVoltar.style.display = 'block';
         
@@ -713,6 +712,30 @@
       }
     });
 
+    // Função de Login do Player
+    async function carregarDadosIniciais(nome, senha) {
+      try {
+        const res = await fetch(`${API_URL}/load-ficha`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome, senha })
+        });
+
+        if (res.ok) {
+          const ficha = await res.json();
+          window.state = ficha; // Define o estado global
+          document.getElementById('login-overlay').style.display = 'none';
+          
+          finalizarCarregamento(ficha);
+        } else {
+          exibirAvisoTemporario("Nome ou senha incorretos.");
+        }
+      } catch (e) {
+        exibirAvisoTemporario("Erro ao conectar com o servidor.");
+      }
+    }
+
+    // Função de Carregamento do Mestre
     async function carregarFichaMestre(nome) {
       try {
         const res = await fetch(`${API_URL}/load-ficha-mestre`, {
@@ -723,70 +746,44 @@
 
         if (res.ok) {
           const ficha = await res.json();
-          
-          // Define a ficha no escopo global para todos os outros scripts (HeaderJS, EsquerdaJS, etc)
-          window.state = ficha; 
-
-          // Preenche o visual básico
-          preencherFichaNaTela(ficha);
-          
-          // Dispara a inicialização de todos os módulos da ficha
-          setTimeout(() => {
-            if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
-            if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
-            if (typeof atualizarHeader === 'function') atualizarHeader();
-            if (typeof atualizarTextoClassesHeader === 'function') atualizarTextoClassesHeader();
-            if (typeof setActiveTab === 'function') setActiveTab(ficha.activeTab || 'Combate');
-            
-            window.dispatchEvent(new CustomEvent('sheet-updated'));
-          }, 100);
-
-          exibirAvisoTemporario("Mestre: Visualizando " + (ficha.personagem || ficha.nome));
-        } else {
-          exibirAvisoTemporario("Erro: Ficha não encontrada no servidor.");
+          window.state = ficha;
+          finalizarCarregamento(ficha);
         }
       } catch (e) {
-        console.error("Falha no login do Mestre:", e);
-        exibirAvisoTemporario("Erro crítico ao carregar ficha.");
+        console.error("Erro ao carregar ficha:", e);
       }
     }
 
+    function finalizarCarregamento(ficha) {
+      preencherFichaNaTela(ficha);
+      
+      // Inicializa todos os componentes do sistema
+      if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+      if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
+      if (typeof atualizarHeader === 'function') atualizarHeader();
+      if (typeof atualizarTextoClassesHeader === 'function') atualizarTextoClassesHeader();
+      
+      window.dispatchEvent(new CustomEvent('sheet-updated'));
+      if (typeof setActiveTab === 'function') setActiveTab(ficha.activeTab || 'Combate');
+    }
+
     /* =================================================================
-       2. SINCRONIZAÇÃO EM TEMPO REAL (SOCKET.IO)
+       2. SINCRONIZAÇÃO EM TEMPO REAL
        ================================================================= */
-    const socket = io('https://dandd-chan.onrender.com');
-
-    socket.on('connect', () => { console.log("Socket conectado:", socket.id); });
-
     socket.on('ficha_atualizada', (novaFicha) => {
-      // Verifica se a ficha recebida é a que está aberta na tela
-      if (window.state && window.state.nome && novaFicha.nome && novaFicha.nome.toLowerCase() === window.state.nome.toLowerCase()) {
-        
-        let estadoFinal = novaFicha;
-        if (typeof window.mesclarEstadoVisual === 'function') {
-          estadoFinal = window.mesclarEstadoVisual(window.state, novaFicha);
-        }
-
-        Object.assign(window.state, estadoFinal);
-
-        // Atualiza a tela sem recarregar a página
-        if (typeof preencherFichaNaTela === 'function') preencherFichaNaTela(window.state);
+      if (window.state && window.state.nome && novaFicha.nome.toLowerCase() === window.state.nome.toLowerCase()) {
+        Object.assign(window.state, novaFicha);
+        preencherFichaNaTela(window.state);
         if (typeof atualizarHeader === 'function') atualizarHeader();
         if (typeof atualizarTextoClassesHeader === 'function') atualizarTextoClassesHeader();
-        if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
-        if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
-
         window.dispatchEvent(new CustomEvent('sheet-updated'));
       }
     });
 
     socket.on('dados_rolados', (data) => {
       if (data.socketId === socket.id) return;
-      if (window.state && window.state.nome && data.personagem &&
-        data.personagem.toLowerCase() === window.state.nome.toLowerCase()) {
-        if (typeof showCombatResults === 'function') {
-          showCombatResults(data.titulo, data.ataque, data.dano, true);
-        }
+      if (window.state && window.state.nome && data.personagem && data.personagem.toLowerCase() === window.state.nome.toLowerCase()) {
+        if (typeof showCombatResults === 'function') showCombatResults(data.titulo, data.ataque, data.dano, true);
       }
     });
 
@@ -797,53 +794,45 @@
     const btnConfirmarCrop = document.getElementById('btn-confirmar-crop');
     const btnCancelarCrop = document.getElementById('btn-cancelar-crop');
 
-    btnCancelarCrop.onclick = function () {
-        modalCrop.style.display = 'none';
-        if (window.cropper) {
-            window.cropper.destroy();
-            window.cropper = null;
-        }
+    btnCancelarCrop.onclick = () => {
+      modalCrop.style.display = 'none';
+      if (window.cropper) { window.cropper.destroy(); window.cropper = null; }
     };
 
-    btnConfirmarCrop.onclick = function () {
-        if (!window.cropper) return;
+    btnConfirmarCrop.onclick = () => {
+      if (!window.cropper) return;
+      const canvas = window.cropper.getCroppedCanvas({ width: 300, height: 300 });
+      const imagemBase64 = canvas.toDataURL('image/jpeg', 0.85);
 
-        const canvas = window.cropper.getCroppedCanvas({ width: 300, height: 300 });
-        const imagemBase64 = canvas.toDataURL('image/jpeg', 0.85);
+      document.getElementById('img-personagem-visual').src = imagemBase64;
+      modalCrop.style.display = 'none';
+      window.cropper.destroy();
+      window.cropper = null;
 
-        // Atualiza a foto na ficha
-        const imgElement = document.getElementById('img-personagem-visual');
-        if (imgElement) imgElement.src = imagemBase64;
-
-        modalCrop.style.display = 'none';
-        window.cropper.destroy();
-        window.cropper = null;
-
-        if (window.state) {
-            window.state.fotoPerfil = imagemBase64;
-
-            if (typeof reordenarObjeto === 'function') {
-                Object.assign(window.state, reordenarObjeto(window.state));
-            }
-
-            // Salva de forma robusta
-            if (typeof saveStateToServer === 'function') {
-                saveStateToServer();
-            } else {
-                // Fallback de salvamento via fetch direto
-                fetch(`${API_URL}/save-ficha`, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(window.state)
-                });
-                socket.emit('ficha_atualizada', window.state);
-            }
-        }
+      if (window.state) {
+        window.state.fotoPerfil = imagemBase64;
+        if (typeof saveStateToServer === 'function') saveStateToServer();
+      }
     };
 
     /* =================================================================
-       4. UTILITÁRIOS (MOBILE, LOGIN, INTERFACE)
+       4. UTILITÁRIOS E LOGIN
        ================================================================= */
+    function tentarLogin() {
+      const nome = document.getElementById('login-nome').value;
+      const senha = document.getElementById('login-senha').value;
+
+      if (nome.toLowerCase() === 'mestre' && senha === 'admin') {
+        window.open('mestre.html', '_blank');
+        return;
+      }
+      if (nome && senha) {
+        carregarDadosIniciais(nome, senha);
+      } else {
+        exibirAvisoTemporario("Preencha todos os campos!");
+      }
+    }
+
     function setMobileView(view) {
       document.body.setAttribute('data-mobile-view', view);
       document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
@@ -860,9 +849,8 @@
       setVal('input-raca', data.raca);
       setTxt('btn-antecedente', data.antecedente);
       const imgElement = document.getElementById('img-personagem-visual');
-      if (imgElement) {
-        imgElement.src = (data.fotoPerfil && data.fotoPerfil.length > 50) ? data.fotoPerfil : "img/imagem-no-site/personagem.png";
-      }
+      if (imgElement) imgElement.src = (data.fotoPerfil && data.fotoPerfil.length > 50) ? data.fotoPerfil : "img/imagem-no-site/personagem.png";
+      
       if (data.atributos) {
         setTxtQ('.num.n1', data.atributos.n1); setTxtQ('.num.n2', data.atributos.n2);
         setTxtQ('.num.n3', data.atributos.n3); setTxtQ('.num.n4', data.atributos.n4);
@@ -873,23 +861,8 @@
     function setVal(id, v) { const el = document.getElementById(id); if (el) el.value = v || ''; }
     function setTxt(id, v) { const el = document.getElementById(id); if (el) el.innerText = v || ''; }
     function setTxtQ(s, v) { const el = document.querySelector(s); if (el) el.innerText = v || ''; }
-
-    function tentarLogin() {
-      const nome = document.getElementById('login-nome').value;
-      const senha = document.getElementById('login-senha').value;
-      if (nome.toLowerCase() === 'mestre' && senha === 'admin') {
-        window.open('mestre.html', '_blank');
-        return;
-      }
-      if (nome && senha) {
-        if (typeof carregarDadosIniciais === 'function') carregarDadosIniciais(nome, senha);
-        else alert("Erro: Carregue os arquivos JS primeiro.");
-      } else {
-        exibirAvisoTemporario("Preencha todos os campos!");
-      }
-    }
-
   </script>
+
 </body>
 
 </html>
