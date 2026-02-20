@@ -3127,15 +3127,29 @@ function openSpellCatalogOverlay(parentModal = null) {
         </div>
       </div>
     `;
+  
+  // TRAVA O SCROLL DO FUNDO
+  document.body.classList.add('modal-open-lock');
   document.body.appendChild(overlay);
-  checkScrollLock();
+  // Não precisamos chamar checkScrollLock aqui pois ele gerenciava outros modais, vamos usar o nosso lock robusto
 
-  // FECHAR
-  overlay.querySelector('.catalog-large-close').onclick = () => { overlay.remove(); checkScrollLock(); };
+  // FUNÇÃO DE FECHAR CORRIGIDA
+  const fecharCatalogo = () => {
+      overlay.remove();
+      document.body.classList.remove('modal-open-lock');
+      checkScrollLock(); // Chama o antigo por garantia
+  };
+
+  overlay.querySelector('.catalog-large-close').onclick = fecharCatalogo;
+  
+  // Fecha clicando fora da caixa (no overlay escuro)
+  overlay.onclick = (e) => {
+      if (e.target === overlay) fecharCatalogo();
+  };
 
   // BOTÃO CRIAR MAGIA MANUAL
   overlay.querySelector('#catalog-new-spell').onclick = () => {
-    overlay.remove();
+    fecharCatalogo();
     openSpellModal(null);
   };
 
@@ -3151,39 +3165,42 @@ function openSpellCatalogOverlay(parentModal = null) {
   // --- EVENTOS DOS FILTROS (Toggle Painel) ---
   const btnToggleFiltros = overlay.querySelector('#btnToggleCatalogFiltros');
   const painelFiltros = overlay.querySelector('#painelFiltrosCatalog');
-  const containerLarge = overlay.querySelector('.catalog-large'); // Container principal
+  const containerLarge = overlay.querySelector('.catalog-large'); 
   
-  btnToggleFiltros.onclick = () => {
+  // Usando evento para mobile (touchstart) e desktop (click) de forma segura
+  const toggleFiltroAction = (e) => {
       isFiltersExpanded = !isFiltersExpanded;
       painelFiltros.style.display = isFiltersExpanded ? 'block' : 'none';
       btnToggleFiltros.innerHTML = `Filtros ${isFiltersExpanded ? '▴' : '▾'}`;
       
-      // Animação de crescer para baixo
       if (isFiltersExpanded) {
           containerLarge.classList.add('filters-open');
       } else {
           containerLarge.classList.remove('filters-open');
       }
   };
+  btnToggleFiltros.addEventListener('click', toggleFiltroAction);
 
   // --- EVENTOS DOS FILTROS (Clique nas Pills CORRIGIDO PARA MOBILE) ---
-  overlay.querySelectorAll('.catalog-filter-pill').forEach(btn => {
-      // Usamos .onclick puro para evitar qualquer bloqueio nativo em aparelhos Touch
-      btn.onclick = () => {
-          const type = btn.dataset.type; // 'school' ou 'class'
-          const val = btn.dataset.val;
-          const list = type === 'school' ? selectedSchools : selectedClasses;
-          
-          if (list.includes(val)) {
-              list.splice(list.indexOf(val), 1);
-              btn.classList.remove('active');
-          } else {
-              list.push(val);
-              btn.classList.add('active');
-          }
-          triggerSearch(); 
-      };
+  // A abordagem com delegação de eventos na div pai é mais segura no mobile
+  painelFiltros.addEventListener('click', (e) => {
+      const btn = e.target.closest('.catalog-filter-pill');
+      if (!btn) return; // Se não clicou num botão, ignora
+
+      const type = btn.dataset.type; // 'school' ou 'class'
+      const val = btn.dataset.val;
+      const list = type === 'school' ? selectedSchools : selectedClasses;
+      
+      if (list.includes(val)) {
+          list.splice(list.indexOf(val), 1);
+          btn.classList.remove('active');
+      } else {
+          list.push(val);
+          btn.classList.add('active');
+      }
+      triggerSearch(); 
   });
+
 
   // BUSCA (Texto)
   const inputSearch = overlay.querySelector('#catalogLargeSearch');
