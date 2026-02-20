@@ -16,7 +16,7 @@ const io = new Server(server, {
 });
 app.use(cors());
 
-// AUMENTADO PARA 50MB PARA AGUENTAR IMAGENS E ÍCONES BASE64 SEM DAR ERRO
+// Limite aumentado para aceitar dados do mapa
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
@@ -45,7 +45,6 @@ const LayoutSchema = new mongoose.Schema({
 });
 const Layout = mongoose.model('Layout', LayoutSchema);
 
-// --- MODELO DO MAPA (PINS) ---
 const PinSchema = new mongoose.Schema({
     id: { type: Number, required: true, unique: true },
     lat: Number,
@@ -57,42 +56,23 @@ const PinSchema = new mongoose.Schema({
 });
 const Pin = mongoose.model('Pin', PinSchema);
 
-// --- MEMÓRIA DA INICIATIVA ---
 let serverTrackerList = []; 
 
-// --- SOCKET.IO ---
 io.on('connection', (socket) => {
     console.log('Cliente conectado:', socket.id);
-
-    // 1. Envia lista atual ao conectar
     socket.emit('sync_tracker_update', serverTrackerList);
-
-    // 2. Rolagem de dados (visual)
-    socket.on('dados_rolados', (data) => {
-        io.emit('dados_rolados', data); 
-    });
-
-    // 3. Atualização Total (Remover/Limpar/Reordenar)
+    socket.on('dados_rolados', (data) => { io.emit('dados_rolados', data); });
     socket.on('update_tracker', (lista) => {
         serverTrackerList = lista;
         io.emit('sync_tracker_update', serverTrackerList);
     });
-
-    // 4. Adição Individual (Rolar Iniciativa/Adicionar Mob)
     socket.on('add_to_tracker', (item) => {
         const idx = serverTrackerList.findIndex(x => x.name === item.name);
-        if (idx >= 0) {
-            serverTrackerList[idx] = item; 
-        } else {
-            serverTrackerList.push(item); 
-        }
+        if (idx >= 0) { serverTrackerList[idx] = item; } else { serverTrackerList.push(item); }
         io.emit('sync_tracker_update', serverTrackerList);
     });
 });
 
-// =================================================================
-// ROTAS GERAIS E DE ARQUIVOS
-// =================================================================
 app.get('/api/catalog/:tipo', (req, res) => {
     const tipo = req.params.tipo;
     let possiblePaths = [ path.join(__dirname, 'data', `${tipo}.json`), path.join(__dirname, 'data', `${tipo}_db.json`) ];
@@ -107,7 +87,6 @@ app.get('/api/catalog/:tipo', (req, res) => {
     res.json(found ? fileData : []); 
 });
 
-// --- ROTAS LAYOUT ---
 app.get('/api/layout', async (req, res) => {
     try {
         let layout = await Layout.findOne({ id: "master_layout" });
@@ -123,7 +102,6 @@ app.post('/api/save-layout', async (req, res) => {
     } catch (error) { res.status(500).json({ error: "Erro ao salvar layout" }); }
 });
 
-// --- ROTAS PERSONAGEM ---
 app.get('/api/lista-personagens', async (req, res) => {
     try {
         const fichas = await Ficha.find({}, 'nome');
@@ -188,10 +166,6 @@ app.post('/api/editar-credenciais', async (req, res) => {
     } catch (error) { res.status(500).json({ error: "Erro ao editar." }); }
 });
 
-// =================================================================
-// ROTAS DO MAPA DE RUNETERRA
-// =================================================================
-
 app.get('/api/mapa-pins', async (req, res) => {
     try {
         const pins = await Pin.find({});
@@ -204,8 +178,8 @@ app.post('/api/mapa-pins', async (req, res) => {
         await Pin.findOneAndUpdate({ id: req.body.id }, req.body, { upsert: true, new: true });
         res.json({ ok: true });
     } catch (error) { 
-        console.error("Erro ao salvar no banco:", error);
-        res.status(500).json({ error: 'Erro ao salvar pin' }); 
+        console.error("Erro ao salvar no banco:", error.message);
+        res.status(500).json({ error: 'Erro ao salvar pin. A imagem pode ser grande demais.' }); 
     }
 });
 

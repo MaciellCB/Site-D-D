@@ -146,7 +146,8 @@
             display: flex; align-items: center; justify-content: center; font-weight: bold;
         }
 
-        .leaflet-popup-content-wrapper { background: #151515; border: 1px solid var(--accent); color: #ddd; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+        /* Leaflet e Popup Customizado */
+        .leaflet-popup-content-wrapper { background: #151515; border: 1px solid var(--accent); color: #ddd; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); padding: 0; overflow: hidden; }
         .leaflet-popup-tip { background: var(--accent); }
         .leaflet-popup-content { margin: 15px; width: 320px !important; }
         
@@ -156,28 +157,33 @@
         .popup-edit-btn { background: none; border: none; color: #777; cursor: pointer; font-size: 16px; transition: 0.2s; }
         .popup-edit-btn:hover { color: #fff; transform: scale(1.1); }
 
-        /* === SISTEMA DE ARRASTAR O LORE === */
-        /* Textarea readonly parece um texto normal, mas permite redimensionar */
-        .popup-desc-view { 
-            width: 100%; font-family: inherit; font-size: 14px; color: #ccc; line-height: 1.6; 
-            margin-bottom: 10px; padding: 0 0 10px 0; border: none; border-bottom: 1px dashed #333;
-            background: transparent; outline: none;
-            resize: vertical; /* Permite arrastar verticalmente! */
-            overflow-y: auto; 
-            min-height: 50px; 
-            height: 80px; /* Começa com aproximadamente 3 a 4 linhas visíveis */
-            max-height: 400px;
-            box-sizing: border-box; cursor: text;
+        /* === SISTEMA DE ARRASTAR O LORE EXPLÍCITO === */
+        .popup-desc-container {
+            width: 100%; display: flex; flex-direction: column; margin-bottom: 10px;
+            border: 1px solid #333; border-radius: 6px; overflow: hidden; background: #0a0a0a;
+            /* Permite arrastar TUDO puxando a barra debaixo */
+            resize: vertical; overflow: hidden; 
+            height: 90px; /* Altura inicial para +- 3 linhas e a barra */
+            min-height: 70px; max-height: 400px;
         }
-        /* Personaliza a barrinha de rolagem do texto */
+        .popup-desc-view {
+            width: 100%; flex: 1; padding: 10px; margin: 0; border: none; background: transparent; 
+            color: #ccc; font-size: 14px; font-family: inherit; line-height: 1.6; outline: none;
+            resize: none; /* Desativa o resize próprio, pois a div inteira que cresce */
+            overflow-y: auto; white-space: pre-wrap; cursor: text;
+        }
         .popup-desc-view::-webkit-scrollbar { width: 4px; }
-        .popup-desc-view::-webkit-scrollbar-track { background: transparent; }
         .popup-desc-view::-webkit-scrollbar-thumb { background: #555; border-radius: 2px; }
         
+        /* A barra visual que fica na base ensinando que dá pra puxar */
+        .popup-drag-handle {
+            background: #1a1a1a; color: #555; text-align: center; font-size: 9px; font-weight: bold; 
+            padding: 3px 0; border-top: 1px solid #333; width: 100%; user-select: none;
+            letter-spacing: 1px; flex-shrink: 0; pointer-events: none; /* A div pai que tem a hitbox do resize */
+        }
+        
         .popup-img-main { 
-            width: 100%; height: 160px; 
-            object-fit: cover; border-radius: 6px; margin-bottom: 8px; cursor: pointer; border: 1px solid #333; display: block; 
-            transition: 0.2s;
+            width: 100%; height: 160px; object-fit: cover; border-radius: 6px; margin-bottom: 8px; cursor: pointer; border: 1px solid #333; display: block; transition: 0.2s;
         }
         .popup-img-main:hover { border-color: var(--accent); }
         
@@ -193,9 +199,6 @@
 
         .lightbox { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index: 10000; display:none; justify-content:center; align-items:center; cursor: zoom-out; animation: fadeIn 0.2s; }
         .lightbox img { max-width: 95%; max-height: 95%; border: 2px solid #333; box-shadow: 0 0 50px black; border-radius: 4px; }
-
-        @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -361,8 +364,6 @@
                 document.getElementById('ctx-menu').style.display = 'none';
 
                 if (isMeasuringSession) {
-                    const mode = document.querySelector('input[name="measure-mode"]:checked').value;
-                    
                     if (!isDrawing) {
                         isDrawing = true;
                         measurePoints = [e.latlng]; 
@@ -554,11 +555,11 @@
                 });
                 
                 if(!res.ok) {
-                    alert("Aviso: O pin apareceu no mapa, mas falhou ao salvar no servidor! Tente imagens menores.");
+                    alert("Aviso: O pin apareceu no mapa, mas falhou ao salvar no servidor! Tente imagens menores. O erro continua.");
                 }
             } catch(e) { 
                 console.error("Erro ao salvar no banco", e);
-                alert("Erro grave ao comunicar com o servidor. Verifique se o banco de dados está rodando.");
+                alert("Erro grave ao comunicar com o servidor. Verifique se o banco de dados está rodando e se a imagem não é colossal.");
             }
 
             fecharModal();
@@ -585,26 +586,12 @@
             pin.marker.setPopupContent(gerarPopupContent(pin));
         }
 
-        // --- SISTEMA CORRIGIDO DE TROCAR IMAGEM E GARANTIR A RENDERIZAÇÃO ---
-        window.trocarImagemPrincipal = function(pinId, idx) {
-            const pin = markers.find(m => m.id === pinId);
-            if(!pin) return;
-            
-            // Reconstroi a lista de imagens para saber qual o índice clicado
-            let todasImagens = [];
-            if(pin.gallery && pin.gallery.length > 0) {
-                todasImagens.push(...pin.gallery);
-            }
-            if(pin.icon !== IMG_DEFAULT_ICON && !todasImagens.includes(pin.icon)) {
-                todasImagens.unshift(pin.icon);
-            }
-            if(todasImagens.length === 0) {
-                todasImagens.push(IMG_DEFAULT_ICON);
-            }
-
+        // Função segura para trocar a imagem sem quebrar o DOM com strings gigantes
+        window.trocarImagemPrincipal = function(element, pinId) {
             const mainImg = document.getElementById(`main-img-${pinId}`);
-            if(mainImg && todasImagens[idx]) {
-                mainImg.src = todasImagens[idx];
+            if(mainImg) {
+                // Ao invés de passar a string toda por parâmetro no HTML, nós pegamos o 'src' diretamente do elemento que foi clicado.
+                mainImg.src = element.src; 
             }
         };
 
@@ -617,31 +604,37 @@
                 </div>
             `;
             
+            // LORE CONTAINER ARRASTÁVEL: Engloba o texto e a barra inferior para ficar óbvio
             let descHtml = pin.desc || "Sem descrição.";
-            html += `<textarea readonly class="popup-desc-view">${descHtml}</textarea>`;
+            html += `
+                <div class="popup-desc-container">
+                    <textarea readonly class="popup-desc-view">${descHtml}</textarea>
+                    <div class="popup-drag-handle">[ ||| Arraste para expandir ||| ]</div>
+                </div>
+            `;
             
-            // PREPARA AS IMAGENS
+            // PREPARA AS IMAGENS: Evita duplicados entre o Ícone e a Galeria
             let todasImagens = [];
             
             if(pin.gallery && pin.gallery.length > 0) {
                 todasImagens.push(...pin.gallery);
             }
             if(pin.icon !== IMG_DEFAULT_ICON && !todasImagens.includes(pin.icon)) {
-                todasImagens.unshift(pin.icon);
+                todasImagens.unshift(pin.icon); // Coloca o ícone customizado no início se não estiver na galeria
             }
             if(todasImagens.length === 0) {
-                todasImagens.push(IMG_DEFAULT_ICON);
+                todasImagens.push(IMG_DEFAULT_ICON); // Previne erros caso não tenha imagem nenhuma
             }
 
             // IMAGEM PRINCIPAL
             html += `<img src="${todasImagens[0]}" id="main-img-${pin.id}" class="popup-img-main" onclick="verFull(this.src)">`;
 
-            // THUMBNAILS (GALERIA)
-            // Em vez de passar a imagem inteira na função (que quebra o HTML), passamos apenas o índice dela (idx)!
+            // THUMBNAILS (GALERIA EXTRA)
             if(todasImagens.length > 1) {
                 html += `<div class="popup-gallery">`;
-                todasImagens.forEach((img, idx) => { 
-                    html += `<img src="${img}" class="popup-thumb" onclick="trocarImagemPrincipal(${pin.id}, ${idx})">`; 
+                // Passamos "this" no onclick para pegar o objeto seguro
+                todasImagens.forEach((img) => { 
+                    html += `<img src="${img}" class="popup-thumb" onclick="trocarImagemPrincipal(this, ${pin.id})">`; 
                 });
                 html += `</div>`;
             }
@@ -656,13 +649,47 @@
             document.getElementById(`area-${target}`).classList.add('paste-active');
         }
 
+        // === COMPRESSOR DE IMAGENS AUTOMÁTICO (Resolve o erro do Servidor) ===
+        function comprimirImagem(file, callback) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = event => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    // Reduz para no máximo 800px de largura/altura para salvar tranquilo no banco
+                    const MAX_WIDTH = 800;
+                    const MAX_HEIGHT = 800;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                    } else {
+                        if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Retorna um WebP comprimido a 70% de qualidade
+                    const dataUrl = canvas.toDataURL('image/webp', 0.7);
+                    callback(dataUrl);
+                }
+            }
+        }
+
         document.getElementById('area-icon').addEventListener('click', (e) => {
             if (pasteTarget !== 'icon') { setPasteTarget('icon'); } 
             else { document.getElementById('file-icon').click(); }
         });
         document.getElementById('file-icon').addEventListener('change', (e) => {
             const file = e.target.files[0];
-            if(file) lerArquivo(file, (res) => { iconImage = res; renderFormVisuals(); });
+            // Usa o compressor agora!
+            if(file) comprimirImagem(file, (res) => { iconImage = res; renderFormVisuals(); });
         });
 
         document.getElementById('area-gallery').addEventListener('click', (e) => {
@@ -671,7 +698,8 @@
         });
         document.getElementById('file-gallery').addEventListener('change', (e) => {
             Array.from(e.target.files).forEach(file => { 
-                lerArquivo(file, (res) => { galleryImages.push(res); renderFormVisuals(); }); 
+                // Usa o compressor agora!
+                comprimirImagem(file, (res) => { galleryImages.push(res); renderFormVisuals(); }); 
             });
         });
 
@@ -681,7 +709,9 @@
             for (let index in items) {
                 const item = items[index];
                 if (item.kind === 'file' && item.type.includes('image/')) {
-                    lerArquivo(item.getAsFile(), (res) => {
+                    const file = item.getAsFile();
+                    // Usa o compressor agora!
+                    comprimirImagem(file, (res) => {
                         if(pasteTarget === 'icon') iconImage = res;
                         else galleryImages.push(res);
                         renderFormVisuals();
@@ -689,12 +719,6 @@
                 }
             }
         });
-
-        function lerArquivo(file, callback) {
-            const reader = new FileReader();
-            reader.onload = (e) => callback(e.target.result);
-            reader.readAsDataURL(file);
-        }
 
         window.removeImg = function(e, idx) {
             e.stopPropagation();
