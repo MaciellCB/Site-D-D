@@ -689,36 +689,77 @@
   <script src="JS/HeaderJS.js"></script>
   <script src="JS/MagicSystem.js"></script>
 
-  <script>
-/* =================================================================
-       1. LÓGICA DO MODO MOBILE
-       ================================================================= */
-    function setMobileView(view) {
-      document.body.setAttribute('data-mobile-view', view);
-      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.getAttribute('onclick').includes(view)) {
-          btn.classList.add('active');
-        }
-      });
-      window.scrollTo(0, 0);
-    }
+ <script>
+    // Configuração Global da API
+    const API_URL = 'https://dandd-chan.onrender.com/api';
 
-    if (window.innerWidth <= 768) {
-      setMobileView('status');
+    /* =================================================================
+       1. INICIALIZAÇÃO E MODO MESTRE
+       ================================================================= */
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const masterChar = params.get('masterView');
+
+      if (masterChar) {
+        console.log("Modo Mestre detectado para:", masterChar);
+        // Remove o bloqueio de login imediatamente
+        const overlay = document.getElementById('login-overlay');
+        if (overlay) overlay.style.display = 'none';
+        
+        const linkVoltar = document.getElementById('link-voltar-painel');
+        if (linkVoltar) linkVoltar.style.display = 'block';
+        
+        carregarFichaMestre(masterChar);
+      }
+    });
+
+    async function carregarFichaMestre(nome) {
+      try {
+        const res = await fetch(`${API_URL}/load-ficha-mestre`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome: nome })
+        });
+
+        if (res.ok) {
+          const ficha = await res.json();
+          
+          // Define a ficha no escopo global para todos os outros scripts (HeaderJS, EsquerdaJS, etc)
+          window.state = ficha; 
+
+          // Preenche o visual básico
+          preencherFichaNaTela(ficha);
+          
+          // Dispara a inicialização de todos os módulos da ficha
+          setTimeout(() => {
+            if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+            if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
+            if (typeof atualizarHeader === 'function') atualizarHeader();
+            if (typeof atualizarTextoClassesHeader === 'function') atualizarTextoClassesHeader();
+            if (typeof setActiveTab === 'function') setActiveTab(ficha.activeTab || 'Combate');
+            
+            window.dispatchEvent(new CustomEvent('sheet-updated'));
+          }, 100);
+
+          exibirAvisoTemporario("Mestre: Visualizando " + (ficha.personagem || ficha.nome));
+        } else {
+          exibirAvisoTemporario("Erro: Ficha não encontrada no servidor.");
+        }
+      } catch (e) {
+        console.error("Falha no login do Mestre:", e);
+        exibirAvisoTemporario("Erro crítico ao carregar ficha.");
+      }
     }
 
     /* =================================================================
-       2. LÓGICA DO SOCKET.IO (SINCRONIZAÇÃO EM TEMPO REAL)
+       2. SINCRONIZAÇÃO EM TEMPO REAL (SOCKET.IO)
        ================================================================= */
     const socket = io('https://dandd-chan.onrender.com');
 
-    socket.on('connect', () => {
-      console.log("Conectado ao servidor! ID:", socket.id);
-    });
+    socket.on('connect', () => { console.log("Socket conectado:", socket.id); });
 
     socket.on('ficha_atualizada', (novaFicha) => {
-      // Usa window.state para ser compatível com Mestre e Jogador
+      // Verifica se a ficha recebida é a que está aberta na tela
       if (window.state && window.state.nome && novaFicha.nome && novaFicha.nome.toLowerCase() === window.state.nome.toLowerCase()) {
         
         let estadoFinal = novaFicha;
@@ -728,6 +769,7 @@
 
         Object.assign(window.state, estadoFinal);
 
+        // Atualiza a tela sem recarregar a página
         if (typeof preencherFichaNaTela === 'function') preencherFichaNaTela(window.state);
         if (typeof atualizarHeader === 'function') atualizarHeader();
         if (typeof atualizarTextoClassesHeader === 'function') atualizarTextoClassesHeader();
@@ -749,63 +791,11 @@
     });
 
     /* =================================================================
-       3. LÓGICA DO MESTRE & ACESSO DIRETO
-       ================================================================= */
-    window.addEventListener('DOMContentLoaded', () => {
-      const params = new URLSearchParams(window.location.search);
-      const masterChar = params.get('masterView');
-
-      if (masterChar) {
-        // Esconde o login e mostra o link de voltar para o Mestre entrar direto
-        const loginOverlay = document.getElementById('login-overlay');
-        if (loginOverlay) loginOverlay.style.display = 'none';
-        
-        const linkVoltar = document.getElementById('link-voltar-painel');
-        if (linkVoltar) linkVoltar.style.display = 'block';
-        
-        carregarFichaMestre(masterChar);
-      }
-    });
-
-    async function carregarFichaMestre(nome) {
-      try {
-        const res = await fetch(`https://dandd-chan.onrender.com/api/load-ficha-mestre`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nome: nome })
-        });
-
-        if (res.ok) {
-          const ficha = await res.json();
-          window.state = ficha; // Inicializa o estado global
-
-          preencherFichaNaTela(ficha);
-          
-          if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
-          if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
-          if (typeof atualizarHeader === 'function') atualizarHeader();
-          if (typeof atualizarTextoClassesHeader === 'function') atualizarTextoClassesHeader();
-          
-          window.dispatchEvent(new CustomEvent('sheet-updated'));
-          if (typeof setActiveTab === 'function') setActiveTab(ficha.activeTab || 'Combate');
-          
-          exibirAvisoTemporario("Mestre: Visualizando " + (ficha.personagem || ficha.nome));
-        } else {
-          exibirAvisoTemporario("Erro: Personagem não encontrado.");
-        }
-      } catch (e) {
-        console.error(e);
-        exibirAvisoTemporario("Erro de conexão com o servidor.");
-      }
-    }
-
-    /* =================================================================
-       4. LÓGICA DE RECORTE (CROP) E SALVAMENTO UNIFICADO
+       3. LÓGICA DE RECORTE (CROP) E SALVAMENTO
        ================================================================= */
     const modalCrop = document.getElementById('modal-crop-overlay');
     const btnConfirmarCrop = document.getElementById('btn-confirmar-crop');
     const btnCancelarCrop = document.getElementById('btn-cancelar-crop');
-    const imgVisualFicha = document.getElementById('img-personagem-visual');
 
     btnCancelarCrop.onclick = function () {
         modalCrop.style.display = 'none';
@@ -821,7 +811,9 @@
         const canvas = window.cropper.getCroppedCanvas({ width: 300, height: 300 });
         const imagemBase64 = canvas.toDataURL('image/jpeg', 0.85);
 
-        if (imgVisualFicha) imgVisualFicha.src = imagemBase64;
+        // Atualiza a foto na ficha
+        const imgElement = document.getElementById('img-personagem-visual');
+        if (imgElement) imgElement.src = imagemBase64;
 
         modalCrop.style.display = 'none';
         window.cropper.destroy();
@@ -831,57 +823,56 @@
             window.state.fotoPerfil = imagemBase64;
 
             if (typeof reordenarObjeto === 'function') {
-                const ordenado = reordenarObjeto(window.state);
-                Object.assign(window.state, ordenado);
+                Object.assign(window.state, reordenarObjeto(window.state));
             }
 
+            // Salva de forma robusta
             if (typeof saveStateToServer === 'function') {
                 saveStateToServer();
-            } else if (socket) {
+            } else {
+                // Fallback de salvamento via fetch direto
+                fetch(`${API_URL}/save-ficha`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(window.state)
+                });
                 socket.emit('ficha_atualizada', window.state);
             }
         }
     };
 
     /* =================================================================
-       5. UTILITÁRIOS DE INTERFACE E LOGIN
+       4. UTILITÁRIOS (MOBILE, LOGIN, INTERFACE)
        ================================================================= */
+    function setMobileView(view) {
+      document.body.setAttribute('data-mobile-view', view);
+      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('onclick').includes(view)) btn.classList.add('active');
+      });
+      window.scrollTo(0, 0);
+    }
+    if (window.innerWidth <= 768) setMobileView('status');
+
     function preencherFichaNaTela(data) {
       setVal('input-personagem', data.personagem || data.nome);
       setVal('input-jogador', data.jogador);
       setVal('input-raca', data.raca);
       setTxt('btn-antecedente', data.antecedente);
-
       const imgElement = document.getElementById('img-personagem-visual');
       if (imgElement) {
-        imgElement.src = (data.fotoPerfil && data.fotoPerfil.length > 10) ? data.fotoPerfil : "img/imagem-no-site/personagem.png";
+        imgElement.src = (data.fotoPerfil && data.fotoPerfil.length > 50) ? data.fotoPerfil : "img/imagem-no-site/personagem.png";
       }
-
       if (data.atributos) {
-        setTxtQ('.num.n1', data.atributos.n1);
-        setTxtQ('.num.n2', data.atributos.n2);
-        setTxtQ('.num.n3', data.atributos.n3);
-        setTxtQ('.num.n4', data.atributos.n4);
-        setTxtQ('.num.n5', data.atributos.n5);
-        setTxtQ('.num.n6', data.atributos.n6);
+        setTxtQ('.num.n1', data.atributos.n1); setTxtQ('.num.n2', data.atributos.n2);
+        setTxtQ('.num.n3', data.atributos.n3); setTxtQ('.num.n4', data.atributos.n4);
+        setTxtQ('.num.n5', data.atributos.n5); setTxtQ('.num.n6', data.atributos.n6);
       }
     }
 
-    function setVal(id, valor) { const el = document.getElementById(id); if (el) el.value = valor !== undefined ? valor : ''; }
-    function setTxt(id, valor) { const el = document.getElementById(id); if (el) el.innerText = valor !== undefined ? valor : ''; }
-    function setTxtQ(selector, valor) { const el = document.querySelector(selector); if (el) el.innerText = valor !== undefined ? valor : ''; }
-
-    function exibirAvisoTemporario(mensagem) {
-      const existente = document.querySelector('.custom-toast-warning');
-      if (existente) existente.remove();
-      const toast = document.createElement('div');
-      toast.className = 'custom-toast-warning';
-      const textoFormatado = mensagem.split('\n').join('<br>');
-      toast.innerHTML = `<div class="toast-progress"></div><div class="toast-content"><strong style="color:#e0aaff; display:block; margin-bottom:4px; font-size:11px; letter-spacing:1px;">SISTEMA</strong>${textoFormatado}</div>`;
-      document.body.appendChild(toast);
-      setTimeout(() => { toast.querySelector('.toast-progress').style.width = '0%'; }, 50);
-      setTimeout(() => { if (toast.parentElement) { toast.style.animation = 'toastFadeOut 0.5s ease-out forwards'; setTimeout(() => toast.remove(), 450); } }, 5000);
-    }
+    function setVal(id, v) { const el = document.getElementById(id); if (el) el.value = v || ''; }
+    function setTxt(id, v) { const el = document.getElementById(id); if (el) el.innerText = v || ''; }
+    function setTxtQ(s, v) { const el = document.querySelector(s); if (el) el.innerText = v || ''; }
 
     function tentarLogin() {
       const nome = document.getElementById('login-nome').value;
@@ -892,13 +883,11 @@
       }
       if (nome && senha) {
         if (typeof carregarDadosIniciais === 'function') carregarDadosIniciais(nome, senha);
-        else alert("Erro: Scripts JS não carregados.");
+        else alert("Erro: Carregue os arquivos JS primeiro.");
       } else {
         exibirAvisoTemporario("Preencha todos os campos!");
       }
     }
-    
-
 
   </script>
 </body>

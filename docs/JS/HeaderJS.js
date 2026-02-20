@@ -3345,6 +3345,7 @@ window.addEventListener('sheet-updated', () => {
 
 // Mantém o JSON da ficha organizado
 function reordenarObjeto(obj) {
+    if (!obj) return {};
     const chavesPrioritarias = ["nome", "senha", "fotoPerfil", "activeTab", "spellDCConfig", "dtMagias"];
     const novoObj = {};
     chavesPrioritarias.forEach(chave => {
