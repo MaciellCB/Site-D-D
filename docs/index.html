@@ -283,11 +283,8 @@
   <section class="info-personagem">
     <div class="info-esquerda">
       <div style="position: relative; display: inline-block;">
-        <img src="img/imagem-no-site/personagem.png" 
-     alt="Foto do personagem" 
-     class="foto-personagem"
+        <img src="img/imagem-no-site/personagem.png" alt="Foto do personagem" class="foto-personagem"
      id="img-personagem-visual"
-     onclick="abrirPromptImagem()" 
      title="Clique para alterar a foto" />
 
         <button onclick="toggleConfigPopup(event)" class="btn-config-foto" title="Opções da Ficha">
@@ -689,56 +686,79 @@
   <script src="JS/HeaderJS.js"></script>
   <script src="JS/MagicSystem.js"></script>
 
- <script>
-    // Configuração da API - Garanta que esta URL esteja correta
-    const API_URL = 'https://dandd-chan.onrender.com/api';
-    const socket = io('https://dandd-chan.onrender.com');
+  <script>
+    /* =================================================================
+       LÓGICA DO MODO MOBILE
+       ================================================================= */
+    function setMobileView(view) {
+      document.body.setAttribute('data-mobile-view', view);
+      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('onclick').includes(view)) {
+          btn.classList.add('active');
+        }
+      });
+      window.scrollTo(0, 0);
+    }
+
+    if (window.innerWidth <= 768) {
+      setMobileView('status');
+    }
 
     /* =================================================================
-       1. INICIALIZAÇÃO E ACESSO (JOGADOR E MESTRE)
+       LÓGICA DO SOCKET.IO (SINCRONIZAÇÃO EM TEMPO REAL)
+       ================================================================= */
+    const socket = io('https://dandd-chan.onrender.com');
+
+    socket.on('connect', () => {
+      console.log("Conectado ao servidor de atualizações! ID:", socket.id);
+    });
+
+    socket.on('ficha_atualizada', (novaFicha) => {
+      // Verifica se a ficha é a mesma que está aberta
+      if (state && state.nome && novaFicha.nome && novaFicha.nome.toLowerCase() === state.nome.toLowerCase()) {
+        console.log("Recebi atualização externa para: " + novaFicha.nome);
+
+        // 1. Chama a função de mesclagem que criamos no DireitaJS
+        // Se a função existir (carregada), usa ela. Se não, usa o dado bruto.
+        let estadoFinal = novaFicha;
+
+        if (typeof window.mesclarEstadoVisual === 'function') {
+          estadoFinal = window.mesclarEstadoVisual(state, novaFicha);
+        }
+
+        // 2. Atualiza o estado com os dados mesclados (Preservando abertas/fechadas)
+        Object.assign(state, estadoFinal);
+
+        // 3. Atualiza a tela
+        if (typeof preencherFichaNaTela === 'function') preencherFichaNaTela(state);
+        if (typeof atualizarHeader === 'function') atualizarHeader();
+        if (typeof atualizarTextoClassesHeader === 'function') atualizarTextoClassesHeader();
+        if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+        if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
+
+        // Dispara evento para redesenhar a Direita
+        window.dispatchEvent(new CustomEvent('sheet-updated'));
+      }
+    });
+
+    /* =================================================================
+       LÓGICA DO MESTRE & PREENCHIMENTO DE DADOS
        ================================================================= */
     window.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
       const masterChar = params.get('masterView');
 
       if (masterChar) {
-        // Se for visualização do Mestre, remove o bloqueio e carrega
-        const overlay = document.getElementById('login-overlay');
-        if (overlay) overlay.style.display = 'none';
-        const linkVoltar = document.getElementById('link-voltar-painel');
-        if (linkVoltar) linkVoltar.style.display = 'block';
-        
+        document.getElementById('login-overlay').style.display = 'none';
+        document.getElementById('link-voltar-painel').style.display = 'block';
         carregarFichaMestre(masterChar);
       }
     });
 
-    // Função de Login do Player
-    async function carregarDadosIniciais(nome, senha) {
-      try {
-        const res = await fetch(`${API_URL}/load-ficha`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nome, senha })
-        });
-
-        if (res.ok) {
-          const ficha = await res.json();
-          window.state = ficha; // Define o estado global
-          document.getElementById('login-overlay').style.display = 'none';
-          
-          finalizarCarregamento(ficha);
-        } else {
-          exibirAvisoTemporario("Nome ou senha incorretos.");
-        }
-      } catch (e) {
-        exibirAvisoTemporario("Erro ao conectar com o servidor.");
-      }
-    }
-
-    // Função de Carregamento do Mestre
     async function carregarFichaMestre(nome) {
       try {
-        const res = await fetch(`${API_URL}/load-ficha-mestre`, {
+        const res = await fetch('https://dandd-chan.onrender.com/api/load-ficha-mestre', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ nome: nome })
@@ -746,123 +766,246 @@
 
         if (res.ok) {
           const ficha = await res.json();
-          window.state = ficha;
-          finalizarCarregamento(ficha);
+          if (typeof state !== 'undefined') {
+            Object.assign(state, ficha);
+            preencherFichaNaTela(ficha);
+            if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+            if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
+            if (typeof atualizarHeader === 'function') atualizarHeader();
+            window.dispatchEvent(new CustomEvent('sheet-updated'));
+            if (typeof setActiveTab === 'function') setActiveTab(state.activeTab || 'Combate');
+            exibirAvisoTemporario("Mestre: Visualizando " + ficha.nome);
+          }
+        } else {
+          exibirAvisoTemporario("Erro: Personagem não encontrado.");
         }
       } catch (e) {
-        console.error("Erro ao carregar ficha:", e);
+        console.error(e);
+        exibirAvisoTemporario("Erro de conexão com o servidor.");
       }
     }
 
-    function finalizarCarregamento(ficha) {
-      preencherFichaNaTela(ficha);
-      
-      // Inicializa todos os componentes do sistema
-      if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
-      if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
-      if (typeof atualizarHeader === 'function') atualizarHeader();
-      if (typeof atualizarTextoClassesHeader === 'function') atualizarTextoClassesHeader();
-      
-      window.dispatchEvent(new CustomEvent('sheet-updated'));
-      if (typeof setActiveTab === 'function') setActiveTab(ficha.activeTab || 'Combate');
+    function preencherFichaNaTela(data) {
+      // ALTERADO: Agora preenche o input com 'personagem' e só usa 'nome' se o outro estiver vazio
+      setVal('input-personagem', data.personagem || data.nome);
+      setVal('input-jogador', data.jogador);
+      setVal('input-raca', data.raca);
+      setTxt('btn-antecedente', data.antecedente);
+
+      // Atualiza o HUD do OBS se estiver aberto (Nome Visual)
+      const overlayNome = document.getElementById('nome-personagem-overlay');
+      if (overlayNome) overlayNome.textContent = data.personagem || data.nome;
+
+      const imgElement = document.getElementById('img-personagem-visual');
+      if (imgElement) {
+        imgElement.src = (data.fotoPerfil && data.fotoPerfil.length > 10) ? data.fotoPerfil : "img/imagem-no-site/personagem.png";
+      }
+
+      if (data.atributos) {
+        setTxtQ('.num.n1', data.atributos.n1);
+        setTxtQ('.num.n2', data.atributos.n2);
+        setTxtQ('.num.n3', data.atributos.n3);
+        setTxtQ('.num.n4', data.atributos.n4);
+        setTxtQ('.num.n5', data.atributos.n5);
+        setTxtQ('.num.n6', data.atributos.n6);
+      }
     }
 
-    /* =================================================================
-       2. SINCRONIZAÇÃO EM TEMPO REAL
-       ================================================================= */
-    socket.on('ficha_atualizada', (novaFicha) => {
-      if (window.state && window.state.nome && novaFicha.nome.toLowerCase() === window.state.nome.toLowerCase()) {
-        Object.assign(window.state, novaFicha);
-        preencherFichaNaTela(window.state);
-        if (typeof atualizarHeader === 'function') atualizarHeader();
-        if (typeof atualizarTextoClassesHeader === 'function') atualizarTextoClassesHeader();
-        window.dispatchEvent(new CustomEvent('sheet-updated'));
-      }
-    });
-
-    socket.on('dados_rolados', (data) => {
-      if (data.socketId === socket.id) return;
-      if (window.state && window.state.nome && data.personagem && data.personagem.toLowerCase() === window.state.nome.toLowerCase()) {
-        if (typeof showCombatResults === 'function') showCombatResults(data.titulo, data.ataque, data.dano, true);
-      }
-    });
+    function setVal(id, valor) { const el = document.getElementById(id); if (el) el.value = valor !== undefined ? valor : ''; }
+    function setTxt(id, valor) { const el = document.getElementById(id); if (el) el.innerText = valor !== undefined ? valor : ''; }
+    function setTxtQ(selector, valor) { const el = document.querySelector(selector); if (el) el.innerText = valor !== undefined ? valor : ''; }
 
     /* =================================================================
-       3. LÓGICA DE RECORTE (CROP) E SALVAMENTO
+       SISTEMA DE LOGIN / TOASTS / ALERTAS
        ================================================================= */
-    const modalCrop = document.getElementById('modal-crop-overlay');
-    const btnConfirmarCrop = document.getElementById('btn-confirmar-crop');
-    const btnCancelarCrop = document.getElementById('btn-cancelar-crop');
+    function exibirAvisoTemporario(mensagem) {
+      const existente = document.querySelector('.custom-toast-warning');
+      if (existente) existente.remove();
 
-    btnCancelarCrop.onclick = () => {
-      modalCrop.style.display = 'none';
-      if (window.cropper) { window.cropper.destroy(); window.cropper = null; }
-    };
+      const toast = document.createElement('div');
+      toast.className = 'custom-toast-warning';
 
-    btnConfirmarCrop.onclick = () => {
-      if (!window.cropper) return;
-      const canvas = window.cropper.getCroppedCanvas({ width: 300, height: 300 });
-      const imagemBase64 = canvas.toDataURL('image/jpeg', 0.85);
+      const progress = document.createElement('div');
+      progress.className = 'toast-progress';
 
-      document.getElementById('img-personagem-visual').src = imagemBase64;
-      modalCrop.style.display = 'none';
-      window.cropper.destroy();
-      window.cropper = null;
+      const content = document.createElement('div');
+      content.className = 'toast-content';
 
-      if (window.state) {
-        window.state.fotoPerfil = imagemBase64;
-        if (typeof saveStateToServer === 'function') saveStateToServer();
-      }
-    };
+      const textoFormatado = mensagem.split('\n').join('<br>');
+      content.innerHTML = '<strong style="color:#e0aaff; display:block; margin-bottom:4px; font-size:11px; letter-spacing:1px;">SISTEMA</strong>' + textoFormatado;
 
-    /* =================================================================
-       4. UTILITÁRIOS E LOGIN
-       ================================================================= */
+      toast.appendChild(progress);
+      toast.appendChild(content);
+      document.body.appendChild(toast);
+
+      setTimeout(() => { progress.style.width = '0%'; }, 50);
+      setTimeout(() => {
+        if (toast.parentElement) {
+          toast.style.animation = 'toastFadeOut 0.5s ease-out forwards';
+          setTimeout(() => toast.remove(), 450);
+        }
+      }, 5000);
+    }
+
+    window.alert = function (msg) { exibirAvisoTemporario(msg); };
+
     function tentarLogin() {
       const nome = document.getElementById('login-nome').value;
       const senha = document.getElementById('login-senha').value;
 
       if (nome.toLowerCase() === 'mestre' && senha === 'admin') {
         window.open('mestre.html', '_blank');
+        document.getElementById('login-nome').value = '';
+        document.getElementById('login-senha').value = '';
+        exibirAvisoTemporario("Painel do Mestre aberto em nova aba.");
         return;
       }
+
       if (nome && senha) {
-        carregarDadosIniciais(nome, senha);
+        if (typeof carregarDadosIniciais === 'function') {
+          carregarDadosIniciais(nome, senha);
+        } else {
+          alert("Erro: Scripts JS não carregados corretamente.");
+        }
       } else {
         exibirAvisoTemporario("Preencha todos os campos!");
       }
     }
 
-    function setMobileView(view) {
-      document.body.setAttribute('data-mobile-view', view);
-      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.getAttribute('onclick').includes(view)) btn.classList.add('active');
+    /* =================================================================
+       LÓGICA DE RECORTE (CROP) E SALVAMENTO REORDENADO
+       ================================================================= */
+
+    // Função auxiliar para garantir a ordem das chaves no JSON
+    function reordenarObjeto(obj) {
+      const chavesPrioritarias = ["nome", "senha", "fotoPerfil", "activeTab", "spellDCConfig", "dtMagias"];
+      const novoObj = {};
+      chavesPrioritarias.forEach(chave => {
+        if (obj.hasOwnProperty(chave)) {
+          novoObj[chave] = obj[chave];
+        }
       });
-      window.scrollTo(0, 0);
+      Object.keys(obj).forEach(chave => {
+        if (!chavesPrioritarias.includes(chave)) {
+          novoObj[chave] = obj[chave];
+        }
+      });
+      return novoObj;
     }
-    if (window.innerWidth <= 768) setMobileView('status');
 
-    function preencherFichaNaTela(data) {
-      setVal('input-personagem', data.personagem || data.nome);
-      setVal('input-jogador', data.jogador);
-      setVal('input-raca', data.raca);
-      setTxt('btn-antecedente', data.antecedente);
-      const imgElement = document.getElementById('img-personagem-visual');
-      if (imgElement) imgElement.src = (data.fotoPerfil && data.fotoPerfil.length > 50) ? data.fotoPerfil : "img/imagem-no-site/personagem.png";
-      
-      if (data.atributos) {
-        setTxtQ('.num.n1', data.atributos.n1); setTxtQ('.num.n2', data.atributos.n2);
-        setTxtQ('.num.n3', data.atributos.n3); setTxtQ('.num.n4', data.atributos.n4);
-        setTxtQ('.num.n5', data.atributos.n5); setTxtQ('.num.n6', data.atributos.n6);
+    // Elementos do DOM
+    const inputFoto = document.getElementById('input-foto-upload');
+    const modalCrop = document.getElementById('modal-crop-overlay');
+    const imgParaCrop = document.getElementById('imagem-para-crop');
+    const btnConfirmarCrop = document.getElementById('btn-confirmar-crop');
+    const btnCancelarCrop = document.getElementById('btn-cancelar-crop');
+    const imgVisual = document.getElementById('img-personagem-visual');
+
+    let cropper = null;
+
+    if (inputFoto) {
+      // 1. Ao selecionar arquivo, abre o modal
+      inputFoto.addEventListener('change', function (e) {
+        const files = e.target.files;
+        if (files && files.length > 0) {
+          const file = files[0];
+          const url = URL.createObjectURL(file);
+
+          imgParaCrop.src = url;
+          modalCrop.style.display = 'flex'; // Exibe o modal
+
+          if (cropper) cropper.destroy();
+
+          cropper = new Cropper(imgParaCrop, {
+            aspectRatio: 1, // Força quadrado
+            viewMode: 1,
+            dragMode: 'move',
+            autoCropArea: 1,
+            restore: false,
+            guides: true,
+            center: true,
+            highlight: false,
+            cropBoxMovable: true,
+            cropBoxResizable: true,
+            toggleDragModeOnDblclick: false,
+          });
+
+          inputFoto.value = ''; // Limpa input para permitir re-seleção
+        }
+      });
+
+      // 2. Botão Cancelar
+      btnCancelarCrop.onclick = function () {
+        modalCrop.style.display = 'none';
+        if (cropper) {
+          cropper.destroy();
+          cropper = null;
+        }
+      };
+
+      // 3. Botão Salvar (Recortar e Enviar)
+      btnConfirmarCrop.onclick = function () {
+        if (!cropper) return;
+
+        // Pega o resultado (300x300px)
+        const canvas = cropper.getCroppedCanvas({
+          width: 300,
+          height: 300,
+        });
+
+        const imagemBase64 = canvas.toDataURL('image/jpeg', 0.85);
+
+        // Atualiza na tela
+        if (imgVisual) imgVisual.src = imagemBase64;
+
+        // Fecha modal
+        modalCrop.style.display = 'none';
+        cropper.destroy();
+        cropper = null;
+
+        // Salva no State com Reordenação
+        if (typeof state !== 'undefined') {
+          state.fotoPerfil = imagemBase64;
+
+          const stateOrdenado = reordenarObjeto(state);
+          Object.assign(state, stateOrdenado);
+
+          console.log("Salvando foto recortada e reordenando JSON...");
+
+          if (typeof saveStateToServer === 'function') {
+            saveStateToServer();
+          } else if (typeof socket !== 'undefined') {
+            socket.emit('ficha_atualizada', stateOrdenado);
+          }
+        }
+      };
+    }
+
+
+    /* =================================================================
+            RECEBIMENTO DE DADOS ROLADOS (SINCRONIZAÇÃO VISUAL)
+            ================================================================= */
+    socket.on('dados_rolados', (data) => {
+      // 1. Ignora se fui eu mesmo que enviei (pois já vi a animação localmente)
+      if (data.socketId === socket.id) return;
+
+      // 2. Verifica se é para a ficha que estou aberto
+      // (Compara o nome da ficha aberta com o nome da ficha que rolou o dado)
+      if (state && state.nome && data.personagem &&
+        data.personagem.toLowerCase() === state.nome.toLowerCase()) {
+
+        console.log("Recebendo rolagem remota de outra tela...");
+
+        // Chama a função visual marcando como TRUE (é remoto)
+        // Isso exibe o popup mas impede que ele seja reenviado para o servidor
+        if (typeof showCombatResults === 'function') {
+          showCombatResults(data.titulo, data.ataque, data.dano, true);
+        }
       }
-    }
+    });
 
-    function setVal(id, v) { const el = document.getElementById(id); if (el) el.value = v || ''; }
-    function setTxt(id, v) { const el = document.getElementById(id); if (el) el.innerText = v || ''; }
-    function setTxtQ(s, v) { const el = document.querySelector(s); if (el) el.innerText = v || ''; }
+
   </script>
-
 </body>
 
 </html>
