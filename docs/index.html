@@ -872,114 +872,103 @@
       }
     }
 
-    /* =================================================================
-       LÓGICA DE RECORTE (CROP) E SALVAMENTO REORDENADO
-       ================================================================= */
+   /* =================================================================
+   LÓGICA DE RECORTE (CROP) E PROMPT DE IMAGEM
+   ================================================================= */
 
-    // Função auxiliar para garantir a ordem das chaves no JSON
-    function reordenarObjeto(obj) {
-      const chavesPrioritarias = ["nome", "senha", "fotoPerfil", "activeTab", "spellDCConfig", "dtMagias"];
-      const novoObj = {};
-      chavesPrioritarias.forEach(chave => {
-        if (obj.hasOwnProperty(chave)) {
-          novoObj[chave] = obj[chave];
+// Elementos do DOM
+const modalCrop = document.getElementById('modal-crop-overlay');
+const imgParaCrop = document.getElementById('imagem-para-crop');
+const btnConfirmarCrop = document.getElementById('btn-confirmar-crop');
+const btnCancelarCrop = document.getElementById('btn-cancelar-crop');
+const imgVisual = document.getElementById('img-personagem-visual');
+
+let cropper = null;
+
+// FUNÇÃO PARA INICIAR O CROPPER (Chamada após colar ou selecionar arquivo)
+function iniciarCorteImagem(src) {
+    imgParaCrop.src = src;
+    modalCrop.style.display = 'flex'; // Exibe o modal de corte
+
+    if (cropper) cropper.destroy();
+
+    cropper = new Cropper(imgParaCrop, {
+        aspectRatio: 1, // Força ser quadrado
+        viewMode: 1,
+        dragMode: 'move',
+        autoCropArea: 1,
+        restore: false,
+        guides: true,
+        center: true,
+        highlight: false,
+        cropBoxMovable: true,
+        cropBoxResizable: true,
+        toggleDragModeOnDblclick: false,
+    });
+}
+
+// 1. AO CLICAR NA FOTO: Abre o prompt customizado (do HeaderJS.js)
+if (imgVisual) {
+    imgVisual.onclick = () => {
+        // Chama a função que você já tem no HeaderJS.js
+        if (typeof abrirPopupImagem === 'function') {
+            abrirPopupImagem((imgSelecionada) => {
+                iniciarCorteImagem(imgSelecionada);
+            });
+        } else {
+            // Fallback caso o script não tenha carregado
+            document.getElementById('input-foto-upload').click();
         }
-      });
-      Object.keys(obj).forEach(chave => {
-        if (!chavesPrioritarias.includes(chave)) {
-          novoObj[chave] = obj[chave];
-        }
-      });
-      return novoObj;
-    }
+    };
+}
 
-    // Elementos do DOM
-    const inputFoto = document.getElementById('input-foto-upload');
-    const modalCrop = document.getElementById('modal-crop-overlay');
-    const imgParaCrop = document.getElementById('imagem-para-crop');
-    const btnConfirmarCrop = document.getElementById('btn-confirmar-crop');
-    const btnCancelarCrop = document.getElementById('btn-cancelar-crop');
-    const imgVisual = document.getElementById('img-personagem-visual');
-
-    let cropper = null;
-
-    if (inputFoto) {
-      // 1. Ao selecionar arquivo, abre o modal
-      inputFoto.addEventListener('change', function (e) {
-        const files = e.target.files;
-        if (files && files.length > 0) {
-          const file = files[0];
-          const url = URL.createObjectURL(file);
-
-          imgParaCrop.src = url;
-          modalCrop.style.display = 'flex'; // Exibe o modal
-
-          if (cropper) cropper.destroy();
-
-          cropper = new Cropper(imgParaCrop, {
-            aspectRatio: 1, // Força quadrado
-            viewMode: 1,
-            dragMode: 'move',
-            autoCropArea: 1,
-            restore: false,
-            guides: true,
-            center: true,
-            highlight: false,
-            cropBoxMovable: true,
-            cropBoxResizable: true,
-            toggleDragModeOnDblclick: false,
-          });
-
-          inputFoto.value = ''; // Limpa input para permitir re-seleção
-        }
-      });
-
-      // 2. Botão Cancelar
-      btnCancelarCrop.onclick = function () {
-        modalCrop.style.display = 'none';
-        if (cropper) {
-          cropper.destroy();
-          cropper = null;
-        }
-      };
-
-      // 3. Botão Salvar (Recortar e Enviar)
-      btnConfirmarCrop.onclick = function () {
-        if (!cropper) return;
-
-        // Pega o resultado (300x300px)
-        const canvas = cropper.getCroppedCanvas({
-          width: 300,
-          height: 300,
-        });
-
-        const imagemBase64 = canvas.toDataURL('image/jpeg', 0.85);
-
-        // Atualiza na tela
-        if (imgVisual) imgVisual.src = imagemBase64;
-
-        // Fecha modal
-        modalCrop.style.display = 'none';
+// 2. Botão Cancelar do Modal de Corte
+btnCancelarCrop.onclick = function () {
+    modalCrop.style.display = 'none';
+    if (cropper) {
         cropper.destroy();
         cropper = null;
-
-        // Salva no State com Reordenação
-        if (typeof state !== 'undefined') {
-          state.fotoPerfil = imagemBase64;
-
-          const stateOrdenado = reordenarObjeto(state);
-          Object.assign(state, stateOrdenado);
-
-          console.log("Salvando foto recortada e reordenando JSON...");
-
-          if (typeof saveStateToServer === 'function') {
-            saveStateToServer();
-          } else if (typeof socket !== 'undefined') {
-            socket.emit('ficha_atualizada', stateOrdenado);
-          }
-        }
-      };
     }
+};
+
+// 3. Botão Salvar (Recortar e Enviar para o Servidor)
+btnConfirmarCrop.onclick = function () {
+    if (!cropper) return;
+
+    // Pega o resultado (300x300px para manter leve)
+    const canvas = cropper.getCroppedCanvas({
+        width: 300,
+        height: 300,
+    });
+
+    const imagemBase64 = canvas.toDataURL('image/jpeg', 0.85);
+
+    // Atualiza visualmente na tela
+    if (imgVisual) imgVisual.src = imagemBase64;
+
+    // Fecha o modal
+    modalCrop.style.display = 'none';
+    cropper.destroy();
+    cropper = null;
+
+    // Salva no State e sincroniza com o servidor
+    if (typeof state !== 'undefined') {
+        state.fotoPerfil = imagemBase64;
+
+        // Mantém a ordem das chaves se a função existir
+        const estadoParaSalvar = (typeof reordenarObjeto === 'function') ? reordenarObjeto(state) : state;
+
+        console.log("Salvando foto recortada...");
+
+        if (typeof saveStateToServer === 'function') {
+            saveStateToServer();
+        } else if (typeof socket !== 'undefined') {
+            socket.emit('ficha_atualizada', estadoParaSalvar);
+        }
+        
+        exibirAvisoTemporario("Foto do personagem atualizada!");
+    }
+};
 
 
     /* =================================================================

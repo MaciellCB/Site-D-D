@@ -94,6 +94,7 @@ function abrirPopupImagem(callbackImagemDefinida) {
         preview.style.display = 'block';
         pasteText.style.display = 'none';
         pasteArea.style.borderColor = '#9c27b0';
+        pasteArea.style.background = '#1a051a';
         btnConfirm.removeAttribute('disabled');
         btnConfirm.style.background = '#9c27b0';
     };
