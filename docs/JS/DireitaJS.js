@@ -1819,60 +1819,6 @@ function formatMySpellCard(s) {
 /* ---------------- PARTE 1: RENDERIZAR LISTA DE MAGIAS ---------------- */
 
 
-/* --- SUBSTITUA A FUNÇÃO renderSpells INTEIRA POR ESTA --- */
-function renderSpells() {
-  state.dtMagias = calculateSpellDC();
-  const slotsHTML = renderSpellSlotsHTML();
-
-  const html = `
-    <div class="spells-wrapper" style="position:relative;">
-      ${slotsHTML}
-      ${slotsHTML ? '<hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 15px 0;">' : ''}
-
-      <div class="spells-controls controls-row">
-        <input id="filterMagias" placeholder="Filtrar magias" />
-        <div class="right-controls">
-          <button id="botAddSpell" class="btn-add">Nova Magia</button>
-          
-          <div class="dt-magias" id="btnOpenDTConfig" style="cursor:pointer;" title="Clique para configurar">
-            <label style="cursor:pointer; color:#9c27b0;">DT DE MAGIAS ⚙️</label>
-            <input id="dtMagiasInput" type="text" value="${state.dtMagias}" readonly 
-                   style="cursor:pointer; font-weight:bold; color:#fff; text-align:center; min-width:80px;" />
-          </div>
-        </div>
-      </div>
-
-      <div style="display:flex; align-items:center; margin:15px 0 10px 4px;">
-          <h4 style="margin:0; color:#ddd; font-size:16px;">Minhas Magias</h4>
-          
-          <div id="btnRollSpellAttack_Header" title="Rolar Ataque Mágico (1d20 + Prof + Mod)" style="cursor:pointer; margin-left:10px; transition: transform 0.2s;">
-              <img src="img/imagem-no-site/dado.png" alt="Rolar Ataque" style="width:26px; height:26px; display:block; opacity:0.9; filter: drop-shadow(0 0 2px rgba(156, 39, 176, 0.5));" />
-          </div>
-      </div>
-
-      <div class="spells-list">
-        ${state.spells.map(formatMySpellCard).join('')}
-      </div>
-    </div>
-  `;
-
-  conteudoEl.innerHTML = html;
-  bindSpellEvents();
-  bindSlotEvents();
-  // REMOVIDO: bindSpellAttackEvents(); -> Causava travamento do script
-}
-
-
-// Inicializa estrutura de slots usada para controle de "gastos" (used)
-/* =============================================================
-   CORREÇÃO: INCLUIR 'Inventário' NA LISTA DE ATUALIZAÇÃO
-   Substitua o listener "window.addEventListener('sheet-updated'..." 
-   por este bloco completo:
-============================================================= */
-
-/* =============================================================
-   CORREÇÃO 2: Atualização que respeita o cursor e Sincroniza Esquerda
-============================================================= */
 
 /* =============================================================
    CORREÇÃO CRÍTICA: Evento de Atualização com "Guarda de Foco"
@@ -2487,7 +2433,129 @@ if (baseLevel === 0) return baseDamage;
 }
 /* ---------------- EVENTOS DAS MAGIAS (LIMPO) ---------------- */
 
+/* =============================================================
+   NOVA FUNÇÃO DE FILTRAGEM MULTIPLA DE MAGIAS
+============================================================= */
+function aplicarFiltrosMagias() {
+    if (!state.spellFilters) return;
+    const { classes, schools, text } = state.spellFilters;
+    const q = text.toLowerCase();
 
+    document.querySelectorAll('.spell-card').forEach(card => {
+        const id = card.getAttribute('data-id');
+        const s = state.spells.find(x => String(x.id) === String(id));
+        if (!s) return;
+
+        let show = true;
+        
+        // 1. Filtro de Texto (Nome)
+        if (q && !(s.name || '').toLowerCase().includes(q)) show = false;
+        
+        // 2. Filtro de Escola (Mostra se a escola da magia bater com QUALQUER UMA das escolas selecionadas)
+        if (show && schools.length > 0 && !schools.includes(s.school)) show = false;
+        
+        // 3. Filtro de Classe (Mostra se a magia pertencer a QUALQUER UMA das classes selecionadas)
+        if (show && classes.length > 0) {
+            const spellClasses = (s.spellClass || '').split(',').map(c => c.trim());
+            const temClasse = classes.some(c => spellClasses.includes(c));
+            if (!temClasse) show = false;
+        }
+
+        card.style.display = show ? '' : 'none';
+    });
+}
+
+/* --- SUBSTITUA A FUNÇÃO renderSpells INTEIRA POR ESTA --- */
+function renderSpells() {
+  state.dtMagias = calculateSpellDC();
+  const slotsHTML = renderSpellSlotsHTML();
+
+  // Inicializa o estado dos filtros se não existir
+  if (!state.spellFilters) {
+      state.spellFilters = { classes: [], schools: [], text: '', isExpanded: false };
+  }
+
+  // Extrair dinamicamente as Escolas e Classes únicas baseadas nas magias que o personagem possui
+  const escolasUnicas = [...new Set(state.spells.map(s => s.school).filter(Boolean))].sort();
+  
+  let classesSet = new Set();
+  state.spells.forEach(s => {
+      if(s.spellClass) s.spellClass.split(',').forEach(c => classesSet.add(c.trim()));
+  });
+  const classesUnicas = [...classesSet].filter(Boolean).sort();
+
+  const renderPills = (list, selectedList, type) => {
+      if (list.length === 0) return '<em style="color:#666; font-size:12px;">Nenhuma disponível</em>';
+      return list.map(item => `
+          <button class="filter-pill ${selectedList.includes(item) ? 'active' : ''}" data-type="${type}" data-val="${item}">
+              ${item}
+          </button>
+      `).join('');
+  };
+
+  const html = `
+    <div class="spells-wrapper" style="position:relative;">
+      ${slotsHTML}
+      ${slotsHTML ? '<hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 15px 0;">' : ''}
+
+      <div class="spells-controls controls-row" style="flex-wrap: wrap; gap: 8px;">
+        <div style="display:flex; flex:1; min-width: 200px; gap:8px;">
+            <input id="filterMagias" placeholder="Buscar magia..." value="${escapeHtml(state.spellFilters.text)}" style="flex:1;" />
+            <button id="btnToggleFiltros" style="background:#1a1a1a; border:1px solid #333; color:#ccc; border-radius:4px; padding:0 12px; cursor:pointer; font-weight:bold; transition: 0.2s;">
+               Filtros ${state.spellFilters.isExpanded ? '▴' : '▾'}
+            </button>
+        </div>
+        <div class="right-controls">
+          <button id="botAddSpell" class="btn-add">Nova Magia</button>
+          
+          <div class="dt-magias" id="btnOpenDTConfig" style="cursor:pointer;" title="Clique para configurar">
+            <label style="cursor:pointer; color:#9c27b0;">DT DE MAGIAS ⚙️</label>
+            <input id="dtMagiasInput" type="text" value="${state.dtMagias}" readonly 
+                   style="cursor:pointer; font-weight:bold; color:#fff; text-align:center; min-width:80px;" />
+          </div>
+        </div>
+      </div>
+
+      <div id="painelFiltrosMagias" style="${state.spellFilters.isExpanded ? 'display:block;' : 'display:none;'} background:#121212; padding:12px; border-radius:6px; border:1px solid rgba(156, 39, 176, 0.3); margin-bottom:12px;">
+         <div style="margin-bottom: 8px;"><strong style="color:#9c27b0; font-size:11px; text-transform:uppercase;">Filtrar por Escola</strong></div>
+         <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:15px;" id="containerFiltrosEscola">
+            ${renderPills(escolasUnicas, state.spellFilters.schools, 'school')}
+         </div>
+         
+         <div style="margin-bottom: 8px;"><strong style="color:#9c27b0; font-size:11px; text-transform:uppercase;">Filtrar por Classe</strong></div>
+         <div style="display:flex; flex-wrap:wrap; gap:6px;" id="containerFiltrosClasse">
+            ${renderPills(classesUnicas, state.spellFilters.classes, 'class')}
+         </div>
+      </div>
+
+      <div style="display:flex; align-items:center; margin:15px 0 10px 4px;">
+          <h4 style="margin:0; color:#ddd; font-size:16px;">Minhas Magias</h4>
+          
+          <div id="btnRollSpellAttack_Header" title="Rolar Ataque Mágico (1d20 + Prof + Mod)" style="cursor:pointer; margin-left:10px; transition: transform 0.2s;">
+              <img src="img/imagem-no-site/dado.png" alt="Rolar Ataque" style="width:26px; height:26px; display:block; opacity:0.9; filter: drop-shadow(0 0 2px rgba(156, 39, 176, 0.5));" />
+          </div>
+      </div>
+
+      <div class="spells-list">
+        ${state.spells.map(formatMySpellCard).join('')}
+      </div>
+    </div>
+  `;
+
+  conteudoEl.innerHTML = html;
+  bindSpellEvents();
+  bindSlotEvents();
+  aplicarFiltrosMagias(); // Aplica a visualização correta após renderizar as magias
+  
+  // Restaura o foco no input caso ele estivesse digitando
+  const inputFiltro = document.getElementById('filterMagias');
+  if (inputFiltro && state.spellFilters.text.length > 0) {
+      inputFiltro.focus();
+      inputFiltro.setSelectionRange(inputFiltro.value.length, inputFiltro.value.length);
+  }
+}
+
+/* --- SUBSTITUA A FUNÇÃO bindSpellEvents INTEIRA POR ESTA --- */
 function bindSpellEvents() {
     // 1. Botões do topo
     const botAdd = document.getElementById('botAddSpell');
@@ -2495,15 +2563,45 @@ function bindSpellEvents() {
     if (botAdd) botAdd.onclick = () => openSpellCatalogOverlay();
     if (btnDT) btnDT.onclick = openDTConfigModal;
 
-    // 2. Filtro
+    // 2. EVENTOS DOS FILTROS (NOVOS)
+    const btnToggleFiltros = document.getElementById('btnToggleFiltros');
+    const painelFiltros = document.getElementById('painelFiltrosMagias');
+    
+    if (btnToggleFiltros && painelFiltros) {
+        btnToggleFiltros.onclick = () => {
+            state.spellFilters.isExpanded = !state.spellFilters.isExpanded;
+            painelFiltros.style.display = state.spellFilters.isExpanded ? 'block' : 'none';
+            btnToggleFiltros.innerHTML = `Filtros ${state.spellFilters.isExpanded ? '▴' : '▾'}`;
+        };
+    }
+
     const filtro = document.getElementById('filterMagias');
-    if (filtro) filtro.oninput = (e) => {
-        const q = e.target.value.toLowerCase();
-        document.querySelectorAll('.spell-card').forEach(card => {
-            const title = card.querySelector('.spell-title').textContent.toLowerCase();
-            card.style.display = title.includes(q) ? '' : 'none';
-        });
-    };
+    if (filtro) {
+        filtro.oninput = (e) => {
+            state.spellFilters.text = e.target.value;
+            aplicarFiltrosMagias();
+        };
+    }
+
+    // Clique nas Pills de Classe/Escola
+    document.querySelectorAll('.filter-pill').forEach(btn => {
+        btn.onclick = () => {
+            const type = btn.dataset.type; // 'school' ou 'class'
+            const val = btn.dataset.val;
+            const list = type === 'school' ? state.spellFilters.schools : state.spellFilters.classes;
+            
+            // Adiciona ou remove o valor da lista selecionada
+            if (list.includes(val)) {
+                list.splice(list.indexOf(val), 1);
+                btn.classList.remove('active');
+            } else {
+                list.push(val);
+                btn.classList.add('active');
+            }
+            
+            aplicarFiltrosMagias();
+        };
+    });
 
     // 3. Upcast Visual
     document.querySelectorAll('.spell-slot-selector').forEach(sel => {
@@ -2528,7 +2626,6 @@ function bindSpellEvents() {
 
     // 4. EVENTOS DOS CARDS (MAGIAS)
     document.querySelectorAll('.spell-card').forEach(card => {
-        // CORREÇÃO: Pega o ID como STRING
         const rawId = card.getAttribute('data-id');
         
         // A. EXPANDIR / COLAPSAR
@@ -2539,13 +2636,12 @@ function bindSpellEvents() {
                     ev.target.closest('.check-ativar') || 
                     ev.target.closest('.cast-controls') ||
                     ev.target.closest('.dice-img') || 
-                    ev.target.closest('a') || // Importante para não expandir ao clicar em editar
+                    ev.target.closest('a') ||
                     ev.target.tagName === 'SELECT' ||
                     ev.target.tagName === 'INPUT') {
                     return;
                 }
                 
-                // Comparação como String
                 const s = state.spells.find(x => String(x.id) === String(rawId));
                 if (s) {
                     s.expanded = !s.expanded;
@@ -2584,19 +2680,17 @@ function bindSpellEvents() {
         if (btnRemove) {
             btnRemove.onclick = (ev) => {
                 ev.preventDefault();
-                // Comparação String
                 state.spells = state.spells.filter(s => String(s.id) !== String(rawId));
                 card.remove();
                 saveStateToServer();
             }
         }
 
-        // D. EDITAR (Eventos dentro do card body) - CORREÇÃO CRÍTICA AQUI
+        // D. EDITAR
         const btnEdit = card.querySelector('.editar-spell');
         if (btnEdit) {
             btnEdit.onclick = (ev) => {
                 ev.preventDefault();
-                // Comparação String
                 const s = state.spells.find(x => String(x.id) === String(rawId));
                 if (s) openSpellModal(s);
             }

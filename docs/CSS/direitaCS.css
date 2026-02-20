@@ -2276,3 +2276,36 @@ a.editar-spell {
     background: #9c27b0;
     border-radius: 10px;
 }
+
+
+
+
+
+/* ==========================================================================
+   FILTROS DE MAGIAS (PILLS AVANÇADOS)
+   ========================================================================== */
+.filter-pill {
+    background: #1a1a1a;
+    color: #999;
+    border: 1px solid #333;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 0;
+    outline: none;
+}
+
+.filter-pill:hover {
+    background: #252525;
+    color: #ddd;
+}
+
+.filter-pill.active {
+    background: #9c27b0;
+    color: #fff;
+    border-color: #9c27b0;
+    box-shadow: 0 0 8px rgba(156, 39, 176, 0.4);
+}
