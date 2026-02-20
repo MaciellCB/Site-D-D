@@ -3044,6 +3044,7 @@ function openSpellModal(existingSpell = null) {
 }
 
 
+/* --- SUBSTITUA A FUNÇÃO openSpellCatalogOverlay INTEIRA POR ESTA --- */
 function openSpellCatalogOverlay(parentModal = null) {
   const existing = document.querySelector('.catalog-overlay-large');
   if (existing) { existing.remove(); return; }
@@ -3068,7 +3069,7 @@ function openSpellCatalogOverlay(parentModal = null) {
   const renderCatalogPills = (list, type) => {
       if (list.length === 0) return '<em style="color:#666; font-size:12px;">Nenhuma disponível</em>';
       return list.map(item => `
-          <button class="filter-pill catalog-filter-pill" data-type="${type}" data-val="${escapeHtml(item)}">
+          <button type="button" class="filter-pill catalog-filter-pill" data-type="${type}" data-val="${escapeHtml(item)}">
               ${item}
           </button>
       `).join('');
@@ -3083,7 +3084,7 @@ function openSpellCatalogOverlay(parentModal = null) {
   }
 
   const circlesHtml = filters.map((f, idx) => {
-    return `<button class="circle-filter ${idx === 0 ? 'active' : ''}" data-filter="${f.val}">${f.label}</button>`;
+    return `<button type="button" class="circle-filter ${idx === 0 ? 'active' : ''}" data-filter="${f.val}">${f.label}</button>`;
   }).join('');
 
   overlay.innerHTML = `
@@ -3091,35 +3092,37 @@ function openSpellCatalogOverlay(parentModal = null) {
         <div class="catalog-large-header">
           <h3>Adicionar Magias</h3>
           <div style="display:flex;gap:8px;align-items:center;">
-              <button id="catalog-new-spell" class="btn-add" style="background:#222;border:1px solid rgba(255,255,255,0.04);">Criar Magia</button>
+              <button type="button" id="catalog-new-spell" class="btn-add" style="background:#222;border:1px solid rgba(255,255,255,0.04);">Criar Magia</button>
               <div class="catalog-large-close" title="Fechar" style="cursor:pointer;">✖</div>
           </div>
         </div>
-        <div class="catalog-large-filters">
+        
+        <div class="catalog-large-filters" style="margin-top: 10px;">
           ${circlesHtml}
         </div>
-        <div class="catalog-large-search">
+        
+        <div class="catalog-large-search" style="margin-top: 10px;">
           <div style="display:flex; gap:8px;">
-              <input id="catalogLargeSearch" placeholder="Ex: ataque, cura, magia (separa por vírgula)..." style="flex:1;" />
-              <button id="btnToggleCatalogFiltros" style="background:#1a1a1a; border:1px solid #333; color:#ccc; border-radius:4px; padding:0 12px; cursor:pointer; font-weight:bold; transition: 0.2s;">
+              <input id="catalogLargeSearch" placeholder="Ex: ataque, cura, magia..." style="flex:1;" />
+              <button type="button" id="btnToggleCatalogFiltros" style="background:#1a1a1a; border:1px solid #333; color:#ccc; border-radius:4px; padding:10px 12px; cursor:pointer; font-weight:bold; transition: 0.2s; white-space: nowrap;">
                  Filtros ▾
               </button>
           </div>
         </div>
 
-        <div id="painelFiltrosCatalog" style="display:none; background:#121212; padding:12px; border-radius:6px; border:1px solid rgba(156, 39, 176, 0.3); margin-top:8px;">
+        <div id="painelFiltrosCatalog" style="display:none; background:#1a1a1a; padding:15px; border-radius:6px; border:1px solid rgba(156, 39, 176, 0.3); margin-top:10px; margin-bottom:10px;">
            <div style="margin-bottom: 8px;"><strong style="color:#9c27b0; font-size:11px; text-transform:uppercase;">Filtrar por Escola</strong></div>
-           <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:15px;" id="catFiltrosEscola">
+           <div class="filter-container-scroll" id="catFiltrosEscola">
               ${renderCatalogPills(escolasUnicas, 'school')}
            </div>
            
-           <div style="margin-bottom: 8px;"><strong style="color:#9c27b0; font-size:11px; text-transform:uppercase;">Filtrar por Classe</strong></div>
-           <div style="display:flex; flex-wrap:wrap; gap:6px;" id="catFiltrosClasse">
+           <div style="margin-bottom: 8px; margin-top: 15px;"><strong style="color:#9c27b0; font-size:11px; text-transform:uppercase;">Filtrar por Classe</strong></div>
+           <div class="filter-container-scroll" id="catFiltrosClasse" style="margin-bottom:0;">
               ${renderCatalogPills(classesUnicas, 'class')}
            </div>
         </div>
 
-        <div class="catalog-large-list">
+        <div class="catalog-large-list" style="margin-top: 15px;">
           ${spellCatalog.map(c => formatCatalogSpellCard(c)).join('')}
         </div>
       </div>
@@ -3128,36 +3131,40 @@ function openSpellCatalogOverlay(parentModal = null) {
   checkScrollLock();
 
   // FECHAR
-  overlay.querySelector('.catalog-large-close').onclick = () => { overlay.remove(); checkScrollLock(); };
+  overlay.querySelector('.catalog-large-close').addEventListener('click', () => { 
+      overlay.remove(); 
+      checkScrollLock(); 
+  });
 
   // BOTÃO CRIAR MAGIA MANUAL
-  overlay.querySelector('#catalog-new-spell').onclick = () => {
+  overlay.querySelector('#catalog-new-spell').addEventListener('click', () => {
     overlay.remove();
     openSpellModal(null);
-  };
+  });
 
   // FILTROS DE CÍRCULO (Visual)
   overlay.querySelectorAll('.circle-filter').forEach(btn => {
-    btn.onclick = () => {
+    btn.addEventListener('click', () => {
       overlay.querySelectorAll('.circle-filter').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       triggerSearch();
-    };
+    });
   });
 
   // --- EVENTOS DOS FILTROS (Toggle Painel) ---
   const btnToggleFiltros = overlay.querySelector('#btnToggleCatalogFiltros');
   const painelFiltros = overlay.querySelector('#painelFiltrosCatalog');
   
-  btnToggleFiltros.onclick = () => {
+  btnToggleFiltros.addEventListener('click', () => {
       isFiltersExpanded = !isFiltersExpanded;
       painelFiltros.style.display = isFiltersExpanded ? 'block' : 'none';
       btnToggleFiltros.innerHTML = `Filtros ${isFiltersExpanded ? '▴' : '▾'}`;
-  };
+  });
 
   // --- EVENTOS DOS FILTROS (Clique nas Pills) ---
   overlay.querySelectorAll('.catalog-filter-pill').forEach(btn => {
-      btn.onclick = () => {
+      btn.addEventListener('click', (e) => {
+          e.preventDefault(); // Previne qualquer comportamento estranho no mobile
           const type = btn.dataset.type; // 'school' ou 'class'
           const val = btn.dataset.val;
           const list = type === 'school' ? selectedSchools : selectedClasses;
@@ -3170,12 +3177,12 @@ function openSpellCatalogOverlay(parentModal = null) {
               btn.classList.add('active');
           }
           triggerSearch(); 
-      };
+      });
   });
 
   // BUSCA (Texto)
   const inputSearch = overlay.querySelector('#catalogLargeSearch');
-  inputSearch.oninput = triggerSearch;
+  inputSearch.addEventListener('input', triggerSearch);
 
   // LÓGICA PRINCIPAL DE FILTRAGEM
   function triggerSearch() {
@@ -3232,7 +3239,7 @@ function openSpellCatalogOverlay(parentModal = null) {
 
   // BOTÃO ADICIONAR (+)
   overlay.querySelectorAll('.catalog-add-btn').forEach(btn => {
-    btn.onclick = (ev) => {
+    btn.addEventListener('click', (ev) => {
       ev.stopPropagation();
       const id = btn.dataset.id;
       const c = spellCatalog.find(x => x.id === id);
@@ -3251,7 +3258,7 @@ function openSpellCatalogOverlay(parentModal = null) {
         btn.textContent = '✓';
         setTimeout(() => btn.textContent = '+', 1000);
       }
-    };
+    });
   });
 
   function adicionarMagiaAoState(c, classeFinal) {
