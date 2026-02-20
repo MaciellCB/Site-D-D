@@ -2472,7 +2472,12 @@ function renderSpells() {
 
   // Inicializa o estado dos filtros se não existir
   if (!state.spellFilters) {
-      state.spellFilters = { classes: [], schools: [], text: '', isExpanded: false };
+      state.spellFilters = { classes: [], schools: [], text: '' };
+  }
+
+  // Controle visual que NÃO vai para o servidor (Sempre começa fechado ao carregar a página)
+  if (typeof window.isMagiasFiltroExpanded === 'undefined') {
+      window.isMagiasFiltroExpanded = false;
   }
 
   // Extrair dinamicamente as Escolas e Classes únicas baseadas nas magias que o personagem possui
@@ -2502,7 +2507,7 @@ function renderSpells() {
         <div style="display:flex; flex:1; min-width: 200px; gap:8px;">
             <input id="filterMagias" placeholder="Buscar magia..." value="${escapeHtml(state.spellFilters.text)}" style="flex:1;" />
             <button id="btnToggleFiltros" style="background:#1a1a1a; border:1px solid #333; color:#ccc; border-radius:4px; padding:0 12px; cursor:pointer; font-weight:bold; transition: 0.2s;">
-               Filtros ${state.spellFilters.isExpanded ? '▴' : '▾'}
+               Filtros ${window.isMagiasFiltroExpanded ? '▴' : '▾'}
             </button>
         </div>
         <div class="right-controls">
@@ -2516,7 +2521,7 @@ function renderSpells() {
         </div>
       </div>
 
-      <div id="painelFiltrosMagias" style="${state.spellFilters.isExpanded ? 'display:block;' : 'display:none;'} background:#121212; padding:12px; border-radius:6px; border:1px solid rgba(156, 39, 176, 0.3); margin-bottom:12px;">
+      <div id="painelFiltrosMagias" style="${window.isMagiasFiltroExpanded ? 'display:block;' : 'display:none;'} background:#121212; padding:12px; border-radius:6px; border:1px solid rgba(156, 39, 176, 0.3); margin-bottom:12px;">
          <div style="margin-bottom: 8px;"><strong style="color:#9c27b0; font-size:11px; text-transform:uppercase;">Filtrar por Escola</strong></div>
          <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:15px;" id="containerFiltrosEscola">
             ${renderPills(escolasUnicas, state.spellFilters.schools, 'school')}
@@ -2545,7 +2550,7 @@ function renderSpells() {
   conteudoEl.innerHTML = html;
   bindSpellEvents();
   bindSlotEvents();
-  aplicarFiltrosMagias(); // Aplica a visualização correta após renderizar as magias
+  aplicarFiltrosMagias(); 
   
   // Restaura o foco no input caso ele estivesse digitando
   const inputFiltro = document.getElementById('filterMagias');
