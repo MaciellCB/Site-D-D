@@ -3337,3 +3337,96 @@ window.addEventListener('sheet-updated', () => {
         }
     }
 });
+
+/* =============================================================
+   PROMPT DE IMAGEM (COLAR OU BUSCAR ARQUIVO)
+   ============================================================= */
+function abrirPromptImagem() {
+    // Cria o HTML do Modal de Prompt
+    const overlay = document.createElement('div');
+    overlay.className = 'spell-modal-overlay';
+    overlay.style.zIndex = '1000000'; // Fica por cima de tudo
+
+    overlay.innerHTML = `
+        <div class="spell-modal" style="width: 400px; height: auto; text-align: center; padding: 20px;">
+            <div class="modal-header">
+                <h3>Alterar Foto</h3>
+                <button class="modal-close" id="close-prompt">✖</button>
+            </div>
+            <div class="modal-body" style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
+                <p style="color: #bbb; font-size: 14px;">Aperte <b>Ctrl + V</b> para colar uma imagem ou selecione um arquivo abaixo.</p>
+                
+                <div id="drop-area" style="border: 2px dashed #9c27b0; padding: 30px; border-radius: 8px; background: #0a0a0a; cursor: pointer; transition: 0.3s;">
+                    <span style="color: #666; font-weight: bold;">[Área de Colagem / Clique aqui]</span>
+                </div>
+
+                <button id="btn-search-file" class="btn-add" style="background: #333; border: 1px solid #555;">📁 Buscar nos Arquivos</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    // Função para enviar a imagem para o Cropper (que já existe no seu index.html)
+    const processarImagemParaCrop = (src) => {
+        const imgParaCrop = document.getElementById('imagem-para-crop');
+        const modalCrop = document.getElementById('modal-crop-overlay');
+        
+        if (imgParaCrop && modalCrop) {
+            imgParaCrop.src = src;
+            modalCrop.style.display = 'flex';
+            
+            // Dispara o evento de carregamento para o CropperJS reinicializar
+            if (window.cropper) window.cropper.destroy();
+            window.cropper = new Cropper(imgParaCrop, {
+                aspectRatio: 1,
+                viewMode: 1,
+                dragMode: 'move',
+                autoCropArea: 1
+            });
+            
+            overlay.remove(); // Fecha o prompt
+            document.removeEventListener('paste', handlePaste);
+        }
+    };
+
+    // Lógica de Colar (Paste)
+    const handlePaste = (e) => {
+        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+        for (let item of items) {
+            if (item.kind === 'file' && item.type.includes('image/')) {
+                const blob = item.getAsFile();
+                const reader = new FileReader();
+                reader.onload = (event) => processarImagemParaCrop(event.target.result);
+                reader.readAsDataURL(blob);
+            }
+        }
+    };
+
+    document.addEventListener('paste', handlePaste);
+
+    // Lógica de clicar na área ou no botão de arquivo
+    const inputOculto = document.getElementById('input-foto-upload');
+    overlay.querySelector('#btn-search-file').onclick = () => inputOculto.click();
+    overlay.querySelector('#drop-area').onclick = () => inputOculto.click();
+    
+    // Fechar Modal
+    overlay.querySelector('#close-prompt').onclick = () => {
+        overlay.remove();
+        document.removeEventListener('paste', handlePaste);
+    };
+
+    // Se o usuário selecionar via arquivo, o evento 'change' do input (no index.html) vai rodar.
+    // Vamos apenas garantir que o modal de prompt feche quando o de crop abrir.
+    inputOculto.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                processarImagemParaCrop(ev.target.result);
+                inputOculto.value = ""; // Limpa para re-seleção
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+}
