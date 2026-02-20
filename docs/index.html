@@ -875,115 +875,72 @@
       }
     }
 
+
     /* =================================================================
-       LÓGICA DE RECORTE (CROP) E SALVAMENTO REORDENADO
-       ================================================================= */
+   LÓGICA DE RECORTE (CROP) E SALVAMENTO REORDENADO UNIFICADO
+   ================================================================= */
 
-    // Função auxiliar para garantir a ordem das chaves no JSON
-    function reordenarObjeto(obj) {
-      const chavesPrioritarias = ["nome", "senha", "fotoPerfil", "activeTab", "spellDCConfig", "dtMagias"];
-      const novoObj = {};
-      chavesPrioritarias.forEach(chave => {
-        if (obj.hasOwnProperty(chave)) {
-          novoObj[chave] = obj[chave];
-        }
-      });
-      Object.keys(obj).forEach(chave => {
-        if (!chavesPrioritarias.includes(chave)) {
-          novoObj[chave] = obj[chave];
-        }
-      });
-      return novoObj;
+// Elementos do DOM (Crop Modal)
+const modalCrop = document.getElementById('modal-crop-overlay');
+const btnConfirmarCrop = document.getElementById('btn-confirmar-crop');
+const btnCancelarCrop = document.getElementById('btn-cancelar-crop');
+const imgVisualFicha = document.getElementById('img-personagem-visual');
+
+// 1. Botão Cancelar do Corte
+btnCancelarCrop.onclick = function () {
+    modalCrop.style.display = 'none';
+    if (window.cropper) {
+        window.cropper.destroy();
+        window.cropper = null;
+    }
+};
+
+// 2. Botão Salvar (Corrigido para salvar sempre)
+btnConfirmarCrop.onclick = function () {
+    // Verifica se o cropper foi iniciado globalmente (pelo HeaderJS)
+    if (!window.cropper) {
+        console.error("Erro: Instância do Cropper não encontrada no window.");
+        return;
     }
 
-    // Elementos do DOM
-    const inputFoto = document.getElementById('input-foto-upload');
-    const modalCrop = document.getElementById('modal-crop-overlay');
-    const imgParaCrop = document.getElementById('imagem-para-crop');
-    const btnConfirmarCrop = document.getElementById('btn-confirmar-crop');
-    const btnCancelarCrop = document.getElementById('btn-cancelar-crop');
-    const imgVisual = document.getElementById('img-personagem-visual');
+    // Pega o canvas do recorte
+    const canvas = window.cropper.getCroppedCanvas({
+        width: 300,
+        height: 300,
+    });
 
-    let cropper = null;
+    const imagemBase64 = canvas.toDataURL('image/jpeg', 0.85);
 
-    if (inputFoto) {
-      // 1. Ao selecionar arquivo, abre o modal
-      inputFoto.addEventListener('change', function (e) {
-        const files = e.target.files;
-        if (files && files.length > 0) {
-          const file = files[0];
-          const url = URL.createObjectURL(file);
+    // 1. Atualiza visualmente na ficha
+    if (imgVisualFicha) imgVisualFicha.src = imagemBase64;
 
-          imgParaCrop.src = url;
-          modalCrop.style.display = 'flex'; // Exibe o modal
+    // 2. Fecha o modal e limpa memória
+    modalCrop.style.display = 'none';
+    window.cropper.destroy();
+    window.cropper = null;
 
-          if (cropper) cropper.destroy();
+    // 3. Salva no State e envia ao servidor
+    if (typeof state !== 'undefined') {
+        state.fotoPerfil = imagemBase64;
 
-          cropper = new Cropper(imgParaCrop, {
-            aspectRatio: 1, // Força quadrado
-            viewMode: 1,
-            dragMode: 'move',
-            autoCropArea: 1,
-            restore: false,
-            guides: true,
-            center: true,
-            highlight: false,
-            cropBoxMovable: true,
-            cropBoxResizable: true,
-            toggleDragModeOnDblclick: false,
-          });
-
-          inputFoto.value = ''; // Limpa input para permitir re-seleção
+        // Tenta reordenar o JSON se a função existir no HeaderJS
+        if (typeof reordenarObjeto === 'function') {
+            const stateOrdenado = reordenarObjeto(state);
+            Object.assign(state, stateOrdenado);
+            console.log("JSON reordenado com sucesso.");
         }
-      });
+        
+        console.log("Imagem salva! Sincronizando com o servidor...");
 
-      // 2. Botão Cancelar
-      btnCancelarCrop.onclick = function () {
-        modalCrop.style.display = 'none';
-        if (cropper) {
-          cropper.destroy();
-          cropper = null;
-        }
-      };
-
-      // 3. Botão Salvar (Recortar e Enviar)
-      btnConfirmarCrop.onclick = function () {
-        if (!cropper) return;
-
-        // Pega o resultado (300x300px)
-        const canvas = cropper.getCroppedCanvas({
-          width: 300,
-          height: 300,
-        });
-
-        const imagemBase64 = canvas.toDataURL('image/jpeg', 0.85);
-
-        // Atualiza na tela
-        if (imgVisual) imgVisual.src = imagemBase64;
-
-        // Fecha modal
-        modalCrop.style.display = 'none';
-        cropper.destroy();
-        cropper = null;
-
-        // Salva no State com Reordenação
-        if (typeof state !== 'undefined') {
-          state.fotoPerfil = imagemBase64;
-
-          const stateOrdenado = reordenarObjeto(state);
-          Object.assign(state, stateOrdenado);
-
-          console.log("Salvando foto recortada e reordenando JSON...");
-
-          if (typeof saveStateToServer === 'function') {
+        // O salvamento agora acontece INDEPENDENTE da reordenação funcionar ou não
+        if (typeof saveStateToServer === 'function') {
             saveStateToServer();
-          } else if (typeof socket !== 'undefined') {
-            socket.emit('ficha_atualizada', stateOrdenado);
-          }
+        } else if (typeof socket !== 'undefined') {
+            // Fallback caso saveStateToServer não esteja no escopo
+            socket.emit('ficha_atualizada', state);
         }
-      };
     }
-
+};
 
     /* =================================================================
             RECEBIMENTO DE DADOS ROLADOS (SINCRONIZAÇÃO VISUAL)
