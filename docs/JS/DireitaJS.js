@@ -3052,6 +3052,29 @@ function openSpellCatalogOverlay(parentModal = null) {
   const overlay = document.createElement('div');
   overlay.className = 'catalog-overlay-large';
 
+  // --- 1. EXTRAIR ESCOLAS E CLASSES ÚNICAS DO JSON ---
+  const escolasUnicas = [...new Set(spellCatalog.map(s => s.school).filter(Boolean))].sort();
+  
+  let classesSet = new Set();
+  spellCatalog.forEach(s => {
+      if(s.spellClass) s.spellClass.split(',').forEach(c => classesSet.add(c.trim()));
+  });
+  const classesUnicas = [...classesSet].filter(Boolean).sort();
+
+  // --- 2. ESTADO LOCAL DOS FILTROS ---
+  let selectedSchools = [];
+  let selectedClasses = [];
+  let isFiltersExpanded = false;
+
+  const renderCatalogPills = (list, type) => {
+      if (list.length === 0) return '<em style="color:#666; font-size:12px;">Nenhuma disponível</em>';
+      return list.map(item => `
+          <button class="filter-pill catalog-filter-pill" data-type="${type}" data-val="${escapeHtml(item)}">
+              ${item}
+          </button>
+      `).join('');
+  };
+
   const filters = [
     { label: 'Todos', val: 'all' },
     { label: 'Truque (0º)', val: '0' }
@@ -3077,8 +3100,26 @@ function openSpellCatalogOverlay(parentModal = null) {
           ${circlesHtml}
         </div>
         <div class="catalog-large-search">
-          <input id="catalogLargeSearch" placeholder="Ex: pode pesquisar coisas separadas, separa por vírgula ma pesquisa(coisa1,coisa2,palavra-chave3)..." />
+          <div style="display:flex; gap:8px;">
+              <input id="catalogLargeSearch" placeholder="Ex: ataque, cura, magia (separa por vírgula)..." style="flex:1;" />
+              <button id="btnToggleCatalogFiltros" style="background:#1a1a1a; border:1px solid #333; color:#ccc; border-radius:4px; padding:0 12px; cursor:pointer; font-weight:bold; transition: 0.2s;">
+                 Filtros ▾
+              </button>
+          </div>
         </div>
+
+        <div id="painelFiltrosCatalog" style="display:none; background:#121212; padding:12px; border-radius:6px; border:1px solid rgba(156, 39, 176, 0.3); margin-top:8px;">
+           <div style="margin-bottom: 8px;"><strong style="color:#9c27b0; font-size:11px; text-transform:uppercase;">Filtrar por Escola</strong></div>
+           <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:15px;" id="catFiltrosEscola">
+              ${renderCatalogPills(escolasUnicas, 'school')}
+           </div>
+           
+           <div style="margin-bottom: 8px;"><strong style="color:#9c27b0; font-size:11px; text-transform:uppercase;">Filtrar por Classe</strong></div>
+           <div style="display:flex; flex-wrap:wrap; gap:6px;" id="catFiltrosClasse">
+              ${renderCatalogPills(classesUnicas, 'class')}
+           </div>
+        </div>
+
         <div class="catalog-large-list">
           ${spellCatalog.map(c => formatCatalogSpellCard(c)).join('')}
         </div>
@@ -3101,16 +3142,43 @@ function openSpellCatalogOverlay(parentModal = null) {
     btn.onclick = () => {
       overlay.querySelectorAll('.circle-filter').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-
-      // Re-aplica o filtro de texto + círculo
       triggerSearch();
     };
   });
 
-  // BUSCA (Lógica Principal)
+  // --- EVENTOS DOS FILTROS (Toggle Painel) ---
+  const btnToggleFiltros = overlay.querySelector('#btnToggleCatalogFiltros');
+  const painelFiltros = overlay.querySelector('#painelFiltrosCatalog');
+  
+  btnToggleFiltros.onclick = () => {
+      isFiltersExpanded = !isFiltersExpanded;
+      painelFiltros.style.display = isFiltersExpanded ? 'block' : 'none';
+      btnToggleFiltros.innerHTML = `Filtros ${isFiltersExpanded ? '▴' : '▾'}`;
+  };
+
+  // --- EVENTOS DOS FILTROS (Clique nas Pills) ---
+  overlay.querySelectorAll('.catalog-filter-pill').forEach(btn => {
+      btn.onclick = () => {
+          const type = btn.dataset.type; // 'school' ou 'class'
+          const val = btn.dataset.val;
+          const list = type === 'school' ? selectedSchools : selectedClasses;
+          
+          if (list.includes(val)) {
+              list.splice(list.indexOf(val), 1);
+              btn.classList.remove('active');
+          } else {
+              list.push(val);
+              btn.classList.add('active');
+          }
+          triggerSearch(); 
+      };
+  });
+
+  // BUSCA (Texto)
   const inputSearch = overlay.querySelector('#catalogLargeSearch');
   inputSearch.oninput = triggerSearch;
 
+  // LÓGICA PRINCIPAL DE FILTRAGEM
   function triggerSearch() {
     const q = inputSearch.value.toLowerCase();
     const searchTerms = q.split(',').map(t => t.trim()).filter(t => t);
@@ -3119,44 +3187,47 @@ function openSpellCatalogOverlay(parentModal = null) {
     const circleFilter = activeCircleBtn ? activeCircleBtn.dataset.filter : 'all';
 
     overlay.querySelectorAll('.catalog-card-item').forEach(card => {
+      const id = card.dataset.id;
+      const spell = spellCatalog.find(s => s.id === id);
+      
+      let show = true;
+
       // 1. Filtro de Círculo
       const itemLevel = card.dataset.level;
-      const passCircle = (circleFilter === 'all' || itemLevel === circleFilter);
+      if (circleFilter !== 'all' && itemLevel !== circleFilter) show = false;
 
-      // 2. Filtro de Texto (Comma Separated)
-      let passText = true;
-      if (searchTerms.length > 0) {
-        // Pega os dados brutos do card (reconstruindo a string de busca)
-        // O ideal seria ter o objeto original, mas vamos pegar do DOM para simplificar a referência
-        // ou buscar no spellCatalog pelo ID se precisar de mais precisão.
-        // Vamos usar o spellCatalog global para busca precisa.
+      if (spell && show) {
+          // 2. Filtro de Escola (Mostra se bater com QUALQUER UMA selecionada)
+          if (selectedSchools.length > 0 && !selectedSchools.includes(spell.school)) {
+              show = false;
+          }
+          
+          // 3. Filtro de Classe (Mostra se bater com QUALQUER UMA selecionada)
+          if (show && selectedClasses.length > 0) {
+              const spellClasses = (spell.spellClass || '').split(',').map(c => c.trim());
+              const temClasse = selectedClasses.some(c => spellClasses.includes(c));
+              if (!temClasse) show = false;
+          }
 
-        const id = card.dataset.id;
-        const spell = spellCatalog.find(s => s.id === id);
+          // 4. Filtro de Texto
+          if (show && searchTerms.length > 0) {
+            const fullText = [
+              spell.name, spell.school, spell.spellClass, spell.levelNumber.toString(),
+              spell.damage, spell.description, spell.material,
+              (spell.components?.V ? 'verbal' : ''),
+              (spell.components?.S ? 'somatico' : ''),
+              (spell.components?.M ? 'material' : '')
+            ].filter(Boolean).join(' ').toLowerCase();
 
-        if (spell) {
-          const fullText = [
-            spell.name,
-            spell.school,
-            spell.spellClass,
-            spell.levelNumber.toString(),
-            spell.damage,
-            spell.description,
-            spell.material,
-            // Componentes
-            (spell.components?.V ? 'verbal' : ''),
-            (spell.components?.S ? 'somatico' : ''),
-            (spell.components?.M ? 'material' : '')
-          ].filter(Boolean).join(' ').toLowerCase();
-
-          passText = searchTerms.every(term => fullText.includes(term));
-        } else {
-          // Fallback se não achar no catalogo (raro)
-          passText = card.textContent.toLowerCase().includes(searchTerms[0]);
-        }
+            const passText = searchTerms.every(term => fullText.includes(term));
+            if (!passText) show = false;
+          }
+      } else if (!spell && show && searchTerms.length > 0) {
+          // Fallback caso não ache no JSON
+          show = card.textContent.toLowerCase().includes(searchTerms[0]);
       }
 
-      card.style.display = (passCircle && passText) ? '' : 'none';
+      card.style.display = show ? '' : 'none';
     });
   }
 
@@ -3185,17 +3256,13 @@ function openSpellCatalogOverlay(parentModal = null) {
   });
 
   function adicionarMagiaAoState(c, classeFinal) {
-    // Agora active: true faz ela aparecer imediatamente na lista de preparadas
     state.spells.unshift({ ...c, id: uid(), expanded: false, active: true, spellClass: classeFinal });
-
     renderSpells();
     saveStateToServer();
-
-    // Recomendado: Adicionar isso para forçar atualização de contadores/DT se houver listeners
     window.dispatchEvent(new CustomEvent('sheet-updated'));
   }
 
-  // LÓGICA DE EXPANDIR
+  // LÓGICA DE EXPANDIR (Para ler a descrição no catálogo)
   overlay.querySelectorAll('.catalog-card-header').forEach(header => {
     header.style.cursor = 'pointer';
     header.addEventListener('click', (ev) => {
