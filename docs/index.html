@@ -690,8 +690,8 @@
   <script src="JS/MagicSystem.js"></script>
 
   <script>
-    /* =================================================================
-       LÓGICA DO MODO MOBILE
+/* =================================================================
+       1. LÓGICA DO MODO MOBILE
        ================================================================= */
     function setMobileView(view) {
       document.body.setAttribute('data-mobile-view', view);
@@ -709,59 +709,67 @@
     }
 
     /* =================================================================
-       LÓGICA DO SOCKET.IO (SINCRONIZAÇÃO EM TEMPO REAL)
+       2. LÓGICA DO SOCKET.IO (SINCRONIZAÇÃO EM TEMPO REAL)
        ================================================================= */
     const socket = io('https://dandd-chan.onrender.com');
 
     socket.on('connect', () => {
-      console.log("Conectado ao servidor de atualizações! ID:", socket.id);
+      console.log("Conectado ao servidor! ID:", socket.id);
     });
 
     socket.on('ficha_atualizada', (novaFicha) => {
-      // Verifica se a ficha é a mesma que está aberta
-      if (state && state.nome && novaFicha.nome && novaFicha.nome.toLowerCase() === state.nome.toLowerCase()) {
-        console.log("Recebi atualização externa para: " + novaFicha.nome);
-
-        // 1. Chama a função de mesclagem que criamos no DireitaJS
-        // Se a função existir (carregada), usa ela. Se não, usa o dado bruto.
+      // Usa window.state para ser compatível com Mestre e Jogador
+      if (window.state && window.state.nome && novaFicha.nome && novaFicha.nome.toLowerCase() === window.state.nome.toLowerCase()) {
+        
         let estadoFinal = novaFicha;
-
         if (typeof window.mesclarEstadoVisual === 'function') {
-          estadoFinal = window.mesclarEstadoVisual(state, novaFicha);
+          estadoFinal = window.mesclarEstadoVisual(window.state, novaFicha);
         }
 
-        // 2. Atualiza o estado com os dados mesclados (Preservando abertas/fechadas)
-        Object.assign(state, estadoFinal);
+        Object.assign(window.state, estadoFinal);
 
-        // 3. Atualiza a tela
-        if (typeof preencherFichaNaTela === 'function') preencherFichaNaTela(state);
+        if (typeof preencherFichaNaTela === 'function') preencherFichaNaTela(window.state);
         if (typeof atualizarHeader === 'function') atualizarHeader();
         if (typeof atualizarTextoClassesHeader === 'function') atualizarTextoClassesHeader();
         if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
         if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
 
-        // Dispara evento para redesenhar a Direita
         window.dispatchEvent(new CustomEvent('sheet-updated'));
       }
     });
 
+    socket.on('dados_rolados', (data) => {
+      if (data.socketId === socket.id) return;
+      if (window.state && window.state.nome && data.personagem &&
+        data.personagem.toLowerCase() === window.state.nome.toLowerCase()) {
+        if (typeof showCombatResults === 'function') {
+          showCombatResults(data.titulo, data.ataque, data.dano, true);
+        }
+      }
+    });
+
     /* =================================================================
-       LÓGICA DO MESTRE & PREENCHIMENTO DE DADOS
+       3. LÓGICA DO MESTRE & ACESSO DIRETO
        ================================================================= */
     window.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
       const masterChar = params.get('masterView');
 
       if (masterChar) {
-        document.getElementById('login-overlay').style.display = 'none';
-        document.getElementById('link-voltar-painel').style.display = 'block';
+        // Esconde o login e mostra o link de voltar para o Mestre entrar direto
+        const loginOverlay = document.getElementById('login-overlay');
+        if (loginOverlay) loginOverlay.style.display = 'none';
+        
+        const linkVoltar = document.getElementById('link-voltar-painel');
+        if (linkVoltar) linkVoltar.style.display = 'block';
+        
         carregarFichaMestre(masterChar);
       }
     });
 
     async function carregarFichaMestre(nome) {
       try {
-        const res = await fetch('https://dandd-chan.onrender.com/api/load-ficha-mestre', {
+        const res = await fetch(`https://dandd-chan.onrender.com/api/load-ficha-mestre`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ nome: nome })
@@ -769,16 +777,19 @@
 
         if (res.ok) {
           const ficha = await res.json();
-          if (typeof state !== 'undefined') {
-            Object.assign(state, ficha);
-            preencherFichaNaTela(ficha);
-            if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
-            if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
-            if (typeof atualizarHeader === 'function') atualizarHeader();
-            window.dispatchEvent(new CustomEvent('sheet-updated'));
-            if (typeof setActiveTab === 'function') setActiveTab(state.activeTab || 'Combate');
-            exibirAvisoTemporario("Mestre: Visualizando " + ficha.nome);
-          }
+          window.state = ficha; // Inicializa o estado global
+
+          preencherFichaNaTela(ficha);
+          
+          if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+          if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
+          if (typeof atualizarHeader === 'function') atualizarHeader();
+          if (typeof atualizarTextoClassesHeader === 'function') atualizarTextoClassesHeader();
+          
+          window.dispatchEvent(new CustomEvent('sheet-updated'));
+          if (typeof setActiveTab === 'function') setActiveTab(ficha.activeTab || 'Combate');
+          
+          exibirAvisoTemporario("Mestre: Visualizando " + (ficha.personagem || ficha.nome));
         } else {
           exibirAvisoTemporario("Erro: Personagem não encontrado.");
         }
@@ -788,16 +799,58 @@
       }
     }
 
+    /* =================================================================
+       4. LÓGICA DE RECORTE (CROP) E SALVAMENTO UNIFICADO
+       ================================================================= */
+    const modalCrop = document.getElementById('modal-crop-overlay');
+    const btnConfirmarCrop = document.getElementById('btn-confirmar-crop');
+    const btnCancelarCrop = document.getElementById('btn-cancelar-crop');
+    const imgVisualFicha = document.getElementById('img-personagem-visual');
+
+    btnCancelarCrop.onclick = function () {
+        modalCrop.style.display = 'none';
+        if (window.cropper) {
+            window.cropper.destroy();
+            window.cropper = null;
+        }
+    };
+
+    btnConfirmarCrop.onclick = function () {
+        if (!window.cropper) return;
+
+        const canvas = window.cropper.getCroppedCanvas({ width: 300, height: 300 });
+        const imagemBase64 = canvas.toDataURL('image/jpeg', 0.85);
+
+        if (imgVisualFicha) imgVisualFicha.src = imagemBase64;
+
+        modalCrop.style.display = 'none';
+        window.cropper.destroy();
+        window.cropper = null;
+
+        if (window.state) {
+            window.state.fotoPerfil = imagemBase64;
+
+            if (typeof reordenarObjeto === 'function') {
+                const ordenado = reordenarObjeto(window.state);
+                Object.assign(window.state, ordenado);
+            }
+
+            if (typeof saveStateToServer === 'function') {
+                saveStateToServer();
+            } else if (socket) {
+                socket.emit('ficha_atualizada', window.state);
+            }
+        }
+    };
+
+    /* =================================================================
+       5. UTILITÁRIOS DE INTERFACE E LOGIN
+       ================================================================= */
     function preencherFichaNaTela(data) {
-      // ALTERADO: Agora preenche o input com 'personagem' e só usa 'nome' se o outro estiver vazio
       setVal('input-personagem', data.personagem || data.nome);
       setVal('input-jogador', data.jogador);
       setVal('input-raca', data.raca);
       setTxt('btn-antecedente', data.antecedente);
-
-      // Atualiza o HUD do OBS se estiver aberto (Nome Visual)
-      const overlayNome = document.getElementById('nome-personagem-overlay');
-      if (overlayNome) overlayNome.textContent = data.personagem || data.nome;
 
       const imgElement = document.getElementById('img-personagem-visual');
       if (imgElement) {
@@ -818,151 +871,33 @@
     function setTxt(id, valor) { const el = document.getElementById(id); if (el) el.innerText = valor !== undefined ? valor : ''; }
     function setTxtQ(selector, valor) { const el = document.querySelector(selector); if (el) el.innerText = valor !== undefined ? valor : ''; }
 
-    /* =================================================================
-       SISTEMA DE LOGIN / TOASTS / ALERTAS
-       ================================================================= */
     function exibirAvisoTemporario(mensagem) {
       const existente = document.querySelector('.custom-toast-warning');
       if (existente) existente.remove();
-
       const toast = document.createElement('div');
       toast.className = 'custom-toast-warning';
-
-      const progress = document.createElement('div');
-      progress.className = 'toast-progress';
-
-      const content = document.createElement('div');
-      content.className = 'toast-content';
-
       const textoFormatado = mensagem.split('\n').join('<br>');
-      content.innerHTML = '<strong style="color:#e0aaff; display:block; margin-bottom:4px; font-size:11px; letter-spacing:1px;">SISTEMA</strong>' + textoFormatado;
-
-      toast.appendChild(progress);
-      toast.appendChild(content);
+      toast.innerHTML = `<div class="toast-progress"></div><div class="toast-content"><strong style="color:#e0aaff; display:block; margin-bottom:4px; font-size:11px; letter-spacing:1px;">SISTEMA</strong>${textoFormatado}</div>`;
       document.body.appendChild(toast);
-
-      setTimeout(() => { progress.style.width = '0%'; }, 50);
-      setTimeout(() => {
-        if (toast.parentElement) {
-          toast.style.animation = 'toastFadeOut 0.5s ease-out forwards';
-          setTimeout(() => toast.remove(), 450);
-        }
-      }, 5000);
+      setTimeout(() => { toast.querySelector('.toast-progress').style.width = '0%'; }, 50);
+      setTimeout(() => { if (toast.parentElement) { toast.style.animation = 'toastFadeOut 0.5s ease-out forwards'; setTimeout(() => toast.remove(), 450); } }, 5000);
     }
-
-    window.alert = function (msg) { exibirAvisoTemporario(msg); };
 
     function tentarLogin() {
       const nome = document.getElementById('login-nome').value;
       const senha = document.getElementById('login-senha').value;
-
       if (nome.toLowerCase() === 'mestre' && senha === 'admin') {
         window.open('mestre.html', '_blank');
-        document.getElementById('login-nome').value = '';
-        document.getElementById('login-senha').value = '';
-        exibirAvisoTemporario("Painel do Mestre aberto em nova aba.");
         return;
       }
-
       if (nome && senha) {
-        if (typeof carregarDadosIniciais === 'function') {
-          carregarDadosIniciais(nome, senha);
-        } else {
-          alert("Erro: Scripts JS não carregados corretamente.");
-        }
+        if (typeof carregarDadosIniciais === 'function') carregarDadosIniciais(nome, senha);
+        else alert("Erro: Scripts JS não carregados.");
       } else {
         exibirAvisoTemporario("Preencha todos os campos!");
       }
     }
-
-
-    /* =================================================================
-   LÓGICA DE RECORTE (CROP) E SALVAMENTO REORDENADO UNIFICADO
-   ================================================================= */
-
-// Elementos do DOM (Crop Modal)
-const modalCrop = document.getElementById('modal-crop-overlay');
-const btnConfirmarCrop = document.getElementById('btn-confirmar-crop');
-const btnCancelarCrop = document.getElementById('btn-cancelar-crop');
-const imgVisualFicha = document.getElementById('img-personagem-visual');
-
-// 1. Botão Cancelar do Corte
-btnCancelarCrop.onclick = function () {
-    modalCrop.style.display = 'none';
-    if (window.cropper) {
-        window.cropper.destroy();
-        window.cropper = null;
-    }
-};
-
-// 2. Botão Salvar (Corrigido para salvar sempre)
-btnConfirmarCrop.onclick = function () {
-    // Verifica se o cropper foi iniciado globalmente (pelo HeaderJS)
-    if (!window.cropper) {
-        console.error("Erro: Instância do Cropper não encontrada no window.");
-        return;
-    }
-
-    // Pega o canvas do recorte
-    const canvas = window.cropper.getCroppedCanvas({
-        width: 300,
-        height: 300,
-    });
-
-    const imagemBase64 = canvas.toDataURL('image/jpeg', 0.85);
-
-    // 1. Atualiza visualmente na ficha
-    if (imgVisualFicha) imgVisualFicha.src = imagemBase64;
-
-    // 2. Fecha o modal e limpa memória
-    modalCrop.style.display = 'none';
-    window.cropper.destroy();
-    window.cropper = null;
-
-    // 3. Salva no State e envia ao servidor
-    if (typeof state !== 'undefined') {
-        state.fotoPerfil = imagemBase64;
-
-        // Tenta reordenar o JSON se a função existir no HeaderJS
-        if (typeof reordenarObjeto === 'function') {
-            const stateOrdenado = reordenarObjeto(state);
-            Object.assign(state, stateOrdenado);
-            console.log("JSON reordenado com sucesso.");
-        }
-        
-        console.log("Imagem salva! Sincronizando com o servidor...");
-
-        // O salvamento agora acontece INDEPENDENTE da reordenação funcionar ou não
-        if (typeof saveStateToServer === 'function') {
-            saveStateToServer();
-        } else if (typeof socket !== 'undefined') {
-            // Fallback caso saveStateToServer não esteja no escopo
-            socket.emit('ficha_atualizada', state);
-        }
-    }
-};
-
-    /* =================================================================
-            RECEBIMENTO DE DADOS ROLADOS (SINCRONIZAÇÃO VISUAL)
-            ================================================================= */
-    socket.on('dados_rolados', (data) => {
-      // 1. Ignora se fui eu mesmo que enviei (pois já vi a animação localmente)
-      if (data.socketId === socket.id) return;
-
-      // 2. Verifica se é para a ficha que estou aberto
-      // (Compara o nome da ficha aberta com o nome da ficha que rolou o dado)
-      if (state && state.nome && data.personagem &&
-        data.personagem.toLowerCase() === state.nome.toLowerCase()) {
-
-        console.log("Recebendo rolagem remota de outra tela...");
-
-        // Chama a função visual marcando como TRUE (é remoto)
-        // Isso exibe o popup mas impede que ele seja reenviado para o servidor
-        if (typeof showCombatResults === 'function') {
-          showCombatResults(data.titulo, data.ataque, data.dano, true);
-        }
-      }
-    });
+    
 
 
   </script>

@@ -3356,7 +3356,9 @@ function reordenarObjeto(obj) {
     return novoObj;
 }
 
-// Abre o prompt inicial (Ctrl+V ou Arquivo)
+/* =============================================================
+   SISTEMA DE GESTÃO DE IMAGEM (PROMPT REVISADO)
+   ============================================================= */
 function abrirPromptImagem() {
     const overlay = document.createElement('div');
     overlay.className = 'spell-modal-overlay';
@@ -3370,7 +3372,7 @@ function abrirPromptImagem() {
             </div>
             <div class="modal-body" style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
                 <p style="color: #bbb; font-size: 13px;">Aperte <b>Ctrl + V</b> para colar ou selecione um arquivo.</p>
-                <div id="drop-area" style="border: 2px dashed #9c27b0; padding: 30px; border-radius: 8px; background: #0a0a0a; cursor: pointer; transition: 0.2s;">
+                <div id="drop-area" style="border: 2px dashed #9c27b0; padding: 30px; border-radius: 8px; background: #0a0a0a; cursor: pointer;">
                     <span style="color: #666; font-weight: bold;">[Área de Colagem / Clique]</span>
                 </div>
                 <button id="btn-search-file" class="btn-add" style="background: #333; border: 1px solid #555;">📁 Buscar nos Arquivos</button>
@@ -3386,14 +3388,13 @@ function abrirPromptImagem() {
         
         if (imgParaCrop && modalCrop) {
             imgParaCrop.src = src;
-            modalCrop.style.display = 'flex'; // Abre o modal de corte que está no index.html
+            modalCrop.style.display = 'flex';
             
             if (window.cropper) window.cropper.destroy();
 
-            // Delay para garantir que o modal abriu antes de iniciar o Cropper
             setTimeout(() => {
                 window.cropper = new Cropper(imgParaCrop, {
-                    aspectRatio: 1, // Quadrado
+                    aspectRatio: 1,
                     viewMode: 1,
                     dragMode: 'move',
                     autoCropArea: 1,
@@ -3401,7 +3402,8 @@ function abrirPromptImagem() {
                 });
             }, 150);
             
-            fecharPrompt();
+            overlay.remove();
+            document.removeEventListener('paste', handlePaste);
         }
     };
 
@@ -3417,15 +3419,12 @@ function abrirPromptImagem() {
         }
     };
 
-    const fecharPrompt = () => {
+    document.addEventListener('paste', handlePaste);
+    overlay.querySelector('#close-prompt').onclick = () => {
         overlay.remove();
         document.removeEventListener('paste', handlePaste);
     };
 
-    document.addEventListener('paste', handlePaste);
-    overlay.querySelector('#close-prompt').onclick = fecharPrompt;
-
-    // Lógica de cliques
     const inputOculto = document.getElementById('input-foto-upload');
     overlay.querySelector('#btn-search-file').onclick = () => inputOculto.click();
     overlay.querySelector('#drop-area').onclick = () => inputOculto.click();
