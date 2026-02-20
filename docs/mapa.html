@@ -23,7 +23,6 @@
         
         #map { width: 100vw; height: 100vh; background: var(--bg-dark); z-index: 1; cursor: default; }
 
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #111; }
         ::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
@@ -157,25 +156,26 @@
         .popup-edit-btn { background: none; border: none; color: #777; cursor: pointer; font-size: 16px; transition: 0.2s; }
         .popup-edit-btn:hover { color: #fff; transform: scale(1.1); }
 
-        /* === SISTEMA DE EXPANDIR E ENCOLHER O LORE === */
-        .popup-desc { 
-            font-size: 14px; color: #ccc; line-height: 1.6; 
-            margin-bottom: 5px; padding-bottom: 10px; border-bottom: 1px dashed #333;
-            max-height: 120px; /* Limite de altura base */
-            overflow: hidden; /* Esconde o que passar do limite */
-            white-space: pre-wrap; transition: max-height 0.3s ease;
+        /* === SISTEMA DE ARRASTAR O LORE === */
+        /* Textarea readonly parece um texto normal, mas permite redimensionar */
+        .popup-desc-view { 
+            width: 100%; font-family: inherit; font-size: 14px; color: #ccc; line-height: 1.6; 
+            margin-bottom: 10px; padding: 0 0 10px 0; border: none; border-bottom: 1px dashed #333;
+            background: transparent; outline: none;
+            resize: vertical; /* Permite arrastar verticalmente! */
+            overflow-y: auto; 
+            min-height: 50px; 
+            height: 80px; /* Começa com aproximadamente 3 a 4 linhas visíveis */
+            max-height: 400px;
+            box-sizing: border-box; cursor: text;
         }
-        .popup-desc.expanded {
-            max-height: 2000px; /* Abre para mostrar tudo */
-        }
-        .btn-toggle-desc {
-            background: none; border: none; color: var(--accent); cursor: pointer; font-weight: bold;
-            font-size: 12px; margin-bottom: 15px; padding: 0; display: inline-block;
-        }
-        .btn-toggle-desc:hover { color: #fff; text-decoration: underline; }
+        /* Personaliza a barrinha de rolagem do texto */
+        .popup-desc-view::-webkit-scrollbar { width: 4px; }
+        .popup-desc-view::-webkit-scrollbar-track { background: transparent; }
+        .popup-desc-view::-webkit-scrollbar-thumb { background: #555; border-radius: 2px; }
         
         .popup-img-main { 
-            width: 100%; height: 140px; 
+            width: 100%; height: 160px; 
             object-fit: cover; border-radius: 6px; margin-bottom: 8px; cursor: pointer; border: 1px solid #333; display: block; 
             transition: 0.2s;
         }
@@ -337,14 +337,13 @@
 
         window.onload = function() {
             map = L.map('map', {
-                crs: L.CRS.Simple, minZoom: -2, maxZoom: 2, zoomControl: false, attributionControl: false
+                crs: L.CRS.Simple, minZoom: -4, maxZoom: 2, zoomControl: false, attributionControl: false
             });
 
             const w = 1920, h = 1080;
             const bounds = [[0,0], [h,w]];
             L.imageOverlay(IMG_MAPA, bounds).addTo(map);
             
-            // Usando fitBounds para enquadrar a imagem inteira na tela automaticamente
             map.fitBounds(bounds);
             
             L.control.zoom({ position: 'bottomright' }).addTo(map);
@@ -529,7 +528,7 @@
                 pin.nome = nome;
                 pin.desc = desc;
                 pin.icon = finalIcon;
-                pin.gallery = [...galleryImages]; // Copia o array para evitar bug de referência
+                pin.gallery = [...galleryImages]; 
                 refreshMarkerVisuals(pin);
                 pinData = pin;
             } else {
@@ -553,9 +552,13 @@
                         gallery: pinData.gallery
                     })
                 });
-                if(!res.ok) alert("Houve um erro no servidor ao salvar (talvez as imagens sejam muito grandes).");
+                
+                if(!res.ok) {
+                    alert("Aviso: O pin apareceu no mapa, mas falhou ao salvar no servidor! Tente imagens menores.");
+                }
             } catch(e) { 
-                console.error("Erro ao salvar no banco", e); 
+                console.error("Erro ao salvar no banco", e);
+                alert("Erro grave ao comunicar com o servidor. Verifique se o banco de dados está rodando.");
             }
 
             fecharModal();
@@ -582,21 +585,26 @@
             pin.marker.setPopupContent(gerarPopupContent(pin));
         }
 
-        window.trocarImagemPrincipal = function(pinId, imgSrc) {
-            const mainImg = document.getElementById(`main-img-${pinId}`);
-            if(mainImg) mainImg.src = imgSrc;
-        };
+        // --- SISTEMA CORRIGIDO DE TROCAR IMAGEM E GARANTIR A RENDERIZAÇÃO ---
+        window.trocarImagemPrincipal = function(pinId, idx) {
+            const pin = markers.find(m => m.id === pinId);
+            if(!pin) return;
+            
+            // Reconstroi a lista de imagens para saber qual o índice clicado
+            let todasImagens = [];
+            if(pin.gallery && pin.gallery.length > 0) {
+                todasImagens.push(...pin.gallery);
+            }
+            if(pin.icon !== IMG_DEFAULT_ICON && !todasImagens.includes(pin.icon)) {
+                todasImagens.unshift(pin.icon);
+            }
+            if(todasImagens.length === 0) {
+                todasImagens.push(IMG_DEFAULT_ICON);
+            }
 
-        // Função de expandir/encolher o texto do Lore
-        window.toggleDesc = function(pinId) {
-            const desc = document.getElementById(`desc-text-${pinId}`);
-            const btn = document.getElementById(`desc-btn-${pinId}`);
-            if(desc.classList.contains('expanded')) {
-                desc.classList.remove('expanded');
-                btn.innerText = 'Ler mais ▼';
-            } else {
-                desc.classList.add('expanded');
-                btn.innerText = 'Mostrar menos ▲';
+            const mainImg = document.getElementById(`main-img-${pinId}`);
+            if(mainImg && todasImagens[idx]) {
+                mainImg.src = todasImagens[idx];
             }
         };
 
@@ -609,29 +617,31 @@
                 </div>
             `;
             
-            // Adiciona a div de descrição
             let descHtml = pin.desc || "Sem descrição.";
-            html += `<div class="popup-desc" id="desc-text-${pin.id}">${descHtml}</div>`;
+            html += `<textarea readonly class="popup-desc-view">${descHtml}</textarea>`;
             
-            // Se o texto for grande (mais de 150 caracteres ou muitas quebras de linha), mostra o botão "Ler mais"
-            let isLongText = (descHtml.length > 150) || (descHtml.split('\n').length > 4);
-            if (isLongText) {
-                html += `<button class="btn-toggle-desc" id="desc-btn-${pin.id}" onclick="toggleDesc(${pin.id})">Ler mais ▼</button>`;
-            }
-            
+            // PREPARA AS IMAGENS
             let todasImagens = [];
-            if(pin.icon !== IMG_DEFAULT_ICON) todasImagens.push(pin.icon);
-            if(pin.gallery && pin.gallery.length > 0) todasImagens.push(...pin.gallery);
             
-            todasImagens = [...new Set(todasImagens)];
-            if(todasImagens.length === 0) todasImagens.push(IMG_DEFAULT_ICON);
+            if(pin.gallery && pin.gallery.length > 0) {
+                todasImagens.push(...pin.gallery);
+            }
+            if(pin.icon !== IMG_DEFAULT_ICON && !todasImagens.includes(pin.icon)) {
+                todasImagens.unshift(pin.icon);
+            }
+            if(todasImagens.length === 0) {
+                todasImagens.push(IMG_DEFAULT_ICON);
+            }
 
+            // IMAGEM PRINCIPAL
             html += `<img src="${todasImagens[0]}" id="main-img-${pin.id}" class="popup-img-main" onclick="verFull(this.src)">`;
 
+            // THUMBNAILS (GALERIA)
+            // Em vez de passar a imagem inteira na função (que quebra o HTML), passamos apenas o índice dela (idx)!
             if(todasImagens.length > 1) {
                 html += `<div class="popup-gallery">`;
-                todasImagens.forEach(img => { 
-                    html += `<img src="${img}" class="popup-thumb" onclick="trocarImagemPrincipal(${pin.id}, '${img}')">`; 
+                todasImagens.forEach((img, idx) => { 
+                    html += `<img src="${img}" class="popup-thumb" onclick="trocarImagemPrincipal(${pin.id}, ${idx})">`; 
                 });
                 html += `</div>`;
             }
