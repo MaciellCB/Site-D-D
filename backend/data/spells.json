@@ -1,5 +1,4 @@
 [
-
   {
     "id": "s_amizade",
     "name": "Amizade",
@@ -138,6 +137,25 @@
     "description": "<p>Uma chama tremeluzente aparece na sua mão. Ela permanece lá pela duração e não fere nem você nem seu equipamento. A chama emite luz plena num raio de 3 metros e penumbra por mais 3 metros.</p><p>Você pode atacar arremessando a chama (alcance 9m). Faça um ataque à distância com magia. Se atingir, causa <strong>1d8</strong> de dano de fogo.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d8</strong> nos níveis 5 (2d8), 11 (3d8) e 17 (4d8).</p>"
   },
   {
+    "id": "s_criar_fogueira",
+    "name": "Criar Fogueira",
+    "levelNumber": 0,
+    "school": "Conjuração",
+    "spellClass": "Druida, Feiticeiro, Bruxo, Mago, Artífice",
+    "damage": "1d8",
+    "scaling": "1d8",
+    "components": { "V": true, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "18m",
+      "area": "Cubo 1,5m",
+      "alvo": "Área",
+      "duracao": "Até 1 min",
+      "resistencia": "Destreza"
+    },
+    "description": "<p>Você cria uma fogueira mágica no chão que preenche um cubo de 1,5 metro e que requer concentração. A fogueira inflama objetos inflamáveis na área que não estejam sendo vestidos ou carregados.</p><p>Qualquer criatura no espaço da fogueira quando você a conjura, ou que entrar na fogueira pela primeira vez num turno ou terminar seu turno nela, deve fazer um teste de resistência de <strong>Destreza</strong>, sofrendo <strong>1d8</strong> de dano de fogo se falhar.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d8</strong> nos níveis 5 (2d8), 11 (3d8) e 17 (4d8).</p>"
+  },
+  {
     "id": "s_druidismo",
     "name": "Druidismo",
     "levelNumber": 0,
@@ -195,6 +213,25 @@
     "description": "<p>Você toca uma criatura viva que esteja com 0 pontos de vida.</p><p>A criatura é estabilizada, o que significa que ela não precisa mais realizar testes de resistência contra a morte, mas permanece inconsciente.</p>"
   },
   {
+    "id": "s_estrondo_terrestre",
+    "name": "Estrondo Terrestre",
+    "levelNumber": 0,
+    "school": "Evocação",
+    "spellClass": "Bardo, Druida, Feiticeiro, Bruxo, Mago, Artífice",
+    "damage": "1d6",
+    "scaling": "1d6",
+    "components": { "V": false, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "1,5m",
+      "area": "Raio 1,5m",
+      "alvo": "Criaturas na área",
+      "duracao": "Instantânea",
+      "resistencia": "Constituição"
+    },
+    "description": "<p>Você cria uma explosão de som trovejante, que pode ser ouvida a até 30 metros de você. Cada criatura a até 1,5 metro de você (que não seja você) deve ser bem-sucedida em um teste de resistência de <strong>Constituição</strong> ou sofrerá <strong>1d6</strong> de dano trovejante.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> nos níveis 5 (2d6), 11 (3d6) e 17 (4d6).</p>"
+  },
+  {
     "id": "s_globos_luz",
     "name": "Globos de Luz",
     "levelNumber": 0,
@@ -235,6 +272,26 @@
     "description": "<p>Você cria um som ou uma imagem de um objeto dentro do alcance que permanece pela duração.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Som:</strong> Pode variar de um sussurro a um grito, ou sons variados.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Imagem:</strong> Deve caber num cubo de 1,5m. Coisas físicas atravessam a ilusão.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Revelar:</strong> Uma criatura pode usar sua ação para examinar (Investigação contra sua CD). Se passar, a ilusão se torna translúcida para ela.</li></ul>"
   },
   {
+    "id": "s_infestacao",
+    "name": "Infestação",
+    "levelNumber": 0,
+    "school": "Conjuração",
+    "spellClass": "Druida, Feiticeiro, Bruxo, Mago",
+    "damage": "1d6",
+    "scaling": "1d6",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Uma pulga viva",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "9m",
+      "area": "-",
+      "alvo": "1 criatura",
+      "duracao": "Instantânea",
+      "resistencia": "Constituição"
+    },
+    "description": "<p>Você faz um enxame de ácaros, pulgas e outros parasitas aparecerem momentaneamente em uma criatura que você possa ver dentro do alcance.</p><p>O alvo deve ser bem-sucedido num teste de resistência de <strong>Constituição</strong> ou sofrerá <strong>1d6</strong> de dano de veneno e se moverá 1,5 metro em uma direção aleatória se puder se mover, mas não para uma área obviamente perigosa.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> nos níveis 5 (2d6), 11 (3d6) e 17 (4d6).</p>"
+  },
+  {
     "id": "s_luz",
     "name": "Luz",
     "levelNumber": 0,
@@ -253,6 +310,25 @@
       "resistencia": "Destreza"
     },
     "description": "<p>Você toca um objeto com dimensão não maior que 3 metros. Até a magia acabar, o objeto emite luz plena num raio de 6 metros e penumbra por mais 6 metros.</p><p>Se você mirar um objeto segurado ou vestido por uma criatura hostil, ela deve passar num teste de <strong>Destreza</strong> para evitar a magia.</p>"
+  },
+  {
+    "id": "s_manejar_chamas",
+    "name": "Manejar Chamas",
+    "levelNumber": 0,
+    "school": "Transmutação",
+    "spellClass": "Druida, Feiticeiro, Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": false, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "18m",
+      "area": "Cubo 1,5m",
+      "alvo": "Fogo não mágico",
+      "duracao": "Instantânea (ou até 1 hora)",
+      "resistencia": "-"
+    },
+    "description": "<p>Você escolhe uma chama não mágica que você possa ver dentro do alcance e que caiba em um cubo de 1,5 metro. Você a afeta de uma das seguintes maneiras:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Iluminação:</strong> Expande ou reduz a luz da chama em 4,5 metros por 1 hora.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Apagar:</strong> Você extingue as chamas instantaneamente.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Espalhar:</strong> A chama espalha-se 1,5 metro em uma direção, se houver madeira ou combustível.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Alterar:</strong> Você muda a cor ou cria formas simples nas chamas por 1 hora.</li></ul>"
   },
   {
     "id": "s_maos_magicas",
@@ -294,6 +370,63 @@
     "description": "<p>Você aponta o dedo para uma criatura dentro do alcance e sussurra uma mensagem. O alvo (e apenas ele) ouve a mensagem e pode responder num sussurro que só você ouve.</p><p>Você pode conjurar essa magia através de objetos sólidos se você for familiar com o alvo. Chumbo mágico, silêncio mágico e barreiras mágicas bloqueiam a magia.</p>"
   },
   {
+    "id": "s_moldar_agua",
+    "name": "Moldar Água",
+    "levelNumber": 0,
+    "school": "Transmutação",
+    "spellClass": "Druida, Feiticeiro, Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": false, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "9m",
+      "area": "Cubo 1,5m",
+      "alvo": "Água",
+      "duracao": "Instantânea (ou até 1 hora)",
+      "resistencia": "-"
+    },
+    "description": "<p>Você escolhe uma área de água que você possa ver e que caiba em um cubo de 1,5 metro. Você a afeta de uma das seguintes maneiras:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Mover:</strong> Você move ou muda a direção da água em até 1,5 metro.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Animar:</strong> Você faz a água formar formas simples ou se animar por 1 hora.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Alterar:</strong> Você muda a cor ou a opacidade da água por 1 hora.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Congelar:</strong> Você congela a água por 1 hora, desde que não haja criaturas nela.</li></ul>"
+  },
+  {
+    "id": "s_moldar_terra",
+    "name": "Moldar Terra",
+    "levelNumber": 0,
+    "school": "Transmutação",
+    "spellClass": "Druida, Feiticeiro, Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": false, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "9m",
+      "area": "Cubo 1,5m",
+      "alvo": "Terra ou Pedra",
+      "duracao": "Instantânea (ou até 1 hora)",
+      "resistencia": "-"
+    },
+    "description": "<p>Você escolhe uma porção de terra ou pedra que você possa ver e que caiba em um cubo de 1,5 metro. Você a afeta de uma das seguintes maneiras:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Escavar:</strong> Se mirar terra solta, você pode movê-la a até 1,5 metro de distância.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Sinais:</strong> Você causa formas, cores ou letras aparecerem na terra ou pedra por 1 hora.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Terreno:</strong> Você transforma terra normal em terreno difícil (ou vice-versa) por 1 hora.</li></ul>"
+  },
+  {
+    "id": "s_mordida_frio",
+    "name": "Mordida de Frio",
+    "levelNumber": 0,
+    "school": "Evocação",
+    "spellClass": "Druida, Feiticeiro, Bruxo, Mago, Artífice",
+    "damage": "1d6",
+    "scaling": "1d6",
+    "components": { "V": true, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "18m",
+      "area": "-",
+      "alvo": "1 criatura",
+      "duracao": "Instantânea",
+      "resistencia": "Constituição"
+    },
+    "description": "<p>Você causa um frio entorpecente em uma criatura que você possa ver dentro do alcance. O alvo deve ser bem-sucedido num teste de resistência de <strong>Constituição</strong> ou sofrerá <strong>1d6</strong> de dano de frio, e terá <strong>desvantagem</strong> na sua próxima jogada de ataque com arma que fizer antes do final de seu próximo turno.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> nos níveis 5 (2d6), 11 (3d6) e 17 (4d6).</p>"
+  },
+  {
     "id": "s_orientacao",
     "name": "Orientação",
     "levelNumber": 0,
@@ -311,6 +444,64 @@
       "resistencia": "-"
     },
     "description": "<p>Você toca uma criatura voluntária. Uma vez, antes da magia acabar, o alvo pode rolar um <strong>d4</strong> e adicionar o resultado a um teste de habilidade de sua escolha.</p><p>O alvo pode rolar o dado antes ou depois de realizar o teste.</p>"
+  },
+  {
+    "id": "s_palavra_radiante",
+    "name": "Palavra Radiante",
+    "levelNumber": 0,
+    "school": "Evocação",
+    "spellClass": "Clérigo",
+    "damage": "1d6",
+    "scaling": "1d6",
+    "components": { "V": true, "S": false, "M": true },
+    "material": "Um símbolo sagrado",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "1,5m",
+      "area": "Raio 1,5m",
+      "alvo": "Criaturas escolhidas",
+      "duracao": "Instantânea",
+      "resistencia": "Constituição"
+    },
+    "description": "<p>Você pronuncia uma palavra divina e radiação ardente emana de você. Cada criatura que você escolher e que você possa ver a até 1,5 metro de você deve ser bem-sucedida num teste de resistência de <strong>Constituição</strong> ou sofrerá <strong>1d6</strong> de dano radiante.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> nos níveis 5 (2d6), 11 (3d6) e 17 (4d6).</p>"
+  },
+  {
+    "id": "s_pedagio_mortos",
+    "name": "Pedágio dos Mortos",
+    "levelNumber": 0,
+    "school": "Necromancia",
+    "spellClass": "Clérigo, Bruxo, Mago",
+    "damage": "1d8 ou 1d12",
+    "scaling": "1d8 / 1d12",
+    "components": { "V": true, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "18m",
+      "area": "-",
+      "alvo": "1 criatura",
+      "duracao": "Instantânea",
+      "resistencia": "Sabedoria"
+    },
+    "description": "<p>Você aponta para uma criatura que você possa ver e o som de um sino lúgubre ecoa pelo ar à volta dela por um momento. O alvo deve passar num teste de resistência de <strong>Sabedoria</strong> ou sofrerá <strong>1d8</strong> de dano necrótico.</p><p>Se o alvo estiver sem qualquer quantidade dos seus pontos de vida máximos (já estiver ferido), ele sofre <strong>1d12</strong> de dano necrótico em vez disso.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em um dado nos níveis 5 (2 dados), 11 (3 dados) e 17 (4 dados).</p>"
+  },
+  {
+    "id": "s_pedra_magica",
+    "name": "Pedra Mágica",
+    "levelNumber": 0,
+    "school": "Transmutação",
+    "spellClass": "Druida, Bruxo, Artífice",
+    "damage": "1d6",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação bônus",
+      "alcance": "Toque",
+      "area": "-",
+      "alvo": "1 a 3 pedregulhos",
+      "duracao": "1 min",
+      "resistencia": "-"
+    },
+    "description": "<p>Você toca de uma a três pedrinhas e as imbui com magia. Você ou outra pessoa pode fazer um ataque à distância com magia arremessando uma pedrinha (alcance 18m) ou com uma funda. Se arremessada por outra pessoa, essa pessoa usa a <em>sua</em> habilidade de conjuração.</p><p>Ao atingir, o alvo sofre dano de concussão igual a <strong>1d6 + seu modificador de habilidade de conjuração</strong>. A magia termina na pedra ao atingir ou errar o alvo.</p>"
   },
   {
     "id": "s_prestidigitacao",
@@ -389,6 +580,25 @@
     "description": "<p>Um raio de luz azulada e fria parte em direção a uma criatura ao alcance. Faça um ataque à distância com magia.</p><p>Se atingir, o alvo sofre <strong>1d8</strong> de dano de frio e seu deslocamento é reduzido em 3 metros até o começo do seu próximo turno.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d8</strong> nos níveis 5 (2d8), 11 (3d8) e 17 (4d8).</p>"
   },
   {
+    "id": "s_rajada_vento_truque",
+    "name": "Rajada de Vento",
+    "levelNumber": 0,
+    "school": "Transmutação",
+    "spellClass": "Druida, Feiticeiro, Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "9m",
+      "area": "-",
+      "alvo": "1 criatura ou objeto",
+      "duracao": "Instantânea",
+      "resistencia": "Força"
+    },
+    "description": "<p>Você agarra o ar ao seu redor para criar um dos seguintes efeitos à sua escolha:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Empurrar:</strong> Uma criatura Média ou menor deve passar em resistência de <strong>Força</strong> ou será empurrada 1,5 metro para longe de você.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Mover Objeto:</strong> Você empurra um objeto solto de até 2,5 kg para até 3 metros para longe de você. Não é forte o suficiente para causar dano.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Sensorial:</strong> Você cria um efeito inofensivo de ar, como fazer roupas esvoaçarem ou portas baterem.</li></ul>"
+  },
+  {
     "id": "s_rajada_veneno",
     "name": "Rajada de Veneno",
     "levelNumber": 0,
@@ -445,6 +655,25 @@
       "resistencia": "-"
     },
     "description": "<p>Você toca uma criatura voluntária. Uma vez, antes da magia acabar, o alvo pode rolar um <strong>d4</strong> e adicionar o resultado a um teste de resistência de sua escolha.</p><p>O alvo pode rolar o dado antes ou depois de realizar o teste.</p>"
+  },
+  {
+    "id": "s_selvageria_primitiva",
+    "name": "Selvageria Primitiva",
+    "levelNumber": 0,
+    "school": "Transmutação",
+    "spellClass": "Druida",
+    "damage": "1d10",
+    "scaling": "1d10",
+    "components": { "V": false, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "Pessoal",
+      "area": "-",
+      "alvo": "1 criatura",
+      "duracao": "Instantânea",
+      "resistencia": "-"
+    },
+    "description": "<p>Você canaliza magia primitiva para fazer seus dentes ou unhas afiarem-se e ficarem prontos para desferir um ataque corrosivo. Faça um ataque corpo-a-corpo com magia contra uma criatura a até 1,5 metro de você.</p><p>Se atingir, o alvo sofre <strong>1d10</strong> de dano ácido. Depois que você faz o ataque, seus dentes ou unhas voltam ao normal.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d10</strong> nos níveis 5 (2d10), 11 (3d10) e 17 (4d10).</p>"
   },
   {
     "id": "s_taumaturgia",
@@ -538,6 +767,26 @@
 
 
   
+ 
+  {
+    "id": "s_absorver_elementos",
+    "name": "Absorver Elementos",
+    "levelNumber": 1,
+    "school": "Abjuração",
+    "spellClass": "Druida, Patrulheiro, Mago, Artífice",
+    "damage": "1d6",
+    "scaling": "1d6",
+    "components": { "V": false, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 reação",
+      "alcance": "Pessoal",
+      "area": "-",
+      "alvo": "Pessoal",
+      "duracao": "1 rodada",
+      "resistencia": "-"
+    },
+    "description": "<p>A magia captura parte da energia de entrada, diminuindo seu efeito em você e armazenando-a para o seu próximo ataque corpo-a-corpo. Você usa essa reação quando sofre dano de ácido, frio, fogo, elétrico ou trovejante.</p><p>Você tem <strong>resistência</strong> ao tipo de dano ativador até o início do seu próximo turno. Além disso, a primeira vez que você atingir com um ataque corpo-a-corpo no seu próximo turno, o alvo sofre <strong>1d6</strong> de dano extra do tipo ativador, e a magia termina.</p><p><strong>Níveis Superiores:</strong> O dano extra aumenta em <strong>1d6</strong> para cada nível de slot acima do 1º.</p>"
+  },
   {
     "id": "s_alarme",
     "name": "Alarme",
@@ -599,24 +848,24 @@
     "description": "<p>Graxa escorregadia cobre o chão em um quadrado de 3 metros centrado num ponto dentro do alcance, transformando-o em terreno difícil.</p><p>Quando a graxa aparece, cada criatura na área deve ser bem sucedida num teste de <strong>Destreza</strong> ou cairá <strong>caída</strong> no chão. Uma criatura que entre na área ou termine seu turno nela também deve realizar o teste.</p>"
   },
   {
-    "id": "s_armadura_arcana",
-    "name": "Armadura Arcana",
+    "id": "s_armadilha",
+    "name": "Armadilha",
     "levelNumber": 1,
     "school": "Abjuração",
-    "spellClass": "Feiticeiro, Mago",
+    "spellClass": "Druida, Patrulheiro, Mago, Artífice",
     "damage": "-",
     "scaling": "-",
     "components": { "V": true, "S": true, "M": true },
-    "material": "Um pedaço de couro curado",
+    "material": "7,5 metros de corda, consumida",
     "attrs": {
-      "execucao": "1 ação",
+      "execucao": "1 min",
       "alcance": "Toque",
-      "area": "-",
-      "alvo": "1 criatura (sem armadura)",
-      "duracao": "8 horas",
-      "resistencia": "-"
+      "area": "Círculo 1,5m",
+      "alvo": "Área",
+      "duracao": "Até 8 horas",
+      "resistencia": "Destreza"
     },
-    "description": "<p>Você toca uma criatura voluntária que não esteja vestindo armadura. Uma força mágica protetora a envolve até a magia acabar.</p><p>A Classe de Armadura base do alvo se torna <strong>13 + modificador de Destreza</strong>. A magia acaba se o alvo vestir uma armadura ou se você dissipá-la com uma ação.</p>"
+    "description": "<p>Enquanto você conjura a magia, usa a corda para criar um círculo com um raio de 1,5 metro no chão. Quando a magia termina, a corda desaparece e o círculo se torna uma armadilha mágica quase invisível.</p><p>A magia é ativada quando uma criatura Pequena, Média ou Grande pisa no chão dentro do raio. A criatura deve ser bem-sucedida num teste de resistência de <strong>Destreza</strong> ou ficará magicamente suspensa no ar, pendurada de cabeça para baixo e <strong>impedida</strong>.</p><p>A criatura pode fazer um teste de Destreza (Acrobacia) ou Força (Atletismo) (sua escolha) no final de cada um de seus turnos para escapar.</p>"
   },
   {
     "id": "s_armadura_agathys",
@@ -637,6 +886,26 @@
       "resistencia": "-"
     },
     "description": "<p>Uma força mágica protetora envolve você, manifestando-se como um frio espectral que cobre você e seu equipamento.</p><p>Você ganha <strong>5 pontos de vida temporários</strong>. Se uma criatura atingir você com um ataque corpo-a-corpo enquanto você possuir esses pontos de vida, a criatura sofrerá <strong>5</strong> de dano de frio.</p><p><strong>Níveis Superiores:</strong> Os pontos de vida temporários e o dano de frio aumentam em <strong>5</strong> para cada nível de slot acima do 1º.</p>"
+  },
+  {
+    "id": "s_armadura_arcana",
+    "name": "Armadura Arcana",
+    "levelNumber": 1,
+    "school": "Abjuração",
+    "spellClass": "Feiticeiro, Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Um pedaço de couro curado",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "Toque",
+      "area": "-",
+      "alvo": "1 criatura (sem armadura)",
+      "duracao": "8 horas",
+      "resistencia": "-"
+    },
+    "description": "<p>Você toca uma criatura voluntária que não esteja vestindo armadura. Uma força mágica protetora a envolve até a magia acabar.</p><p>A Classe de Armadura base do alvo se torna <strong>13 + modificador de Destreza</strong>. A magia acaba se o alvo vestir uma armadura ou se você dissipá-la com uma ação.</p>"
   },
   {
     "id": "s_auxilio_divino",
@@ -735,6 +1004,64 @@
       "resistencia": "-"
     },
     "description": "<p>Você coloca uma maldição em uma criatura. Até a magia acabar, você causa <strong>1d6</strong> de dano necrótico extra no alvo sempre que acertá-lo com um ataque.</p><p>Escolha um atributo quando conjurar a magia. O alvo tem <strong>desvantagem</strong> em testes de habilidade com o atributo escolhido. Se o alvo cair a 0 PV, você pode usar uma ação bônus para amaldiçoar outra criatura.</p><p><strong>Níveis Superiores:</strong> A duração aumenta para 8 horas (slot 3º) ou 24 horas (slot 5º).</p>"
+  },
+  {
+    "id": "s_catapulta",
+    "name": "Catapulta",
+    "levelNumber": 1,
+    "school": "Transmutação",
+    "spellClass": "Feiticeiro, Mago, Artífice",
+    "damage": "3d8",
+    "scaling": "1d8",
+    "components": { "S": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "18m",
+      "area": "Linha 27m",
+      "alvo": "Objeto e Criatura",
+      "duracao": "Instantânea",
+      "resistencia": "Destreza"
+    },
+    "description": "<p>Escolha um objeto não mágico pesando de 0,5 a 2,5 kg dentro do alcance que não esteja sendo vestido ou carregado. O objeto voa em linha reta a até 27 metros na direção que você escolher antes de cair no chão, parando precocemente se impactar contra uma superfície sólida.</p><p>Se o objeto for atingir uma criatura, essa criatura deve fazer um teste de resistência de <strong>Destreza</strong>. Num sucesso, o objeto erra a criatura e continua sua trajetória. Numa falha, o objeto atinge o alvo e para. O objeto e o alvo do impacto sofrem ambos <strong>3d8</strong> de dano de concussão.</p><p><strong>Níveis Superiores:</strong> O peso máximo do objeto aumenta em 2,5 kg e o dano aumenta em <strong>1d8</strong> para cada nível de slot acima do 1º.</p>"
+  },
+  {
+    "id": "s_causa_efeito",
+    "name": "Causa e Efeito",
+    "levelNumber": 1,
+    "school": "Necromancia",
+    "spellClass": "Bruxo, Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "18m",
+      "area": "-",
+      "alvo": "1 criatura",
+      "duracao": "Até 1 min",
+      "resistencia": "Sabedoria"
+    },
+    "description": "<p>Você desperta o senso de mortalidade em uma criatura que você possa ver dentro do alcance. Um construto ou morto-vivo é imune a este efeito.</p><p>O alvo deve ser bem-sucedido num teste de resistência de <strong>Sabedoria</strong> ou ficará <strong>amedrontado</strong> de você até a magia acabar. O alvo pode repetir o teste de resistência no final de cada um dos turnos dele, encerrando o efeito sobre si em caso de sucesso.</p><p><strong>Níveis Superiores:</strong> Você pode ter como alvo uma criatura adicional para cada nível de slot acima do 1º. As criaturas devem estar a 9 metros umas das outras quando você as alveja.</p>"
+  },
+  {
+    "id": "s_cerimonia",
+    "name": "Cerimônia",
+    "levelNumber": 1,
+    "school": "Abjuração (Ritual)",
+    "spellClass": "Clérigo, Paladino",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Pó de prata valendo 25 po (consumido)",
+    "attrs": {
+      "execucao": "1 hora",
+      "alcance": "Toque",
+      "area": "-",
+      "alvo": "Criaturas voluntárias",
+      "duracao": "Instantânea (ou Variável)",
+      "resistencia": "-"
+    },
+    "description": "<p>Você realiza uma das várias cerimônias religiosas. Quando conjura, escolha um dos ritos:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Expiação:</strong> Toca uma criatura voluntária que mudou de alinhamento para restaurar seu alinhamento original.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Abençoar Água:</strong> Toca um frasco com água, transformando em Água Benta.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Rito de Maioridade:</strong> Toca um jovem adulto; por 24h, rola 1d4 extra em qualquer teste que escolher.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dedicação:</strong> Toca humanoide se dedicando ao seu deus; por 24h, rola 1d4 extra em testes de resistência.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Rito Fúnebre:</strong> Toca um cadáver. Ele não pode se tornar morto-vivo por meios mágicos por 7 dias.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Casamento:</strong> Toca adultos voluntários. Pelos próximos 7 dias, eles ganham +2 na CA se estiverem a 9m um do outro (apenas 1 vez por casal, salvo se enviuvar).</li></ul>"
   },
   {
     "id": "s_comando",
@@ -1105,6 +1432,26 @@
     "description": "<p>Um campo cintilante aparece e envolve uma criatura à sua escolha dentro do alcance, concedendo a ela um bônus de <strong>+2 na CA</strong> pela duração.</p>"
   },
   {
+    "id": "s_faca_gelo",
+    "name": "Faca de Gelo",
+    "levelNumber": 1,
+    "school": "Conjuração",
+    "spellClass": "Druida, Feiticeiro, Mago",
+    "damage": "1d10 + 2d6",
+    "scaling": "1d6",
+    "components": { "S": true, "M": true },
+    "material": "Uma gota de água ou um pedaço de gelo",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "18m",
+      "area": "Esfera 1,5m",
+      "alvo": "1 criatura",
+      "duracao": "Instantânea",
+      "resistencia": "Destreza"
+    },
+    "description": "<p>Você cria uma lasca de gelo e a arremessa em uma criatura dentro do alcance. Faça um ataque à distância com magia contra o alvo. Se atingir, o alvo sofre <strong>1d10</strong> de dano perfurante.</p><p>Atingindo ou errando, a lasca de gelo explode. O alvo e cada criatura a até 1,5 metro de onde o gelo explodiu devem ser bem-sucedidos num teste de resistência de <strong>Destreza</strong> ou sofrerão <strong>2d6</strong> de dano de frio.</p><p><strong>Níveis Superiores:</strong> O dano de frio aumenta em <strong>1d6</strong> para cada nível de slot acima do 1º.</p>"
+  },
+  {
     "id": "s_falar_animais",
     "name": "Falar com Animais",
     "levelNumber": 1,
@@ -1277,6 +1624,25 @@
       "resistencia": "-"
     },
     "description": "<p>Um leque de cores deslumbrantes surge das suas mãos. Role <strong>6d10</strong>; o total é a quantidade de pontos de vida de criaturas que a magia pode afetar.</p><p>As criaturas num cone de 4,5 metros são afetadas em ordem ascendente de seus pontos de vida atuais. Criaturas afetadas ficam <strong>cegas</strong> até o final da magia.</p><p><strong>Níveis Superiores:</strong> Jogue <strong>2d10</strong> adicionais para cada nível de slot acima do 1º.</p>"
+  },
+  {
+    "id": "s_golpe_zefiro",
+    "name": "Golpe de Zéfiro",
+    "levelNumber": 1,
+    "school": "Transmutação",
+    "spellClass": "Patrulheiro",
+    "damage": "1d8",
+    "scaling": "-",
+    "components": { "V": true, "S": false, "M": false },
+    "attrs": {
+      "execucao": "1 ação bônus",
+      "alcance": "Pessoal",
+      "area": "-",
+      "alvo": "Pessoal",
+      "duracao": "Até 1 min",
+      "resistencia": "-"
+    },
+    "description": "<p>Você se move como o vento. Até a magia acabar, seu movimento não provoca ataques de oportunidade.</p><p>Uma vez antes da magia acabar, você pode se dar <strong>vantagem</strong> em uma jogada de ataque com arma no seu turno. Se esse ataque atingir, causa <strong>1d8</strong> de dano de energia extra. Seja atingindo ou errando, seu deslocamento aumenta em 9 metros até o final daquele turno.</p>"
   },
   {
     "id": "s_maos_flamejantes",
@@ -1551,6 +1917,25 @@
     "description": "<p>Um raio de energia azulada crepitante é lançado em direção a uma criatura ao alcance. Faça um ataque à distância com magia.</p><p>Se atingir, o alvo sofre <strong>1d12</strong> de dano elétrico e, em cada um dos seus turnos pela duração, você pode usar sua ação para causar <strong>1d12</strong> de dano elétrico ao alvo automaticamente.</p><p>A magia acaba se você usar sua ação para fazer outra coisa, se o alvo estiver fora do alcance ou se tiver cobertura total.</p><p><strong>Níveis Superiores:</strong> O dano inicial aumenta em <strong>1d12</strong> para cada nível de slot acima do 1º.</p>"
   },
   {
+    "id": "s_raio_caos",
+    "name": "Raio do Caos",
+    "levelNumber": 1,
+    "school": "Evocação",
+    "spellClass": "Feiticeiro",
+    "damage": "2d8+1d6",
+    "scaling": "1d6",
+    "components": { "V": true, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "36m",
+      "area": "-",
+      "alvo": "1 criatura",
+      "duracao": "Instantânea",
+      "resistencia": "-"
+    },
+    "description": "<p>Você arremessa uma massa ondulante de energia caótica. Faça um ataque à distância com magia contra uma criatura. Se atingir, o alvo sofre <strong>2d8 + 1d6</strong> de dano. Escolha um dos d8s rolados para determinar o tipo de dano: 1-Ácido, 2-Frio, 3-Fogo, 4-Energia, 5-Elétrico, 6-Veneno, 7-Psíquico, 8-Trovejante.</p><p>Se você rolar o mesmo número em ambos os d8s, a energia caótica salta do alvo para uma criatura diferente a até 9 metros. Faça um novo ataque e role o dano novamente.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> para cada nível de slot acima do 1º.</p>"
+  },
+  {
     "id": "s_raio_guiador",
     "name": "Raio Guiador",
     "levelNumber": 1,
@@ -1567,7 +1952,7 @@
       "duracao": "1 rodada",
       "resistencia": "-"
     },
-    "description": "<p>Um flash de luz brilha em direção a uma criatura de sua escolha dentro do alcance. Faça um ataque à distância com magia.</p><p>Se atingir, o alvo sofre <strong>4d6</strong> de dano radiante e a próxima jogada de ataque feita contra este alvo antes do final do seu próximo turno tem <strong>vantagem</strong>, graças à penumbra mística que brilha no alvo.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> para cada nível de slot acima do 1º.</p>"
+    "description": "<p>Um flash de light brilha em direção a uma criatura de sua escolha dentro do alcance. Faça um ataque à distância com magia.</p><p>Se atingir, o alvo sofre <strong>4d6</strong> de dano radiante e a próxima jogada de ataque feita contra este alvo antes do final do seu próximo turno tem <strong>vantagem</strong>, graças à penumbra mística que brilha no alvo.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> para cada nível de slot acima do 1º.</p>"
   },
   {
     "id": "s_recuo_acelerado",
@@ -1746,6 +2131,45 @@
     "description": "<p>Você sussurra uma melodia discordante que apenas uma criatura pode ouvir. O alvo deve realizar um teste de resistência de <strong>Sabedoria</strong>.</p><p>Se falhar, sofre <strong>3d6</strong> de dano psíquico e deve usar sua reação imediatamente, se disponível, para se mover para o mais longe possível de você. Se passar, sofre metade do dano e não foge.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> para cada nível de slot acima do 1º.</p>"
   },
   {
+    "id": "s_tremor_terra",
+    "name": "Tremor de Terra",
+    "levelNumber": 1,
+    "school": "Evocação",
+    "spellClass": "Bardo, Druida, Feiticeiro, Mago",
+    "damage": "1d6",
+    "scaling": "1d6",
+    "components": { "V": true, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "Pessoal",
+      "area": "Raio 3m",
+      "alvo": "Área",
+      "duracao": "Instantânea",
+      "resistencia": "Destreza"
+    },
+    "description": "<p>Você causa um tremor no chão num raio de 3 metros. Cada criatura na área (exceto você) deve fazer um teste de resistência de <strong>Destreza</strong>. Se falhar, sofre <strong>1d6</strong> de dano de concussão e cai <strong>caída</strong>.</p><p>Se o chão na área for de terra solta ou pedra, ele se torna terreno difícil até ser limpo (cada porção de 1,5m requer 1 minuto para limpar).</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> para cada nível de slot acima do 1º.</p>"
+  },
+  {
+    "id": "s_vinculo_bestial",
+    "name": "Vínculo Bestial",
+    "levelNumber": 1,
+    "school": "Adivinhação",
+    "spellClass": "Druida, Patrulheiro",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Um chumaço de pelos envolto em um pano",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "Toque",
+      "area": "-",
+      "alvo": "1 besta",
+      "duracao": "Até 10 min",
+      "resistencia": "-"
+    },
+    "description": "<p>Você estabelece um vínculo telepático com uma besta amigável à sua escolha que você tocar. A magia falha se a Inteligência da besta for 4 ou maior.</p><p>Até a magia acabar, o vínculo permanece ativo desde que você e a besta estejam em linha de visão. Através do vínculo, a besta pode entender suas mensagens telepáticas e tem <strong>vantagem</strong> nas jogadas de ataque contra qualquer criatura a até 1,5 metro de você que você possa ver.</p>"
+  },
+  {
     "id": "s_vitalidade_falsa",
     "name": "Vitalidade Falsa",
     "levelNumber": 1,
@@ -1780,6 +2204,7 @@
 
   
  
+  
   {
     "id": "s_acalmar_emocoes",
     "name": "Acalmar Emoções",
@@ -1798,6 +2223,25 @@
       "resistencia": "Carisma"
     },
     "description": "<p>Você tenta suprimir emoções fortes em um grupo de pessoas. Cada humanoide numa esfera de 6 metros de raio deve realizar um teste de resistência de <strong>Carisma</strong>.</p><p>Você pode escolher um dos seguintes efeitos:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Supressão:</strong> Você pode suprimir qualquer efeito que esteja deixando a criatura Enfeitiçada ou Amedrontada.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Indiferença:</strong> Você pode tornar um alvo hostil indiferente a criaturas que você escolher. A indiferença acaba se o alvo for atacado ou testemunhar seus amigos sendo feridos.</li></ul>"
+  },
+  {
+    "id": "s_acoite_mental",
+    "name": "Açoite Mental",
+    "levelNumber": 2,
+    "school": "Adivinhação",
+    "spellClass": "Feiticeiro, Bruxo, Mago",
+    "damage": "3d8",
+    "scaling": "1d8",
+    "components": { "S": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "18m",
+      "area": "-",
+      "alvo": "1 criatura",
+      "duracao": "Até 1 hora",
+      "resistencia": "Sabedoria"
+    },
+    "description": "<p>Você atinge a mente de uma criatura que você possa ver dentro do alcance. O alvo deve fazer um teste de resistência de <strong>Sabedoria</strong>, sofrendo <strong>3d8</strong> de dano psíquico num fracasso, ou metade desse dano num sucesso.</p><p>Num fracasso, você também sabe a localização do alvo até a magia acabar (requer concentração), mas apenas se os dois estiverem no mesmo plano de existência. Enquanto você tiver esse conhecimento, o alvo não se beneficia de estar invisível para você.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d8</strong> para cada nível de slot acima do 2º.</p>"
   },
   {
     "id": "s_ajuda",
@@ -2034,6 +2478,26 @@
     "description": "<p>Você pode cegar ou ensurdecer um inimigo. Escolha uma criatura ao alcance para fazer uma resistência de <strong>Constituição</strong>. Se falhar, o alvo fica <strong>Cego</strong> ou <strong>Surdo</strong> (sua escolha) pela duração.</p><p>No final de cada turno do alvo, ele pode realizar um novo teste de resistência para encerrar o efeito.</p><p><strong>Níveis Superiores:</strong> Você pode afetar uma criatura adicional para cada nível de slot acima do 2º.</p>"
   },
   {
+    "id": "s_chama_aganazzar",
+    "name": "Chama de Aganazzar",
+    "levelNumber": 2,
+    "school": "Evocação",
+    "spellClass": "Feiticeiro, Mago",
+    "damage": "3d8",
+    "scaling": "1d8",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Uma escama de dragão vermelho",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "9m",
+      "area": "Linha 9m",
+      "alvo": "Área",
+      "duracao": "Instantânea",
+      "resistencia": "Destreza"
+    },
+    "description": "<p>Uma linha de chamas agitadas com 9 metros de comprimento e 1,5 metro de largura emana de você na direção que você escolher. Cada criatura na linha deve fazer um teste de resistência de <strong>Destreza</strong>. A criatura sofre <strong>3d8</strong> de dano de fogo se falhar na resistência, ou metade desse dano se passar.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d8</strong> para cada nível de slot acima do 2º.</p>"
+  },
+  {
     "id": "s_chama_continua",
     "name": "Chama Contínua",
     "levelNumber": 2,
@@ -2172,6 +2636,46 @@
     "description": "<p>Você pode ler os pensamentos de certas criaturas a até 9 metros de você. Inicialmente, você ouve os pensamentos superficiais (o que está na mente no momento).</p><p>Com uma ação, você pode focar em uma criatura e tentar sondar mais fundo. O alvo deve fazer uma resistência de <strong>Sabedoria</strong> (se falhar, você ganha acesso a raciocínio, estado emocional e algo importante para ela). O alvo sabe que está sendo sondado se você aprofundar.</p>"
   },
   {
+    "id": "s_diabrete_poeira",
+    "name": "Diabrete da Poeira",
+    "levelNumber": 2,
+    "school": "Conjuração",
+    "spellClass": "Druida, Feiticeiro, Mago",
+    "damage": "1d8",
+    "scaling": "1d8",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Uma pitada de poeira",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "18m",
+      "area": "Cubo 1,5m",
+      "alvo": "Área",
+      "duracao": "Até 1 min",
+      "resistencia": "Força"
+    },
+    "description": "<p>Escolha um cubo de 1,5 metro de ar desocupado no chão que você possa ver dentro do alcance. Uma força elemental que se assemelha a um redemoinho de poeira aparece no cubo e permanece pela duração da magia.</p><p>Qualquer criatura que terminar seu turno a até 1,5 metro do diabrete da poeira deve fazer um teste de resistência de <strong>Força</strong>. Num fracasso, a criatura sofre <strong>1d8</strong> de dano de concussão e é empurrada 3 metros para longe. Num sucesso, sofre metade do dano e não é empurrada.</p><p>Como uma ação bônus, você pode mover o diabrete da poeira até 9 metros em qualquer direção.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d8</strong> para cada nível de slot acima do 2º.</p>"
+  },
+  {
+    "id": "s_dragao_sopro",
+    "name": "Dragão de Sopro (Hálito de Dragão)",
+    "levelNumber": 2,
+    "school": "Transmutação",
+    "spellClass": "Feiticeiro, Mago",
+    "damage": "3d6",
+    "scaling": "1d6",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Uma pimenta ardida",
+    "attrs": {
+      "execucao": "1 ação bônus",
+      "alcance": "Toque",
+      "area": "Cone 4,5m",
+      "alvo": "1 criatura voluntária",
+      "duracao": "Até 1 min",
+      "resistencia": "Destreza"
+    },
+    "description": "<p>Você toca uma criatura voluntária e a imbui com o poder de expelir energia mágica da boca, desde que ela tenha uma. Escolha ácido, frio, fogo, elétrico ou venenoso. Até a magia acabar, a criatura pode usar uma ação para expelir energia num cone de 4,5 metros.</p><p>Cada criatura na área deve fazer um teste de resistência de <strong>Destreza</strong>, sofrendo <strong>3d6</strong> de dano do tipo escolhido num fracasso, ou metade desse dano num sucesso.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> para cada nível de slot acima do 2º.</p>"
+  },
+  {
     "id": "s_encontrar_armadilhas",
     "name": "Encontrar Armadilhas",
     "levelNumber": 2,
@@ -2189,6 +2693,25 @@
       "resistencia": "-"
     },
     "description": "<p>Você sente a presença de qualquer armadilha dentro do alcance que esteja na sua linha de visão.</p><p>A magia revela que uma armadilha está presente, mas não a localização exata dela. Você descobre a natureza geral do perigo (ex: 'alçapão', 'glifo de fogo').</p>"
+  },
+  {
+    "id": "s_escrita_celeste",
+    "name": "Escrita Celeste",
+    "levelNumber": 2,
+    "school": "Transmutação",
+    "spellClass": "Bardo, Druida, Mago, Artífice",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "Visão",
+      "area": "-",
+      "alvo": "Céu",
+      "duracao": "Até 1 hora",
+      "resistencia": "-"
+    },
+    "description": "<p>Você faz com que até dez palavras se formem em uma parte do céu que você possa ver. As palavras parecem ser feitas de nuvens e permanecem no local pela duração da magia. As palavras se dissipam quando a magia termina.</p><p>Um vento forte pode dispersar as nuvens e terminar a magia prematuramente.</p>"
   },
   {
     "id": "s_escuridao",
@@ -2231,6 +2754,25 @@
     "description": "<p>Uma esfera de fogo de 1,5 metro de diâmetro aparece. Qualquer criatura que terminar o turno a 1,5 metro da esfera deve fazer resistência de <strong>Destreza</strong>.</p><p>Sofre <strong>2d6</strong> de dano de fogo se falhar, ou metade se passar. Como uma ação bônus, você pode mover a esfera até 9 metros. Se atropelar uma criatura, ela faz o teste de resistência imediatamente.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> para cada nível de slot acima do 2º.</p>"
   },
   {
+    "id": "s_espirito_curativo",
+    "name": "Espírito Curativo",
+    "levelNumber": 2,
+    "school": "Conjuração",
+    "spellClass": "Druida, Patrulheiro",
+    "damage": "1d6",
+    "scaling": "1d6",
+    "components": { "V": true, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação bônus",
+      "alcance": "18m",
+      "area": "Cubo 1,5m",
+      "alvo": "Aliados",
+      "duracao": "Até 1 min",
+      "resistencia": "-"
+    },
+    "description": "<p>Você invoca um espírito da natureza que cura você ou seus aliados. O espírito aparece em um espaço que você possa ver dentro do alcance. O espírito não pode ser atacado ou ferido.</p><p>Até a magia acabar, sempre que você ou uma criatura que você possa ver entrar no espaço do espírito pela primeira vez num turno ou iniciar seu turno lá, você pode fazer com que o espírito restaure <strong>1d6</strong> pontos de vida a essa criatura.</p><p><em>Nota da Errata:</em> O espírito pode curar um número de vezes igual a 1 + o seu modificador de habilidade de conjuração (mínimo de duas vezes). Depois disso, o espírito desaparece.</p><p><strong>Níveis Superiores:</strong> A cura aumenta em <strong>1d6</strong> para cada nível de slot acima do 2º.</p>"
+  },
+  {
     "id": "s_esquentar_metal",
     "name": "Esquentar Metal",
     "levelNumber": 2,
@@ -2249,6 +2791,25 @@
       "resistencia": "Constituição"
     },
     "description": "<p>Você aquece um objeto de metal manufaturado (como uma arma ou armadura) até ficar incandescente. Qualquer criatura em contato físico com o objeto sofre <strong>2d8</strong> de dano de fogo quando você conjura a magia.</p><p>Até a magia acabar, você pode usar uma ação bônus em turnos subsequentes para causar o dano novamente. Se a criatura estiver segurando ou vestindo o objeto, deve passar em resistência de <strong>Constituição</strong> ou terá de largar o objeto (se puder). Se não largar, tem desvantagem em ataques e testes de habilidade.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d8</strong> para cada nível de slot acima do 2º.</p>"
+  },
+  {
+    "id": "s_fardo_terra",
+    "name": "Fardo da Terra",
+    "levelNumber": 2,
+    "school": "Transmutação",
+    "spellClass": "Druida, Feiticeiro, Bruxo, Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": false, "M": false },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "90m",
+      "area": "-",
+      "alvo": "1 criatura voando",
+      "duracao": "Até 1 min",
+      "resistencia": "Força"
+    },
+    "description": "<p>Faixas amarelas de energia mágica se prendem ao redor de uma criatura que você possa ver dentro do alcance. O alvo deve ser bem-sucedido num teste de resistência de <strong>Força</strong> ou seu deslocamento de voo (se houver) é reduzido a 0 metros pela duração da magia.</p><p>Uma criatura em voo afetada por essa magia desce a 18 metros por rodada até atingir o chão ou a magia acabar.</p>"
   },
   {
     "id": "s_flecha_acida",
@@ -2329,6 +2890,25 @@
       "resistencia": "-"
     },
     "description": "<p>Uma criatura que você tocar se torna <strong>invisível</strong> até a magia acabar. Tudo o que o alvo estiver vestindo ou carregando fica invisível enquanto estiver com ele.</p><p>A magia termina se o alvo atacar ou conjurar uma magia.</p><p><strong>Níveis Superiores:</strong> Você pode afetar uma criatura adicional para cada nível de slot acima do 2º.</p>"
+  },
+  {
+    "id": "s_lamina_das_sombras",
+    "name": "Lâmina das Sombras",
+    "levelNumber": 2,
+    "school": "Ilusão",
+    "spellClass": "Feiticeiro, Bruxo, Mago",
+    "damage": "2d8",
+    "scaling": "1d8",
+    "components": { "V": true, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação bônus",
+      "alcance": "Pessoal",
+      "area": "-",
+      "alvo": "Pessoal",
+      "duracao": "Até 1 min",
+      "resistencia": "-"
+    },
+    "description": "<p>Você tece fios de sombras para criar uma espada de pura escuridão na sua mão livre. A arma causa <strong>2d8</strong> de dano psíquico num acerto e tem as propriedades acuidade, leve e arremesso (alcance 6/18m).</p><p>Se você largar ou arremessar a arma, ela se dissipa no final do turno, mas você pode usar uma ação bônus para fazê-la reaparecer na sua mão. Quando ataca com a arma em penumbra ou escuridão, você tem <strong>vantagem</strong> na jogada de ataque.</p><p><strong>Níveis Superiores:</strong> O dano aumenta para 3d8 (slot de 3º/4º nível), 4d8 (slot de 5º/6º) ou 5d8 (slot de 7º ou maior).</p>"
   },
   {
     "id": "s_lamina_flamejante",
@@ -2450,6 +3030,26 @@
     "description": "<p>A próxima vez que você atingir uma criatura com um ataque com arma, o ataque brilha com luz astral e causa <strong>2d6</strong> de dano radiante extra.</p><p>Além disso, o alvo se torna visível se estiver invisível, e brilha com penumbra num raio de 1,5 metro. O alvo não pode ficar invisível até a magia acabar.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> para cada nível de slot acima do 2º.</p>"
   },
   {
+    "id": "s_maximilian_earthen_grasp",
+    "name": "Mão de Terra de Maximilian",
+    "levelNumber": 2,
+    "school": "Transmutação",
+    "spellClass": "Feiticeiro, Mago",
+    "damage": "2d6",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Um pequeno modelo de mão em argila",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "9m",
+      "area": "Cubo 1,5m",
+      "alvo": "1 criatura",
+      "duracao": "Até 1 min",
+      "resistencia": "Força"
+    },
+    "description": "<p>Você escolhe um espaço desocupado de 1,5 metro no chão e faz uma mão de tamanho Médio feita de terra compactada surgir lá. A mão estende-se e tenta agarrar uma criatura a até 1,5 metro dela. O alvo deve fazer uma resistência de <strong>Força</strong>.</p><p>Se falhar, o alvo sofre <strong>2d6</strong> de dano de concussão e fica <strong>impedido</strong> pela duração. Com uma ação, você pode fazer a mão esmagar o alvo impedido, que deve fazer outro teste de Força (sofrendo 2d6 de dano numa falha ou metade no sucesso). O alvo pode usar a própria ação para fazer um teste de Força contra a CD da sua magia para se libertar.</p>"
+  },
+  {
     "id": "s_mensageiro_animal",
     "name": "Mensageiro Animal",
     "levelNumber": 2,
@@ -2468,25 +3068,6 @@
       "resistencia": "-"
     },
     "description": "<p>Você usa um animal Miúdo (como um esquilo, gaio ou morcego) para entregar uma mensagem. Você especifica um local e uma descrição do destinatário.</p><p>A mensagem pode ter até 25 palavras. O animal viaja até 75 km para entregar a mensagem, imitando sua voz.</p><p><strong>Níveis Superiores:</strong> A duração aumenta em 48 horas para cada nível de slot acima do 2º.</p>"
-  },
-  {
-    "id": "s_Desfoque",
-    "name": "Desfoque",
-    "levelNumber": 2,
-    "school": "Ilusão",
-    "spellClass": "Artífice, Feiticeiro, Mago",
-    "damage": "-",
-    "scaling": "-",
-    "components": { "V": true, "S": false, "M": false },
-    "attrs": {
-      "execucao": "1 ação",
-      "alcance": "Pessoal",
-      "area": "-",
-      "alvo": "Pessoal",
-      "duracao": "Até 1 min",
-      "resistencia": "-"
-    },
-    "description": "<p>Seu corpo se torna turvo, trêmulo e oscilante para todos que podem vê-lo. Pela duração, qualquer criatura tem <strong>desvantagem</strong> nas jogadas de ataque contra você.</p><p>Um atacante é imune a esse efeito se não depender da visão (como percepção às cegas) ou puder ver através de ilusões (como visão verdadeira).</p>"
   },
   {
     "id": "s_nuvem_adagas",
@@ -2681,7 +3262,7 @@
       "duracao": "Até 1 min",
       "resistencia": "Constituição"
     },
-    "description": "<p>Um feixe de luz pálida de 1,5 metro de raio e 12 metros de altura desce sobre um ponto ao alcance. Quando uma criatura entra na área pela primeira vez num turno ou começa seu turno nela, é envolvida por chamas fantasmagóricas e deve fazer resistência de <strong>Constituição</strong>.</p><p>Sofre <strong>2d10</strong> de dano radiante se falhar, ou metade se passar. Um metamorfo faz o teste com desvantagem e reverte à forma original se falhar. Você pode mover o raio 18m com uma ação.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d10</strong> para cada nível de slot acima do 2º.</p>"
+    "description": "<p>Um feixe de light pálida de 1,5 metro de raio e 12 metros de altura desce sobre um ponto ao alcance. Quando uma criatura entra na área pela primeira vez num turno ou começa seu turno nela, é envolvida por chamas fantasmagóricas e deve fazer resistência de <strong>Constituição</strong>.</p><p>Sofre <strong>2d10</strong> de dano radiante se falhar, ou metade se passar. Um metamorfo faz o teste com desvantagem e reverte à forma original se falhar. Você pode mover o raio 18m com uma ação.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d10</strong> para cada nível de slot acima do 2º.</p>"
   },
   {
     "id": "s_reflexos",
@@ -2860,6 +3441,25 @@
     "description": "<p>Você toca uma corda de até 18 metros. Uma ponta sobe no ar até ficar esticada perpendicularmente ao chão. No topo da corda, uma entrada invisível se abre para um espaço extradimensional.</p><p>O espaço pode abrigar até 8 criaturas Médias ou menores. A corda pode ser puxada para dentro do espaço, tornando-o totalmente invisível do lado de fora.</p>"
   },
   {
+    "id": "s_vento_de_protecao",
+    "name": "Vento de Proteção",
+    "levelNumber": 2,
+    "school": "Evocação",
+    "spellClass": "Bardo, Clérigo, Druida, Feiticeiro",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "Pessoal",
+      "area": "Esfera 3m",
+      "alvo": "Pessoal",
+      "duracao": "Até 10 min",
+      "resistencia": "-"
+    },
+    "description": "<p>Um vento forte de 30 km/h sopra ao redor de você num raio de 3 metros e se move junto com você, permanecendo centrado em você. Ele possui os seguintes efeitos:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Surdez:</strong> Ensudece você e outras criaturas na área.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Apagar:</strong> Apaga chamas desprotegidas no seu espaço.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Terreno:</strong> Torna a área terreno difícil para qualquer um exceto você.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Projéteis:</strong> Jogadas de ataque com arma à distância têm <strong>desvantagem</strong> se passarem pelo vento ou entrarem nele.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Névoa:</strong> Cobre efeitos como névoas, fumaças e gases tóxicos.</li></ul>"
+  },
+  {
     "id": "s_ver_invisivel",
     "name": "Ver o Invisível",
     "levelNumber": 2,
@@ -2951,6 +3551,8 @@
 
 
 
+
+  
   
   
   {
@@ -3111,6 +3713,26 @@
     "description": "<p>Você cria um sensor invisível num local familiar (ou óbvio) dentro do alcance. Você escolhe ver ou ouvir através do sensor como se estivesse lá.</p><p>Você pode usar sua ação para alternar entre ver e ouvir. Uma criatura que possa ver o sensor vê um globo luminoso e intangível.</p>"
   },
   {
+    "id": "s_cochilo",
+    "name": "Cochilo",
+    "levelNumber": 3,
+    "school": "Encantamento",
+    "spellClass": "Bardo, Feiticeiro, Mago, Artífice",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "S": true, "M": true },
+    "material": "Um punhado de areia reconfortante",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "9m",
+      "area": "-",
+      "alvo": "Até 3 criaturas",
+      "duracao": "10 min",
+      "resistencia": "-"
+    },
+    "description": "<p>Você faz um gesto calmante e até três criaturas voluntárias à sua escolha que você possa ver no alcance caem inconscientes pela duração da magia.</p><p>A magia termina em um alvo prematuramente se ele sofrer dano ou se alguém usar uma ação para sacudi-lo ou esbofeteá-lo para acordá-lo. Se um alvo permanecer inconsciente por toda a duração, ele recebe os benefícios de um <strong>descanso curto</strong> e não pode ser afetado por essa magia novamente até terminar um descanso longo.</p><p><strong>Níveis Superiores:</strong> Você pode afetar uma criatura adicional para cada nível de slot acima do 3º.</p>"
+  },
+  {
     "id": "s_conjurar_animais",
     "name": "Conjurar Animais",
     "levelNumber": 3,
@@ -3128,6 +3750,26 @@
       "resistencia": "-"
     },
     "description": "<p>Você invoca espíritos feéricos que assumem a forma de bestas. Escolha uma das opções:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'>1 besta de ND 2 ou menor</li><li style='margin-bottom:4px;'>2 bestas de ND 1 ou menor</li><li style='margin-bottom:4px;'>4 bestas de ND 1/2 ou menor</li><li style='margin-bottom:4px;'>8 bestas de ND 1/4 ou menor</li></ul><p>As bestas obedecem aos seus comandos verbais (nenhuma ação requerida). Se não comandadas, defendem-se. Elas rolam iniciativa própria.</p><p><strong>Níveis Superiores:</strong> O dobro de bestas com slot de 5º nível, o triplo com 7º e o quádruplo com 9º.</p>"
+  },
+  {
+    "id": "s_conjurar_demonios_menores",
+    "name": "Conjurar Demônios Menores",
+    "levelNumber": 3,
+    "school": "Conjuração",
+    "spellClass": "Bruxo, Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Um frasco de sangue de humanoide morto nas últimas 24h",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "18m",
+      "area": "-",
+      "alvo": "Espaços vazios",
+      "duracao": "Até 1 hora",
+      "resistencia": "-"
+    },
+    "description": "<p>Você invoca demônios de espaços desocupados que possa ver. Escolha uma das opções:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'>2 demônios de ND 1 ou menor</li><li style='margin-bottom:4px;'>4 demônios de ND 1/2 ou menor</li><li style='margin-bottom:4px;'>8 demônios de ND 1/4 ou menor</li></ul><p>Os demônios são hostis a todas as criaturas (incluindo você). Eles rolam a própria iniciativa e gastam o turno perseguindo e atacando as criaturas não-demônios mais próximas que puderem ver.</p><p>Como parte da conjuração, você pode desenhar um círculo de proteção no chão usando o sangue. O círculo não pode ser cruzado por esses demônios e dura pela duração da magia.</p><p><strong>Níveis Superiores:</strong> O dobro de demônios com slot de 4º/5º nível, o triplo com 6º/7º e o quádruplo com 8º/9º.</p>"
   },
   {
     "id": "s_conjurar_rajada",
@@ -3285,6 +3927,26 @@
     "description": "<p>Você envia uma mensagem curta de até 25 palavras para uma criatura com a qual você esteja familiarizado. A criatura ouve a mensagem em sua mente, reconhece você e pode responder imediatamente da mesma maneira.</p><p>A magia funciona através de qualquer distância e até mesmo em outros planos de existência (com 5% de chance de falha se estiver em outro plano).</p>"
   },
   {
+    "id": "s_erupcao_terra",
+    "name": "Erupção de Terra",
+    "levelNumber": 3,
+    "school": "Transmutação",
+    "spellClass": "Druida, Feiticeiro, Mago",
+    "damage": "3d12",
+    "scaling": "1d12",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Um pedaço de obsidiana",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "36m",
+      "area": "Cubo 6m",
+      "alvo": "Área",
+      "duracao": "Instantânea",
+      "resistencia": "Destreza"
+    },
+    "description": "<p>Uma fonte de terra e pedras irrompe em um cubo de 6 metros centrado num ponto no solo à sua escolha. Cada criatura na área deve fazer uma resistência de <strong>Destreza</strong>. Sofre <strong>3d12</strong> de dano de concussão se falhar, ou metade se passar.</p><p>Além disso, o solo na área se torna terreno difícil até ser limpo. Cada porção de 1,5 metro requer 1 minuto para ser limpa à mão.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d12</strong> para cada nível de slot acima do 3º.</p>"
+  },
+  {
     "id": "s_espiritos_guardioes",
     "name": "Espíritos Guardiões",
     "levelNumber": 3,
@@ -3342,6 +4004,25 @@
       "resistencia": "Destreza"
     },
     "description": "<p>A próxima vez que você fizer um ataque à distância com arma, a munição se transforma em um relâmpago. Faça a jogada de ataque.</p><p>O alvo sofre <strong>4d8</strong> de dano elétrico se atingir, ou metade se errar. Em vez do dano normal da arma. Criaturas a até 3 metros do alvo devem passar em resistência de <strong>Destreza</strong> ou sofrem <strong>2d8</strong> de dano elétrico.</p><p><strong>Níveis Superiores:</strong> Ambos os danos aumentam em <strong>1d8</strong> para cada nível de slot acima do 3º.</p>"
+  },
+  {
+    "id": "s_flechas_flamejantes",
+    "name": "Flechas Flamejantes",
+    "levelNumber": 3,
+    "school": "Transmutação",
+    "spellClass": "Druida, Patrulheiro, Feiticeiro, Mago, Artífice",
+    "damage": "1d6",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "Toque",
+      "area": "-",
+      "alvo": "1 aljava",
+      "duracao": "Até 1 hora",
+      "resistencia": "-"
+    },
+    "description": "<p>Você toca uma aljava contendo flechas ou virotes. Quando um alvo é atingido por um ataque à distância usando munição retirada dessa aljava, ele sofre <strong>1d6</strong> de dano de fogo extra.</p><p>A magia afeta até doze peças de munição. A magia acaba quando a última peça for usada.</p><p><strong>Níveis Superiores:</strong> A quantidade de peças de munição que você pode encantar aumenta em 2 para cada nível de slot acima do 3º.</p>"
   },
   {
     "id": "s_fome_hadar",
@@ -3462,6 +4143,25 @@
       "resistencia": "Inteligência (Investigação)"
     },
     "description": "<p>Você cria uma ilusão muito convincente (visual, sonora, olfativa e térmica) que cabe num cubo de 6 metros. Você pode usar sua ação para mover a imagem e alterar sua aparência.</p><p>Interação física revela a ilusão. Uma criatura pode usar uma ação para Examinar (Investigação contra sua CD). Se passar, a ilusão se torna translúcida.</p><p><strong>Níveis Superiores:</strong> Se conjurada com slot de 6º nível, a duração é permanente e não exige concentração.</p>"
+  },
+  {
+    "id": "s_inimigos_abundantes",
+    "name": "Inimigos Abundantes",
+    "levelNumber": 3,
+    "school": "Ilusão",
+    "spellClass": "Bardo, Feiticeiro, Bruxo, Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "36m",
+      "area": "-",
+      "alvo": "1 criatura",
+      "duracao": "Até 1 min",
+      "resistencia": "Inteligência"
+    },
+    "description": "<p>Você atinge a mente de uma criatura que você possa ver dentro do alcance. Ela deve ser bem-sucedida num teste de resistência de <strong>Inteligência</strong> ou considerará todas as criaturas que puder ver como inimigas até a magia acabar.</p><p>Sempre que o alvo afetado escolher uma criatura como alvo de um ataque, magia ou outra habilidade, ele deve escolher a criatura mais próxima que puder ver. Se houver múltiplas criaturas à mesma distância, ele escolhe aleatoriamente. O alvo pode repetir o teste de resistência sempre que sofrer dano, encerrando a magia em si com um sucesso.</p>"
   },
   {
     "id": "s_lentidao",
@@ -3640,6 +4340,26 @@
     "description": "<p>Você cria uma esfera de 6 metros de gás amarelo e nauseante. A névoa contorna esquinas e a área é de <strong>escuridão densa</strong>.</p><p>Cada criatura que estiver completamente dentro da névoa no início do turno dela deve fazer resistência de <strong>Constituição</strong>. Se falhar, a criatura gasta sua ação naquele turno vomitando e tossindo.</p>"
   },
   {
+    "id": "s_onda_mare",
+    "name": "Onda de Maré",
+    "levelNumber": 3,
+    "school": "Conjuração",
+    "spellClass": "Druida, Feiticeiro, Mago",
+    "damage": "4d8",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Uma gota de água",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "36m",
+      "area": "Muralha (9m x 3m x 3m)",
+      "alvo": "Área",
+      "duracao": "Instantânea",
+      "resistencia": "Destreza"
+    },
+    "description": "<p>Você conjura uma onda de água que colide com uma área dentro do alcance. A área pode ter até 9 metros de comprimento, até 3 metros de largura e até 3 metros de altura. Cada criatura na área deve fazer um teste de resistência de <strong>Destreza</strong>.</p><p>Num fracasso, uma criatura sofre <strong>4d8</strong> de dano de concussão e fica <strong>caída</strong>. Num sucesso, a criatura sofre metade do dano e não fica caída. A água espalha-se pela área em todas as direções, extinguindo chamas desprotegidas e desaparecendo em seguida.</p>"
+  },
+  {
     "id": "s_padrao_hipnotico",
     "name": "Padrão Hipnótico",
     "levelNumber": 3,
@@ -3679,6 +4399,25 @@
     "description": "<p>Conforme você brada palavras de restauração, até seis criaturas à sua escolha que você possa ver dentro do alcance recuperam pontos de vida.</p><p>A cura é igual a <strong>1d4 + seu modificador de habilidade de conjuração</strong>. A magia não afeta mortos-vivos ou construtos.</p><p><strong>Níveis Superiores:</strong> A cura aumenta em <strong>1d4</strong> para cada nível de slot acima do 3º.</p>"
   },
   {
+    "id": "s_passo_trovao",
+    "name": "Passo do Trovão",
+    "levelNumber": 3,
+    "school": "Conjuração",
+    "spellClass": "Feiticeiro, Bruxo, Mago",
+    "damage": "3d10",
+    "scaling": "1d10",
+    "components": { "V": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "27m",
+      "area": "Raio 3m",
+      "alvo": "Pessoal e Área",
+      "duracao": "Instantânea",
+      "resistencia": "Constituição"
+    },
+    "description": "<p>Você se teleporta para um espaço desocupado que você possa ver dentro do alcance. Imediatamente após desaparecer, um estrondo trovejante soa e cada criatura a até 3 metros do espaço que você deixou deve fazer um teste de resistência de <strong>Constituição</strong>, sofrendo <strong>3d10</strong> de dano trovejante num fracasso ou metade num sucesso.</p><p>Você pode trazer um objeto de até sua capacidade de carga e uma criatura voluntária Média ou menor com equipamento. A criatura aparece a 1,5 metro do seu destino.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d10</strong> para cada nível de slot acima do 3º.</p>"
+  },
+  {
     "id": "s_pequena_cabana",
     "name": "Pequena Cabana de Leomund",
     "levelNumber": 3,
@@ -3697,6 +4436,26 @@
       "resistencia": "-"
     },
     "description": "<p>Um domo de força imóvel, de 3 metros de raio, surge ao seu redor e acima de você. Nove criaturas (Médias ou menores) podem caber dentro.</p><p>Magias e outros efeitos mágicos não podem atravessar a barreira. A atmosfera lá dentro é confortável e seca, independentemente do clima externo. O domo é opaco por fora (cor à escolha) e transparente por dentro.</p>"
+  },
+  {
+    "id": "s_pequenos_meteoros",
+    "name": "Pequenos Meteoros de Melf",
+    "levelNumber": 3,
+    "school": "Evocação",
+    "spellClass": "Feiticeiro, Mago",
+    "damage": "2d6",
+    "scaling": "2 meteoros",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Salitre e nitrato",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "Pessoal",
+      "area": "Esfera 1,5m",
+      "alvo": "Área",
+      "duracao": "Até 10 min",
+      "resistencia": "Destreza"
+    },
+    "description": "<p>Você cria seis meteoros do tamanho de pedrinhas em sua órbita. Quando conjura a magia, e com uma <strong>ação bônus</strong> nos seus turnos subsequentes, você pode gastar um ou dois meteoros enviando-os para colidir em pontos que você possa ver a até 36 metros de você.</p><p>O meteoro explode se atingir uma criatura ou superfície. Cada criatura a até 1,5 metro do impacto deve fazer uma resistência de <strong>Destreza</strong>. Sofre <strong>2d6</strong> de dano de fogo se falhar, ou metade se passar.</p><p><strong>Níveis Superiores:</strong> Você cria 2 meteoros adicionais para cada nível de slot acima do 3º.</p>"
   },
   {
     "id": "s_piscar",
@@ -3873,6 +4632,25 @@
     "description": "<p>O toque da sua mão coberta de sombras pode sugar a força vital de outros. Faça um ataque corpo-a-corpo com magia contra uma criatura ao seu alcance.</p><p>Se atingir, o alvo sofre <strong>3d6</strong> de dano necrótico e você recupera pontos de vida iguais à metade do dano necrótico causado. Até a magia acabar, você pode realizar o ataque novamente em cada um dos seus turnos com uma ação.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> para cada nível de slot acima do 3º.</p>"
   },
   {
+    "id": "s_transferencia_vida",
+    "name": "Transferência de Vida",
+    "levelNumber": 3,
+    "school": "Necromancia",
+    "spellClass": "Clérigo, Mago",
+    "damage": "4d8",
+    "scaling": "1d8",
+    "components": { "V": true, "S": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "9m",
+      "area": "-",
+      "alvo": "1 criatura",
+      "duracao": "Instantânea",
+      "resistencia": "-"
+    },
+    "description": "<p>Você sacrifica parte da sua vida para curar outra pessoa. Você sofre <strong>4d8</strong> de dano necrótico, e esse dano não pode ser reduzido de forma alguma. Em seguida, uma criatura à sua escolha a até 9 metros recupera pontos de vida iguais ao dobro do dano necrótico que você sofreu.</p><p><strong>Níveis Superiores:</strong> O dano necrótico que você sofre aumenta em <strong>1d8</strong> para cada nível de slot acima do 3º.</p>"
+  },
+  {
     "id": "s_velocidade",
     "name": "Velocidade",
     "levelNumber": 3,
@@ -3928,6 +4706,7 @@
 
 
   
+ 
   {
     "id": "s_adivinhacao",
     "name": "Adivinhação",
@@ -4222,6 +5001,44 @@
     "description": "<p>Você tenta seduzir uma besta que possa ver. Ela deve passar em resistência de <strong>Sabedoria</strong> ou fica enfeitiçada e sob seu controle telepático.</p><p>Você pode comandá-la mentalmente (sem ação) ou usar sua ação para assumir controle total e preciso. Se a besta sofrer dano, ela faz um novo teste de resistência.</p><p><strong>Níveis Superiores:</strong> A duração aumenta para 10 minutos (5º nível), 1 hora (6º nível) ou 8 horas (7º nível).</p>"
   },
   {
+    "id": "s_encontrar_montaria_maior",
+    "name": "Encontrar Montaria Maior",
+    "levelNumber": 4,
+    "school": "Conjuração",
+    "spellClass": "Paladino",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": false },
+    "attrs": {
+      "execucao": "10 min",
+      "alcance": "9m",
+      "area": "-",
+      "alvo": "-",
+      "duracao": "Instantânea",
+      "resistencia": "-"
+    },
+    "description": "<p>Você invoca um espírito que assume a forma de uma montaria leal e majestosa. Escolha entre: dente-de-sabre, grifo, lobo atroz, pégaso, rinoceronte ou urso-coruja.</p><p>A criatura tem as estatísticas normais da forma escolhida, mas é um celestial, fada ou corruptor. Ela tem Inteligência 6, entende um idioma à sua escolha e vocês podem se comunicar telepaticamente a até 1,5km. Magias que você conjura com alcance 'Pessoal' também afetam a montaria se você estiver montado nela.</p>"
+  },
+  {
+    "id": "s_enfeiticar_monstro",
+    "name": "Enfeitiçar Monstro",
+    "levelNumber": 4,
+    "school": "Encantamento",
+    "spellClass": "Bardo, Druida, Feiticeiro, Bruxo, Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "9m",
+      "area": "-",
+      "alvo": "1 criatura",
+      "duracao": "1 hora",
+      "resistencia": "Sabedoria"
+    },
+    "description": "<p>Você tenta enfeitiçar uma criatura que você possa ver dentro do alcance. Ela deve fazer um teste de resistência de <strong>Sabedoria</strong> (com vantagem se você ou seus aliados estiverem lutando contra ela).</p><p>Se falhar, ela fica <strong>enfeitiçada</strong> por você até a magia acabar ou até você ou algum aliado fazer algo nocivo contra ela. A criatura enfeitiçada é amigável a você. Quando a magia acaba, a criatura sabe que foi enfeitiçada.</p><p><strong>Níveis Superiores:</strong> Você pode afetar uma criatura adicional para cada nível de slot acima do 4º (devem estar a 9m uma da outra).</p>"
+  },
+  {
     "id": "s_escudo_fogo",
     "name": "Escudo de Fogo",
     "levelNumber": 4,
@@ -4242,6 +5059,45 @@
     "description": "<p>Chamas finas e wispy envolvem seu corpo, emitindo luz. Você ganha resistência a um tipo de dano e causa dano a quem te ataca. Escolha um escudo:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Escudo Quente:</strong> Você tem resistência a dano de frio. Causa <strong>2d8</strong> de dano de fogo a quem te atingir com ataque corpo-a-corpo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Escudo Frio:</strong> Você tem resistência a dano de fogo. Causa <strong>2d8</strong> de dano de frio a quem te atingir com ataque corpo-a-corpo.</li></ul>"
   },
   {
+    "id": "s_esfera_aquatica",
+    "name": "Esfera Aquática",
+    "levelNumber": 4,
+    "school": "Conjuração",
+    "spellClass": "Druida, Feiticeiro, Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Uma gota de água",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "27m",
+      "area": "Esfera 1,5m",
+      "alvo": "Área",
+      "duracao": "Até 1 min",
+      "resistencia": "Força"
+    },
+    "description": "<p>Você conjura uma esfera de água de 1,5 metro de raio pairando no ar. Qualquer criatura no espaço da esfera deve fazer uma resistência de <strong>Força</strong>. Se falhar, fica <strong>impedida</strong> e submersa. Se passar, é ejetada para o espaço desocupado mais próximo.</p><p>A esfera pode conter até quatro criaturas Médias ou menores, ou uma criatura Grande. Com uma ação, você pode mover a esfera até 9 metros. Você pode atropelar criaturas para tentar absorvê-las. No final do turno de uma criatura presa, ela pode repetir o teste para escapar.</p>"
+  },
+  {
+    "id": "s_esfera_tempestade",
+    "name": "Esfera da Tempestade",
+    "levelNumber": 4,
+    "school": "Evocação",
+    "spellClass": "Feiticeiro, Mago",
+    "damage": "2d6 / 4d6",
+    "scaling": "1d6",
+    "components": { "V": true, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "45m",
+      "area": "Esfera 6m",
+      "alvo": "Área",
+      "duracao": "Até 1 min",
+      "resistencia": "Força"
+    },
+    "description": "<p>Uma esfera de 6 metros de ventos rodopiantes e nuvens tempestuosas surge. O espaço é terreno difícil e as criaturas nele têm desvantagem para ouvir.</p><p>Quando a esfera aparece, e quando uma criatura termina o turno nela, deve fazer resistência de <strong>Força</strong> ou sofre <strong>2d6</strong> de dano de concussão. Até a magia acabar, você pode usar uma <strong>ação bônus</strong> para lançar um relâmpago do centro da esfera num alvo a até 18 metros dela (ataque com magia, vantagem se o alvo estiver na esfera). O relâmpago causa <strong>4d6</strong> de dano elétrico.</p><p><strong>Níveis Superiores:</strong> Ambos os danos aumentam em <strong>1d6</strong> para cada nível de slot acima do 4º.</p>"
+  },
+  {
     "id": "s_esfera_resiliente",
     "name": "Esfera Resiliente de Otiluke",
     "levelNumber": 4,
@@ -4260,6 +5116,26 @@
       "resistencia": "Destreza"
     },
     "description": "<p>Uma esfera de força cintilante envolve uma criatura ou objeto Grande ou menor. Uma criatura involuntária pode fazer resistência de <strong>Destreza</strong> para não ser presa.</p><p>Nada pode passar através da barreira, dentro ou fora, embora a criatura lá dentro possa respirar. A esfera é imune a todos os danos. A criatura lá dentro pode usar sua ação para rolar a esfera.</p>"
+  },
+  {
+    "id": "s_esfera_vitriolica",
+    "name": "Esfera Vitriólica",
+    "levelNumber": 4,
+    "school": "Evocação",
+    "spellClass": "Feiticeiro, Mago",
+    "damage": "10d4+5d4",
+    "scaling": "2d4",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Uma gota de bile de lesma gigante",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "45m",
+      "area": "Esfera 6m",
+      "alvo": "Ponto",
+      "duracao": "Instantânea",
+      "resistencia": "Destreza"
+    },
+    "description": "<p>Você aponta para um local e uma bola brilhante de ácido esmeralda voa para lá e explode num raio de 6 metros. Cada criatura na área deve fazer uma resistência de <strong>Destreza</strong>.</p><p>Se falhar, sofre <strong>10d4</strong> de dano de ácido imediatamente e mais <strong>5d4</strong> de dano de ácido no final do seu próximo turno. Se passar, sofre metade do dano inicial e nenhum dano no turno seguinte.</p><p><strong>Níveis Superiores:</strong> O dano inicial aumenta em <strong>2d4</strong> para cada nível de slot acima do 4º.</p>"
   },
   {
     "id": "s_fabricar",
@@ -4298,6 +5174,25 @@
       "resistencia": "Destreza"
     },
     "description": "<p>Um guardião espectral Grande aparece e flutua num espaço desocupado. Ele ocupa o espaço e é indistinto exceto por uma espada e escudo brilhantes.</p><p>Qualquer criatura hostil a você que se mova para um espaço a 3 metros do guardião deve fazer resistência de <strong>Destreza</strong>. Sofre <strong>20</strong> de dano radiante se falhar, ou 10 se passar. O guardião desaparece após causar um total de 60 de dano.</p>"
+  },
+  {
+    "id": "s_guardiao_natureza",
+    "name": "Guardião da Natureza",
+    "levelNumber": 4,
+    "school": "Transmutação",
+    "spellClass": "Druida, Patrulheiro",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true },
+    "attrs": {
+      "execucao": "1 ação bônus",
+      "alcance": "Pessoal",
+      "area": "-",
+      "alvo": "Pessoal",
+      "duracao": "Até 1 min",
+      "resistencia": "-"
+    },
+    "description": "<p>Um espírito da natureza assume você. Escolha uma forma:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Fera Primitiva:</strong> Seu deslocamento aumenta em 3m, você ganha visão no escuro (36m), vantagem em ataques baseados em Força, e ataques com arma de Força causam <strong>1d6</strong> de dano de energia extra.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Árvore Anciã:</strong> Você ganha 10 PV temporários, vantagem em ataques de Destreza e Sabedoria, e o chão a até 4,5m de você é terreno difícil para seus inimigos.</li></ul>"
   },
   {
     "id": "s_inseto_gigante",
@@ -4535,6 +5430,44 @@
     "description": "<p>Você toca uma criatura e concede a ela uma medida de proteção contra a morte. A primeira vez que o alvo cair a 0 pontos de vida como resultado de sofrer dano, o alvo fica com 1 ponto de vida e a magia termina.</p><p>Se a magia ainda estiver ativa quando o alvo for submetido a um efeito que o mataria instantaneamente sem causar dano, o efeito é negado e a magia termina.</p>"
   },
   {
+    "id": "s_radiacao_doentia",
+    "name": "Radiação Doentia",
+    "levelNumber": 4,
+    "school": "Evocação",
+    "spellClass": "Feiticeiro, Bruxo, Mago",
+    "damage": "4d10",
+    "scaling": "-",
+    "components": { "V": true, "S": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "36m",
+      "area": "Esfera 9m",
+      "alvo": "Área",
+      "duracao": "Até 10 min",
+      "resistencia": "Constituição"
+    },
+    "description": "<p>Luz esverdeada, fraca e nauseante se espalha em uma esfera de 9 metros de raio. A luz espalha-se dobrando esquinas e a área é iluminada com penumbra.</p><p>Quando uma criatura se move para a área pela primeira vez num turno ou começa seu turno nela, deve fazer uma resistência de <strong>Constituição</strong>. Se falhar, sofre <strong>4d10</strong> de dano radiante, sofre um nível de exaustão e emite luz esverdeada (que impede invisibilidade) até a magia acabar.</p>"
+  },
+  {
+    "id": "s_ruina_elemental",
+    "name": "Ruína Elemental",
+    "levelNumber": 4,
+    "school": "Transmutação",
+    "spellClass": "Artífice, Druida, Bruxo, Mago",
+    "damage": "2d8",
+    "scaling": "2d8",
+    "components": { "V": true, "S": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "27m",
+      "area": "-",
+      "alvo": "1 criatura",
+      "duracao": "Até 1 min",
+      "resistencia": "Constituição"
+    },
+    "description": "<p>Escolha uma criatura que possa ver dentro do alcance e um tipo de dano: ácido, frio, fogo, elétrico ou trovejante. O alvo deve fazer uma resistência de <strong>Constituição</strong> ou será afetado pela magia.</p><p>A primeira vez em cada turno que o alvo sofrer dano do tipo escolhido, ele sofre <strong>2d8</strong> de dano extra desse mesmo tipo. Além disso, o alvo perde qualquer resistência que tenha a esse tipo de dano pela duração.</p><p><strong>Níveis Superiores:</strong> Você pode afetar uma criatura adicional para cada nível de slot acima do 4º.</p>"
+  },
+  {
     "id": "s_santuario_particular",
     "name": "Santuário Particular de Mordenkainen",
     "levelNumber": 4,
@@ -4553,6 +5486,26 @@
       "resistencia": "-"
     },
     "description": "<p>Você torna uma área dentro do alcance segura contra detecção mágica. Você escolhe qualquer combinação das seguintes propriedades:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Som:</strong> O som não pode atravessar a barreira.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Visão:</strong> A barreira é escura e nebulosa, impedindo visão (inclusive visão no escuro).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Sensores:</strong> Sensores de adivinhação não podem aparecer ou passar pela área.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Viagem:</strong> Teletransporte e viagem planar para dentro ou fora da área são bloqueados.</li></ul><p><strong>Níveis Superiores:</strong> A área aumenta em 30 metros para cada nível de slot acima do 4º.</p>"
+  },
+  {
+    "id": "s_sombra_moil",
+    "name": "Sombra de Moil",
+    "levelNumber": 4,
+    "school": "Necromancia",
+    "spellClass": "Bruxo",
+    "damage": "2d8",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Um globo ocular morto-vivo em uma gema (150 po)",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "Pessoal",
+      "area": "Raio 3m",
+      "alvo": "Pessoal",
+      "duracao": "Até 1 min",
+      "resistencia": "-"
+    },
+    "description": "<p>Sombras em forma de chamas envolvem seu corpo. Você se torna <strong>fortemente obscurecido</strong> para os outros. As sombras transformam luz plena a até 3 metros de você em penumbra, e penumbra no mesmo raio em escuridão.</p><p>Você ganha resistência a dano radiante. Além disso, sempre que uma criatura a até 3 metros atingir você com um ataque, as sombras revidam, causando <strong>2d8</strong> de dano necrótico ao atacante.</p>"
   },
   {
     "id": "s_tempestade_gelo",
@@ -4647,6 +5600,7 @@
 
   
   
+
   {
     "id": "s_aljava_veloz",
     "name": "Aljava Veloz",
@@ -4666,6 +5620,26 @@
       "resistencia": "-"
     },
     "description": "<p>Você transmuta sua aljava para produzir um suprimento infinito de munição não mágica.</p><p>Em cada um dos seus turnos, até a magia acabar, você pode usar uma <strong>Ação Bônus</strong> para realizar dois ataques com uma arma que use munição desta aljava. A munição desaparece logo após atingir ou errar o alvo.</p>"
+  },
+  {
+    "id": "s_amanhecer",
+    "name": "Amanhecer",
+    "levelNumber": 5,
+    "school": "Evocação",
+    "spellClass": "Clérigo, Mago",
+    "damage": "4d10",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Um pingente de sol de ouro",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "18m",
+      "area": "Cilindro 9m x 12m",
+      "alvo": "Área",
+      "duracao": "Até 1 min",
+      "resistencia": "Constituição"
+    },
+    "description": "<p>A luz do amanhecer brilha em um cilindro de 9 metros de raio e 12 metros de altura centrado num ponto ao alcance. A área é iluminada por luz plena (considerada luz solar).</p><p>Qualquer criatura que termine o turno no cilindro deve fazer uma resistência de <strong>Constituição</strong>. Sofre <strong>4d10</strong> de dano radiante se falhar, ou metade se passar. Como uma ação bônus no seu turno, você pode mover o cilindro até 18 metros.</p>"
   },
   {
     "id": "s_ancora_planar",
@@ -4705,6 +5679,26 @@
       "resistencia": "-"
     },
     "description": "<p>Você anima até 10 objetos não mágicos. Como uma ação bônus, você comanda os objetos. As estatísticas dependem do tamanho:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Miúdo:</strong> PV 20, CA 18, +8 acerto, <strong>1d4+4</strong> dano.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Pequeno:</strong> PV 25, CA 16, +6 acerto, <strong>1d8+2</strong> dano.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Médio:</strong> PV 40, CA 13, +5 acerto, <strong>2d6+1</strong> dano.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Grande:</strong> PV 50, CA 10, +6 acerto, <strong>2d10+2</strong> dano.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Enorme:</strong> PV 80, CA 10, +8 acerto, <strong>2d12+2</strong> dano.</li></ul><p><strong>Níveis Superiores:</strong> +2 objetos por nível de slot acima do 5º.</p>"
+  },
+  {
+    "id": "s_ataque_vento_aco",
+    "name": "Ataque do Vento de Aço",
+    "levelNumber": 5,
+    "school": "Conjuração",
+    "spellClass": "Patrulheiro, Mago",
+    "damage": "6d10",
+    "scaling": "-",
+    "components": { "S": true, "M": true },
+    "material": "Uma arma corpo-a-corpo valendo pelo menos 1 sp",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "9m",
+      "area": "-",
+      "alvo": "Até 5 criaturas",
+      "duracao": "Instantânea",
+      "resistencia": "-"
+    },
+    "description": "<p>Você floresce a arma usada na conjuração e então desaparece para golpear como o vento. Escolha até cinco criaturas que você possa ver dentro do alcance. Faça um ataque corpo-a-corpo com magia contra cada alvo. Se atingir, o alvo sofre <strong>6d10</strong> de Dano de Energia.</p><p>Você pode então se teletransportar para um espaço desocupado que você possa ver a até 1,5 metro de um dos alvos que você atingiu ou errou.</p>"
   },
   {
     "id": "s_caminhar_arvores",
@@ -4943,6 +5937,25 @@
     "description": "<p>Você contata mentalmente um semideus, espírito ou entidade. Você deve fazer uma resistência de <strong>Inteligência (CD 15)</strong>.</p><p>Se falhar, você sofre <strong>6d6</strong> de dano psíquico e fica insano até terminar um descanso longo. Se passar, você pode fazer 5 perguntas, que serão respondidas com 'sim', 'não', 'talvez', 'nunca', 'irrelevante' ou 'incerto'.</p>"
   },
   {
+    "id": "s_controle_ventos",
+    "name": "Controle dos Ventos",
+    "levelNumber": 5,
+    "school": "Transmutação",
+    "spellClass": "Druida, Feiticeiro, Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "90m",
+      "area": "Cubo 30m",
+      "alvo": "Área",
+      "duracao": "Até 1 hora",
+      "resistencia": "Força"
+    },
+    "description": "<p>Você assume controle do vento num cubo de 30 metros. O vento pode soprar calmo, moderado ou forte. Escolha um efeito:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Lufadas:</strong> O vento sopra forte e longe do centro do cubo. Movimento em direção ao centro custa o dobro. Vantagem em armas à distância atiradas de dentro para fora, e desvantagem de fora para dentro.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Corrente Ascendente:</strong> Vento forte sopra para cima. Criaturas caindo recebem dano como se a queda fosse 30m menor. Saltos ganham 3m adicionais.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Corrente Descendente:</strong> Vento forte sopra para baixo. Voar custa o dobro. Armas à distância que atravessam ou alvejam algo no cubo têm desvantagem e criaturas que tentem voar lá dentro devem fazer resistência de Força ou cairão.</li></ul>"
+  },
+  {
     "id": "s_criacao",
     "name": "Criação",
     "levelNumber": 5,
@@ -5019,6 +6032,25 @@
       "resistencia": "-"
     },
     "description": "<p>Uma onda de energia curativa emana de um ponto à sua escolha. Escolha até seis criaturas numa esfera de 9 metros de raio centrada no ponto.</p><p>Cada alvo recupera pontos de vida iguais a <strong>3d8 + seu modificador de habilidade de conjuração</strong>. A magia não afeta mortos-vivos ou construtos.</p><p><strong>Níveis Superiores:</strong> A cura aumenta em <strong>1d8</strong> para cada nível de slot acima do 5º.</p>"
+  },
+  {
+    "id": "s_danca_macabra",
+    "name": "Dança Macabra",
+    "levelNumber": 5,
+    "school": "Necromancia",
+    "spellClass": "Bruxo, Mago",
+    "damage": "-",
+    "scaling": "Especial",
+    "components": { "V": true, "S": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "18m",
+      "area": "-",
+      "alvo": "Até 5 cadáveres",
+      "duracao": "Até 1 hora",
+      "resistencia": "-"
+    },
+    "description": "<p>Fios de magia negra se prendem a até cinco cadáveres Pequenos ou Médios que você possa ver dentro do alcance. Cada cadáver imediatamente se levanta e torna-se um morto-vivo, seja um esqueleto ou um zumbi (sua escolha).</p><p>Qualquer criatura animada tem um bônus nas jogadas de ataque e de dano igual ao seu modificador de habilidade de conjuração. Você usa uma <strong>ação bônus</strong> para comandar mentalmente as criaturas a se moverem e realizarem ações. Quando a magia termina, elas voltam a ser cadáveres inanimados.</p><p><strong>Níveis Superiores:</strong> Você anima até 2 cadáveres adicionais para cada nível de slot acima do 5º.</p>"
   },
   {
     "id": "s_despertar",
@@ -5118,6 +6150,25 @@
     "description": "<p>Você tenta seduzir um humanoide que possa ver. Ele deve passar em resistência de <strong>Sabedoria</strong> ou fica enfeitiçado e sob seu controle telepático.</p><p>Você pode emitir comandos telepáticos (sem ação) que o alvo fará o melhor para obedecer. Você pode usar sua ação para assumir controle total e preciso do corpo do alvo. Se o alvo sofrer dano, ele repete o teste de resistência.</p><p><strong>Níveis Superiores:</strong> A duração aumenta para 10 minutos (6º), 1 hora (7º) ou 8 horas (8º).</p>"
   },
   {
+    "id": "s_estatica_sinaptica",
+    "name": "Estática Sináptica",
+    "levelNumber": 5,
+    "school": "Encantamento",
+    "spellClass": "Bardo, Feiticeiro, Bruxo, Mago",
+    "damage": "8d6",
+    "scaling": "-",
+    "components": { "V": true, "S": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "36m",
+      "area": "Esfera 6m",
+      "alvo": "Área",
+      "duracao": "Instantânea",
+      "resistencia": "Inteligência"
+    },
+    "description": "<p>Você escolhe um ponto no alcance e causa uma explosão de energia psíquica que rasga a mente. Cada criatura numa esfera de 6 metros deve fazer um teste de resistência de <strong>Inteligência</strong>.</p><p>Se falhar, a criatura sofre <strong>8d6</strong> de dano psíquico e, por 1 minuto, seus pensamentos ficam embaralhados (ela deve rolar um d6 e subtrair o número rolado de todas as suas jogadas de ataque, testes de habilidade e testes de resistência de Constituição). Se passar, sofre metade do dano e nenhum efeito adicional.</p><p>Uma criatura sob o efeito pode fazer um novo teste de Inteligência no final de cada um de seus turnos para encerrar a condição.</p>"
+  },
+  {
     "id": "s_imobilizar_monstro",
     "name": "Imobilizar Monstro",
     "levelNumber": 5,
@@ -5136,6 +6187,82 @@
       "resistencia": "Sabedoria"
     },
     "description": "<p>Escolha uma criatura que você possa ver dentro do alcance. O alvo deve passar em um teste de resistência de <strong>Sabedoria</strong> ou ficará <strong>paralisado</strong> pela duração.</p><p>A magia não tem efeito em mortos-vivos. No final de cada turno do alvo, ele pode realizar um novo teste de resistência para encerrar o efeito.</p><p><strong>Níveis Superiores:</strong> Você pode afetar uma criatura adicional para cada nível de slot acima do 5º (devem estar a 9m uma da outra).</p>"
+  },
+  {
+    "id": "s_imolacao",
+    "name": "Imolação",
+    "levelNumber": 5,
+    "school": "Evocação",
+    "spellClass": "Feiticeiro, Mago",
+    "damage": "8d6",
+    "scaling": "Especial",
+    "components": { "V": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "27m",
+      "area": "-",
+      "alvo": "1 criatura",
+      "duracao": "Até 1 min",
+      "resistencia": "Destreza"
+    },
+    "description": "<p>Chamas envolvem uma criatura que você possa ver. O alvo deve fazer uma resistência de <strong>Destreza</strong>. Sofre <strong>8d6</strong> de dano de fogo se falhar, ou metade se passar.</p><p>Se falhar, o alvo também queima e emite luz plena num raio de 9 metros (e penumbra por mais 9m). No final de cada um dos turnos dele, o alvo deve fazer outro teste de Destreza. Se falhar novamente, sofre <strong>4d6</strong> de dano de fogo. Se passar, a magia termina. Danos de água ou frio não apagam esse fogo, apenas um teste bem-sucedido ou o fim da magia.</p>"
+  },
+  {
+    "id": "s_inundacao_energia_magica",
+    "name": "Inundação de Energia Mágica (Skill Empowerment)",
+    "levelNumber": 5,
+    "school": "Transmutação",
+    "spellClass": "Artífice, Bardo, Feiticeiro, Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "Toque",
+      "area": "-",
+      "alvo": "1 criatura",
+      "duracao": "Até 1 hora",
+      "resistencia": "-"
+    },
+    "description": "<p>Sua magia aprofunda o entendimento do alvo sobre seu próprio talento. Você toca uma criatura voluntária e concede a ela perícia em uma habilidade na qual ela já seja proficiente.</p><p>Até a magia acabar, a criatura dobra seu bônus de proficiência para quaisquer testes de habilidade que fizer usando a perícia escolhida. Você deve escolher uma perícia na qual o alvo seja proficiente e que não esteja já se beneficiando de um efeito que dobre seu bônus de proficiência.</p>"
+  },
+  {
+    "id": "s_invocacao_sagrada",
+    "name": "Invocação Sagrada (Holy Weapon)",
+    "levelNumber": 5,
+    "school": "Evocação",
+    "spellClass": "Clérigo, Paladino",
+    "damage": "2d8",
+    "scaling": "-",
+    "components": { "V": true, "S": true },
+    "attrs": {
+      "execucao": "1 ação bônus",
+      "alcance": "Toque",
+      "area": "-",
+      "alvo": "1 arma",
+      "duracao": "Até 1 hora",
+      "resistencia": "Constituição"
+    },
+    "description": "<p>Você imbui uma arma que você toca com poder sagrado. Até a magia acabar, a arma emite luz plena num raio de 9 metros e penumbra num raio adicional de 9 metros.</p><p>Ataques feitos com essa arma causam <strong>2d8</strong> de dano radiante extra num acerto.</p><p>Como uma ação bônus no seu turno, você pode dispensar essa magia e causar uma explosão no alvo. Cada criatura à sua escolha a até 9 metros da arma deve fazer um teste de resistência de <strong>Constituição</strong>. Numa falha, a criatura sofre <strong>4d8</strong> de dano radiante e fica cega por 1 minuto. Num sucesso, sofre metade do dano e não fica cega.</p>"
+  },
+  {
+    "id": "s_ira_natureza",
+    "name": "Ira da Natureza",
+    "levelNumber": 5,
+    "school": "Evocação",
+    "spellClass": "Druida, Patrulheiro",
+    "damage": "4d6",
+    "scaling": "-",
+    "components": { "V": true, "S": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "36m",
+      "area": "Cubo 18m",
+      "alvo": "Área",
+      "duracao": "Até 1 min",
+      "resistencia": "Força/Destreza"
+    },
+    "description": "<p>Você desperta os espíritos da natureza em um cubo de 18 metros. Inimigos seus consideram a área terreno difícil. A cada turno seu, você pode usar uma ação bônus para ativar um ou mais efeitos (se os elementos estiverem presentes):</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Gramíneas/Arbustos:</strong> Um inimigo deve passar em resistência de <strong>Força</strong> ou fica <strong>impedido</strong>.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Árvores:</strong> Uma árvore faz um ataque corpo-a-corpo com magia (alcance 4,5m). Se atingir, causa <strong>4d6</strong> de dano cortante.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Pedras:</strong> Uma pedra solta é atirada num alvo (ataque à distância com magia, alcance 18m). Se atingir, causa <strong>3d8</strong> de dano de concussão e o alvo cai <strong>caído</strong>.</li></ul>"
   },
   {
     "id": "s_ligacao_telepatica",
@@ -5176,6 +6303,25 @@
       "resistencia": "-"
     },
     "description": "<p>Você cria uma mão Grande de força cintilante. A mão tem CA 20 e PV iguais aos seus PV máximos. Você pode usar uma ação bônus para movê-la e causar um dos efeitos:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Mão Fechada:</strong> Ataca um alvo (corpo-a-corpo com magia). Dano: <strong>4d8</strong> de força.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Mão Vigorosa:</strong> Tenta empurrar uma criatura (Teste resistido de Força).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Mão Que Esmaga:</strong> Agarra uma criatura. Dano: <strong>2d6 + modificador</strong> no início de cada turno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Mão Interposta:</strong> Fornece meia cobertura contra ataques.</li></ul><p><strong>Níveis Superiores:</strong> O dano da Mão Fechada aumenta em <strong>2d8</strong> e o da Mão Que Esmaga em <strong>2d6</strong> por nível de slot acima do 5º.</p>"
+  },
+  {
+    "id": "s_mao_longe",
+    "name": "Mão de Longe (Far Step)",
+    "levelNumber": 5,
+    "school": "Conjuração",
+    "spellClass": "Feiticeiro, Bruxo, Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true },
+    "attrs": {
+      "execucao": "1 ação bônus",
+      "alcance": "Pessoal",
+      "area": "-",
+      "alvo": "Pessoal",
+      "duracao": "Até 1 min",
+      "resistencia": "-"
+    },
+    "description": "<p>Você se teleporta a até 18 metros para um espaço desocupado que você possa ver.</p><p>Em cada um dos seus turnos, antes da magia acabar, você pode usar uma ação bônus para se teleportar dessa forma novamente.</p>"
   },
   {
     "id": "s_missao",
@@ -5234,6 +6380,26 @@
       "resistencia": "-"
     },
     "description": "<p>Uma muralha invisível de força surge num ponto à sua escolha. Pode ser uma esfera ou uma superfície plana. A muralha é imune a todos os danos e não pode ser dissipada por <em>Dissipar Magia</em>.</p><p>Nada pode passar fisicamente através da muralha. Ela bloqueia magias, sopros e viagens para o plano etéreo.</p>"
+  },
+  {
+    "id": "s_muralha_luz",
+    "name": "Muralha de Luz",
+    "levelNumber": 5,
+    "school": "Evocação",
+    "spellClass": "Clérigo, Feiticeiro, Mago",
+    "damage": "4d8",
+    "scaling": "1d8",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Um espelho de mão",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "36m",
+      "area": "Muralha 18m",
+      "alvo": "Área",
+      "duracao": "Até 10 min",
+      "resistencia": "Constituição"
+    },
+    "description": "<p>Uma muralha de luz brilhante aparece. Ela tem até 18 metros de comprimento, 3 metros de altura e 1,5 metro de espessura. A muralha bloqueia a linha de visão.</p><p>Quando a muralha aparece, cada criatura em sua área deve fazer um teste de resistência de <strong>Constituição</strong>, sofrendo <strong>4d8</strong> de dano radiante e ficando <strong>cega</strong> por 1 minuto se falhar, ou sofrendo metade se passar. Qualquer criatura que terminar o turno na muralha sofre 4d8 de dano radiante.</p><p>Até a magia acabar, você pode usar uma ação para disparar um feixe de luz da muralha num alvo a até 18 metros, causando 4d8 de dano radiante num acerto (ataque de magia). Ao fazer isso, o comprimento da muralha reduz em 3 metros.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d8</strong> para cada nível de slot acima do 5º.</p>"
   },
   {
     "id": "s_muralha_pedra",
@@ -5451,6 +6617,26 @@
     "description": "<p>Você exerce sua vontade para mover objetos ou criaturas. A cada rodada, você pode usar sua ação para tentar mover algo.</p><p><strong>Criatura:</strong> Faça um teste resistido da sua Inteligência/Sabedoria/Carisma contra a <strong>Força</strong> do alvo. Se você vencer, move a criatura 9 metros e a deixa <strong>impedida</strong>.</p><p><strong>Objeto:</strong> Você pode mover um objeto de até 500kg por 9 metros. Se o objeto for segurado, faça o teste resistido.</p>"
   },
   {
+    "id": "s_transmutar_pedra",
+    "name": "Transmutar Pedra",
+    "levelNumber": 5,
+    "school": "Transmutação",
+    "spellClass": "Artífice, Druida, Mago",
+    "damage": "4d8",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Argila e água",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "36m",
+      "area": "Cubo 12m",
+      "alvo": "Área",
+      "duracao": "Instantânea",
+      "resistencia": "Destreza/Força"
+    },
+    "description": "<p>Você escolhe uma área de pedra ou lama e transmuta uma na outra. Escolha o efeito:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Pedra para Lama:</strong> Pedra inanimada vira lama espessa e terreno difícil (custa 1,2m por metro). Criaturas na área ao conjurar devem fazer resistência de <strong>Destreza</strong>, ou afundam na lama (fincadas). Precisam usar a ação para escapar.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Lama para Pedra:</strong> Lama inanimada vira pedra sólida. Criaturas afundadas nela devem fazer resistência de <strong>Destreza</strong> ou ficarão presas na rocha (impedidas). Podem usar uma ação para quebrar a pedra (Força CD 20).</li></ul>"
+  },
+  {
     "id": "s_videncia",
     "name": "Vidência",
     "levelNumber": 5,
@@ -5480,9 +6666,9 @@
 
 
 
-
   
   
+ 
   {
     "id": "s_aliado_planar",
     "name": "Aliado Planar",
@@ -5559,6 +6745,26 @@
       "resistencia": "Destreza"
     },
     "description": "<p>Você cria uma muralha vertical de lâminas giratórias, afiadas como navalhas, feitas de energia mágica. A muralha pode ter até 30 metros de comprimento, 6 metros de altura e 1,5 metro de espessura, ou ser um anel de 18 metros de diâmetro.</p><p>A muralha fornece cobertura de três quartos e é terreno difícil. Quando uma criatura entra na área pela primeira vez num turno ou começa seu turno nela, deve fazer resistência de <strong>Destreza</strong>. Sofre <strong>6d10</strong> de dano cortante se falhar, ou metade se passar.</p>"
+  },
+  {
+    "id": "s_bosque_druidico",
+    "name": "Bosque Druídico",
+    "levelNumber": 6,
+    "school": "Abjuração",
+    "spellClass": "Druida",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Visco colhido com foice de ouro sob a lua cheia",
+    "attrs": {
+      "execucao": "10 min",
+      "alcance": "Toque",
+      "area": "Cubo 12m a 27m",
+      "alvo": "Área",
+      "duracao": "24 horas",
+      "resistencia": "Sabedoria/Destreza"
+    },
+    "description": "<p>Você protege uma área externa ou subterrânea enraizando nela magia protetora da natureza. Você pode designar criaturas que não serão afetadas pela magia. A área ganha os seguintes efeitos:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Névoa Espessa:</strong> A área fica obscurecida por uma névoa espessa (obstrução forte para inimigos).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Árvores Ansiosas:</strong> Árvores na área animam e agarram intrusos (teste de Destreza para não ficar impedido).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Sub-bosque:</strong> Mato rasteiro funciona como a magia <em>Crescer Espinhos</em> na área desejada.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Guardiões:</strong> Você pode animar até quatro árvores na área que agem como Árvores Despertas e defendem o bosque.</li></ul><p>Lançar a magia no mesmo local todos os dias por um ano a torna permanente.</p>"
   },
   {
     "id": "s_caminhar_vento",
@@ -5680,6 +6886,26 @@
     "description": "<p>Você cria um raio de eletricidade que arcua em direção a um alvo que você possa ver e depois salta para outros três alvos. Cada alvo secundário deve estar a até 9 metros do alvo primário.</p><p>Um alvo deve fazer resistência de <strong>Destreza</strong>. Sofre <strong>10d8</strong> de dano elétrico se falhar, ou metade se passar.</p><p><strong>Níveis Superiores:</strong> Um raio adicional salta para outro alvo para cada nível de slot acima do 6º.</p>"
   },
   {
+    "id": "s_criar_homunculo",
+    "name": "Criar Homúnculo",
+    "levelNumber": 6,
+    "school": "Transmutação",
+    "spellClass": "Mago",
+    "damage": "2d4",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Argila, cinzas, raiz de mandrágora e uma adaga com joias (1.000 po)",
+    "attrs": {
+      "execucao": "1 hora",
+      "alcance": "Toque",
+      "area": "-",
+      "alvo": "Material componente",
+      "duracao": "Instantânea",
+      "resistencia": "-"
+    },
+    "description": "<p>Enquanto fala encantamentos obscuros, você corta a si mesmo com a adaga, sofrendo <strong>2d4</strong> de dano perfurante que não pode ser reduzido, e derrama o sangue sobre os materiais, criando um homúnculo servo.</p><p>As estatísticas do homúnculo estão no Manual dos Monstros. Você pode ter apenas um de cada vez. O homúnculo entende as línguas que você fala e obedece perfeitamente a você. Você tem um vínculo telepático com ele em qualquer lugar no mesmo plano, e pode ver e ouvir o que ele percebe se usar sua ação.</p>"
+  },
+  {
     "id": "s_criar_mortos_vivos",
     "name": "Criar Mortos-Vivos",
     "levelNumber": 6,
@@ -5756,6 +6982,25 @@
       "resistencia": "Destreza"
     },
     "description": "<p>Um raio verde fino sai do seu dedo. O alvo deve fazer resistência de <strong>Destreza</strong>. Sofre <strong>10d6 + 40</strong> de Dano de Energia se falhar. Se passar, não sofre nenhum dano.</p><p>Se esse dano reduzir os PV do alvo a 0, ele é desintegrado e transformado em pó fino. Um alvo desintegrado só pode ser trazido de volta com <em>Ressurreição Verdadeira</em> ou <em>Desejo</em>. A magia destrói automaticamente criações de força mágica, como <em>Muralha de Energia</em>.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>3d6</strong> para cada nível de slot acima do 6º.</p>"
+  },
+  {
+    "id": "s_dispersar",
+    "name": "Dispersar (Scatter)",
+    "levelNumber": 6,
+    "school": "Conjuração",
+    "spellClass": "Feiticeiro, Bruxo, Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "9m",
+      "area": "-",
+      "alvo": "Até 5 criaturas",
+      "duracao": "Instantânea",
+      "resistencia": "Sabedoria"
+    },
+    "description": "<p>O ar tremeluz ao redor de até cinco criaturas à sua escolha que você possa ver a até 9 metros de você. Uma criatura não disposta deve passar em um teste de resistência de <strong>Sabedoria</strong> para não ser afetada.</p><p>Você teleporta cada alvo afetado para um espaço desocupado que você possa ver no chão ou em um piso a até 36 metros de você. Os destinos podem ser diferentes ou o mesmo para alvos múltiplos.</p>"
   },
   {
     "id": "s_doenca_plena",
@@ -5857,6 +7102,82 @@
     "description": "<p>Você cria uma ilusão de um objeto, criatura ou outro fenômeno visível dentro de um cubo de 9 metros. A ilusão permanece inativa até que uma condição específica ocorra.</p><p>Quando ativada, a ilusão age como programada por até 5 minutos (com fala, movimento, som, cheiro, calor). Interação física revela ser uma ilusão.</p>"
   },
   {
+    "id": "s_investidura_pedra",
+    "name": "Investidura da Pedra",
+    "levelNumber": 6,
+    "school": "Transmutação",
+    "spellClass": "Druida, Feiticeiro, Bruxo, Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "Pessoal",
+      "area": "Raio 4,5m",
+      "alvo": "Pessoal",
+      "duracao": "Até 10 min",
+      "resistencia": "Destreza"
+    },
+    "description": "<p>Pedaços de pedra espalham-se pelo seu corpo. Você ganha resistência a dano de concussão, cortante e perfurante de armas não mágicas.</p><p>Você pode se mover através de terra sólida ou pedra como se fosse terreno difícil. Se terminar seu turno dentro delas, você é ejetado para o espaço não ocupado mais próximo, sofrendo 1d8 de dano de concussão para cada 1,5m percorrido forçadamente.</p><p>Você pode usar sua ação para causar um pequeno tremor. Criaturas no chão a até 4,5m devem fazer resistência de <strong>Destreza</strong> ou caem no chão.</p>"
+  },
+  {
+    "id": "s_investidura_fogo",
+    "name": "Investidura do Fogo",
+    "levelNumber": 6,
+    "school": "Transmutação",
+    "spellClass": "Druida, Feiticeiro, Bruxo, Mago",
+    "damage": "1d10 / 4d8",
+    "scaling": "-",
+    "components": { "V": true, "S": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "Pessoal",
+      "area": "Linha 4,5m",
+      "alvo": "Pessoal",
+      "duracao": "Até 10 min",
+      "resistencia": "Destreza"
+    },
+    "description": "<p>Chamas correm pelo seu corpo. Você ganha imunidade a dano de fogo e resistência a dano de frio.</p><p>Qualquer criatura que se mover para até 1,5 metro de você ou terminar o turno dela lá sofre <strong>1d10</strong> de dano de fogo.</p><p>Você pode usar sua ação para criar uma linha de fogo de 4,5m emanando de você. Criaturas nela fazem resistência de <strong>Destreza</strong>, sofrendo <strong>4d8</strong> de dano de fogo se falhar, ou metade se passar.</p>"
+  },
+  {
+    "id": "s_investidura_gelo",
+    "name": "Investidura do Gelo",
+    "levelNumber": 6,
+    "school": "Transmutação",
+    "spellClass": "Druida, Feiticeiro, Bruxo, Mago",
+    "damage": "4d6",
+    "scaling": "-",
+    "components": { "V": true, "S": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "Pessoal",
+      "area": "Cone 4,5m",
+      "alvo": "Pessoal",
+      "duracao": "Até 10 min",
+      "resistencia": "Constituição"
+    },
+    "description": "<p>Gelo cobre seu corpo. Você ganha imunidade a dano de frio e resistência a dano de fogo.</p><p>Você ignora terreno difícil criado por gelo ou neve. O chão a até 3m de você fica coberto de gelo escorregadio, virando terreno difícil para as outras criaturas.</p><p>Você pode usar sua ação para criar um cone de 4,5m de frio congelante. Criaturas nele fazem resistência de <strong>Constituição</strong>, sofrendo <strong>4d6</strong> de dano de frio se falhar (e tendo o deslocamento reduzido pela metade), ou sofrendo metade do dano se passar.</p>"
+  },
+  {
+    "id": "s_investidura_vento",
+    "name": "Investidura do Vento",
+    "levelNumber": 6,
+    "school": "Transmutação",
+    "spellClass": "Druida, Feiticeiro, Bruxo, Mago",
+    "damage": "2d10",
+    "scaling": "-",
+    "components": { "V": true, "S": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "Pessoal",
+      "area": "Cubo 4,5m",
+      "alvo": "Pessoal",
+      "duracao": "Até 10 min",
+      "resistencia": "Constituição"
+    },
+    "description": "<p>Vento uiva ao seu redor. Você ganha deslocamento de voo de 18 metros e jogadas de ataque à distância com armas feitas contra você têm desvantagem.</p><p>Você pode usar sua ação para criar um cubo de 4,5 metros de ar rodopiante em um ponto que possa ver a até 18 metros de você. Criaturas nele fazem resistência de <strong>Constituição</strong>. Sofrem <strong>2d10</strong> de dano de concussão se falhar, ou metade se passar. Se falhar, e for de tamanho Grande ou menor, a criatura é empurrada 3 metros para longe do centro do cubo.</p>"
+  },
+  {
     "id": "s_invocacao_instantanea",
     "name": "Invocação Instantânea de Drawmij",
     "levelNumber": 6,
@@ -5875,6 +7196,26 @@
       "resistencia": "-"
     },
     "description": "<p>Você toca um objeto pesando até 5kg e cujo maior lado seja de 1,8m ou menos. A magia deixa uma marca invisível na superfície do item e inscreve o nome do item na safira.</p><p>A qualquer momento depois, você pode usar uma ação para falar o nome do item e esmagar a safira. O item aparece instantaneamente na sua mão, independentemente da distância ou plano, exceto se estiver sendo segurado ou carregado por outra criatura (nesse caso você descobre quem e onde).</p>"
+  },
+  {
+    "id": "s_jaula_alma",
+    "name": "Jaula da Alma",
+    "levelNumber": 6,
+    "school": "Necromancia",
+    "spellClass": "Bruxo, Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Uma gaiola de prata minúscula valendo 100 po",
+    "attrs": {
+      "execucao": "1 reação",
+      "alcance": "18m",
+      "area": "-",
+      "alvo": "1 humanoide que acabou de morrer",
+      "duracao": "8 horas",
+      "resistencia": "-"
+    },
+    "description": "<p>Você usa essa magia como uma reação quando um humanoide morre a até 18m de você. Você rouba a alma dele, prendendo-a na gaiola. Enquanto a alma estiver presa, você pode explorá-la até seis vezes de várias maneiras:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Roubar Vida:</strong> Usa ação bônus para curar 2d8 PV.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Fazer Pergunta:</strong> A alma responde telepatica e brevemente o que sabia em vida.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Obter Vantagem:</strong> Usa ação bônus para ter vantagem na próxima jogada de ataque, teste de habilidade ou resistência.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Olhos da Alma:</strong> Usa uma ação para ver invisível e perceber onde a alma viveu.</li></ul><p>Quando a magia acaba ou após o sexto uso, a alma é libertada e segue para a vida após a morte.</p>"
   },
   {
     "id": "s_mover_terra",
@@ -5937,6 +7278,25 @@
     "description": "<p>Você cria uma muralha de gelo. Quando a muralha aparece, cada criatura no espaço dela deve fazer resistência de <strong>Destreza</strong>. Sofre <strong>10d6</strong> de dano de frio se falhar, ou metade se passar.</p><p>A muralha tem CA 12 e 30 PV por seção de 3m. Se destruída, deixa para trás uma área de ar frígido: quem passar por ela sofre <strong>5d6</strong> de dano de frio.</p><p><strong>Níveis Superiores:</strong> O dano ao aparecer aumenta em <strong>2d6</strong> e o dano do ar frio em <strong>1d6</strong> por nível de slot acima do 6º.</p>"
   },
   {
+    "id": "s_ossos_terra",
+    "name": "Ossos da Terra",
+    "levelNumber": 6,
+    "school": "Transmutação",
+    "spellClass": "Druida",
+    "damage": "6d6",
+    "scaling": "2 pilares",
+    "components": { "V": true, "S": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "36m",
+      "area": "Pilares 1,5m x 9m",
+      "alvo": "Área",
+      "duracao": "Instantânea",
+      "resistencia": "Destreza"
+    },
+    "description": "<p>Você faz até seis pilares de pedra irromperem do solo em lugares que possa ver. Cada pilar tem 1,5 metro de diâmetro e sobe 9 metros. Um pilar só pode aparecer no solo ou em pedra não lapidada.</p><p>Se um pilar surgir sob uma criatura Média ou menor, ela faz resistência de <strong>Destreza</strong> para escapar; se falhar, sobe junto. Se a criatura bater no teto antes do pilar parar de crescer, ela sofre <strong>6d6</strong> de dano de concussão e fica <strong>impedida</strong> até o pilar ser destruído ou ela escapar. Os pilares têm CA 5 e 30 PV.</p><p><strong>Níveis Superiores:</strong> Você pode criar 2 pilares adicionais para cada nível de slot acima do 6º.</p>"
+  },
+  {
     "id": "s_palavra_recordacao",
     "name": "Palavra de Recordação",
     "levelNumber": 6,
@@ -5975,6 +7335,25 @@
     "description": "<p>Você cria dois portais circulares, um perto de você e outro a até 150 metros. Os portais formam um anel brilhante no chão.</p><p>Qualquer criatura ou objeto que entrar num portal sai imediatamente pelo outro como se os dois espaços fossem adjacentes. Os portais só têm um lado funcional.</p>"
   },
   {
+    "id": "s_prisao_mental",
+    "name": "Prisão Mental",
+    "levelNumber": 6,
+    "school": "Ilusão",
+    "spellClass": "Feiticeiro, Bruxo, Mago",
+    "damage": "5d10 / 10d10",
+    "scaling": "-",
+    "components": { "S": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "18m",
+      "area": "-",
+      "alvo": "1 criatura",
+      "duracao": "Até 1 min",
+      "resistencia": "Inteligência"
+    },
+    "description": "<p>Você tenta aprisionar a mente de uma criatura que você possa ver dentro do alcance. Ela deve fazer um teste de resistência de <strong>Inteligência</strong>.</p><p>Se falhar, a criatura sofre <strong>5d10</strong> de dano psíquico e o terreno ao redor dela parece para ela um ambiente ameaçador ilusório, deixando-a <strong>impedida</strong>. A criatura não consegue ver nem ouvir nada além do interior da ilusão. Se o alvo for empurrado para fora da prisão (ou tentar atravessá-la), ou for atingido por um ataque que passe pela área, sofre mais <strong>10d10</strong> de dano psíquico e a magia termina.</p>"
+  },
+  {
     "id": "s_proibicao",
     "name": "Proibição",
     "levelNumber": 6,
@@ -5993,6 +7372,25 @@
       "resistencia": "-"
     },
     "description": "<p>Você protege uma área de até 12.000 metros quadrados (aprox. 110x110m) contra viagem mágica. Teletransporte e viagens planares para dentro da área falham.</p><p>A magia também causa dano a tipos específicos de criaturas (celestiais, elementais, fadas, corruptores e mortos-vivos). Quando uma dessas criaturas entra na área, sofre <strong>5d6</strong> de dano radiante ou necrótico (sua escolha).</p>"
+  },
+  {
+    "id": "s_protecao_primordial",
+    "name": "Proteção Primordial",
+    "levelNumber": 6,
+    "school": "Abjuração",
+    "spellClass": "Druida",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "Pessoal",
+      "area": "-",
+      "alvo": "Pessoal",
+      "duracao": "Até 1 min",
+      "resistencia": "-"
+    },
+    "description": "<p>Você ganha resistência a dano de ácido, frio, fogo, elétrico e trovejante pela duração.</p><p>Quando você sofrer um dano de algum desses tipos, pode usar sua reação para ganhar <strong>imunidade</strong> contra aquele tipo de dano (incluindo contra o próprio ataque que desencadeou a reação) até o final do seu próximo turno. Feito isso, a magia termina.</p>"
   },
   {
     "id": "s_proteger_fortaleza",
@@ -6094,6 +7492,26 @@
     "description": "<p>Você toca uma árvore Grande ou maior. Você cria um portal de teletransporte que conecta essa árvore a outra árvore que você já tenha visto ou tocado no mesmo plano de existência.</p><p>Você pode passar pelo portal imediatamente (custa 1,5m de movimento). O portal permanece aberto até o final do seu próximo turno, permitindo que outras criaturas passem.</p>"
   },
   {
+    "id": "s_transformacao_tenser",
+    "name": "Transformação de Tenser",
+    "levelNumber": 6,
+    "school": "Transmutação",
+    "spellClass": "Mago",
+    "damage": "2d12",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Um fio de cabelo de um touro",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "Pessoal",
+      "area": "-",
+      "alvo": "Pessoal",
+      "duracao": "Até 10 min",
+      "resistencia": "-"
+    },
+    "description": "<p>Você se dota de resistência e habilidades marciais divinas alimentadas por magia. Você ganha os seguintes benefícios:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈</strong> Você ganha 50 pontos de vida temporários. Se sobrarem ao final da magia, eles são perdidos.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈</strong> Você tem vantagem em ataques com armas simples e marciais, e seus ataques causam <strong>2d12</strong> de dano de Energia extra no acerto.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈</strong> Você ganha proficiência com todas as armaduras, escudos e armas simples/marciais.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈</strong> Você ganha proficiência nos testes de resistência de Força e Constituição.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈</strong> Você pode atacar duas vezes, não uma, quando usa a ação Atacar.</li></ul><p>Quando a magia acaba, você deve fazer uma resistência de Constituição CD 15 ou sofrer um nível de exaustão.</p>"
+  },
+  {
     "id": "s_visao_verdade",
     "name": "Visão da Verdade",
     "levelNumber": 6,
@@ -6128,6 +7546,7 @@
 
   
   
+ 
   {
     "id": "s_bola_fogo_controlavel",
     "name": "Bola de Fogo Controlável",
@@ -6166,6 +7585,25 @@
       "resistencia": "-"
     },
     "description": "<p>Você invoca um celestial de ND 4 ou menor. O celestial é amigável a você e seus companheiros e obedece seus comandos verbais (sem ação).</p><p>Se você não der comandos, ele se defende. Se sua concentração for quebrada, o celestial não desaparece, mas você perde o controle e ele pode se tornar hostil e atacar.</p><p><strong>Níveis Superiores:</strong> Você pode invocar um celestial de ND 5 usando um slot de 9º nível.</p>"
+  },
+  {
+    "id": "s_coroa_estrelas",
+    "name": "Coroa de Estrelas",
+    "levelNumber": 7,
+    "school": "Evocação",
+    "spellClass": "Feiticeiro, Bruxo, Mago",
+    "damage": "4d12",
+    "scaling": "2 estrelas",
+    "components": { "V": true, "S": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "Pessoal",
+      "area": "-",
+      "alvo": "Pessoal",
+      "duracao": "1 hora",
+      "resistencia": "-"
+    },
+    "description": "<p>Sete motes de luz parecidos com estrelas aparecem e orbitam sua cabeça. Pela duração, você emite luz plena num raio de 9 metros e penumbra por mais 9 metros.</p><p>Como uma <strong>ação bônus</strong>, você pode enviar uma das estrelas voando em direção a uma criatura a até 36 metros de você. Faça um ataque à distância com magia. Se atingir, o alvo sofre <strong>4d12</strong> de dano radiante. Acertando ou errando, a estrela se consome. A magia termina quando você gastar todas as estrelas.</p><p><strong>Níveis Superiores:</strong> A magia cria 2 estrelas adicionais para cada nível de slot acima do 7º.</p>"
   },
   {
     "id": "s_dedo_morte",
@@ -6306,6 +7744,25 @@
     "description": "<p>Você faz um terreno numa área de até 1,5km quadrados parecer, soar, cheirar e até parecer tátil como outro tipo de terreno.</p><p>A ilusão inclui elementos audíveis, visuais, táteis e olfativos. Você pode transformar um campo aberto em um pântano ou criar uma colina onde não há. A ilusão pode ser interagida fisicamente. Criaturas com Visão Verdadeira veem a ilusão como uma imagem vaga sobreposta ao terreno real.</p>"
   },
   {
+    "id": "s_palavra_poder_dor",
+    "name": "Palavra de Poder: Dor",
+    "levelNumber": 7,
+    "school": "Encantamento",
+    "spellClass": "Feiticeiro, Bruxo, Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "18m",
+      "area": "-",
+      "alvo": "1 criatura",
+      "duracao": "Instantânea",
+      "resistencia": "Constituição"
+    },
+    "description": "<p>Você pronuncia uma palavra de poder que causa dor lancinante numa criatura que possa ver dentro do alcance. Se o alvo tiver <strong>100 pontos de vida ou menos</strong>, ele é submetido à dor debilitante. Se tiver mais, a magia não tem efeito.</p><p>Um alvo afetado fica com deslocamento máximo de 3 metros, tem desvantagem nas jogadas de ataque, testes de habilidade e testes de resistência (exceto Constituição). Além disso, se ele tentar conjurar uma magia, deve passar em um teste de Constituição ou a conjuração falha. No final de cada turno do alvo, ele pode fazer um teste de resistência de <strong>Constituição</strong> para encerrar o efeito.</p>"
+  },
+  {
     "id": "s_palavra_divina",
     "name": "Palavra Divina",
     "levelNumber": 7,
@@ -6382,6 +7839,26 @@
       "resistencia": "Destreza"
     },
     "description": "<p>Oito raios de luz multicoloridos lampejam das suas mãos. Cada raio é de uma cor diferente e tem um poder e propósito diferente.</p><p>Cada criatura num cone de 18 metros deve fazer uma resistência de <strong>Destreza</strong>. Para cada alvo, role um <strong>d8</strong> para determinar qual raio o atinge.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 1-5 (Vermelho a Azul):</strong> 10d6 de dano (Fogo, Ácido, Elétrico, Veneno ou Frio). Metade se passar.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 6 (Anil):</strong> Se falhar, fica impedido e deve fazer testes de CON para não ser petrificado.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 7 (Violeta):</strong> Se falhar, fica cego e deve fazer testes de SAB para não ser banido.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 8 (Especial):</strong> Atingido por dois raios. Role duas vezes novamente.</li></ul>"
+  },
+  {
+    "id": "s_redemoinho",
+    "name": "Redemoinho",
+    "levelNumber": 7,
+    "school": "Evocação",
+    "spellClass": "Druida, Feiticeiro, Mago",
+    "damage": "10d6",
+    "scaling": "-",
+    "components": { "V": true, "M": true },
+    "material": "Um pedaço de palha",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "90m",
+      "area": "Cilindro 3m x 9m",
+      "alvo": "Área",
+      "duracao": "Até 1 min",
+      "resistencia": "Destreza/Força"
+    },
+    "description": "<p>Um redemoinho de ventos uivantes aparece num ponto no solo à sua escolha. O redemoinho é um cilindro de 3 metros de raio e 9 metros de altura que requer concentração. Qualquer criatura que comece o turno na área ou entre nela deve fazer uma resistência de <strong>Destreza</strong>, sofrendo <strong>10d6</strong> de dano de concussão se falhar, ou metade se passar.</p><p>Num fracasso, se a criatura for Média ou menor, ela é sugada para o ar e fica <strong>impedida</strong>. Uma criatura impedida sobe até o topo do redemoinho, onde faz testes de Força ou Destreza no seu turno para escapar e ser arremessada a 3d6 metros.</p><p>Como uma ação, você pode mover o redemoinho até 9 metros.</p>"
   },
   {
     "id": "s_regeneracao",
@@ -6502,6 +7979,26 @@
     "description": "<p>Uma tempestade de lençóis de fogo rugindo aparece na área. A área consiste em até dez cubos de 3 metros, que você pode arranjar como desejar (devem ter pelo menos uma face adjacente a outro cubo).</p><p>Cada criatura na área deve fazer uma resistência de <strong>Destreza</strong>. Sofre <strong>7d10</strong> de dano de fogo se falhar, ou metade se passar. Você pode escolher que o fogo não afete a vida vegetal na área.</p>"
   },
   {
+    "id": "s_templo_dos_deuses",
+    "name": "Templo dos Deuses",
+    "levelNumber": 7,
+    "school": "Conjuração",
+    "spellClass": "Clérigo",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Símbolo sagrado de pelo menos 5 po",
+    "attrs": {
+      "execucao": "1 hora",
+      "alcance": "36m",
+      "area": "Cubo 36m",
+      "alvo": "Ponto no solo",
+      "duracao": "24 horas",
+      "resistencia": "Carisma"
+    },
+    "description": "<p>Você ergue um templo que surge do chão num espaço desocupado que você possa ver, dedicado a uma divindade ou panteão. Ele tem as paredes externas indestrutíveis, e a estrutura bloqueia passagens etéreas ou teletransportes para dentro. Você escolhe as regras sensoriais internas (luz, cor, sons corais, cheiro).</p><p>Ao conjurar, você escolhe celestiais, elementais, fadas, corruptores ou mortos-vivos alinhados aos inimigos do seu deus. Quando tentarem entrar no templo, farão resistência de <strong>Carisma</strong>. Se falharem, não entram. Se passarem, e enquanto estiverem lá, terão desvantagem em ataques e resistências e sofrerão dano se receberem magias curativas de você.</p><p>Se lançada no mesmo local diariamente por um ano, a magia se torna permanente.</p>"
+  },
+  {
     "id": "s_viagem_planar",
     "name": "Viagem Planar",
     "levelNumber": 7,
@@ -6535,6 +8032,8 @@
 
 
 
+
+  
   
   
   {
@@ -6657,6 +8156,25 @@
     "description": "<p>Você tenta seduzir uma criatura que possa ver dentro do alcance. Ela deve passar em resistência de <strong>Sabedoria</strong> ou fica enfeitiçada (vantagem se estiver lutando contra você).</p><p>Enquanto enfeitiçada, você tem um elo telepático com ela. Você pode emitir comandos (sem ação) ou usar sua ação para assumir controle total e preciso. Se a criatura sofrer dano, ela repete o teste de resistência.</p><p><strong>Níveis Superiores:</strong> Com um slot de 9º nível, a duração aumenta para 8 horas.</p>"
   },
   {
+    "id": "s_dragao_ilusorio",
+    "name": "Dragão Ilusório",
+    "levelNumber": 8,
+    "school": "Ilusão",
+    "spellClass": "Mago",
+    "damage": "7d6",
+    "scaling": "-",
+    "components": { "S": true },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "36m",
+      "area": "Cone 18m",
+      "alvo": "Área",
+      "duracao": "Até 1 min",
+      "resistencia": "Sabedoria/Inteligência"
+    },
+    "description": "<p>Você cria um dragão ilusório Enorme num espaço desocupado a até 36 metros. Quando ele aparece, inimigos que puderem vê-lo devem fazer resistência de <strong>Sabedoria</strong> ou ficam <strong>amedrontados</strong> por 1 minuto (podem repetir o teste no final de seus turnos).</p><p>Com uma ação bônus, você pode mover a ilusão 18 metros e fazê-la expelir energia num cone de 18 metros. Cada criatura no cone deve fazer resistência de <strong>Inteligência</strong>, sofrendo <strong>7d6</strong> de dano (ácido, frio, fogo, elétrico, necrótico ou venenoso, escolhido ao conjurar) se falhar, ou metade se passar. A ilusão é tangível, mas ataques contra ela falham automaticamente.</p>"
+  },
+  {
     "id": "s_enfraquecer_intelecto",
     "name": "Enfraquecer Intelecto",
     "levelNumber": 8,
@@ -6675,6 +8193,26 @@
       "resistencia": "Inteligência"
     },
     "description": "<p>Você explode a mente de uma criatura. O alvo sofre <strong>4d6</strong> de dano psíquico e deve fazer uma resistência de <strong>Inteligência</strong>.</p><p>Se falhar, os valores de Inteligência e Carisma da criatura tornam-se 1. A criatura não pode conjurar magias, ativar itens mágicos, compreender idiomas ou se comunicar de forma inteligível. O alvo pode repetir o teste de resistência a cada 30 dias.</p>"
+  },
+  {
+    "id": "s_escuridao_enlouquecedora",
+    "name": "Escuridão Enlouquecedora",
+    "levelNumber": 8,
+    "school": "Evocação",
+    "spellClass": "Bruxo, Mago",
+    "damage": "8d8",
+    "scaling": "-",
+    "components": { "V": true, "M": true },
+    "material": "Uma gota de piche e uma gota de mercúrio",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "45m",
+      "area": "Esfera 18m",
+      "alvo": "Área",
+      "duracao": "Até 10 min",
+      "resistencia": "Sabedoria"
+    },
+    "description": "<p>Uma escuridão mágica preenche uma esfera de 18 metros. Luz criada por magias de 8º nível ou inferior não pode iluminá-la. Gritos, lamentos e risadas ininteligíveis ecoam na área.</p><p>Qualquer criatura que iniciar seu turno na área deve fazer uma resistência de <strong>Sabedoria</strong>. Sofre <strong>8d8</strong> de dano psíquico se falhar, ou metade se passar.</p>"
   },
   {
     "id": "s_explosao_solar",
@@ -6714,6 +8252,26 @@
       "resistencia": "-"
     },
     "description": "<p>Sua magia transforma outras criaturas em bestas. Escolha qualquer número de criaturas voluntárias que você possa ver. Você transforma cada alvo na forma de uma Besta Grande ou menor com ND 4 ou inferior.</p><p>Os alvos assumem os pontos de vida da nova forma. Se retornarem a 0 PV, revertem para a forma original (com o dano excedente sendo aplicado). Você pode usar sua ação para transformar as criaturas afetadas em novas formas.</p>"
+  },
+  {
+    "id": "s_fortaleza_poderosa",
+    "name": "Fortaleza Poderosa",
+    "levelNumber": 8,
+    "school": "Conjuração",
+    "spellClass": "Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Diamante valendo pelo menos 500 po (consumido)",
+    "attrs": {
+      "execucao": "1 min",
+      "alcance": "1,5km",
+      "area": "Área 30m",
+      "alvo": "Espaço no solo",
+      "duracao": "Instantânea (dura 7 dias)",
+      "resistencia": "-"
+    },
+    "description": "<p>Você conjura uma fortaleza de pedra num espaço vazio no chão. Ela tem uma base de 30x30 metros, com 4 torres de 6 metros de altura, paredes grossas e um castelo central de 3 andares.</p><p>A fortaleza conta com comida e 100 servos invisíveis. Ela dura por 7 dias. Lançar a magia no mesmo local uma vez por semana durante um ano torna a fortaleza permanente.</p>"
   },
   {
     "id": "s_labirinto",
@@ -6771,6 +8329,26 @@
       "resistencia": "-"
     },
     "description": "<p>Sua fala se torna incrivelmente persuasiva e convincente. Até a magia acabar, qualquer teste de Carisma que você fizer pode ser substituído por um <strong>15</strong> no dado (se você rolar menos).</p><p>Além disso, qualquer magia que determinaria se você está dizendo a verdade indica que você está sendo sincero, independente do que você diga.</p>"
+  },
+  {
+    "id": "s_murchar_horrivel_abi_dalzim",
+    "name": "Murchar Horrível de Abi-Dalzim",
+    "levelNumber": 8,
+    "school": "Necromancia",
+    "spellClass": "Feiticeiro, Mago",
+    "damage": "12d8",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Um pedaço de esponja",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "45m",
+      "area": "Cubo 9m",
+      "alvo": "Área",
+      "duracao": "Instantânea",
+      "resistencia": "Constituição"
+    },
+    "description": "<p>Você drena a umidade de todas as criaturas em um cubo de 9 metros centrado num ponto à sua escolha. Cada criatura deve fazer uma resistência de <strong>Constituição</strong>.</p><p>Sofre <strong>12d8</strong> de dano necrótico se falhar, ou metade se passar. Construtos e mortos-vivos não são afetados. Plantas e criaturas de água fazem o teste com <strong>desvantagem</strong>.</p>"
   },
   {
     "id": "s_nuvem_incendiaria",
@@ -6904,6 +8482,7 @@
 
   
   
+ 
   {
     "id": "s_alterar_forma",
     "name": "Alterar Forma",
@@ -7021,6 +8600,65 @@
     "description": "<p>Você cria ilusões dos medos mais profundos das criaturas. Cada criatura numa esfera de 9 metros deve fazer resistência de <strong>Sabedoria</strong> ou ficará <strong>amedrontada</strong>.</p><p>No final de cada turno de uma criatura amedrontada, ela deve fazer um teste de resistência. Se falhar, sofre <strong>4d10</strong> de dano psíquico. Se passar, o medo e a magia terminam para ela.</p>"
   },
   {
+    "id": "s_grito_psiquico",
+    "name": "Grito Psíquico",
+    "levelNumber": 9,
+    "school": "Encantamento",
+    "spellClass": "Bardo, Feiticeiro, Bruxo, Mago",
+    "damage": "14d6",
+    "scaling": "-",
+    "components": { "V": false, "S": true, "M": false },
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "27m",
+      "area": "-",
+      "alvo": "Até 10 criaturas",
+      "duracao": "Instantânea",
+      "resistencia": "Inteligência"
+    },
+    "description": "<p>Você libera o poder da sua mente para explodir o intelecto de até dez criaturas à sua escolha que você possa ver dentro do alcance. Cada alvo deve fazer um teste de resistência de <strong>Inteligência</strong>.</p><p>Se falhar, a criatura sofre <strong>14d6</strong> de dano psíquico e fica <strong>atordoada</strong>. Se passar, sofre metade do dano e não fica atordoada. Um alvo atordoado pode fazer um teste de resistência de Inteligência no final de cada um dos turnos dele para terminar o atordoamento.</p><p>Se o dano dessa magia matar um alvo, a cabeça dele explode (presumindo que ele tenha uma).</p>"
+  },
+  {
+    "id": "s_invulnerabilidade",
+    "name": "Invulnerabilidade",
+    "levelNumber": 9,
+    "school": "Abjuração",
+    "spellClass": "Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Um pequeno pedaço de adamante valendo pelo menos 500 po (consumido)",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "Pessoal",
+      "area": "-",
+      "alvo": "Pessoal",
+      "duracao": "Até 10 min",
+      "resistencia": "-"
+    },
+    "description": "<p>Você canaliza pura magia protetora e se torna indestrutível. Até a magia acabar, você é <strong>imune a todos os danos</strong>.</p>"
+  },
+  {
+    "id": "s_metamorfose_massa",
+    "name": "Metamorfose em Massa",
+    "levelNumber": 9,
+    "school": "Transmutação",
+    "spellClass": "Bardo, Feiticeiro, Mago",
+    "damage": "-",
+    "scaling": "-",
+    "components": { "V": true, "S": true, "M": true },
+    "material": "Casulo de lagarta",
+    "attrs": {
+      "execucao": "1 ação",
+      "alcance": "36m",
+      "area": "-",
+      "alvo": "Até 10 criaturas",
+      "duracao": "Até 1 hora",
+      "resistencia": "Sabedoria"
+    },
+    "description": "<p>Você transforma até dez criaturas que você possa ver dentro do alcance. Uma criatura não disposta deve passar em um teste de resistência de <strong>Sabedoria</strong> para não ser afetada.</p><p>Cada alvo se transforma na forma de uma besta de Nível de Desafio igual ou menor ao nível ou Nível de Desafio original do alvo. Você pode escolher a mesma forma ou formas diferentes para cada alvo. As regras de transformação são idênticas às da magia <em>Metamorfose</em> (o alvo assume os PV e estatísticas da besta e, se cair a 0 PV, reverte à forma original sofrendo o dano excedente).</p>"
+  },
+  {
     "id": "s_metamorfose_verdadeira",
     "name": "Metamorfose Verdadeira",
     "levelNumber": 9,
@@ -7076,7 +8714,7 @@
       "duracao": "Instantânea",
       "resistencia": "-"
     },
-    "description": "<p>Você toca uma criatura e pronuncia uma palavra de poder. O alvo recupera <strong>todos</strong> os seus pontos de vida.</p><p>Se a criatura estiver enfeitiçada, amedrontada, paralisada ou atordoada, a condição termina. Se a criatura estiver caída, ela pode usar sua reação para ficar de pé.</p>"
+    "description": "<p>Você toca uma criatura e pronuncia uma palavra de poder. O alvo recupera <strong>todos</strong> os seus pontos de vida.</p><p>Se a criatura estiver enfeitiçada, amedrontada, paralisada ou atordoada, a condition termina. Se a criatura estiver caída, ela pode usar sua reação para ficar de pé.</p>"
   },
   {
     "id": "s_palavra_poder_matar",
