@@ -1,0 +1,18 @@
+[
+  {
+    "id": "dados",
+    "titulo": "Como rolar dados?",
+    "resumo": "Aprenda como funcionam as rolagens de ataque, dano e os menus de vantagem.",
+    "conteudo": "Para rolar dados, basta clicar nos números sublinhados na sua ficha. \n\nSe você tiver vantagem ou desvantagem, um menu aparecerá no meio da tela para você confirmar a rolagem final. Os resultados aparecem automaticamente no botão de Histórico (🎲).",
+    "tags": ["Básico", "Rolagens", "Mecânica"],
+    "imagem": "img/Ajuda sobre o Sistema/rolagem.png"
+  },
+  {
+    "id": "foto_personagem",
+    "titulo": "Como editar a foto do Personagem?",
+    "resumo": "Saiba como fazer upload ou colar uma nova imagem de perfil.",
+    "conteudo": "Clique na foto atual do seu personagem no topo da tela. Isso abrirá um menu onde você pode procurar um arquivo no seu computador ou simplesmente dar um Ctrl+V (Colar) direto na tela para enviar uma imagem rapidamente.",
+    "tags": ["Perfil", "Visual"],
+    "imagem": "" 
+  }
+]
