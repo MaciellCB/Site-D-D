@@ -11,8 +11,8 @@
     "id": "atributos_modificadores",
     "titulo": "Os 6 Atributos e seus Modificadores",
     "resumo": "Entenda o que cada atributo (Força, Destreza, etc.) faz na prática e como calcular seu bônus.",
-    "conteudo": "<div class='ajuda-grid-2col'><div><h4 style='color:#e0aaff'>O que cada atributo faz?</h4><ul style='padding-left:15px;'><li><b>💪 Força:</b> Ataques corpo a corpo, testes de Atletismo (saltar, empurrar, quebrar).</li><li><b>🏹 Destreza:</b> Ataques à distância/finesse, Furtividade, Acrobacia e sua Classe de Armadura (CA).</li><li><b>🛡️ Constituição:</b> Seus Pontos de Vida (PV), resistência física, venenos e foco em magias.</li><li><b>🧠 Inteligência:</b> Conhecimentos (Arcanismo, História), Investigação e magias de Mago.</li><li><b>🦉 Sabedoria:</b> Percepção, Intuição, resistir a ilusões e magias de Clérigo/Druida.</li><li><b>🗣️ Carisma:</b> Persuasão, Intimidação, Enganação e magias de Bardo/Bruxo/Feiticeiro/Paladino.</li></ul></div><div><h4 style='color:#e0aaff'>Tabela de Modificadores</h4><p>O número puro do atributo não é o que você soma nos dados, mas sim o seu <b>Modificador</b>:</p><table class='ajuda-tabela'><tr><th>Valor do Atributo</th><th>Modificador</th></tr><tr><td>1</td><td>-5</td></tr><tr><td>2 a 3</td><td>-4</td></tr><tr><td>4 a 5</td><td>-3</td></tr><tr><td>6 a 7</td><td>-2</td></tr><tr><td>8 a 9</td><td>-1</td></tr><tr><td>10 a 11</td><td>0</td></tr><tr><td>12 a 13</td><td>+1</td></tr><tr><td>14 a 15</td><td>+2</td></tr><tr><td>16 a 17</td><td>+3</td></tr><tr><td>18 a 19</td><td>+4</td></tr><tr><td>20 a 21</td><td>+5</td></tr></table></div></div>",
-    "tags": ["Entenda a sua Ficha", "Atributos", "Regras"],
+    "conteudo": "<div class='ajuda-grid-2col'><div><h4 style='color:#e0aaff'>O que cada atributo faz?</h4><ul style='padding-left:15px;'><li><b>💪 Força:</b> Ataques corpo a corpo, testes de Atletismo (saltar, empurrar, quebrar).</li><li><b>🏹 Destreza:</b> Ataques à distância/finesse, Furtividade, Acrobacia e sua Classe de Armadura (CA).</li><li><b>🛡️ Constituição:</b> Seus Pontos de Vida (PV), resistência física, venenos e foco em magias.</li><li><b>🧠 Inteligência:</b> Conhecimentos (Arcanismo, História), Investigação, magias de Mago e as habilidades/maldições do <b>Blood Hunter</b>.</li><li><b>🦉 Sabedoria:</b> Percepção, Intuição, resistir a ilusões e magias de Clérigo/Druida.</li><li><b>🗣️ Carisma:</b> Persuasão, Intimidação, Enganação e magias de Bardo/Bruxo/Feiticeiro/Paladino.</li></ul></div><div><h4 style='color:#e0aaff'>Tabela de Modificadores</h4><p>O número puro do atributo não é o que você soma nos dados, mas sim o seu <b>Modificador</b>:</p><table class='ajuda-tabela'><tr><th>Valor do Atributo</th><th>Modificador</th></tr><tr><td>1</td><td>-5</td></tr><tr><td>2 a 3</td><td>-4</td></tr><tr><td>4 a 5</td><td>-3</td></tr><tr><td>6 a 7</td><td>-2</td></tr><tr><td>8 a 9</td><td>-1</td></tr><tr><td>10 a 11</td><td>0</td></tr><tr><td>12 a 13</td><td>+1</td></tr><tr><td>14 a 15</td><td>+2</td></tr><tr><td>16 a 17</td><td>+3</td></tr><tr><td>18 a 19</td><td>+4</td></tr><tr><td>20 a 21</td><td>+5</td></tr></table></div></div>",
+    "tags": ["Entenda a sua Ficha", "Atributos", "Regras", "Blood Hunter"],
     "imagem": ""
   },
   {
@@ -35,8 +35,8 @@
     "id": "regras_multiclasse",
     "titulo": "Regras de Multiclasse",
     "resumo": "Requisitos, proficiências ganhas e o cálculo correto dos seus espaços de magia.",
-    "conteudo": "<p>Ao ganhar um nível, você pode escolher pegar um nível em uma nova classe, desde que cumpra os <b>Requisitos Mínimos (Ter 13 no atributo principal da nova classe)</b>.</p><h4 style='color:#e0aaff'>O que você ganha?</h4><p>Você recebe os Pontos de Vida (Dado de Vida) da nova classe. <i>Ex: Nv 1 Mago / Nv 1 Guerreiro tem 1d6 e 1d10 de vida.</i> Você também recebe apenas <b>algumas</b> proficiências (Geralmente armas simples, armaduras leves e uma perícia da nova lista, dependendo da classe).</p><h4 style='color:#e0aaff'>Espaços de Magia (Cálculo)</h4><p>Os seus espaços (slots) de magia de multiclasse são compartilhados. Para descobrir sua tabela de magia, calcule o seu <b>Nível de Conjurador</b> somando:</p><ul style='background:#111; padding:10px 10px 10px 30px; border-radius:6px; border:1px solid #333;'><li>Níveis de Bardo, Clérigo, Druida, Feiticeiro e Mago <b>(x1)</b></li><li>Níveis de Paladino e Patrulheiro/Ranger <b>(x 0,5 - Metade)</b></li><li>Níveis de Cavaleiro Arcano ou Trapaceiro Arcano <b>(x 0,33 - Um terço)</b></li></ul><p><i>Some os resultados, arredonde para baixo e olhe na tabela de conjurador padrão. <br><span class='ajuda-destaque-negativo'>Atenção: A magia do Bruxo (Magia de Pacto) corre paralela e não entra nessa soma!</span></i></p>",
-    "tags": ["Entenda a sua Ficha", "Multiclasse", "Magia", "Avançado"],
+    "conteudo": "<p>Ao ganhar um nível, você pode escolher pegar um nível em uma nova classe, desde que cumpra os <b>Requisitos Mínimos</b>. <i>(Ex: Para multiclasse de <b>Blood Hunter</b>, você precisa de Força 13 ou Destreza 13, E Inteligência 13).</i></p><h4 style='color:#e0aaff'>O que você ganha?</h4><p>Você recebe os Pontos de Vida (Dado de Vida) da nova classe. <i>Ex: Nv 1 Mago / Nv 1 Guerreiro tem 1d6 e 1d10 de vida.</i> Você também recebe apenas <b>algumas</b> proficiências (Geralmente armas simples, armaduras leves e uma perícia da nova lista, dependendo da classe).</p><h4 style='color:#e0aaff'>Espaços de Magia (Cálculo)</h4><p>Os seus espaços (slots) de magia de multiclasse são compartilhados. Para descobrir sua tabela de magia, calcule o seu <b>Nível de Conjurador</b> somando:</p><ul style='background:#111; padding:10px 10px 10px 30px; border-radius:6px; border:1px solid #333;'><li>Níveis de Bardo, Clérigo, Druida, Feiticeiro e Mago <b>(x1)</b></li><li>Níveis de Paladino e Patrulheiro/Ranger <b>(x 0,5 - Metade)</b></li><li>Níveis de Cavaleiro Arcano ou Trapaceiro Arcano <b>(x 0,33 - Um terço)</b></li></ul><p><i>Some os resultados, arredonde para baixo e olhe na tabela de conjurador padrão. <br><span class='ajuda-destaque-negativo'>Atenção: A magia de Pacto do Bruxo e da subclasse Alma Profana do Blood Hunter correm em paralelo e não entram nessa soma!</span></i></p>",
+    "tags": ["Entenda a sua Ficha", "Multiclasse", "Magia", "Avançado", "Blood Hunter"],
     "imagem": ""
   },
   {
@@ -45,6 +45,86 @@
     "resumo": "Entenda como sua atenção constante evita armadilhas e emboscadas inimigas.",
     "conteudo": "<p>A <b>Percepção Passiva</b> representa o que o seu personagem consegue notar sem precisar ativamente jogar os dados. É o seu \"radar\" constante.</p><h4 style='color:#e0aaff'>Como é calculada?</h4><p><code>10 + Modificador de Sabedoria (+ Bônus de Proficiência, se treinado em Percepção)</code></p><h4 style='color:#e0aaff'>Furtividade vs Passiva</h4><p>Quando monstros tentam emboscar você, o Mestre rola a <i>Furtividade</i> deles contra a sua Percepção Passiva.</p><ul><li>Se a Furtividade do monstro for <b>MAIOR</b> que sua Passiva: Você não nota ele.</li><li>Se a Furtividade do monstro for <b>MENOR ou IGUAL</b> à sua Passiva: Você percebe o inimigo.</li></ul><h4 style='color:#e0aaff'>O Turno de Surpresa</h4><p>Se um combate iniciar e você não tiver notado <b>nenhum</b> inimigo (sua Passiva foi derrotada por todos), você estará <span class='ajuda-destaque-negativo'>Surpreso</span>. Um personagem surpreso não pode se mover nem realizar ações no seu primeiro turno de combate, e não pode usar reações até o turno dele terminar.</p>",
     "tags": ["Entenda a sua Ficha", "Percepção", "Surpresa", "Combate"],
+    "imagem": ""
+  },
+  {
+    "id": "pontos_vida_descanso",
+    "titulo": "Pontos de Vida e Dados de Vida",
+    "resumo": "Aprenda como calcular sua vida inicial, o que rolar ao subir de nível e como se curar.",
+    "conteudo": "<div class='ajuda-grid-2col'><div><h4 style='color:#e0aaff'>Dados de Vida por Classe</h4><table class='ajuda-tabela'><tr><th>Dado</th><th>Classes</th></tr><tr><td><b>d12</b></td><td>Bárbaro</td></tr><tr><td><b>d10</b></td><td>Guardião, Guerreiro, Paladino, <b>Blood Hunter</b></td></tr><tr><td><b>d8</b></td><td>Bardo, Bruxo, Clérigo, Druida, Ladino, Monge</td></tr><tr><td><b>d6</b></td><td>Feiticeiro, Mago</td></tr></table></div><div><h4 style='color:#e0aaff'>Calculando seus PVs</h4><p><b>Nível 1:</b> Valor Máximo do Dado da Classe + Modificador de Constituição (CON).<br><b>Subindo de Nível:</b> Role o Dado de Vida (ou pegue a média) + Modificador de CON.</p><p><i>Nota: Se sua CON aumentar no futuro, você ganha +1 PV retroativo para cada nível que já possui! Em Multiclasse, você usa o dado da nova classe para aquele nível.</i></p></div></div><h4 style='color:#e0aaff'>Cura e PVs Temporários</h4><ul><li><b>Descanso Curto (Cura):</b> Gaste Dados de Vida (até o limite do seu nível). A cura é = Rolagem do Dado + Modificador de CON.</li><li><b>PV Temporário:</b> Eles não se acumulam (não somam). Se você já tem PV Temporário e ganha mais, deve escolher qual valor manter (geralmente o maior).</li></ul>",
+    "tags": ["Entenda a sua Ficha", "Combate", "Vida", "Cura", "Blood Hunter"],
+    "imagem": ""
+  },
+  {
+    "id": "pericia_medicina",
+    "titulo": "A Perícia: Medicina",
+    "resumo": "Como a medicina funciona para estabilizar aliados e diagnosticar problemas.",
+    "conteudo": "<p>A perícia Medicina vai além de apenas enfaixar ferimentos. Ela é vital para a sobrevivência do grupo.</p><ul><li><b>Estabilizar Criaturas:</b> Se um aliado está inconsciente fazendo salvaguardas contra a morte, um teste de Medicina bem-sucedido concede uma pequena vantagem na rolagem dele, podendo salvá-lo sem gastar recursos mágicos.</li><li><b>Diagnóstico e Roleplay:</b> Permite identificar a causa da morte de uma criatura, avaliar sintomas de doenças ou venenos, e examinar feridas para entender o tipo de arma ou monstro que causou o dano.</li><li><b>Talento Curandeiro:</b> Caso possua este talento, a perícia Medicina ganha uso direto de cura através de Kits de Curandeiro, tornando-se uma ferramenta de suporte poderosa.</li></ul>",
+    "tags": ["Entenda a sua Ficha", "Perícias", "Medicina", "Cura"],
+    "imagem": ""
+  },
+  {
+    "id": "acoes_turno_tempo",
+    "titulo": "Ações, Turnos e o Tempo",
+    "resumo": "Entenda as fases do seu turno no combate e como lutar com duas armas.",
+    "conteudo": "<p>Cada rodada de combate dura cerca de <b>6 segundos</b>, e os turnos acontecem simultaneamente na narrativa. Em seu turno, você tem as seguintes \"moedas\" para gastar:</p><div class='ajuda-grid-2col'><div><ul><li><span class='ajuda-destaque-neutro'>1x Ação Padrão:</span> Atacar, lançar magia, usar objeto, etc.</li><li><span class='ajuda-destaque-neutro'>1x Ação de Movimento:</span> Seu deslocamento.</li><li><span class='ajuda-destaque-neutro'>1x Ação Bônus:</span> Apenas se uma magia, classe ou habilidade disser que usa.</li><li><span class='ajuda-destaque-neutro'>1x Interação Livre:</span> Sacar uma arma, abrir uma porta.</li></ul></div><div><h4 style='color:#e0aaff'>Reação (1 por rodada)</h4><p>Uma ação rápida feita <b>fora do seu turno</b> em resposta a um gatilho. Só recarrega no início do seu próximo turno.</p></div></div><h4 style='color:#e0aaff'>Combate com Duas Armas</h4><p>Se estiver segurando duas armas com a propriedade <i>Leve</i>, ao usar sua Ação Padrão para atacar, você pode usar sua <b>Ação Bônus</b> para atacar com a segunda arma. No entanto, você não soma seu modificador de atributo no dano desse segundo ataque (a não ser que tenha o Estilo de Luta específico).</p>",
+    "tags": ["Entenda a sua Ficha", "Combate", "Ações", "Turno"],
+    "imagem": ""
+  },
+  {
+    "id": "movimento_deslocamento",
+    "titulo": "Deslocamento e Movimentação",
+    "resumo": "Como funciona o deslocamento das raças no mapa de quadrados.",
+    "conteudo": "<p>O deslocamento define o quão longe você pode andar usando sua Ação de Movimento.</p><table class='ajuda-tabela'><tr><th>Distância</th><th>Quadrados</th><th>Raças Comuns</th></tr><tr><td><b>7,5 metros</b></td><td>5 Quadrados</td><td>Anão, Gnomo, Pequenino</td></tr><tr><td><b>9,0 metros</b></td><td>6 Quadrados</td><td>Alto Elfo, Drow, Humano, Draconato, Meio-Elfo, Orc, Tiferino</td></tr><tr><td><b>10,5 metros</b></td><td>7 Quadrados</td><td>Elfo da Floresta</td></tr></table><p><span class='ajuda-destaque-neutro'>Regra do Grid:</span> No sistema, cada quadrado do mapa representa <b>1,5 metros</b>. Para saber exatamente quantos quadrados você anda, basta dividir seu deslocamento total por 1,5.</p>",
+    "tags": ["Entenda a sua Ficha", "Combate", "Movimento", "Raças"],
+    "imagem": ""
+  },
+  {
+    "id": "ataque_dano_armadura",
+    "titulo": "Acerto, Dano e Armadura (CA)",
+    "resumo": "Como saber se você acertou um golpe e como rolar seus dados de dano.",
+    "conteudo": "<div class='ajuda-grid-2col'><div><h4 style='color:#e0aaff'>Para Acertar (O d20)</h4><p>Role o d20 e some seus modificadores. O objetivo é <b>igualar ou superar</b> a CA do alvo. Em caso de empate, o ataque acerta.</p><ul><li><b>Armas Corpo a Corpo:</b> + Mod. de Força</li><li><b>Armas Finesse/Leves ou à Distância:</b> + Mod. de Destreza</li><li><b>Proficiência:</b> Se souber usar a arma, some seu Bônus de Proficiência.</li></ul></div><div><h4 style='color:#e0aaff'>Para Dar Dano</h4><p>Após acertar, role o dado da arma e some o <b>mesmo modificador</b> (Força ou Destreza) que usou no acerto. <i>(Não se soma Bônus de Proficiência no dano)</i>.</p></div></div><h4 style='color:#e0aaff'>Sua Classe de Armadura (CA)</h4><p>A CA base é <code>10 + Mod. de Destreza</code>. Se usar armadura, a fórmula muda:</p><ul><li><b>Armadura Leve:</b> CA da Armadura + Mod. de Destreza</li><li><b>Armadura Média:</b> CA da Armadura + Mod. de Destreza (Máximo de +2)</li><li><b>Armadura Pesada:</b> CA da Armadura (Ignora a Destreza)</li></ul><p><i>Nota: Escudos sempre adicionam +2 na sua CA final. Se o ataque errar a sua CA, você (ou o mestre) pode narrar como o golpe resvalou na armadura ou foi esquivado.</i></p>",
+    "tags": ["Entenda a sua Ficha", "Combate", "Ataque", "Dano", "CA"],
+    "imagem": ""
+  },
+  {
+    "id": "tipos_dano_resistencias",
+    "titulo": "Tipos de Dano, Fraquezas e Resistências",
+    "resumo": "A diferença entre dano ígneo, necrótico, e como calcular imunidades.",
+    "conteudo": "<p>Existem diversos tipos de dano: <b>Ácido, Contundente, Cortante, Elétrico, Energético, Gélido, Ígneo, Necrótico, Perfurante, Psíquico, Radiante, Trovejante e Venenoso.</b></p><h4 style='color:#e0aaff'>Resistências e Vulnerabilidades</h4><ul><li><span class='ajuda-destaque-positivo'>Resistência:</span> O dano sofrido é cortado pela <b>metade</b>.</li><li><span class='ajuda-destaque-negativo'>Vulnerabilidade:</span> O dano sofrido é <b>dobrado</b>. (Ex: Bater com um martelo contundente num esqueleto de ossos frágeis).</li><li><span class='ajuda-destaque-neutro'>Imunidade:</span> A criatura não sofre dano nenhum.</li></ul><h4 style='color:#e0aaff'>Matemática das Reduções</h4><p>Se você tem várias proteções, a ordem matemática importa. Primeiro você aplica reduções fixas, depois divide pela resistência. Além disso, as resistências <b>não acumulam</b>. Se você tem resistência a Fogo por ser Tiferino e bebe uma Poção de Resistência a Fogo, o dano continua caindo apenas pela metade (não vira um quarto de dano).</p>",
+    "tags": ["Entenda a sua Ficha", "Combate", "Dano", "Resistência"],
+    "imagem": ""
+  },
+  {
+    "id": "vantagem_desvantagem",
+    "titulo": "Vantagem e Desvantagem",
+    "resumo": "Como funciona rolar dois dados no sistema e a mecânica na plataforma.",
+    "conteudo": "<p>A Vantagem e a Desvantagem representam situações muito favoráveis ou desastrosas durante um teste.</p><div class='ajuda-grid-2col'><div><h4 class='ajuda-destaque-positivo'>Vantagem</h4><p>Role <b>dois d20</b> e escolha o <b>maior</b> resultado. Usado quando um inimigo está caído, cego, ou você está escondido.</p></div><div><h4 class='ajuda-destaque-negativo'>Desvantagem</h4><p>Role <b>dois d20</b> e escolha o <b>pior</b> resultado. Usado quando você está envenenado, no escuro absoluto, ou exausto.</p></div></div><h4 style='color:#e0aaff'>Como usar na Ficha Virtual?</h4><p>No nosso site, basta <b>clicar com o botão direito do mouse</b> (ou <b>segurar o dedo</b> no celular) em qualquer botão de rolagem na ficha. Isso abrirá um menu flutuante onde você pode escolher rolar com Vantagem (setas verdes) ou Desvantagem (setas vermelhas).</p>",
+    "tags": ["Entenda a sua Ficha", "Combate", "Rolagens", "Sistema"],
+    "imagem": ""
+  },
+  {
+    "id": "salvaguardas",
+    "titulo": "Salvaguardas (Testes de Resistência)",
+    "resumo": "Como seu personagem se defende contra magias, venenos e perigos.",
+    "conteudo": "<p>Uma Salvaguarda é a sua defesa automática. Você rola um d20 e soma o seu modificador do Atributo exigido (e a sua Proficiência, se a sua Classe tiver). O atributo usado depende da ameaça:</p><ul><li><b>Força:</b> Evitar ser empurrado, agarrado ou derrubado fisicamente.</li><li><b>Destreza:</b> Desviar agilmente de explosões, bolas de fogo ou armadilhas que caem.</li><li><b>Constituição:</b> Suportar venenos, doenças e nuvens tóxicas com o próprio corpo.</li><li><b>Inteligência:</b> Perceber ilusões complexas e resistir a ataques mentais de devoradores de mentes.</li><li><b>Sabedoria:</b> Ter força de vontade para ignorar controle mental, encantos e magias de medo.</li><li><b>Carisma:</b> Força de alma para evitar possessões, banimentos para outras dimensões e dreno de essência.</li></ul><p>A descrição do golpe inimigo sempre dirá algo como: <i>\"O alvo deve fazer uma Salvaguarda de Destreza, se falhar, sofre X de dano.\"</i></p>",
+    "tags": ["Entenda a sua Ficha", "Combate", "Salvaguarda", "Defesa"],
+    "imagem": ""
+  },
+  {
+    "id": "cobertura_defesa",
+    "titulo": "Sistema de Cobertura",
+    "resumo": "Use o cenário ao seu favor para ganhar bônus de CA gratuitos.",
+    "conteudo": "<p>Se esconder atrás de muros, árvores ou aliados dificulta os ataques inimigos.</p><table class='ajuda-tabela'><tr><th>Tipo de Cobertura</th><th>Bônus Recebido</th><th>Exemplo</th></tr><tr><td><b>Meia Cobertura</b></td><td>+2 na CA e Salvaguarda de DES</td><td>Muretas, arbustos ou um aliado na frente da linha de tiro.</td></tr><tr><td><b>Três Quartos (3/4)</b></td><td>+5 na CA e Salvaguarda de DES</td><td>Atirar por uma fresta, tronco grosso ou janela.</td></tr><tr><td><b>Cobertura Total</b></td><td>Inalvejável</td><td>Atrás de uma porta fechada ou parede inteira.</td></tr></table><p><i>Nota: A Cobertura Total impede ataques diretos, mas não protege de magias em área (como uma Bola de Fogo explodindo no recinto), a menos que a parede bloqueie completamente a onda de impacto.</i></p>",
+    "tags": ["Entenda a sua Ficha", "Combate", "Defesa", "Posicionamento"],
+    "imagem": ""
+  },
+  {
+    "id": "reacoes_oportunidade",
+    "titulo": "Ataques de Oportunidade e Preparar Ação",
+    "resumo": "Como reagir fora do seu turno para atacar quem foge ou criar emboscadas.",
+    "conteudo": "<div class='ajuda-grid-2col'><div><h4 style='color:#e0aaff'>Ataque de Oportunidade</h4><p>Acontece quando um inimigo tenta <b>sair do seu alcance corpo a corpo andando</b>. Você gasta sua Reação para dar um golpe (geralmente físico) nas costas dele.</p><ul><li>Rodar em volta do inimigo dentro do alcance não provoca o ataque.</li><li>Ser empurrado à força também não provoca.</li><li>A ação <b>Desengajar</b> permite fugir em segurança.</li><li>Teleportes (Passo Nebuloso) ignoram essa regra.</li></ul></div><div><h4 style='color:#e0aaff'>Preparar Ação</h4><p>Se você não tem alvo agora, pode usar sua Ação Padrão para armar um gatilho para o futuro.</p><ul><li><b>O Gatilho:</b> \"Se a porta abrir...\"</li><li><b>A Ação:</b> \"...eu atiro minha flecha.\"</li></ul><p>Quando o gatilho ocorre, você gasta sua Reação para agir. Se o seu próximo turno chegar e a porta não abriu, a sua ação preparada é perdida.</p></div></div>",
+    "tags": ["Entenda a sua Ficha", "Combate", "Reação", "Tática"],
     "imagem": ""
   }
 ]
