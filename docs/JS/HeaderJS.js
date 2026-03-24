@@ -2943,10 +2943,9 @@ document.addEventListener('click', function(event) {
 ============================================================= */
 
 // 1. MODAL DE AJUDA
-function abrirAjudaSistema() {
+async function abrirAjudaSistema() {
     document.getElementById('popup-config-foto').style.display = 'none';
 
-    // Remove se já existir
     const existing = document.querySelector('.ajuda-modal-overlay');
     if (existing) existing.remove();
 
@@ -2954,26 +2953,20 @@ function abrirAjudaSistema() {
     overlay.className = 'spell-modal-overlay ajuda-modal-overlay';
     overlay.style.zIndex = '60000';
 
+    // Monta o layout inicial do modal com a barra de pesquisa e a área do grid
     overlay.innerHTML = `
-        <div class="spell-modal" style="width: 800px; height: 80vh; display:flex; flex-direction:column;">
+        <div class="spell-modal" style="width: 850px; height: 80vh; display:flex; flex-direction:column;">
             <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <h3>❓ Ajuda sobre o Sistema</h3>
                 <button class="modal-close">✖</button>
             </div>
             <div class="modal-body" style="padding: 20px; overflow-y: auto; flex:1;">
                 <div style="margin-bottom: 20px;">
-                    <input type="text" id="pesquisa-ajuda" placeholder="🔍 Pesquisar na ajuda..." 
+                    <input type="text" id="pesquisa-ajuda" placeholder="🔍 Pesquisar por título, resumo ou tag..." 
                            style="width: 100%; padding: 12px; background: #111; color: #fff; border: 1px solid #444; border-radius: 6px; font-size: 16px;">
                 </div>
-                <div class="grid-ajuda">
-                    <div class="card-ajuda">
-                        <h4>Como rolar dados?</h4>
-                        <p>Clique nos números sublinhados na ficha para realizar rolagens automáticas...</p>
-                    </div>
-                    <div class="card-ajuda">
-                        <h4>Edição de Imagem</h4>
-                        <p>Clique na foto do personagem para abrir o menu de recorte e upload...</p>
-                    </div>
+                <div class="grid-ajuda" id="grid-ajuda-content">
+                    <div style="color: #666; text-align: center; width: 100%;">Carregando tópicos de ajuda...</div>
                 </div>
             </div>
         </div>
@@ -2982,10 +2975,107 @@ function abrirAjudaSistema() {
     document.body.appendChild(overlay);
     if (typeof checkScrollLock === 'function') checkScrollLock();
 
-    // Evento para fechar e destruir o modal
     overlay.querySelector('.modal-close').onclick = () => {
         overlay.remove();
         if (typeof checkScrollLock === 'function') checkScrollLock();
+    };
+
+    // Busca os dados do seu JSON
+    try {
+        const res = await fetch(`${BASE_API_URL}/catalog/ajuda`);
+        let ajudaData = [];
+        
+        if (res.ok) {
+            ajudaData = await res.json();
+        } else {
+            // Tenta caminho local de fallback
+            const resLocal = await fetch('backend/data/ajuda_db.json');
+            if(resLocal.ok) ajudaData = await resLocal.json();
+        }
+
+        renderAjudaGrid(ajudaData, overlay, ajudaData); // Passa os dados totais pro render para o filtro funcionar
+
+        // Configura o campo de pesquisa
+        const inputPesquisa = overlay.querySelector('#pesquisa-ajuda');
+        inputPesquisa.addEventListener('input', (e) => {
+            const termo = e.target.value.toLowerCase();
+            const filtrado = ajudaData.filter(item => 
+                item.titulo.toLowerCase().includes(termo) || 
+                item.resumo.toLowerCase().includes(termo) || 
+                (item.tags && item.tags.some(tag => tag.toLowerCase().includes(termo)))
+            );
+            renderAjudaGrid(filtrado, overlay, ajudaData);
+        });
+
+    } catch (e) {
+        console.error("Erro ao carregar ajuda:", e);
+        overlay.querySelector('#grid-ajuda-content').innerHTML = '<div style="color: #f44336; text-align: center; width: 100%;">Erro ao carregar o sistema de ajuda.</div>';
+    }
+}
+
+// Função para renderizar os blocos
+function renderAjudaGrid(dadosFiltrados, overlay, dadosTotais) {
+    const container = overlay.querySelector('#grid-ajuda-content');
+    
+    if (!dadosFiltrados || dadosFiltrados.length === 0) {
+        container.innerHTML = '<div style="color: #666; text-align: center; width: 100%;">Nenhum tópico encontrado com essa pesquisa.</div>';
+        return;
+    }
+
+    container.innerHTML = dadosFiltrados.map((item) => {
+        const tagsHtml = item.tags ? item.tags.map(tag => `<span class="ajuda-tag">${tag}</span>`).join('') : '';
+        // Usamos o ID do item para garantir que a pesquisa não quebre a referência
+        return `
+            <div class="card-ajuda-bloco" data-id="${item.id}">
+                <h4>${item.titulo}</h4>
+                <p>${item.resumo}</p>
+                <div class="ajuda-tags-container">${tagsHtml}</div>
+            </div>
+        `;
+    }).join('');
+
+    // Adiciona o evento de clique para abrir a tela expandida
+    container.querySelectorAll('.card-ajuda-bloco').forEach(bloco => {
+        bloco.addEventListener('click', () => {
+            const id = bloco.getAttribute('data-id');
+            const itemSelecionado = dadosTotais.find(d => d.id === id);
+            if (itemSelecionado) abrirModalAjudaExpandida(itemSelecionado);
+        });
+    });
+}
+
+// Função para abrir a tela maior de conteúdo
+function abrirModalAjudaExpandida(item) {
+    const detalheOverlay = document.createElement('div');
+    detalheOverlay.className = 'spell-modal-overlay ajuda-detalhe-overlay';
+    detalheOverlay.style.zIndex = '65000'; // Maior que o modal pai
+
+    const tagsHtml = item.tags ? item.tags.map(tag => `<span class="ajuda-tag">${tag}</span>`).join('') : '';
+    const imagemHtml = item.imagem && item.imagem !== "" 
+        ? `<div style="text-align: center; margin: 20px 0;"><img src="${item.imagem}" style="max-width: 100%; max-height: 400px; border-radius: 8px; border: 1px solid #444;" alt="Imagem de ajuda"></div>` 
+        : '';
+
+    detalheOverlay.innerHTML = `
+        <div class="spell-modal" style="width: 700px; max-height: 90vh; display:flex; flex-direction:column; background: #151515;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #9c27b0;">
+                <h3 style="color: #fff; margin: 0;">${item.titulo}</h3>
+                <button class="modal-close-detalhe" style="background: none; border: none; color: #fff; font-size: 20px; cursor: pointer;">✖</button>
+            </div>
+            <div class="modal-body" style="padding: 25px; overflow-y: auto;">
+                <div class="ajuda-tags-container" style="margin-bottom: 20px;">${tagsHtml}</div>
+                ${imagemHtml}
+                <div style="color: #ccc; line-height: 1.6; font-size: 15px;">
+                    ${item.conteudo.replace(/\n/g, '<br>')}
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(detalheOverlay);
+
+    // Fecha apenas o modal de detalhe, mantendo a pesquisa de ajuda aberta atrás
+    detalheOverlay.querySelector('.modal-close-detalhe').onclick = () => {
+        detalheOverlay.remove();
     };
 }
 
