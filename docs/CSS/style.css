@@ -799,3 +799,56 @@ body.modal-open-lock {
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
+
+
+
+/* =============================================================
+   ESTILOS INTERNOS DO CONTEÚDO DE AJUDA
+============================================================= */
+.ajuda-tabela {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    font-size: 13px;
+    background: #1a1a1a;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.ajuda-tabela th {
+    background: #4a148c; /* Roxo escuro */
+    color: #fff;
+    padding: 10px;
+    text-align: left;
+    font-weight: bold;
+    border-bottom: 2px solid #9c27b0;
+}
+
+.ajuda-tabela td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #333;
+    color: #ccc;
+}
+
+.ajuda-tabela tr:last-child td {
+    border-bottom: none;
+}
+
+.ajuda-tabela tr:hover td {
+    background: #222;
+}
+
+.ajuda-destaque-positivo { color: #4caf50; font-weight: bold; }
+.ajuda-destaque-negativo { color: #f44336; font-weight: bold; }
+.ajuda-destaque-neutro { color: #e0aaff; font-weight: bold; }
+
+.ajuda-grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+@media (max-width: 768px) {
+    .ajuda-grid-2col { grid-template-columns: 1fr; }
+    .ajuda-tabela { font-size: 11px; }
+}

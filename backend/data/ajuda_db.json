@@ -1,18 +1,50 @@
 [
   {
-    "id": "dados",
-    "titulo": "Como rolar dados?",
-    "resumo": "Aprenda como funcionam as rolagens de ataque, dano e os menus de vantagem.",
-    "conteudo": "Para rolar dados, basta clicar nos números sublinhados na sua ficha. \n\nSe você tiver vantagem ou desvantagem, um menu aparecerá no meio da tela para você confirmar a rolagem final. Os resultados aparecem automaticamente no botão de Histórico (🎲).",
-    "tags": ["Básico", "Rolagens", "Mecânica"],
-    "imagem": "img/Ajuda sobre o Sistema/rolagem.png"
+    "id": "criacao_personagem",
+    "titulo": "Passo a Passo: Criação de Personagem",
+    "resumo": "Aprenda o básico para iniciar a construção do seu herói, desde status até personalidade.",
+    "conteudo": "<p>A criação do seu personagem segue uma ordem lógica para facilitar a montagem da sua ficha:</p><h4 style='color:#e0aaff'>1. Defina seus Atributos Base</h4><p>Você pode definir os 6 atributos principais de duas formas:</p><ul><li><b>Padrão Fixo:</b> Distribua os valores <span class='ajuda-destaque-neutro'>15, 14, 13, 12, 10 e 8</span> entre Força, Destreza, Constituição, Inteligência, Sabedoria e Carisma.</li><li><b>Rolagem Clássica:</b> Role <b>4d6</b> e descarte o menor valor. Repita isso 6 vezes e distribua os totais.</li></ul><h4 style='color:#e0aaff'>2. Raça, Classe, Antecedente e Alinhamento</h4><p>Essas escolhas definem suas proficiências iniciais, magias, resistência e a moralidade do seu personagem.</p><h4 style='color:#e0aaff'>3. Personalidade (Roleplay)</h4><p>Preencha os campos narrativos para dar vida ao seu herói. Use os exemplos dos livros ou crie os seus:</p><ul><li><b>Traços de Personalidade:</b> Como você age no dia a dia?</li><li><b>Ideais:</b> No que você acredita?</li><li><b>Vínculos:</b> Quem ou o que é mais importante para você?</li><li><b>Fraquezas:</b> Qual é o seu maior defeito ou vício oculto?</li></ul>",
+    "tags": ["Entenda a sua Ficha", "Criação", "Básico"],
+    "imagem": ""
   },
   {
-    "id": "foto_personagem",
-    "titulo": "Como editar a foto do Personagem?",
-    "resumo": "Saiba como fazer upload ou colar uma nova imagem de perfil.",
-    "conteudo": "Clique na foto atual do seu personagem no topo da tela. Isso abrirá um menu onde você pode procurar um arquivo no seu computador ou simplesmente dar um Ctrl+V (Colar) direto na tela para enviar uma imagem rapidamente.",
-    "tags": ["Perfil", "Visual"],
-    "imagem": "" 
+    "id": "atributos_modificadores",
+    "titulo": "Os 6 Atributos e seus Modificadores",
+    "resumo": "Entenda o que cada atributo (Força, Destreza, etc.) faz na prática e como calcular seu bônus.",
+    "conteudo": "<div class='ajuda-grid-2col'><div><h4 style='color:#e0aaff'>O que cada atributo faz?</h4><ul style='padding-left:15px;'><li><b>💪 Força:</b> Ataques corpo a corpo, testes de Atletismo (saltar, empurrar, quebrar).</li><li><b>🏹 Destreza:</b> Ataques à distância/finesse, Furtividade, Acrobacia e sua Classe de Armadura (CA).</li><li><b>🛡️ Constituição:</b> Seus Pontos de Vida (PV), resistência física, venenos e foco em magias.</li><li><b>🧠 Inteligência:</b> Conhecimentos (Arcanismo, História), Investigação e magias de Mago.</li><li><b>🦉 Sabedoria:</b> Percepção, Intuição, resistir a ilusões e magias de Clérigo/Druida.</li><li><b>🗣️ Carisma:</b> Persuasão, Intimidação, Enganação e magias de Bardo/Bruxo/Feiticeiro/Paladino.</li></ul></div><div><h4 style='color:#e0aaff'>Tabela de Modificadores</h4><p>O número puro do atributo não é o que você soma nos dados, mas sim o seu <b>Modificador</b>:</p><table class='ajuda-tabela'><tr><th>Valor do Atributo</th><th>Modificador</th></tr><tr><td>1</td><td>-5</td></tr><tr><td>2 a 3</td><td>-4</td></tr><tr><td>4 a 5</td><td>-3</td></tr><tr><td>6 a 7</td><td>-2</td></tr><tr><td>8 a 9</td><td>-1</td></tr><tr><td>10 a 11</td><td>0</td></tr><tr><td>12 a 13</td><td>+1</td></tr><tr><td>14 a 15</td><td>+2</td></tr><tr><td>16 a 17</td><td>+3</td></tr><tr><td>18 a 19</td><td>+4</td></tr><tr><td>20 a 21</td><td>+5</td></tr></table></div></div>",
+    "tags": ["Entenda a sua Ficha", "Atributos", "Regras"],
+    "imagem": ""
+  },
+  {
+    "id": "proficiencia_dificuldade",
+    "titulo": "Proficiência e Dificuldade (CD)",
+    "resumo": "Saiba o seu bônus de proficiência por nível e a dificuldade de testes gerais.",
+    "conteudo": "<div class='ajuda-grid-2col'><div><h4 style='color:#e0aaff'>Bônus de Proficiência</h4><p>Soma-se a ataques, perícias e ferramentas em que você é treinado.</p><table class='ajuda-tabela'><tr><th>Nível do Personagem</th><th>Bônus</th></tr><tr><td>1º ao 4º</td><td>+2</td></tr><tr><td>5º ao 8º</td><td>+3</td></tr><tr><td>9º ao 12º</td><td>+4</td></tr><tr><td>13º ao 16º</td><td>+5</td></tr><tr><td>17º ao 20º</td><td>+6</td></tr></table></div><div><h4 style='color:#e0aaff'>Classe de Dificuldade (CD)</h4><p>O número alvo que você precisa alcançar ou superar no d20 para ter sucesso numa ação.</p><table class='ajuda-tabela'><tr><th>Dificuldade</th><th>Alvo (CD)</th></tr><tr><td>Trivial</td><td>5</td></tr><tr><td>Fácil</td><td>10</td></tr><tr><td>Moderado</td><td>15</td></tr><tr><td>Difícil</td><td>20</td></tr><tr><td>Muito Difícil</td><td>25</td></tr><tr><td>Impossível</td><td>30</td></tr></table></div></div>",
+    "tags": ["Entenda a sua Ficha", "Proficiência", "Testes", "CD"],
+    "imagem": ""
+  },
+  {
+    "id": "sistema_estresse",
+    "titulo": "Sistema de Estresse e Sanidade",
+    "resumo": "Aventure-se além do limite. O acúmulo de estresse causa testes que podem trazer crises ou superação.",
+    "conteudo": "<p>Conforme você enfrenta horrores e perigos, sua mente sofre. A barra de Estresse mede sua sanidade atual.</p><h4 style='color:#e0aaff'>Regra de Disparo</h4><ul><li>Ao atingir <b>25%, 50% ou 75%</b> de Estresse: O mestre joga uma moeda (ou rola ímpar/par). Se perder, recebe um <span class='ajuda-destaque-negativo'>Efeito Negativo</span>. Se ganhar, recebe um <span class='ajuda-destaque-positivo'>Efeito Positivo</span>.</li><li>Ao atingir <b>100%</b> de Estresse: O personagem quebra. Há <b>90% de chance</b> de um Efeito Negativo grave e apenas <b>10% de chance</b> de uma resposta heróica (Positivo).</li></ul><div class='ajuda-grid-2col'><div><h4 class='ajuda-destaque-negativo'>Exemplos de Efeitos Negativos</h4><p>Os efeitos prejudicam você mecanicamente e narrativamente:</p><ul><li><b>Ansiedade/Tremor:</b> Desvantagem em ataques, magias ou testes sociais.</li><li><b>Fobia/Paranoia:</b> Recusa-se a chegar perto de certos inimigos ou recusa ações de \"Ajudar\" de aliados.</li><li><b>Reflexos Lentos:</b> Perda de bônus de Iniciativa ou incapacidade de usar Reações.</li><li><b>Perda de Foco:</b> Desvantagem severa para manter concentração.</li></ul></div><div><h4 class='ajuda-destaque-positivo'>Exemplos de Efeitos Positivos (Superação)</h4><p>O personagem encontra forças no desespero:</p><ul><li><b>Calma Interior:</b> Reduz instantaneamente o nível de estresse atual.</li><li><b>Adrenalina:</b> Recebe Vantagem em testes ou ataques específicos.</li><li><b>Instinto de Sobrevivência:</b> Aumenta temporariamente a Classe de Armadura (CA) ou Iniciativa.</li><li><b>Autocontrole:</b> Torna-se imune à condição <i>Amedrontado</i> temporariamente.</li></ul></div></div>",
+    "tags": ["Entenda a sua Ficha", "Estresse", "Sanidade", "Regras Customizadas"],
+    "imagem": ""
+  },
+  {
+    "id": "regras_multiclasse",
+    "titulo": "Regras de Multiclasse",
+    "resumo": "Requisitos, proficiências ganhas e o cálculo correto dos seus espaços de magia.",
+    "conteudo": "<p>Ao ganhar um nível, você pode escolher pegar um nível em uma nova classe, desde que cumpra os <b>Requisitos Mínimos (Ter 13 no atributo principal da nova classe)</b>.</p><h4 style='color:#e0aaff'>O que você ganha?</h4><p>Você recebe os Pontos de Vida (Dado de Vida) da nova classe. <i>Ex: Nv 1 Mago / Nv 1 Guerreiro tem 1d6 e 1d10 de vida.</i> Você também recebe apenas <b>algumas</b> proficiências (Geralmente armas simples, armaduras leves e uma perícia da nova lista, dependendo da classe).</p><h4 style='color:#e0aaff'>Espaços de Magia (Cálculo)</h4><p>Os seus espaços (slots) de magia de multiclasse são compartilhados. Para descobrir sua tabela de magia, calcule o seu <b>Nível de Conjurador</b> somando:</p><ul style='background:#111; padding:10px 10px 10px 30px; border-radius:6px; border:1px solid #333;'><li>Níveis de Bardo, Clérigo, Druida, Feiticeiro e Mago <b>(x1)</b></li><li>Níveis de Paladino e Patrulheiro/Ranger <b>(x 0,5 - Metade)</b></li><li>Níveis de Cavaleiro Arcano ou Trapaceiro Arcano <b>(x 0,33 - Um terço)</b></li></ul><p><i>Some os resultados, arredonde para baixo e olhe na tabela de conjurador padrão. <br><span class='ajuda-destaque-negativo'>Atenção: A magia do Bruxo (Magia de Pacto) corre paralela e não entra nessa soma!</span></i></p>",
+    "tags": ["Entenda a sua Ficha", "Multiclasse", "Magia", "Avançado"],
+    "imagem": ""
+  },
+  {
+    "id": "percepcao_passiva",
+    "titulo": "Percepção Passiva e Surpresa",
+    "resumo": "Entenda como sua atenção constante evita armadilhas e emboscadas inimigas.",
+    "conteudo": "<p>A <b>Percepção Passiva</b> representa o que o seu personagem consegue notar sem precisar ativamente jogar os dados. É o seu \"radar\" constante.</p><h4 style='color:#e0aaff'>Como é calculada?</h4><p><code>10 + Modificador de Sabedoria (+ Bônus de Proficiência, se treinado em Percepção)</code></p><h4 style='color:#e0aaff'>Furtividade vs Passiva</h4><p>Quando monstros tentam emboscar você, o Mestre rola a <i>Furtividade</i> deles contra a sua Percepção Passiva.</p><ul><li>Se a Furtividade do monstro for <b>MAIOR</b> que sua Passiva: Você não nota ele.</li><li>Se a Furtividade do monstro for <b>MENOR ou IGUAL</b> à sua Passiva: Você percebe o inimigo.</li></ul><h4 style='color:#e0aaff'>O Turno de Surpresa</h4><p>Se um combate iniciar e você não tiver notado <b>nenhum</b> inimigo (sua Passiva foi derrotada por todos), você estará <span class='ajuda-destaque-negativo'>Surpreso</span>. Um personagem surpreso não pode se mover nem realizar ações no seu primeiro turno de combate, e não pode usar reações até o turno dele terminar.</p>",
+    "tags": ["Entenda a sua Ficha", "Percepção", "Surpresa", "Combate"],
+    "imagem": ""
   }
 ]
