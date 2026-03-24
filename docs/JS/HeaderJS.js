@@ -2996,14 +2996,35 @@ async function abrirAjudaSistema() {
         renderAjudaGrid(ajudaData, overlay, ajudaData); // Passa os dados totais pro render para o filtro funcionar
 
         // Configura o campo de pesquisa
+        // Configura o campo de pesquisa Múltipla (separada por vírgulas)
         const inputPesquisa = overlay.querySelector('#pesquisa-ajuda');
         inputPesquisa.addEventListener('input', (e) => {
-            const termo = e.target.value.toLowerCase();
-            const filtrado = ajudaData.filter(item => 
-                item.titulo.toLowerCase().includes(termo) || 
-                item.resumo.toLowerCase().includes(termo) || 
-                (item.tags && item.tags.some(tag => tag.toLowerCase().includes(termo)))
-            );
+            const textoBusca = e.target.value.toLowerCase();
+
+            // Quebra o texto digitado nas vírgulas, remove espaços em branco soltos e ignora itens vazios
+            const termos = textoBusca.split(',')
+                                     .map(t => t.trim())
+                                     .filter(t => t !== "");
+
+            // Se o campo estiver vazio, renderiza tudo novamente
+            if (termos.length === 0) {
+                renderAjudaGrid(ajudaData, overlay, ajudaData);
+                return;
+            }
+
+            const filtrado = ajudaData.filter(item => {
+                // A função 'every' exige que TODOS os termos digitados retornem verdadeiro
+                return termos.every(termo => {
+                    const noTitulo = item.titulo.toLowerCase().includes(termo);
+                    const noResumo = item.resumo.toLowerCase().includes(termo);
+                    const noConteudo = item.conteudo.toLowerCase().includes(termo); // Adicionado para pesquisar no texto interno também
+                    const nasTags = item.tags && item.tags.some(tag => tag.toLowerCase().includes(termo));
+                    
+                    // Se o termo atual estiver em pelo menos um desses lugares, ele passa no teste
+                    return noTitulo || noResumo || noConteudo || nasTags;
+                });
+            });
+            
             renderAjudaGrid(filtrado, overlay, ajudaData);
         });
 
