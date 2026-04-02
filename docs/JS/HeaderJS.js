@@ -3225,9 +3225,20 @@ if (typeof io !== 'undefined' && !window.socket) {
 
 if (window.socket) {
     window.socket.on('sync_tracker_update', (novaLista) => {
-        // console.log("Tracker Sync Recebido:", novaLista);
         trackerListGlobal = novaLista;
         
+        // NOVA LÓGICA: Limpar a iniciativa local se o personagem foi removido do tracker
+        if (typeof state !== 'undefined' && state.iniciativaAtual !== undefined && state.iniciativaAtual !== null) {
+            const meuNome = (state.personagem || state.nome || "Personagem").toLowerCase();
+            const aindaNaLista = trackerListGlobal.some(x => x.name.toLowerCase() === meuNome);
+            
+            // Se a lista global não tem mais meu nome, limpa do meu banco de dados
+            if (!aindaNaLista) {
+                state.iniciativaAtual = null;
+                if (typeof saveStateToServer === 'function') saveStateToServer();
+            }
+        }
+
         // Se o popup estiver visível no HTML, atualiza o conteúdo
         const el = document.getElementById('tracker-overlay');
         if (el && el.style.display !== 'none') {
@@ -3397,7 +3408,7 @@ function tornarPopupArrastavel(elmnt, handle) {
 }
 
 // 7. CHAMADA EXTERNA (Botão de Rolar da Ficha)
-window.adicionarAoTrackerExterno = function(valor) {
+window.adicionarAoTrackerExterno = function(valor, silencioso = false) {
     const nome = state.personagem || state.nome || "Personagem";
     const foto = (state.fotoPerfil && state.fotoPerfil.length > 50) ? state.fotoPerfil : "img/imagem-no-site/personagem.png";
 
@@ -3412,10 +3423,12 @@ window.adicionarAoTrackerExterno = function(valor) {
         window.socket.emit('add_to_tracker', newItem);
     }
     
-    // Abre o popup se estiver fechado
-    const el = document.getElementById('tracker-overlay');
-    if (el && el.style.display !== 'flex') {
-        toggleTracker(); 
+    // Abre o popup se estiver fechado, APENAS se não for uma recuperação silenciosa
+    if (!silencioso) {
+        const el = document.getElementById('tracker-overlay');
+        if (el && el.style.display !== 'flex') {
+            toggleTracker(); 
+        }
     }
 };
 
@@ -3444,8 +3457,8 @@ window.addEventListener('sheet-updated', () => {
         const jaExiste = trackerListGlobal.find(x => x.name.toLowerCase() === nome);
         
         if (!jaExiste) {
-             // Apenas envia, não abre o popup sozinho
-             window.adicionarAoTrackerExterno(state.iniciativaAtual);
+             // Passa 'true' no final para carregar de forma silenciosa e não abrir a tela
+             window.adicionarAoTrackerExterno(state.iniciativaAtual, true);
         }
     }
 });
