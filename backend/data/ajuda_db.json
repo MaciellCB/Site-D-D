@@ -95,14 +95,14 @@
     "tags": ["Entenda a sua Ficha", "Combate", "Dano", "Resistência"],
     "imagem": ""
   },
-  {
-    "id": "vantagem_desvantagem",
-    "titulo": "Vantagem e Desvantagem",
-    "resumo": "Como funciona rolar dois dados no sistema e a mecânica na plataforma.",
-    "conteudo": "<p>A Vantagem e a Desvantagem representam situações muito favoráveis ou desastrosas durante um teste.</p><div class='ajuda-grid-2col'><div><h4 class='ajuda-destaque-positivo'>Vantagem</h4><p>Role <b>dois d20</b> e escolha o <b>maior</b> resultado. Usado quando um inimigo está caído, cego, ou você está escondido.</p></div><div><h4 class='ajuda-destaque-negativo'>Desvantagem</h4><p>Role <b>dois d20</b> e escolha o <b>pior</b> resultado. Usado quando você está envenenado, no escuro absoluto, ou exausto.</p></div></div><h4 style='color:#e0aaff'>Como usar na Ficha Virtual?</h4><p>No nosso site, basta <b>clicar com o botão direito do mouse</b> (ou <b>segurar o dedo</b> no celular) em qualquer botão de rolagem na ficha. Isso abrirá um menu flutuante onde você pode escolher rolar com Vantagem (setas verdes) ou Desvantagem (setas vermelhas).</p>",
-    "tags": ["Entenda a sua Ficha", "Combate", "Rolagens", "Sistema"],
-    "imagem": ""
-  },
+ {
+  "id": "vantagem_desvantagem",
+  "titulo": "Vantagem e Desvantagem",
+  "resumo": "Como funciona o limite de 2d20, a regra de cancelamento e as exceções da Inspiração.",
+  "conteudo": "<p>A Vantagem e a Desvantagem representam situações favoráveis ou desastrosas. O limite do sistema é estrito: você rola no máximo <b>2d20</b>, e elas nunca se acumulam.</p><div class='ajuda-grid-2col'><div><h4 class='ajuda-destaque-positivo'>Vantagem</h4><p>Role <b>dois d20</b> e escolha o <b>maior</b> resultado. Usado em situações como atacar um alvo caído ou escondido.</p></div><div><h4 class='ajuda-destaque-negativo'>Desvantagem</h4><p>Role <b>dois d20</b> e escolha o <b>pior</b> resultado. Usado quando se está cego, envenenado ou no escuro absoluto.</p></div></div><h4 style='color:#e0aaff'>A Regra de Cancelamento</h4><p>Se você possuir qualquer fonte de vantagem e desvantagem ao mesmo tempo, não importa a quantidade, elas se anulam completamente. Você fará uma rolagem normal (apenas 1d20).</p><h4 style='color:#e0aaff'>Quebrando o Limite</h4><p>Apenas casos muito específicos permitem rolar um terceiro dado por cima desse limite:</p><ul><li><b>Talentos Específicos:</b> Habilidades raras como <i>Precisão Élfica</i> e <i>Sortudo</i> possuem regras próprias para adicionar dados extras.</li><li><b>Ponto de Inspiração:</b> Gastar Inspiração adiciona um d20 extra decisivo por cima de qualquer situação. Você pode carregar no máximo <b>1 Ponto de Inspiração</b>. Se for recompensado com outro enquanto estiver no limite, esse ponto deve ser doado imediatamente a um aliado.</li></ul><h4 style='color:#e0aaff'>Como usar na Ficha Virtual?</h4><p>No nosso site, basta <b>clicar com o botão direito do mouse</b> (ou <b>segurar o dedo</b> no celular) em qualquer botão de rolagem na ficha. Isso abrirá um menu flutuante onde você pode selecionar Vantagem (setas verdes) ou Desvantagem (setas vermelhas).</p>",
+  "tags": ["Entenda a sua Ficha", "Combate", "Rolagens", "Sistema", "Inspiração"],
+  "imagem": ""
+},
   {
     "id": "salvaguardas",
     "titulo": "Salvaguardas (Testes de Resistência)",
