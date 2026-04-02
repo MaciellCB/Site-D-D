@@ -508,6 +508,9 @@
       </div>
   </div>
 
+
+
+  
         <script>
             const API_URL = 'https://dandd-chan.onrender.com/api';
             // const API_URL = 'http://localhost:3000/api'; // Teste Local
@@ -559,6 +562,94 @@
                 }
             }
         });
+
+
+// Função para abrir o popup de imagem no Painel do Mestre
+function abrirPopupImagem(callbackImagemDefinida) {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.style.zIndex = '100000';
+    overlay.style.display = 'flex';
+
+    overlay.innerHTML = `
+        <div class="modal-box" style="width: 400px; height: auto; text-align: center;">
+            <h3 class="modal-titulo">Alterar Imagem</h3>
+            <div class="modal-body">
+                <p style="color:#bbb; font-size:13px; margin-bottom:15px;">
+                    Você pode <strong>Colar (Ctrl+V)</strong> uma imagem agora ou clicar abaixo para buscar.
+                </p>
+                <div id="paste-area" style="width: 100%; height: 150px; border: 2px dashed #444; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: #0a0a0a; color: #666; font-weight: bold; position: relative; overflow: hidden; margin-bottom: 15px; transition: 0.2s;">
+                    <span id="paste-text">Cole (Ctrl+V) aqui...</span>
+                    <img id="paste-preview" style="position:absolute; width:100%; height:100%; object-fit:contain; display:none;">
+                </div>
+                <div class="modal-buttons" style="display:flex; gap: 10px;">
+                    <button id="btn-upload-file" class="btn-modal btn-cancelar" style="flex:1;">Buscar Arquivo</button>
+                    <button id="btn-confirm-img" class="btn-modal btn-confirmar" style="flex:1; background:#444;" disabled>Confirmar</button>
+                </div>
+                <button class="btn-modal btn-cancelar" id="btn-close-img-popup" style="width: 100%; margin-top: 10px;">Cancelar</button>
+                <input type="file" id="hidden-file-input" accept="image/*" style="display:none;">
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    let imgDataFinal = null;
+    const pasteArea = overlay.querySelector('#paste-area');
+    const preview = overlay.querySelector('#paste-preview');
+    const pasteText = overlay.querySelector('#paste-text');
+    const btnConfirm = overlay.querySelector('#btn-confirm-img');
+    const btnUpload = overlay.querySelector('#btn-upload-file');
+    const fileInput = overlay.querySelector('#hidden-file-input');
+
+    const fechar = () => {
+        document.removeEventListener('paste', pasteHandler);
+        overlay.remove();
+    };
+    overlay.querySelector('#btn-close-img-popup').onclick = fechar;
+
+    const setImagem = (src) => {
+        imgDataFinal = src;
+        preview.src = src;
+        preview.style.display = 'block';
+        pasteText.style.display = 'none';
+        pasteArea.style.borderColor = '#9c27b0';
+        btnConfirm.removeAttribute('disabled');
+        btnConfirm.style.background = '#9c27b0';
+    };
+
+    btnUpload.onclick = () => fileInput.click();
+    fileInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (ev) => setImagem(ev.target.result);
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const pasteHandler = (e) => {
+        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+        for (let index in items) {
+            const item = items[index];
+            if (item.kind === 'file' && item.type.includes('image/')) {
+                const blob = item.getAsFile();
+                const reader = new FileReader();
+                reader.onload = (ev) => setImagem(ev.target.result);
+                reader.readAsDataURL(blob);
+                e.preventDefault();
+            }
+        }
+    };
+    document.addEventListener('paste', pasteHandler);
+
+    btnConfirm.onclick = () => {
+        if (imgDataFinal) {
+            callbackImagemDefinida(imgDataFinal);
+            fechar();
+        }
+    };
+}
 
         async function confirmarAddInit() {
             const nome = document.getElementById('manual-init-name').value.trim();
