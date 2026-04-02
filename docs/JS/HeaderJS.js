@@ -3307,15 +3307,21 @@ function renderTrackerPopup() {
         
         container.appendChild(div);
 
-        // Troca de imagem ao clicar
+        // Troca de imagem ao clicar na lista do tracker
         const imgEl = document.getElementById(`tracker-img-${item.id}`);
         if(imgEl) {
             imgEl.onclick = () => {
                 if(typeof abrirPopupImagem === 'function') {
                     abrirPopupImagem((novaImg) => {
-                        item.img = novaImg;
-                        // Atualiza no servidor (que vai atualizar todo mundo)
-                        if(window.socket) window.socket.emit('add_to_tracker', item);
+                        if (typeof iniciarCorteImagem === 'function') {
+                            iniciarCorteImagem(novaImg, (imgRecortada) => {
+                                item.img = imgRecortada;
+                                if(window.socket) window.socket.emit('add_to_tracker', item);
+                            });
+                        } else {
+                            item.img = novaImg;
+                            if(window.socket) window.socket.emit('add_to_tracker', item);
+                        }
                     });
                 }
             };
@@ -3432,15 +3438,22 @@ window.adicionarAoTrackerExterno = function(valor, silencioso = false) {
     }
 };
 
-// 8. LIGA PASTE (No input do tracker)
+// 8. LIGA PASTE E CROP (No input do tracker)
 document.addEventListener('DOMContentLoaded', () => {
     const prev = document.getElementById('new-mob-preview');
     if(prev) {
         prev.onclick = () => {
             if(typeof abrirPopupImagem === 'function') {
-                abrirPopupImagem((img) => { 
-                    tempImgSrc = img; 
-                    prev.src = img; 
+                abrirPopupImagem((img) => {
+                    if (typeof iniciarCorteImagem === 'function') {
+                        iniciarCorteImagem(img, (imgRecortada) => {
+                            tempImgSrc = imgRecortada;
+                            prev.src = imgRecortada;
+                        });
+                    } else {
+                        tempImgSrc = img;
+                        prev.src = img;
+                    }
                 });
             }
         };
