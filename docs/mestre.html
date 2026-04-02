@@ -486,28 +486,26 @@
         </div>
     </div>
 
-    <div id="modal-add-init" class="modal-overlay">
-      <div class="modal-box" style="width: 350px;">
-          <h3 class="modal-titulo">Adicionar Criatura</h3>
-          
-          <div style="display:flex; justify-content:center; margin-bottom:15px;">
-             <div style="width:80px; height:80px; border-radius:50%; border:2px dashed #444; overflow:hidden; position:relative; cursor:pointer;" onclick="abrirSelecaoImagemInit()">
-                  <img id="manual-init-preview" src="img/imagem-no-site/dado.png" style="width:100%; height:100%; object-fit:cover;">
-                  <div style="position:absolute; bottom:0; width:100%; background:rgba(0,0,0,0.6); font-size:10px; color:#fff;">Alterar</div>
-              </div>
-              <input type="file" id="manual-init-file" accept="image/*" style="display:none;" onchange="previewManualInitImage(this)">
-          </div>
-
-          <input type="text" id="manual-init-name" class="modal-input" placeholder="Nome (Ex: Goblin 1)" autocomplete="off">
-          <input type="number" id="manual-init-val" class="modal-input" placeholder="Valor de Iniciativa" autocomplete="off">
-          
-          <div class="modal-buttons">
-              <button class="btn-modal btn-cancelar" onclick="fecharModalInit()">Cancelar</button>
-              <button class="btn-modal btn-confirmar" onclick="confirmarAddInit()">Adicionar</button>
+   <div id="modal-add-init" class="modal-overlay">
+  <div class="modal-box" style="width: 350px;">
+      <h3 class="modal-titulo">Adicionar Criatura</h3>
+      
+      <div style="display:flex; justify-content:center; margin-bottom:15px;">
+          <div style="width:80px; height:80px; border-radius:50%; border:2px dashed #444; overflow:hidden; position:relative; cursor:pointer;" onclick="abrirSelecaoImagemInit()">
+              <img id="manual-init-preview" src="img/imagem-no-site/dado.png" style="width:100%; height:100%; object-fit:cover;">
+              <div style="position:absolute; bottom:0; width:100%; background:rgba(0,0,0,0.6); font-size:10px; color:#fff;">Alterar</div>
           </div>
       </div>
-  </div>
 
+      <input type="text" id="manual-init-name" class="modal-input" placeholder="Nome (Ex: Goblin 1)" autocomplete="off">
+      <input type="number" id="manual-init-val" class="modal-input" placeholder="Valor de Iniciativa" autocomplete="off">
+      
+      <div class="modal-buttons">
+          <button class="btn-modal btn-cancelar" onclick="fecharModalInit()">Cancelar</button>
+          <button class="btn-modal btn-confirmar" onclick="confirmarAddInit()">Adicionar</button>
+      </div>
+  </div>
+</div>
 
 
   
@@ -544,25 +542,31 @@
         }
 
         // Suporte a Paste no Modal de Iniciativa
-        document.addEventListener('paste', function(e) {
-            if (document.getElementById('modal-add-init').style.display === 'flex') {
-                const items = (e.clipboardData || e.originalEvent.clipboardData).items;
-                for (let index in items) {
-                    const item = items[index];
-                    if (item.kind === 'file' && item.type.includes('image/')) {
-                        const blob = item.getAsFile();
-                        const reader = new FileReader();
-                        reader.onload = function(event) {
-                            document.getElementById('manual-init-preview').src = event.target.result;
-                            currentInitImage = event.target.result;
-                        };
-                        reader.readAsDataURL(blob);
-                        e.preventDefault(); 
+document.addEventListener('paste', function(e) {
+    if (document.getElementById('modal-add-init').style.display === 'flex') {
+        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+        for (let index in items) {
+            const item = items[index];
+            if (item.kind === 'file' && item.type.includes('image/')) {
+                const blob = item.getAsFile();
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    
+                    // Chama a tela de corte antes de colocar na iniciativa
+                    if (typeof iniciarCorteImagem === 'function') {
+                        iniciarCorteImagem(event.target.result, (imgRecortada) => {
+                            currentInitImage = imgRecortada;
+                            document.getElementById('manual-init-preview').src = imgRecortada;
+                        });
                     }
-                }
-            }
-        });
 
+                };
+                reader.readAsDataURL(blob);
+                e.preventDefault(); 
+            }
+        }
+    }
+});
 
 // Função para abrir o popup de imagem no Painel do Mestre
 function abrirPopupImagem(callbackImagemDefinida) {
