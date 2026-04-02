@@ -103,6 +103,15 @@
   "tags": ["Entenda a sua Ficha", "Combate", "Rolagens", "Sistema", "Inspiração"],
   "imagem": ""
 },
+{
+  "id": "acao_desarmar",
+  "titulo": "Ação: Desarmar",
+  "resumo": "Regras para arrancar armas ou itens do inimigo e o risco envolvido na manobra.",
+  "conteudo": "<p>Desarmar é uma tática agressiva e perigosa. Você foca seu ataque em derrubar um item das mãos do oponente, mas abre totalmente a sua guarda no processo.</p><h4 style='color:#e0aaff'>Como Funciona</h4><ul><li><b>O Ataque:</b> Você faz uma jogada de Ataque contra o alvo, sofrendo <b>Desvantagem</b> direta na rolagem.</li><li><b>Empunhadura Dupla:</b> Se o inimigo estiver segurando o objeto com as duas mãos, você recebe uma penalidade adicional de <b>-5 no resultado</b> do teste.</li></ul><h4 style='color:#e0aaff'>O Preço da Ação</h4><p>Tentar golpear a arma de um inimigo alerta deixa você exposto. No momento em que você declara a tentativa de desarme, o alvo ganha um <b>Ataque de Oportunidade</b> imediato contra você.</p>",
+  "tags": ["Combate", "Ações", "Manobras", "Sistema"],
+  "imagem": ""
+},
+
   {
     "id": "salvaguardas",
     "titulo": "Salvaguardas (Testes de Resistência)",
