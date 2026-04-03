@@ -48,12 +48,12 @@ function getTotalCharacterLevel() {
 window.isUserInteracting = false;
 window.interactionTimer = null;
 
-window.travarTelaParaClique = function() {
-    window.isUserInteracting = true;
-    if (window.interactionTimer) clearTimeout(window.interactionTimer);
-    window.interactionTimer = setTimeout(() => {
-        window.isUserInteracting = false;
-    }, 2000); // 2 segundos de blindagem total
+window.travarTelaParaClique = function () {
+  window.isUserInteracting = true;
+  if (window.interactionTimer) clearTimeout(window.interactionTimer);
+  window.interactionTimer = setTimeout(() => {
+    window.isUserInteracting = false;
+  }, 2000); // 2 segundos de blindagem total
 };
 
 
@@ -61,7 +61,7 @@ window.travarTelaParaClique = function() {
 carregarCatalogosDireita();
 
 
-let saveTimer = null; 
+let saveTimer = null;
 let isUserInteracting = false; // NOVA VARIÁVEL: O "Escudo"
 
 async function saveStateToServer() {
@@ -92,7 +92,7 @@ async function saveStateToServer() {
       console.error("Erro silencioso de conexão:", e);
       isUserInteracting = false;
     }
-  }, 100); 
+  }, 100);
 }
 
 
@@ -253,14 +253,14 @@ const CLASSES_WITH_SUBCLASSES = {
 
 const CLASSES_AVAILABLE = Object.keys(CLASSES_WITH_SUBCLASSES);
 const conteudoEl = document.querySelector('.lado-direito .conteudo');
-function uid() { 
-  return Date.now().toString(36) + Math.random().toString(36).substr(2, 5); 
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
 }
 
 /* --- FUNÇÃO AUXILIAR PARA TRAVAR/LIBERAR SCROLL (CORRIGIDA) --- */
 function checkScrollLock() {
   const modais = document.querySelectorAll('.spell-modal-overlay, .catalog-overlay-large, .ajuda-modal-overlay, .historico-modal-overlay');
-  
+
   let temModalAberto = false;
   modais.forEach(modal => {
     if (window.getComputedStyle(modal).display !== 'none') {
@@ -413,10 +413,10 @@ function formatInventoryItem(item) {
   // Grupo Ofensivo
   let offenseGroup = '';
   // Mostra qual atributo está sendo usado, se houver
-  if (item.attackAttribute && item.attackAttribute !== 'Nenhum') offenseGroup += createSimpleStat('Attr Acerto', item.attackAttribute.substring(0,3));
-  if (item.damageAttribute && item.damageAttribute !== 'Nenhum') offenseGroup += createSimpleStat('Attr Dano', item.damageAttribute.substring(0,3));
-  
-  offenseGroup += createSimpleStat('Acerto Bônus', item.acertoBonus || item.attackBonus); 
+  if (item.attackAttribute && item.attackAttribute !== 'Nenhum') offenseGroup += createSimpleStat('Attr Acerto', item.attackAttribute.substring(0, 3));
+  if (item.damageAttribute && item.damageAttribute !== 'Nenhum') offenseGroup += createSimpleStat('Attr Dano', item.damageAttribute.substring(0, 3));
+
+  offenseGroup += createSimpleStat('Acerto Bônus', item.acertoBonus || item.attackBonus);
   offenseGroup += createSimpleStat('Dano Bônus', item.damageBonus);
   offenseGroup += createSimpleStat('Tipo Dano', item.damageType);
 
@@ -508,15 +508,15 @@ function renderInventory() {
 
   if (!listaHTML) listaHTML = `<div class="empty-tip">Nenhum item encontrado.</div>`;
 
-const html = `
+  const html = `
         <div class="inventory-controls controls-row">
             <input id="filterItens" placeholder="Filtrar itens..." value="${escapeHtml(termo)}" />
-            
-            ${getHeaderDiceHtml('Dados Puros')}
-
-            <div class="right-controls">
+            <div class="right-controls" style="display:flex; align-items:center;">
                 <button id="botAddItem" class="btn-add">Adicionar</button>
             </div>
+        </div>
+        <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 12px; margin-top: -4px;">
+            ${getHeaderDiceHtml('Dados Puros')}
         </div>
         <div class="inventory-list-wrapper">
             ${listaHTML}
@@ -555,103 +555,103 @@ function bindInventoryCardEvents() {
   const findItemById = (rawId) => state.inventory.find(x => String(x.id) === String(rawId));
 
   // ITERAÇÃO DOS CARDS DE ITEM
-    document.querySelectorAll('.item-card').forEach(card => {
-        const rawId = card.getAttribute('data-id');
-        
-        // A. EXPANDIR/RECOLHER
-        const header = card.querySelector('.card-header');
-        if (header) {
-            header.onclick = (ev) => {
-                // Lista de coisas que NÃO devem disparar o expandir
-                if (ev.target.closest('.header-equip') ||
-                    ev.target.closest('.item-actions-footer') ||
-                    ev.target.closest('.dice-img') ||
-                    ev.target.closest('.spell-damage') ||
-                    ev.target.closest('.versatile-check-inline') || 
-                    ev.target.closest('input') || 
-                    ev.target.tagName === 'INPUT') { 
-                    return;
-                }
+  document.querySelectorAll('.item-card').forEach(card => {
+    const rawId = card.getAttribute('data-id');
 
-                const it = state.inventory.find(x => String(x.id) === String(rawId));
-                if (!it) return;
-
-                it.expanded = !it.expanded;
-
-                // Atualiza DOM localmente
-                const body = card.querySelector('.card-body');
-                const caret = card.querySelector('.caret');
-
-                if (it.expanded) {
-                    body.style.display = 'block';
-                    if(caret) caret.textContent = '▾';
-                    card.classList.add('expanded');
-                } else {
-                    body.style.display = 'none';
-                    if(caret) caret.textContent = '▸';
-                    card.classList.remove('expanded');
-                }
-                
-                saveStateToServer(); 
-            };
+    // A. EXPANDIR/RECOLHER
+    const header = card.querySelector('.card-header');
+    if (header) {
+      header.onclick = (ev) => {
+        // Lista de coisas que NÃO devem disparar o expandir
+        if (ev.target.closest('.header-equip') ||
+          ev.target.closest('.item-actions-footer') ||
+          ev.target.closest('.dice-img') ||
+          ev.target.closest('.spell-damage') ||
+          ev.target.closest('.versatile-check-inline') ||
+          ev.target.closest('input') ||
+          ev.target.tagName === 'INPUT') {
+          return;
         }
 
-       // B. EVENTO HÍBRIDO (ITEM)
-        const diceImg = card.querySelector('.dice-img');
-        if (diceImg) {
-            
-            // Helper interno para calcular a expressão de dano COM os atributos e bônus
-            const getExprDanoAtualizada = (itemData) => {
-                let exprBase = card.querySelector('.spell-damage span') ? card.querySelector('.spell-damage span').textContent : itemData.damage;
-                let modDano = 0;
-                if (itemData.damageAttribute && itemData.damageAttribute !== 'Nenhum') {
-                    modDano = typeof getAttributeMod === 'function' ? getAttributeMod(itemData.damageAttribute) : 0;
-                } else if (itemData.type === 'Arma') {
-                    modDano = typeof getItemAttackValues === 'function' ? getItemAttackValues(itemData).modAttr : 0;
-                }
-                const totalModDano = modDano + (parseInt(itemData.damageBonus) || 0);
+        const it = state.inventory.find(x => String(x.id) === String(rawId));
+        if (!it) return;
 
-                if (totalModDano !== 0) {
-                    const sinal = totalModDano >= 0 ? '+' : '';
-                    exprBase = `${exprBase}${sinal}${totalModDano}`;
-                }
-                return exprBase;
-            };
+        it.expanded = !it.expanded;
 
-            // Clique esquerdo (Normal)
-            diceImg.addEventListener('click', (e) => {
-                const item = state.inventory.find(i => String(i.id) === String(rawId));
-                if(!item) return;
-                
-                const { modAttr, profBonus, itemBonus } = getItemAttackValues(item);
-                const totalBonus = modAttr + profBonus + itemBonus;
-                const exprAtk = `1d20 + ${totalBonus}`;
-                const exprDanoReal = getExprDanoAtualizada(item);
-                const usaAtaque = (item.type === 'Arma' || (item.attackAttribute && item.attackAttribute !== 'Nenhum'));
+        // Atualiza DOM localmente
+        const body = card.querySelector('.card-body');
+        const caret = card.querySelector('.caret');
 
-                const atkRes = usaAtaque ? rollDiceWithAdvantage(exprAtk, 0, 0) : null;
-                const dmgRes = rollDiceExpression(exprDanoReal);
-                
-                showCombatResults(item.name, atkRes, dmgRes);
-            });
-
-            // Clique Direito / Segurar (Menu de Vantagem)
-            if (typeof window.addLongPressListener === 'function') {
-                window.addLongPressListener(diceImg, (e) => {
-                    const item = state.inventory.find(i => String(i.id) === String(rawId));
-                    if (!item) return;
-
-                    const { modAttr, profBonus, itemBonus } = getItemAttackValues(item);
-                    const totalBonus = modAttr + profBonus + itemBonus;
-                    const exprAtk = `1d20 + ${totalBonus}`;
-                    const exprDanoReal = getExprDanoAtualizada(item);
-                    const usaAtaque = (item.type === 'Arma' || (item.attackAttribute && item.attackAttribute !== 'Nenhum'));
-                    
-                    window.abrirMenuRolagem(e, item.name, usaAtaque ? exprAtk : null, exprDanoReal);
-                });
-            }
+        if (it.expanded) {
+          body.style.display = 'block';
+          if (caret) caret.textContent = '▾';
+          card.classList.add('expanded');
+        } else {
+          body.style.display = 'none';
+          if (caret) caret.textContent = '▸';
+          card.classList.remove('expanded');
         }
-    });
+
+        saveStateToServer();
+      };
+    }
+
+    // B. EVENTO HÍBRIDO (ITEM)
+    const diceImg = card.querySelector('.dice-img');
+    if (diceImg) {
+
+      // Helper interno para calcular a expressão de dano COM os atributos e bônus
+      const getExprDanoAtualizada = (itemData) => {
+        let exprBase = card.querySelector('.spell-damage span') ? card.querySelector('.spell-damage span').textContent : itemData.damage;
+        let modDano = 0;
+        if (itemData.damageAttribute && itemData.damageAttribute !== 'Nenhum') {
+          modDano = typeof getAttributeMod === 'function' ? getAttributeMod(itemData.damageAttribute) : 0;
+        } else if (itemData.type === 'Arma') {
+          modDano = typeof getItemAttackValues === 'function' ? getItemAttackValues(itemData).modAttr : 0;
+        }
+        const totalModDano = modDano + (parseInt(itemData.damageBonus) || 0);
+
+        if (totalModDano !== 0) {
+          const sinal = totalModDano >= 0 ? '+' : '';
+          exprBase = `${exprBase}${sinal}${totalModDano}`;
+        }
+        return exprBase;
+      };
+
+      // Clique esquerdo (Normal)
+      diceImg.addEventListener('click', (e) => {
+        const item = state.inventory.find(i => String(i.id) === String(rawId));
+        if (!item) return;
+
+        const { modAttr, profBonus, itemBonus } = getItemAttackValues(item);
+        const totalBonus = modAttr + profBonus + itemBonus;
+        const exprAtk = `1d20 + ${totalBonus}`;
+        const exprDanoReal = getExprDanoAtualizada(item);
+        const usaAtaque = (item.type === 'Arma' || (item.attackAttribute && item.attackAttribute !== 'Nenhum'));
+
+        const atkRes = usaAtaque ? rollDiceWithAdvantage(exprAtk, 0, 0) : null;
+        const dmgRes = rollDiceExpression(exprDanoReal);
+
+        showCombatResults(item.name, atkRes, dmgRes);
+      });
+
+      // Clique Direito / Segurar (Menu de Vantagem)
+      if (typeof window.addLongPressListener === 'function') {
+        window.addLongPressListener(diceImg, (e) => {
+          const item = state.inventory.find(i => String(i.id) === String(rawId));
+          if (!item) return;
+
+          const { modAttr, profBonus, itemBonus } = getItemAttackValues(item);
+          const totalBonus = modAttr + profBonus + itemBonus;
+          const exprAtk = `1d20 + ${totalBonus}`;
+          const exprDanoReal = getExprDanoAtualizada(item);
+          const usaAtaque = (item.type === 'Arma' || (item.attackAttribute && item.attackAttribute !== 'Nenhum'));
+
+          window.abrirMenuRolagem(e, item.name, usaAtaque ? exprAtk : null, exprDanoReal);
+        });
+      }
+    }
+  });
 
   // --- 2. CHECKBOX EQUIPAR ---
   document.querySelectorAll('.item-equip-checkbox').forEach(ch => {
@@ -664,12 +664,12 @@ function bindInventoryCardEvents() {
       if (item && isChecked) {
         if (item.type === 'Proteção' || item.type === 'protecao') {
           const isEscudo = item.tipoItem?.toLowerCase() === 'escudo' || item.proficiency?.toLowerCase() === 'escudo';
-          
+
           state.inventory.forEach(other => {
             if (String(other.id) !== String(rawId) && (other.type === 'Proteção' || other.type === 'protecao')) {
               const otherIsEscudo = other.tipoItem?.toLowerCase() === 'escudo' || other.proficiency?.toLowerCase() === 'escudo';
               if (isEscudo === otherIsEscudo) {
-                other.equip = false; 
+                other.equip = false;
                 // Desmarca visualmente o outro
                 const otherChk = document.querySelector(`.item-equip-checkbox[data-id="${other.id}"]`);
                 if (otherChk) otherChk.checked = false;
@@ -693,7 +693,7 @@ function bindInventoryCardEvents() {
     ch.onchange = (ev) => {
       const rawId = ev.target.getAttribute('data-id');
       const item = findItemById(rawId);
-      
+
       if (item) {
         // A. Ativa ESCUDO GLOBAL imediatamente
         // Isso impede que o socket.io redesenhe a tela se chegar algo do servidor agora
@@ -701,7 +701,7 @@ function bindInventoryCardEvents() {
 
         // B. Atualiza a memória local
         item.useTwoHands = ev.target.checked;
-        
+
         // C. Atualiza o visual do Dano (DOM) instantaneamente
         const card = ev.target.closest('.item-card');
         const damageSpan = card.querySelector('.spell-damage span');
@@ -709,12 +709,12 @@ function bindInventoryCardEvents() {
 
         let baseDamage = item.damage;
         if (item.useTwoHands && item.damage2Hands) {
-            baseDamage = item.damage2Hands;
+          baseDamage = item.damage2Hands;
         }
 
         let dmgParts = [baseDamage];
         if (item.moreDmgList) {
-            item.moreDmgList.forEach(m => { if (m.dano) dmgParts.push(m.dano); });
+          item.moreDmgList.forEach(m => { if (m.dano) dmgParts.push(m.dano); });
         }
         const finalDisplay = dmgParts.join(' + ') || '-';
 
@@ -723,13 +723,13 @@ function bindInventoryCardEvents() {
 
         // D. DEBOUNCE GLOBAL: Só salva quando você parar de clicar em TUDO
         if (window.globalSaveTimer) clearTimeout(window.globalSaveTimer);
-        
+
         window.globalSaveTimer = setTimeout(() => {
-            console.log("Salvando alterações acumuladas do inventário...");
-            saveStateToServer();
-            
-            // Só abaixa o escudo um pouco depois de salvar
-            setTimeout(() => { window.isUserInteracting = false; }, 500);
+          console.log("Salvando alterações acumuladas do inventário...");
+          saveStateToServer();
+
+          // Só abaixa o escudo um pouco depois de salvar
+          setTimeout(() => { window.isUserInteracting = false; }, 500);
         }, 800); // 0.8s de espera
       }
     };
@@ -740,11 +740,11 @@ function bindInventoryCardEvents() {
     el.onclick = (ev) => {
       ev.preventDefault();
       const rawId = el.getAttribute('data-id');
-      
+
       // Remove do state
       state.inventory = state.inventory.filter(i => String(i.id) !== String(rawId));
       saveStateToServer();
-      
+
       // Animação visual de remoção
       const card = el.closest('.item-card');
       if (card) {
@@ -755,7 +755,7 @@ function bindInventoryCardEvents() {
         card.style.padding = "0";
         setTimeout(() => card.remove(), 300);
       }
-      
+
       if (typeof atualizarAC === 'function') atualizarAC();
     };
   });
@@ -824,9 +824,11 @@ function renderCombat() {
     listaHTML = `<p class="empty-tip">Nada equipado para combate.</p>`;
   }
 
- const html = `
+  const html = `
         <div class="controls-row">
             <input id="filterCombat" placeholder="Filtrar combate..." value="${escapeHtml(termo)}" />
+        </div>
+        <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 12px; margin-top: -4px;">
             ${getHeaderDiceHtml('Dados Puros')}
         </div>
         <div class="inventory-list-wrapper">
@@ -933,7 +935,7 @@ function openItemModal(existingItem = null) {
   `;
 
   document.body.appendChild(modal);
-  
+
   const btnLista = modal.querySelector('#btnListaPadrao');
   if (btnLista) {
     btnLista.addEventListener('click', (ev) => {
@@ -964,13 +966,13 @@ function openItemModal(existingItem = null) {
 
     // --- CORREÇÃO: Se mudar para ARMA e for novo, sugere Força. Se for ITEM, sugere Nenhum. ---
     if (!existingItem) {
-        if (tab === 'Arma') {
-            defaultAttackAttr = 'Força';
-            defaultDamageAttr = 'Força';
-        } else if (tab === 'Item') {
-            defaultAttackAttr = 'Nenhum';
-            defaultDamageAttr = 'Nenhum';
-        }
+      if (tab === 'Arma') {
+        defaultAttackAttr = 'Força';
+        defaultDamageAttr = 'Força';
+      } else if (tab === 'Item') {
+        defaultAttackAttr = 'Nenhum';
+        defaultDamageAttr = 'Nenhum';
+      }
     }
 
     const descContent = pre.description || '';
@@ -982,7 +984,7 @@ function openItemModal(existingItem = null) {
     if (tab === 'Item') {
       const disadv = Array.isArray(pre.disadvantageSkill) ? pre.disadvantageSkill : (pre.disadvantageSkill ? [pre.disadvantageSkill] : []);
       const adv = Array.isArray(pre.advantageSkill) ? pre.advantageSkill : (pre.advantageSkill ? [pre.advantageSkill] : []);
-      
+
       html = `
           <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; align-items:end;">
             ${nameInput}
@@ -1066,14 +1068,14 @@ function openItemModal(existingItem = null) {
         </div>
       `;
     } else if (tab === 'Armadura') {
-        const profSelected = pre.proficiency || '';
-        const tipoSelected = pre.tipoItem || 'Armadura';
-        const minReqAttrs = pre.minReqAttrs || ['Força'];
-        const disadv = Array.isArray(pre.disadvantageSkill) ? pre.disadvantageSkill : (pre.disadvantageSkill ? [pre.disadvantageSkill] : []);
-        const adv = Array.isArray(pre.advantageSkill) ? pre.advantageSkill : (pre.advantageSkill ? [pre.advantageSkill] : []);
-        const nameInputArmadura = `<div style="grid-column: 1 / span 3;"><label>Nome <span style="color:#ff5555">*</span></label><input id="item-name" type="text" value="${escapeHtml(pre.name || '')}" placeholder="Nome da Armadura (Obrigatório)" /></div>`;
+      const profSelected = pre.proficiency || '';
+      const tipoSelected = pre.tipoItem || 'Armadura';
+      const minReqAttrs = pre.minReqAttrs || ['Força'];
+      const disadv = Array.isArray(pre.disadvantageSkill) ? pre.disadvantageSkill : (pre.disadvantageSkill ? [pre.disadvantageSkill] : []);
+      const adv = Array.isArray(pre.advantageSkill) ? pre.advantageSkill : (pre.advantageSkill ? [pre.advantageSkill] : []);
+      const nameInputArmadura = `<div style="grid-column: 1 / span 3;"><label>Nome <span style="color:#ff5555">*</span></label><input id="item-name" type="text" value="${escapeHtml(pre.name || '')}" placeholder="Nome da Armadura (Obrigatório)" /></div>`;
 
-        html = `
+      html = `
         <div style="display:grid; grid-template-columns: 1.2fr 0.8fr 1.2fr; gap:12px; align-items:start;">
             ${nameInputArmadura}
             <div><label>Proficiência</label><div class="pills-container" id="arm-prof-pills">${PROFICIENCIAS_ARMADURA.map(p => `<button type="button" class="pill single-select ${p === profSelected ? 'active' : ''}" data-val="${escapeHtml(p)}">${escapeHtml(p)}</button>`).join('')}</div></div>
@@ -1100,7 +1102,7 @@ function openItemModal(existingItem = null) {
             <div style="grid-column: 1 / span 3;"><label>Descrição</label>${editorHTML}</div>
         </div>`;
     }
-    
+
     contentBody.innerHTML = html;
     bindTabEvents(tab);
     initRichEditorEvents('item-editor-content');
@@ -1125,30 +1127,30 @@ function openItemModal(existingItem = null) {
   }
 
   function bindTabEvents(tab) {
-    modal.querySelectorAll('.pill.single-select').forEach(p => { 
-        p.addEventListener('click', () => { 
-            p.parentElement.querySelectorAll('.pill').forEach(x => x.classList.remove('active')); 
-            p.classList.add('active'); 
-            
-            // === LÓGICA DE AUTO-SELEÇÃO DE ATRIBUTOS (CORRIGIDO) ===
-            if (p.parentElement.id === 'tipo-pills') {
-                const val = p.getAttribute('data-val');
-                const attackSelect = document.getElementById('item-attack-attr');
-                const damageSelect = document.getElementById('item-damage-attr');
-                
-                if (attackSelect && damageSelect) {
-                    if (val === 'Corpo a Corpo') {
-                        attackSelect.value = 'Força';
-                        damageSelect.value = 'Força';
-                    } else if (val === 'A Distancia') { 
-                        attackSelect.value = 'Destreza';
-                        damageSelect.value = 'Destreza';
-                    }
-                }
+    modal.querySelectorAll('.pill.single-select').forEach(p => {
+      p.addEventListener('click', () => {
+        p.parentElement.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+        p.classList.add('active');
+
+        // === LÓGICA DE AUTO-SELEÇÃO DE ATRIBUTOS (CORRIGIDO) ===
+        if (p.parentElement.id === 'tipo-pills') {
+          const val = p.getAttribute('data-val');
+          const attackSelect = document.getElementById('item-attack-attr');
+          const damageSelect = document.getElementById('item-damage-attr');
+
+          if (attackSelect && damageSelect) {
+            if (val === 'Corpo a Corpo') {
+              attackSelect.value = 'Força';
+              damageSelect.value = 'Força';
+            } else if (val === 'A Distancia') {
+              attackSelect.value = 'Destreza';
+              damageSelect.value = 'Destreza';
             }
-        }); 
+          }
+        }
+      });
     });
-    
+
     modal.querySelectorAll('.multi-select-field').forEach(field => { if (field.id === 'dmg-field' || field.closest('.extra-dmg-row')) return; let trigger = field.querySelector('.label-dropdown-trigger') || field.querySelector('.display'); const panel = field.querySelector('.panel'); trigger.onclick = (e) => { e.stopPropagation(); const isOpen = panel.style.display === 'block'; document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); panel.style.display = isOpen ? 'none' : 'block'; }; panel.querySelectorAll('input[type="checkbox"]').forEach(chk => { chk.onchange = () => { const vals = Array.from(panel.querySelectorAll('input:checked')).map(x => x.value); const span = trigger.querySelector('span:first-child') || modal.querySelector('#min-req-label-text'); if (span) span.textContent = vals.length ? vals.join(', ') : (field.id === 'min-req-container' ? '' : 'Selecione...'); }; }); });
 
     if (tab === 'Arma') {
@@ -1210,7 +1212,7 @@ function openItemModal(existingItem = null) {
       newItem.defenseType = modal.querySelector('#item-defensetype').value;
       const disPanel = modal.querySelector('#disadv-field-item .panel'); newItem.disadvantageSkill = disPanel ? Array.from(disPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
       const advPanel = modal.querySelector('#adv-field-item .panel'); newItem.advantageSkill = advPanel ? Array.from(advPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
-      
+
       // SALVA ATRIBUTOS (INCLUI DANO)
       newItem.attackAttribute = modal.querySelector('#item-attack-attr').value;
       newItem.damageAttribute = modal.querySelector('#item-damage-attr').value;
@@ -1258,11 +1260,11 @@ function openItemModal(existingItem = null) {
     closeMe();
     renderInventory();
     saveStateToServer();
-    
+
     // ATUALIZAÇÃO DA ESQUERDA (CA/Status)
     if (typeof atualizarAC === 'function') atualizarAC();
     if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
-    
+
     window.dispatchEvent(new CustomEvent('sheet-updated'));
   });
 }
@@ -1319,15 +1321,15 @@ function renderAbilities() {
     return a.title.localeCompare(b.title);
   };
 
- let htmlFinal = `
+  let htmlFinal = `
         <div class="abilities-controls controls-row">
             <input id="filterHabs" placeholder="Filtrar habilidades..." value="${escapeHtml(termoBusca)}" />
-            
-            ${getHeaderDiceHtml('Dados Puros')}
-
-            <div class="right-controls">
+            <div class="right-controls" style="display:flex; align-items:center;">
                 <button id="botOpenCatalogHab" class="btn-add">Adicionar</button>
             </div>
+        </div>
+        <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 12px; margin-top: -4px;">
+            ${getHeaderDiceHtml('Dados Puros')}
         </div>
         <div class="abilities-list">
     `;
@@ -1408,175 +1410,175 @@ function bindAbilitySectionEvents() {
    CORREÇÃO: Eventos de Habilidades (Fix ID String)
 ============================================================= */
 function bindAbilityEvents() {
-    // Itera sobre todos os cards de habilidade renderizados
-    document.querySelectorAll('.hab-card').forEach(card => {
-        // CORREÇÃO: Removemos o Number() pois o ID gerado por uid() é String
-        const habId = card.getAttribute('data-id');
+  // Itera sobre todos os cards de habilidade renderizados
+  document.querySelectorAll('.hab-card').forEach(card => {
+    // CORREÇÃO: Removemos o Number() pois o ID gerado por uid() é String
+    const habId = card.getAttribute('data-id');
 
-        // Função auxiliar para achar a habilidade garantindo comparação de String
-        const findHab = () => state.abilities.find(h => String(h.id) === String(habId));
+    // Função auxiliar para achar a habilidade garantindo comparação de String
+    const findHab = () => state.abilities.find(h => String(h.id) === String(habId));
 
-        // =================================================================
-        // 1. EXPANDIR / COLAPSAR CARD
-        // =================================================================
-        const header = card.querySelector('.card-header');
-        if (header) {
-            header.onclick = (ev) => {
-                // Impede que o card feche se clicar no checkbox, no dado ou nos botões de ação
-                if (ev.target.closest('.check-ativar') || 
-                    ev.target.closest('.dice-img') || 
-                    ev.target.closest('a')) {
-                    return;
-                }
-
-                const hab = findHab();
-                if (hab) {
-                    hab.expanded = !hab.expanded;
-
-                    // Atualização DOM direta para performance
-                    const body = card.querySelector('.card-body');
-                    const caret = card.querySelector('.caret');
-
-                    if (hab.expanded) {
-                        body.style.display = 'block';
-                        card.classList.add('expanded');
-                        if (caret) caret.textContent = '▾';
-                    } else {
-                        body.style.display = 'none';
-                        card.classList.remove('expanded');
-                        if (caret) caret.textContent = '▸';
-                    }
-                    
-                    // saveStateToServer(); 
-                }
-            };
+    // =================================================================
+    // 1. EXPANDIR / COLAPSAR CARD
+    // =================================================================
+    const header = card.querySelector('.card-header');
+    if (header) {
+      header.onclick = (ev) => {
+        // Impede que o card feche se clicar no checkbox, no dado ou nos botões de ação
+        if (ev.target.closest('.check-ativar') ||
+          ev.target.closest('.dice-img') ||
+          ev.target.closest('a')) {
+          return;
         }
 
-        // =================================================================
-        // 2. CHECKBOX DE ATIVAÇÃO
-        // =================================================================
-        const chk = card.querySelector('.hab-activate');
-        if (chk) {
-            chk.onchange = (ev) => {
-                const hab = findHab();
-                if (hab) {
-                    hab.active = ev.target.checked;
-                    saveStateToServer();
+        const hab = findHab();
+        if (hab) {
+          hab.expanded = !hab.expanded;
 
-                    // --- Lógica de Exclusividade (Defesa sem Armadura) ---
-                    if (hab.active) {
-                        if (hab.title.includes("Bárbaro")) {
-                            const m = state.abilities.find(a => a.title.includes("Monge"));
-                            if (m) { 
-                                m.active = false; 
-                                const mChk = document.querySelector(`.hab-activate[data-id="${m.id}"]`); 
-                                if (mChk) mChk.checked = false; 
-                            }
-                        }
-                        if (hab.title.includes("Monge")) {
-                            const b = state.abilities.find(a => a.title.includes("Bárbaro"));
-                            if (b) { 
-                                b.active = false; 
-                                const bChk = document.querySelector(`.hab-activate[data-id="${b.id}"]`); 
-                                if (bChk) bChk.checked = false; 
-                            }
-                        }
-                    }
+          // Atualização DOM direta para performance
+          const body = card.querySelector('.card-body');
+          const caret = card.querySelector('.caret');
 
-                    if (typeof atualizarAC === 'function') atualizarAC();
-                    if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
-                    if (state.activeTab === 'Mag. Preparadas') renderActiveTab();
-                }
-            };
-            chk.onclick = (e) => e.stopPropagation();
+          if (hab.expanded) {
+            body.style.display = 'block';
+            card.classList.add('expanded');
+            if (caret) caret.textContent = '▾';
+          } else {
+            body.style.display = 'none';
+            card.classList.remove('expanded');
+            if (caret) caret.textContent = '▸';
+          }
+
+          // saveStateToServer(); 
         }
+      };
+    }
 
-        // =================================================================
-        // 3. REMOVER HABILIDADE
-        // =================================================================
-        const btnRemover = card.querySelector('.remover-hab');
-        if (btnRemover) {
-            btnRemover.onclick = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                // Remove do array comparando string
-                state.abilities = state.abilities.filter(h => String(h.id) !== String(habId));
-                
-                card.style.transition = 'opacity 0.2s';
-                card.style.opacity = '0';
-                setTimeout(() => card.remove(), 200);
+    // =================================================================
+    // 2. CHECKBOX DE ATIVAÇÃO
+    // =================================================================
+    const chk = card.querySelector('.hab-activate');
+    if (chk) {
+      chk.onchange = (ev) => {
+        const hab = findHab();
+        if (hab) {
+          hab.active = ev.target.checked;
+          saveStateToServer();
 
-                saveStateToServer();
-                
-                if (typeof atualizarAC === 'function') atualizarAC();
-                window.dispatchEvent(new CustomEvent('sheet-updated'));
-            };
-        }
-
-        // =================================================================
-        // 4. EDITAR HABILIDADE (CORREÇÃO APLICADA AQUI TAMBÉM)
-        // =================================================================
-        const btnEditar = card.querySelector('.editar-hab');
-        if (btnEditar) {
-            btnEditar.onclick = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const hab = findHab();
-                if (hab) openNewAbilityModal(hab);
-            };
-        }
-
-        // 5. EVENTO HÍBRIDO (DADO)
-        const diceImg = card.querySelector('.dice-img');
-        if (diceImg) {
-            // Clique Esquerdo
-            diceImg.addEventListener('click', (e) => {
-                const hab = findHab();
-                if (!hab) return;
-                
-                let exprAtk = null;
-                if (hab.useStandardAttack) {
-                    const prof = parseInt(document.getElementById('proficienciaValor')?.textContent || 2);
-                    const mod = typeof getAttributeMod === 'function' ? getAttributeMod(hab.attackAttribute || 'Força') : 0;
-                    const extra = parseInt(hab.attackBonus) || 0;
-                    exprAtk = `1d20 + ${prof + mod + extra}`;
-                } else if (hab.attackBonus && hab.attackBonus.trim() !== '') {
-                    exprAtk = `1d20 + ${parseInt(hab.attackBonus)}`;
-                }
-                const spanDano = card.querySelector('.spell-damage span');
-                const exprDano = spanDano ? spanDano.textContent : hab.damage;
-
-                const atkRes = exprAtk ? rollDiceWithAdvantage(exprAtk, 0, 0) : null;
-                const dmgRes = rollDiceExpression(exprDano);
-                showCombatResults(hab.title, atkRes, dmgRes);
-            });
-
-            // Clique Direito
-            if (typeof window.addLongPressListener === 'function') {
-                window.addLongPressListener(diceImg, (e) => {
-                    const hab = findHab();
-                    if (!hab) return;
-
-                    let exprAtk = null;
-                    if (hab.useStandardAttack) {
-                        const prof = parseInt(document.getElementById('proficienciaValor')?.textContent || 2);
-                        const mod = typeof getAttributeMod === 'function' ? getAttributeMod(hab.attackAttribute || 'Força') : 0;
-                        const extra = parseInt(hab.attackBonus) || 0;
-                        exprAtk = `1d20 + ${prof + mod + extra}`;
-                    } else if (hab.attackBonus && hab.attackBonus.trim() !== '') {
-                        const bonusLimpo = hab.attackBonus.replace('+', '').trim();
-                        exprAtk = `1d20 + ${parseInt(bonusLimpo)}`;
-                    }
-
-                    const spanDano = card.querySelector('.spell-damage span');
-                    const exprDano = spanDano ? spanDano.textContent : hab.damage;
-
-                    window.abrirMenuRolagem(e, hab.title, exprAtk, exprDano);
-                });
+          // --- Lógica de Exclusividade (Defesa sem Armadura) ---
+          if (hab.active) {
+            if (hab.title.includes("Bárbaro")) {
+              const m = state.abilities.find(a => a.title.includes("Monge"));
+              if (m) {
+                m.active = false;
+                const mChk = document.querySelector(`.hab-activate[data-id="${m.id}"]`);
+                if (mChk) mChk.checked = false;
+              }
             }
+            if (hab.title.includes("Monge")) {
+              const b = state.abilities.find(a => a.title.includes("Bárbaro"));
+              if (b) {
+                b.active = false;
+                const bChk = document.querySelector(`.hab-activate[data-id="${b.id}"]`);
+                if (bChk) bChk.checked = false;
+              }
+            }
+          }
+
+          if (typeof atualizarAC === 'function') atualizarAC();
+          if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
+          if (state.activeTab === 'Mag. Preparadas') renderActiveTab();
         }
-    });
+      };
+      chk.onclick = (e) => e.stopPropagation();
+    }
+
+    // =================================================================
+    // 3. REMOVER HABILIDADE
+    // =================================================================
+    const btnRemover = card.querySelector('.remover-hab');
+    if (btnRemover) {
+      btnRemover.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Remove do array comparando string
+        state.abilities = state.abilities.filter(h => String(h.id) !== String(habId));
+
+        card.style.transition = 'opacity 0.2s';
+        card.style.opacity = '0';
+        setTimeout(() => card.remove(), 200);
+
+        saveStateToServer();
+
+        if (typeof atualizarAC === 'function') atualizarAC();
+        window.dispatchEvent(new CustomEvent('sheet-updated'));
+      };
+    }
+
+    // =================================================================
+    // 4. EDITAR HABILIDADE (CORREÇÃO APLICADA AQUI TAMBÉM)
+    // =================================================================
+    const btnEditar = card.querySelector('.editar-hab');
+    if (btnEditar) {
+      btnEditar.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const hab = findHab();
+        if (hab) openNewAbilityModal(hab);
+      };
+    }
+
+    // 5. EVENTO HÍBRIDO (DADO)
+    const diceImg = card.querySelector('.dice-img');
+    if (diceImg) {
+      // Clique Esquerdo
+      diceImg.addEventListener('click', (e) => {
+        const hab = findHab();
+        if (!hab) return;
+
+        let exprAtk = null;
+        if (hab.useStandardAttack) {
+          const prof = parseInt(document.getElementById('proficienciaValor')?.textContent || 2);
+          const mod = typeof getAttributeMod === 'function' ? getAttributeMod(hab.attackAttribute || 'Força') : 0;
+          const extra = parseInt(hab.attackBonus) || 0;
+          exprAtk = `1d20 + ${prof + mod + extra}`;
+        } else if (hab.attackBonus && hab.attackBonus.trim() !== '') {
+          exprAtk = `1d20 + ${parseInt(hab.attackBonus)}`;
+        }
+        const spanDano = card.querySelector('.spell-damage span');
+        const exprDano = spanDano ? spanDano.textContent : hab.damage;
+
+        const atkRes = exprAtk ? rollDiceWithAdvantage(exprAtk, 0, 0) : null;
+        const dmgRes = rollDiceExpression(exprDano);
+        showCombatResults(hab.title, atkRes, dmgRes);
+      });
+
+      // Clique Direito
+      if (typeof window.addLongPressListener === 'function') {
+        window.addLongPressListener(diceImg, (e) => {
+          const hab = findHab();
+          if (!hab) return;
+
+          let exprAtk = null;
+          if (hab.useStandardAttack) {
+            const prof = parseInt(document.getElementById('proficienciaValor')?.textContent || 2);
+            const mod = typeof getAttributeMod === 'function' ? getAttributeMod(hab.attackAttribute || 'Força') : 0;
+            const extra = parseInt(hab.attackBonus) || 0;
+            exprAtk = `1d20 + ${prof + mod + extra}`;
+          } else if (hab.attackBonus && hab.attackBonus.trim() !== '') {
+            const bonusLimpo = hab.attackBonus.replace('+', '').trim();
+            exprAtk = `1d20 + ${parseInt(bonusLimpo)}`;
+          }
+
+          const spanDano = card.querySelector('.spell-damage span');
+          const exprDano = spanDano ? spanDano.textContent : hab.damage;
+
+          window.abrirMenuRolagem(e, hab.title, exprAtk, exprDano);
+        });
+      }
+    }
+  });
 }
 
 // --- FUNÇÃO DE ABERTURA DO CATÁLOGO DE HABILIDADES (CORRIGIDA PARA SALVAR CATEGORIA) ---
@@ -1728,36 +1730,36 @@ function formatMySpellCard(s) {
   // =========================================================================
   let finalDamageDisplay = s.damage;
   const nomeLimpo = (s.name || '').toLowerCase();
-  
+
   // Verifica se é a Rajada Mística (Eldritch Blast)
   const isEldritchBlast = nomeLimpo.includes('rajada mística') || nomeLimpo.includes('eldritch blast');
 
   if (s.levelNumber === 0 && s.scaling) {
-      const charLevel = getTotalCharacterLevel();
-      
-      // Regra 5e: Aumenta em 5, 11 e 17
-      let multiplier = 1;
-      if (charLevel >= 5) multiplier = 2;
-      if (charLevel >= 11) multiplier = 3;
-      if (charLevel >= 17) multiplier = 4;
+    const charLevel = getTotalCharacterLevel();
 
-      if (multiplier > 1) {
-          if (isEldritchBlast) {
-              // SE FOR RAJADA MÍSTICA: Não multiplica o dado (mantém 1d10), 
-              // mas mostra a quantidade de feixes no texto para o jogador saber.
-              finalDamageDisplay = `${s.damage} (${multiplier}x)`; 
-          } else {
-              // SE FOR TRUQUE COMUM (Chama Sagrada, Raio de Fogo): Multiplica o dado (2d8)
-              const regex = /^(\d*)d(\d+)(.*)$/i;
-              const match = s.scaling.match(regex);
-              if (match) {
-                  const baseQtd = match[1] === "" ? 1 : parseInt(match[1]);
-                  const faces = match[2];
-                  const resto = match[3] || "";
-                  finalDamageDisplay = `${baseQtd * multiplier}d${faces}${resto}`;
-              }
-          }
+    // Regra 5e: Aumenta em 5, 11 e 17
+    let multiplier = 1;
+    if (charLevel >= 5) multiplier = 2;
+    if (charLevel >= 11) multiplier = 3;
+    if (charLevel >= 17) multiplier = 4;
+
+    if (multiplier > 1) {
+      if (isEldritchBlast) {
+        // SE FOR RAJADA MÍSTICA: Não multiplica o dado (mantém 1d10), 
+        // mas mostra a quantidade de feixes no texto para o jogador saber.
+        finalDamageDisplay = `${s.damage} (${multiplier}x)`;
+      } else {
+        // SE FOR TRUQUE COMUM (Chama Sagrada, Raio de Fogo): Multiplica o dado (2d8)
+        const regex = /^(\d*)d(\d+)(.*)$/i;
+        const match = s.scaling.match(regex);
+        if (match) {
+          const baseQtd = match[1] === "" ? 1 : parseInt(match[1]);
+          const faces = match[2];
+          const resto = match[3] || "";
+          finalDamageDisplay = `${baseQtd * multiplier}d${faces}${resto}`;
+        }
       }
+    }
   }
   // =========================================================================
 
@@ -1851,38 +1853,38 @@ function formatMySpellCard(s) {
    (Evita que a tela pisque ou trave enquanto você digita)
 ============================================================= */
 window.addEventListener('sheet-updated', () => {
-    // Mantém as atualizações da Esquerda e da DT...
-    if (typeof calculateSpellDC === 'function') {
-        state.dtMagias = calculateSpellDC();
-        const inputDT = document.getElementById('dtMagiasInput');
-        if (inputDT) inputDT.value = state.dtMagias;
-    }
-    if (typeof atualizarAC === 'function') atualizarAC();
-    if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
+  // Mantém as atualizações da Esquerda e da DT...
+  if (typeof calculateSpellDC === 'function') {
+    state.dtMagias = calculateSpellDC();
+    const inputDT = document.getElementById('dtMagiasInput');
+    if (inputDT) inputDT.value = state.dtMagias;
+  }
+  if (typeof atualizarAC === 'function') atualizarAC();
+  if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
 
-    // =================================================================
-    // O BLOQUEIO ABSOLUTO: Se estiver clicando, NADA redesenha a direita.
-    // =================================================================
-    if (window.isUserInteracting) {
-        console.log("Servidor tentou atualizar, mas o usuário está clicando. Ignorado.");
-        return; 
-    }
+  // =================================================================
+  // O BLOQUEIO ABSOLUTO: Se estiver clicando, NADA redesenha a direita.
+  // =================================================================
+  if (window.isUserInteracting) {
+    console.log("Servidor tentou atualizar, mas o usuário está clicando. Ignorado.");
+    return;
+  }
 
-    // Se a trava estiver desligada, atualiza normalmente:
-    if (['Magias', 'Mag. Preparadas', 'Habilidades', 'Combate', 'Inventário', 'Descrição'].includes(state.activeTab)) {
-        const activeElement = document.activeElement;
-        const isTyping = activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA');
-        const isInsideContent = document.querySelector('.lado-direito').contains(activeElement);
+  // Se a trava estiver desligada, atualiza normalmente:
+  if (['Magias', 'Mag. Preparadas', 'Habilidades', 'Combate', 'Inventário', 'Descrição'].includes(state.activeTab)) {
+    const activeElement = document.activeElement;
+    const isTyping = activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA');
+    const isInsideContent = document.querySelector('.lado-direito').contains(activeElement);
 
-        if (isTyping && isInsideContent) return;
+    if (isTyping && isInsideContent) return;
 
-        const scrollContainer = document.querySelector('.lado-direito .conteudo') || document.querySelector('.lado-direito');
-        const savedScroll = scrollContainer ? scrollContainer.scrollTop : 0;
+    const scrollContainer = document.querySelector('.lado-direito .conteudo') || document.querySelector('.lado-direito');
+    const savedScroll = scrollContainer ? scrollContainer.scrollTop : 0;
 
-        renderActiveTab();
+    renderActiveTab();
 
-        if (scrollContainer) scrollContainer.scrollTop = savedScroll;
-    }
+    if (scrollContainer) scrollContainer.scrollTop = savedScroll;
+  }
 });
 
 /* =============================================================
@@ -1948,7 +1950,7 @@ function renderSpellSlotsHTML() {
       // Garante tamanho do array de status
       while (slotState.status.length < maxVal) slotState.status.push(false);
       // Remove excessos se o max diminuiu
-      if(slotState.status.length > maxVal) slotState.status = slotState.status.slice(0, maxVal);
+      if (slotState.status.length > maxVal) slotState.status = slotState.status.slice(0, maxVal);
 
       let contentHtml = '';
       if (maxVal >= 99) {
@@ -1974,7 +1976,7 @@ function renderSpellSlotsHTML() {
 
   // 1. Slots Normais (Chaves "1" a "9")
   for (let i = 1; i <= 9; i++) renderPips(String(i), recursosTotais.slots[i - 1], `${i}º Círculo`, '');
-  
+
   // 2. Pacto e Classe
   if (recursosTotais.pact.qtd > 0) renderPips('pact', recursosTotais.pact.qtd, `Pacto (${recursosTotais.pact.nivel}º)`, 'pact');
   renderPips('ki', recursosTotais.ki, 'Ki', 'ki-pip');
@@ -2013,7 +2015,7 @@ function renderSpellSlotsHTML() {
   }
 
   html += `</div></div>`;
-  
+
   if (!hasAnySlot && (!state.customResources || state.customResources.length === 0) && recursosTotais.infoConjuracao.length === 0) return '';
   return html;
 }
@@ -2143,7 +2145,7 @@ function bindSlotEvents() {
     // Removemos listener antigo clonando o elemento (truque de limpeza)
     const newHeader = headerToggle.cloneNode(true);
     headerToggle.parentNode.replaceChild(newHeader, headerToggle);
-    
+
     newHeader.addEventListener('click', (e) => {
       if (e.target.closest('button')) return;
       state.isSlotsCollapsed = !state.isSlotsCollapsed;
@@ -2170,12 +2172,12 @@ function bindSlotEvents() {
     btnRest.parentNode.replaceChild(newRest, btnRest);
     newRest.onclick = (e) => {
       e.stopPropagation();
-      if(confirm("Recuperar todos os espaços de magia e recursos?")) {
-          for (let key in state.spellSlots) {
-            state.spellSlots[key].status = []; // Limpa tudo
-          }
-          saveStateToServer();
-          renderActiveTab();
+      if (confirm("Recuperar todos os espaços de magia e recursos?")) {
+        for (let key in state.spellSlots) {
+          state.spellSlots[key].status = []; // Limpa tudo
+        }
+        saveStateToServer();
+        renderActiveTab();
       }
     };
   }
@@ -2430,7 +2432,7 @@ function openSlotConfigModal() {
 function calculateNewDamage(baseDamage, scalingDamage, baseLevel, targetLevel) {
   if (!scalingDamage || targetLevel <= baseLevel) return baseDamage;
 
-if (baseLevel === 0) return baseDamage; 
+  if (baseLevel === 0) return baseDamage;
 
   if (!scalingDamage || targetLevel <= baseLevel) return baseDamag
   const regex = /^(\d+)d(\d+)(.*)$/i;
@@ -2463,37 +2465,37 @@ if (baseLevel === 0) return baseDamage;
    NOVA FUNÇÃO DE FILTRAGEM MULTIPLA DE MAGIAS
 ============================================================= */
 function aplicarFiltrosMagias() {
-    if (!state.spellFilters) return;
-    const { classes, schools, text } = state.spellFilters;
-    const q = text.toLowerCase();
+  if (!state.spellFilters) return;
+  const { classes, schools, text } = state.spellFilters;
+  const q = text.toLowerCase();
 
-    document.querySelectorAll('.spell-card').forEach(card => {
-        const id = card.getAttribute('data-id');
-        const s = state.spells.find(x => String(x.id) === String(id));
-        if (!s) return;
+  document.querySelectorAll('.spell-card').forEach(card => {
+    const id = card.getAttribute('data-id');
+    const s = state.spells.find(x => String(x.id) === String(id));
+    if (!s) return;
 
-        let show = true;
-        
-        // 1. Filtro de Texto (Nome)
-        if (q && !(s.name || '').toLowerCase().includes(q)) show = false;
-        
-        // 2. Filtro de Escola
-        if (show && schools.length > 0 && !schools.includes(s.school)) show = false;
-        
-        // 3. Filtro de Classe
-        if (show && classes.length > 0) {
-            const spellClasses = (s.spellClass || '').split(',').map(c => c.trim());
-            const temClasse = classes.some(c => spellClasses.includes(c));
-            if (!temClasse) show = false;
-        }
+    let show = true;
 
-        // A CORREÇÃO MÁGICA AQUI: Bate de frente com o !important do CSS mobile
-        if (show) {
-            card.style.removeProperty('display'); // Deixa o CSS normal assumir
-        } else {
-            card.style.setProperty('display', 'none', 'important'); // Força ocultar no mobile
-        }
-    });
+    // 1. Filtro de Texto (Nome)
+    if (q && !(s.name || '').toLowerCase().includes(q)) show = false;
+
+    // 2. Filtro de Escola
+    if (show && schools.length > 0 && !schools.includes(s.school)) show = false;
+
+    // 3. Filtro de Classe
+    if (show && classes.length > 0) {
+      const spellClasses = (s.spellClass || '').split(',').map(c => c.trim());
+      const temClasse = classes.some(c => spellClasses.includes(c));
+      if (!temClasse) show = false;
+    }
+
+    // A CORREÇÃO MÁGICA AQUI: Bate de frente com o !important do CSS mobile
+    if (show) {
+      card.style.removeProperty('display'); // Deixa o CSS normal assumir
+    } else {
+      card.style.setProperty('display', 'none', 'important'); // Força ocultar no mobile
+    }
+  });
 }
 
 /* --- SUBSTITUA A FUNÇÃO renderSpells INTEIRA POR ESTA --- */
@@ -2502,24 +2504,24 @@ function renderSpells() {
   const slotsHTML = renderSpellSlotsHTML();
 
   if (!state.spellFilters) {
-      state.spellFilters = { classes: [], schools: [], text: '' };
+    state.spellFilters = { classes: [], schools: [], text: '' };
   }
 
   if (typeof window.isMagiasFiltroExpanded === 'undefined') {
-      window.isMagiasFiltroExpanded = false;
+    window.isMagiasFiltroExpanded = false;
   }
 
   const escolasUnicas = [...new Set(state.spells.map(s => s.school).filter(Boolean))].sort();
-  
+
   let classesSet = new Set();
   state.spells.forEach(s => {
-      if(s.spellClass) s.spellClass.split(',').forEach(c => classesSet.add(c.trim()));
+    if (s.spellClass) s.spellClass.split(',').forEach(c => classesSet.add(c.trim()));
   });
   const classesUnicas = [...classesSet].filter(Boolean).sort();
 
   const renderPills = (list, selectedList, type) => {
-      if (list.length === 0) return '<em style="color:#666; font-size:12px;">Nenhuma disponível</em>';
-      return list.map(item => `
+    if (list.length === 0) return '<em style="color:#666; font-size:12px;">Nenhuma disponível</em>';
+    return list.map(item => `
           <button class="filter-pill ${selectedList.includes(item) ? 'active' : ''}" data-type="${type}" data-val="${item}">
               ${item}
           </button>
@@ -2532,18 +2534,20 @@ function renderSpells() {
       ${slotsHTML ? '<hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 15px 0;">' : ''}
 
      <div class="right-controls" style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:5px;">
-          
-          <div style="display:flex; align-items:center; gap:16px;">
-              ${getHeaderDiceHtml('Ataque Mágico (Todas)')}
+          <div style="display:flex; align-items:center; gap:8px;">
               <button id="botAddSpell" class="btn-add">Nova Magia</button>
           </div>
-
           <div class="dt-magias" id="btnOpenDTConfig" style="cursor:pointer;" title="Clique para configurar">
             <label style="cursor:pointer; color:#9c27b0;">DT DE MAGIAS ⚙️</label>
             <input id="dtMagiasInput" type="text" value="${state.dtMagias}" readonly 
                    style="cursor:pointer; font-weight:bold; color:#fff; text-align:center; min-width:80px;" />
           </div>
         </div>
+      </div>
+      
+      <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 12px; margin-top: 5px;">
+          ${getHeaderDiceHtml('Ataque Mágico')}
+      </div>
 
       <div id="painelFiltrosMagias" style="${window.isMagiasFiltroExpanded ? 'display:block;' : 'display:none;'} background:#121212; padding:12px; border-radius:6px; border:1px solid rgba(156, 39, 176, 0.3); margin-bottom:12px;">
          <div style="margin-bottom: 8px;"><strong style="color:#9c27b0; font-size:11px; text-transform:uppercase;">Filtrar por Escola</strong></div>
@@ -2570,211 +2574,211 @@ function renderSpells() {
   conteudoEl.innerHTML = html;
   bindSpellEvents();
   bindSlotEvents();
-  aplicarFiltrosMagias(); 
+  aplicarFiltrosMagias();
   bindHeaderDiceEvents();
-  
+
   const inputFiltro = document.getElementById('filterMagias');
   if (inputFiltro && state.spellFilters.text.length > 0) {
-      inputFiltro.focus();
-      inputFiltro.setSelectionRange(inputFiltro.value.length, inputFiltro.value.length);
+    inputFiltro.focus();
+    inputFiltro.setSelectionRange(inputFiltro.value.length, inputFiltro.value.length);
   }
 }
 
 /* --- SUBSTITUA A FUNÇÃO bindSpellEvents INTEIRA POR ESTA --- */
 function bindSpellEvents() {
-    // 1. Botões do topo
-    const botAdd = document.getElementById('botAddSpell');
-    const btnDT = document.getElementById('btnOpenDTConfig');
-    if (botAdd) botAdd.onclick = () => openSpellCatalogOverlay();
-    if (btnDT) btnDT.onclick = openDTConfigModal;
+  // 1. Botões do topo
+  const botAdd = document.getElementById('botAddSpell');
+  const btnDT = document.getElementById('btnOpenDTConfig');
+  if (botAdd) botAdd.onclick = () => openSpellCatalogOverlay();
+  if (btnDT) btnDT.onclick = openDTConfigModal;
 
-    // 2. EVENTOS DOS FILTROS (NOVOS)
-    const btnToggleFiltros = document.getElementById('btnToggleFiltros');
-    const painelFiltros = document.getElementById('painelFiltrosMagias');
-    
-    if (btnToggleFiltros && painelFiltros) {
-        btnToggleFiltros.onclick = () => {
-            state.spellFilters.isExpanded = !state.spellFilters.isExpanded;
-            painelFiltros.style.display = state.spellFilters.isExpanded ? 'block' : 'none';
-            btnToggleFiltros.innerHTML = `Filtros ${state.spellFilters.isExpanded ? '▴' : '▾'}`;
-        };
+  // 2. EVENTOS DOS FILTROS (NOVOS)
+  const btnToggleFiltros = document.getElementById('btnToggleFiltros');
+  const painelFiltros = document.getElementById('painelFiltrosMagias');
+
+  if (btnToggleFiltros && painelFiltros) {
+    btnToggleFiltros.onclick = () => {
+      state.spellFilters.isExpanded = !state.spellFilters.isExpanded;
+      painelFiltros.style.display = state.spellFilters.isExpanded ? 'block' : 'none';
+      btnToggleFiltros.innerHTML = `Filtros ${state.spellFilters.isExpanded ? '▴' : '▾'}`;
+    };
+  }
+
+  const filtro = document.getElementById('filterMagias');
+  if (filtro) {
+    filtro.oninput = (e) => {
+      state.spellFilters.text = e.target.value;
+      aplicarFiltrosMagias();
+    };
+  }
+
+  // Clique nas Pills de Classe/Escola
+  document.querySelectorAll('.filter-pill').forEach(btn => {
+    btn.onclick = () => {
+      const type = btn.dataset.type; // 'school' ou 'class'
+      const val = btn.dataset.val;
+      const list = type === 'school' ? state.spellFilters.schools : state.spellFilters.classes;
+
+      // Adiciona ou remove o valor da lista selecionada
+      if (list.includes(val)) {
+        list.splice(list.indexOf(val), 1);
+        btn.classList.remove('active');
+      } else {
+        list.push(val);
+        btn.classList.add('active');
+      }
+
+      aplicarFiltrosMagias();
+    };
+  });
+
+  // 3. Upcast Visual
+  document.querySelectorAll('.spell-slot-selector').forEach(sel => {
+    sel.onclick = (ev) => ev.stopPropagation();
+    sel.onchange = (ev) => {
+      ev.stopPropagation();
+      const targetLvl = parseInt(ev.target.value);
+      const scaling = ev.target.dataset.scaling;
+      const baseDmg = ev.target.dataset.baseDmg;
+      const baseLvl = parseInt(ev.target.dataset.baseLvl);
+
+      const card = ev.target.closest('.spell-card');
+      const damageTextEl = card.querySelector('.dynamic-damage-text');
+
+      if (damageTextEl && scaling && baseDmg && typeof calculateNewDamage === 'function') {
+        const newDmg = calculateNewDamage(baseDmg, scaling, baseLvl, targetLvl);
+        damageTextEl.textContent = newDmg;
+        damageTextEl.style.color = '#e040fb';
+      }
+    };
+  });
+
+  // 4. EVENTOS DOS CARDS (MAGIAS)
+  document.querySelectorAll('.spell-card').forEach(card => {
+    const rawId = card.getAttribute('data-id');
+
+    // A. EXPANDIR / COLAPSAR
+    const header = card.querySelector('.card-header');
+    if (header) {
+      header.onclick = (ev) => {
+        if (ev.target.closest('.spell-right') ||
+          ev.target.closest('.check-ativar') ||
+          ev.target.closest('.cast-controls') ||
+          ev.target.closest('.dice-img') ||
+          ev.target.closest('a') ||
+          ev.target.tagName === 'SELECT' ||
+          ev.target.tagName === 'INPUT') {
+          return;
+        }
+
+        const s = state.spells.find(x => String(x.id) === String(rawId));
+        if (s) {
+          s.expanded = !s.expanded;
+          const body = card.querySelector('.card-body');
+          const caret = card.querySelector('.caret');
+
+          if (s.expanded) {
+            body.style.display = 'block';
+            card.classList.add('expanded');
+            if (caret) caret.textContent = '▾';
+          } else {
+            body.style.display = 'none';
+            card.classList.remove('expanded');
+            if (caret) caret.textContent = '▸';
+          }
+          saveStateToServer();
+        }
+      };
     }
 
-    const filtro = document.getElementById('filterMagias');
-    if (filtro) {
-        filtro.oninput = (e) => {
-            state.spellFilters.text = e.target.value;
-            aplicarFiltrosMagias();
-        };
+    // B. Checkbox Preparar
+    const ch = card.querySelector('.spell-activate');
+    if (ch) {
+      ch.onchange = (ev) => {
+        const s = state.spells.find(x => String(x.id) === String(rawId));
+        if (s) {
+          s.active = ev.target.checked;
+          saveStateToServer();
+        }
+      };
+      ch.onclick = ev => ev.stopPropagation();
     }
 
-    // Clique nas Pills de Classe/Escola
-    document.querySelectorAll('.filter-pill').forEach(btn => {
-        btn.onclick = () => {
-            const type = btn.dataset.type; // 'school' ou 'class'
-            const val = btn.dataset.val;
-            const list = type === 'school' ? state.spellFilters.schools : state.spellFilters.classes;
-            
-            // Adiciona ou remove o valor da lista selecionada
-            if (list.includes(val)) {
-                list.splice(list.indexOf(val), 1);
-                btn.classList.remove('active');
-            } else {
-                list.push(val);
-                btn.classList.add('active');
-            }
-            
-            aplicarFiltrosMagias();
-        };
-    });
+    // C. REMOVER (Eventos dentro do card body)
+    const btnRemove = card.querySelector('.remover-spell');
+    if (btnRemove) {
+      btnRemove.onclick = (ev) => {
+        ev.preventDefault();
+        state.spells = state.spells.filter(s => String(s.id) !== String(rawId));
+        card.remove();
+        saveStateToServer();
+      }
+    }
 
-    // 3. Upcast Visual
-    document.querySelectorAll('.spell-slot-selector').forEach(sel => {
-        sel.onclick = (ev) => ev.stopPropagation(); 
-        sel.onchange = (ev) => {
-            ev.stopPropagation(); 
-            const targetLvl = parseInt(ev.target.value);
-            const scaling = ev.target.dataset.scaling;
-            const baseDmg = ev.target.dataset.baseDmg;
-            const baseLvl = parseInt(ev.target.dataset.baseLvl);
-            
-            const card = ev.target.closest('.spell-card');
-            const damageTextEl = card.querySelector('.dynamic-damage-text');
-            
-            if (damageTextEl && scaling && baseDmg && typeof calculateNewDamage === 'function') {
-                const newDmg = calculateNewDamage(baseDmg, scaling, baseLvl, targetLvl);
-                damageTextEl.textContent = newDmg;
-                damageTextEl.style.color = '#e040fb';
-            }
-        };
-    });
+    // D. EDITAR
+    const btnEdit = card.querySelector('.editar-spell');
+    if (btnEdit) {
+      btnEdit.onclick = (ev) => {
+        ev.preventDefault();
+        const s = state.spells.find(x => String(x.id) === String(rawId));
+        if (s) openSpellModal(s);
+      }
+    }
 
-    // 4. EVENTOS DOS CARDS (MAGIAS)
-    document.querySelectorAll('.spell-card').forEach(card => {
-        const rawId = card.getAttribute('data-id');
-        
-        // A. EXPANDIR / COLAPSAR
-        const header = card.querySelector('.card-header');
-        if (header) {
-            header.onclick = (ev) => {
-                if (ev.target.closest('.spell-right') || 
-                    ev.target.closest('.check-ativar') || 
-                    ev.target.closest('.cast-controls') ||
-                    ev.target.closest('.dice-img') || 
-                    ev.target.closest('a') ||
-                    ev.target.tagName === 'SELECT' ||
-                    ev.target.tagName === 'INPUT') {
-                    return;
-                }
-                
-                const s = state.spells.find(x => String(x.id) === String(rawId));
-                if (s) {
-                    s.expanded = !s.expanded;
-                    const body = card.querySelector('.card-body');
-                    const caret = card.querySelector('.caret');
-                    
-                    if(s.expanded) {
-                        body.style.display = 'block';
-                        card.classList.add('expanded');
-                        if(caret) caret.textContent = '▾';
-                    } else {
-                        body.style.display = 'none';
-                        card.classList.remove('expanded');
-                        if(caret) caret.textContent = '▸';
-                    }
-                    saveStateToServer();
-                }
-            };
+    // E. EVENTO HÍBRIDO (MAGIAS) - DADO
+    const diceImg = card.querySelector('.dice-img');
+    if (diceImg) {
+      diceImg.addEventListener('click', (e) => {
+        diceImg.style.transform = "scale(0.8)";
+        setTimeout(() => diceImg.style.transform = "scale(1)", 100);
+
+        const s = state.spells.find(x => String(x.id) === String(rawId));
+        if (!s) return;
+
+        const vals = getSpellAttackValues() || { prof: 0, mod: 0, extra: 0 };
+        const totalBonus = vals.prof + vals.mod + vals.extra;
+        const exprAtk = `1d20 + ${totalBonus}`;
+
+        const damageTextElement = card.querySelector('.dynamic-damage-text');
+        const exprDano = damageTextElement ? damageTextElement.textContent : s.damage;
+
+        const atkRes = rollDiceWithAdvantage(exprAtk, 0, 0);
+
+        let dmgRes = null;
+        if (atkRes.isCrit && exprDano) {
+          const regexDice = /^(\d*)d(\d+)(.*)$/i;
+          const match = exprDano.match(regexDice);
+          let dmgFormulaCrit = exprDano;
+          if (match) {
+            const qtd = (match[1] === "" ? 1 : parseInt(match[1])) * 2;
+            dmgFormulaCrit = `${qtd}d${match[2]}${match[3] || ''}`;
+          }
+          dmgRes = rollDiceExpression(dmgFormulaCrit);
+          dmgRes.isCrit = true;
+          dmgRes.label = "DANO CRÍTICO";
+        } else if (exprDano) {
+          dmgRes = rollDiceExpression(exprDano);
         }
 
-        // B. Checkbox Preparar
-        const ch = card.querySelector('.spell-activate');
-        if (ch) {
-            ch.onchange = (ev) => {
-                const s = state.spells.find(x => String(x.id) === String(rawId));
-                if (s) {
-                    s.active = ev.target.checked;
-                    saveStateToServer();
-                }
-            };
-            ch.onclick = ev => ev.stopPropagation();
-        }
+        showCombatResults(s.name, atkRes, dmgRes);
+      });
 
-        // C. REMOVER (Eventos dentro do card body)
-        const btnRemove = card.querySelector('.remover-spell');
-        if (btnRemove) {
-            btnRemove.onclick = (ev) => {
-                ev.preventDefault();
-                state.spells = state.spells.filter(s => String(s.id) !== String(rawId));
-                card.remove();
-                saveStateToServer();
-            }
-        }
+      if (typeof window.addLongPressListener === 'function') {
+        window.addLongPressListener(diceImg, (e) => {
+          const s = state.spells.find(x => String(x.id) === String(rawId));
+          if (!s) return;
 
-        // D. EDITAR
-        const btnEdit = card.querySelector('.editar-spell');
-        if (btnEdit) {
-            btnEdit.onclick = (ev) => {
-                ev.preventDefault();
-                const s = state.spells.find(x => String(x.id) === String(rawId));
-                if (s) openSpellModal(s);
-            }
-        }
+          const vals = getSpellAttackValues() || { prof: 0, mod: 0, extra: 0 };
+          const totalBonus = vals.prof + vals.mod + vals.extra;
+          const exprAtk = `1d20 + ${totalBonus}`;
+          const damageTextElement = card.querySelector('.dynamic-damage-text');
+          const exprDano = damageTextElement ? damageTextElement.textContent : s.damage;
 
-        // E. EVENTO HÍBRIDO (MAGIAS) - DADO
-        const diceImg = card.querySelector('.dice-img');
-        if (diceImg) {
-            diceImg.addEventListener('click', (e) => {
-                diceImg.style.transform = "scale(0.8)";
-                setTimeout(()=>diceImg.style.transform="scale(1)", 100);
-
-                const s = state.spells.find(x => String(x.id) === String(rawId));
-                if (!s) return;
-
-                const vals = getSpellAttackValues() || {prof:0, mod:0, extra:0};
-                const totalBonus = vals.prof + vals.mod + vals.extra;
-                const exprAtk = `1d20 + ${totalBonus}`;
-                
-                const damageTextElement = card.querySelector('.dynamic-damage-text');
-                const exprDano = damageTextElement ? damageTextElement.textContent : s.damage;
-                
-                const atkRes = rollDiceWithAdvantage(exprAtk, 0, 0);
-                
-                let dmgRes = null;
-                if (atkRes.isCrit && exprDano) {
-                     const regexDice = /^(\d*)d(\d+)(.*)$/i;
-                     const match = exprDano.match(regexDice);
-                     let dmgFormulaCrit = exprDano;
-                     if (match) {
-                        const qtd = (match[1] === "" ? 1 : parseInt(match[1])) * 2;
-                        dmgFormulaCrit = `${qtd}d${match[2]}${match[3] || ''}`;
-                     }
-                     dmgRes = rollDiceExpression(dmgFormulaCrit);
-                     dmgRes.isCrit = true;
-                     dmgRes.label = "DANO CRÍTICO";
-                } else if (exprDano) {
-                     dmgRes = rollDiceExpression(exprDano);
-                }
-
-                showCombatResults(s.name, atkRes, dmgRes);
-            });
-
-            if (typeof window.addLongPressListener === 'function') {
-                window.addLongPressListener(diceImg, (e) => {
-                    const s = state.spells.find(x => String(x.id) === String(rawId));
-                    if (!s) return;
-
-                    const vals = getSpellAttackValues() || {prof:0, mod:0, extra:0};
-                    const totalBonus = vals.prof + vals.mod + vals.extra;
-                    const exprAtk = `1d20 + ${totalBonus}`;
-                    const damageTextElement = card.querySelector('.dynamic-damage-text');
-                    const exprDano = damageTextElement ? damageTextElement.textContent : s.damage;
-
-                    window.abrirMenuRolagem(e, s.name, exprAtk, exprDano);
-                });
-            }
-        }
-    });
+          window.abrirMenuRolagem(e, s.name, exprAtk, exprDano);
+        });
+      }
+    }
+  });
 }
 
 /* =============================================================
@@ -2857,7 +2861,7 @@ function openDTConfigModal() {
     // Salva DT
     state.spellDCConfig.selectedAttr = document.getElementById('dt-attr-select').value;
     state.spellDCConfig.extraMod = parseInt(document.getElementById('dt-extra-val').value) || 0;
-    
+
     // Salva Crítico
     state.spellDCConfig.critRange = parseInt(document.getElementById('dt-crit-range').value) || 20;
     state.spellDCConfig.critMult = parseInt(document.getElementById('dt-crit-mult').value) || 2;
@@ -3028,10 +3032,10 @@ function openSpellModal(existingSpell = null) {
         name: modal.querySelector('#modal-name').value.trim() || 'Sem nome',
         levelNumber: Number(modal.querySelector('#modal-level').value) || 0,
         damage: modal.querySelector('#modal-damage').value.trim(),
-        
+
         expanded: existingSpell ? existingSpell.expanded : false,
         active: existingSpell ? existingSpell.active : false,
-        
+
         // --- NOVAS TAGS ---
         concentration: modal.querySelector('#modal-conc').checked,
         ritual: modal.querySelector('#modal-rit').checked,
@@ -3080,10 +3084,10 @@ function openSpellCatalogOverlay(parentModal = null) {
 
   // --- 1. EXTRAIR ESCOLAS E CLASSES ÚNICAS DO JSON ---
   const escolasUnicas = [...new Set(spellCatalog.map(s => s.school).filter(Boolean))].sort();
-  
+
   let classesSet = new Set();
   spellCatalog.forEach(s => {
-      if(s.spellClass) s.spellClass.split(',').forEach(c => classesSet.add(c.trim()));
+    if (s.spellClass) s.spellClass.split(',').forEach(c => classesSet.add(c.trim()));
   });
   const classesUnicas = [...classesSet].filter(Boolean).sort();
 
@@ -3093,8 +3097,8 @@ function openSpellCatalogOverlay(parentModal = null) {
   let isFiltersExpanded = false;
 
   const renderCatalogPills = (list, type) => {
-      if (list.length === 0) return '<em style="color:#666; font-size:12px;">Nenhuma disponível</em>';
-      return list.map(item => `
+    if (list.length === 0) return '<em style="color:#666; font-size:12px;">Nenhuma disponível</em>';
+    return list.map(item => `
           <button type="button" class="filter-pill catalog-filter-pill" data-type="${type}" data-val="${escapeHtml(item)}">
               ${item}
           </button>
@@ -3153,7 +3157,7 @@ function openSpellCatalogOverlay(parentModal = null) {
         </div>
       </div>
     `;
-  
+
   // TRAVA O SCROLL DO FUNDO
   document.body.classList.add('modal-open-lock');
   document.body.appendChild(overlay);
@@ -3161,16 +3165,16 @@ function openSpellCatalogOverlay(parentModal = null) {
 
   // FUNÇÃO DE FECHAR CORRIGIDA
   const fecharCatalogo = () => {
-      overlay.remove();
-      document.body.classList.remove('modal-open-lock');
-      checkScrollLock(); // Chama o antigo por garantia
+    overlay.remove();
+    document.body.classList.remove('modal-open-lock');
+    checkScrollLock(); // Chama o antigo por garantia
   };
 
   overlay.querySelector('.catalog-large-close').onclick = fecharCatalogo;
-  
+
   // Fecha clicando fora da caixa (no overlay escuro)
   overlay.onclick = (e) => {
-      if (e.target === overlay) fecharCatalogo();
+    if (e.target === overlay) fecharCatalogo();
   };
 
   // BOTÃO CRIAR MAGIA MANUAL
@@ -3191,40 +3195,40 @@ function openSpellCatalogOverlay(parentModal = null) {
   // --- EVENTOS DOS FILTROS (Toggle Painel) ---
   const btnToggleFiltros = overlay.querySelector('#btnToggleCatalogFiltros');
   const painelFiltros = overlay.querySelector('#painelFiltrosCatalog');
-  const containerLarge = overlay.querySelector('.catalog-large'); 
-  
+  const containerLarge = overlay.querySelector('.catalog-large');
+
   // Usando evento para mobile (touchstart) e desktop (click) de forma segura
   const toggleFiltroAction = (e) => {
-      isFiltersExpanded = !isFiltersExpanded;
-      painelFiltros.style.display = isFiltersExpanded ? 'block' : 'none';
-      btnToggleFiltros.innerHTML = `Filtros ${isFiltersExpanded ? '▴' : '▾'}`;
-      
-      if (isFiltersExpanded) {
-          containerLarge.classList.add('filters-open');
-      } else {
-          containerLarge.classList.remove('filters-open');
-      }
+    isFiltersExpanded = !isFiltersExpanded;
+    painelFiltros.style.display = isFiltersExpanded ? 'block' : 'none';
+    btnToggleFiltros.innerHTML = `Filtros ${isFiltersExpanded ? '▴' : '▾'}`;
+
+    if (isFiltersExpanded) {
+      containerLarge.classList.add('filters-open');
+    } else {
+      containerLarge.classList.remove('filters-open');
+    }
   };
   btnToggleFiltros.addEventListener('click', toggleFiltroAction);
 
   // --- EVENTOS DOS FILTROS (Clique nas Pills CORRIGIDO PARA MOBILE) ---
   // A abordagem com delegação de eventos na div pai é mais segura no mobile
   painelFiltros.addEventListener('click', (e) => {
-      const btn = e.target.closest('.catalog-filter-pill');
-      if (!btn) return; // Se não clicou num botão, ignora
+    const btn = e.target.closest('.catalog-filter-pill');
+    if (!btn) return; // Se não clicou num botão, ignora
 
-      const type = btn.dataset.type; // 'school' ou 'class'
-      const val = btn.dataset.val;
-      const list = type === 'school' ? selectedSchools : selectedClasses;
-      
-      if (list.includes(val)) {
-          list.splice(list.indexOf(val), 1);
-          btn.classList.remove('active');
-      } else {
-          list.push(val);
-          btn.classList.add('active');
-      }
-      triggerSearch(); 
+    const type = btn.dataset.type; // 'school' ou 'class'
+    const val = btn.dataset.val;
+    const list = type === 'school' ? selectedSchools : selectedClasses;
+
+    if (list.includes(val)) {
+      list.splice(list.indexOf(val), 1);
+      btn.classList.remove('active');
+    } else {
+      list.push(val);
+      btn.classList.add('active');
+    }
+    triggerSearch();
   });
 
 
@@ -3232,7 +3236,7 @@ function openSpellCatalogOverlay(parentModal = null) {
   const inputSearch = overlay.querySelector('#catalogLargeSearch');
   inputSearch.oninput = triggerSearch;
 
-// LÓGICA PRINCIPAL DE FILTRAGEM
+  // LÓGICA PRINCIPAL DE FILTRAGEM
   function triggerSearch() {
     const q = inputSearch.value.toLowerCase();
     const searchTerms = q.split(',').map(t => t.trim()).filter(t => t);
@@ -3243,7 +3247,7 @@ function openSpellCatalogOverlay(parentModal = null) {
     overlay.querySelectorAll('.catalog-card-item').forEach(card => {
       const id = card.dataset.id;
       const spell = spellCatalog.find(s => s.id === id);
-      
+
       let show = true;
 
       // 1. Filtro de Círculo
@@ -3251,40 +3255,40 @@ function openSpellCatalogOverlay(parentModal = null) {
       if (circleFilter !== 'all' && itemLevel !== circleFilter) show = false;
 
       if (spell && show) {
-          // 2. Filtro de Escola
-          if (selectedSchools.length > 0 && !selectedSchools.includes(spell.school)) {
-              show = false;
-          }
-          
-          // 3. Filtro de Classe
-          if (show && selectedClasses.length > 0) {
-              const spellClasses = (spell.spellClass || '').split(',').map(c => c.trim());
-              const temClasse = selectedClasses.some(c => spellClasses.includes(c));
-              if (!temClasse) show = false;
-          }
+        // 2. Filtro de Escola
+        if (selectedSchools.length > 0 && !selectedSchools.includes(spell.school)) {
+          show = false;
+        }
 
-          // 4. Filtro de Texto
-          if (show && searchTerms.length > 0) {
-            const fullText = [
-              spell.name, spell.school, spell.spellClass, spell.levelNumber.toString(),
-              spell.damage, spell.description, spell.material,
-              (spell.components?.V ? 'verbal' : ''),
-              (spell.components?.S ? 'somatico' : ''),
-              (spell.components?.M ? 'material' : '')
-            ].filter(Boolean).join(' ').toLowerCase();
+        // 3. Filtro de Classe
+        if (show && selectedClasses.length > 0) {
+          const spellClasses = (spell.spellClass || '').split(',').map(c => c.trim());
+          const temClasse = selectedClasses.some(c => spellClasses.includes(c));
+          if (!temClasse) show = false;
+        }
 
-            const passText = searchTerms.every(term => fullText.includes(term));
-            if (!passText) show = false;
-          }
+        // 4. Filtro de Texto
+        if (show && searchTerms.length > 0) {
+          const fullText = [
+            spell.name, spell.school, spell.spellClass, spell.levelNumber.toString(),
+            spell.damage, spell.description, spell.material,
+            (spell.components?.V ? 'verbal' : ''),
+            (spell.components?.S ? 'somatico' : ''),
+            (spell.components?.M ? 'material' : '')
+          ].filter(Boolean).join(' ').toLowerCase();
+
+          const passText = searchTerms.every(term => fullText.includes(term));
+          if (!passText) show = false;
+        }
       } else if (!spell && show && searchTerms.length > 0) {
-          show = card.textContent.toLowerCase().includes(searchTerms[0]);
+        show = card.textContent.toLowerCase().includes(searchTerms[0]);
       }
 
       // A CORREÇÃO MÁGICA AQUI TAMBÉM:
       if (show) {
-          card.style.removeProperty('display');
+        card.style.removeProperty('display');
       } else {
-          card.style.setProperty('display', 'none', 'important');
+        card.style.setProperty('display', 'none', 'important');
       }
     });
   }
@@ -3470,16 +3474,16 @@ function renderPreparedSpells() {
 
            <div class="controls-row">
                 <input id="filterPrepared" placeholder="Filtrar..." />
-                
-                ${getHeaderDiceHtml('Ataque Mágico (Preparadas)')}
-
-                <div class="right-controls">
+                <div class="right-controls" style="display:flex; align-items:center;">
                     <div class="dt-magias" id="btnOpenDTConfig_Prep" style="cursor:pointer;" title="Clique para configurar">
                         <label style="cursor:pointer; color:#9c27b0;">DT DE MAGIAS ⚙️</label>
                         <input id="dtMagiasInput_Prep" type="text" value="${state.dtMagias}" readonly 
                                style="cursor:pointer; font-weight:bold; color:#fff; text-align:center; min-width:80px;" />
                     </div>
                 </div>
+            </div>
+            <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 12px; margin-top: -4px;">
+                ${getHeaderDiceHtml('Ataque Mágico')}
             </div>
         </div>
     `;
@@ -3500,11 +3504,11 @@ function renderPreparedSpells() {
       const val = e.target.value.toLowerCase();
       conteudoEl.querySelectorAll('.card').forEach(c => {
         const txt = c.textContent.toLowerCase();
-        
+
         if (txt.includes(val)) {
-            c.style.removeProperty('display');
+          c.style.removeProperty('display');
         } else {
-            c.style.setProperty('display', 'none', 'important');
+          c.style.setProperty('display', 'none', 'important');
         }
       });
     });
@@ -3623,7 +3627,7 @@ function renderPreparedSpells() {
       state.abilities = state.abilities.filter(a => a.id !== id);
       saveStateToServer();
       renderActiveTab();
-      
+
     });
   });
 
@@ -3859,15 +3863,15 @@ window.adicionarItemDoCatalogo = (id) => {
 
   // Aplica regra apenas se for Arma
   if (i.type === 'Arma' || i.category === 'Armas') {
-      const t = (i.tipoArma || '').toLowerCase();
-      
-      // Verifica variações de escrita para "A Distancia"
-      if (t.includes('distancia') || t.includes('distância')) {
-          defaultAttr = 'Destreza';
-      } else {
-          // Se não for distância, assume Corpo a Corpo (Força)
-          defaultAttr = 'Força';
-      }
+    const t = (i.tipoArma || '').toLowerCase();
+
+    // Verifica variações de escrita para "A Distancia"
+    if (t.includes('distancia') || t.includes('distância')) {
+      defaultAttr = 'Destreza';
+    } else {
+      // Se não for distância, assume Corpo a Corpo (Força)
+      defaultAttr = 'Força';
+    }
   }
 
   let novoItem = {
@@ -3881,15 +3885,15 @@ window.adicionarItemDoCatalogo = (id) => {
     proficiency: i.proficiency || 'Armas Simples',
 
     // --- APLICA O ATRIBUTO CALCULADO ACIMA ---
-    attackAttribute: defaultAttr, 
-    damageAttribute: defaultAttr, 
+    attackAttribute: defaultAttr,
+    damageAttribute: defaultAttr,
     attackBonus: i.attackBonus || '', // Mantém bônus mágica se houver no JSON
     damageBonus: i.damageBonus || '',
     // -----------------------------------------
 
-    defense: i.defense || '',         
-    tipoItem: i.tipoItem || '',       
-    minStrength: i.minStrength || '', 
+    defense: i.defense || '',
+    tipoItem: i.tipoItem || '',
+    minStrength: i.minStrength || '',
 
     tipoArma: i.tipoArma || 'Corpo a Corpo',
     empunhadura: i.empunhadura || 'Uma mao',
@@ -4138,7 +4142,7 @@ function openAbilityCatalogOverlay() {
           title: c.name,
           description: c.description || '',
           expanded: false,
-          
+
           class: c.class || '',
           subclass: c.subclass || '',
           category: c.category || 'Geral',
@@ -4148,11 +4152,11 @@ function openAbilityCatalogOverlay() {
           damage: c.damage || '',
           damageType: c.damageType || '',
           damageAttribute: c.damageAttribute || '',
-          
+
           attackBonus: c.attackBonus || '',
           attackAttribute: c.attackAttribute || '',
           useStandardAttack: !!c.useStandardAttack,
-          
+
           defenseBonus: c.defenseBonus || '',
           speedBonus: c.speedBonus || '',
           saveDC: c.saveDC || ''
@@ -4307,25 +4311,25 @@ function openNewAbilityModal(existingAbility = null) {
 
   // Valores iniciais seguros
   const vals = {
-      title: existingAbility ? existingAbility.title : '',
-      
-      // DANO E ATRIBUTO SOMADO
-      damage: existingAbility ? existingAbility.damage : '',
-      damageAttribute: existingAbility ? existingAbility.damageAttribute : '', // <--- NOVO
-      damageType: existingAbility ? existingAbility.damageType : '',
-      
-      // CAMPOS DE ATAQUE E EFEITOS
-      attackBonus: existingAbility ? existingAbility.attackBonus : '',
-      useStandardAttack: existingAbility ? !!existingAbility.useStandardAttack : false,
-      attackAttribute: existingAbility ? existingAbility.attackAttribute : 'Força',
-      
-      defenseBonus: existingAbility ? existingAbility.defenseBonus : '',
-      speedBonus: existingAbility ? existingAbility.speedBonus : '',
-      saveDC: existingAbility ? existingAbility.saveDC : '',
-      
-      category: existingAbility ? existingAbility.category : 'Geral',
-      class: existingAbility ? existingAbility.class : '',
-      subclass: existingAbility ? existingAbility.subclass : ''
+    title: existingAbility ? existingAbility.title : '',
+
+    // DANO E ATRIBUTO SOMADO
+    damage: existingAbility ? existingAbility.damage : '',
+    damageAttribute: existingAbility ? existingAbility.damageAttribute : '', // <--- NOVO
+    damageType: existingAbility ? existingAbility.damageType : '',
+
+    // CAMPOS DE ATAQUE E EFEITOS
+    attackBonus: existingAbility ? existingAbility.attackBonus : '',
+    useStandardAttack: existingAbility ? !!existingAbility.useStandardAttack : false,
+    attackAttribute: existingAbility ? existingAbility.attackAttribute : 'Força',
+
+    defenseBonus: existingAbility ? existingAbility.defenseBonus : '',
+    speedBonus: existingAbility ? existingAbility.speedBonus : '',
+    saveDC: existingAbility ? existingAbility.saveDC : '',
+
+    category: existingAbility ? existingAbility.category : 'Geral',
+    class: existingAbility ? existingAbility.class : '',
+    subclass: existingAbility ? existingAbility.subclass : ''
   };
 
   const CATEGORIAS = ['Geral', 'Raça', 'Talento', 'Antecedente', 'Classe'];
@@ -4339,12 +4343,12 @@ function openNewAbilityModal(existingAbility = null) {
   // Opções de Atributos
   const ATTRS = ['Força', 'Destreza', 'Constituição', 'Inteligência', 'Sabedoria', 'Carisma'];
   const attrOptions = ATTRS.map(a => `<option value="${a}" ${vals.attackAttribute === a ? 'selected' : ''}>${a}</option>`).join('');
-  
+
   // Opções para o Dano (Inclui 'Nenhum')
   const damageAttrOptions = `<option value="">Nenhum</option>` + ATTRS.map(a => `<option value="${a}" ${vals.damageAttribute === a ? 'selected' : ''}>${a}</option>`).join('');
 
   const classDropdownStyle = vals.category === 'Classe' ? 'display:block;' : 'display:none;';
-  
+
   // HTML DO MODAL
   modal.innerHTML = `
       <div class="spell-modal" style="width:800px; max-width:calc(100% - 40px);">
@@ -4446,20 +4450,20 @@ function openNewAbilityModal(existingAbility = null) {
   const inpBonus = modal.querySelector('#hab-attack');
 
   chkStd.addEventListener('change', () => {
-      if (chkStd.checked) {
-          wrapperAttr.style.display = 'block';
-          inpBonus.placeholder = 'Bônus Extra (ex: +1)';
-      } else {
-          wrapperAttr.style.display = 'none';
-          inpBonus.placeholder = 'Bônus Fixo (ex: +5)';
-      }
+    if (chkStd.checked) {
+      wrapperAttr.style.display = 'block';
+      inpBonus.placeholder = 'Bônus Extra (ex: +1)';
+    } else {
+      wrapperAttr.style.display = 'none';
+      inpBonus.placeholder = 'Bônus Fixo (ex: +5)';
+    }
   });
 
   // Evento Tipo Classe
   const radios = modal.querySelectorAll('input[name="hab-type"]');
   const classDiv = modal.querySelector('#hab-class-selector');
   radios.forEach(r => r.addEventListener('change', e => {
-      classDiv.style.display = e.target.value === 'Classe' ? 'block' : 'none';
+    classDiv.style.display = e.target.value === 'Classe' ? 'block' : 'none';
   }));
 
   // Fechar
@@ -4478,38 +4482,38 @@ function openNewAbilityModal(existingAbility = null) {
     const cls = cat === 'Classe' ? modal.querySelector('#hab-class-text').value : '';
 
     const newHab = {
-        id: existingAbility ? existingAbility.id : uid(),
-        title: nome,
-        description: desc,
-        category: cat,
-        class: cls,
-        active: existingAbility ? existingAbility.active : false,
-        expanded: existingAbility ? existingAbility.expanded : false,
+      id: existingAbility ? existingAbility.id : uid(),
+      title: nome,
+      description: desc,
+      category: cat,
+      class: cls,
+      active: existingAbility ? existingAbility.active : false,
+      expanded: existingAbility ? existingAbility.expanded : false,
 
-        // SALVANDO DANO E ATRIBUTO SOMADO
-        damage: modal.querySelector('#hab-damage').value.trim(),
-        damageAttribute: modal.querySelector('#hab-damage-attr').value, // Salva "Força", "Destreza", etc.
-        damageType: modal.querySelector('#hab-dmg-type').value.trim(),
-        
-        useStandardAttack: chkStd.checked,
-        attackAttribute: modal.querySelector('#hab-attack-attr').value,
-        attackBonus: inpBonus.value.trim(),
+      // SALVANDO DANO E ATRIBUTO SOMADO
+      damage: modal.querySelector('#hab-damage').value.trim(),
+      damageAttribute: modal.querySelector('#hab-damage-attr').value, // Salva "Força", "Destreza", etc.
+      damageType: modal.querySelector('#hab-dmg-type').value.trim(),
 
-        defenseBonus: modal.querySelector('#hab-defense').value.trim(),
-        speedBonus: modal.querySelector('#hab-speed').value.trim(),
-        saveDC: modal.querySelector('#hab-dc').value.trim()
+      useStandardAttack: chkStd.checked,
+      attackAttribute: modal.querySelector('#hab-attack-attr').value,
+      attackBonus: inpBonus.value.trim(),
+
+      defenseBonus: modal.querySelector('#hab-defense').value.trim(),
+      speedBonus: modal.querySelector('#hab-speed').value.trim(),
+      saveDC: modal.querySelector('#hab-dc').value.trim()
     };
 
     if (existingAbility) {
-        state.abilities = state.abilities.map(h => h.id === newHab.id ? newHab : h);
+      state.abilities = state.abilities.map(h => h.id === newHab.id ? newHab : h);
     } else {
-        state.abilities.unshift(newHab);
+      state.abilities.unshift(newHab);
     }
 
     closeAll();
     renderAbilities();
-    saveStateToServer(); 
-    window.dispatchEvent(new CustomEvent('sheet-updated')); 
+    saveStateToServer();
+    window.dispatchEvent(new CustomEvent('sheet-updated'));
   });
 }
 
@@ -4519,13 +4523,13 @@ function openNewAbilityModal(existingAbility = null) {
 /* =============================================================
    CORREÇÃO 2: renderDescription Otimizada (Debounce)
 ============================================================= */
-let descSaveTimer = null; 
+let descSaveTimer = null;
 
 function renderDescription() {
-    const d = state.description;
+  const d = state.description;
 
-    // HTML (sem botão salvar, pois é automático)
-    conteudoEl.innerHTML = `
+  // HTML (sem botão salvar, pois é automático)
+  conteudoEl.innerHTML = `
         <div class="desc-grid">
             <div><label>Anotações</label><textarea id="desc-anotacoes" placeholder="Anotações pessoais...">${d.anotacoes}</textarea></div>
             <div><label>Aparência</label><textarea id="desc-aparencia" placeholder="Descrição física...">${d.aparencia}</textarea></div>
@@ -4537,33 +4541,33 @@ function renderDescription() {
         </div>
     `;
 
-    const textareas = conteudoEl.querySelectorAll('textarea');
+  const textareas = conteudoEl.querySelectorAll('textarea');
 
-    textareas.forEach(tx => {
-        // Ajusta altura inicial
-        tx.style.height = 'auto';
-        tx.style.height = (tx.scrollHeight + 2) + 'px';
+  textareas.forEach(tx => {
+    // Ajusta altura inicial
+    tx.style.height = 'auto';
+    tx.style.height = (tx.scrollHeight + 2) + 'px';
 
-        tx.addEventListener('input', () => {
-            // 1. Ajusta altura visualmente
-            tx.style.height = 'auto';
-            tx.style.height = (tx.scrollHeight + 2) + 'px';
+    tx.addEventListener('input', () => {
+      // 1. Ajusta altura visualmente
+      tx.style.height = 'auto';
+      tx.style.height = (tx.scrollHeight + 2) + 'px';
 
-            // 2. Atualiza memória LOCAL instantaneamente
-            const key = tx.id.replace('desc-', '');
-            if (state.description.hasOwnProperty(key)) {
-                state.description[key] = tx.value;
-                
-                // 3. Cancela salvamento anterior se ainda estiver digitando
-                if (descSaveTimer) clearTimeout(descSaveTimer);
+      // 2. Atualiza memória LOCAL instantaneamente
+      const key = tx.id.replace('desc-', '');
+      if (state.description.hasOwnProperty(key)) {
+        state.description[key] = tx.value;
 
-                // 4. Agenda novo salvamento para 1.5 segundos depois de PARAR de digitar
-                descSaveTimer = setTimeout(() => {
-                    saveStateToServer();
-                }, 1500); 
-            }
-        });
+        // 3. Cancela salvamento anterior se ainda estiver digitando
+        if (descSaveTimer) clearTimeout(descSaveTimer);
+
+        // 4. Agenda novo salvamento para 1.5 segundos depois de PARAR de digitar
+        descSaveTimer = setTimeout(() => {
+          saveStateToServer();
+        }, 1500);
+      }
     });
+  });
 }
 
 
@@ -4587,7 +4591,7 @@ function renderItemGroup(titulo, listaItens, chaveUnica, forceExpand = false) {
     isCollapsed = state.collapsedSections[chaveUnica] !== undefined ? state.collapsedSections[chaveUnica] : true;
   }
 
-const arrow = isCollapsed ? '▸' : '▾';
+  const arrow = isCollapsed ? '▸' : '▾';
   const displayStyle = isCollapsed ? 'display:none;' : '';
   const cardsHtml = listaItens.map(item => formatInventoryItem(item)).join('');
 
@@ -4616,9 +4620,9 @@ function renderAbilitySection(titulo, listaCards, chaveUnica, forceExpand = fals
   const displayStyle = isCollapsed ? 'display:none;' : '';
 
   // Mapeamento para pegar o modificador correto
-  const attrMap = { 
-      'Força': 'for', 'Destreza': 'dex', 'Constituição': 'con', 
-      'Inteligência': 'int', 'Sabedoria': 'sab', 'Carisma': 'car' 
+  const attrMap = {
+    'Força': 'for', 'Destreza': 'dex', 'Constituição': 'con',
+    'Inteligência': 'int', 'Sabedoria': 'sab', 'Carisma': 'car'
   };
 
   const cardsHtml = listaCards.map(a => {
@@ -4626,23 +4630,23 @@ function renderAbilitySection(titulo, listaCards, chaveUnica, forceExpand = fals
     let finalDamageDisplay = a.damage; // Ex: "1d8"
 
     if (a.damage && a.damage !== '-' && a.damageAttribute && a.damageAttribute !== '') {
-        const key = attrMap[a.damageAttribute];
-        if (key) {
-            // Usa a função getAttributeMod que já existe no EsquerdaJS/DireitaJS
-            const mod = typeof getAttributeMod === 'function' ? getAttributeMod(key) : 0;
-            
-            // Adiciona o modificador ao texto (Ex: "1d8 + 3" ou "1d8 - 1")
-            if (mod !== 0) {
-                const sinal = mod > 0 ? '+' : '';
-                finalDamageDisplay = `${a.damage} ${sinal} ${mod}`;
-            }
+      const key = attrMap[a.damageAttribute];
+      if (key) {
+        // Usa a função getAttributeMod que já existe no EsquerdaJS/DireitaJS
+        const mod = typeof getAttributeMod === 'function' ? getAttributeMod(key) : 0;
+
+        // Adiciona o modificador ao texto (Ex: "1d8 + 3" ou "1d8 - 1")
+        if (mod !== 0) {
+          const sinal = mod > 0 ? '+' : '';
+          finalDamageDisplay = `${a.damage} ${sinal} ${mod}`;
         }
+      }
     }
 
     // --- HTML DO HEADER DO DANO ---
     let rightHeaderHtml = '';
     if (finalDamageDisplay && finalDamageDisplay !== '-' && finalDamageDisplay.trim() !== '') {
-        rightHeaderHtml = `
+      rightHeaderHtml = `
             <div class="card-meta spell-damage" style="display: flex; align-items: center; gap: 6px; margin-right: 10px;">
                 <span style="font-weight: 800; color: #9c27b0; font-size: 16px;">${finalDamageDisplay}</span>
                 <img class="dice-img" src="img/imagem-no-site/dado.png" alt="dado" style="width: 20px; height: 20px; cursor:pointer;" title="Rolar Dano" />
@@ -4661,7 +4665,7 @@ function renderAbilitySection(titulo, listaCards, chaveUnica, forceExpand = fals
     if (a.saveDC) parts.push(`<span class="purple">CD:</span> <span class="white-val">${a.saveDC}</span>`);
 
     if (parts.length > 0) {
-        statsHtml = `
+      statsHtml = `
             <div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; display: flex; flex-wrap: wrap; gap: 12px;">
                 ${parts.join('<span class="separator"></span>')}
             </div>
@@ -4698,7 +4702,7 @@ function renderAbilitySection(titulo, listaCards, chaveUnica, forceExpand = fals
     `;
   }).join('');
 
- return `
+  return `
         <div class="hab-section-group" style="margin-bottom:12px;">
             <div class="toggle-section-header" data-key="${chaveUnica}" style="cursor:pointer; display:flex; align-items:center; background:rgba(255,255,255,0.03); padding:8px; border-radius:4px; margin-bottom:5px; border: 1px solid rgba(255,255,255,0.05);">
                 <span style="font-size:14px; color:#9c27b0; width:15px;">${arrow}</span> 
@@ -5081,7 +5085,7 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
       <div class="dice-close" onclick="fecharDiceResult()" ontouchstart="event.preventDefault(); fecharDiceResult()">✖</div>
       <div class="dice-content-wrapper">
   `;
-  
+
   contentHtml += `<div class="dice-header">${title}</div>`;
 
   if (attackResult) {
@@ -5105,7 +5109,7 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
 
   if (damageResult) {
     let totalClass = damageResult.isCrit ? "crit-total" : "";
-    
+
     // AQUI ESTÁ A MUDANÇA: Usa damageResult.label ou o padrão "DANO"
     const labelTexto = damageResult.label || "DANO";
 
@@ -5139,31 +5143,31 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
   // --- CORREÇÃO: FORÇAR O FUNCIONAMENTO DO BOTÃO FECHAR ---
   const btnFechar = container.querySelector('.dice-close');
   if (btnFechar) {
-      // Remove clones de eventos anteriores para não bugar
-      const novoBtn = btnFechar.cloneNode(true);
-      btnFechar.parentNode.replaceChild(novoBtn, btnFechar);
-      
-      // Adiciona evento de clique e toque
-      novoBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          window.fecharDiceResult();
-      });
-      novoBtn.addEventListener('touchstart', (e) => {
-          e.preventDefault(); // Evita duplo clique em alguns celulares
-          e.stopPropagation();
-          window.fecharDiceResult();
-      });
+    // Remove clones de eventos anteriores para não bugar
+    const novoBtn = btnFechar.cloneNode(true);
+    btnFechar.parentNode.replaceChild(novoBtn, btnFechar);
+
+    // Adiciona evento de clique e toque
+    novoBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      window.fecharDiceResult();
+    });
+    novoBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault(); // Evita duplo clique em alguns celulares
+      e.stopPropagation();
+      window.fecharDiceResult();
+    });
   }
   // -------------------------------------------------------
 
-  
-  
+
+
 
   // Mostra o container
   requestAnimationFrame(() => { container.classList.add('active'); });
 
- // --- LÓGICA DE HISTÓRICO LOCAL (CORRIGIDA) ---
+  // --- LÓGICA DE HISTÓRICO LOCAL (CORRIGIDA) ---
   if (!isRemote && typeof window.adicionarAoHistorico === 'function') {
     // Agora mandamos tudo de uma vez para a função:
     window.adicionarAoHistorico(title, attackResult, damageResult);
@@ -5208,15 +5212,15 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
 }
 
 // Função global para fechar manualmente
-window.fecharDiceResult = function() {
-    const container = document.getElementById('dice-results-container');
-    if (container) {
-        container.classList.remove('active');
-        // Remove do DOM após a animação para garantir reset limpo na próxima rolagem
-        setTimeout(() => {
-             if (!container.classList.contains('active')) container.remove();
-        }, 300);
-    }
+window.fecharDiceResult = function () {
+  const container = document.getElementById('dice-results-container');
+  if (container) {
+    container.classList.remove('active');
+    // Remove do DOM após a animação para garantir reset limpo na próxima rolagem
+    setTimeout(() => {
+      if (!container.classList.contains('active')) container.remove();
+    }, 300);
+  }
 };
 
 /* 2. FUNÇÕES DE CÁLCULO E EXIBIÇÃO */
@@ -5279,481 +5283,481 @@ function rollDiceExpression(expression) {
 
 // Função segura para pegar modificador do Hexagrama (Esquerda)
 function getAttributeMod(attrKey) {
-    if (!attrKey) return 0;
-    
-    // Mapeia nomes completos para as classes do DOM, se necessário
-    const mapKeys = {
-        'força': 'for', 'destreza': 'dex', 'constituição': 'con', 
-        'inteligência': 'int', 'sabedoria': 'sab', 'carisma': 'car',
-        'for': 'for', 'dex': 'dex', 'con': 'con', 'int': 'int', 'sab': 'sab', 'car': 'car'
-    };
-    
-    const cleanKey = attrKey.toLowerCase().trim();
-    const finalKey = mapKeys[cleanKey] || cleanKey;
-    
-    // Tenta pegar o seletor. Se DOM_SELECTORS não existir, usa fallback manual
-    const selector = (typeof DOM_SELECTORS !== 'undefined' && DOM_SELECTORS[finalKey]) 
-        ? DOM_SELECTORS[finalKey] 
-        : `.hexagrama .n${getFieldNum(finalKey)}`;
+  if (!attrKey) return 0;
 
-    const el = document.querySelector(selector);
-    
-    if (el) {
-        let rawVal = el.dataset.attrValue;
-        if (rawVal === undefined || rawVal === null || rawVal === "") {
-            rawVal = el.textContent;
-        }
-        const score = parseInt(rawVal);
-        if (!isNaN(score)) {
-            return Math.floor((score - 10) / 2);
-        }
+  // Mapeia nomes completos para as classes do DOM, se necessário
+  const mapKeys = {
+    'força': 'for', 'destreza': 'dex', 'constituição': 'con',
+    'inteligência': 'int', 'sabedoria': 'sab', 'carisma': 'car',
+    'for': 'for', 'dex': 'dex', 'con': 'con', 'int': 'int', 'sab': 'sab', 'car': 'car'
+  };
+
+  const cleanKey = attrKey.toLowerCase().trim();
+  const finalKey = mapKeys[cleanKey] || cleanKey;
+
+  // Tenta pegar o seletor. Se DOM_SELECTORS não existir, usa fallback manual
+  const selector = (typeof DOM_SELECTORS !== 'undefined' && DOM_SELECTORS[finalKey])
+    ? DOM_SELECTORS[finalKey]
+    : `.hexagrama .n${getFieldNum(finalKey)}`;
+
+  const el = document.querySelector(selector);
+
+  if (el) {
+    let rawVal = el.dataset.attrValue;
+    if (rawVal === undefined || rawVal === null || rawVal === "") {
+      rawVal = el.textContent;
     }
-    return 0;
+    const score = parseInt(rawVal);
+    if (!isNaN(score)) {
+      return Math.floor((score - 10) / 2);
+    }
+  }
+  return 0;
 }
 
 // Helper para descobrir o número da classe n1..n6 caso o mapa falhe
 function getFieldNum(k) {
-    if(k.includes('con')) return 1;
-    if(k.includes('dex')) return 2;
-    if(k.includes('sab')) return 3;
-    if(k.includes('car')) return 4;
-    if(k.includes('int')) return 5;
-    return 6; // for
+  if (k.includes('con')) return 1;
+  if (k.includes('dex')) return 2;
+  if (k.includes('sab')) return 3;
+  if (k.includes('car')) return 4;
+  if (k.includes('int')) return 5;
+  return 6; // for
 }
 
 // Calcula ataque do Item (Arma/Geral)
 function getItemAttackValues(item) {
-    let modAttr = 0;
-    let attrName = item.attackAttribute ? item.attackAttribute.trim() : '';
+  let modAttr = 0;
+  let attrName = item.attackAttribute ? item.attackAttribute.trim() : '';
 
-    // 1. Se for "Nenhum", zera o mod
-    if (attrName === 'Nenhum') {
-        modAttr = 0;
-    } 
-    // 2. Se estiver vazio (item antigo), tenta deduzir
-    else if (!attrName || attrName === '') {
-        if (item.type === 'Arma') {
-            const tipo = (item.tipoArma || '').toLowerCase();
-            // Armas a distância usam DEX, o resto usa FOR
-            const key = (tipo.includes('distancia') || tipo.includes('distância')) ? 'dex' : 'for';
-            modAttr = getAttributeMod(key);
-        }
-    } 
-    // 3. Caso normal: tem atributo definido (ex: "Força", "Inteligência")
-    else {
-        modAttr = getAttributeMod(attrName);
+  // 1. Se for "Nenhum", zera o mod
+  if (attrName === 'Nenhum') {
+    modAttr = 0;
+  }
+  // 2. Se estiver vazio (item antigo), tenta deduzir
+  else if (!attrName || attrName === '') {
+    if (item.type === 'Arma') {
+      const tipo = (item.tipoArma || '').toLowerCase();
+      // Armas a distância usam DEX, o resto usa FOR
+      const key = (tipo.includes('distancia') || tipo.includes('distância')) ? 'dex' : 'for';
+      modAttr = getAttributeMod(key);
     }
+  }
+  // 3. Caso normal: tem atributo definido (ex: "Força", "Inteligência")
+  else {
+    modAttr = getAttributeMod(attrName);
+  }
 
-    // Lógica de Proficiência
-    let profBonus = 0;
-    // Se o item diz que tem proficiência (e não é "Nenhuma"), pega o valor da ficha
-    if (item.proficiency && item.proficiency !== 'Nenhuma' && item.proficiency !== 'Não') {
-        const profEl = document.getElementById('proficienciaValor');
-        if (profEl) profBonus = parseInt(profEl.textContent.replace('+','')) || 2;
-    }
+  // Lógica de Proficiência
+  let profBonus = 0;
+  // Se o item diz que tem proficiência (e não é "Nenhuma"), pega o valor da ficha
+  if (item.proficiency && item.proficiency !== 'Nenhuma' && item.proficiency !== 'Não') {
+    const profEl = document.getElementById('proficienciaValor');
+    if (profEl) profBonus = parseInt(profEl.textContent.replace('+', '')) || 2;
+  }
 
-    // Bônus Mágico do Item
-    const itemBonus = parseInt(item.attackBonus) || 0;
+  // Bônus Mágico do Item
+  const itemBonus = parseInt(item.attackBonus) || 0;
 
-    return { modAttr, profBonus, itemBonus };
+  return { modAttr, profBonus, itemBonus };
 }
 
 // Calcula ataque de Magia (Spell)
 function getSpellAttackValues() {
-    let prof = 2; 
-    const pe = document.getElementById('proficienciaValor'); 
-    if (pe) prof = parseInt(pe.textContent.replace('+','')) || 2;
-    
-    // Pega o atributo configurado na DT (ex: 'int', 'car')
-    const key = state.spellDCConfig.selectedAttr; 
-    if (!key || key === 'none') return null;
-    
-    let mod = getAttributeMod(key);
-    const extra = parseInt(state.spellDCConfig.extraMod) || 0;
-    
-    return { prof, mod, extra };
+  let prof = 2;
+  const pe = document.getElementById('proficienciaValor');
+  if (pe) prof = parseInt(pe.textContent.replace('+', '')) || 2;
+
+  // Pega o atributo configurado na DT (ex: 'int', 'car')
+  const key = state.spellDCConfig.selectedAttr;
+  if (!key || key === 'none') return null;
+
+  let mod = getAttributeMod(key);
+  const extra = parseInt(state.spellDCConfig.extraMod) || 0;
+
+  return { prof, mod, extra };
 }
 
 
 /* =============================================================
    4. ESCUTADOR GLOBAL DE CLIQUES (ATUALIZADO: ACERTO COM VÍRGULA + TOOLTIP LIMPO)
 ============================================================= */
-document.addEventListener('click', function(e) {
-    
-    // CASO 1: CLIQUE NO ÍCONE DE DADO (IMAGEM)
-    if (e.target.classList.contains('dice-img')) {
-        e.preventDefault(); 
-        e.stopPropagation();
+document.addEventListener('click', function (e) {
 
-        const spellCard = e.target.closest('.spell-card');
-        if (spellCard) {
-            const spellId = spellCard.getAttribute('data-id');
-            const s = state.spells.find(x => String(x.id) === String(spellId));
-            if (!s) return;
+  // CASO 1: CLIQUE NO ÍCONE DE DADO (IMAGEM)
+  if (e.target.classList.contains('dice-img')) {
+    e.preventDefault();
+    e.stopPropagation();
 
-            const spellTitle = s.name || "Magia";
-            const nomeLimpo = spellTitle.toLowerCase();
-            
-            const selectSlot = spellCard.querySelector('.spell-slot-selector');
-            const selectedLevel = selectSlot ? parseInt(selectSlot.value) : (s.levelNumber || 0);
-            const baseLevel = s.levelNumber || 0;
+    const spellCard = e.target.closest('.spell-card');
+    if (spellCard) {
+      const spellId = spellCard.getAttribute('data-id');
+      const s = state.spells.find(x => String(x.id) === String(spellId));
+      if (!s) return;
 
-            const critRange = state.spellDCConfig.critRange || 20;
-            const critMult = state.spellDCConfig.critMult || 2;
+      const spellTitle = s.name || "Magia";
+      const nomeLimpo = spellTitle.toLowerCase();
 
-            // =========================================================
-            // LÓGICA DE MULTI-RAIOS (Rajada Mística / Raio Ardente)
-            // =========================================================
-            let numRaios = 0;
-            let isMultiAttack = false;
+      const selectSlot = spellCard.querySelector('.spell-slot-selector');
+      const selectedLevel = selectSlot ? parseInt(selectSlot.value) : (s.levelNumber || 0);
+      const baseLevel = s.levelNumber || 0;
 
-            if (nomeLimpo.includes("rajada mística") || nomeLimpo.includes("eldritch blast")) {
-                const charLevel = getTotalCharacterLevel();
-                numRaios = 1;
-                if (charLevel >= 5) numRaios = 2;
-                if (charLevel >= 11) numRaios = 3;
-                if (charLevel >= 17) numRaios = 4;
-                isMultiAttack = true;
+      const critRange = state.spellDCConfig.critRange || 20;
+      const critMult = state.spellDCConfig.critMult || 2;
+
+      // =========================================================
+      // LÓGICA DE MULTI-RAIOS (Rajada Mística / Raio Ardente)
+      // =========================================================
+      let numRaios = 0;
+      let isMultiAttack = false;
+
+      if (nomeLimpo.includes("rajada mística") || nomeLimpo.includes("eldritch blast")) {
+        const charLevel = getTotalCharacterLevel();
+        numRaios = 1;
+        if (charLevel >= 5) numRaios = 2;
+        if (charLevel >= 11) numRaios = 3;
+        if (charLevel >= 17) numRaios = 4;
+        isMultiAttack = true;
+      }
+      else if (nomeLimpo.includes("raio ardente") || nomeLimpo.includes("scorching ray")) {
+        // Se a magia estiver configurada errada como Nível 1 no JSON,
+        // mas o dropdown (selectedLevel) estiver em 2, usa 2.
+        // Se selectedLevel for 0 (erro), assume 2 (base do Raio Ardente)
+        const slotUsado = selectedLevel > 0 ? selectedLevel : 2;
+
+        // Fórmula Raio Ardente: 3 raios base (2º círculo) + 1 raio por nível acima
+        numRaios = 3 + (slotUsado - 2);
+        isMultiAttack = true;
+      }
+
+      if (isMultiAttack) {
+        const vals = getSpellAttackValues();
+        if (!vals) { alert("Configure a DT/Atributo de conjuração primeiro!"); return; }
+
+        let listaAcertosNumeros = [];
+        let listaDetalhesDano = [];
+        let totalDano = 0;
+        let teveCriticoGeral = false;
+        let teveFalhaGeral = false;
+
+        for (let i = 1; i <= numRaios; i++) {
+          // 1. ROLA ATAQUE
+          const d20 = Math.floor(Math.random() * 20) + 1;
+          const atkTotal = d20 + vals.prof + vals.mod + vals.extra;
+
+          let isCrit = (d20 >= critRange);
+          let isFumble = (d20 === 1);
+
+          if (isCrit) teveCriticoGeral = true;
+          if (isFumble) teveFalhaGeral = true;
+
+          // Formatação do número: <span class="cor">18</span>
+          let displayNum = atkTotal;
+          if (isCrit) displayNum = `<span class="dice-roll-max" title="Crítico!">${atkTotal}</span>`;
+          else if (isFumble) displayNum = `<span class="dice-roll-min" title="Falha!">${d20}</span>`;
+
+          listaAcertosNumeros.push(displayNum);
+
+          // 2. ROLA DANO
+          let formulaDano = s.damage || (nomeLimpo.includes("ardente") ? "2d6" : "1d10");
+
+          if (isCrit) {
+            const regex = /^(\d*)d(\d+)(.*)$/i;
+            const match = formulaDano.match(regex);
+            if (match) {
+              const q = (match[1] === "" ? 1 : parseInt(match[1])) * critMult;
+              formulaDano = `${q}d${match[2]}${match[3] || ''}`;
             }
-            else if (nomeLimpo.includes("raio ardente") || nomeLimpo.includes("scorching ray")) {
-                // Se a magia estiver configurada errada como Nível 1 no JSON,
-                // mas o dropdown (selectedLevel) estiver em 2, usa 2.
-                // Se selectedLevel for 0 (erro), assume 2 (base do Raio Ardente)
-                const slotUsado = selectedLevel > 0 ? selectedLevel : 2;
-                
-                // Fórmula Raio Ardente: 3 raios base (2º círculo) + 1 raio por nível acima
-                numRaios = 3 + (slotUsado - 2);
-                isMultiAttack = true;
-            }
+          }
 
-            if (isMultiAttack) {
-                const vals = getSpellAttackValues();
-                if (!vals) { alert("Configure a DT/Atributo de conjuração primeiro!"); return; }
+          const resDano = rollDiceExpression(formulaDano);
+          totalDano += resDano.total;
 
-                let listaAcertosNumeros = []; 
-                let listaDetalhesDano = [];   
-                let totalDano = 0;
-                let teveCriticoGeral = false;
-                let teveFalhaGeral = false;
-
-                for (let i = 1; i <= numRaios; i++) {
-                    // 1. ROLA ATAQUE
-                    const d20 = Math.floor(Math.random() * 20) + 1;
-                    const atkTotal = d20 + vals.prof + vals.mod + vals.extra;
-                    
-                    let isCrit = (d20 >= critRange);
-                    let isFumble = (d20 === 1);
-                    
-                    if(isCrit) teveCriticoGeral = true;
-                    if(isFumble) teveFalhaGeral = true;
-
-                    // Formatação do número: <span class="cor">18</span>
-                    let displayNum = atkTotal;
-                    if (isCrit) displayNum = `<span class="dice-roll-max" title="Crítico!">${atkTotal}</span>`;
-                    else if (isFumble) displayNum = `<span class="dice-roll-min" title="Falha!">${d20}</span>`; 
-                    
-                    listaAcertosNumeros.push(displayNum);
-
-                    // 2. ROLA DANO
-                    let formulaDano = s.damage || (nomeLimpo.includes("ardente") ? "2d6" : "1d10");
-                    
-                    if (isCrit) {
-                        const regex = /^(\d*)d(\d+)(.*)$/i;
-                        const match = formulaDano.match(regex);
-                        if (match) {
-                            const q = (match[1] === "" ? 1 : parseInt(match[1])) * critMult;
-                            formulaDano = `${q}d${match[2]}${match[3] || ''}`;
-                        }
-                    }
-
-                    const resDano = rollDiceExpression(formulaDano);
-                    totalDano += resDano.total;
-                    
-                    // FORMATO LIMPO PEDIDO: "P1: 6"
-                    listaDetalhesDano.push(`<strong>P${i}:</strong> ${resDano.total}`);
-                }
-
-                const attackRes = {
-                    total: 0, 
-                    // Junta com vírgula e espaço
-                    text: listaAcertosNumeros.join(', '), 
-                    detail: "Valores individuais de ataque",
-                    isCrit: teveCriticoGeral,
-                    isFumble: teveFalhaGeral,
-                    label: "ACERTOS"
-                };
-
-                const damageRes = {
-                    total: totalDano,
-                    text: totalDano.toString(),
-                    detail: listaDetalhesDano.join('<br>'),
-                    label: "DANO TOTAL",
-                    isCrit: false 
-                };
-
-                showCombatResults(spellTitle, attackRes, damageRes);
-                consumirSlotSeNecessario(selectedLevel > 0 ? selectedLevel : 2);
-                return;
-            }
-            
-            // =========================================================
-            // 2. LÓGICA DE MÍSSEIS MÁGICOS (Mantida)
-            // =========================================================
-            if (nomeLimpo.includes("mísseis mágicos") || nomeLimpo.includes("misseis magicos")) {
-                let numProjectiles = 3 + (selectedLevel - baseLevel);
-                let totalDamage = 0;
-                let allRollsDetails = [];
-                const damageText = s.damage || "1d4+1";
-
-                for (let i = 1; i <= numProjectiles; i++) {
-                   let res = rollDiceExpression(damageText);
-                   totalDamage += res.total;
-                   // FORMATO LIMPO: "P1: 4"
-                   allRollsDetails.push(`P${i}: ${res.text}`);
-                }
-
-                const damageRes = {
-                    total: totalDamage,
-                    text: totalDamage.toString(),
-                    detail: allRollsDetails.join('<br>'),
-                    label: `${numProjectiles} PROJÉTEIS`
-                };
-                
-                showCombatResults(spellTitle, null, damageRes);
-                consumirSlotSeNecessario(selectedLevel); 
-                return;
-            }
-
-            // =========================================================
-            // 3. CASO PADRÃO (Magias Normais)
-            // =========================================================
-            let attackRes = null;
-            const usaResistencia = s.attrs?.resistencia && s.attrs.resistencia !== "-" && s.attrs.resistencia !== "";
-            
-            if (!usaResistencia) {
-                const vals = getSpellAttackValues();
-                if (vals) {
-                    const d20 = Math.floor(Math.random() * 20) + 1;
-                    const totalAttack = d20 + vals.prof + vals.mod + vals.extra;
-                    const isCrit = (d20 >= critRange);
-                    const isFumble = (d20 === 1);
-                    const d20Html = isCrit ? `<span class="dice-roll-max">${d20}</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
-
-                    attackRes = {
-                        total: totalAttack,
-                        text: totalAttack.toString(),
-                        detail: `${d20Html} + ${vals.mod} + ${vals.prof} + ${vals.extra}`,
-                        isCrit: isCrit,
-                        isFumble: isFumble,
-                        label: "ACERTO"
-                    };
-                }
-            }
-
-            // Rola Dano
-            const damageTextElement = spellCard.querySelector('.dynamic-damage-text');
-            let damageFormula = damageTextElement ? damageTextElement.textContent : s.damage;
-            
-            if(damageFormula.includes('(')) damageFormula = damageFormula.split('(')[0].trim();
-
-            let damageRes = null;
-            if (damageFormula && damageFormula !== '-' && damageFormula !== '0') {
-                if (attackRes && attackRes.isCrit) {
-                    const regexDice = /^(\d*)d(\d+)(.*)$/i;
-                    const match = damageFormula.match(regexDice);
-                    if (match) {
-                        const qtd = match[1] === "" ? 1 : parseInt(match[1]);
-                        const faces = match[2];
-                        const resto = match[3] || "";
-                        damageFormula = `${qtd * critMult}d${faces}${resto}`;
-                    }
-                }
-                damageRes = rollDiceExpression(damageFormula);
-                if (attackRes && attackRes.isCrit) {
-                    damageRes.isCrit = true;
-                    damageRes.label = `CRÍTICO (${critMult}x)`;
-                }
-            }
-
-            showCombatResults(spellTitle, attackRes, damageRes);
-            consumirSlotSeNecessario(selectedLevel);
-            return;
+          // FORMATO LIMPO PEDIDO: "P1: 6"
+          listaDetalhesDano.push(`<strong>P${i}:</strong> ${resDano.total}`);
         }
 
-        // -------------------------------------------------------------
-        // B. VERIFICA SE É ITEM (ARMA/INVENTÁRIO) - MANTIDO IGUAL
-        // -------------------------------------------------------------
-        const itemCard = e.target.closest('.item-card');
-        if (itemCard) {
-            const itemId = itemCard.getAttribute('data-id');
-            const item = state.inventory.find(i => String(i.id) === String(itemId));
+        const attackRes = {
+          total: 0,
+          // Junta com vírgula e espaço
+          text: listaAcertosNumeros.join(', '),
+          detail: "Valores individuais de ataque",
+          isCrit: teveCriticoGeral,
+          isFumble: teveFalhaGeral,
+          label: "ACERTOS"
+        };
 
-            if (item) {
-                let attackRes = null;
-                const margemCritico = parseInt(item.crit) || 20;
-                const temAtributoDefinido = item.attackAttribute && item.attackAttribute !== 'Nenhum';
-                
-                if (item.type === 'Arma' || temAtributoDefinido) {
-                    const { modAttr, profBonus, itemBonus, attrUsed } = getItemAttackValues(item);
-                    const d20 = Math.floor(Math.random() * 20) + 1;
-                    const totalAttack = d20 + modAttr + profBonus + itemBonus;
-                    
-                    const isCrit = (d20 >= margemCritico); 
-                    const isFumble = (d20 === 1);
-                    const d20Html = isCrit ? `<span class="dice-roll-max">${d20}</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
-                    
-                    const detailParts = [d20Html];
-                    const nomeAttr = attrUsed || (item.type === 'Arma' ? ((item.tipoArma||'').includes('istancia') ? 'Destreza' : 'Força') : '');
-                    
-                    if (modAttr !== 0) detailParts.push(`${modAttr} (${nomeAttr.substring(0,3)})`); 
-                    if (profBonus !== 0) detailParts.push(`${profBonus} (Prof)`); 
-                    if (itemBonus !== 0) detailParts.push(`${itemBonus} (Item)`);
-                    
-                    attackRes = { 
-                        total: totalAttack, 
-                        text: totalAttack.toString(), 
-                        detail: detailParts.join(' + '), 
-                        isCrit: isCrit, 
-                        isFumble: isFumble 
-                    };
-                }
+        const damageRes = {
+          total: totalDano,
+          text: totalDano.toString(),
+          detail: listaDetalhesDano.join('<br>'),
+          label: "DANO TOTAL",
+          isCrit: false
+        };
 
-                let damageRes = null;
-                let expressionDano = "";
-                let baseDano = item.damage || '0';
-                if (item.empunhadura === 'Versátil' && item.useTwoHands && item.damage2Hands) {
-                    baseDano = item.damage2Hands;
-                }
+        showCombatResults(spellTitle, attackRes, damageRes);
+        consumirSlotSeNecessario(selectedLevel > 0 ? selectedLevel : 2);
+        return;
+      }
 
-                let modDano = 0;
-                if (item.damageAttribute && item.damageAttribute !== 'Nenhum') {
-                    modDano = getAttributeMod(item.damageAttribute);
-                } else if (item.type === 'Arma') {
-                    const { modAttr } = getItemAttackValues(item);
-                    modDano = modAttr;
-                }
-                const bonusDano = parseInt(item.damageBonus) || 0;
-                const totalModDano = modDano + bonusDano;
+      // =========================================================
+      // 2. LÓGICA DE MÍSSEIS MÁGICOS (Mantida)
+      // =========================================================
+      if (nomeLimpo.includes("mísseis mágicos") || nomeLimpo.includes("misseis magicos")) {
+        let numProjectiles = 3 + (selectedLevel - baseLevel);
+        let totalDamage = 0;
+        let allRollsDetails = [];
+        const damageText = s.damage || "1d4+1";
 
-                if (totalModDano !== 0) {
-                    const sinal = totalModDano >= 0 ? '+' : '';
-                    expressionDano = `${baseDano}${sinal}${totalModDano}`;
-                } else {
-                    expressionDano = baseDano;
-                }
-                
-                if (expressionDano && expressionDano !== '-' && expressionDano !== '0') { 
-                    if (attackRes && attackRes.isCrit) {
-                        const multStr = item.multiplicador ? String(item.multiplicador) : "2";
-                        const partes = multStr.split('+');
-                        const fator = parseInt(partes[0]) || 2;
-                        const bonusExtraCrit = partes.length > 1 ? (parseInt(partes[1]) || 0) : 0; 
-
-                        const regexDice = /^(\d*)d(\d+)(.*)$/i;
-                        const match = expressionDano.match(regexDice);
-
-                        if (match) {
-                            let qtdDados = match[1] === "" ? 1 : parseInt(match[1]);
-                            const faces = match[2]; 
-                            const restoExpressao = match[3] || ""; 
-                            const novaQtd = qtdDados * fator;
-                            let novaExpressao = `${novaQtd}d${faces}${restoExpressao}`;
-                            if (bonusExtraCrit > 0) novaExpressao += `+${bonusExtraCrit}`;
-
-                            damageRes = rollDiceExpression(novaExpressao);
-                            damageRes.isCrit = true;
-                            damageRes.label = `CRÍTICO (${fator}x DADOS)`;
-                        } else {
-                            let danoFixo = rollDiceExpression(expressionDano).total;
-                            let totalCrit = (danoFixo * fator) + bonusExtraCrit;
-                            damageRes = {
-                                total: totalCrit,
-                                text: totalCrit.toString(),
-                                detail: `${danoFixo} x ${fator} + ${bonusExtraCrit}`,
-                                isCrit: true,
-                                label: "DANO CRÍTICO"
-                            };
-                        }
-                    } else {
-                        damageRes = rollDiceExpression(expressionDano); 
-                    }
-                }
-
-                if (attackRes || damageRes) showCombatResults(item.name, attackRes, damageRes);
-            }
-            return;
+        for (let i = 1; i <= numProjectiles; i++) {
+          let res = rollDiceExpression(damageText);
+          totalDamage += res.total;
+          // FORMATO LIMPO: "P1: 4"
+          allRollsDetails.push(`P${i}: ${res.text}`);
         }
 
-        // -------------------------------------------------------------
-        // C. VERIFICA SE É HABILIDADE (MANTIDO IGUAL)
-        // -------------------------------------------------------------
-        const habCard = e.target.closest('.hab-card');
-        if (habCard) {
-            const habId = Number(habCard.getAttribute('data-id'));
-            const hab = state.abilities.find(h => h.id === habId);
-            
-            if (hab) {
-                let damageRes = null;
-                if (hab.damage && hab.damage !== '-' && hab.damage.trim() !== '') {
-                    damageRes = rollDiceExpression(hab.damage);
-                }
+        const damageRes = {
+          total: totalDamage,
+          text: totalDamage.toString(),
+          detail: allRollsDetails.join('<br>'),
+          label: `${numProjectiles} PROJÉTEIS`
+        };
 
-                let attackRes = null;
-                if (hab.useStandardAttack) {
-                    let prof = 2;
-                    const profEl = document.getElementById('proficienciaValor');
-                    if (profEl) prof = parseInt(profEl.textContent) || 2;
+        showCombatResults(spellTitle, null, damageRes);
+        consumirSlotSeNecessario(selectedLevel);
+        return;
+      }
 
-                    const attrKeyMap = { 'Força': 'for', 'Destreza': 'dex', 'Constituição': 'con', 'Inteligência': 'int', 'Sabedoria': 'sab', 'Carisma': 'car' };
-                    const attrKey = attrKeyMap[hab.attackAttribute || 'Força'];
-                    const mod = getAttributeMod(attrKey);
-                    const extraBonus = parseInt(hab.attackBonus) || 0;
+      // =========================================================
+      // 3. CASO PADRÃO (Magias Normais)
+      // =========================================================
+      let attackRes = null;
+      const usaResistencia = s.attrs?.resistencia && s.attrs.resistencia !== "-" && s.attrs.resistencia !== "";
 
-                    const d20 = Math.floor(Math.random() * 20) + 1;
-                    const total = d20 + prof + mod + extraBonus;
-                    
-                    const isCrit = (d20 === 20);
-                    const isFumble = (d20 === 1);
-                    const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
+      if (!usaResistencia) {
+        const vals = getSpellAttackValues();
+        if (vals) {
+          const d20 = Math.floor(Math.random() * 20) + 1;
+          const totalAttack = d20 + vals.prof + vals.mod + vals.extra;
+          const isCrit = (d20 >= critRange);
+          const isFumble = (d20 === 1);
+          const d20Html = isCrit ? `<span class="dice-roll-max">${d20}</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
 
-                    const detailParts = [d20Html];
-                    if (prof !== 0) detailParts.push(`${prof} (Prof)`);
-                    if (mod !== 0) detailParts.push(`${mod} (${hab.attackAttribute.substr(0,3)})`);
-                    if (extraBonus !== 0) detailParts.push(extraBonus);
-
-                    attackRes = {
-                        total: total,
-                        text: total.toString(),
-                        detail: detailParts.join(' + '),
-                        isCrit: isCrit,
-                        isFumble: isFumble
-                    };
-                }
-                else if (hab.attackBonus && hab.attackBonus.trim() !== '') {
-                    const bonusStr = hab.attackBonus.replace('+', '').trim();
-                    const bonus = parseInt(bonusStr) || 0;
-                    const d20 = Math.floor(Math.random() * 20) + 1;
-                    const total = d20 + bonus;
-                    const isCrit = (d20 === 20);
-                    const isFumble = (d20 === 1);
-                    const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
-
-                    attackRes = {
-                        total: total,
-                        text: total.toString(),
-                        detail: `${d20Html} + ${bonus}`,
-                        isCrit: isCrit,
-                        isFumble: isFumble
-                    };
-                }
-
-                if (damageRes || attackRes) {
-                    showCombatResults(hab.title, attackRes, damageRes);
-                }
-            }
-            return;
+          attackRes = {
+            total: totalAttack,
+            text: totalAttack.toString(),
+            detail: `${d20Html} + ${vals.mod} + ${vals.prof} + ${vals.extra}`,
+            isCrit: isCrit,
+            isFumble: isFumble,
+            label: "ACERTO"
+          };
         }
+      }
+
+      // Rola Dano
+      const damageTextElement = spellCard.querySelector('.dynamic-damage-text');
+      let damageFormula = damageTextElement ? damageTextElement.textContent : s.damage;
+
+      if (damageFormula.includes('(')) damageFormula = damageFormula.split('(')[0].trim();
+
+      let damageRes = null;
+      if (damageFormula && damageFormula !== '-' && damageFormula !== '0') {
+        if (attackRes && attackRes.isCrit) {
+          const regexDice = /^(\d*)d(\d+)(.*)$/i;
+          const match = damageFormula.match(regexDice);
+          if (match) {
+            const qtd = match[1] === "" ? 1 : parseInt(match[1]);
+            const faces = match[2];
+            const resto = match[3] || "";
+            damageFormula = `${qtd * critMult}d${faces}${resto}`;
+          }
+        }
+        damageRes = rollDiceExpression(damageFormula);
+        if (attackRes && attackRes.isCrit) {
+          damageRes.isCrit = true;
+          damageRes.label = `CRÍTICO (${critMult}x)`;
+        }
+      }
+
+      showCombatResults(spellTitle, attackRes, damageRes);
+      consumirSlotSeNecessario(selectedLevel);
+      return;
     }
+
+    // -------------------------------------------------------------
+    // B. VERIFICA SE É ITEM (ARMA/INVENTÁRIO) - MANTIDO IGUAL
+    // -------------------------------------------------------------
+    const itemCard = e.target.closest('.item-card');
+    if (itemCard) {
+      const itemId = itemCard.getAttribute('data-id');
+      const item = state.inventory.find(i => String(i.id) === String(itemId));
+
+      if (item) {
+        let attackRes = null;
+        const margemCritico = parseInt(item.crit) || 20;
+        const temAtributoDefinido = item.attackAttribute && item.attackAttribute !== 'Nenhum';
+
+        if (item.type === 'Arma' || temAtributoDefinido) {
+          const { modAttr, profBonus, itemBonus, attrUsed } = getItemAttackValues(item);
+          const d20 = Math.floor(Math.random() * 20) + 1;
+          const totalAttack = d20 + modAttr + profBonus + itemBonus;
+
+          const isCrit = (d20 >= margemCritico);
+          const isFumble = (d20 === 1);
+          const d20Html = isCrit ? `<span class="dice-roll-max">${d20}</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
+
+          const detailParts = [d20Html];
+          const nomeAttr = attrUsed || (item.type === 'Arma' ? ((item.tipoArma || '').includes('istancia') ? 'Destreza' : 'Força') : '');
+
+          if (modAttr !== 0) detailParts.push(`${modAttr} (${nomeAttr.substring(0, 3)})`);
+          if (profBonus !== 0) detailParts.push(`${profBonus} (Prof)`);
+          if (itemBonus !== 0) detailParts.push(`${itemBonus} (Item)`);
+
+          attackRes = {
+            total: totalAttack,
+            text: totalAttack.toString(),
+            detail: detailParts.join(' + '),
+            isCrit: isCrit,
+            isFumble: isFumble
+          };
+        }
+
+        let damageRes = null;
+        let expressionDano = "";
+        let baseDano = item.damage || '0';
+        if (item.empunhadura === 'Versátil' && item.useTwoHands && item.damage2Hands) {
+          baseDano = item.damage2Hands;
+        }
+
+        let modDano = 0;
+        if (item.damageAttribute && item.damageAttribute !== 'Nenhum') {
+          modDano = getAttributeMod(item.damageAttribute);
+        } else if (item.type === 'Arma') {
+          const { modAttr } = getItemAttackValues(item);
+          modDano = modAttr;
+        }
+        const bonusDano = parseInt(item.damageBonus) || 0;
+        const totalModDano = modDano + bonusDano;
+
+        if (totalModDano !== 0) {
+          const sinal = totalModDano >= 0 ? '+' : '';
+          expressionDano = `${baseDano}${sinal}${totalModDano}`;
+        } else {
+          expressionDano = baseDano;
+        }
+
+        if (expressionDano && expressionDano !== '-' && expressionDano !== '0') {
+          if (attackRes && attackRes.isCrit) {
+            const multStr = item.multiplicador ? String(item.multiplicador) : "2";
+            const partes = multStr.split('+');
+            const fator = parseInt(partes[0]) || 2;
+            const bonusExtraCrit = partes.length > 1 ? (parseInt(partes[1]) || 0) : 0;
+
+            const regexDice = /^(\d*)d(\d+)(.*)$/i;
+            const match = expressionDano.match(regexDice);
+
+            if (match) {
+              let qtdDados = match[1] === "" ? 1 : parseInt(match[1]);
+              const faces = match[2];
+              const restoExpressao = match[3] || "";
+              const novaQtd = qtdDados * fator;
+              let novaExpressao = `${novaQtd}d${faces}${restoExpressao}`;
+              if (bonusExtraCrit > 0) novaExpressao += `+${bonusExtraCrit}`;
+
+              damageRes = rollDiceExpression(novaExpressao);
+              damageRes.isCrit = true;
+              damageRes.label = `CRÍTICO (${fator}x DADOS)`;
+            } else {
+              let danoFixo = rollDiceExpression(expressionDano).total;
+              let totalCrit = (danoFixo * fator) + bonusExtraCrit;
+              damageRes = {
+                total: totalCrit,
+                text: totalCrit.toString(),
+                detail: `${danoFixo} x ${fator} + ${bonusExtraCrit}`,
+                isCrit: true,
+                label: "DANO CRÍTICO"
+              };
+            }
+          } else {
+            damageRes = rollDiceExpression(expressionDano);
+          }
+        }
+
+        if (attackRes || damageRes) showCombatResults(item.name, attackRes, damageRes);
+      }
+      return;
+    }
+
+    // -------------------------------------------------------------
+    // C. VERIFICA SE É HABILIDADE (MANTIDO IGUAL)
+    // -------------------------------------------------------------
+    const habCard = e.target.closest('.hab-card');
+    if (habCard) {
+      const habId = Number(habCard.getAttribute('data-id'));
+      const hab = state.abilities.find(h => h.id === habId);
+
+      if (hab) {
+        let damageRes = null;
+        if (hab.damage && hab.damage !== '-' && hab.damage.trim() !== '') {
+          damageRes = rollDiceExpression(hab.damage);
+        }
+
+        let attackRes = null;
+        if (hab.useStandardAttack) {
+          let prof = 2;
+          const profEl = document.getElementById('proficienciaValor');
+          if (profEl) prof = parseInt(profEl.textContent) || 2;
+
+          const attrKeyMap = { 'Força': 'for', 'Destreza': 'dex', 'Constituição': 'con', 'Inteligência': 'int', 'Sabedoria': 'sab', 'Carisma': 'car' };
+          const attrKey = attrKeyMap[hab.attackAttribute || 'Força'];
+          const mod = getAttributeMod(attrKey);
+          const extraBonus = parseInt(hab.attackBonus) || 0;
+
+          const d20 = Math.floor(Math.random() * 20) + 1;
+          const total = d20 + prof + mod + extraBonus;
+
+          const isCrit = (d20 === 20);
+          const isFumble = (d20 === 1);
+          const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
+
+          const detailParts = [d20Html];
+          if (prof !== 0) detailParts.push(`${prof} (Prof)`);
+          if (mod !== 0) detailParts.push(`${mod} (${hab.attackAttribute.substr(0, 3)})`);
+          if (extraBonus !== 0) detailParts.push(extraBonus);
+
+          attackRes = {
+            total: total,
+            text: total.toString(),
+            detail: detailParts.join(' + '),
+            isCrit: isCrit,
+            isFumble: isFumble
+          };
+        }
+        else if (hab.attackBonus && hab.attackBonus.trim() !== '') {
+          const bonusStr = hab.attackBonus.replace('+', '').trim();
+          const bonus = parseInt(bonusStr) || 0;
+          const d20 = Math.floor(Math.random() * 20) + 1;
+          const total = d20 + bonus;
+          const isCrit = (d20 === 20);
+          const isFumble = (d20 === 1);
+          const d20Html = isCrit ? `<span class="dice-roll-max">20</span>` : (isFumble ? `<span class="dice-roll-min">1</span>` : d20);
+
+          attackRes = {
+            total: total,
+            text: total.toString(),
+            detail: `${d20Html} + ${bonus}`,
+            isCrit: isCrit,
+            isFumble: isFumble
+          };
+        }
+
+        if (damageRes || attackRes) {
+          showCombatResults(hab.title, attackRes, damageRes);
+        }
+      }
+      return;
+    }
+  }
 });
 
 /* =============================================================
@@ -5771,8 +5775,8 @@ window.mesclarEstadoVisual = function (estadoAntigo, estadoNovo) {
   // Se o usuário clicou recentemente (isUserInteracting), ignoramos 
   // a atualização de slots vinda do servidor e mantemos a local.
   if (window.isUserInteracting && estadoAntigo.spellSlots) {
-      console.log("Protegendo slots locais contra sobrescrita do servidor...");
-      estadoNovo.spellSlots = JSON.parse(JSON.stringify(estadoAntigo.spellSlots));
+    console.log("Protegendo slots locais contra sobrescrita do servidor...");
+    estadoNovo.spellSlots = JSON.parse(JSON.stringify(estadoAntigo.spellSlots));
   }
 
   // 3. Preserva Seções Colapsadas
@@ -5816,59 +5820,59 @@ window.mesclarEstadoVisual = function (estadoAntigo, estadoNovo) {
 window.isConsumingSlot = false; // Trava global
 
 function consumirSlotSeNecessario(selectedLevel) {
-    // 1. Bloqueio de Segurança (Debounce)
-    if (window.isConsumingSlot) return; 
-    if (!selectedLevel || selectedLevel <= 0) return;
+  // 1. Bloqueio de Segurança (Debounce)
+  if (window.isConsumingSlot) return;
+  if (!selectedLevel || selectedLevel <= 0) return;
 
-    window.isConsumingSlot = true; // Ativa a trava
+  window.isConsumingSlot = true; // Ativa a trava
 
-    // Libera a trava após 500ms (tempo suficiente para animação e salvar)
-    setTimeout(() => { window.isConsumingSlot = false; }, 500);
+  // Libera a trava após 500ms (tempo suficiente para animação e salvar)
+  setTimeout(() => { window.isConsumingSlot = false; }, 500);
 
-    const key = String(selectedLevel);
-    let slotGasto = false;
-    let tipoGasto = "";
+  const key = String(selectedLevel);
+  let slotGasto = false;
+  let tipoGasto = "";
 
-    // A. Tenta Slot Normal
-    if (state.spellSlots[key] && Array.isArray(state.spellSlots[key].status)) {
-        // Pega o primeiro false (disponível)
-        const idx = state.spellSlots[key].status.indexOf(false);
-        if (idx !== -1) {
-            state.spellSlots[key].status[idx] = true; // Marca usado
-            slotGasto = true;
-            tipoGasto = `${selectedLevel}º Círculo`;
-        }
+  // A. Tenta Slot Normal
+  if (state.spellSlots[key] && Array.isArray(state.spellSlots[key].status)) {
+    // Pega o primeiro false (disponível)
+    const idx = state.spellSlots[key].status.indexOf(false);
+    if (idx !== -1) {
+      state.spellSlots[key].status[idx] = true; // Marca usado
+      slotGasto = true;
+      tipoGasto = `${selectedLevel}º Círculo`;
     }
+  }
 
-    // B. Se falhar, tenta Pacto (Bruxo)
-    if (!slotGasto && state.spellSlots['pact'] && Array.isArray(state.spellSlots['pact'].status)) {
-         const pactLvl = state.spellSlots['pact'].level || 0;
-         if (pactLvl >= selectedLevel) {
-             const idx = state.spellSlots['pact'].status.indexOf(false);
-             if (idx !== -1) {
-                 state.spellSlots['pact'].status[idx] = true;
-                 slotGasto = true;
-                 tipoGasto = `Pacto (${pactLvl}º)`;
-             }
-         }
+  // B. Se falhar, tenta Pacto (Bruxo)
+  if (!slotGasto && state.spellSlots['pact'] && Array.isArray(state.spellSlots['pact'].status)) {
+    const pactLvl = state.spellSlots['pact'].level || 0;
+    if (pactLvl >= selectedLevel) {
+      const idx = state.spellSlots['pact'].status.indexOf(false);
+      if (idx !== -1) {
+        state.spellSlots['pact'].status[idx] = true;
+        slotGasto = true;
+        tipoGasto = `Pacto (${pactLvl}º)`;
+      }
     }
+  }
 
-    if (slotGasto) {
-        // Salva e atualiza imediatamente
-        saveStateToServer();
-        renderActiveTab(); 
-        
-        if (typeof exibirAvisoTemporario === 'function') {
-            exibirAvisoTemporario(`Gasto: Espaço de ${tipoGasto}`);
-        }
+  if (slotGasto) {
+    // Salva e atualiza imediatamente
+    saveStateToServer();
+    renderActiveTab();
+
+    if (typeof exibirAvisoTemporario === 'function') {
+      exibirAvisoTemporario(`Gasto: Espaço de ${tipoGasto}`);
+    }
+  } else {
+    const msg = `Sem espaços de ${selectedLevel}º Círculo disponíveis!`;
+    if (typeof exibirAvisoTemporario === 'function') {
+      exibirAvisoTemporario(msg);
     } else {
-        const msg = `Sem espaços de ${selectedLevel}º Círculo disponíveis!`;
-        if (typeof exibirAvisoTemporario === 'function') {
-            exibirAvisoTemporario(msg);
-        } else {
-            alert(msg);
-        }
+      alert(msg);
     }
+  }
 }
 
 /* =============================================================
@@ -5877,97 +5881,97 @@ function consumirSlotSeNecessario(selectedLevel) {
 
 // 1. Função Matemática Atualizada (Suporta N dados)
 function rollDiceWithAdvantage(expression, advCount, disCount) {
-    const cleanExpr = expression.toLowerCase().trim();
-    
-    // Extrai modificador (Ex: "1d20+5" -> 5)
-    let modifier = 0;
-    let modStr = cleanExpr.replace(/1?d20/g, '').replace(/\s/g, '');
-    if (modStr) modifier = parseInt(modStr) || 0;
+  const cleanExpr = expression.toLowerCase().trim();
 
-    // Lógica do Saldo de Dados
-    // Saldo = Vantagens - Desvantagens
-    const net = advCount - disCount;
-    
-    let rolls = [];
-    let numDice = 1 + Math.abs(net); // Se net for 0, rola 1. Se 2, rola 3.
-    
-    // Rola os dados
-    for(let i=0; i<numDice; i++) {
-        rolls.push(Math.floor(Math.random() * 20) + 1);
+  // Extrai modificador (Ex: "1d20+5" -> 5)
+  let modifier = 0;
+  let modStr = cleanExpr.replace(/1?d20/g, '').replace(/\s/g, '');
+  if (modStr) modifier = parseInt(modStr) || 0;
+
+  // Lógica do Saldo de Dados
+  // Saldo = Vantagens - Desvantagens
+  const net = advCount - disCount;
+
+  let rolls = [];
+  let numDice = 1 + Math.abs(net); // Se net for 0, rola 1. Se 2, rola 3.
+
+  // Rola os dados
+  for (let i = 0; i < numDice; i++) {
+    rolls.push(Math.floor(Math.random() * 20) + 1);
+  }
+
+  let chosenDie = 0;
+  let label = "ACERTO";
+
+  if (net > 0) {
+    // Vantagem: Pega o maior
+    chosenDie = Math.max(...rolls);
+    label = `VANTAGEM (${net})`;
+  } else if (net < 0) {
+    // Desvantagem: Pega o menor
+    chosenDie = Math.min(...rolls);
+    label = `DESVANTAGEM (${Math.abs(net)})`;
+  } else {
+    // Normal
+    chosenDie = rolls[0];
+    label = "NORMAL";
+  }
+
+  const total = chosenDie + modifier;
+  const isCrit = (chosenDie === 20);
+  const isFumble = (chosenDie === 1);
+
+  // Formatação do Tooltip: Mostra todos, destaca o escolhido
+  // Ex: [15, 4, 2] + 5
+  let dieVisual = rolls.map(r => {
+    if (r === chosenDie) {
+      // Se houver empates, destaca o primeiro encontrado ou todos (aqui todos iguais ganham cor)
+      return `<span class="${isCrit ? 'dice-roll-max' : (isFumble ? 'dice-roll-min' : '')}" style="font-weight:bold;text-decoration:underline;">${r}</span>`;
     }
+    return `<span style="color:#777;">${r}</span>`;
+  }).join(', ');
 
-    let chosenDie = 0;
-    let label = "ACERTO";
+  const detailText = `[${dieVisual}] ${modifier >= 0 ? '+' : ''} ${modifier}`;
 
-    if (net > 0) {
-        // Vantagem: Pega o maior
-        chosenDie = Math.max(...rolls);
-        label = `VANTAGEM (${net})`;
-    } else if (net < 0) {
-        // Desvantagem: Pega o menor
-        chosenDie = Math.min(...rolls);
-        label = `DESVANTAGEM (${Math.abs(net)})`;
-    } else {
-        // Normal
-        chosenDie = rolls[0];
-        label = "NORMAL";
-    }
-
-    const total = chosenDie + modifier;
-    const isCrit = (chosenDie === 20);
-    const isFumble = (chosenDie === 1);
-
-    // Formatação do Tooltip: Mostra todos, destaca o escolhido
-    // Ex: [15, 4, 2] + 5
-    let dieVisual = rolls.map(r => {
-        if (r === chosenDie) {
-            // Se houver empates, destaca o primeiro encontrado ou todos (aqui todos iguais ganham cor)
-            return `<span class="${isCrit?'dice-roll-max':(isFumble?'dice-roll-min':'')}" style="font-weight:bold;text-decoration:underline;">${r}</span>`;
-        }
-        return `<span style="color:#777;">${r}</span>`;
-    }).join(', ');
-
-    const detailText = `[${dieVisual}] ${modifier >= 0 ? '+' : ''} ${modifier}`;
-
-    return {
-        total: total,
-        text: total.toString(),
-        detail: detailText,
-        isCrit: isCrit,
-        isFumble: isFumble,
-        label: label
-    };
+  return {
+    total: total,
+    text: total.toString(),
+    detail: detailText,
+    isCrit: isCrit,
+    isFumble: isFumble,
+    label: label
+  };
 }
 
 // 2. Variáveis Globais de Estado do Menu
 let menuState = { adv: 0, dis: 0 };
 
 // 3. Criar Popup Arrastável (DESIGN FINAL: SEM BOTÃO NORMAL EM CIMA)
-window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage = null) {
-    if(e.preventDefault) e.preventDefault();
-    if(e.stopPropagation) e.stopPropagation();
+window.abrirMenuRolagem = function (e, titulo, expressionAttack, expressionDamage = null) {
+  if (e.preventDefault) e.preventDefault();
+  if (e.stopPropagation) e.stopPropagation();
 
-    const old = document.querySelector('.roll-context-menu');
-    if (old) old.remove();
+  const old = document.querySelector('.roll-context-menu');
+  if (old) old.remove();
 
-    menuState = { adv: 0, dis: 0 };
+  menuState = { adv: 0, dis: 0 };
 
-    const menu = document.createElement('div');
-    menu.className = 'roll-context-menu';
-    
-    let posX = e.clientX || (e.touches && e.touches[0].clientX);
-    let posY = e.clientY || (e.touches && e.touches[0].clientY);
+  const menu = document.createElement('div');
+  menu.className = 'roll-context-menu';
 
-    if (posX + 180 > window.innerWidth) posX = window.innerWidth - 190;
-    if (posY + 280 > window.innerHeight) posY = window.innerHeight - 290;
+  let posX = e.clientX || (e.touches && e.touches[0].clientX);
+  let posY = e.clientY || (e.touches && e.touches[0].clientY);
 
-    menu.style.left = `${posX}px`;
-    menu.style.top = `${posY}px`;
+  if (posX + 180 > window.innerWidth) posX = window.innerWidth - 190;
+  if (posY + 280 > window.innerHeight) posY = window.innerHeight - 290;
 
-    // Imagem do dado para o botão
-    const imgDado = `<img src="img/imagem-no-site/dado.png" alt="dado" style="width:18px; height:18px; vertical-align:middle; margin-bottom:2px;" />`;
+  menu.style.left = `${posX}px`;
+  menu.style.top = `${posY}px`;
 
-    menu.innerHTML = `
+  // Imagem do dado para o botão
+  const imgDado = `<img src="img/imagem-no-site/dado.png" alt="dado" style="width:18px; height:18px; vertical-align:middle; margin-bottom:2px;" />`;
+
+  menu.innerHTML = `
         <div class="roll-ctx-header" id="roll-drag-handle">ROLAR ${titulo}</div>
         <div class="roll-ctx-body">
             
@@ -5995,174 +5999,174 @@ window.abrirMenuRolagem = function(e, titulo, expressionAttack, expressionDamage
         </div>
     `;
 
-    document.body.appendChild(menu);
+  document.body.appendChild(menu);
 
-    window.alterarRolagem = (type, delta) => {
-        if (type === 'adv') {
-            menuState.adv = Math.max(0, menuState.adv + delta);
-            document.getElementById('val-adv').textContent = menuState.adv;
-        } else {
-            menuState.dis = Math.max(0, menuState.dis + delta);
-            document.getElementById('val-dis').textContent = menuState.dis;
-        }
-    };
-
-    const executar = () => {
-        let adv = menuState.adv;
-        let dis = menuState.dis;
-        let attackRes = null;
-        let damageRes = null;
-
-        if (expressionAttack) {
-            attackRes = rollDiceWithAdvantage(expressionAttack, adv, dis);
-        }
-
-        if (expressionDamage) {
-            let formulaDano = expressionDamage;
-            if (attackRes && attackRes.isCrit) {
-                const regexDice = /^(\d*)d(\d+)(.*)$/i;
-                const match = formulaDano.match(regexDice);
-                if (match) {
-                    const qtd = (match[1] === "" ? 1 : parseInt(match[1])) * 2;
-                    formulaDano = `${qtd}d${match[2]}${match[3] || ''}`;
-                }
-                damageRes = rollDiceExpression(formulaDano);
-                damageRes.isCrit = true;
-                damageRes.label = "DANO CRÍTICO";
-            } else {
-                damageRes = rollDiceExpression(formulaDano);
-            }
-        }
-
-        showCombatResults(titulo, attackRes, damageRes);
-        
-        // SE FOR INICIATIVA, SALVA NA FICHA E MANDA PRO TRACKER
-        if (titulo === "Iniciativa" && attackRes) {
-             // Salva na ficha
-             if (typeof state !== 'undefined') {
-                 state.iniciativaAtual = attackRes.total;
-                 if (typeof saveStateToServer === 'function') saveStateToServer();
-             }
-
-             // Manda pro tracker
-             if (typeof window.adicionarAoTrackerExterno === 'function') {
-                window.adicionarAoTrackerExterno(attackRes.total);
-            }
-        }
-        // -------------------------
-
-        menu.remove();
-        document.removeEventListener('mousedown', closeMenuOutside);
-    };
-
-    document.getElementById('btn-executar-rolagem').onclick = executar;
-
-    tornarArrastavel(menu, document.getElementById('roll-drag-handle'));
-
-    setTimeout(() => { document.addEventListener('mousedown', closeMenuOutside); }, 100);
-
-    function closeMenuOutside(ev) {
-        if (!menu.contains(ev.target)) {
-            menu.remove();
-            document.removeEventListener('mousedown', closeMenuOutside);
-        }
+  window.alterarRolagem = (type, delta) => {
+    if (type === 'adv') {
+      menuState.adv = Math.max(0, menuState.adv + delta);
+      document.getElementById('val-adv').textContent = menuState.adv;
+    } else {
+      menuState.dis = Math.max(0, menuState.dis + delta);
+      document.getElementById('val-dis').textContent = menuState.dis;
     }
+  };
+
+  const executar = () => {
+    let adv = menuState.adv;
+    let dis = menuState.dis;
+    let attackRes = null;
+    let damageRes = null;
+
+    if (expressionAttack) {
+      attackRes = rollDiceWithAdvantage(expressionAttack, adv, dis);
+    }
+
+    if (expressionDamage) {
+      let formulaDano = expressionDamage;
+      if (attackRes && attackRes.isCrit) {
+        const regexDice = /^(\d*)d(\d+)(.*)$/i;
+        const match = formulaDano.match(regexDice);
+        if (match) {
+          const qtd = (match[1] === "" ? 1 : parseInt(match[1])) * 2;
+          formulaDano = `${qtd}d${match[2]}${match[3] || ''}`;
+        }
+        damageRes = rollDiceExpression(formulaDano);
+        damageRes.isCrit = true;
+        damageRes.label = "DANO CRÍTICO";
+      } else {
+        damageRes = rollDiceExpression(formulaDano);
+      }
+    }
+
+    showCombatResults(titulo, attackRes, damageRes);
+
+    // SE FOR INICIATIVA, SALVA NA FICHA E MANDA PRO TRACKER
+    if (titulo === "Iniciativa" && attackRes) {
+      // Salva na ficha
+      if (typeof state !== 'undefined') {
+        state.iniciativaAtual = attackRes.total;
+        if (typeof saveStateToServer === 'function') saveStateToServer();
+      }
+
+      // Manda pro tracker
+      if (typeof window.adicionarAoTrackerExterno === 'function') {
+        window.adicionarAoTrackerExterno(attackRes.total);
+      }
+    }
+    // -------------------------
+
+    menu.remove();
+    document.removeEventListener('mousedown', closeMenuOutside);
+  };
+
+  document.getElementById('btn-executar-rolagem').onclick = executar;
+
+  tornarArrastavel(menu, document.getElementById('roll-drag-handle'));
+
+  setTimeout(() => { document.addEventListener('mousedown', closeMenuOutside); }, 100);
+
+  function closeMenuOutside(ev) {
+    if (!menu.contains(ev.target)) {
+      menu.remove();
+      document.removeEventListener('mousedown', closeMenuOutside);
+    }
+  }
 };
 
 // 4. Função Utilitária para Arrastar
 function tornarArrastavel(element, handle) {
-    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-    
-    handle.onmousedown = dragMouseDown;
-    handle.ontouchstart = dragTouchStart; // Suporte Mobile
+  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
-    function dragMouseDown(e) {
-        e.preventDefault();
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        document.onmouseup = closeDragElement;
-        document.onmousemove = elementDrag;
-    }
+  handle.onmousedown = dragMouseDown;
+  handle.ontouchstart = dragTouchStart; // Suporte Mobile
 
-    function elementDrag(e) {
-        e.preventDefault();
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        element.style.top = (element.offsetTop - pos2) + "px";
-        element.style.left = (element.offsetLeft - pos1) + "px";
-    }
+  function dragMouseDown(e) {
+    e.preventDefault();
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
+  }
 
-    function closeDragElement() {
-        document.onmouseup = null;
-        document.onmousemove = null;
-    }
+  function elementDrag(e) {
+    e.preventDefault();
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    element.style.top = (element.offsetTop - pos2) + "px";
+    element.style.left = (element.offsetLeft - pos1) + "px";
+  }
 
-    // Mobile Touch Drag
-    function dragTouchStart(e) {
-        const touch = e.touches[0];
-        pos3 = touch.clientX;
-        pos4 = touch.clientY;
-        document.ontouchend = closeDragElement;
-        document.ontouchmove = elementTouchDrag;
-    }
+  function closeDragElement() {
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
 
-    function elementTouchDrag(e) {
-        const touch = e.touches[0];
-        pos1 = pos3 - touch.clientX;
-        pos2 = pos4 - touch.clientY;
-        pos3 = touch.clientX;
-        pos4 = touch.clientY;
-        element.style.top = (element.offsetTop - pos2) + "px";
-        element.style.left = (element.offsetLeft - pos1) + "px";
-    }
+  // Mobile Touch Drag
+  function dragTouchStart(e) {
+    const touch = e.touches[0];
+    pos3 = touch.clientX;
+    pos4 = touch.clientY;
+    document.ontouchend = closeDragElement;
+    document.ontouchmove = elementTouchDrag;
+  }
+
+  function elementTouchDrag(e) {
+    const touch = e.touches[0];
+    pos1 = pos3 - touch.clientX;
+    pos2 = pos4 - touch.clientY;
+    pos3 = touch.clientX;
+    pos4 = touch.clientY;
+    element.style.top = (element.offsetTop - pos2) + "px";
+    element.style.left = (element.offsetLeft - pos1) + "px";
+  }
 }
 
 // 5. Função Utilitária para Long Press (Segurar botão) - VERSÃO MOBILE CORRIGIDA
-window.addLongPressListener = function(element, callback) {
-    let timer;
-    const delay = 500; // Tempo para ativar (ms)
+window.addLongPressListener = function (element, callback) {
+  let timer;
+  const delay = 500; // Tempo para ativar (ms)
 
-    // BLOQUEIA O MENU NATIVO (DIREITO E SEGURAR)
-    element.oncontextmenu = function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        callback(e); // No desktop, abre imediatamente com botão direito
-        return false;
-    };
+  // BLOQUEIA O MENU NATIVO (DIREITO E SEGURAR)
+  element.oncontextmenu = function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    callback(e); // No desktop, abre imediatamente com botão direito
+    return false;
+  };
 
-    // TOUCH START
-    element.addEventListener('touchstart', (e) => {
-        // Se a gente der preventDefault aqui, o scroll para de funcionar na imagem
-        // Então deixamos passar, MAS...
-        timer = setTimeout(() => {
-            // Se segurou tempo suficiente, abrimos nosso menu
-            callback(e); 
-        }, delay);
-    }, {passive: true});
+  // TOUCH START
+  element.addEventListener('touchstart', (e) => {
+    // Se a gente der preventDefault aqui, o scroll para de funcionar na imagem
+    // Então deixamos passar, MAS...
+    timer = setTimeout(() => {
+      // Se segurou tempo suficiente, abrimos nosso menu
+      callback(e);
+    }, delay);
+  }, { passive: true });
 
-    // Se mover o dedo (tentando dar scroll), cancela o timer
-    element.addEventListener('touchmove', () => {
-        if (timer) clearTimeout(timer);
-    });
+  // Se mover o dedo (tentando dar scroll), cancela o timer
+  element.addEventListener('touchmove', () => {
+    if (timer) clearTimeout(timer);
+  });
 
-    // Se soltar o dedo antes do tempo, cancela
-    element.addEventListener('touchend', () => {
-        if (timer) clearTimeout(timer);
-    });
-    
-    // Se o sistema cancelar (ex: receber ligação), cancela
-    element.addEventListener('touchcancel', () => {
-        if (timer) clearTimeout(timer);
-    });
+  // Se soltar o dedo antes do tempo, cancela
+  element.addEventListener('touchend', () => {
+    if (timer) clearTimeout(timer);
+  });
+
+  // Se o sistema cancelar (ex: receber ligação), cancela
+  element.addEventListener('touchcancel', () => {
+    if (timer) clearTimeout(timer);
+  });
 };
 
 /* =============================================================
    SISTEMA DE GAVETA DE DADOS PUROS (HEADER)
 ============================================================= */
 function getHeaderDiceHtml(titleForAttack) {
-    return `
+  return `
         <div class="header-dice-wrapper" onclick="event.stopPropagation();">
             <div class="main-header-dice" data-title="${titleForAttack}" title="Esquerdo: Dados Puros | Direito/Segurar: Vantagem">
                 <img src="img/imagem-no-site/dado.png" alt="Rolar" style="width:24px; height:24px; display:block; filter: drop-shadow(0 0 2px rgba(156, 39, 176, 0.5));" />
@@ -6180,56 +6184,56 @@ function getHeaderDiceHtml(titleForAttack) {
     `;
 }
 function bindHeaderDiceEvents() {
-    document.querySelectorAll('.header-dice-wrapper').forEach(wrapper => {
-        const mainDice = wrapper.querySelector('.main-header-dice');
-        const drawer = wrapper.querySelector('.raw-dice-drawer');
+  document.querySelectorAll('.header-dice-wrapper').forEach(wrapper => {
+    const mainDice = wrapper.querySelector('.main-header-dice');
+    const drawer = wrapper.querySelector('.raw-dice-drawer');
 
-        if (!mainDice || !drawer) return;
+    if (!mainDice || !drawer) return;
 
-        // Limpa eventos antigos clonando
-        const newMain = mainDice.cloneNode(true);
-        mainDice.parentNode.replaceChild(newMain, mainDice);
+    // Limpa eventos antigos clonando
+    const newMain = mainDice.cloneNode(true);
+    mainDice.parentNode.replaceChild(newMain, mainDice);
 
-        // Clique Esquerdo: Abre a gaveta de dados puros
-        newMain.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const isOpen = drawer.classList.contains('open');
-            document.querySelectorAll('.raw-dice-drawer').forEach(d => d.classList.remove('open'));
-            if (!isOpen) drawer.classList.add('open');
-        });
-
-        // Clique Direito / Segurar: Rola o Ataque da Seção com Vantagem Menu
-        if (typeof window.addLongPressListener === 'function') {
-            window.addLongPressListener(newMain, (e) => {
-                const title = newMain.getAttribute('data-title') || "Ataque";
-                // Deduz ataque básico (Modificador de Magia + Proficiência)
-                const vals = typeof getSpellAttackValues === 'function' ? getSpellAttackValues() : {prof:2, mod:0, extra:0};
-                const expr = vals ? `1d20 + ${vals.prof + vals.mod + vals.extra}` : "1d20";
-                window.abrirMenuRolagem(e, title, expr, null);
-            });
-        }
+    // Clique Esquerdo: Abre a gaveta de dados puros
+    newMain.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const isOpen = drawer.classList.contains('open');
+      document.querySelectorAll('.raw-dice-drawer').forEach(d => d.classList.remove('open'));
+      if (!isOpen) drawer.classList.add('open');
     });
 
-    // Eventos dos Dados Puros
-    document.querySelectorAll('.raw-dice-btn').forEach(btn => {
-        const newBtn = btn.cloneNode(true);
-        btn.parentNode.replaceChild(newBtn, btn);
-        
-        newBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const diceType = newBtn.getAttribute('data-dice');
-            const res = rollDiceExpression(diceType);
-            showCombatResults(`Rolagem Pura (${diceType})`, null, { ...res, label: "RESULTADO" });
-        });
+    // Clique Direito / Segurar: Rola o Ataque da Seção com Vantagem Menu
+    if (typeof window.addLongPressListener === 'function') {
+      window.addLongPressListener(newMain, (e) => {
+        const title = newMain.getAttribute('data-title') || "Ataque";
+        // Deduz ataque básico (Modificador de Magia + Proficiência)
+        const vals = typeof getSpellAttackValues === 'function' ? getSpellAttackValues() : { prof: 2, mod: 0, extra: 0 };
+        const expr = vals ? `1d20 + ${vals.prof + vals.mod + vals.extra}` : "1d20";
+        window.abrirMenuRolagem(e, title, expr, null);
+      });
+    }
+  });
 
-        // Botão direito no dado puro também abre o menu de vantagem para ele
-        if (typeof window.addLongPressListener === 'function') {
-            window.addLongPressListener(newBtn, (e) => {
-                const diceType = newBtn.getAttribute('data-dice');
-                window.abrirMenuRolagem(e, `Rolagem Pura (${diceType})`, diceType, null);
-            });
-        }
+  // Eventos dos Dados Puros
+  document.querySelectorAll('.raw-dice-btn').forEach(btn => {
+    const newBtn = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newBtn, btn);
+
+    newBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const diceType = newBtn.getAttribute('data-dice');
+      const res = rollDiceExpression(diceType);
+      showCombatResults(`Rolagem Pura (${diceType})`, null, { ...res, label: "RESULTADO" });
     });
+
+    // Botão direito no dado puro também abre o menu de vantagem para ele
+    if (typeof window.addLongPressListener === 'function') {
+      window.addLongPressListener(newBtn, (e) => {
+        const diceType = newBtn.getAttribute('data-dice');
+        window.abrirMenuRolagem(e, `Rolagem Pura (${diceType})`, diceType, null);
+      });
+    }
+  });
 }
