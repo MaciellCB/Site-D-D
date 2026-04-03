@@ -2315,8 +2315,7 @@ a.editar-spell {
 .header-dice-wrapper {
     display: flex;
     align-items: center;
-    margin-left: auto;
-    margin-right: 10px;
+    justify-content: center;
 }
 .main-header-dice {
     cursor: pointer;

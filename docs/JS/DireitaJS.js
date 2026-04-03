@@ -508,9 +508,12 @@ function renderInventory() {
 
   if (!listaHTML) listaHTML = `<div class="empty-tip">Nenhum item encontrado.</div>`;
 
-  const html = `
+const html = `
         <div class="inventory-controls controls-row">
             <input id="filterItens" placeholder="Filtrar itens..." value="${escapeHtml(termo)}" />
+            
+            ${getHeaderDiceHtml('Dados Puros')}
+
             <div class="right-controls">
                 <button id="botAddItem" class="btn-add">Adicionar</button>
             </div>
@@ -821,9 +824,10 @@ function renderCombat() {
     listaHTML = `<p class="empty-tip">Nada equipado para combate.</p>`;
   }
 
-  const html = `
+ const html = `
         <div class="controls-row">
             <input id="filterCombat" placeholder="Filtrar combate..." value="${escapeHtml(termo)}" />
+            ${getHeaderDiceHtml('Dados Puros')}
         </div>
         <div class="inventory-list-wrapper">
             ${listaHTML}
@@ -1315,9 +1319,12 @@ function renderAbilities() {
     return a.title.localeCompare(b.title);
   };
 
-  let htmlFinal = `
+ let htmlFinal = `
         <div class="abilities-controls controls-row">
             <input id="filterHabs" placeholder="Filtrar habilidades..." value="${escapeHtml(termoBusca)}" />
+            
+            ${getHeaderDiceHtml('Dados Puros')}
+
             <div class="right-controls">
                 <button id="botOpenCatalogHab" class="btn-add">Adicionar</button>
             </div>
@@ -2524,22 +2531,19 @@ function renderSpells() {
       ${slotsHTML}
       ${slotsHTML ? '<hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 15px 0;">' : ''}
 
-      <div class="spells-controls controls-row" style="flex-wrap: wrap; gap: 8px;">
-        <div style="display:flex; flex:1; width: 100%; gap:8px;">
-            <input id="filterMagias" placeholder="Buscar magia..." value="${escapeHtml(state.spellFilters.text)}" style="flex:1;" />
-            <button id="btnToggleFiltros" style="background:#1a1a1a; border:1px solid #333; color:#ccc; border-radius:4px; padding:0 12px; cursor:pointer; font-weight:bold; transition: 0.2s; white-space: nowrap;">
-               Filtros ${window.isMagiasFiltroExpanded ? '▴' : '▾'}
-            </button>
-        </div>
-        <div class="right-controls" style="display:flex; justify-content:space-between; width:100%; margin-top:5px;">
-          <button id="botAddSpell" class="btn-add">Nova Magia</button>
+     <div class="right-controls" style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:5px;">
+          
+          <div style="display:flex; align-items:center; gap:16px;">
+              ${getHeaderDiceHtml('Ataque Mágico (Todas)')}
+              <button id="botAddSpell" class="btn-add">Nova Magia</button>
+          </div>
+
           <div class="dt-magias" id="btnOpenDTConfig" style="cursor:pointer;" title="Clique para configurar">
             <label style="cursor:pointer; color:#9c27b0;">DT DE MAGIAS ⚙️</label>
             <input id="dtMagiasInput" type="text" value="${state.dtMagias}" readonly 
                    style="cursor:pointer; font-weight:bold; color:#fff; text-align:center; min-width:80px;" />
           </div>
         </div>
-      </div>
 
       <div id="painelFiltrosMagias" style="${window.isMagiasFiltroExpanded ? 'display:block;' : 'display:none;'} background:#121212; padding:12px; border-radius:6px; border:1px solid rgba(156, 39, 176, 0.3); margin-bottom:12px;">
          <div style="margin-bottom: 8px;"><strong style="color:#9c27b0; font-size:11px; text-transform:uppercase;">Filtrar por Escola</strong></div>
@@ -2553,10 +2557,9 @@ function renderSpells() {
          </div>
       </div>
 
-      <div style="display:flex; align-items:center; margin:15px 0 10px 4px;">
-          <h4 style="margin:0; color:#ddd; font-size:16px;">Minhas Magias</h4>
-          ${getHeaderDiceHtml('Ataque Mágico (Todas as Magias)')}
-      </div>
+     <div style="display:flex; align-items:center; margin:15px 0 10px 4px;">
+      <h4 style="margin:0; color:#ddd; font-size:16px;">Minhas Magias</h4>
+  </div>
 
       <div class="spells-list">
         ${state.spells.map(formatMySpellCard).join('')}
@@ -3465,8 +3468,11 @@ function renderPreparedSpells() {
             ${slotsHTML}
             ${slotsHTML ? '<hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 15px 0;">' : ''}
 
-            <div class="controls-row">
+           <div class="controls-row">
                 <input id="filterPrepared" placeholder="Filtrar..." />
+                
+                ${getHeaderDiceHtml('Ataque Mágico (Preparadas)')}
+
                 <div class="right-controls">
                     <div class="dt-magias" id="btnOpenDTConfig_Prep" style="cursor:pointer;" title="Clique para configurar">
                         <label style="cursor:pointer; color:#9c27b0;">DT DE MAGIAS ⚙️</label>
@@ -3474,10 +3480,6 @@ function renderPreparedSpells() {
                                style="cursor:pointer; font-weight:bold; color:#fff; text-align:center; min-width:80px;" />
                     </div>
                 </div>
-            </div>
-
-            <div class="spells-list">
-                ${listaContent}
             </div>
         </div>
     `;
@@ -4588,20 +4590,14 @@ function renderItemGroup(titulo, listaItens, chaveUnica, forceExpand = false) {
 const arrow = isCollapsed ? '▸' : '▾';
   const displayStyle = isCollapsed ? 'display:none;' : '';
   const cardsHtml = listaItens.map(item => formatInventoryItem(item)).join('');
-  const diceHtml = getHeaderDiceHtml(titulo);
 
   return `
         <div class="inv-section-group" style="margin-bottom:12px;">
             <div class="toggle-inv-header" data-key="${chaveUnica}" style="cursor:pointer; display:flex; align-items:center; background:rgba(255,255,255,0.03); padding:8px; border-radius:4px; margin-bottom:5px; border: 1px solid rgba(255,255,255,0.05);">
                 <span style="font-size:14px; color:#9c27b0; width:15px;">${arrow}</span> 
                 <span style="font-weight:700; font-size:12px; color:#ccc; text-transform:uppercase;">${titulo}</span>
-                ${diceHtml}
-                <span style="font-size:10px; color:#666; background:#111; padding:2px 6px; border-radius:4px;">${listaItens.length}</span>
+                <span style="margin-left:auto; font-size:10px; color:#666; background:#111; padding:2px 6px; border-radius:4px;">${listaItens.length}</span>
             </div>
-            <div class="inv-section-content" style="${displayStyle}">
-                ${cardsHtml}
-            </div>
-        </div>
     `;
 }
 
@@ -4702,19 +4698,13 @@ function renderAbilitySection(titulo, listaCards, chaveUnica, forceExpand = fals
     `;
   }).join('');
 
- const diceHtml = getHeaderDiceHtml(titulo);
-  return `
+ return `
         <div class="hab-section-group" style="margin-bottom:12px;">
             <div class="toggle-section-header" data-key="${chaveUnica}" style="cursor:pointer; display:flex; align-items:center; background:rgba(255,255,255,0.03); padding:8px; border-radius:4px; margin-bottom:5px; border: 1px solid rgba(255,255,255,0.05);">
                 <span style="font-size:14px; color:#9c27b0; width:15px;">${arrow}</span> 
                 <span style="font-weight:700; font-size:12px; color:#ccc; text-transform:uppercase;">${titulo}</span>
-                ${diceHtml}
-                <span style="font-size:10px; color:#666; background:#111; padding:2px 6px; border-radius:4px;">${listaCards.length}</span>
+                <span style="margin-left:auto; font-size:10px; color:#666; background:#111; padding:2px 6px; border-radius:4px;">${listaCards.length}</span>
             </div>
-            <div class="section-content" style="${displayStyle}">
-                ${cardsHtml}
-            </div>
-        </div>
     `;
 }
 
