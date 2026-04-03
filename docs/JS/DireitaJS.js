@@ -6172,13 +6172,13 @@ function getHeaderDiceHtml(titleForAttack) {
                 <img src="img/imagem-no-site/dado.png" alt="Rolar" style="width:24px; height:24px; display:block; filter: drop-shadow(0 0 2px rgba(156, 39, 176, 0.5));" />
             </div>
             <div class="raw-dice-drawer">
-                <div class="raw-dice-btn" data-dice="1d2" title="Rolar 1d2"><img src="img/imagem-no-site/d2.png"></div>
-                <div class="raw-dice-btn" data-dice="1d4" title="Rolar 1d4"><img src="img/imagem-no-site/d4.png"></div>
-                <div class="raw-dice-btn" data-dice="1d6" title="Rolar 1d6"><img src="img/imagem-no-site/d6.png"></div>
-                <div class="raw-dice-btn" data-dice="1d8" title="Rolar 1d8"><img src="img/imagem-no-site/d8.png"></div>
-                <div class="raw-dice-btn" data-dice="1d10" title="Rolar 1d10"><img src="img/imagem-no-site/d10.png"></div>
-                <div class="raw-dice-btn" data-dice="1d12" title="Rolar 1d12"><img src="img/imagem-no-site/d12.png"></div>
-                <div class="raw-dice-btn" data-dice="1d20" title="Rolar 1d20"><img src="img/imagem-no-site/d20.png"></div>
+                <div class="raw-dice-btn" data-dice="1d2" title="Rolar 1d2"><img src="img/imagem-no-site/d2.png"><span>d2</span></div>
+                <div class="raw-dice-btn" data-dice="1d4" title="Rolar 1d4"><img src="img/imagem-no-site/d4.png"><span>d4</span></div>
+                <div class="raw-dice-btn" data-dice="1d6" title="Rolar 1d6"><img src="img/imagem-no-site/d6.png"><span>d6</span></div>
+                <div class="raw-dice-btn" data-dice="1d8" title="Rolar 1d8"><img src="img/imagem-no-site/d8.png"><span>d8</span></div>
+                <div class="raw-dice-btn" data-dice="1d10" title="Rolar 1d10"><img src="img/imagem-no-site/d10.png"><span>d10</span></div>
+                <div class="raw-dice-btn" data-dice="1d12" title="Rolar 1d12"><img src="img/imagem-no-site/d12.png"><span>d12</span></div>
+                <div class="raw-dice-btn" data-dice="1d20" title="Rolar 1d20"><img src="img/imagem-no-site/d20.png"><span>d20</span></div>
             </div>
         </div>
     `;
