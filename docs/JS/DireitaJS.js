@@ -4578,16 +4578,10 @@ function renderItemGroup(titulo, listaItens, chaveUnica, forceExpand = false) {
 
   if (!state.collapsedSections) state.collapsedSections = {};
 
-  // Lógica: 
-  // Se forceExpand (busca ativa) -> Não colapsado (false)
-  // Se não tem state salvo -> Colapsado (true) por padrão (antes era false)
-  // Se tem state salvo -> Usa o state
   let isCollapsed;
-
   if (forceExpand) {
     isCollapsed = false;
   } else {
-    // Se undefined, assume TRUE (fechado por padrão). Se definido, usa o valor.
     isCollapsed = state.collapsedSections[chaveUnica] !== undefined ? state.collapsedSections[chaveUnica] : true;
   }
 
@@ -4602,6 +4596,10 @@ function renderItemGroup(titulo, listaItens, chaveUnica, forceExpand = false) {
                 <span style="font-weight:700; font-size:12px; color:#ccc; text-transform:uppercase;">${titulo}</span>
                 <span style="margin-left:auto; font-size:10px; color:#666; background:#111; padding:2px 6px; border-radius:4px;">${listaItens.length}</span>
             </div>
+            <div class="inv-section-content" style="${displayStyle}">
+                ${cardsHtml}
+            </div>
+        </div>
     `;
 }
 
