@@ -527,6 +527,7 @@ function renderInventory() {
   bindInventoryCardEvents();
   bindInventorySectionEvents();
   aplicarEnterNosInputs(conteudoEl);
+  bindHeaderDiceEvents();
 
   // --- CORREÇÃO DO FOCO AUTOMÁTICO ---
   const inputFiltro = document.getElementById('filterItens');
@@ -592,9 +593,28 @@ function bindInventoryCardEvents() {
             };
         }
 
-        // B. NOVO: EVENTO HÍBRIDO (ITEM)
+       // B. EVENTO HÍBRIDO (ITEM)
         const diceImg = card.querySelector('.dice-img');
         if (diceImg) {
+            
+            // Helper interno para calcular a expressão de dano COM os atributos e bônus
+            const getExprDanoAtualizada = (itemData) => {
+                let exprBase = card.querySelector('.spell-damage span') ? card.querySelector('.spell-damage span').textContent : itemData.damage;
+                let modDano = 0;
+                if (itemData.damageAttribute && itemData.damageAttribute !== 'Nenhum') {
+                    modDano = typeof getAttributeMod === 'function' ? getAttributeMod(itemData.damageAttribute) : 0;
+                } else if (itemData.type === 'Arma') {
+                    modDano = typeof getItemAttackValues === 'function' ? getItemAttackValues(itemData).modAttr : 0;
+                }
+                const totalModDano = modDano + (parseInt(itemData.damageBonus) || 0);
+
+                if (totalModDano !== 0) {
+                    const sinal = totalModDano >= 0 ? '+' : '';
+                    exprBase = `${exprBase}${sinal}${totalModDano}`;
+                }
+                return exprBase;
+            };
+
             // Clique esquerdo (Normal)
             diceImg.addEventListener('click', (e) => {
                 const item = state.inventory.find(i => String(i.id) === String(rawId));
@@ -603,17 +623,16 @@ function bindInventoryCardEvents() {
                 const { modAttr, profBonus, itemBonus } = getItemAttackValues(item);
                 const totalBonus = modAttr + profBonus + itemBonus;
                 const exprAtk = `1d20 + ${totalBonus}`;
-                const spanDano = card.querySelector('.spell-damage span');
-                const exprDano = spanDano ? spanDano.textContent : item.damage;
+                const exprDanoReal = getExprDanoAtualizada(item);
                 const usaAtaque = (item.type === 'Arma' || (item.attackAttribute && item.attackAttribute !== 'Nenhum'));
 
                 const atkRes = usaAtaque ? rollDiceWithAdvantage(exprAtk, 0, 0) : null;
-                const dmgRes = rollDiceExpression(exprDano);
+                const dmgRes = rollDiceExpression(exprDanoReal);
                 
                 showCombatResults(item.name, atkRes, dmgRes);
             });
 
-            // Clique Direito / Segurar (Menu)
+            // Clique Direito / Segurar (Menu de Vantagem)
             if (typeof window.addLongPressListener === 'function') {
                 window.addLongPressListener(diceImg, (e) => {
                     const item = state.inventory.find(i => String(i.id) === String(rawId));
@@ -622,12 +641,10 @@ function bindInventoryCardEvents() {
                     const { modAttr, profBonus, itemBonus } = getItemAttackValues(item);
                     const totalBonus = modAttr + profBonus + itemBonus;
                     const exprAtk = `1d20 + ${totalBonus}`;
-                    
-                    const spanDano = card.querySelector('.spell-damage span');
-                    const exprDano = spanDano ? spanDano.textContent : item.damage;
+                    const exprDanoReal = getExprDanoAtualizada(item);
                     const usaAtaque = (item.type === 'Arma' || (item.attackAttribute && item.attackAttribute !== 'Nenhum'));
                     
-                    window.abrirMenuRolagem(e, item.name, usaAtaque ? exprAtk : null, exprDano);
+                    window.abrirMenuRolagem(e, item.name, usaAtaque ? exprAtk : null, exprDanoReal);
                 });
             }
         }
@@ -817,6 +834,7 @@ function renderCombat() {
 
   bindInventoryCardEvents();
   bindInventorySectionEvents();
+  bindHeaderDiceEvents();
 
   // --- CORREÇÃO DO FOCO AUTOMÁTICO ---
   const inputFiltro = document.getElementById('filterCombat');
@@ -1332,6 +1350,7 @@ function renderAbilities() {
 
   bindAbilityEvents();
   bindAbilitySectionEvents();
+  bindHeaderDiceEvents();
 
   // --- CORREÇÃO DO FOCO AUTOMÁTICO ---
   const novoInput = document.getElementById('filterHabs');
@@ -2536,9 +2555,7 @@ function renderSpells() {
 
       <div style="display:flex; align-items:center; margin:15px 0 10px 4px;">
           <h4 style="margin:0; color:#ddd; font-size:16px;">Minhas Magias</h4>
-          <div id="btnRollSpellAttack_Header" title="Rolar Ataque Mágico (1d20 + Prof + Mod)" style="cursor:pointer; margin-left:10px; transition: transform 0.2s;">
-              <img src="img/imagem-no-site/dado.png" alt="Rolar Ataque" style="width:26px; height:26px; display:block; opacity:0.9; filter: drop-shadow(0 0 2px rgba(156, 39, 176, 0.5));" />
-          </div>
+          ${getHeaderDiceHtml('Ataque Mágico (Todas as Magias)')}
       </div>
 
       <div class="spells-list">
@@ -2551,6 +2568,7 @@ function renderSpells() {
   bindSpellEvents();
   bindSlotEvents();
   aplicarFiltrosMagias(); 
+  bindHeaderDiceEvents();
   
   const inputFiltro = document.getElementById('filterMagias');
   if (inputFiltro && state.spellFilters.text.length > 0) {
@@ -3393,10 +3411,7 @@ function renderPreparedSpells() {
             <div id="toggle-magias" class="toggle-section-header" style="margin: 10px 0 6px 4px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; cursor:pointer; display:flex; align-items:center;">
                 <span style="font-size:16px; color:#9c27b0; width:15px;">${arrowMagias}</span> 
                 <span style="color: #ddd; text-transform: uppercase; font-size: 14px; font-weight:700;">Magias Preparadas</span>
-                
-                <div id="btnRollSpellAttack_PrepHeader" title="Rolar Ataque Mágico (d20 + Prof + Mod)" style="cursor:pointer; margin-left:auto; padding-left:10px; transition: transform 0.2s;">
-                    <img src="img/imagem-no-site/dado.png" alt="dado" style="width:26px; height:26px; opacity:0.9; display:block; filter: drop-shadow(0 0 2px rgba(156, 39, 176, 0.5));" />
-                </div>
+                ${getHeaderDiceHtml('Ataque Mágico (Preparadas)')}
             </div>
 
             <div id="content-magias" class="section-content" style="${styleMagias}">
@@ -3606,6 +3621,7 @@ function renderPreparedSpells() {
       state.abilities = state.abilities.filter(a => a.id !== id);
       saveStateToServer();
       renderActiveTab();
+      
     });
   });
 
@@ -3618,6 +3634,7 @@ function renderPreparedSpells() {
       if (hab) openNewAbilityModal(hab);
     });
   });
+  bindHeaderDiceEvents();
 }
 
 /* ---------------- CATALOGO DE ITENS (DESIGN UNIFICADO) ---------------- */
@@ -4547,6 +4564,8 @@ function renderDescription() {
     });
 }
 
+
+
 /* --- ATUALIZADO: RENDERIZA GRUPO DE ITENS (COM LÓGICA DE FECHADO POR PADRÃO) --- */
 function renderItemGroup(titulo, listaItens, chaveUnica, forceExpand = false) {
   if (!listaItens || listaItens.length === 0) return '';
@@ -4566,17 +4585,18 @@ function renderItemGroup(titulo, listaItens, chaveUnica, forceExpand = false) {
     isCollapsed = state.collapsedSections[chaveUnica] !== undefined ? state.collapsedSections[chaveUnica] : true;
   }
 
-  const arrow = isCollapsed ? '▸' : '▾';
+const arrow = isCollapsed ? '▸' : '▾';
   const displayStyle = isCollapsed ? 'display:none;' : '';
-
   const cardsHtml = listaItens.map(item => formatInventoryItem(item)).join('');
+  const diceHtml = getHeaderDiceHtml(titulo);
 
   return `
         <div class="inv-section-group" style="margin-bottom:12px;">
             <div class="toggle-inv-header" data-key="${chaveUnica}" style="cursor:pointer; display:flex; align-items:center; background:rgba(255,255,255,0.03); padding:8px; border-radius:4px; margin-bottom:5px; border: 1px solid rgba(255,255,255,0.05);">
                 <span style="font-size:14px; color:#9c27b0; width:15px;">${arrow}</span> 
                 <span style="font-weight:700; font-size:12px; color:#ccc; text-transform:uppercase;">${titulo}</span>
-                <span style="margin-left:auto; font-size:10px; color:#666; background:#111; padding:2px 6px; border-radius:4px;">${listaItens.length}</span>
+                ${diceHtml}
+                <span style="font-size:10px; color:#666; background:#111; padding:2px 6px; border-radius:4px;">${listaItens.length}</span>
             </div>
             <div class="inv-section-content" style="${displayStyle}">
                 ${cardsHtml}
@@ -4682,12 +4702,14 @@ function renderAbilitySection(titulo, listaCards, chaveUnica, forceExpand = fals
     `;
   }).join('');
 
+ const diceHtml = getHeaderDiceHtml(titulo);
   return `
         <div class="hab-section-group" style="margin-bottom:12px;">
             <div class="toggle-section-header" data-key="${chaveUnica}" style="cursor:pointer; display:flex; align-items:center; background:rgba(255,255,255,0.03); padding:8px; border-radius:4px; margin-bottom:5px; border: 1px solid rgba(255,255,255,0.05);">
                 <span style="font-size:14px; color:#9c27b0; width:15px;">${arrow}</span> 
                 <span style="font-weight:700; font-size:12px; color:#ccc; text-transform:uppercase;">${titulo}</span>
-                <span style="margin-left:auto; font-size:10px; color:#666; background:#111; padding:2px 6px; border-radius:4px;">${listaCards.length}</span>
+                ${diceHtml}
+                <span style="font-size:10px; color:#666; background:#111; padding:2px 6px; border-radius:4px;">${listaCards.length}</span>
             </div>
             <div class="section-content" style="${displayStyle}">
                 ${cardsHtml}
@@ -6145,3 +6167,79 @@ window.addLongPressListener = function(element, callback) {
         if (timer) clearTimeout(timer);
     });
 };
+
+/* =============================================================
+   SISTEMA DE GAVETA DE DADOS PUROS (HEADER)
+============================================================= */
+function getHeaderDiceHtml(titleForAttack) {
+    return `
+        <div class="header-dice-wrapper" onclick="event.stopPropagation();">
+            <div class="main-header-dice" data-title="${titleForAttack}" title="Esquerdo: Dados Puros | Direito/Segurar: Vantagem">
+                <img src="img/imagem-no-site/dado.png" alt="Rolar" style="width:24px; height:24px; display:block; filter: drop-shadow(0 0 2px rgba(156, 39, 176, 0.5));" />
+            </div>
+            <div class="raw-dice-drawer">
+                <div class="raw-dice-btn" data-dice="1d2" title="Rolar 1d2"><img src="img/imagem-no-site/dado.png"><span>d2</span></div>
+                <div class="raw-dice-btn" data-dice="1d4" title="Rolar 1d4"><img src="img/imagem-no-site/dado.png"><span>d4</span></div>
+                <div class="raw-dice-btn" data-dice="1d6" title="Rolar 1d6"><img src="img/imagem-no-site/dado.png"><span>d6</span></div>
+                <div class="raw-dice-btn" data-dice="1d8" title="Rolar 1d8"><img src="img/imagem-no-site/dado.png"><span>d8</span></div>
+                <div class="raw-dice-btn" data-dice="1d10" title="Rolar 1d10"><img src="img/imagem-no-site/dado.png"><span>d10</span></div>
+                <div class="raw-dice-btn" data-dice="1d12" title="Rolar 1d12"><img src="img/imagem-no-site/dado.png"><span>d12</span></div>
+                <div class="raw-dice-btn" data-dice="1d20" title="Rolar 1d20"><img src="img/imagem-no-site/dado.png"><span>d20</span></div>
+            </div>
+        </div>
+    `;
+}
+function bindHeaderDiceEvents() {
+    document.querySelectorAll('.header-dice-wrapper').forEach(wrapper => {
+        const mainDice = wrapper.querySelector('.main-header-dice');
+        const drawer = wrapper.querySelector('.raw-dice-drawer');
+
+        if (!mainDice || !drawer) return;
+
+        // Limpa eventos antigos clonando
+        const newMain = mainDice.cloneNode(true);
+        mainDice.parentNode.replaceChild(newMain, mainDice);
+
+        // Clique Esquerdo: Abre a gaveta de dados puros
+        newMain.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const isOpen = drawer.classList.contains('open');
+            document.querySelectorAll('.raw-dice-drawer').forEach(d => d.classList.remove('open'));
+            if (!isOpen) drawer.classList.add('open');
+        });
+
+        // Clique Direito / Segurar: Rola o Ataque da Seção com Vantagem Menu
+        if (typeof window.addLongPressListener === 'function') {
+            window.addLongPressListener(newMain, (e) => {
+                const title = newMain.getAttribute('data-title') || "Ataque";
+                // Deduz ataque básico (Modificador de Magia + Proficiência)
+                const vals = typeof getSpellAttackValues === 'function' ? getSpellAttackValues() : {prof:2, mod:0, extra:0};
+                const expr = vals ? `1d20 + ${vals.prof + vals.mod + vals.extra}` : "1d20";
+                window.abrirMenuRolagem(e, title, expr, null);
+            });
+        }
+    });
+
+    // Eventos dos Dados Puros
+    document.querySelectorAll('.raw-dice-btn').forEach(btn => {
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+        
+        newBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const diceType = newBtn.getAttribute('data-dice');
+            const res = rollDiceExpression(diceType);
+            showCombatResults(`Rolagem Pura (${diceType})`, null, { ...res, label: "RESULTADO" });
+        });
+
+        // Botão direito no dado puro também abre o menu de vantagem para ele
+        if (typeof window.addLongPressListener === 'function') {
+            window.addLongPressListener(newBtn, (e) => {
+                const diceType = newBtn.getAttribute('data-dice');
+                window.abrirMenuRolagem(e, `Rolagem Pura (${diceType})`, diceType, null);
+            });
+        }
+    });
+}
