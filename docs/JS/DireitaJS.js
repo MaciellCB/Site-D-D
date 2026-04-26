@@ -3534,7 +3534,7 @@ function renderPreparedSpells() {
   }
 
   // =================================================================
-  // 4. EVENTOS DE CARDS (CORRIGIDOS)
+  // 4. EVENTOS DE CARDS (CORRIGIDOS NA ABA MAGIAS PREPARADAS)
   // =================================================================
 
   // --- MAGIAS ---
@@ -3543,11 +3543,10 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.spell-card .card-header').forEach(h => {
     h.addEventListener('click', (ev) => {
       if (ev.target.closest('.check-ativar') || ev.target.closest('.spell-right')) return;
-      const id = Number(h.closest('.card').dataset.id);
-      const s = state.spells.find(x => x.id === id);
+      const id = h.closest('.card').dataset.id;
+      const s = state.spells.find(x => String(x.id) === String(id));
       if (s) {
         s.expanded = !s.expanded;
-        // saveStateToServer();  <--- REMOVA OU COMENTE ISSO
         renderActiveTab();
       }
     });
@@ -3556,8 +3555,8 @@ function renderPreparedSpells() {
   // B. Checkbox (Despreparar)
   conteudoEl.querySelectorAll('.spell-activate').forEach(ch => {
     ch.addEventListener('change', (ev) => {
-      const id = Number(ev.target.dataset.id);
-      const s = state.spells.find(x => x.id === id);
+      const id = ev.target.dataset.id;
+      const s = state.spells.find(x => String(x.id) === String(id));
       if (s) {
         s.active = ev.target.checked;
         saveStateToServer();
@@ -3571,8 +3570,8 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.remover-spell').forEach(btn => {
     btn.addEventListener('click', (ev) => {
       ev.preventDefault();
-      const id = Number(btn.dataset.id);
-      state.spells = state.spells.filter(s => s.id !== id);
+      const id = btn.dataset.id;
+      state.spells = state.spells.filter(s => String(s.id) !== String(id));
       saveStateToServer();
       renderActiveTab();
     });
@@ -3582,8 +3581,8 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.editar-spell').forEach(btn => {
     btn.addEventListener('click', (ev) => {
       ev.preventDefault();
-      const id = Number(btn.dataset.id);
-      const s = state.spells.find(x => x.id === id);
+      const id = btn.dataset.id;
+      const s = state.spells.find(x => String(x.id) === String(id));
       if (s) openSpellModal(s);
     });
   });
@@ -3595,11 +3594,10 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.hab-card .card-header').forEach(h => {
     h.addEventListener('click', (ev) => {
       if (ev.target.closest('.check-ativar')) return;
-      const id = Number(h.closest('.card').dataset.id);
-      const hab = state.abilities.find(a => a.id === id);
+      const id = h.closest('.card').dataset.id;
+      const hab = state.abilities.find(a => String(a.id) === String(id));
       if (hab) {
         hab.expanded = !hab.expanded;
-        // saveStateToServer(); <--- REMOVA OU COMENTE ISSO
         renderActiveTab();
       }
     });
@@ -3608,8 +3606,8 @@ function renderPreparedSpells() {
   // B. Checkbox (Desativar)
   conteudoEl.querySelectorAll('.hab-activate').forEach(ch => {
     ch.addEventListener('change', (ev) => {
-      const id = Number(ev.target.dataset.id);
-      const hab = state.abilities.find(a => a.id === id);
+      const id = ev.target.dataset.id;
+      const hab = state.abilities.find(a => String(a.id) === String(id));
       if (hab) {
         hab.active = ev.target.checked;
         saveStateToServer();
@@ -3623,11 +3621,10 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.remover-hab').forEach(btn => {
     btn.addEventListener('click', (ev) => {
       ev.preventDefault();
-      const id = Number(btn.dataset.id);
-      state.abilities = state.abilities.filter(a => a.id !== id);
+      const id = btn.dataset.id;
+      state.abilities = state.abilities.filter(a => String(a.id) !== String(id));
       saveStateToServer();
       renderActiveTab();
-
     });
   });
 
@@ -3635,11 +3632,12 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.editar-hab').forEach(btn => {
     btn.addEventListener('click', (ev) => {
       ev.preventDefault();
-      const id = Number(btn.dataset.id);
-      const hab = state.abilities.find(a => a.id === id);
+      const id = btn.dataset.id;
+      const hab = state.abilities.find(a => String(a.id) === String(id));
       if (hab) openNewAbilityModal(hab);
     });
   });
+  
   bindHeaderDiceEvents();
 }
 
@@ -5687,12 +5685,12 @@ document.addEventListener('click', function (e) {
     }
 
     // -------------------------------------------------------------
-    // C. VERIFICA SE É HABILIDADE (MANTIDO IGUAL)
+    // C. VERIFICA SE É HABILIDADE (CORRIGIDO)
     // -------------------------------------------------------------
     const habCard = e.target.closest('.hab-card');
     if (habCard) {
-      const habId = Number(habCard.getAttribute('data-id'));
-      const hab = state.abilities.find(h => h.id === habId);
+      const habId = habCard.getAttribute('data-id'); // Sem o Number()
+      const hab = state.abilities.find(h => String(h.id) === String(habId)); // Busca por String
 
       if (hab) {
         let damageRes = null;
