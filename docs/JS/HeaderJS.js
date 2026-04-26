@@ -1432,14 +1432,11 @@ function openClassSelectionModal() {
     };
 
     function renderClassDetails(cls, simulatedLevel) {
-        // (Copie a função renderClassDetails original que já estava aqui, sem alterações nela)
-        // Se precisar eu reenvio, mas ela não muda.
         if (!cls) return;
         btnSelect.removeAttribute('disabled');
         btnSelect.textContent = `Selecionar ${cls.name} (Nível ${simulatedLevel})`;
         btnSelect.style.background = '#9c27b0';
         
-        // ... (resto da renderização igual ao anterior) ...
         const imagePath = cls.image || 'img/imagem-no-site/dado.png';
         const subclassReqLevel = cls.subclass_level || 3;
         const canPickSubclass = simulatedLevel >= subclassReqLevel;
@@ -1453,15 +1450,27 @@ function openClassSelectionModal() {
 
         const traitsHtml = cls.features ? cls.features.map(t => `<div class="race-trait-item"><div class="race-trait-name">${t.name}</div><div class="race-trait-desc">${t.description}</div></div>`).join('') : '';
 
-        /* =============================================================
-   SUBSTITUA ESTE TRECHO DENTRO DE renderClassDetails
-   NO ARQUIVO HeaderJS.js
-============================================================= */
-
         let subclassesHtml = '';
         if (cls.subclasses && cls.subclasses.length > 0) {
             let lockMessage = '';
             const classKey = cls.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+            // =================================================================
+            // CORREÇÃO: REMOVER SUBCLASSE FANTASMA AO VOLTAR NÍVEL
+            // Se o nível simulado for menor ou igual ao nível de escolha da subclasse,
+            // significa que o personagem "voltou" de nível. Apagamos a memória para permitir nova escolha.
+            // =================================================================
+            if (simulatedLevel <= subclassReqLevel && state.subclasses && state.subclasses[classKey]) {
+                const ghostSub = state.subclasses[classKey];
+                delete state.subclasses[classKey];
+                
+                // Limpa as habilidades antigas da subclasse fantasma
+                if (state.abilities) {
+                    state.abilities = state.abilities.filter(a => !(a.category === 'Subclasse' && a.class === cls.name && a.subclass === ghostSub));
+                }
+                if (typeof saveStateToServer === 'function') saveStateToServer();
+            }
+
             const hasSaved = state.subclasses && state.subclasses[classKey];
             const isExactSelectionLevel = simulatedLevel === subclassReqLevel;
 
@@ -1479,16 +1488,9 @@ function openClassSelectionModal() {
                     ${lockMessage}
                     <div class="variations-list" style="${!canPickSubclass ? 'opacity:0.8;' : ''}"> 
                         ${cls.subclasses.map((sub, idx) => {
-                            // --- LÓGICA DA TRAVA (LOCK) ---
-                            // 1. Verifica se esta é a opção salva atualmente
+                            // Lógica de Trava Visual
                             const isSelected = hasSaved === sub.name;
-                            
-                            // 2. Deve desabilitar se:
-                            //    a) O nível for baixo (!canPickSubclass)
-                            //    b) JÁ existe algo salvo E esta opção NÃO é a salva (Bloqueia as outras)
                             const shouldDisable = !canPickSubclass || (hasSaved && !isSelected);
-
-                            // 3. Estilo visual para itens bloqueados (mais escuro e sem clique)
                             const styleBlocked = shouldDisable && hasSaved 
                                 ? "opacity: 0.3; pointer-events: none; filter: grayscale(1);" 
                                 : "cursor:pointer;";
@@ -1518,7 +1520,7 @@ function openClassSelectionModal() {
                             </div>
                         `}).join('')}
                     </div>
-                `;
+            `;
         }
 
         detailsContainer.innerHTML = `
@@ -1540,7 +1542,7 @@ function openClassSelectionModal() {
                 <div class="race-traits-title" style="margin-top:20px;">Características de Classe</div>
                 <div>${traitsHtml}</div>
                 ${subclassesHtml}
-            `;
+        `;
 
         if (cls.subclasses && cls.subclasses.length > 0) {
             const allRadios = detailsContainer.querySelectorAll('input[name="class_subclass"]');
