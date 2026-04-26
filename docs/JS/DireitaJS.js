@@ -3534,7 +3534,7 @@ function renderPreparedSpells() {
   }
 
   // =================================================================
-  // 4. EVENTOS DE CARDS (CORRIGIDOS NA ABA MAGIAS PREPARADAS)
+  // 4. EVENTOS DE CARDS (CORRIGIDOS)
   // =================================================================
 
   // --- MAGIAS ---
@@ -3543,10 +3543,11 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.spell-card .card-header').forEach(h => {
     h.addEventListener('click', (ev) => {
       if (ev.target.closest('.check-ativar') || ev.target.closest('.spell-right')) return;
-      const id = h.closest('.card').dataset.id;
-      const s = state.spells.find(x => String(x.id) === String(id));
+      const id = Number(h.closest('.card').dataset.id);
+      const s = state.spells.find(x => x.id === id);
       if (s) {
         s.expanded = !s.expanded;
+        // saveStateToServer();  <--- REMOVA OU COMENTE ISSO
         renderActiveTab();
       }
     });
@@ -3555,8 +3556,8 @@ function renderPreparedSpells() {
   // B. Checkbox (Despreparar)
   conteudoEl.querySelectorAll('.spell-activate').forEach(ch => {
     ch.addEventListener('change', (ev) => {
-      const id = ev.target.dataset.id;
-      const s = state.spells.find(x => String(x.id) === String(id));
+      const id = Number(ev.target.dataset.id);
+      const s = state.spells.find(x => x.id === id);
       if (s) {
         s.active = ev.target.checked;
         saveStateToServer();
@@ -3570,8 +3571,8 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.remover-spell').forEach(btn => {
     btn.addEventListener('click', (ev) => {
       ev.preventDefault();
-      const id = btn.dataset.id;
-      state.spells = state.spells.filter(s => String(s.id) !== String(id));
+      const id = Number(btn.dataset.id);
+      state.spells = state.spells.filter(s => s.id !== id);
       saveStateToServer();
       renderActiveTab();
     });
@@ -3581,8 +3582,8 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.editar-spell').forEach(btn => {
     btn.addEventListener('click', (ev) => {
       ev.preventDefault();
-      const id = btn.dataset.id;
-      const s = state.spells.find(x => String(x.id) === String(id));
+      const id = Number(btn.dataset.id);
+      const s = state.spells.find(x => x.id === id);
       if (s) openSpellModal(s);
     });
   });
@@ -3594,10 +3595,11 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.hab-card .card-header').forEach(h => {
     h.addEventListener('click', (ev) => {
       if (ev.target.closest('.check-ativar')) return;
-      const id = h.closest('.card').dataset.id;
-      const hab = state.abilities.find(a => String(a.id) === String(id));
+      const id = Number(h.closest('.card').dataset.id);
+      const hab = state.abilities.find(a => a.id === id);
       if (hab) {
         hab.expanded = !hab.expanded;
+        // saveStateToServer(); <--- REMOVA OU COMENTE ISSO
         renderActiveTab();
       }
     });
@@ -3606,8 +3608,8 @@ function renderPreparedSpells() {
   // B. Checkbox (Desativar)
   conteudoEl.querySelectorAll('.hab-activate').forEach(ch => {
     ch.addEventListener('change', (ev) => {
-      const id = ev.target.dataset.id;
-      const hab = state.abilities.find(a => String(a.id) === String(id));
+      const id = Number(ev.target.dataset.id);
+      const hab = state.abilities.find(a => a.id === id);
       if (hab) {
         hab.active = ev.target.checked;
         saveStateToServer();
@@ -3621,10 +3623,11 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.remover-hab').forEach(btn => {
     btn.addEventListener('click', (ev) => {
       ev.preventDefault();
-      const id = btn.dataset.id;
-      state.abilities = state.abilities.filter(a => String(a.id) !== String(id));
+      const id = Number(btn.dataset.id);
+      state.abilities = state.abilities.filter(a => a.id !== id);
       saveStateToServer();
       renderActiveTab();
+
     });
   });
 
@@ -3632,12 +3635,11 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.editar-hab').forEach(btn => {
     btn.addEventListener('click', (ev) => {
       ev.preventDefault();
-      const id = btn.dataset.id;
-      const hab = state.abilities.find(a => String(a.id) === String(id));
+      const id = Number(btn.dataset.id);
+      const hab = state.abilities.find(a => a.id === id);
       if (hab) openNewAbilityModal(hab);
     });
   });
-  
   bindHeaderDiceEvents();
 }
 
@@ -4601,7 +4603,7 @@ function renderItemGroup(titulo, listaItens, chaveUnica, forceExpand = false) {
     `;
 }
 
-/* --- ATUALIZADO: RENDERIZA GRUPO DE HABILIDADES (COM DANO SOMADO AUTOMÁTICO) --- */
+/* --- ATUALIZADO: RENDERIZA GRUPO DE HABILIDADES (CORRIGIDO HTML CORTADO) --- */
 function renderAbilitySection(titulo, listaCards, chaveUnica, forceExpand = false) {
   if (!state.collapsedSections) state.collapsedSections = {};
 
@@ -4698,6 +4700,7 @@ function renderAbilitySection(titulo, listaCards, chaveUnica, forceExpand = fals
     `;
   }).join('');
 
+  // AQUI ERA ONDE O CÓDIGO TINHA SIDO CORTADO:
   return `
         <div class="hab-section-group" style="margin-bottom:12px;">
             <div class="toggle-section-header" data-key="${chaveUnica}" style="cursor:pointer; display:flex; align-items:center; background:rgba(255,255,255,0.03); padding:8px; border-radius:4px; margin-bottom:5px; border: 1px solid rgba(255,255,255,0.05);">
@@ -4705,6 +4708,10 @@ function renderAbilitySection(titulo, listaCards, chaveUnica, forceExpand = fals
                 <span style="font-weight:700; font-size:12px; color:#ccc; text-transform:uppercase;">${titulo}</span>
                 <span style="margin-left:auto; font-size:10px; color:#666; background:#111; padding:2px 6px; border-radius:4px;">${listaCards.length}</span>
             </div>
+            <div class="section-content" style="${displayStyle}">
+                ${cardsHtml}
+            </div>
+        </div>
     `;
 }
 
@@ -5685,12 +5692,12 @@ document.addEventListener('click', function (e) {
     }
 
     // -------------------------------------------------------------
-    // C. VERIFICA SE É HABILIDADE (CORRIGIDO)
+    // C. VERIFICA SE É HABILIDADE (MANTIDO IGUAL)
     // -------------------------------------------------------------
     const habCard = e.target.closest('.hab-card');
     if (habCard) {
-      const habId = habCard.getAttribute('data-id'); // Sem o Number()
-      const hab = state.abilities.find(h => String(h.id) === String(habId)); // Busca por String
+      const habId = Number(habCard.getAttribute('data-id'));
+      const hab = state.abilities.find(h => h.id === habId);
 
       if (hab) {
         let damageRes = null;
