@@ -1766,7 +1766,7 @@ function formatMySpellCard(s) {
   const castControlsHTML = baseLevel > 0 ? `
       <div class="cast-controls">
           <span class="cast-label">Círculo:</span>
-          <select class="slot-select spell-slot-selector" data-id="${s.id}" data-base-dmg="${s.damage || ''}" data-base-lvl="${baseLevel}">
+          <select class="slot-select spell-slot-selector" data-id="${s.id}" data-base-dmg="${s.damage || ''}" data-base-lvl="${baseLevel}" data-scaling="${s.scaling || ''}">
               ${levelOptions}
           </select>
       </div>
@@ -2434,7 +2434,6 @@ function calculateNewDamage(baseDamage, scalingDamage, baseLevel, targetLevel) {
 
   if (baseLevel === 0) return baseDamage;
 
-  if (!scalingDamage || targetLevel <= baseLevel) return baseDamag
   const regex = /^(\d+)d(\d+)(.*)$/i;
 
   const baseMatch = baseDamage.match(regex);
