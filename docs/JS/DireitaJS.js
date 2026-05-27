@@ -3323,13 +3323,28 @@ function openSpellCatalogOverlay(parentModal = null) {
     function normalizeToAvailableClass(name) {
       if (!name) return '';
       const target = normalizeKey(name);
+
+      // 1) Match exact top-level class (e.g., 'Feiticeiro' -> 'Feiticeiro')
       for (const opt of CLASSES_AVAILABLE) {
         if (normalizeKey(opt) === target) return opt;
       }
+
+      // 2) If the name is a known subclass, map to its parent class
+      for (const parent of Object.keys(CLASSES_WITH_SUBCLASSES)) {
+        const subs = CLASSES_WITH_SUBCLASSES[parent] || [];
+        for (const sub of subs) {
+          if (!sub) continue;
+          if (normalizeKey(sub) === target) return parent;
+          if (normalizeKey(sub).includes(target) || target.includes(normalizeKey(sub))) return parent;
+        }
+      }
+
+      // 3) Fallback: fuzzy match against top-level classes
       for (const opt of CLASSES_AVAILABLE) {
         const o = normalizeKey(opt);
         if (o.includes(target) || target.includes(o)) return opt;
       }
+
       return name;
     }
 
