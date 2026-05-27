@@ -3317,7 +3317,24 @@ function openSpellCatalogOverlay(parentModal = null) {
   });
 
   function adicionarMagiaAoState(c, classeFinal) {
-    state.spells.unshift({ ...c, id: uid(), expanded: false, active: true, spellClass: classeFinal });
+    if (!state.spells) state.spells = [];
+
+    // Normaliza o nome da classe para as opções disponíveis (trata sinônimos/inglês)
+    function normalizeToAvailableClass(name) {
+      if (!name) return '';
+      const target = normalizeKey(name);
+      for (const opt of CLASSES_AVAILABLE) {
+        if (normalizeKey(opt) === target) return opt;
+      }
+      for (const opt of CLASSES_AVAILABLE) {
+        const o = normalizeKey(opt);
+        if (o.includes(target) || target.includes(o)) return opt;
+      }
+      return name;
+    }
+
+    const mappedClass = normalizeToAvailableClass(classeFinal);
+    state.spells.unshift({ ...c, id: uid(), expanded: false, active: true, spellClass: mappedClass });
     renderSpells();
     saveStateToServer();
     window.dispatchEvent(new CustomEvent('sheet-updated'));
