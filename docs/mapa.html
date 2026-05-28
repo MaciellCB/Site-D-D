@@ -677,7 +677,7 @@
             html += `
                 <div class="popup-desc-container" style="margin-bottom:0;">
                     <textarea readonly class="popup-desc-view">${descHtml}</textarea>
-                    <div class="popup-drag-handle">⤡ Arraste para expandir ⤡</div>
+                    <div class="popup-drag-handle" onpointerdown="initDragExpand(event)">⤡ Arraste para expandir ⤡</div>
                 </div>
             `;
 
@@ -816,55 +816,48 @@
             document.getElementById('lightbox').style.display = 'flex';
         };
 
-        // O texto vaza para fora do card ao arrastar o handle
+        // Reseta altura ao reabrir o popup
         map.on('popupopen', function(e) {
             const el = e.popup.getElement();
             if (!el) return;
             const container = el.querySelector('.popup-desc-container');
-            if (container) container.style.removeProperty('height');
+            if (container) { container.style.removeProperty('height'); container.style.removeProperty('width'); }
         });
 
-        document.addEventListener('pointerdown', function(ev) {
-            const handle = ev.target.closest('.popup-drag-handle');
-            if (!handle) return;
-
+        window.initDragExpand = function(ev) {
             ev.stopPropagation();
             ev.preventDefault();
 
+            const handle      = ev.currentTarget;
             const container   = handle.parentElement;
             const contentNode = container.closest('.leaflet-popup-content');
             const wrapperNode = container.closest('.leaflet-popup-content-wrapper');
 
-            // Libera overflow para o texto vazar visualmente fora do card
             if (wrapperNode) wrapperNode.style.overflow = 'visible';
             if (contentNode) contentNode.style.overflow = 'visible';
 
-            const startY = ev.clientY;
-            const startX = ev.clientX;
-            const startH = container.offsetHeight;
-            const startW = container.offsetWidth;
+            const startX = ev.clientX, startY = ev.clientY;
+            const startW = container.offsetWidth,  startH = container.offsetHeight;
 
-            try { handle.setPointerCapture(ev.pointerId); } catch(e) {}
+            handle.setPointerCapture(ev.pointerId);
             if (map && map.dragging) map.dragging.disable();
             document.body.style.userSelect = 'none';
             document.body.style.cursor = 'nwse-resize';
 
             function onMove(e) {
-                const newH = Math.max(70,  startH + (e.clientY - startY));
-                const newW = Math.max(200, startW + (e.clientX - startX));
-                container.style.height = newH + 'px';
-                container.style.width  = newW + 'px';
+                container.style.height = Math.max(70,  startH + (e.clientY - startY)) + 'px';
+                container.style.width  = Math.max(200, startW + (e.clientX - startX)) + 'px';
             }
             function onUp() {
-                document.removeEventListener('pointermove', onMove);
-                document.removeEventListener('pointerup',   onUp);
+                handle.removeEventListener('pointermove', onMove);
+                handle.removeEventListener('pointerup',   onUp);
                 if (map && map.dragging) map.dragging.enable();
                 document.body.style.userSelect = '';
                 document.body.style.cursor = '';
             }
-            document.addEventListener('pointermove', onMove);
-            document.addEventListener('pointerup',   onUp);
-        }, true);
+            handle.addEventListener('pointermove', onMove);
+            handle.addEventListener('pointerup',   onUp);
+        };
 
     </script>
 </body>
