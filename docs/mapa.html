@@ -455,10 +455,6 @@
                 })
                 .catch(err => console.error("Erro ao carregar mapa:", err));
 
-            map.on('popupopen', function(e) {
-                const el = e.popup.getElement ? e.popup.getElement() : e.popup._container;
-                if (el) setupPopupDrag(el);
-            });
         };
 
         function toggleMedicao() {
@@ -820,19 +816,20 @@
             document.getElementById('lightbox').style.display = 'flex';
         };
 
-        // Drag bidirecional do popup de descrição
-        // O Leaflet bloqueia 'mousedown' dentro do popup antes de chegar ao document,
-        // então o handler precisa ser acoplado diretamente ao handle via evento 'popupopen'.
-        function setupPopupDrag(popupEl) {
-            const handle = popupEl.querySelector('.popup-drag-handle');
-            if (!handle) return;
+        // Drag bidirecional do popup de descrição.
+        // MutationObserver detecta quando o handle aparece no DOM (popup abre)
+        // e acopla o listener diretamente no elemento — sem depender de APIs do Leaflet.
+        function attachDragToHandle(handle) {
+            if (handle._dragSetup) return; // evita duplicar listener
+            handle._dragSetup = true;
 
             handle.addEventListener('mousedown', function(ev) {
                 ev.stopPropagation();
                 ev.preventDefault();
 
-                const container = handle.closest('.popup-desc-container');
+                const container = handle.parentElement;
                 if (!container) return;
+                const contentNode = container.closest('.leaflet-popup-content');
 
                 const startX = ev.clientX, startY = ev.clientY;
                 const startW = container.offsetWidth, startH = container.offsetHeight;
@@ -842,19 +839,28 @@
                     const newW = Math.max(260, Math.min(800, startW + (e.clientX - startX)));
                     container.style.height = newH + 'px';
                     container.style.width  = newW + 'px';
-                    const popupContent = container.closest('.leaflet-popup-content');
-                    if (popupContent) popupContent.style.setProperty('width', (newW + 2) + 'px', 'important');
+                    if (contentNode) contentNode.style.setProperty('width', (newW + 2) + 'px', 'important');
                 }
-
                 function onUp() {
                     document.removeEventListener('mousemove', onMove);
                     document.removeEventListener('mouseup', onUp);
                 }
-
                 document.addEventListener('mousemove', onMove);
                 document.addEventListener('mouseup', onUp);
             });
         }
+
+        new MutationObserver(function(mutations) {
+            mutations.forEach(function(m) {
+                m.addedNodes.forEach(function(node) {
+                    if (node.nodeType !== 1) return;
+                    const handles = node.classList.contains('popup-drag-handle')
+                        ? [node]
+                        : [...node.querySelectorAll('.popup-drag-handle')];
+                    handles.forEach(attachDragToHandle);
+                });
+            });
+        }).observe(document.body, { childList: true, subtree: true });
 
     </script>
 </body>
