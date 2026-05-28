@@ -92,9 +92,11 @@
         .btn-action.danger:hover { background: var(--danger); color: white; }
         .btn-action.active { background: var(--accent); color: #fff; border-color: #d05ce3; }
 
-        .planes-section { border-top: 1px solid var(--border); padding-top: 15px; margin-top: auto; flex-shrink: 0; }
-        .plane-card { background: #111; border: 1px solid #333; border-radius: 6px; margin-bottom: 5px; overflow: hidden; transition: 0.2s; }
-        .plane-header { padding: 10px; cursor: pointer; font-weight: bold; font-size: 12px; color: #888; display: flex; justify-content: space-between; background: #1a1a1a; transition: 0.2s; }
+        .planes-section { border-top: 1px solid var(--border); padding-top: 15px; margin-top: auto; flex-shrink: 0; max-height: 55vh; overflow-y: auto; display: flex; flex-direction: column; }
+        .plane-category { margin-bottom: 8px; }
+        .plane-cat-header { font-size: 10px; font-weight: bold; color: #666; text-transform: uppercase; letter-spacing: 1.5px; padding: 4px 2px; border-bottom: 1px solid #222; margin-bottom: 5px; }
+        .plane-card { background: #111; border: 1px solid #333; border-radius: 6px; margin-bottom: 4px; overflow: hidden; transition: 0.2s; }
+        .plane-header { padding: 9px 10px; cursor: pointer; font-weight: bold; font-size: 12px; color: #888; display: flex; justify-content: space-between; background: #1a1a1a; transition: 0.2s; }
         .plane-header:hover { color: #fff; background: #222; }
         .plane-body { padding: 12px; font-size: 12px; color: #999; line-height: 1.5; display: none; border-top: 1px solid #222; background: #0e0e0e; }
         .plane-card.open .plane-body { display: block; animation: fadeIn 0.3s; }
@@ -330,10 +332,52 @@
         let measureLine = null; 
         let measurePoints = []; 
 
+        const PLANE_CATEGORIES = [
+            { id: 'central',    name: '🌍 Planos Centrais' },
+            { id: 'elemental',  name: '🔥 Planos Elementais' },
+            { id: 'superior',   name: '✨ Planos Superiores' },
+            { id: 'inferior',   name: '💀 Planos Inferiores' },
+            { id: 'especial',   name: '🔮 Planos Especiais' },
+        ];
+
         const PLANES_DATA = [
-            { id: 'shadowfell', name: 'Pendor das Sombras', desc: 'Um eco escuro e distorcido do Plano Material. Um lugar de decadência, morte e melancolia.' },
-            { id: 'feywild', name: 'Agréstia das Fadas', desc: 'Um eco vibrante e mágico do mundo. Lar de fadas, emoções intensas e beleza perigosa.' },
-            { id: 'astral', name: 'Plano Astral', desc: 'O espaço entre os planos. Um vazio prateado de pensamento e sonho.' }
+            // === CENTRAIS ===
+            { id: 'material', cat: 'central', name: 'Plano Material', desc: 'Representa o mundo tangível, o universo observável onde vivem os mortais. É o ponto de referência de toda cosmologia.' },
+            { id: 'etereo',   cat: 'central', name: 'Plano Etéreo',   desc: 'Uma névoa que se sobrepõe ao Plano Material. É frequentemente utilizado para viagens de curta distância ou habitado por fantasmas.' },
+            { id: 'astral',   cat: 'central', name: 'Plano Astral',   desc: 'Descrito como o mar de pensamentos e sonhos. Sua principal função é conectar o Plano Material aos Planos Externos.' },
+
+            // === ELEMENTAIS ===
+            { id: 'ar',       cat: 'elemental', name: 'Plano Elemental do Ar',   desc: 'É uma das esferas externas onde o elemento ar existe em seu estado mais básico e absoluto. Opera fora das leis físicas comuns do Plano Material.' },
+            { id: 'fogo',     cat: 'elemental', name: 'Plano Elemental do Fogo', desc: 'Uma dimensão de energia pura onde o elemento fogo se manifesta sem restrições ou combustível externo. Um dos quatro pilares que compõem a base elemental da existência.' },
+            { id: 'terra',    cat: 'elemental', name: 'Plano Elemental da Terra', desc: 'Dedicado inteiramente à pureza do elemento terra. Representa a solidez fundamental dentro da estrutura planar externa do cosmos.' },
+            { id: 'agua',     cat: 'elemental', name: 'Plano Elemental da Água', desc: 'Onde o elemento água é encontrado em sua forma mais limpa e primordial. Mantém a essência do elemento protegida de contaminações.' },
+            { id: 'caos-el',  cat: 'elemental', name: 'Caos Elemental',          desc: 'Um ponto de convergência violento onde todos os elementos se chocam e se misturam em uma tempestade infinita, impedindo qualquer forma de estabilidade.' },
+            { id: 'puros',    cat: 'elemental', name: 'Os 4 Elementais Puros',   desc: 'Domínios individuais de Ar, Terra, Fogo e Água, onde cada elemento existe em sua forma mais concentrada e absoluta, sem mistura ou contaminação de outros.' },
+
+            // === SUPERIORES ===
+            { id: 'mechanus',  cat: 'superior', name: 'Mechanus',      desc: 'O plano das engrenagens e da lógica pura, onde tudo funciona sob engrenagens mecânicas precisas. É regido pelos Modrons, seres de pura lógica, e a lei aqui não é apenas aplicada, ela é absoluta e inerente à física do lugar.' },
+            { id: 'arcadia',   cat: 'superior', name: 'Arcádia',       desc: 'Este plano manifesta a ordem perfeita dentro da natureza. A vegetação cresce com precisão matemática, com árvores alinhadas em filas impecáveis e pomares organizados milimetricamente, onde nada sai do lugar estabelecido pela harmonia natural.' },
+            { id: 'arborea',   cat: 'superior', name: 'Arbórea',       desc: 'É o plano das paixões desenfreadas e da natureza em seu estado mais indomável. Lar ancestral de algumas variações de elfos, um local de festividades eternas e sentimentos intensos que moldam a própria paisagem.' },
+            { id: 'bandopolis',cat: 'superior', name: 'Bandópolis',    desc: 'Uma terra acessível apenas por portais invisíveis. Gnomos, fadas e seres raros de magia habitam este reino, onde a magia é ilimitada e as experiências são amplificadas. As cores são mais vívidas, a comida e a bebida embriagam os sentidos, e a luz do sol parece sempre dourada. Aqueles que visitam voltam com histórias irreconciliáveis, cada um com uma visão única do lugar.' },
+            { id: 'asterios',  cat: 'superior', name: 'Astérios',      desc: 'São planos individuais criados por cada um dos deuses para acolher as almas de seus seguidores após a morte. Funcionam como pontes por cima do Vazio para aproximar as almas dos Campos Elísios, exigindo a aprovação da divindade para entrar.' },
+            { id: 'elisios',   cat: 'superior', name: 'Campos Elísios',desc: 'O destino final das almas virtuosas. Um plano de paz e beleza perfeitas, onde as almas dos heróis e dos justos encontram descanso eterno.' },
+            { id: 'deuses',    cat: 'superior', name: 'Plano dos Deuses', desc: 'É o local onde os deuses residem fisicamente. Representa a camada mais alta da existência, situada acima de todos os outros planos.' },
+
+            // === INFERIORES ===
+            { id: 'pandemonio',cat: 'inferior', name: 'Pandemônio',      desc: 'Composto por túneis infinitos de pedra com ventos ensurdecedores que nunca cessam. Um plano de caos sonoro onde a mente gradualmente se perde na cacofonia eterna.' },
+            { id: 'acheron',   cat: 'inferior', name: 'Acheron',         desc: 'O cenário da guerra eterna, composto por cubos metálicos de proporções gigantescas que flutuam no vazio. Exércitos colidem infinitamente em um campo de batalha perpétuo onde o som do metal e o choque de forças nunca cessam.' },
+            { id: 'gehenna',   cat: 'inferior', name: 'Gehenna',         desc: 'Formado por quatro vulcões infinitos que não possuem base nem topo. É o lar dos mercenários conhecidos como Yugoloths.' },
+            { id: 'hades',     cat: 'inferior', name: 'Hades',           desc: 'O plano da desesperança total. É um lugar cinzento que drena a cor e a vontade de viver de qualquer um que o visite.' },
+            { id: 'infernos',  cat: 'inferior', name: 'Os Nove Infernos',desc: 'Um local gigantesco e quente destinado às almas corrompidas ou àquelas que não foram aceitas por nenhum deus. Curiosamente, quanto mais profundo se viaja neste plano, mais frio ele se torna.' },
+            { id: 'carceri',   cat: 'inferior', name: 'Carceri',         desc: 'O plano prisão. Consiste em uma corrente de planetas de onde é quase impossível escapar uma vez que se entra.' },
+
+            // === ESPECIAIS ===
+            { id: 'shadowfell',cat: 'especial', name: 'Pendor das Sombras',       desc: 'Um eco escuro e distorcido do Plano Material. Um lugar de decadência, morte e melancolia onde sombras de seres e lugares do mundo mortal existem em formas corrompidas.' },
+            { id: 'feywild',   cat: 'especial', name: 'Agréstia das Fadas',       desc: 'Um eco vibrante e mágico do mundo. Lar de fadas, emoções intensas e beleza perigosa onde tudo é mais vívido e imprevisível.' },
+            { id: 'bhasm',     cat: 'especial', name: 'Bhasm',                    desc: 'Conhecido como uma versão distorcida e alternativa de Runeterra, este plano é o retrato da desolação absoluta. É um mundo de cinzas totalmente destruído, onde o que antes era vida e civilização foi reduzido a um silêncio acinzentado.' },
+            { id: 'negativo',  cat: 'especial', name: 'Dimensão de Energia Negativa', desc: 'Uma dimensão de energia negativa que surgiu como uma reação natural ao Éter positivo. Há cerca de 1500 anos, deixou de ser acessível apenas por magia proibida e passou a invadir o Plano Material por conta própria, criando zonas de corrupção.' },
+            { id: 'extradim',  cat: 'especial', name: 'Espaço Extradimensional',  desc: 'Bolsões de espaço que existem fora da realidade normal, acessados por magias como Bolsa de Retenção. Não seguem as leis físicas convencionais e são frequentemente usados como armazenamento ou abrigo.' },
+            { id: 'vazio',     cat: 'especial', name: 'O Vazio',                  desc: 'O nada absoluto entre os planos. Não é um plano em si, mas a ausência de existência que separa os planos uns dos outros. Extremamente perigoso e praticamente impossível de atravessar sem magia poderosa.' },
         ];
 
         window.onload = function() {
@@ -750,12 +794,21 @@
         function filtrarLocais() { atualizarListaLateral(); }
         
         function renderPlanes() {
-            document.getElementById('planes-container').innerHTML = PLANES_DATA.map(p => `
-                <div class="plane-card" onclick="this.classList.toggle('open')">
-                    <div class="plane-header"><span>${p.name}</span> <span>▼</span></div>
-                    <div class="plane-body">${p.desc}</div>
-                </div>
-            `).join('');
+            document.getElementById('planes-container').innerHTML = PLANE_CATEGORIES.map(cat => {
+                const planes = PLANES_DATA.filter(p => p.cat === cat.id);
+                if (!planes.length) return '';
+                return `
+                    <div class="plane-category">
+                        <div class="plane-cat-header">${cat.name}</div>
+                        ${planes.map(p => `
+                            <div class="plane-card" onclick="this.classList.toggle('open')">
+                                <div class="plane-header"><span>${p.name}</span> <span>▼</span></div>
+                                <div class="plane-body">${p.desc}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }).join('');
         }
 
         window.verFull = function(src) {
