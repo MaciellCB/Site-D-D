@@ -149,7 +149,7 @@
         }
 
         /* Leaflet e Popup Customizado */
-        .leaflet-popup-content-wrapper { background: #151515; border: 1px solid var(--accent); color: #ddd; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); padding: 0; overflow: hidden; }
+        .leaflet-popup-content-wrapper { background: #151515; border: 1px solid var(--accent); color: #ddd; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); padding: 0; overflow: visible; }
         .leaflet-popup-tip { background: var(--accent); }
         .leaflet-popup-content { margin: 15px; width: 320px !important; }
         
@@ -444,6 +444,20 @@
 
             map.on('movestart', () => document.getElementById('ctx-menu').style.display = 'none');
 
+            // Reseta os tamanhos salvos pelo drag ao reabrir qualquer popup
+            map.on('popupopen', function(e) {
+                const el = e.popup.getElement();
+                if (!el) return;
+                const wrapper     = el.querySelector('.leaflet-popup-content-wrapper');
+                const content     = el.querySelector('.leaflet-popup-content');
+                const descContainer = el.querySelector('.popup-desc-container');
+                if (wrapper)      { wrapper.style.removeProperty('width'); wrapper.style.removeProperty('max-width'); }
+                if (content)      { content.style.removeProperty('width'); }
+                if (descContainer){ descContainer.style.removeProperty('width'); descContainer.style.removeProperty('height'); }
+                el.style.removeProperty('max-width');
+                el.style.removeProperty('width');
+            });
+
             renderPlanes();
 
             fetch(`${API_URL}/mapa-pins`)
@@ -616,7 +630,7 @@
             const marker = L.marker([lat, lng], {icon: customIcon}).addTo(map);
             
             const pinData = { id: pinId, marker, lat, lng, nome, desc, icon: safeIcon, gallery: galeria || [] };
-            marker.bindPopup(gerarPopupContent(pinData));
+            marker.bindPopup(gerarPopupContent(pinData), { maxWidth: 2000 });
             markers.push(pinData);
             atualizarListaLateral();
         }
@@ -826,9 +840,14 @@
             if (!container) return;
             const contentNode = container.closest('.leaflet-popup-content');
             const wrapperNode = container.closest('.leaflet-popup-content-wrapper');
+            const popupNode   = container.closest('.leaflet-popup');
 
             const startX = ev.clientX, startY = ev.clientY;
             const startW = container.offsetWidth, startH = container.offsetHeight;
+
+            // Remove restrições de tamanho máximo antes de começar o drag
+            if (popupNode)   { popupNode.style.maxWidth   = 'none'; popupNode.style.width = 'auto'; }
+            if (wrapperNode) { wrapperNode.style.maxWidth = 'none'; }
 
             try { handle.setPointerCapture(ev.pointerId); } catch(e) {}
             if (map && map.dragging) map.dragging.disable();
