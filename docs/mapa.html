@@ -645,27 +645,17 @@
                     <button class="popup-edit-btn" onclick="abrirModal(${pin.id})" title="Editar Local">✏️</button>
                 </div>
             `;
-            
-            // LORE CONTAINER ARRASTÁVEL: Engloba o texto e a barra inferior para ficar óbvio
-            let descHtml = pin.desc || "Sem descrição.";
-            html += `
-                <div class="popup-desc-container">
-                    <textarea readonly class="popup-desc-view">${descHtml}</textarea>
-                    <div class="popup-drag-handle">⤡ Arraste para expandir ⤡</div>
-                </div>
-            `;
-            
+
             // PREPARA AS IMAGENS: Evita duplicados entre o Ícone e a Galeria
             let todasImagens = [];
-            
             if(pin.gallery && pin.gallery.length > 0) {
                 todasImagens.push(...pin.gallery);
             }
             if(pin.icon !== IMG_DEFAULT_ICON && !todasImagens.includes(pin.icon)) {
-                todasImagens.unshift(pin.icon); // Coloca o ícone customizado no início se não estiver na galeria
+                todasImagens.unshift(pin.icon);
             }
             if(todasImagens.length === 0) {
-                todasImagens.push(IMG_DEFAULT_ICON); // Previne erros caso não tenha imagem nenhuma
+                todasImagens.push(IMG_DEFAULT_ICON);
             }
 
             // IMAGEM PRINCIPAL
@@ -674,12 +664,20 @@
             // THUMBNAILS (GALERIA EXTRA)
             if(todasImagens.length > 1) {
                 html += `<div class="popup-gallery">`;
-                // Passamos "this" no onclick para pegar o objeto seguro
-                todasImagens.forEach((img) => { 
-                    html += `<img src="${img}" class="popup-thumb" onclick="trocarImagemPrincipal(this, ${pin.id})">`; 
+                todasImagens.forEach((img) => {
+                    html += `<img src="${img}" class="popup-thumb" onclick="trocarImagemPrincipal(this, ${pin.id})">`;
                 });
                 html += `</div>`;
             }
+
+            // DESCRIÇÃO (por último, com handle de resize)
+            let descHtml = pin.desc || "Sem descrição.";
+            html += `
+                <div class="popup-desc-container" style="margin-bottom:0;">
+                    <textarea readonly class="popup-desc-view">${descHtml}</textarea>
+                    <div class="popup-drag-handle">⤡ Arraste para expandir ⤡</div>
+                </div>
+            `;
 
             return html;
         }
@@ -841,6 +839,7 @@
                 container.style.height = newH + 'px';
                 container.style.width  = newW + 'px';
                 if (contentNode) contentNode.style.setProperty('width', (newW + 2) + 'px', 'important');
+                if (map._popup) map._popup._updatePosition();
             }
             function onUp() {
                 document.removeEventListener('mousemove', onMove);
