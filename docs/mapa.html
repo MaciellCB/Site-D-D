@@ -177,7 +177,7 @@
         .popup-drag-handle {
             background: #1a1a1a; color: #666; text-align: center; font-size: 10px; font-weight: bold;
             padding: 4px 0; border-top: 1px solid #333; width: 100%; user-select: none;
-            letter-spacing: 1px; flex-shrink: 0; cursor: s-resize; transition: background 0.2s;
+            letter-spacing: 1px; flex-shrink: 0; cursor: nwse-resize; transition: background 0.2s;
         }
         .popup-drag-handle:hover { background: #222; color: var(--accent); }
         
@@ -814,9 +814,8 @@
             document.getElementById('lightbox').style.display = 'flex';
         };
 
-        // Delegação no capture phase garante que nosso handler roda ANTES do Leaflet.
-        // map.dragging.disable/enable evita que o mapa se mova durante o resize.
-        document.addEventListener('mousedown', function(ev) {
+        // setPointerCapture garante entrega de eventos mesmo com mouse rápido fora do popup.
+        document.addEventListener('pointerdown', function(ev) {
             const handle = ev.target.closest('.popup-drag-handle');
             if (!handle) return;
 
@@ -826,25 +825,33 @@
             const container = handle.parentElement;
             if (!container) return;
             const contentNode = container.closest('.leaflet-popup-content');
+            const wrapperNode = container.closest('.leaflet-popup-content-wrapper');
 
-            const startY = ev.clientY;
-            const startH = container.offsetHeight;
+            const startX = ev.clientX, startY = ev.clientY;
+            const startW = container.offsetWidth, startH = container.offsetHeight;
 
+            try { handle.setPointerCapture(ev.pointerId); } catch(e) {}
             if (map && map.dragging) map.dragging.disable();
-            document.body.style.cursor = 's-resize';
+            document.body.style.userSelect = 'none';
+            document.body.style.cursor = 'nwse-resize';
 
             function onMove(e) {
-                const newH = Math.max(70, Math.min(800, startH + (e.clientY - startY)));
+                const newH = Math.max(70,  Math.min(1200, startH + (e.clientY - startY)));
+                const newW = Math.max(200, Math.min(1200, startW + (e.clientX - startX)));
                 container.style.height = newH + 'px';
+                container.style.width  = newW + 'px';
+                if (contentNode) contentNode.style.setProperty('width', newW + 'px', 'important');
+                if (wrapperNode) wrapperNode.style.setProperty('width', (newW + 30) + 'px', 'important');
             }
             function onUp() {
-                document.removeEventListener('mousemove', onMove);
-                document.removeEventListener('mouseup', onUp);
+                document.removeEventListener('pointermove', onMove);
+                document.removeEventListener('pointerup',   onUp);
                 if (map && map.dragging) map.dragging.enable();
+                document.body.style.userSelect = '';
                 document.body.style.cursor = '';
             }
-            document.addEventListener('mousemove', onMove);
-            document.addEventListener('mouseup', onUp);
+            document.addEventListener('pointermove', onMove);
+            document.addEventListener('pointerup',   onUp);
         }, true);
 
     </script>
