@@ -816,38 +816,45 @@
         };
 
         // Drag bidirecional do popup de descrição
-        (function() {
-            let drag = null;
+        // O Leaflet bloqueia 'mousedown' dentro do popup antes de chegar ao document,
+        // então o handler precisa ser acoplado diretamente ao handle via evento 'popupopen'.
+        function setupPopupDrag(popupEl) {
+            const handle = popupEl.querySelector('.popup-drag-handle');
+            if (!handle) return;
 
-            document.addEventListener('mousedown', function(e) {
-                const handle = e.target.closest('.popup-drag-handle');
-                if (!handle) return;
+            handle.addEventListener('mousedown', function(ev) {
+                ev.stopPropagation();
+                ev.preventDefault();
+
                 const container = handle.closest('.popup-desc-container');
                 if (!container) return;
-                drag = {
-                    container,
-                    startX: e.clientX, startY: e.clientY,
-                    startW: container.offsetWidth, startH: container.offsetHeight
-                };
-                e.preventDefault();
-            });
 
-            document.addEventListener('mousemove', function(e) {
-                if (!drag) return;
-                const dx = e.clientX - drag.startX;
-                const dy = e.clientY - drag.startY;
-                const newH = Math.max(70, Math.min(600, drag.startH + dy));
-                const newW = Math.max(260, Math.min(800, drag.startW + dx));
-                drag.container.style.height = newH + 'px';
-                drag.container.style.width = newW + 'px';
-                const popupContent = drag.container.closest('.leaflet-popup-content');
-                if (popupContent) {
-                    popupContent.style.setProperty('width', (newW + 2) + 'px', 'important');
+                const startX = ev.clientX, startY = ev.clientY;
+                const startW = container.offsetWidth, startH = container.offsetHeight;
+
+                function onMove(e) {
+                    const newH = Math.max(70,  Math.min(600, startH + (e.clientY - startY)));
+                    const newW = Math.max(260, Math.min(800, startW + (e.clientX - startX)));
+                    container.style.height = newH + 'px';
+                    container.style.width  = newW + 'px';
+                    const popupContent = container.closest('.leaflet-popup-content');
+                    if (popupContent) popupContent.style.setProperty('width', (newW + 2) + 'px', 'important');
                 }
-            });
 
-            document.addEventListener('mouseup', function() { drag = null; });
-        })();
+                function onUp() {
+                    document.removeEventListener('mousemove', onMove);
+                    document.removeEventListener('mouseup', onUp);
+                }
+
+                document.addEventListener('mousemove', onMove);
+                document.addEventListener('mouseup', onUp);
+            });
+        }
+
+        map.on('popupopen', function(e) {
+            const el = e.popup.getElement();
+            if (el) setupPopupDrag(el);
+        });
     </script>
 </body>
 </html>
