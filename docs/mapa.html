@@ -816,51 +816,41 @@
             document.getElementById('lightbox').style.display = 'flex';
         };
 
-        // Drag bidirecional do popup de descrição.
-        // MutationObserver detecta quando o handle aparece no DOM (popup abre)
-        // e acopla o listener diretamente no elemento — sem depender de APIs do Leaflet.
-        function attachDragToHandle(handle) {
-            if (handle._dragSetup) return; // evita duplicar listener
-            handle._dragSetup = true;
+        // Delegação no capture phase garante que nosso handler roda ANTES do Leaflet.
+        // map.dragging.disable/enable evita que o mapa se mova durante o resize.
+        document.addEventListener('mousedown', function(ev) {
+            const handle = ev.target.closest('.popup-drag-handle');
+            if (!handle) return;
 
-            handle.addEventListener('mousedown', function(ev) {
-                ev.stopPropagation();
-                ev.preventDefault();
+            ev.stopPropagation();
+            ev.preventDefault();
 
-                const container = handle.parentElement;
-                if (!container) return;
-                const contentNode = container.closest('.leaflet-popup-content');
+            const container = handle.parentElement;
+            if (!container) return;
+            const contentNode = container.closest('.leaflet-popup-content');
 
-                const startX = ev.clientX, startY = ev.clientY;
-                const startW = container.offsetWidth, startH = container.offsetHeight;
+            const startX = ev.clientX, startY = ev.clientY;
+            const startW = container.offsetWidth, startH = container.offsetHeight;
 
-                function onMove(e) {
-                    const newH = Math.max(70,  Math.min(600, startH + (e.clientY - startY)));
-                    const newW = Math.max(260, Math.min(800, startW + (e.clientX - startX)));
-                    container.style.height = newH + 'px';
-                    container.style.width  = newW + 'px';
-                    if (contentNode) contentNode.style.setProperty('width', (newW + 2) + 'px', 'important');
-                }
-                function onUp() {
-                    document.removeEventListener('mousemove', onMove);
-                    document.removeEventListener('mouseup', onUp);
-                }
-                document.addEventListener('mousemove', onMove);
-                document.addEventListener('mouseup', onUp);
-            });
-        }
+            if (map && map.dragging) map.dragging.disable();
+            document.body.style.cursor = 'nwse-resize';
 
-        new MutationObserver(function(mutations) {
-            mutations.forEach(function(m) {
-                m.addedNodes.forEach(function(node) {
-                    if (node.nodeType !== 1) return;
-                    const handles = node.classList.contains('popup-drag-handle')
-                        ? [node]
-                        : [...node.querySelectorAll('.popup-drag-handle')];
-                    handles.forEach(attachDragToHandle);
-                });
-            });
-        }).observe(document.body, { childList: true, subtree: true });
+            function onMove(e) {
+                const newH = Math.max(70,  Math.min(600, startH + (e.clientY - startY)));
+                const newW = Math.max(260, Math.min(800, startW + (e.clientX - startX)));
+                container.style.height = newH + 'px';
+                container.style.width  = newW + 'px';
+                if (contentNode) contentNode.style.setProperty('width', (newW + 2) + 'px', 'important');
+            }
+            function onUp() {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+                if (map && map.dragging) map.dragging.enable();
+                document.body.style.cursor = '';
+            }
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        }, true);
 
     </script>
 </body>
