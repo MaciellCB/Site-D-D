@@ -839,7 +839,6 @@
                 container.style.height = newH + 'px';
                 container.style.width  = newW + 'px';
                 if (contentNode) contentNode.style.setProperty('width', (newW + 2) + 'px', 'important');
-                if (map._popup) map._popup._updatePosition();
             }
             function onUp() {
                 document.removeEventListener('mousemove', onMove);
