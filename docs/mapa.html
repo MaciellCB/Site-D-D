@@ -445,7 +445,7 @@
             map.on('movestart', () => document.getElementById('ctx-menu').style.display = 'none');
 
             renderPlanes();
-            
+
             fetch(`${API_URL}/mapa-pins`)
                 .then(res => res.json())
                 .then(pinsSalvos => {
@@ -454,6 +454,11 @@
                     });
                 })
                 .catch(err => console.error("Erro ao carregar mapa:", err));
+
+            map.on('popupopen', function(e) {
+                const el = e.popup.getElement ? e.popup.getElement() : e.popup._container;
+                if (el) setupPopupDrag(el);
+            });
         };
 
         function toggleMedicao() {
@@ -851,10 +856,6 @@
             });
         }
 
-        map.on('popupopen', function(e) {
-            const el = e.popup.getElement();
-            if (el) setupPopupDrag(el);
-        });
     </script>
 </body>
 </html>
