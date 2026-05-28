@@ -177,7 +177,7 @@
         .popup-drag-handle {
             background: #1a1a1a; color: #666; text-align: center; font-size: 10px; font-weight: bold;
             padding: 4px 0; border-top: 1px solid #333; width: 100%; user-select: none;
-            letter-spacing: 1px; flex-shrink: 0; cursor: nwse-resize; transition: background 0.2s;
+            letter-spacing: 1px; flex-shrink: 0; cursor: s-resize; transition: background 0.2s;
         }
         .popup-drag-handle:hover { background: #222; color: var(--accent); }
         
@@ -827,18 +827,15 @@
             if (!container) return;
             const contentNode = container.closest('.leaflet-popup-content');
 
-            const startX = ev.clientX, startY = ev.clientY;
-            const startW = container.offsetWidth, startH = container.offsetHeight;
+            const startY = ev.clientY;
+            const startH = container.offsetHeight;
 
             if (map && map.dragging) map.dragging.disable();
-            document.body.style.cursor = 'nwse-resize';
+            document.body.style.cursor = 's-resize';
 
             function onMove(e) {
-                const newH = Math.max(70,  Math.min(600, startH + (e.clientY - startY)));
-                const newW = Math.max(260, Math.min(800, startW + (e.clientX - startX)));
+                const newH = Math.max(70, Math.min(800, startH + (e.clientY - startY)));
                 container.style.height = newH + 'px';
-                container.style.width  = newW + 'px';
-                if (contentNode) contentNode.style.setProperty('width', (newW + 2) + 'px', 'important');
             }
             function onUp() {
                 document.removeEventListener('mousemove', onMove);
