@@ -161,10 +161,7 @@
         .popup-desc-container {
             width: 100%; display: flex; flex-direction: column; margin-bottom: 10px;
             border: 1px solid #333; border-radius: 6px; overflow: hidden; background: #0a0a0a;
-            /* Permite arrastar TUDO puxando a barra debaixo */
-            resize: vertical; overflow: hidden; 
-            height: 90px; /* Altura inicial para +- 3 linhas e a barra */
-            min-height: 70px; max-height: 400px;
+            height: 90px; min-height: 70px;
         }
         .popup-desc-view {
             width: 100%; flex: 1; padding: 10px; margin: 0; border: none; background: transparent; 
@@ -175,12 +172,12 @@
         .popup-desc-view::-webkit-scrollbar { width: 4px; }
         .popup-desc-view::-webkit-scrollbar-thumb { background: #555; border-radius: 2px; }
         
-        /* A barra visual que fica na base ensinando que dá pra puxar */
         .popup-drag-handle {
-            background: #1a1a1a; color: #555; text-align: center; font-size: 9px; font-weight: bold; 
-            padding: 3px 0; border-top: 1px solid #333; width: 100%; user-select: none;
-            letter-spacing: 1px; flex-shrink: 0; pointer-events: none; /* A div pai que tem a hitbox do resize */
+            background: #1a1a1a; color: #666; text-align: center; font-size: 10px; font-weight: bold;
+            padding: 4px 0; border-top: 1px solid #333; width: 100%; user-select: none;
+            letter-spacing: 1px; flex-shrink: 0; cursor: nwse-resize; transition: background 0.2s;
         }
+        .popup-drag-handle:hover { background: #222; color: var(--accent); }
         
         .popup-img-main { 
             width: 100%; height: 160px; object-fit: cover; border-radius: 6px; margin-bottom: 8px; cursor: pointer; border: 1px solid #333; display: block; transition: 0.2s;
@@ -316,6 +313,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <script>
+        const API_URL = 'https://dandd-chan.onrender.com/api';
         const IMG_MAPA = 'img/imagem-no-site/mapa-runeterra.jpg';
         const IMG_DEFAULT_ICON = 'https://cdn-icons-png.flaticon.com/512/684/684908.png';
         
@@ -405,7 +403,7 @@
 
             renderPlanes();
             
-            fetch('/api/mapa-pins')
+            fetch(`${API_URL}/mapa-pins`)
                 .then(res => res.json())
                 .then(pinsSalvos => {
                     pinsSalvos.forEach(p => {
@@ -509,7 +507,7 @@
                     atualizarListaLateral();
                 }
                 
-                try { await fetch(`/api/mapa-pins/${editId}`, { method: 'DELETE' }); } 
+                try { await fetch(`${API_URL}/mapa-pins/${editId}`, { method: 'DELETE' }); } 
                 catch(e) { console.error("Erro ao deletar no banco", e); }
 
                 fecharModal();
@@ -540,7 +538,7 @@
             }
 
             try {
-                const res = await fetch('/api/mapa-pins', {
+                const res = await fetch(`${API_URL}/mapa-pins`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -609,7 +607,7 @@
             html += `
                 <div class="popup-desc-container">
                     <textarea readonly class="popup-desc-view">${descHtml}</textarea>
-                    <div class="popup-drag-handle">[ ||| Arraste para expandir ||| ]</div>
+                    <div class="popup-drag-handle">⤡ Arraste para expandir ⤡</div>
                 </div>
             `;
             
@@ -764,6 +762,40 @@
             document.getElementById('lightbox-img').src = src;
             document.getElementById('lightbox').style.display = 'flex';
         };
+
+        // Drag bidirecional do popup de descrição
+        (function() {
+            let drag = null;
+
+            document.addEventListener('mousedown', function(e) {
+                const handle = e.target.closest('.popup-drag-handle');
+                if (!handle) return;
+                const container = handle.closest('.popup-desc-container');
+                if (!container) return;
+                drag = {
+                    container,
+                    startX: e.clientX, startY: e.clientY,
+                    startW: container.offsetWidth, startH: container.offsetHeight
+                };
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                if (!drag) return;
+                const dx = e.clientX - drag.startX;
+                const dy = e.clientY - drag.startY;
+                const newH = Math.max(70, Math.min(600, drag.startH + dy));
+                const newW = Math.max(260, Math.min(800, drag.startW + dx));
+                drag.container.style.height = newH + 'px';
+                drag.container.style.width = newW + 'px';
+                const popupContent = drag.container.closest('.leaflet-popup-content');
+                if (popupContent) {
+                    popupContent.style.setProperty('width', (newW + 2) + 'px', 'important');
+                }
+            });
+
+            document.addEventListener('mouseup', function() { drag = null; });
+        })();
     </script>
 </body>
 </html>
