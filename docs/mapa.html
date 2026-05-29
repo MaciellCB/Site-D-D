@@ -680,7 +680,7 @@
             html += `
                 <div class="popup-desc-container" style="margin-bottom:0;">
                     <textarea readonly class="popup-desc-view">${descHtml}</textarea>
-                    <div class="popup-drag-handle" onclick="toggleExpandDesc(event)">⤡ Clique para expandir ⤡</div>
+                    <div class="popup-drag-handle">⤡ Clique para expandir ⤡</div>
                 </div>
             `;
 
@@ -819,55 +819,52 @@
             document.getElementById('lightbox').style.display = 'flex';
         };
 
-        // Reseta o container ao reabrir o popup
+        // Ao abrir popup: reseta estado e anexa o clique no handle diretamente no DOM
         map.on('popupopen', function(e) {
             const el = e.popup.getElement();
             if (!el) return;
+
             const container = el.querySelector('.popup-desc-container');
-            if (container) {
-                ['height', 'width', 'position', 'top', 'left', 'z-index', 'margin', 'box-sizing'].forEach(p => container.style.removeProperty(p));
-                container.classList.remove('expanded');
-                container._expanded = false;
-            }
-            const handle = el.querySelector('.popup-drag-handle');
-            if (handle) handle.textContent = '⤡ Clique para expandir ⤡';
+            const handle    = el.querySelector('.popup-drag-handle');
+            if (!container || !handle) return;
+
+            // Reseta para estado colapsado
+            ['position', 'top', 'left', 'width', 'height', 'z-index', 'margin', 'box-sizing'].forEach(p => container.style.removeProperty(p));
+            container.classList.remove('expanded');
+            container._expanded = false;
+            handle.textContent = '⤡ Clique para expandir ⤡';
+
+            // Anexa o evento diretamente (evita problemas com onclick inline no Leaflet)
+            handle.addEventListener('click', function onClick(ev) {
+                ev.stopPropagation();
+                ev.preventDefault();
+
+                if (container._expanded) {
+                    ['position', 'top', 'left', 'width', 'height', 'z-index', 'margin', 'box-sizing'].forEach(p => container.style.removeProperty(p));
+                    container.classList.remove('expanded');
+                    handle.textContent = '⤡ Clique para expandir ⤡';
+                    container._expanded = false;
+                } else {
+                    const rect    = container.getBoundingClientRect();
+                    const expandW = 520;
+                    const expandH = 380;
+                    const left = Math.min(rect.left, window.innerWidth  - expandW - 16);
+                    const top  = Math.min(rect.top,  window.innerHeight - expandH - 16);
+
+                    container.style.position  = 'fixed';
+                    container.style.top       = Math.max(8, top)  + 'px';
+                    container.style.left      = Math.max(8, left) + 'px';
+                    container.style.width     = expandW + 'px';
+                    container.style.height    = expandH + 'px';
+                    container.style.zIndex    = '9999';
+                    container.style.margin    = '0';
+                    container.style.boxSizing = 'border-box';
+                    container.classList.add('expanded');
+                    handle.textContent = '✖ Clique para fechar';
+                    container._expanded = true;
+                }
+            });
         });
-
-        window.toggleExpandDesc = function(ev) {
-            ev.stopPropagation();
-
-            const handle    = ev.currentTarget;
-            const container = handle.parentElement;
-
-            if (container._expanded) {
-                // --- RECOLHER ---
-                ['position', 'top', 'left', 'width', 'height', 'z-index', 'margin', 'box-sizing'].forEach(p => container.style.removeProperty(p));
-                container.classList.remove('expanded');
-                handle.textContent = '⤡ Clique para expandir ⤡';
-                container._expanded = false;
-            } else {
-                // --- EXPANDIR ---
-                const rect    = container.getBoundingClientRect();
-                const expandW = 520;
-                const expandH = 380;
-
-                // Garante que não sai da tela
-                const left = Math.min(rect.left, window.innerWidth  - expandW - 16);
-                const top  = Math.min(rect.top,  window.innerHeight - expandH - 16);
-
-                container.style.position  = 'fixed';
-                container.style.top       = Math.max(8, top)  + 'px';
-                container.style.left      = Math.max(8, left) + 'px';
-                container.style.width     = expandW + 'px';
-                container.style.height    = expandH + 'px';
-                container.style.zIndex    = '9999';
-                container.style.margin    = '0';
-                container.style.boxSizing = 'border-box';
-                container.classList.add('expanded');
-                handle.textContent = '✖ Clique para fechar';
-                container._expanded = true;
-            }
-        };
 
     </script>
 </body>
