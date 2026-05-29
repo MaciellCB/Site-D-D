@@ -816,28 +816,40 @@
             document.getElementById('lightbox').style.display = 'flex';
         };
 
-        // Reseta altura ao reabrir o popup
+        // Reseta o container ao reabrir o popup
         map.on('popupopen', function(e) {
             const el = e.popup.getElement();
             if (!el) return;
             const container = el.querySelector('.popup-desc-container');
-            if (container) { container.style.removeProperty('height'); container.style.removeProperty('width'); }
+            if (container) {
+                ['height', 'width', 'position', 'top', 'left', 'z-index', 'margin', 'box-sizing'].forEach(p => container.style.removeProperty(p));
+            }
         });
 
         window.initDragExpand = function(ev) {
             ev.stopPropagation();
             ev.preventDefault();
 
-            const handle      = ev.currentTarget;
-            const container   = handle.parentElement;
-            const contentNode = container.closest('.leaflet-popup-content');
-            const wrapperNode = container.closest('.leaflet-popup-content-wrapper');
+            const handle    = ev.currentTarget;
+            const container = handle.parentElement;
 
-            if (wrapperNode) wrapperNode.style.overflow = 'visible';
-            if (contentNode) contentNode.style.overflow = 'visible';
+            // Snapshot da posição atual antes de mudar para fixed
+            const rect   = container.getBoundingClientRect();
+            const startW = rect.width;
+            const startH = rect.height;
+
+            // Tira o container do fluxo do popup e fixa na posição exata da tela
+            // Assim o popup não se move e o container pode "vazar" livremente
+            container.style.position  = 'fixed';
+            container.style.top       = rect.top  + 'px';
+            container.style.left      = rect.left + 'px';
+            container.style.width     = startW    + 'px';
+            container.style.height    = startH    + 'px';
+            container.style.zIndex    = '9999';
+            container.style.margin    = '0';
+            container.style.boxSizing = 'border-box';
 
             const startX = ev.clientX, startY = ev.clientY;
-            const startW = container.offsetWidth,  startH = container.offsetHeight;
 
             handle.setPointerCapture(ev.pointerId);
             if (map && map.dragging) map.dragging.disable();
