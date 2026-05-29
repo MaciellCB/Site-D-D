@@ -159,25 +159,28 @@
         .popup-edit-btn { background: none; border: none; color: #777; cursor: pointer; font-size: 16px; transition: 0.2s; }
         .popup-edit-btn:hover { color: #fff; transform: scale(1.1); }
 
-        /* === SISTEMA DE ARRASTAR O LORE EXPLÍCITO === */
+        /* === SISTEMA DE EXPANDIR O LORE === */
         .popup-desc-container {
             width: 100%; display: flex; flex-direction: column; margin-bottom: 10px;
             border: 1px solid #333; border-radius: 6px; overflow: hidden; background: #0a0a0a;
-            height: 90px; min-height: 70px;
+            height: 90px; min-height: 70px; transition: box-shadow 0.2s;
+        }
+        .popup-desc-container.expanded {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(156, 39, 176, 0.4);
         }
         .popup-desc-view {
-            width: 100%; flex: 1; padding: 10px; margin: 0; border: none; background: transparent; 
+            width: 100%; flex: 1; padding: 10px; margin: 0; border: none; background: transparent;
             color: #ccc; font-size: 14px; font-family: inherit; line-height: 1.6; outline: none;
-            resize: none; /* Desativa o resize próprio, pois a div inteira que cresce */
-            overflow-y: auto; white-space: pre-wrap; cursor: text;
+            resize: none; overflow-y: auto; white-space: pre-wrap; cursor: text;
         }
         .popup-desc-view::-webkit-scrollbar { width: 4px; }
         .popup-desc-view::-webkit-scrollbar-thumb { background: #555; border-radius: 2px; }
-        
+
         .popup-drag-handle {
             background: #1a1a1a; color: #666; text-align: center; font-size: 10px; font-weight: bold;
             padding: 4px 0; border-top: 1px solid #333; width: 100%; user-select: none;
-            letter-spacing: 1px; flex-shrink: 0; cursor: nwse-resize; transition: background 0.2s;
+            letter-spacing: 1px; flex-shrink: 0; cursor: pointer; transition: background 0.2s;
         }
         .popup-drag-handle:hover { background: #222; color: var(--accent); }
         
@@ -677,7 +680,7 @@
             html += `
                 <div class="popup-desc-container" style="margin-bottom:0;">
                     <textarea readonly class="popup-desc-view">${descHtml}</textarea>
-                    <div class="popup-drag-handle" onpointerdown="initDragExpand(event)">⤡ Arraste para expandir ⤡</div>
+                    <div class="popup-drag-handle" onclick="toggleExpandDesc(event)">⤡ Clique para expandir ⤡</div>
                 </div>
             `;
 
@@ -823,52 +826,47 @@
             const container = el.querySelector('.popup-desc-container');
             if (container) {
                 ['height', 'width', 'position', 'top', 'left', 'z-index', 'margin', 'box-sizing'].forEach(p => container.style.removeProperty(p));
+                container.classList.remove('expanded');
+                container._expanded = false;
             }
+            const handle = el.querySelector('.popup-drag-handle');
+            if (handle) handle.textContent = '⤡ Clique para expandir ⤡';
         });
 
-        window.initDragExpand = function(ev) {
+        window.toggleExpandDesc = function(ev) {
             ev.stopPropagation();
-            ev.preventDefault();
 
             const handle    = ev.currentTarget;
             const container = handle.parentElement;
 
-            // Snapshot da posição atual antes de mudar para fixed
-            const rect   = container.getBoundingClientRect();
-            const startW = rect.width;
-            const startH = rect.height;
+            if (container._expanded) {
+                // --- RECOLHER ---
+                ['position', 'top', 'left', 'width', 'height', 'z-index', 'margin', 'box-sizing'].forEach(p => container.style.removeProperty(p));
+                container.classList.remove('expanded');
+                handle.textContent = '⤡ Clique para expandir ⤡';
+                container._expanded = false;
+            } else {
+                // --- EXPANDIR ---
+                const rect    = container.getBoundingClientRect();
+                const expandW = 520;
+                const expandH = 380;
 
-            // Tira o container do fluxo do popup e fixa na posição exata da tela
-            // Assim o popup não se move e o container pode "vazar" livremente
-            container.style.position  = 'fixed';
-            container.style.top       = rect.top  + 'px';
-            container.style.left      = rect.left + 'px';
-            container.style.width     = startW    + 'px';
-            container.style.height    = startH    + 'px';
-            container.style.zIndex    = '9999';
-            container.style.margin    = '0';
-            container.style.boxSizing = 'border-box';
+                // Garante que não sai da tela
+                const left = Math.min(rect.left, window.innerWidth  - expandW - 16);
+                const top  = Math.min(rect.top,  window.innerHeight - expandH - 16);
 
-            const startX = ev.clientX, startY = ev.clientY;
-
-            handle.setPointerCapture(ev.pointerId);
-            if (map && map.dragging) map.dragging.disable();
-            document.body.style.userSelect = 'none';
-            document.body.style.cursor = 'nwse-resize';
-
-            function onMove(e) {
-                container.style.height = Math.max(70,  startH + (e.clientY - startY)) + 'px';
-                container.style.width  = Math.max(200, startW + (e.clientX - startX)) + 'px';
+                container.style.position  = 'fixed';
+                container.style.top       = Math.max(8, top)  + 'px';
+                container.style.left      = Math.max(8, left) + 'px';
+                container.style.width     = expandW + 'px';
+                container.style.height    = expandH + 'px';
+                container.style.zIndex    = '9999';
+                container.style.margin    = '0';
+                container.style.boxSizing = 'border-box';
+                container.classList.add('expanded');
+                handle.textContent = '✖ Clique para fechar';
+                container._expanded = true;
             }
-            function onUp() {
-                handle.removeEventListener('pointermove', onMove);
-                handle.removeEventListener('pointerup',   onUp);
-                if (map && map.dragging) map.dragging.enable();
-                document.body.style.userSelect = '';
-                document.body.style.cursor = '';
-            }
-            handle.addEventListener('pointermove', onMove);
-            handle.addEventListener('pointerup',   onUp);
         };
 
     </script>
