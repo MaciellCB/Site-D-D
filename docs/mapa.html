@@ -169,47 +169,44 @@
             margin-bottom: 10px;
         }
 
-        /* O Container real fica absoluto dentro do wrapper para poder vazar livremente */
         /* Container original: Segurando a âncora no topo/esquerda */
-.popup-desc-container {
-    position: absolute;
-    top: 0; 
-    left: 0;
-    width: 100%; 
-    height: 100%; 
-    display: flex; flex-direction: column;
-    border: 1px solid #333; border-radius: 6px; overflow: hidden; background: #0a0a0a;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    z-index: 100;
-}
+        .popup-desc-container {
+            position: absolute;
+            top: 0; 
+            left: 0;
+            width: 100%; 
+            height: 100%; 
+            display: flex; flex-direction: column;
+            border: 1px solid #333; border-radius: 6px; overflow: hidden; background: #0a0a0a;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            z-index: 100;
+        }
 
-/* O estado expandido (os tamanhos agora serão calculados dinamicamente via JS) */
-.popup-desc-container.expanded {
-    top: 15px; /* Vaza 15px para baixo do box base */
-    left: 20px; /* Vaza 20px para a direita do box base */
-    z-index: 9999;
-    border-color: var(--accent);
-    box-shadow: 0 10px 40px rgba(0,0,0,1), 0 0 20px rgba(156, 39, 176, 0.6);
-}
+        /* O estado expandido (os tamanhos agora serão calculados dinamicamente via JS) */
+        .popup-desc-container.expanded {
+            top: 15px; /* Vaza 15px para baixo do box base */
+            left: 20px; /* Vaza 20px para a direita do box base */
+            z-index: 9999;
+            border-color: var(--accent);
+            box-shadow: 0 10px 40px rgba(0,0,0,1), 0 0 20px rgba(156, 39, 176, 0.6);
+        }
 
         .popup-desc-view {
-    width: 100%; flex: 1; padding: 15px; margin: 0; border: none; background: transparent;
-    color: #ccc; font-size: 14px; font-family: inherit; line-height: 1.6; outline: none;
-    resize: none; overflow-y: auto; white-space: pre-wrap; cursor: text;
-    /* Adicione estas duas linhas abaixo: */
-    box-sizing: border-box; 
-    min-height: 0; 
-}
+            width: 100%; flex: 1; padding: 15px; margin: 0; border: none; background: transparent;
+            color: #ccc; font-size: 14px; font-family: inherit; line-height: 1.6; outline: none;
+            resize: none; overflow-y: auto; white-space: pre-wrap; cursor: text;
+            box-sizing: border-box; 
+            min-height: 0; 
+        }
         .popup-desc-view::-webkit-scrollbar { width: 4px; }
         .popup-desc-view::-webkit-scrollbar-thumb { background: #555; border-radius: 2px; }
 
         .popup-drag-handle {
-    background: #1a1a1a; color: #666; text-align: center; font-size: 10px; font-weight: bold;
-    padding: 8px 0; border-top: 1px solid #333; width: 100%; user-select: none;
-    letter-spacing: 1px; flex-shrink: 0; cursor: pointer; transition: background 0.2s;
-    /* Adicione esta linha abaixo: */
-    box-sizing: border-box;
-}
+            background: #1a1a1a; color: #666; text-align: center; font-size: 10px; font-weight: bold;
+            padding: 8px 0; border-top: 1px solid #333; width: 100%; user-select: none;
+            letter-spacing: 1px; flex-shrink: 0; cursor: pointer; transition: background 0.2s;
+            box-sizing: border-box;
+        }
         .popup-drag-handle:hover { background: #222; color: var(--accent); }
         
         .popup-img-main { 
@@ -635,15 +632,67 @@
             if(mainImg) mainImg.src = element.src; 
         };
 
-        // ====== NOVO MÉTODO DE CLICK PARA EXPANDIR ======
+        // ====== LÓGICA DE EXPANSAO INTELIGENTE (Altura dinâmica, Limite, Panning) ======
         window.toggleExpandir = function(btn, pinId) {
             const box = document.getElementById(`desc-box-${pinId}`);
+            const textarea = box.querySelector('.popup-desc-view');
+
             if (box.classList.contains('expanded')) {
+                // FECHAR
                 box.classList.remove('expanded');
                 btn.textContent = '⤡ Clique para expandir ⤡';
+                // Remove os estilos aplicados via JS para voltar ao 100% nativo do CSS
+                box.style.width = '';
+                box.style.height = '';
             } else {
+                // ABRIR E VAZAR PARA O LADO
                 box.classList.add('expanded');
                 btn.textContent = '✖ Clique para fechar';
+
+                // 1. Largura expandida (para vazar à direita da caixa do leaflet)
+                box.style.width = '420px';
+
+                // 2. Medir a altura exata do texto que está no textarea
+                textarea.style.height = '1px'; // Reduz temporariamente para forçar a medição real
+                let alturaDoTexto = textarea.scrollHeight;
+                textarea.style.height = 'auto'; // Retorna pro controle automático do CSS
+
+                // Altura alvo = Altura do texto + O espaço do botão "Clique para fechar" e paddings extras
+                let alturaAlvo = alturaDoTexto + 40;
+
+                // Limite Mínimo e Máximo
+                if (alturaAlvo < 150) alturaAlvo = 150;
+                let alturaMaximaDaTela = window.innerHeight * 0.55; // Limite de 55% da altura da tela
+
+                // Se o texto for gigante, trava no limite e o overflow-y do CSS cria a barra de rolagem!
+                if (alturaAlvo > alturaMaximaDaTela) {
+                    alturaAlvo = alturaMaximaDaTela;
+                }
+
+                // Aplica a altura final
+                box.style.height = alturaAlvo + 'px';
+
+                // 3. Sistema para arrastar a Câmera do Mapa caso a caixa vá parar fora da tela
+                setTimeout(() => {
+                    const rect = box.getBoundingClientRect();
+                    let moverCameraX = 0;
+                    let moverCameraY = 0;
+
+                    // Verifica se cortou em baixo (passou da altura do navegador)
+                    if (rect.bottom > window.innerHeight) {
+                        moverCameraY = (rect.bottom - window.innerHeight) + 30; // +30px de "respiro"
+                    }
+                    
+                    // Verifica se cortou à direita (passou da largura do navegador)
+                    if (rect.right > window.innerWidth) {
+                        moverCameraX = (rect.right - window.innerWidth) + 30;
+                    }
+
+                    // Se passou de qualquer borda, ajusta o mapa de forma macia e animada
+                    if (moverCameraX > 0 || moverCameraY > 0) {
+                        map.panBy([moverCameraX, moverCameraY], { animate: true, duration: 0.4 });
+                    }
+                }, 300); // 300ms aguardando a transição CSS de expansão terminar
             }
         };
 
@@ -673,7 +722,7 @@
 
             let descHtml = pin.desc || "Sem descrição.";
             
-            // Note que aqui adicionamos o Wrapper e o evento onclick inline, removendo código problemático do Leaflet
+            // Note que aqui adicionamos o Wrapper e o evento onclick inline
             html += `
                 <div class="popup-desc-wrapper">
                     <div class="popup-desc-container" id="desc-box-${pin.id}">
@@ -793,9 +842,6 @@
             document.getElementById('lightbox-img').src = src;
             document.getElementById('lightbox').style.display = 'flex';
         };
-
-        // Note que todo aquele bloco de "map.on('popupopen')" foi totalmente removido!
-        // A lógica agora é super limpa, rodando direto no HTML gerado e sendo tratada 100% pelo CSS.
 
     </script>
 </body>
