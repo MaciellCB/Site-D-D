@@ -171,27 +171,28 @@
 
         /* O Container real fica absoluto dentro do wrapper para poder vazar livremente */
         .popup-desc-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%; 
-            height: 100%; 
-            display: flex; flex-direction: column;
-            border: 1px solid #333; border-radius: 6px; overflow: hidden; background: #0a0a0a;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            z-index: 100;
-        }
+    position: absolute;
+    bottom: 0; /* MUDANÇA AQUI: Removemos o top: 0 e colocamos bottom: 0 */
+    left: 0;
+    width: 100%; 
+    height: 100%; 
+    display: flex; flex-direction: column;
+    border: 1px solid #333; border-radius: 6px; overflow: hidden; background: #0a0a0a;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    z-index: 100;
+}
 
-        /* Classe que expande pro lado (left) e pra baixo (top) */
         .popup-desc-container.expanded {
-            top: 15px; /* Vazando pra baixo do wrapper */
-            left: 20px; /* Vazando pro lado direito do wrapper */
-            width: 480px; /* Maior que a largura da caixa do Leaflet */
-            height: 380px; 
-            z-index: 9999;
-            border-color: var(--accent);
-            box-shadow: 0 10px 40px rgba(0,0,0,1), 0 0 20px rgba(156, 39, 176, 0.6);
-        }
+    bottom: -15px; /* Vaza apenas 15px para baixo do container original */
+    left: 20px; /* Vaza para a direita */
+    width: 480px; 
+    max-width: 85vw; /* Limite de segurança: no máximo 85% da largura da tela */
+    height: 380px; 
+    max-height: 65vh; /* Limite de segurança: no máximo 65% da altura da tela */
+    z-index: 9999;
+    border-color: var(--accent);
+    box-shadow: 0 10px 40px rgba(0,0,0,1), 0 0 20px rgba(156, 39, 176, 0.6);
+}
 
         .popup-desc-view {
     width: 100%; flex: 1; padding: 15px; margin: 0; border: none; background: transparent;
