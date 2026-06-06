@@ -166,21 +166,18 @@
             height: 90px;
             margin-bottom: 10px;
         }
+
         .popup-desc-container {
             position: absolute;
-            top: 0; 
-            left: 0;
-            width: 100%; 
-            height: 100%; 
+            top: 0; left: 0; width: 100%; height: 100%; 
             display: flex; flex-direction: column;
             border: 1px solid #333; border-radius: 6px; overflow: hidden; background: #0a0a0a;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             z-index: 100;
         }
+
         .popup-desc-container.expanded {
-            top: 15px; 
-            left: 20px; 
-            z-index: 9999;
+            top: 15px; left: 20px; z-index: 9999;
             border-color: var(--accent);
             box-shadow: 0 10px 40px rgba(0,0,0,1), 0 0 20px rgba(156, 39, 176, 0.6);
         }
@@ -189,8 +186,7 @@
             width: 100%; flex: 1; padding: 15px; margin: 0; border: none; background: transparent;
             color: #ccc; font-size: 14px; font-family: inherit; line-height: 1.6; outline: none;
             resize: none; overflow-y: auto; white-space: pre-wrap; cursor: text;
-            box-sizing: border-box; 
-            min-height: 0; 
+            box-sizing: border-box; min-height: 0; 
         }
         .popup-desc-view::-webkit-scrollbar { width: 4px; }
         .popup-desc-view::-webkit-scrollbar-thumb { background: #555; border-radius: 2px; }
@@ -236,18 +232,15 @@
 
         <div class="sidebar-content">
             
-            <!-- NOVA SEÇÃO: TROCA DE MAPAS -->
-            <div class="map-style-selector">
-                <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:5px; display:block;">ESTILO DO MAPA</label>
-                <select id="mapa-seletor" class="input-dark" onchange="trocarMapaFundo(this.value)">
-                    <option value="padrao">Mapa Original (Terreno)</option>
-                    <option value="politico">Mapa Político (Fronteiras)</option>
-                    <option value="magico">Mapa das Linhas de Ley</option>
+            <div class="map-switcher">
+                <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:5px; display:block;">ESTILO DE MAPA</label>
+                <select id="map-style-select" class="input-dark" onchange="mudarMapa(this.value)">
+                    <option value="img/imagem-no-site/mapa-runeterra.jpg">Mapa Normal</option>
+                    <option value="img/imagem-no-site/mapa-runeterra-politico.jpg">Mapa Político / Regiões</option>
                 </select>
             </div>
-
+            
             <hr style="border:0; border-top:1px solid #333; width:100%; margin:0;">
-            <!-- FIM NOVA SEÇÃO -->
 
             <div class="measure-tools">
                 <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:5px; display:block;">FERRAMENTA DE MEDIÇÃO</label>
@@ -280,7 +273,7 @@
             <div class="locais-container">
                 <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:8px; display:block;">LOCAIS DESCOBERTOS</label>
                 <ul id="lista-locais" class="location-list">
-                    </ul>
+                </ul>
             </div>
 
             <div class="planes-section">
@@ -355,16 +348,8 @@
         const API_URL = 'https://dandd-chan.onrender.com/api';
         const IMG_DEFAULT_ICON = 'https://cdn-icons-png.flaticon.com/512/684/684908.png';
         
-        // --- SUAS IMAGENS DE FUNDO AQUI ---
-        // Você só precisa alterar os links aqui para as versões do seu mapa
-        const MAP_VARIANTS = {
-            'padrao': 'img/imagem-no-site/mapa-runeterra.jpg',
-            'politico': 'img/imagem-no-site/mapa-runeterra-politico.jpg', 
-            'magico': 'img/imagem-no-site/mapa-runeterra-magico.jpg'      
-        };
-
         let map;
-        let mapOverlay; // Guarda a camada da imagem atual para podermos trocar
+        let imageOverlay; // Variável global para podermos trocar o mapa de fundo
         let markers = [];
         let tempCoords = null;
         let editId = null;
@@ -385,22 +370,25 @@
             { id: 'especial',   name: '🔮 Planos Especiais' },
         ];
 
-        const PLANES_DATA = [
-            { id: 'material', cat: 'central', name: 'Plano Material', desc: 'Representa o mundo tangível...' },
-        ];
-
         window.onload = function() {
+            // Inicialização do Mapa
             map = L.map('map', {
-                crs: L.CRS.Simple, minZoom: -4, maxZoom: 2, zoomControl: false, attributionControl: false
+                crs: L.CRS.Simple, 
+                minZoom: -4, 
+                maxZoom: 2, 
+                zoomControl: false, 
+                attributionControl: false,
+                maxBoundsViscosity: 1.0 // Trava o arraste quando atinge os limites
             });
 
-            // BOUNDS FIXO: O segredo para os pinos nunca saírem do lugar.
-            // O mapa SEMPRE vai agir como se tivesse esse tamanho internamente
+            // Configuração do Limite do Mapa (Impede que os pontos fiquem soltos no vazio)
             const w = 1920, h = 1080;
             const bounds = [[0,0], [h,w]];
-            
-            // Inicia com o mapa padrão e guarda o overlay na variável
-            mapOverlay = L.imageOverlay(MAP_VARIANTS['padrao'], bounds).addTo(map);
+            map.setMaxBounds(bounds); // Esta linha trava o tamanho para sempre encaixar
+
+            // Cria o overlay usando o select que está na tela
+            const initialMapUrl = document.getElementById('map-style-select').value;
+            imageOverlay = L.imageOverlay(initialMapUrl, bounds).addTo(map);
             
             map.fitBounds(bounds);
             
@@ -458,68 +446,75 @@
 
             map.on('movestart', () => document.getElementById('ctx-menu').style.display = 'none');
 
+            // Carregamento Inicial dos Pins
             fetch(`${API_URL}/mapa-pins`)
                 .then(res => res.json())
                 .then(pinsSalvos => {
                     pinsSalvos.forEach(p => {
                         criarMarcador(p.lat, p.lng, p.nome, p.desc, p.icon, p.gallery, p.id);
                     });
-                    
-                    iniciarSincronizacaoAutomatica();
                 })
                 .catch(err => console.error("Erro ao carregar mapa:", err));
+
+            // Configuração do Polling para atualizar o mapa em tempo real de tempos em tempos
+            setInterval(sincronizarMapa, 5000); // A cada 5 segundos ele verifica e atualiza
         };
 
-        // ====== FUNÇÃO PARA TROCAR O MAPA DE FUNDO ======
-        window.trocarMapaFundo = function(variantId) {
-            const novaUrl = MAP_VARIANTS[variantId];
-            if(novaUrl) {
-                mapOverlay.setUrl(novaUrl);
+        // ====== FUNÇÃO NOVA: TROCAR MAPA ======
+        window.mudarMapa = function(url) {
+            if(imageOverlay) {
+                imageOverlay.setUrl(url); // Muda apenas a imagem de fundo, coordenadas se mantêm perfeitas
             }
         };
 
-        // ================= FUNÇÃO DE ATUALIZAÇÃO AUTOMÁTICA =================
-        function iniciarSincronizacaoAutomatica() {
-            setInterval(async () => {
-                try {
-                    const res = await fetch(`${API_URL}/mapa-pins`);
-                    const pinsServidor = await res.json();
+        // ====== FUNÇÃO NOVA: SINCRONIZAÇÃO EM TEMPO REAL ======
+        async function sincronizarMapa() {
+            // Se você estiver editando/criando um pin, não vamos sincronizar para não interromper seu preenchimento
+            if (document.getElementById('modal-form').style.display === 'flex') return;
 
-                    const idsServidor = pinsServidor.map(p => p.id);
-                    for (let i = markers.length - 1; i >= 0; i--) {
-                        if (!idsServidor.includes(markers[i].id)) {
-                            map.removeLayer(markers[i].marker);
-                            markers.splice(i, 1);
+            try {
+                const res = await fetch(`${API_URL}/mapa-pins`);
+                if (!res.ok) return;
+                const serverPins = await res.json();
+                
+                const serverPinIds = serverPins.map(p => p.id);
+
+                // 1. Remover pins locais que não existem mais no servidor (foram apagados por alguém)
+                markers = markers.filter(localPin => {
+                    if (!serverPinIds.includes(localPin.id)) {
+                        map.removeLayer(localPin.marker);
+                        return false;
+                    }
+                    return true;
+                });
+
+                // 2. Adicionar novos ou Atualizar os existentes
+                serverPins.forEach(sp => {
+                    const localPin = markers.find(m => m.id === sp.id);
+                    if (!localPin) {
+                        // O pin não existia localmente, vamos criá-lo no mapa
+                        criarMarcador(sp.lat, sp.lng, sp.nome, sp.desc, sp.icon, sp.gallery, sp.id);
+                    } else {
+                        // Verifica se algo mudou dentro do Pin. Se sim, atualiza!
+                        const mudou = localPin.nome !== sp.nome || 
+                                      localPin.desc !== sp.desc || 
+                                      localPin.icon !== sp.icon || 
+                                      JSON.stringify(localPin.gallery) !== JSON.stringify(sp.gallery);
+                        
+                        if (mudou) {
+                            localPin.nome = sp.nome;
+                            localPin.desc = sp.desc;
+                            localPin.icon = sp.icon;
+                            localPin.gallery = sp.gallery;
+                            refreshMarkerVisuals(localPin);
                         }
                     }
-
-                    let atualizouAlgo = false;
-                    pinsServidor.forEach(pServidor => {
-                        const pinLocal = markers.find(m => m.id === pServidor.id);
-                        if (!pinLocal) {
-                            criarMarcador(pServidor.lat, pServidor.lng, pServidor.nome, pServidor.desc, pServidor.icon, pServidor.gallery, pServidor.id);
-                            atualizouAlgo = true;
-                        } else {
-                            const mudou = pinLocal.nome !== pServidor.nome ||
-                                          pinLocal.desc !== pServidor.desc ||
-                                          pinLocal.icon !== pServidor.icon ||
-                                          JSON.stringify(pinLocal.gallery) !== JSON.stringify(pServidor.gallery);
-                            if (mudou) {
-                                pinLocal.nome = pServidor.nome;
-                                pinLocal.desc = pServidor.desc;
-                                pinLocal.icon = pServidor.icon;
-                                pinLocal.gallery = pServidor.gallery || [];
-                                refreshMarkerVisuals(pinLocal);
-                                atualizouAlgo = true;
-                            }
-                        }
-                    });
-
-                    if (atualizouAlgo) {
-                        atualizarListaLateral();
-                    }
-                } catch (err) { }
-            }, 5000); 
+                });
+                
+                atualizarListaLateral();
+            } catch(e) {
+                console.error("Erro no sync automático em background:", e);
+            }
         }
 
         function toggleMedicao() {
@@ -705,7 +700,6 @@
             if (box.classList.contains('expanded')) {
                 box.classList.remove('expanded');
                 btn.textContent = '⤡ Clique para expandir ⤡';
-                
                 box.style.width = '';
                 box.style.height = '';
             } else {
@@ -714,14 +708,11 @@
 
                 box.style.width = '420px';
 
-                textarea.style.flex = 'none';
                 textarea.style.height = '1px'; 
                 let alturaDoTexto = textarea.scrollHeight;
-                
-                textarea.style.height = ''; 
-                textarea.style.flex = '1';
+                textarea.style.height = 'auto'; 
 
-                let alturaAlvo = alturaDoTexto + 60; 
+                let alturaAlvo = alturaDoTexto + 40;
 
                 if (alturaAlvo < 150) alturaAlvo = 150;
                 let alturaMaximaDaTela = window.innerHeight * 0.55; 
@@ -748,7 +739,7 @@
                     if (moverCameraX > 0 || moverCameraY > 0) {
                         map.panBy([moverCameraX, moverCameraY], { animate: true, duration: 0.4 });
                     }
-                }, 300); 
+                }, 300);
             }
         };
 
