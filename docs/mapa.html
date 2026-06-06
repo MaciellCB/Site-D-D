@@ -232,13 +232,11 @@
 
         <div class="sidebar-content">
             
-            <!-- CONTROLE DE TROCA DE MAPA -->
             <div class="map-switcher">
                 <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:5px; display:block;">ESTILO DE MAPA</label>
                 <select id="map-style-select" class="input-dark" onchange="mudarMapa(this.value)">
                     <option value="img/imagem-no-site/mapa-runeterra.jpg">Mapa Normal</option>
-                    <!-- AQUI ESTÁ A CORREÇÃO (.png) -->
-                    <option value="img/imagem-no-site/mapa-runeterra-politico.png">Mapa Político / Rgiões</option>
+                    <option value="img/imagem-no-site/mapa-runeterra-politico.png">Mapa de Regiões</option>
                 </select>
             </div>
             
@@ -368,32 +366,59 @@
             { id: 'central',    name: '🌍 Planos Centrais' },
             { id: 'elemental',  name: '🔥 Planos Elementais' },
             { id: 'superior',   name: '✨ Planos Superiores' },
-            { id: 'inferior',   name: '💀 Planos Inferiores' },
-            { id: 'especial',   name: '🔮 Planos Especiais' },
+            { id: 'vazio',      name: '🔮 O Vazio / Energia Negativa' }
+        ];
+
+        const PLANES_DATA = [
+            // Planos Centrais
+            { id: 'material', cat: 'central', name: 'Plano Material', desc: 'Representa o mundo tangível, o universo observável onde vivem os mortais.' },
+            { id: 'etereo', cat: 'central', name: 'Plano Etéreo', desc: 'Uma névoa que se sobrepõe ao Plano Material. É frequentemente utilizado para viagens de curta distância ou habitado por fantasmas.' },
+            { id: 'astral', cat: 'central', name: 'Plano Astral', desc: 'Descrito como o mar de pensamentos e sonhos. Sua principal função é conectar o Plano Material aos Planos Externos.' },
+            
+            // Planos Elementais
+            { id: 'caos_elemental', cat: 'elemental', name: 'Caos Elemental', desc: 'Um ponto de convergência violento onde todos os elementos se chocam e se misturam em uma tempestade infinita, impedindo qualquer forma de estabilidade.' },
+            { id: 'elem_ar', cat: 'elemental', name: 'Plano Elemental do Ar', desc: 'É uma das esferas externas onde o elemento ar existe em seu estado mais básico e absoluto. Como parte dos Planos Externos, ele é uma dimensão que opera fora das leis físicas comuns do Plano Material.' },
+            { id: 'elem_fogo', cat: 'elemental', name: 'Plano Elemental do Fogo', desc: 'Uma dimensão de energia pura onde o elemento fogo se manifesta sem restrições ou combustível externo. É um dos quatro pilares que compõem a base elemental da existência.' },
+            { id: 'elem_terra', cat: 'elemental', name: 'Plano Elemental da Terra', desc: 'Este plano é dedicado inteiramente à pureza do elemento terra. Representa a solidez fundamental dentro da estrutura planar externa do cosmos.' },
+            { id: 'elem_agua', cat: 'elemental', name: 'Plano Elemental da Água', desc: 'Onde o elemento água é encontrado em sua forma mais límpida e primordial. Assim como os demais, situa-se como um plano externo que mantém a essência do elemento protegida de contaminações.' },
+            
+            // Planos Superiores
+            { id: 'elyseos', cat: 'superior', name: 'Campos Elíseos', desc: 'Plano de harmonia e repouso destinado a almas justas e heróis.' },
+            { id: 'arborea', cat: 'superior', name: 'Arbórea', desc: 'É o plano das paixões desenfreadas e da natureza em seu estado mais indomável. Funciona como o lar ancestral de algumas variações de elfos, um local de festividades eternas e sentimentos intensos que moldam a própria paisagem.' },
+            { id: 'arcadia', cat: 'superior', name: 'Arcádia', desc: 'Este plano manifesto a ordem perfeita dentro da natureza. A vegetação cresce com precisão matemática, com árvores alinhadas em filas impecáveis e pomares organizados milimetricamente, onde nada sai do lugar estabelecido pela harmonia natural.' },
+            { id: 'bandopolis', cat: 'superior', name: 'Bandópolis', desc: 'É uma terra acessível apenas por portais invisíveis. Gnomos, fadas e seres raros de magia habitam este retiro, onde a magia é ilimitada e as experiências são amplificadas. Para os que não são nativos, todas as sensações são mais intensas, as cores são mais vívidas, a comida e a bebida embriagam os sentidos, e a luz do sol parece sempre dourada. Aqueles que visitam o local voltam com histórias irreconciliáveis, cada um com uma visão única de Bandópolis.\n\nTalvez alguns dos relatos sejam verdadeiros, mas muitos acreditam que Bandópolis é um lugar de ilusões tanto quanto de encantamento, onde a realidade se distorce ao sabor dos desejos e da imaginação.' },
+            
+            // O Vazio / Contrapeso Invertido
+            { id: 'vazio_plano', cat: 'vazio', name: 'O Vazio (Plano Invertido)', desc: 'Conhecido também como o Desconhecido ou o Plano Invertido, não é apenas uma dimensão, mas uma realidade de energia puramente negativa. Ele existe como o contrapeso fundamental e necessário para equilibrar o Éter. Enquanto o Éter constrói e anima, o Vazio é uma força de apetite insaciável que aguarda pacientemente qualquer quebra no padrão do equilíbrio para consumir a existência.\n\nComo toda ação gera uma reação, a existência do Éter positivo criou o Vazio, uma dimensão de energia negativa e corrompida. Os habitantes desse reino são anomalias geradas a partir da estrutura do próprio Vazio. Tudo o que rompe a ordem e o equilíbrio é suscetível ao toque desse abismo. Aqueles que o tocam, por qualquer meio, correm o risco de se ligarem ao vazio.\n\nSe ligar ao vazio acontece em fases, o menor contato com o vazio já cria uma ligação com ele, e quanto mais a alma e o Éter se fortalecem, mais o vazio quer trazer a sua parte do mundo terreno para si. Entre outras coisas, faz o vazio conseguir "localizar" e tentar buscar sua Contraparte, levando até à criação de seres chamados "Doppelgänger", esses seres são a contraparte física dentro do vazio, que é caracterizado pela visão que todas as pessoas tem da pessoa em questão.\n\nNeste plano, as leis da física e da magia perdem o sentido. É um domínio de energia proibida onde o tempo e o espaço se distorcem em formas agonizantes, capazes de estilhaçar até as mentes mais robustas. Seres tocados por esse poder experimentam visões perturbadoras de uma irrealidade eterna, uma busca incessante pelo oblívio que ameaça a própria essência da criação de todos os planos.' },
+            { id: 'bhasm', cat: 'vazio', name: 'Bhasm', desc: 'Conhecido como uma versão distorcida e alternativa de Runeterra, este plano é o retrato da desolação absoluta. É um mundo de cinzas, totalmente destruído, onde o que antes era vida e civilização foi reduzido a um silêncio acinzentado.' },
+            { id: 'pandemonio', cat: 'vazio', name: 'Pandemônio', desc: 'Composto por túneis infinitos de pedra com ventos uivantes e caos geológico estrutural.' },
+            { id: 'mechanus', cat: 'vazio', name: 'Mechanus', desc: 'O plano das engrenagens e da lógica pura, onde tudo funciona sob engrenagens mecânicas precisas. É regido pelos Modrons, seres de pura lógica, e a lei aqui não é apenas aplicada, ela é absoluta e inerente à física do lugar.' },
+            { id: 'acheron', cat: 'vazio', name: 'Acheron', desc: 'O cenário da guerra eterna, composto por cubos metálicos de proporções gigantescas que flutuam no vazio. Nestas estruturas, exércitos colidem infinitamente, transformando o plano em um campo de batalha perpétuo onde o som do metal e o choque de forças nunca cessam.' },
+            { id: 'gehenna', cat: 'vazio', name: 'Gehenna', desc: 'Formado por quatro vulcões infinitos que não possuem base nem topo. É o lar dos mercenários conhecidos como Yugoloths.' },
+            { id: 'hades', cat: 'vazio', name: 'Hades', desc: 'O plano da desesperança total. Um lugar cinzento que drena a cor e a vontade de viver de qualquer um que o visite.' },
+            { id: 'nove_infernos', cat: 'vazio', name: 'Os Nove Infernos', desc: 'Um local gigantesco e quente destinado às almas corrompidas ou àquelas que não foram aceitas por nenhum deus. Curiosamente, quanto mais profundo se viaja neste plano, mais frio ele se torna.' },
+            { id: 'asterios', cat: 'vazio', name: 'Astérios', desc: 'São planos individuais criados por cada um dos deuses para acolher as almas de seus seguidores após a morte. Eles funcionam como pontes por cima do Vazio para aproximar as almas dos Campos Elíseos, exigindo a aprovação da divindade para entrar.' },
+            { id: 'carceri', cat: 'vazio', name: 'Carceri', desc: 'O plano prisão. Consiste em uma corrente de planetas de onde é quase impossível escapar uma vez que se entra.' }
         ];
 
         window.onload = function() {
-            // Inicialização do Mapa
             map = L.map('map', {
                 crs: L.CRS.Simple, 
                 minZoom: -4, 
                 maxZoom: 2, 
                 zoomControl: false, 
                 attributionControl: false,
-                maxBoundsViscosity: 1.0 // Trava o arraste quando atinge os limites
+                maxBoundsViscosity: 1.0 
             });
 
-            // Configuração do Limite do Mapa
             const w = 1920, h = 1080;
             const bounds = [[0,0], [h,w]];
             map.setMaxBounds(bounds); 
 
-            // Cria o overlay usando o select que está na tela
             const initialMapUrl = document.getElementById('map-style-select').value;
             imageOverlay = L.imageOverlay(initialMapUrl, bounds).addTo(map);
             
             map.fitBounds(bounds);
-            
             L.control.zoom({ position: 'bottomright' }).addTo(map);
 
             map.on('contextmenu', function(e) {
@@ -407,7 +432,6 @@
 
             map.on('click', function(e) {
                 document.getElementById('ctx-menu').style.display = 'none';
-
                 if (isMeasuringSession) {
                     if (!isDrawing) {
                         isDrawing = true;
@@ -426,14 +450,12 @@
             map.on('mousemove', (e) => {
                 if(isMeasuringSession && isDrawing) {
                     const mode = document.querySelector('input[name="measure-mode"]:checked').value;
-                    
                     if (mode === 'line') {
                         measureLine.setLatLngs([measurePoints[0], e.latlng]);
                         const distPixels = map.project(measurePoints[0]).distanceTo(map.project(e.latlng));
                         const distMetros = (distPixels * 0.015).toFixed(1);
                         document.getElementById('distancia-res').innerText = `${distMetros}m`;
-                    } 
-                    else {
+                    } else {
                         measurePoints.push(e.latlng);
                         measureLine.setLatLngs(measurePoints);
                         let totalPixels = 0;
@@ -448,7 +470,8 @@
 
             map.on('movestart', () => document.getElementById('ctx-menu').style.display = 'none');
 
-            // Carregamento Inicial dos Pins
+            renderPlanes();
+
             fetch(`${API_URL}/mapa-pins`)
                 .then(res => res.json())
                 .then(pinsSalvos => {
@@ -458,9 +481,34 @@
                 })
                 .catch(err => console.error("Erro ao carregar mapa:", err));
 
-            // Configuração do Polling para atualizar o mapa em tempo real de tempos em tempos
-            setInterval(sincronizarMapa, 5000); // A cada 5 segundos ele verifica e atualiza
+            setInterval(sincronizarMapa, 5000); 
         };
+
+        function renderPlanes() {
+            const container = document.getElementById('planes-container');
+            container.innerHTML = "";
+
+            PLANE_CATEGORIES.forEach(cat => {
+                const catDiv = document.createElement('div');
+                catDiv.className = 'plane-category';
+                catDiv.innerHTML = `<div class="plane-cat-header">${cat.name}</div>`;
+
+                const planesInCat = PLANES_DATA.filter(p => p.cat === cat.id);
+                planesInCat.forEach(plane => {
+                    const card = document.createElement('div');
+                    card.className = 'plane-card';
+                    card.innerHTML = `
+                        <div class="plane-header" onclick="this.parentElement.classList.toggle('open')">
+                            <span>${plane.name}</span>
+                            <span>▾</span>
+                        </div>
+                        <div class="plane-body">${plane.desc.replace(/\n/g, '<br>')}</div>
+                    `;
+                    catDiv.appendChild(card);
+                });
+                container.appendChild(catDiv);
+            });
+        }
 
         window.mudarMapa = function(url) {
             if(imageOverlay) {
@@ -515,7 +563,6 @@
         function toggleMedicao() {
             isMeasuringSession = !isMeasuringSession;
             const btn = document.getElementById('btn-medir');
-            
             if(isMeasuringSession) {
                 btn.classList.add('active');
                 document.getElementById('map').style.cursor = 'crosshair';
@@ -605,10 +652,8 @@
                     markers.splice(index, 1);
                     atualizarListaLateral();
                 }
-                
                 try { await fetch(`${API_URL}/mapa-pins/${editId}`, { method: 'DELETE' }); } 
                 catch(e) { console.error("Erro ao deletar no banco", e); }
-
                 fecharModal();
             }
         }
@@ -620,7 +665,6 @@
             const finalIcon = iconImage || IMG_DEFAULT_ICON;
 
             let pinData;
-
             if (editId) {
                 const pin = markers.find(m => m.id === editId);
                 pin.nome = nome;
@@ -650,15 +694,13 @@
                         gallery: pinData.gallery
                     })
                 });
-                
                 if(!res.ok) {
-                    alert("Aviso: O pin apareceu no mapa, mas falhou ao salvar no servidor! Tente imagens menores. O erro continua.");
+                    alert("Aviso: O pin apareceu no mapa, mas falhou ao salvar no servidor!");
                 }
             } catch(e) { 
                 console.error("Erro ao salvar no banco", e);
                 alert("Erro grave ao comunicar com o servidor.");
             }
-
             fecharModal();
             atualizarListaLateral();
         }
@@ -700,7 +742,6 @@
             } else {
                 box.classList.add('expanded');
                 btn.textContent = '✖ Clique para fechar';
-
                 box.style.width = '420px';
 
                 textarea.style.height = '1px'; 
@@ -708,14 +749,10 @@
                 textarea.style.height = 'auto'; 
 
                 let alturaAlvo = alturaDoTexto + 40;
-
                 if (alturaAlvo < 150) alturaAlvo = 150;
                 let alturaMaximaDaTela = window.innerHeight * 0.55; 
 
-                if (alturaAlvo > alturaMaximaDaTela) {
-                    alturaAlvo = alturaMaximaDaTela;
-                }
-
+                if (alturaAlvo > alturaMaximaDaTela) alturaAlvo = alturaMaximaDaTela;
                 box.style.height = alturaAlvo + 'px';
 
                 setTimeout(() => {
@@ -723,13 +760,8 @@
                     let moverCameraX = 0;
                     let moverCameraY = 0;
 
-                    if (rect.bottom > window.innerHeight) {
-                        moverCameraY = (rect.bottom - window.innerHeight) + 30; 
-                    }
-                    
-                    if (rect.right > window.innerWidth) {
-                        moverCameraX = (rect.right - window.innerWidth) + 30;
-                    }
+                    if (rect.bottom > window.innerHeight) moverCameraY = (rect.bottom - window.innerHeight) + 30; 
+                    if (rect.right > window.innerWidth) moverCameraX = (rect.right - window.innerWidth) + 30;
 
                     if (moverCameraX > 0 || moverCameraY > 0) {
                         map.panBy([moverCameraX, moverCameraY], { animate: true, duration: 0.4 });
@@ -763,7 +795,6 @@
             }
 
             let descHtml = pin.desc || "Sem descrição.";
-            
             html += `
                 <div class="popup-desc-wrapper">
                     <div class="popup-desc-container" id="desc-box-${pin.id}">
@@ -772,7 +803,6 @@
                     </div>
                 </div>
             `;
-
             return html;
         }
 
@@ -806,7 +836,6 @@
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-                    
                     const dataUrl = canvas.toDataURL('image/webp', 0.7);
                     callback(dataUrl);
                 }
