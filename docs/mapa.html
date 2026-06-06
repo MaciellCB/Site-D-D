@@ -232,11 +232,13 @@
 
         <div class="sidebar-content">
             
+            <!-- CONTROLE DE TROCA DE MAPA -->
             <div class="map-switcher">
                 <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:5px; display:block;">ESTILO DE MAPA</label>
                 <select id="map-style-select" class="input-dark" onchange="mudarMapa(this.value)">
                     <option value="img/imagem-no-site/mapa-runeterra.jpg">Mapa Normal</option>
-                    <option value="img/imagem-no-site/mapa-runeterra-politico.jpg">Mapa Político / Regiões</option>
+                    <!-- AQUI ESTÁ A CORREÇÃO (.png) -->
+                    <option value="img/imagem-no-site/mapa-runeterra-politico.png">Mapa Político / Regiões</option>
                 </select>
             </div>
             
@@ -349,7 +351,7 @@
         const IMG_DEFAULT_ICON = 'https://cdn-icons-png.flaticon.com/512/684/684908.png';
         
         let map;
-        let imageOverlay; // Variável global para podermos trocar o mapa de fundo
+        let imageOverlay; 
         let markers = [];
         let tempCoords = null;
         let editId = null;
@@ -381,10 +383,10 @@
                 maxBoundsViscosity: 1.0 // Trava o arraste quando atinge os limites
             });
 
-            // Configuração do Limite do Mapa (Impede que os pontos fiquem soltos no vazio)
+            // Configuração do Limite do Mapa
             const w = 1920, h = 1080;
             const bounds = [[0,0], [h,w]];
-            map.setMaxBounds(bounds); // Esta linha trava o tamanho para sempre encaixar
+            map.setMaxBounds(bounds); 
 
             // Cria o overlay usando o select que está na tela
             const initialMapUrl = document.getElementById('map-style-select').value;
@@ -460,16 +462,13 @@
             setInterval(sincronizarMapa, 5000); // A cada 5 segundos ele verifica e atualiza
         };
 
-        // ====== FUNÇÃO NOVA: TROCAR MAPA ======
         window.mudarMapa = function(url) {
             if(imageOverlay) {
-                imageOverlay.setUrl(url); // Muda apenas a imagem de fundo, coordenadas se mantêm perfeitas
+                imageOverlay.setUrl(url);
             }
         };
 
-        // ====== FUNÇÃO NOVA: SINCRONIZAÇÃO EM TEMPO REAL ======
         async function sincronizarMapa() {
-            // Se você estiver editando/criando um pin, não vamos sincronizar para não interromper seu preenchimento
             if (document.getElementById('modal-form').style.display === 'flex') return;
 
             try {
@@ -479,7 +478,6 @@
                 
                 const serverPinIds = serverPins.map(p => p.id);
 
-                // 1. Remover pins locais que não existem mais no servidor (foram apagados por alguém)
                 markers = markers.filter(localPin => {
                     if (!serverPinIds.includes(localPin.id)) {
                         map.removeLayer(localPin.marker);
@@ -488,14 +486,11 @@
                     return true;
                 });
 
-                // 2. Adicionar novos ou Atualizar os existentes
                 serverPins.forEach(sp => {
                     const localPin = markers.find(m => m.id === sp.id);
                     if (!localPin) {
-                        // O pin não existia localmente, vamos criá-lo no mapa
                         criarMarcador(sp.lat, sp.lng, sp.nome, sp.desc, sp.icon, sp.gallery, sp.id);
                     } else {
-                        // Verifica se algo mudou dentro do Pin. Se sim, atualiza!
                         const mudou = localPin.nome !== sp.nome || 
                                       localPin.desc !== sp.desc || 
                                       localPin.icon !== sp.icon || 
