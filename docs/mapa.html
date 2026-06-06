@@ -159,17 +159,13 @@
         .popup-edit-btn { background: none; border: none; color: #777; cursor: pointer; font-size: 16px; transition: 0.2s; }
         .popup-edit-btn:hover { color: #fff; transform: scale(1.1); }
 
-        /* === SISTEMA DE EXPANDIR O LORE (NOVO MÉTODO) === */
-        
-        /* O Wrapper segura o espaço de 90px para o popup não encolher */
+        /* === SISTEMA DE EXPANDIR O LORE === */
         .popup-desc-wrapper {
             position: relative;
             width: 100%;
             height: 90px;
             margin-bottom: 10px;
         }
-
-        /* Container original: Segurando a âncora no topo/esquerda */
         .popup-desc-container {
             position: absolute;
             top: 0; 
@@ -181,11 +177,9 @@
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             z-index: 100;
         }
-
-        /* O estado expandido (os tamanhos agora serão calculados dinamicamente via JS) */
         .popup-desc-container.expanded {
-            top: 15px; /* Vaza 15px para baixo do box base */
-            left: 20px; /* Vaza 20px para a direita do box base */
+            top: 15px; 
+            left: 20px; 
             z-index: 9999;
             border-color: var(--accent);
             box-shadow: 0 10px 40px rgba(0,0,0,1), 0 0 20px rgba(156, 39, 176, 0.6);
@@ -242,6 +236,19 @@
 
         <div class="sidebar-content">
             
+            <!-- NOVA SEÇÃO: TROCA DE MAPAS -->
+            <div class="map-style-selector">
+                <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:5px; display:block;">ESTILO DO MAPA</label>
+                <select id="mapa-seletor" class="input-dark" onchange="trocarMapaFundo(this.value)">
+                    <option value="padrao">Mapa Original (Terreno)</option>
+                    <option value="politico">Mapa Político (Fronteiras)</option>
+                    <option value="magico">Mapa das Linhas de Ley</option>
+                </select>
+            </div>
+
+            <hr style="border:0; border-top:1px solid #333; width:100%; margin:0;">
+            <!-- FIM NOVA SEÇÃO -->
+
             <div class="measure-tools">
                 <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:5px; display:block;">FERRAMENTA DE MEDIÇÃO</label>
                 
@@ -346,10 +353,18 @@
     
     <script>
         const API_URL = 'https://dandd-chan.onrender.com/api';
-        const IMG_MAPA = 'img/imagem-no-site/mapa-runeterra.jpg';
         const IMG_DEFAULT_ICON = 'https://cdn-icons-png.flaticon.com/512/684/684908.png';
         
+        // --- SUAS IMAGENS DE FUNDO AQUI ---
+        // Você só precisa alterar os links aqui para as versões do seu mapa
+        const MAP_VARIANTS = {
+            'padrao': 'img/imagem-no-site/mapa-runeterra.jpg',
+            'politico': 'img/imagem-no-site/mapa-runeterra-politico.jpg', 
+            'magico': 'img/imagem-no-site/mapa-runeterra-magico.jpg'      
+        };
+
         let map;
+        let mapOverlay; // Guarda a camada da imagem atual para podermos trocar
         let markers = [];
         let tempCoords = null;
         let editId = null;
@@ -371,10 +386,7 @@
         ];
 
         const PLANES_DATA = [
-            // Planos (mantidos idênticos)
             { id: 'material', cat: 'central', name: 'Plano Material', desc: 'Representa o mundo tangível...' },
-            // ... (coloquei apenas 1 de exemplo no código para encurtar, 
-            // mas o seu banco original ali em cima continuará funcionando perfeitamente) ...
         ];
 
         window.onload = function() {
@@ -382,9 +394,13 @@
                 crs: L.CRS.Simple, minZoom: -4, maxZoom: 2, zoomControl: false, attributionControl: false
             });
 
+            // BOUNDS FIXO: O segredo para os pinos nunca saírem do lugar.
+            // O mapa SEMPRE vai agir como se tivesse esse tamanho internamente
             const w = 1920, h = 1080;
             const bounds = [[0,0], [h,w]];
-            L.imageOverlay(IMG_MAPA, bounds).addTo(map);
+            
+            // Inicia com o mapa padrão e guarda o overlay na variável
+            mapOverlay = L.imageOverlay(MAP_VARIANTS['padrao'], bounds).addTo(map);
             
             map.fitBounds(bounds);
             
@@ -442,19 +458,69 @@
 
             map.on('movestart', () => document.getElementById('ctx-menu').style.display = 'none');
 
-            // Renderiza apenas se houver no seu PLANES_DATA (recomendo recolocar sua lista gigante aqui)
-            // renderPlanes(); 
-
             fetch(`${API_URL}/mapa-pins`)
                 .then(res => res.json())
                 .then(pinsSalvos => {
                     pinsSalvos.forEach(p => {
                         criarMarcador(p.lat, p.lng, p.nome, p.desc, p.icon, p.gallery, p.id);
                     });
+                    
+                    iniciarSincronizacaoAutomatica();
                 })
                 .catch(err => console.error("Erro ao carregar mapa:", err));
-
         };
+
+        // ====== FUNÇÃO PARA TROCAR O MAPA DE FUNDO ======
+        window.trocarMapaFundo = function(variantId) {
+            const novaUrl = MAP_VARIANTS[variantId];
+            if(novaUrl) {
+                mapOverlay.setUrl(novaUrl);
+            }
+        };
+
+        // ================= FUNÇÃO DE ATUALIZAÇÃO AUTOMÁTICA =================
+        function iniciarSincronizacaoAutomatica() {
+            setInterval(async () => {
+                try {
+                    const res = await fetch(`${API_URL}/mapa-pins`);
+                    const pinsServidor = await res.json();
+
+                    const idsServidor = pinsServidor.map(p => p.id);
+                    for (let i = markers.length - 1; i >= 0; i--) {
+                        if (!idsServidor.includes(markers[i].id)) {
+                            map.removeLayer(markers[i].marker);
+                            markers.splice(i, 1);
+                        }
+                    }
+
+                    let atualizouAlgo = false;
+                    pinsServidor.forEach(pServidor => {
+                        const pinLocal = markers.find(m => m.id === pServidor.id);
+                        if (!pinLocal) {
+                            criarMarcador(pServidor.lat, pServidor.lng, pServidor.nome, pServidor.desc, pServidor.icon, pServidor.gallery, pServidor.id);
+                            atualizouAlgo = true;
+                        } else {
+                            const mudou = pinLocal.nome !== pServidor.nome ||
+                                          pinLocal.desc !== pServidor.desc ||
+                                          pinLocal.icon !== pServidor.icon ||
+                                          JSON.stringify(pinLocal.gallery) !== JSON.stringify(pServidor.gallery);
+                            if (mudou) {
+                                pinLocal.nome = pServidor.nome;
+                                pinLocal.desc = pServidor.desc;
+                                pinLocal.icon = pServidor.icon;
+                                pinLocal.gallery = pServidor.gallery || [];
+                                refreshMarkerVisuals(pinLocal);
+                                atualizouAlgo = true;
+                            }
+                        }
+                    });
+
+                    if (atualizouAlgo) {
+                        atualizarListaLateral();
+                    }
+                } catch (err) { }
+            }, 5000); 
+        }
 
         function toggleMedicao() {
             isMeasuringSession = !isMeasuringSession;
@@ -632,67 +698,57 @@
             if(mainImg) mainImg.src = element.src; 
         };
 
-        // ====== LÓGICA DE EXPANSAO INTELIGENTE (Altura dinâmica, Limite, Panning) ======
         window.toggleExpandir = function(btn, pinId) {
             const box = document.getElementById(`desc-box-${pinId}`);
             const textarea = box.querySelector('.popup-desc-view');
 
             if (box.classList.contains('expanded')) {
-                // FECHAR
                 box.classList.remove('expanded');
                 btn.textContent = '⤡ Clique para expandir ⤡';
-                // Remove os estilos aplicados via JS para voltar ao 100% nativo do CSS
+                
                 box.style.width = '';
                 box.style.height = '';
             } else {
-                // ABRIR E VAZAR PARA O LADO
                 box.classList.add('expanded');
                 btn.textContent = '✖ Clique para fechar';
 
-                // 1. Largura expandida (para vazar à direita da caixa do leaflet)
                 box.style.width = '420px';
 
-                // 2. Medir a altura exata do texto que está no textarea
-                textarea.style.height = '1px'; // Reduz temporariamente para forçar a medição real
+                textarea.style.flex = 'none';
+                textarea.style.height = '1px'; 
                 let alturaDoTexto = textarea.scrollHeight;
-                textarea.style.height = 'auto'; // Retorna pro controle automático do CSS
+                
+                textarea.style.height = ''; 
+                textarea.style.flex = '1';
 
-                // Altura alvo = Altura do texto + O espaço do botão "Clique para fechar" e paddings extras
-                let alturaAlvo = alturaDoTexto + 40;
+                let alturaAlvo = alturaDoTexto + 60; 
 
-                // Limite Mínimo e Máximo
                 if (alturaAlvo < 150) alturaAlvo = 150;
-                let alturaMaximaDaTela = window.innerHeight * 0.55; // Limite de 55% da altura da tela
+                let alturaMaximaDaTela = window.innerHeight * 0.55; 
 
-                // Se o texto for gigante, trava no limite e o overflow-y do CSS cria a barra de rolagem!
                 if (alturaAlvo > alturaMaximaDaTela) {
                     alturaAlvo = alturaMaximaDaTela;
                 }
 
-                // Aplica a altura final
                 box.style.height = alturaAlvo + 'px';
 
-                // 3. Sistema para arrastar a Câmera do Mapa caso a caixa vá parar fora da tela
                 setTimeout(() => {
                     const rect = box.getBoundingClientRect();
                     let moverCameraX = 0;
                     let moverCameraY = 0;
 
-                    // Verifica se cortou em baixo (passou da altura do navegador)
                     if (rect.bottom > window.innerHeight) {
-                        moverCameraY = (rect.bottom - window.innerHeight) + 30; // +30px de "respiro"
+                        moverCameraY = (rect.bottom - window.innerHeight) + 30; 
                     }
                     
-                    // Verifica se cortou à direita (passou da largura do navegador)
                     if (rect.right > window.innerWidth) {
                         moverCameraX = (rect.right - window.innerWidth) + 30;
                     }
 
-                    // Se passou de qualquer borda, ajusta o mapa de forma macia e animada
                     if (moverCameraX > 0 || moverCameraY > 0) {
                         map.panBy([moverCameraX, moverCameraY], { animate: true, duration: 0.4 });
                     }
-                }, 300); // 300ms aguardando a transição CSS de expansão terminar
+                }, 300); 
             }
         };
 
@@ -722,7 +778,6 @@
 
             let descHtml = pin.desc || "Sem descrição.";
             
-            // Note que aqui adicionamos o Wrapper e o evento onclick inline
             html += `
                 <div class="popup-desc-wrapper">
                     <div class="popup-desc-container" id="desc-box-${pin.id}">
