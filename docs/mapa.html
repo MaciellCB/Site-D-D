@@ -96,9 +96,6 @@
         .plane-category { margin-bottom: 8px; }
         .plane-cat-header { font-size: 10px; font-weight: bold; color: #666; text-transform: uppercase; letter-spacing: 1.5px; padding: 4px 2px; border-bottom: 1px solid #222; margin-bottom: 5px; }
         .plane-card { background: #111; border: 1px solid #333; border-radius: 6px; margin-bottom: 4px; overflow: hidden; transition: 0.2s; }
-        .plane-header { padding: 9px 10px; cursor: pointer; font-weight: bold; font-size: 12px; color: #888; display: flex; justify-content: space-between; background: #1a1a1a; transition: 0.2s; }
-        .plane-header:hover { color: #fff; background: #222; }
-        .plane-body { padding: 12px; font-size: 12px; color: #999; line-height: 1.5; display: none; border-top: 1px solid #222; background: #0e0e0e; }
         .plane-card.open .plane-body { display: block; animation: fadeIn 0.3s; }
         .plane-card.open .plane-header { color: var(--accent); background: #222; border-bottom: 1px solid #333; }
 
@@ -176,9 +173,8 @@
             z-index: 100;
         }
 
-        /* Removido o posicionamento fixo forçado do top/left para o JS gerenciar o lado da expansão */
         .popup-desc-container.expanded {
-            z-index: 9999;
+            top: 15px; left: 20px; z-index: 9999;
             border-color: var(--accent);
             box-shadow: 0 10px 40px rgba(0,0,0,1), 0 0 20px rgba(156, 39, 176, 0.6);
         }
@@ -362,42 +358,45 @@
         let isDrawing = false; 
         let measureLine = null; 
         let measurePoints = []; 
+        const MAP_BOUNDS = [[0,0], [1080,1920]]; // Guardamos a referência global dos limites
 
-        // ALTERAÇÃO: Removido a categoria 'vazio' isolada para mover seus elementos para os Centrais
         const PLANE_CATEGORIES = [
             { id: 'central',    name: '🌍 Planos Centrais' },
             { id: 'elemental',  name: '🔥 Planos Elementais' },
-            { id: 'superior',   name: '✨ Planos Superiores' }
+            { id: 'superior',   name: '✨ Planos Superiores' },
+            { id: 'vazio',      name: '🔮 O Vazio / Energia Negativa' }
         ];
 
         const PLANES_DATA = [
-            // Planos Centrais (CORREÇÃO: O Vazio e seus subplanos agora pertencem aos Planos Centrais)
+            // Planos Centrais (Vazio incluído aqui!)
             { id: 'material', cat: 'central', name: 'Plano Material', desc: 'Representa o mundo tangível, o universo observável onde vivem os mortais.' },
             { id: 'etereo', cat: 'central', name: 'Plano Etéreo', desc: 'Uma névoa que se sobrepõe ao Plano Material. É frequentemente utilizado para viagens de curta distância ou habitado por fantasmas.' },
             { id: 'astral', cat: 'central', name: 'Plano Astral', desc: 'Descrito como o mar de pensamentos e sonhos. Sua principal função é conectar o Plano Material aos Planos Externos.' },
-            { id: 'vazio_plano', cat: 'central', name: 'O Vazio (Plano Invertido)', desc: 'Conhecido também como o Desconhecido ou o Plano Invertido, não é apenas uma dimensão, mas uma realidade de energia puramente negativa. Ele existe como o contrapeso fundamental e necessário para equilibrar o Éter. Enquanto o Éter constrói e anima, o Vazio é uma força de apetite insaciável que aguarda pacientemente qualquer quebra no padrão do equilíbrio para comicamente consumir a existência.\n\nComo toda ação gera uma reação, a existência do Éter positivo criou o Vazio, uma dimensão de energia negativa e corrompida. Os habitantes desse reino são anomalias geradas a partir da estrutura do próprio Vazio. Tudo o que rompe a ordem e o equilíbrio é suscetível ao toque desse abismo. Aqueles que o tocam, por qualquer meio, correm o risco de se ligarem ao vazio.\n\nSe ligar ao vazio acontece em fases, o menor contato com o vazio já cria uma ligação com ele, e quanto mais a alma e o Éter se fortalecem, mais o vazio quer trazer a sua parte do mundo terreno para si. Entre outras coisas, faz o vazio conseguir "localizar" e tentar buscar sua Contraparte, levando até à criação de seres chamados "Doppelgänger", esses seres são a contraparte física dentro do vazio, que é caracterizado pela visão que todas as pessoas tem da pessoa em questão.\n\nNeste plano, as leis da física e da magia perdem o sentido. É um domínio de energia proibida onde o tempo e o espaço se distorcem em formas agonizantes, capazes de estilhaçar até as mentes mais robustas. Seres tocados por esse poder experimentam visões perturbadoras de uma irrealidade eterna, uma busca incessante pelo oblívio que ameaça a própria essência da criação de todos os planos.' },
-            { id: 'bhasm', cat: 'central', name: 'Bhasm', desc: 'Conhecido como uma versão distorcida e alternativa de Runeterra, este plano é o retrato da desolação absoluta. É um mundo de cinzas, totalmente destruído, onde o que antes era vida e civilização foi reduzido a um silêncio acinzentado.' },
-            { id: 'pandemonio', cat: 'central', name: 'Pandemônio', desc: 'Composto por túneis infinitos de pedra com ventos uivantes e caos geológico estrutural.' },
-            { id: 'mechanus', cat: 'central', name: 'Mechanus', desc: 'O plano das engrenagens e da lógica pura, onde tudo funciona sob engrenagens mecânicas precisas. É regido pelos Modrons, seres de pura lógica, e a lei aqui não é apenas aplicada, ela é absoluta e inerente à física do lugar.' },
-            { id: 'acheron', cat: 'central', name: 'Acheron', desc: 'O cenário da guerra eterna, composto por cubos metálicos de proporções gigantescas que flutuam no vazio. Nestas estruturas, exércitos colidem infinitamente, transformando o plano em um campo de batalha perpétuo onde o som do metal e o choque de forças nunca cessam.' },
-            { id: 'gehenna', cat: 'central', name: 'Gehenna', desc: 'Formado por quatro vulcões infinitos que não possuem base nem topo. É o lar dos mercenários conhecidos como Yugoloths.' },
-            { id: 'hades', cat: 'central', name: 'Hades', desc: 'O plano da desesperança total. Um lugar cinzento que drena a cor e a vontade de viver de qualquer um que o visite.' },
-            { id: 'nove_infernos', cat: 'central', name: 'Os Nove Infernos', desc: 'Um local gigantesco e quente destinado às almas corrompidas ou àquelas que não foram aceitas por nenhum deus. Curiosamente, quanto mais profundo se viaja neste plano, mais frio ele se torna.' },
-            { id: 'asterios', cat: 'central', name: 'Astérios', desc: 'São planos individuais criados por cada um dos deuses para acolher as almas de seus seguidores após a morte. Eles funcionam como pontes por cima do Vazio para aproximar as almas dos Campos Elíseos, exigindo a aprovação da divindade para entrar.' },
-            { id: 'carceri', cat: 'central', name: 'Carceri', desc: 'O plano prisão. Consiste em uma corrente de planetas de onde é quase impossível escapar uma vez que se entra.' },
+            { id: 'vazio_plano', cat: 'central', name: 'O Vazio (Plano Invertido)', desc: 'Conhecido também como o Desconhecido ou o Plano Invertido, é uma realidade de energia puramente negativa. Ele existe como o contrapeso fundamental e necessário para equilibrar o Éter.' },
             
             // Planos Elementais
-            { id: 'caos_elemental', cat: 'elemental', name: 'Caos Elemental', desc: 'Um ponto de convergência violentamente dinâmico onde todos os elementos se chocam e se misturam em uma tempestade infinita, impedindo qualquer forma de estabilidade.' },
-            { id: 'elem_ar', cat: 'elemental', name: 'Plano Elemental do Ar', desc: 'É uma das esferas externas onde o elemento ar existe em seu estado mais básico e absoluto. Como parte dos Planos Externos, ele é uma dimensão que opera fora das leis físicas comuns do Plano Material.' },
-            { id: 'elem_fogo', cat: 'elemental', name: 'Plano Elemental do Fogo', desc: 'Uma dimensão de energia pura onde o elemento fogo se manifesta sem restrições ou combustível externo. É um dos quatro pilares que compõem a base elemental da existência.' },
-            { id: 'elem_terra', cat: 'elemental', name: 'Plano Elemental da Terra', desc: 'Este plano é dedicado inteiramente à pureza do elemento terra. Representa a solidez fundamental dentro da estrutura planar externa do cosmos.' },
-            { id: 'elem_agua', cat: 'elemental', name: 'Plano Elemental da Água', desc: 'Onde o elemento água é encontrado em sua forma mais límpida e primordial. Assim como os demais, situa-se como um plano externo que mantém a essência do elemento protegida de contaminações.' },
+            { id: 'caos_elemental', cat: 'elemental', name: 'Caos Elemental', desc: 'Um ponto de convergência violento onde todos os elementos se chocam e se misturam em uma tempestade infinita.' },
+            { id: 'elem_ar', cat: 'elemental', name: 'Plano Elemental do Ar', desc: 'É uma das esferas externas onde o elemento ar existe em seu estado mais básico e absoluto.' },
+            { id: 'elem_fogo', cat: 'elemental', name: 'Plano Elemental do Fogo', desc: 'Uma dimensão de energia pura onde o elemento fogo se manifesta sem restrições ou combustível externo.' },
+            { id: 'elem_terra', cat: 'elemental', name: 'Plano Elemental da Terra', desc: 'Este plano é dedicado inteiramente à pureza do elemento terra.' },
+            { id: 'elem_agua', cat: 'elemental', name: 'Plano Elemental da Água', desc: 'Onde o elemento água é encontrado em sua forma mais límpida e primordial.' },
             
             // Planos Superiores
             { id: 'elyseos', cat: 'superior', name: 'Campos Elíseos', desc: 'Plano de harmonia e repouso destinado a almas justas e heróis.' },
-            { id: 'arborea', cat: 'superior', name: 'Arbórea', desc: 'É o plano das paixões desenfreadas e da natureza em seu estado mais indomável. Funciona como o lar ancestral de algumas variações de elfos, um local de festividades eternas e sentimentos intensos que moldam a própria paisagem.' },
-            { id: 'arcadia', cat: 'superior', name: 'Arcádia', desc: 'Este plano manifesto a ordem perfeita dentro da natureza. A vegetação cresce com precisão matemática, com árvores alinhadas em filas impecáveis e pomares organizados milimetricamente, onde nada sai do lugar estabelecido pela harmonia natural.' },
-            { id: 'bandopolis', cat: 'superior', name: 'Bandópolis', desc: 'É uma terra acessível apenas por portais invisíveis. Gnomos, fadas e seres raros de magia habitam este retiro, onde a magia é ilimitada e as experiências são amplificadas. Para os que não são nativos, todas as sensações são mais intensas, as cores são mais vívidas, a comida e a bebida embriagam os sentidos, e a luz do sol parece sempre dourada. Aqueles que visitam o local voltam com histórias irreconciliáveis, cada um com uma visão única de Bandópolis.\n\nTalvez alguns dos relatos sejam verdadeiros, mas muitos acreditam que Bandópolis é um lugar de ilusões tanto quanto de encantamento, onde a realidade se distorce ao sabor dos desejos e da imaginação.' }
+            { id: 'arborea', cat: 'superior', name: 'Arbórea', desc: 'É o plano das paixões desenfreadas e da natureza em seu estado mais indomável.' },
+            { id: 'arcadia', cat: 'superior', name: 'Arcádia', desc: 'Este plano manifesto a ordem perfeita dentro da natureza. A vegetação cresce com precisão matemática.' },
+            { id: 'bandopolis', cat: 'superior', name: 'Bandópolis', desc: 'É uma terra acessível apenas por portais invisíveis. Gnomos, fadas e seres raros de magia habitam este retiro, onde a realidade se distorce ao sabor dos desejos.' },
+            
+            // O Vazio / Energia Negativa (O restante dos subplanos)
+            { id: 'bhasm', cat: 'vazio', name: 'Bhasm', desc: 'Conhecido como uma versão distorcida e alternativa de Runeterra, este plano é o retrato da desolação absoluta. É um mundo de cinzas.' },
+            { id: 'pandemonio', cat: 'vazio', name: 'Pandemônio', desc: 'Composto por túneis infinitos de pedra com ventos uivantes e caos geológico estrutural.' },
+            { id: 'mechanus', cat: 'vazio', name: 'Mechanus', desc: 'O plano das engrenagens e da lógica pura, regido pelos Modrons. A lei aqui é absoluta.' },
+            { id: 'acheron', cat: 'vazio', name: 'Acheron', desc: 'O cenário da guerra eterna, composto por cubos metálicos de proporções gigantescas que flutuam no vazio.' },
+            { id: 'gehenna', cat: 'vazio', name: 'Gehenna', desc: 'Formado por quatro vulcões infinitos que não possuem base nem topo. É o lar dos Yugoloths.' },
+            { id: 'hades', cat: 'vazio', name: 'Hades', desc: 'O plano da desesperança total. Um lugar cinzento que drena a cor e a vontade de viver.' },
+            { id: 'nove_infernos', cat: 'vazio', name: 'Os Nove Infernos', desc: 'Um local gigantesco destinado às almas corrompidas. Quanto mais profundo se viaja, mais frio ele se torna.' },
+            { id: 'asterios', cat: 'vazio', name: 'Astérios', desc: 'Planos individuais criados por cada um dos deuses para acolher as almas de seus seguidores após a morte, servindo de ponte sobre o Vazio.' },
+            { id: 'carceri', cat: 'vazio', name: 'Carceri', desc: 'O plano prisão. Consiste em uma corrente de planetas de onde é quase impossível escapar.' }
         ];
 
         window.onload = function() {
@@ -410,14 +409,12 @@
                 maxBoundsViscosity: 1.0 
             });
 
-            const w = 1920, h = 1080;
-            const bounds = [[0,0], [h,w]];
-            map.setMaxBounds(bounds); 
+            map.setMaxBounds(MAP_BOUNDS); 
 
             const initialMapUrl = document.getElementById('map-style-select').value;
-            imageOverlay = L.imageOverlay(initialMapUrl, bounds).addTo(map);
+            imageOverlay = L.imageOverlay(initialMapUrl, MAP_BOUNDS).addTo(map);
             
-            map.fitBounds(bounds);
+            map.fitBounds(MAP_BOUNDS);
             L.control.zoom({ position: 'bottomright' }).addTo(map);
 
             map.on('contextmenu', function(e) {
@@ -712,13 +709,7 @@
             const marker = L.marker([lat, lng], {icon: customIcon}).addTo(map);
             
             const pinData = { id: pinId, marker, lat, lng, nome, desc, icon: safeIcon, gallery: galeria || [] };
-            
-            // CORREÇÃO: Adicionado autoPanPadding para forçar o mapa a centralizar popups espremidos na borda do mapa fixo
-            marker.bindPopup(gerarPopupContent(pinData), { 
-                maxWidth: 2000,
-                autoPanPadding: L.point(50, 100) 
-            });
-            
+            marker.bindPopup(gerarPopupContent(pinData), { maxWidth: 2000 });
             markers.push(pinData);
             atualizarListaLateral();
         }
@@ -735,20 +726,24 @@
             if(mainImg) mainImg.src = element.src; 
         };
 
-        // ====== LÓGICA DE EXPANSAO ADAPTADA (Crescimento Direcional Inteligente) ======
         window.toggleExpandir = function(btn, pinId) {
             const box = document.getElementById(`desc-box-${pinId}`);
             const textarea = box.querySelector('.popup-desc-view');
 
             if (box.classList.contains('expanded')) {
+                // FECHANDO DETAILS
                 box.classList.remove('expanded');
                 btn.textContent = '⤡ Clique para expandir ⤡';
                 box.style.width = '';
                 box.style.height = '';
-                box.style.top = '';
-                box.style.bottom = '';
-                box.style.left = '';
+                
+                // Reatribui a trava de bordas quando a caixa fecha
+                map.setMaxBounds(MAP_BOUNDS);
             } else {
+                // ABRINDO DETAILS
+                // Remove temporariamente o limite rígido para permitir que a câmera suba sem travar o drag do usuário
+                map.setMaxBounds(null);
+
                 box.classList.add('expanded');
                 btn.textContent = '✖ Clique para fechar';
                 box.style.width = '420px';
@@ -764,31 +759,16 @@
                 if (alturaAlvo > alturaMaximaDaTela) alturaAlvo = alturaMaximaDaTela;
                 box.style.height = alturaAlvo + 'px';
 
-                // CORREÇÃO: Detecção de posição da tela para decidir se vaza para cima ou para baixo
-                const wrapperRect = box.parentElement.getBoundingClientRect();
-                box.style.left = '20px';
-                
-                if (wrapperRect.top > window.innerHeight / 2) {
-                    // Se o pino estiver na parte de baixo da tela, expande para CIMA
-                    box.style.bottom = '15px';
-                    box.style.top = 'auto';
-                } else {
-                    // Se estiver na parte superior da tela, expande para BAIXO
-                    box.style.top = '15px';
-                    box.style.bottom = 'auto';
-                }
-
                 setTimeout(() => {
                     const rect = box.getBoundingClientRect();
                     let moverCameraX = 0;
                     let moverCameraY = 0;
 
-                    // Calcula o deslocamento respeitando margens de segurança maiores
-                    if (rect.bottom > window.innerHeight) moverCameraY = (rect.bottom - window.innerHeight) + 50; 
-                    if (rect.top < 0) moverCameraY = rect.top - 50;
-                    if (rect.right > window.innerWidth) moverCameraX = (rect.right - window.innerWidth) + 50;
+                    if (rect.bottom > window.innerHeight) moverCameraY = (rect.bottom - window.innerHeight) + 30; 
+                    if (rect.right > window.innerWidth) moverCameraX = (rect.right - window.innerWidth) + 30;
 
-                    if (moverCameraX !== 0 || moverCameraY !== 0) {
+                    if (moverCameraX > 0 || moverCameraY > 0) {
+                        // Move a câmera de forma macia para centralizar os detalhes abertos
                         map.panBy([moverCameraX, moverCameraY], { animate: true, duration: 0.4 });
                     }
                 }, 300);
