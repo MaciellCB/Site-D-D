@@ -365,38 +365,44 @@
 
         const PLANE_CATEGORIES = [
             { id: 'central',    name: '🌍 Planos Centrais' },
+            { id: 'superior',  name: '🌌 Planos Superiores' },
             { id: 'elemental',  name: '🔥 Planos Elementais' },
-            { id: 'outros',   name: '✨ Outros Planos' }
+            { id: 'outros',   name: '✨ Outros Planos' },
+            {id: 'infernal', name: '👹 Planos Infernais' }
         ];
 
-        const PLANES_DATA = [
-            // Planos Centrais (Vazio incluído aqui!)
-            { id: 'material', cat: 'central', name: 'Plano Material', desc: 'Representa o mundo tangível, o universo observável onde vivem os mortais.' },
+       const PLANES_DATA = [
+            // Planos Centrais (O núcleo do Universo Físico e trânsito mortal)
+            { id: 'material', cat: 'central', name: 'Plano Material', desc: 'Representa o mundo tangível, o universe observável onde vivem os mortais.' },
             { id: 'etereo', cat: 'central', name: 'Plano Etéreo', desc: 'Uma névoa que se sobrepõe ao Plano Material. É frequentemente utilizado para viagens de curta distância ou habitado por fantasmas.' },
             { id: 'astral', cat: 'central', name: 'Plano Astral', desc: 'Descrito como o mar de pensamentos e sonhos. Sua principal função é conectar o Plano Material aos Planos Externos.' },
-            { id: 'elyseos', cat: 'central', name: 'Campos Elíseos', desc: 'Plano de harmonia e repouso destinado a almas justas e heróis.' },
-            { id: 'vazio_plano', cat: 'central', name: 'O Vazio (Plano Invertido)', desc: 'Conhecido também como o Desconhecido ou o Plano Invertido, é uma realidade de energia puramente negativa. Ele existe como o contrapeso fundamental e necessário para equilibrar o Éter.' },
+            { id: 'vazio_plano', cat: 'central', name: 'O Vazio (Plano Invertido)', desc: 'Conhecido também como o Desconhecido ou o Plano Invertido, é uma reality de energia puramente negativa. Ele existe como o contrapeso fundamental e necessário para equilibrar o Éter.' },
             
-            // Planos Elementais
+            // Planos Superiores (Moradas Divinas e Destinos das Almas)
+            { id: 'elyseos', cat: 'superior', name: 'Campos Elíseos', desc: 'A camada mais alta da existência, situada acima de todos os outros planos. É o local onde os deuses residem fisicamente.' },
+            { id: 'asterios', cat: 'superior', name: 'Astérios', desc: 'Planos individuais criados por cada um dos deuses para acolher as almas de seus seguidores após a morte, servindo de ponte sobre o Vazio.' },
+
+            // Planos Elementais (As fundações da matéria bruta)
             { id: 'caos_elemental', cat: 'elemental', name: 'Caos Elemental', desc: 'Um ponto de convergência violento onde todos os elementos se chocam e se misturam em uma tempestade infinita.' },
             { id: 'elem_ar', cat: 'elemental', name: 'Plano Elemental do Ar', desc: 'É uma das esferas externas onde o elemento ar existe em seu estado mais básico e absoluto.' },
             { id: 'elem_fogo', cat: 'elemental', name: 'Plano Elemental do Fogo', desc: 'Uma dimensão de energia pura onde o elemento fogo se manifesta sem restrições ou combustível externo.' },
             { id: 'elem_terra', cat: 'elemental', name: 'Plano Elemental da Terra', desc: 'Este plano é dedicado inteiramente à pureza do elemento terra.' },
             { id: 'elem_agua', cat: 'elemental', name: 'Plano Elemental da Água', desc: 'Onde o elemento água é encontrado em sua forma mais límpida e primordial.' },
             
-            // Outros Planos
-            { id: 'arborea', cat: 'outros', name: 'Arbórea', desc: 'É o plano das paixões desenfreadas e da natureza em seu estado mais indomável.' },
-            { id: 'arcadia', cat: 'outros', name: 'Arcádia', desc: 'Este plano manifesto a ordem perfeita dentro da natureza. A vegetação cresce com precisão matemática.' },
-            { id: 'bandopolis', cat: 'outros', name: 'Bandópolis', desc: 'É uma terra acessível apenas por portais invisíveis. Gnomos, fadas e seres raros de magia habitam este retiro, onde a realidade se distorce ao sabor dos desejos.' },
-            { id: 'bhasm', cat: 'outros', name: 'Bhasm', desc: 'Conhecido como uma versão distorcida e alternativa de Runeterra, este plano é o retrato da desolação absoluta. É um mundo de cinzas.' },
-            { id: 'pandemonio', cat: 'outros', name: 'Pandemônio', desc: 'Composto por túneis infinitos de pedra com ventos uivantes e caos geológico estrutural.' },
-            { id: 'mechanus', cat: 'outros', name: 'Mechanus', desc: 'O plano das engrenagens e da lógica pura, regido pelos Modrons. A lei aqui é absoluta.' },
-            { id: 'acheron', cat: 'outros', name: 'Acheron', desc: 'O cenário da guerra eterna, composto por cubos metálicos de proporções gigantescas que flutuam no vazio.' },
-            { id: 'gehenna', cat: 'outros', name: 'Gehenna', desc: 'Formado por quatro vulcões infinitos que não possuem base nem topo. É o lar dos Yugoloths.' },
-            { id: 'hades', cat: 'outros', name: 'Hades', desc: 'O plano da desesperança total. Um lugar cinzento que drena a cor e a vontade de viver.' },
-            { id: 'nove_infernos', cat: 'outros', name: 'Os Nove Infernos', desc: 'Um local gigantesco destinado às almas corrompidas. Quanto mais profundo se viaja, mais frio ele se torna.' },
-            { id: 'asterios', cat: 'outros', name: 'Astérios', desc: 'Planos individuais criados por cada um dos deuses para acolher as almas de seus seguidores após a morte, servindo de ponte sobre o Vazio.' },
-            { id: 'carceri', cat: 'outros', name: 'Carceri', desc: 'O plano prisão. Consiste em uma corrente de planetas de onde é quase impossível escapar.' }
+            // Planos Externos e Conceituais (Biomas extremos, ecossistemas e leis absolutas)
+            { id: 'arborea', cat: 'externo', name: 'Arbórea', desc: 'É o plano das paixões desenfreadas e da natureza em seu estado mais indomável.' },
+            { id: 'arcadia', cat: 'externo', name: 'Arcádia', desc: 'Este plano manifesta a ordem perfeita dentro da natureza. A vegetação cresce com precisão matemática.' },
+            { id: 'bandopolis', cat: 'externo', name: 'Bandópolis', desc: 'É uma terra acessível apenas por portais invisíveis. Gnomos, fadas e seres raros de magia habitam este retiro, onde a realidade se distorce ao sabor dos desejos.' },
+            { id: 'bhasm', cat: 'externo', name: 'Bhasm', desc: 'Conhecido como uma versão distorcida e alternativa de Runeterra, este plano é o retrato da desolação absoluta. É um mundo de cinzas.' },
+            { id: 'mechanus', cat: 'externo', name: 'Mechanus', desc: 'O plano das engrenagens e da lógica pura, regido pelos Modrons. A lei aqui é absoluta.' },
+            { id: 'acheron', cat: 'externo', name: 'Acheron', desc: 'O cenário da guerra eterna, composto por cubos metálicos de proporções gigantescas que flutuam no vazio.' },
+
+            // Planos Inferiores e de Punição (Domínios sob os círculos de Anilla e reduto dos Reis Demônios)
+            { id: 'hades', cat: 'infernal', name: 'Hades', desc: 'O plano da desesperança total. Um lugar cinzento que drena a cor e a vontade de viver.' },
+            { id: 'nove_infernos', cat: 'infernal', name: 'Os Nove Infernos', desc: 'Um local gigantesco destinado às almas corrompidas e reduto dos Reis Demônios. Quanto mais profundo se viaja, mais frio ele se torna.' },
+            { id: 'gehenna', cat: 'infernal', name: 'Gehenna', desc: 'Formado por quatro vulcões infinitos que não possuem base nem topo. É o lar dos Yugoloths.' },
+            { id: 'carceri', cat: 'infernal', name: 'Carceri', desc: 'O plano prisão. Consiste em uma corrente de planetas de onde é quase impossível escapar.' },
+            { id: 'pandemonio', cat: 'infernal', name: 'Pandemônio', desc: 'Composto por túneis infinitos de pedra com ventos uivantes que causam loucura e caos geológico estrutural.' }
         ];
 
         window.onload = function() {
