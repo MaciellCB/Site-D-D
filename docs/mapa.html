@@ -96,6 +96,9 @@
         .plane-category { margin-bottom: 8px; }
         .plane-cat-header { font-size: 10px; font-weight: bold; color: #666; text-transform: uppercase; letter-spacing: 1.5px; padding: 4px 2px; border-bottom: 1px solid #222; margin-bottom: 5px; }
         .plane-card { background: #111; border: 1px solid #333; border-radius: 6px; margin-bottom: 4px; overflow: hidden; transition: 0.2s; }
+        .plane-header { padding: 9px 10px; cursor: pointer; font-weight: bold; font-size: 12px; color: #888; display: flex; justify-content: space-between; background: #1a1a1a; transition: 0.2s; }
+        .plane-header:hover { color: #fff; background: #222; }
+        .plane-body { padding: 12px; font-size: 12px; color: #999; line-height: 1.5; display: none; border-top: 1px solid #222; background: #0e0e0e; }
         .plane-card.open .plane-body { display: block; animation: fadeIn 0.3s; }
         .plane-card.open .plane-header { color: var(--accent); background: #222; border-bottom: 1px solid #333; }
 
@@ -358,7 +361,7 @@
         let isDrawing = false; 
         let measureLine = null; 
         let measurePoints = []; 
-        const MAP_BOUNDS = [[0,0], [1080,1920]]; // Guardamos a referência global dos limites
+        const MAP_BOUNDS = [[0,0], [1080,1920]]; // Guardamos a referência global dos limites perfeitos
 
         const PLANE_CATEGORIES = [
             { id: 'central',    name: '🌍 Planos Centrais' },
@@ -382,7 +385,6 @@
             { id: 'elem_agua', cat: 'elemental', name: 'Plano Elemental da Água', desc: 'Onde o elemento água é encontrado em sua forma mais límpida e primordial.' },
             
             // Outros Planos
-          
             { id: 'arborea', cat: 'outros', name: 'Arbórea', desc: 'É o plano das paixões desenfreadas e da natureza em seu estado mais indomável.' },
             { id: 'arcadia', cat: 'outros', name: 'Arcádia', desc: 'Este plano manifesto a ordem perfeita dentro da natureza. A vegetação cresce com precisão matemática.' },
             { id: 'bandopolis', cat: 'outros', name: 'Bandópolis', desc: 'É uma terra acessível apenas por portais invisíveis. Gnomos, fadas e seres raros de magia habitam este retiro, onde a realidade se distorce ao sabor dos desejos.' },
@@ -404,9 +406,10 @@
                 maxZoom: 2, 
                 zoomControl: false, 
                 attributionControl: false,
-                maxBoundsViscosity: 1.0 
+                maxBoundsViscosity: 0.8 
             });
 
+            // Trava o mapa inicialmente
             map.setMaxBounds(MAP_BOUNDS); 
 
             const initialMapUrl = document.getElementById('map-style-select').value;
@@ -463,6 +466,12 @@
             });
 
             map.on('movestart', () => document.getElementById('ctx-menu').style.display = 'none');
+
+            // ======= SOLUÇÃO DO TRAVAMENTO =======
+            // Quando fechar qualquer popup, o mapa trava de volta no limite certinho.
+            map.on('popupclose', function() {
+                map.setMaxBounds(MAP_BOUNDS);
+            });
 
             renderPlanes();
 
@@ -706,6 +715,9 @@
             const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -20] });
             const marker = L.marker([lat, lng], {icon: customIcon}).addTo(map);
             
+            // DESTRAVA O MAPA AO CLICAR NO PIN (crucial para o pan automático funcionar!)
+            marker.on('click', () => { map.setMaxBounds(null); });
+
             const pinData = { id: pinId, marker, lat, lng, nome, desc, icon: safeIcon, gallery: galeria || [] };
             marker.bindPopup(gerarPopupContent(pinData), { maxWidth: 2000 });
             markers.push(pinData);
@@ -734,14 +746,8 @@
                 btn.textContent = '⤡ Clique para expandir ⤡';
                 box.style.width = '';
                 box.style.height = '';
-                
-                // Reatribui a trava de bordas quando a caixa fecha
-                map.setMaxBounds(MAP_BOUNDS);
             } else {
                 // ABRINDO DETAILS
-                // Remove temporariamente o limite rígido para permitir que a câmera suba sem travar o drag do usuário
-                map.setMaxBounds(null);
-
                 box.classList.add('expanded');
                 btn.textContent = '✖ Clique para fechar';
                 box.style.width = '420px';
@@ -763,10 +769,13 @@
                     let moverCameraY = 0;
 
                     if (rect.bottom > window.innerHeight) moverCameraY = (rect.bottom - window.innerHeight) + 30; 
-                    if (rect.right > window.innerWidth) moverCameraX = (rect.right - window.innerWidth) + 30;
+                    // Move a câmera para revelar o topo caso esteja cortado!
+                    if (rect.top < 60) moverCameraY = rect.top - 60; 
 
-                    if (moverCameraX > 0 || moverCameraY > 0) {
-                        // Move a câmera de forma macia para centralizar os detalhes abertos
+                    if (rect.right > window.innerWidth) moverCameraX = (rect.right - window.innerWidth) + 30;
+                    if (rect.left < 30) moverCameraX = rect.left - 30;
+
+                    if (moverCameraX !== 0 || moverCameraY !== 0) {
                         map.panBy([moverCameraX, moverCameraY], { animate: true, duration: 0.4 });
                     }
                 }, 300);
@@ -904,7 +913,13 @@
                 li.className = 'location-item';
                 const iconSrc = pin.icon || IMG_DEFAULT_ICON;
                 li.innerHTML = `<img src="${iconSrc}" class="loc-icon-small"> <span>${pin.nome}</span>`;
-                li.onclick = () => { map.flyTo([pin.lat, pin.lng], 1); pin.marker.openPopup(); };
+                
+                // DESTRAVA O MAPA TAMBÉM SE CLICAR PELA BARRA LATERAL
+                li.onclick = () => { 
+                    map.setMaxBounds(null); 
+                    map.flyTo([pin.lat, pin.lng], 1); 
+                    pin.marker.openPopup(); 
+                };
                 lista.appendChild(li);
             });
         }
