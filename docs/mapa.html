@@ -363,8 +363,7 @@
         const PLANE_CATEGORIES = [
             { id: 'central',    name: '🌍 Planos Centrais' },
             { id: 'elemental',  name: '🔥 Planos Elementais' },
-            { id: 'superior',   name: '✨ Planos Superiores' },
-            { id: 'vazio',      name: '🔮 O Vazio / Energia Negativa' }
+            { id: 'outros',   name: '✨ Outros Planos' }
         ];
 
         const PLANES_DATA = [
@@ -372,6 +371,7 @@
             { id: 'material', cat: 'central', name: 'Plano Material', desc: 'Representa o mundo tangível, o universo observável onde vivem os mortais.' },
             { id: 'etereo', cat: 'central', name: 'Plano Etéreo', desc: 'Uma névoa que se sobrepõe ao Plano Material. É frequentemente utilizado para viagens de curta distância ou habitado por fantasmas.' },
             { id: 'astral', cat: 'central', name: 'Plano Astral', desc: 'Descrito como o mar de pensamentos e sonhos. Sua principal função é conectar o Plano Material aos Planos Externos.' },
+            { id: 'elyseos', cat: 'central', name: 'Campos Elíseos', desc: 'Plano de harmonia e repouso destinado a almas justas e heróis.' },
             { id: 'vazio_plano', cat: 'central', name: 'O Vazio (Plano Invertido)', desc: 'Conhecido também como o Desconhecido ou o Plano Invertido, é uma realidade de energia puramente negativa. Ele existe como o contrapeso fundamental e necessário para equilibrar o Éter.' },
             
             // Planos Elementais
@@ -381,22 +381,20 @@
             { id: 'elem_terra', cat: 'elemental', name: 'Plano Elemental da Terra', desc: 'Este plano é dedicado inteiramente à pureza do elemento terra.' },
             { id: 'elem_agua', cat: 'elemental', name: 'Plano Elemental da Água', desc: 'Onde o elemento água é encontrado em sua forma mais límpida e primordial.' },
             
-            // Planos Superiores
-            { id: 'elyseos', cat: 'superior', name: 'Campos Elíseos', desc: 'Plano de harmonia e repouso destinado a almas justas e heróis.' },
-            { id: 'arborea', cat: 'superior', name: 'Arbórea', desc: 'É o plano das paixões desenfreadas e da natureza em seu estado mais indomável.' },
-            { id: 'arcadia', cat: 'superior', name: 'Arcádia', desc: 'Este plano manifesto a ordem perfeita dentro da natureza. A vegetação cresce com precisão matemática.' },
-            { id: 'bandopolis', cat: 'superior', name: 'Bandópolis', desc: 'É uma terra acessível apenas por portais invisíveis. Gnomos, fadas e seres raros de magia habitam este retiro, onde a realidade se distorce ao sabor dos desejos.' },
-            
-            // O Vazio / Energia Negativa (O restante dos subplanos)
-            { id: 'bhasm', cat: 'vazio', name: 'Bhasm', desc: 'Conhecido como uma versão distorcida e alternativa de Runeterra, este plano é o retrato da desolação absoluta. É um mundo de cinzas.' },
-            { id: 'pandemonio', cat: 'vazio', name: 'Pandemônio', desc: 'Composto por túneis infinitos de pedra com ventos uivantes e caos geológico estrutural.' },
-            { id: 'mechanus', cat: 'vazio', name: 'Mechanus', desc: 'O plano das engrenagens e da lógica pura, regido pelos Modrons. A lei aqui é absoluta.' },
-            { id: 'acheron', cat: 'vazio', name: 'Acheron', desc: 'O cenário da guerra eterna, composto por cubos metálicos de proporções gigantescas que flutuam no vazio.' },
-            { id: 'gehenna', cat: 'vazio', name: 'Gehenna', desc: 'Formado por quatro vulcões infinitos que não possuem base nem topo. É o lar dos Yugoloths.' },
-            { id: 'hades', cat: 'vazio', name: 'Hades', desc: 'O plano da desesperança total. Um lugar cinzento que drena a cor e a vontade de viver.' },
-            { id: 'nove_infernos', cat: 'vazio', name: 'Os Nove Infernos', desc: 'Um local gigantesco destinado às almas corrompidas. Quanto mais profundo se viaja, mais frio ele se torna.' },
-            { id: 'asterios', cat: 'vazio', name: 'Astérios', desc: 'Planos individuais criados por cada um dos deuses para acolher as almas de seus seguidores após a morte, servindo de ponte sobre o Vazio.' },
-            { id: 'carceri', cat: 'vazio', name: 'Carceri', desc: 'O plano prisão. Consiste em uma corrente de planetas de onde é quase impossível escapar.' }
+            // Outros Planos
+          
+            { id: 'arborea', cat: 'outros', name: 'Arbórea', desc: 'É o plano das paixões desenfreadas e da natureza em seu estado mais indomável.' },
+            { id: 'arcadia', cat: 'outros', name: 'Arcádia', desc: 'Este plano manifesto a ordem perfeita dentro da natureza. A vegetação cresce com precisão matemática.' },
+            { id: 'bandopolis', cat: 'outros', name: 'Bandópolis', desc: 'É uma terra acessível apenas por portais invisíveis. Gnomos, fadas e seres raros de magia habitam este retiro, onde a realidade se distorce ao sabor dos desejos.' },
+            { id: 'bhasm', cat: 'outros', name: 'Bhasm', desc: 'Conhecido como uma versão distorcida e alternativa de Runeterra, este plano é o retrato da desolação absoluta. É um mundo de cinzas.' },
+            { id: 'pandemonio', cat: 'outros', name: 'Pandemônio', desc: 'Composto por túneis infinitos de pedra com ventos uivantes e caos geológico estrutural.' },
+            { id: 'mechanus', cat: 'outros', name: 'Mechanus', desc: 'O plano das engrenagens e da lógica pura, regido pelos Modrons. A lei aqui é absoluta.' },
+            { id: 'acheron', cat: 'outros', name: 'Acheron', desc: 'O cenário da guerra eterna, composto por cubos metálicos de proporções gigantescas que flutuam no vazio.' },
+            { id: 'gehenna', cat: 'outros', name: 'Gehenna', desc: 'Formado por quatro vulcões infinitos que não possuem base nem topo. É o lar dos Yugoloths.' },
+            { id: 'hades', cat: 'outros', name: 'Hades', desc: 'O plano da desesperança total. Um lugar cinzento que drena a cor e a vontade de viver.' },
+            { id: 'nove_infernos', cat: 'outros', name: 'Os Nove Infernos', desc: 'Um local gigantesco destinado às almas corrompidas. Quanto mais profundo se viaja, mais frio ele se torna.' },
+            { id: 'asterios', cat: 'outros', name: 'Astérios', desc: 'Planos individuais criados por cada um dos deuses para acolher as almas de seus seguidores após a morte, servindo de ponte sobre o Vazio.' },
+            { id: 'carceri', cat: 'outros', name: 'Carceri', desc: 'O plano prisão. Consiste em uma corrente de planetas de onde é quase impossível escapar.' }
         ];
 
         window.onload = function() {
