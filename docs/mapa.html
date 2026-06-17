@@ -313,8 +313,10 @@
         .lightbox { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index: 10000; display:none; justify-content:center; align-items:center; cursor: zoom-out; animation: fadeIn 0.2s; }
         .lightbox img { max-width: 95%; max-height: 95%; border: 2px solid #333; box-shadow: 0 0 50px black; border-radius: 4px; }
 
-        /* CORREÇÃO AQUI: A CLASSE ADICIONADA CORRETAMENTE NO CSS! */
         .field-label { display:block; color:#aaa; font-size:12px; margin-bottom:5px; font-weight:bold; }
+
+        /* NOVA REGRA CSS: Garante que o preview do submapa não distorça e ocupe o espaço */
+        #preview-submap { object-fit: contain !important; width: 100%; height: 100%; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -326,10 +328,8 @@
     <button id="btn-back-main" onclick="voltarMapaMundi()">⬅ Voltar para o Mapa Mundi</button>
 
     <div id="maps-wrapper">
-        <!-- Mapa Principal -->
         <div id="map" class="map-instance"></div>
         
-        <!-- Container do SubMapa -->
         <div id="sub-map-container" class="map-instance">
             <div id="sub-map"></div>
         </div>
@@ -395,10 +395,8 @@
         </div>
     </div>
 
-    <!-- Menu de Contexto (Botão Direito) unificado -->
     <div id="ctx-menu">
-        <!-- Conteúdo dinâmico via JS -->
-    </div>
+        </div>
 
     <div class="modal-overlay" id="modal-form">
         <div class="modal">
@@ -412,10 +410,17 @@
                     <input type="text" id="input-nome" class="input-dark" placeholder="Ex: Fortaleza Noxkraya ou Taverna do Dragão">
                 </div>
 
-                <div id="group-submap-url">
+                <div id="group-submap-url" style="margin-bottom:20px;">
                     <label class="field-label" style="color: var(--accent);">IMAGEM DO MAPA INTERNO (Opcional)</label>
-                    <input type="text" id="input-submap-url" class="input-dark" placeholder="Ex: img/imagem-no-site/mapa-cidade.png">
-                    <span style="font-size:10px; color:#666; margin-top:2px; display:block;">Coloque o caminho da imagem se este local tiver um mapa próprio explorável.</span>
+                    <div class="upload-area" id="area-submap" style="height:120px; min-height:auto;">
+                        <div class="upload-placeholder" id="placeholder-submap" style="display:flex; flex-direction:column; align-items:center;">
+                            <span style="font-size:24px; margin-bottom:5px;">🗺️</span>
+                            <span style="font-size:11px; color:#666;">Clique para selecionar ou use Ctrl+V</span>
+                        </div>
+                        <img id="preview-submap" class="preview-img" style="display:none;">
+                    </div>
+                    <span style="font-size:10px; color:#666; margin-top:2px; display:block;">Coloque a imagem se este local tiver um mapa próprio explorável.</span>
+                    <input type="file" id="file-submap" accept="image/*" style="display:none;">
                 </div>
 
                 <div style="display:flex; gap:20px;">
@@ -484,6 +489,7 @@
         let isEditingSubPin = false; 
         let galleryImages = []; 
         let iconImage = null;
+        let subMapImage = null; // NOVA VARIÁVEL GLOBAL
         let pasteTarget = 'gallery'; 
 
         // Ferramenta de medição
@@ -771,7 +777,8 @@
                 
                 if(!isSub) {
                     fieldSubMapUrl.style.display = 'block';
-                    document.getElementById('input-submap-url').value = pin.subMapUrl || "";
+                    // CARREGA A IMAGEM EXISTENTE DO SUBMAPA
+                    subMapImage = pin.subMapUrl; 
                 } else {
                     fieldSubMapUrl.style.display = 'none';
                 }
@@ -787,13 +794,15 @@
                 
                 if(!isSub) {
                     fieldSubMapUrl.style.display = 'block';
-                    document.getElementById('input-submap-url').value = "";
+                    // RESETA A IMAGEM DO SUBMAPA
+                    subMapImage = null; 
                 } else {
                     fieldSubMapUrl.style.display = 'none';
                 }
 
                 galleryImages = [];
                 iconImage = null;
+                subMapImage = null; // Reseta para novo ponto
                 setTimeout(() => document.getElementById('input-nome').focus(), 100);
             }
             renderFormVisuals();
@@ -805,7 +814,8 @@
         async function salvarPin() {
             const nome = document.getElementById('input-nome').value;
             const desc = document.getElementById('input-desc').value;
-            const subMapUrl = isEditingSubPin ? null : document.getElementById('input-submap-url').value;
+            // Pega a URL do submapa da variável, não mais do input texto
+            const finalSubMapUrl = subMapImage; 
 
             if(!nome) { alert("O nome é obrigatório!"); return; }
             const finalIcon = iconImage || IMG_DEFAULT_ICON;
@@ -824,7 +834,7 @@
                 } else {
                     const pin = markersMundi.find(m => m.id === editId);
                     Object.assign(pin, pinCoreData);
-                    pin.subMapUrl = subMapUrl; 
+                    pin.subMapUrl = finalSubMapUrl; // Atualiza com a data URL
                     refreshMarkerVisuals(pin, false);
                 }
             } else {
@@ -840,7 +850,7 @@
                     if(!mainPin.subPins) mainPin.subPins = [];
                     mainPin.subPins.push(novaData);
                 } else {
-                    novaData.subMapUrl = subMapUrl;
+                    novaData.subMapUrl = finalSubMapUrl; // Salva data URL
                     novaData.subPins = [];
                     criarMarcadorMundi(novaData);
                 }
@@ -1084,6 +1094,7 @@
             pasteTarget = target;
             document.getElementById('area-icon').classList.remove('paste-active');
             document.getElementById('area-gallery').classList.remove('paste-active');
+            document.getElementById('area-submap').classList.remove('paste-active'); // Reseta submap
             document.getElementById(`area-${target}`).classList.add('paste-active');
         }
 
@@ -1130,6 +1141,16 @@
             });
         });
 
+        // NOVO: Upload do Submapa
+        document.getElementById('area-submap').addEventListener('click', () => {
+            if (pasteTarget !== 'submap') setPasteTarget('submap'); 
+            else document.getElementById('file-submap').click();
+        });
+        document.getElementById('file-submap').addEventListener('change', e => {
+            const file = e.target.files[0];
+            if(file) comprimirImagem(file, res => { subMapImage = res; renderFormVisuals(); });
+        });
+
         document.addEventListener('paste', e => {
             if(document.getElementById('modal-form').style.display !== 'flex') return;
             if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
@@ -1139,7 +1160,8 @@
                 if (item.kind === 'file' && item.type.includes('image/')) {
                     comprimirImagem(item.getAsFile(), res => {
                         if(pasteTarget === 'icon') iconImage = res;
-                        else galleryImages.push(res);
+                        else if(pasteTarget === 'gallery') galleryImages.push(res);
+                        else if(pasteTarget === 'submap') subMapImage = res; // Adiciona para submapa
                         renderFormVisuals();
                     });
                 }
@@ -1169,6 +1191,22 @@
                 prevIcon.style.display = 'none';
                 placeIcon.style.display = 'flex';
                 areaIcon.classList.remove('has-file');
+            }
+
+            // NOVO: Preview do Submapa
+            const prevSubmap = document.getElementById('preview-submap');
+            const placeSubmap = document.getElementById('placeholder-submap');
+            const areaSubmap = document.getElementById('area-submap');
+
+            if(subMapImage) {
+                prevSubmap.src = subMapImage;
+                prevSubmap.style.display = 'block';
+                placeSubmap.style.display = 'none';
+                areaSubmap.classList.add('has-file');
+            } else {
+                prevSubmap.style.display = 'none';
+                placeSubmap.style.display = 'flex';
+                areaSubmap.classList.remove('has-file');
             }
         }
 
