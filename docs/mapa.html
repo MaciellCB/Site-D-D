@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Atlas de Runeterra</title>
+    <title>Atlas de Herdeiros do Caos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="dark">
     
@@ -15,13 +15,84 @@
             --bg-panel: rgba(20, 20, 20, 0.95);
             --border: #333;
             --accent: #9c27b0;
+            --accent-dark: #6a1b9a;
             --danger: #d32f2f;
             --text-main: #e0e0e0;
+            --shadow-sub: 0 0 20px rgba(156, 39, 176, 0.5);
         }
 
         body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Segoe UI', Tahoma, sans-serif; overflow: hidden; color: var(--text-main); }
         
-        #map { width: 100vw; height: 100vh; background: var(--bg-dark); z-index: 1; cursor: default; }
+        /* Container principal para segurar os dois mapas */
+        #maps-wrapper {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        /* Estilo comum para os mapas */
+        .map-instance {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark);
+            cursor: default;
+            transition: opacity 0.5s ease, z-index 0.5s step-end;
+        }
+
+        /* Mapa Principal na frente */
+        #map { z-index: 2; opacity: 1; }
+
+        /* Mapa Secundário atrás, invisível inicialmente */
+        #sub-map-container {
+            z-index: 1;
+            opacity: 0;
+            pointer-events: none; /* Impede interações quando escondido */
+        }
+        
+        #sub-map { width: 100%; height: 100%; }
+
+        /* Estado quando o SubMapa está ativo */
+        body.submap-active #map {
+            opacity: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+        body.submap-active #sub-map-container {
+            opacity: 1;
+            z-index: 2;
+            pointer-events: auto;
+        }
+
+        /* Botão flutuante para voltar do submapa */
+        #btn-back-main {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 3000;
+            padding: 12px 20px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 2px solid var(--accent);
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            display: none; /* Escondido por padrão */
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: 0.2s;
+        }
+        #btn-back-main:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sub);
+        }
+        body.submap-active #btn-back-main { display: flex; animation: fadeIn 0.5s; }
 
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #111; }
@@ -52,6 +123,13 @@
         .sidebar-header h2 { margin: 0; font-size: 16px; color: #fff; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; display:flex; align-items:center; gap:10px; }
 
         .sidebar-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+
+        /* Sidebar bloqueada quando no submapa */
+        body.submap-active #sidebar {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        body.submap-active #sidebar .sidebar-toggle { pointer-events: auto; } /* Permite fechar a sidebar */
 
         .input-dark {
             width: 100%; background: #050505 !important; border: 1px solid #444; color: #fff !important;
@@ -91,6 +169,13 @@
         .btn-action.danger { background: #441111; color: #ff9999; border: 1px solid #662222; }
         .btn-action.danger:hover { background: var(--danger); color: white; }
         .btn-action.active { background: var(--accent); color: #fff; border-color: #d05ce3; }
+        
+        /* Botão específico para entrar no local no popup */
+        .btn-enter-locale {
+            background: #1a1a1a; border: 1px solid var(--accent); color: var(--accent);
+            margin-top: 8px; justify-content: center; font-size: 11px; letter-spacing: 1px;
+        }
+        .btn-enter-locale:hover { background: var(--accent); color: #fff; box-shadow: var(--shadow-sub); }
 
         .planes-section { border-top: 1px solid var(--border); padding-top: 15px; margin-top: auto; flex-shrink: 0; max-height: 55vh; overflow-y: auto; display: flex; flex-direction: column; }
         .plane-category { margin-bottom: 8px; }
@@ -102,6 +187,7 @@
         .plane-card.open .plane-body { display: block; animation: fadeIn 0.3s; }
         .plane-card.open .plane-header { color: var(--accent); background: #222; border-bottom: 1px solid #333; }
 
+        /* Menu de contexto unificado */
         #ctx-menu {
             position: absolute; background: #151515; border: 1px solid var(--accent);
             border-radius: 6px; padding: 5px 0; min-width: 180px; z-index: 9999; display: none;
@@ -153,10 +239,19 @@
         .leaflet-popup-tip { background: var(--accent); }
         .leaflet-popup-content { margin: 15px; width: 320px !important; }
         
+        /* Estilo para sub-points (menores e com sombra roxa) */
+        .sub-map-icon {
+            border: 2px solid var(--accent); border-radius: 50%;
+            box-shadow: var(--shadow-sub);
+            transition: transform 0.2s; background: #000; box-sizing: border-box; padding: 2px; object-fit: contain !important;
+        }
+        .sub-map-icon:hover { transform: scale(1.3); background: #1a1a1a; z-index: 1000 !important; }
+
         .popup-header { display:flex; align-items:center; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; margin-bottom: 10px; }
         .popup-header-icon { width: 32px; height: 32px; border-radius: 50%; object-fit:cover; border:1px solid #555; background:#000; }
         .popup-title { font-weight: bold; color: var(--accent); font-size: 15px; flex:1; text-transform: uppercase; }
-        .popup-edit-btn { background: none; border: none; color: #777; cursor: pointer; font-size: 16px; transition: 0.2s; }
+        .popup-actions { display: flex; gap: 5px; align-items: center; }
+        .popup-edit-btn { background: none; border: none; color: #777; cursor: pointer; font-size: 16px; transition: 0.2s; padding: 0;}
         .popup-edit-btn:hover { color: #fff; transform: scale(1.1); }
 
         /* === SISTEMA DE EXPANDIR O LORE === */
@@ -208,6 +303,7 @@
         .popup-thumb { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; border: 1px solid #444; cursor: pointer; flex-shrink: 0; transition: 0.2s; }
         .popup-thumb:hover { border-color: var(--accent); transform: scale(1.1); }
 
+        /* Ícone padrão do Mapa Mundi */
         .custom-map-icon { 
             border: 2px solid #fff; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.8); 
             transition: transform 0.2s; background: #111; box-sizing: border-box; padding: 4px; object-fit: contain !important; 
@@ -217,17 +313,28 @@
         .lightbox { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index: 10000; display:none; justify-content:center; align-items:center; cursor: zoom-out; animation: fadeIn 0.2s; }
         .lightbox img { max-width: 95%; max-height: 95%; border: 2px solid #333; box-shadow: 0 0 50px black; border-radius: 4px; }
 
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
     </style>
 </head>
 <body>
 
-    <div id="map"></div>
+    <button id="btn-back-main" onclick="voltarMapaMundi()">⬅ Voltar para o Mapa Mundi</button>
+
+    <div id="maps-wrapper">
+        <div id="map" class="map-instance"></div>
+        
+        <div id="sub-map-container" class="map-instance">
+            <div id="sub-map"></div>
+        </div>
+    </div>
 
     <div class="sidebar collapsed" id="sidebar">
         <div class="sidebar-toggle" onclick="toggleSidebar()">⚙</div>
         
         <div class="sidebar-header">
-            <h2>Atlas do Mundo</h2>
+            <h2>Atlas de Herdeiros</h2>
         </div>
 
         <div class="sidebar-content">
@@ -265,8 +372,8 @@
                     <span style="position: absolute; right: 12px; top: 12px; color: #666;">🔍</span>
                 </div>
                 <div class="search-options">
-                    <label><input type="radio" name="search-filter" value="nome" checked onchange="filtrarLocais()"> Por Nome</label>
-                    <label><input type="radio" name="search-filter" value="desc" onchange="filtrarLocais()"> Por Descrição</label>
+                    <label><input type="radio" name="search-filter" value="nome" checked> Por Nome</label>
+                    <label><input type="radio" name="search-filter" value="desc"> Por Lore</label>
                 </div>
             </div>
 
@@ -284,8 +391,7 @@
     </div>
 
     <div id="ctx-menu">
-        <div class="ctx-item" onclick="abrirModal(null)">📍 Criar Ponto Aqui</div>
-    </div>
+        </div>
 
     <div class="modal-overlay" id="modal-form">
         <div class="modal">
@@ -295,13 +401,19 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <label style="display:block; color:#aaa; font-size:12px; margin-bottom:5px; font-weight:bold;">NOME DO LOCAL</label>
-                    <input type="text" id="input-nome" class="input-dark" placeholder="Ex: Fortaleza Noxkraya">
+                    <label class="field-label">NOME DO LOCAL</label>
+                    <input type="text" id="input-nome" class="input-dark" placeholder="Ex: Fortaleza Noxkraya ou Taverna do Dragão">
+                </div>
+
+                <div id="group-submap-url">
+                    <label class="field-label" style="color: var(--accent);">IMAGEM DO MAPA INTERNO (Opcional)</label>
+                    <input type="text" id="input-submap-url" class="input-dark" placeholder="Ex: img/imagem-no-site/mapa-cidade.png">
+                    <span style="font-size:10px; color:#666; margin-top:2px; display:block;">Coloque o caminho da imagem se este local tiver um mapa próprio explorável.</span>
                 </div>
 
                 <div style="display:flex; gap:20px;">
                     <div style="flex: 0 0 130px;">
-                        <label style="display:block; color:#e0aaff; font-size:12px; margin-bottom:5px; font-weight:bold;">ÍCONE (Clique p/ Focar)</label>
+                        <label class="field-label" style="color:#e0aaff;">ÍCONE (Clique p/ Focar)</label>
                         <div class="upload-area" id="area-icon" title="Clique para selecionar, e depois clique de novo para abrir">
                             <div class="upload-placeholder" id="placeholder-icon" style="display:flex; flex-direction:column; align-items:center;">
                                 <span style="font-size:24px; margin-bottom:5px;">📍</span>
@@ -313,10 +425,10 @@
                     </div>
 
                     <div style="flex:1;">
-                        <label style="display:block; color:#aaa; font-size:12px; margin-bottom:5px; font-weight:bold;">GALERIA (Clique p/ Focar)</label>
+                        <label class="field-label">GALERIA DE IMAGENS (Clique p/ Focar)</label>
                         <div class="upload-area" id="area-gallery" style="height:70px; min-height:auto; border-style:dashed;">
                             <div class="upload-placeholder" style="padding:10px;">
-                                <span style="font-size:12px; color:#888;">Clique aqui para selecionar. Após ativo, use <strong>Ctrl+V</strong> ou Clique novamente</span>
+                                <span style="font-size:12px; color:#888;">Clique aqui. Após ativo, use <strong>Ctrl+V</strong> ou Clique novamente</span>
                             </div>
                         </div>
                         <div class="gallery-grid" id="gallery-container"></div>
@@ -325,7 +437,7 @@
                 </div>
 
                 <div>
-                    <label style="display:block; color:#aaa; font-size:12px; margin-bottom:5px; font-weight:bold;">DESCRIÇÃO / LORE</label>
+                    <label class="field-label">DESCRIÇÃO / LORE</label>
                     <textarea id="input-desc" class="input-dark" style="height:120px;" placeholder="História, perigos, NPCs importantes... (Aperte Enter para pular linha!)"></textarea>
                 </div>
             </div>
@@ -345,154 +457,625 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <script>
+        // ================= CONFIGURAÇÕES E ESTADO =================
         const API_URL = 'https://dandd-chan.onrender.com/api';
         const IMG_DEFAULT_ICON = 'https://cdn-icons-png.flaticon.com/512/684/684908.png';
+        const MAP_BOUNDS = [[0,0], [1080,1920]]; // Limites padrão (Mundi e Sub)
+
+        // Instâncias dos Mapas
+        let mapMundi, subMap;
+        let mundiOverlay, subMapOverlay;
         
-        let map;
-        let imageOverlay; 
-        let markers = [];
+        // Estado Global
+        let markersMundi = []; // Pins do mapa principal [{id, marker, data...}]
+        let currentSubMarkers = []; // Pins do submapa atualmente aberto
+        let activeMainPinId = null; // ID do pin principal que estamos "dentro"
+        
+        // Variáveis temporárias de controle
         let tempCoords = null;
         let editId = null;
+        let isEditingSubPin = false; // Define se estamos editando um ponto principal ou sub-ponto
         let galleryImages = []; 
         let iconImage = null;
         let pasteTarget = 'gallery'; 
 
+        // Ferramenta de medição
         let isMeasuringSession = false; 
         let isDrawing = false; 
         let measureLine = null; 
         let measurePoints = []; 
-        const MAP_BOUNDS = [[0,0], [1080,1920]]; // Guardamos a referência global dos limites perfeitos
 
+        // Adicionar classe CSS utilitária que faltava
+        const styleSheet = document.styleSheets[0];
+        styleSheet.insertRule('.field-label { display:block; color:#aaa; font-size:12px; margin-bottom:5px; font-weight:bold; }', styleSheet.cssRules.length);
+
+        // Dados Fixos (Planos)
         const PLANE_CATEGORIES = [
-            { id: 'central',    name: '🌍 Planos Centrais' },
+            { id: 'central',   name: '🌍 Planos Centrais' },
             { id: 'superior',  name: '🌌 Planos Superiores' },
-            { id: 'elemental',  name: '🔥 Planos Elementais' },
+            { id: 'elemental', name: '🔥 Planos Elementais' },
             { id: 'externo',   name: '✨ Planos Externos' },
-            {id: 'infernal', name: '👹 Planos Infernais' }
+            { id: 'infernal',  name: '👹 Planos Infernais' }
         ];
 
        const PLANES_DATA = [
-            // Planos Centrais (O núcleo do Universo Físico e trânsito mortal)
-            { id: 'material', cat: 'central', name: 'Plano Material', desc: 'Representa o mundo tangível, o universe observável onde vivem os mortais.' },
-            { id: 'etereo', cat: 'central', name: 'Plano Etéreo', desc: 'Uma névoa que se sobrepõe ao Plano Material. É frequentemente utilizado para viagens de curta distância ou habitado por fantasmas.' },
-            { id: 'astral', cat: 'central', name: 'Plano Astral', desc: 'Descrito como o mar de pensamentos e sonhos. Sua principal função é conectar o Plano Material aos Planos Externos.' },
-            { id: 'vazio_plano', cat: 'central', name: 'O Vazio (Plano Invertido)', desc: 'Conhecido também como o Desconhecido ou o Plano Invertido, é uma reality de energia puramente negativa. Ele existe como o contrapeso fundamental e necessário para equilibrar o Éter.' },
-            
-            // Planos Superiores (Moradas Divinas e Destinos das Almas)
-            { id: 'elyseos', cat: 'superior', name: 'Campos Elíseos', desc: 'A camada mais alta da existência, situada acima de todos os outros planos. É o local onde os deuses residem fisicamente.' },
-            { id: 'asterios', cat: 'superior', name: 'Astérios', desc: 'Planos individuais criados por cada um dos deuses para acolher as almas de seus seguidores após a morte, servindo de ponte sobre o Vazio.' },
-
-            // Planos Elementais (As fundações da matéria bruta)
-            { id: 'caos_elemental', cat: 'elemental', name: 'Caos Elemental', desc: 'Um ponto de convergência violento onde todos os elementos se chocam e se misturam em uma tempestade infinita.' },
-            { id: 'elem_ar', cat: 'elemental', name: 'Plano Elemental do Ar', desc: 'É uma das esferas externas onde o elemento ar existe em seu estado mais básico e absoluto.' },
-            { id: 'elem_fogo', cat: 'elemental', name: 'Plano Elemental do Fogo', desc: 'Uma dimensão de energia pura onde o elemento fogo se manifesta sem restrições ou combustível externo.' },
-            { id: 'elem_terra', cat: 'elemental', name: 'Plano Elemental da Terra', desc: 'Este plano é dedicado inteiramente à pureza do elemento terra.' },
-            { id: 'elem_agua', cat: 'elemental', name: 'Plano Elemental da Água', desc: 'Onde o elemento água é encontrado em sua forma mais límpida e primordial.' },
-            
-            // Planos Externos e Conceituais (Biomas extremos, ecossistemas e leis absolutas)
-            { id: 'arborea', cat: 'externo', name: 'Arbórea', desc: 'É o plano das paixões desenfreadas e da natureza em seu estado mais indomável.' },
-            { id: 'arcadia', cat: 'externo', name: 'Arcádia', desc: 'Este plano manifesta a ordem perfeita dentro da natureza. A vegetação cresce com precisão matemática.' },
-            { id: 'bandopolis', cat: 'externo', name: 'Bandópolis', desc: 'É uma terra acessível apenas por portais invisíveis. Gnomos, fadas e seres raros de magia habitam este retiro, onde a realidade se distorce ao sabor dos desejos.' },
-            { id: 'bhasm', cat: 'externo', name: 'Bhasm', desc: 'Conhecido como uma versão distorcida e alternativa de Runeterra, este plano é o retrato da desolação absoluta. É um mundo de cinzas.' },
-            { id: 'mechanus', cat: 'externo', name: 'Mechanus', desc: 'O plano das engrenagens e da lógica pura, regido pelos Modrons. A lei aqui é absoluta.' },
-            { id: 'acheron', cat: 'externo', name: 'Acheron', desc: 'O cenário da guerra eterna, composto por cubos metálicos de proporções gigantescas que flutuam no vazio.' },
-
-            // Planos Inferiores e de Punição (Domínios sob os círculos de Anilla e reduto dos Reis Demônios)
-            { id: 'hades', cat: 'infernal', name: 'Hades', desc: 'O plano da desesperança total. Um lugar cinzento que drena a cor e a vontade de viver.' },
-            { id: 'nove_infernos', cat: 'infernal', name: 'Os Nove Infernos', desc: 'Um local gigantesco destinado às almas corrompidas e reduto dos Reis Demônios. Quanto mais profundo se viaja, mais frio ele se torna.' },
-            { id: 'gehenna', cat: 'infernal', name: 'Gehenna', desc: 'Formado por quatro vulcões infinitos que não possuem base nem topo. É o lar dos Yugoloths.' },
-            { id: 'carceri', cat: 'infernal', name: 'Carceri', desc: 'O plano prisão. Consiste em uma corrente de planetas de onde é quase impossível escapar.' },
-            { id: 'pandemonio', cat: 'infernal', name: 'Pandemônio', desc: 'Composto por túneis infinitos de pedra com ventos uivantes que causam loucura e caos geológico estrutural.' }
+            { id: 'material', cat: 'central', name: 'Plano Material', desc: 'O universo tangível onde vivem os mortais. Onde o Éter e o Vazio colidem diretamente.' },
+            { id: 'etereo', cat: 'central', name: 'Plano Etéreo', desc: 'Névoa sobreposta ao Material. Usado para viagens curtas ou habitado por fantasmas.' },
+            { id: 'astral', cat: 'central', name: 'Plano Astral', desc: 'Mar de pensamentos e sonhos. Conecta o Material aos Planos Externos.' },
+            { id: 'vazio_plano', cat: 'central', name: 'O Vazio', desc: 'Realidade de energia negativa. Contrapeso necessário ao Éter, corrompe tudo que toca.' },
+            { id: 'elyseos', cat: 'superior', name: 'Campos Elíseos', desc: 'A camada mais alta da existência. Onde os deuses residem fisicamente.' },
+            { id: 'asterios', cat: 'superior', name: 'Astérios', desc: 'Santuários criados pelos deuses para acolher as almas limpas de seus seguidores.' },
+            { id: 'caos_elemental', cat: 'elemental', name: 'Caos Elemental', desc: 'Convergência violenta onde todos os elementos se chocam infinitamente.' },
+            { id: 'elem_ar', cat: 'elemental', name: 'Plano do Ar', desc: 'Céus infinitos e tempestades sencientes na pureza do elemento ar.' },
+            { id: 'elem_fogo', cat: 'elemental', name: 'Plano do Fogo', desc: 'Inferno brilhante de lava e calor implacável sem necessidade de combustível.' },
+            { id: 'elem_terra', cat: 'elemental', name: 'Plano da Terra', desc: 'Dimensão maciça de rocha sólida, cavernas e veios de minérios Étreos.' },
+            { id: 'elem_agua', cat: 'elemental', name: 'Plano da Água', desc: 'Oceano global sem fundo protegido de contaminações externas.' },
+            { id: 'arborea', cat: 'externo', name: 'Arbórea', desc: 'Plano das paixões desenfreadas e da natureza em seu estado selvagem e gigante.' },
+            { id: 'arcadia', cat: 'externo', name: 'Arcádia', desc: 'Ordem perfeita aplicada à natureza. Tudo cresce em simetria matemática.' },
+            { id: 'bandopolis', cat: 'externo', name: 'Bandópolis', desc: 'Reino mágico atemporal habitado por yordles e seres de feitiçaria antiga.' },
+            { id: 'bhasm', cat: 'externo', name: 'Bhasm', desc: 'Reflexo arruinado do mundo terreno. Um mundo silencioso de cinzas.' },
+            { id: 'mechanus', cat: 'externo', name: 'Mechanus', desc: 'Lógica pura e engrenagens infitinas governadas pela lei absoluta.' },
+            { id: 'acheron', cat: 'externo', name: 'Acheron', desc: 'Cubos metálicos flutuantes no vazio servindo de cenário para guerra eterna.' },
+            { id: 'hades', cat: 'infernal', name: 'Hades', desc: 'Desesperança total. Lugar cinzento que drena a cor e a vontade de viver das almas.' },
+            { id: 'nove_infernos', cat: 'infernal', name: 'Os Nove Infernos', desc: 'Império burocrático de punição governado por Anilla e os Reis Demônios.' },
+            { id: 'gehenna', cat: 'infernal', name: 'Gehenna', desc: 'Vulcões flutuantes sem topo ou base. Lar dos mercenários Yugoloths.' },
+            { id: 'carceri', cat: 'infernal', name: 'Carceri', desc: 'O plano prisão definitivo do multiverso. Nada que entra consegue sair.' },
+            { id: 'pandemonio', cat: 'infernal', name: 'Pandemônio', desc: 'Labirinto claustrofóbico de túneis com ventos gélidos que causam loucura.' }
         ];
 
+        // ================= INICIALIZAÇÃO =================
         window.onload = function() {
-            map = L.map('map', {
-                crs: L.CRS.Simple, 
-                minZoom: -4, 
-                maxZoom: 2, 
-                zoomControl: false, 
-                attributionControl: false,
-                maxBoundsViscosity: 0.8 
-            });
-
-            // Trava o mapa inicialmente
-            map.setMaxBounds(MAP_BOUNDS); 
-
-            const initialMapUrl = document.getElementById('map-style-select').value;
-            imageOverlay = L.imageOverlay(initialMapUrl, MAP_BOUNDS).addTo(map);
+            initMapMundi();
+            initSubMap();
             
-            map.fitBounds(MAP_BOUNDS);
-            L.control.zoom({ position: 'bottomright' }).addTo(map);
-
-            map.on('contextmenu', function(e) {
-                if(isMeasuringSession) return;
-                tempCoords = e.latlng;
-                const menu = document.getElementById('ctx-menu');
-                menu.style.display = 'block';
-                menu.style.left = e.containerPoint.x + 'px';
-                menu.style.top = e.containerPoint.y + 'px';
-            });
-
-            map.on('click', function(e) {
-                document.getElementById('ctx-menu').style.display = 'none';
-                if (isMeasuringSession) {
-                    if (!isDrawing) {
-                        isDrawing = true;
-                        measurePoints = [e.latlng]; 
-                        if (measureLine) map.removeLayer(measureLine);
-                        measureLine = L.polyline(measurePoints, {color: '#9c27b0', dashArray: '10, 10'}).addTo(map);
-                        document.getElementById('distancia-res').innerText = "Clique no destino para finalizar...";
-                    } else {
-                        isDrawing = false;
-                        document.getElementById('distancia-res').innerText += " (Finalizado)";
-                        desativarMedicao(document.getElementById('btn-medir'));
-                    }
-                }
-            });
-            
-            map.on('mousemove', (e) => {
-                if(isMeasuringSession && isDrawing) {
-                    const mode = document.querySelector('input[name="measure-mode"]:checked').value;
-                    if (mode === 'line') {
-                        measureLine.setLatLngs([measurePoints[0], e.latlng]);
-                        const distPixels = map.project(measurePoints[0]).distanceTo(map.project(e.latlng));
-                        const distMetros = (distPixels * 0.015).toFixed(1);
-                        document.getElementById('distancia-res').innerText = `${distMetros}m`;
-                    } else {
-                        measurePoints.push(e.latlng);
-                        measureLine.setLatLngs(measurePoints);
-                        let totalPixels = 0;
-                        for(let i = 0; i < measurePoints.length - 1; i++) {
-                            totalPixels += map.project(measurePoints[i]).distanceTo(map.project(measurePoints[i+1]));
-                        }
-                        const distMetros = (totalPixels * 0.015).toFixed(1);
-                        document.getElementById('distancia-res').innerText = `${distMetros}m`;
-                    }
-                }
-            });
-
-            map.on('movestart', () => document.getElementById('ctx-menu').style.display = 'none');
-
-            // ======= SOLUÇÃO DO TRAVAMENTO =======
-            // Quando fechar qualquer popup, o mapa trava de volta no limite certinho.
-            map.on('popupclose', function() {
-                map.setMaxBounds(MAP_BOUNDS);
-            });
-
             renderPlanes();
+            carregarDadosServidor();
 
-            fetch(`${API_URL}/mapa-pins`)
-                .then(res => res.json())
-                .then(pinsSalvos => {
-                    pinsSalvos.forEach(p => {
-                        criarMarcador(p.lat, p.lng, p.nome, p.desc, p.icon, p.gallery, p.id);
-                    });
-                })
-                .catch(err => console.error("Erro ao carregar mapa:", err));
-
-            setInterval(sincronizarMapa, 5000); 
+            // Sincronização automática apenas se estivermos no Mapa Mundi e modal fechado
+            setInterval(() => {
+                if(!activeMainPinId && document.getElementById('modal-form').style.display !== 'flex') {
+                    sincronizarMapa();
+                }
+            }, 10000); 
         };
 
+        // Configuração do Mapa Principal
+        function initMapMundi() {
+            mapMundi = L.map('map', {
+                crs: L.CRS.Simple, minZoom: -3, maxZoom: 2, zoomControl: false, attributionControl: false, maxBoundsViscosity: 0.8 
+            });
+            mapMundi.setMaxBounds(MAP_BOUNDS); 
+            const initialMapUrl = document.getElementById('map-style-select').value;
+            mundiOverlay = L.imageOverlay(initialMapUrl, MAP_BOUNDS).addTo(mapMundi);
+            mapMundi.fitBounds(MAP_BOUNDS);
+            L.control.zoom({ position: 'bottomright' }).addTo(mapMundi);
+
+            // Eventos do Mapa Mundi
+            mapMundi.on('contextmenu', e => abrirContextMenu(e, false));
+            mapMundi.on('click', e => handleMapClick(e, mapMundi));
+            mapMundi.on('mousemove', e => handleMapMouseMove(e, mapMundi));
+            mapMundi.on('popupclose', () => mapMundi.setMaxBounds(MAP_BOUNDS));
+            mapMundi.on('movestart', fecharContextMenu);
+        }
+
+        // Configuração do Mapa Secundário (SubMapa)
+        function initSubMap() {
+            subMap = L.map('sub-map', {
+                crs: L.CRS.Simple, minZoom: -2, maxZoom: 3, zoomControl: false, attributionControl: false 
+            });
+            // O overlay é criado dinamicamente ao entrar no local
+            L.control.zoom({ position: 'bottomright' }).addTo(subMap);
+
+            // Eventos do SubMapa
+            subMap.on('contextmenu', e => abrirContextMenu(e, true));
+            subMap.on('click', fecharContextMenu);
+            subMap.on('movestart', fecharContextMenu);
+        }
+
+        // ================= SISTEMA DE DRILL-DOWN (ENTRAR/SAIR) =================
+        
+        window.entrarNoLocal = function(pinId) {
+            const pinMundi = markersMundi.find(m => m.id === pinId);
+            if(!pinMundi || !pinMundi.subMapUrl) {
+                alert("Este local não possui um mapa interno configurado.");
+                return;
+            }
+
+            // Define o local ativo e fecha popups
+            activeMainPinId = pinId;
+            pinMundi.marker.closePopup();
+
+            // Configura a imagem do submapa
+            if(subMapOverlay) subMap.removeLayer(subMapOverlay);
+            subMapOverlay = L.imageOverlay(pinMundi.subMapUrl, MAP_BOUNDS).addTo(subMap);
+            
+            // Ativa visualmente o submapa
+            document.body.classList.add('submap-active');
+            
+            // Reseta view do submapa
+            subMap.setView([540, 960], -1); // Centro padrão ajustado para fit
+            subMap.fitBounds(MAP_BOUNDS);
+
+            // Carrega os sub-points deste local
+            renderSubPins(pinMundi.subPins || []);
+            
+            toggleSidebar(true); // Força fechar sidebar se aberta
+        }
+
+        window.voltarMapaMundi = function() {
+            document.body.classList.remove('submap-active');
+            activeMainPinId = null;
+            limparSubMarkers();
+            // Dá um pequeno tempo para a transição CSS e reajusta o mapa principal
+            setTimeout(() => mapMundi.invalidateSize(), 500);
+        }
+
+        // ================= GERENCIAMENTO DE PINS (MUNDI E SUB) =================
+
+        // Gera o HTML do ícone (unificado para mundi e sub)
+        function gerarIconHtml(iconSrc, isSubPin) {
+            const className = isSubPin ? 'sub-map-icon' : 'custom-map-icon';
+            const size = isSubPin ? '24px' : '40px';
+            return `<img src="${iconSrc}" class="${className}" style="width:${size}; height:${size};">`;
+        }
+
+        // --- Mapa Mundi ---
+        function criarMarcadorMundi(data) {
+            const safeIcon = data.icon || IMG_DEFAULT_ICON;
+            const iconHtml = gerarIconHtml(safeIcon, false);
+            const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -20] });
+            
+            const marker = L.marker([data.lat, data.lng], {icon: customIcon}).addTo(mapMundi);
+            
+            // Destrava bounds ao clicar para permitir auto-pan
+            marker.on('click', () => mapMundi.setMaxBounds(null));
+
+            const pinData = { ...data, marker, subPins: data.subPins || [] };
+            marker.bindPopup(() => gerarPopupContent(pinData, false), { maxWidth: 2000 });
+            markersMundi.push(pinData);
+        }
+
+        // --- Sub Mapa ---
+        function renderSubPins(subPinsData) {
+            limparSubMarkers();
+            subPinsData.forEach(data => {
+                const safeIcon = data.icon || IMG_DEFAULT_ICON;
+                const iconHtml = gerarIconHtml(safeIcon, true);
+                const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [24, 24], iconAnchor: [12, 12], popupAnchor: [0, -12] });
+                
+                const marker = L.marker([data.lat, data.lng], {icon: customIcon}).addTo(subMap);
+                
+                const subPinObj = { ...data, marker };
+                marker.bindPopup(() => gerarPopupContent(subPinObj, true), { maxWidth: 2000 });
+                currentSubMarkers.push(subPinObj);
+            });
+        }
+
+        function limparSubMarkers() {
+            currentSubMarkers.forEach(m => subMap.removeLayer(m.marker));
+            currentSubMarkers = [];
+        }
+
+        // Atualiza visual de um pin existente (unificado)
+        function refreshMarkerVisuals(pin, isSub) {
+            const iconHtml = gerarIconHtml(pin.icon, isSub);
+            const size = isSub ? [24, 24] : [40, 40];
+            const anchor = isSub ? [12, 12] : [20, 20];
+            const pAnchor = isSub ? [0, -12] : [0, -20];
+
+            const newIcon = L.divIcon({ html: iconHtml, className: '', iconSize: size, iconAnchor: anchor, popupAnchor: pAnchor });
+            pin.marker.setIcon(newIcon);
+            pin.marker.setPopupContent(gerarPopupContent(pin, isSub));
+        }
+
+        // ================= POPUP CONTENT E INTERAÇÕES =================
+
+        function gerarPopupContent(pin, isSub) {
+            let html = `
+                <div class="popup-header">
+                    <img src="${pin.icon}" class="popup-header-icon">
+                    <span class="popup-title">${pin.nome}</span>
+                    <div class="popup-actions">
+                        <button class="popup-edit-btn" onclick="abrirModal(${pin.id}, ${isSub})" title="Editar">✏️</button>
+                    </div>
+                </div>
+            `;
+
+            // Lógica de imagens (galeria + ícone)
+            let todasImagens = [];
+            if(pin.gallery && pin.gallery.length > 0) todasImagens.push(...pin.gallery);
+            if(pin.icon !== IMG_DEFAULT_ICON && !todasImagens.includes(pin.icon)) todasImagens.unshift(pin.icon);
+            if(todasImagens.length === 0) todasImagens.push(IMG_DEFAULT_ICON);
+
+            html += `<img src="${todasImagens[0]}" id="main-img-${pin.id}" class="popup-img-main" onclick="verFull(this.src)">`;
+
+            if(todasImagens.length > 1) {
+                html += `<div class="popup-gallery">`;
+                todasImagens.forEach((img) => {
+                    html += `<img src="${img}" class="popup-thumb" onclick="trocarImagemPrincipal(this, ${pin.id})">`;
+                });
+                html += `</div>`;
+            }
+
+            // Lore expandível
+            let descHtml = pin.desc || "Sem descrição disponível.";
+            html += `
+                <div class="popup-desc-wrapper">
+                    <div class="popup-desc-container" id="desc-box-${pin.id}">
+                        <textarea readonly class="popup-desc-view">${descHtml}</textarea>
+                        <div class="popup-drag-handle" onclick="toggleExpandirLore(this, ${pin.id})">⤡ Clique para expandir lore ⤡</div>
+                    </div>
+                </div>
+            `;
+
+            // BOTÃO MÁGICO: Apenas para pontos principais que possuem mapa interno
+            if(!isSub && pin.subMapUrl) {
+                html += `
+                    <button class="btn-action btn-enter-locale" onclick="entrarNoLocal(${pin.id})">
+                        🗺️ EXPLORAR MAPA INTERNO
+                    </button>
+                `;
+            }
+
+            return html;
+        }
+
+        // Funções auxiliares do popup (globais para onclick)
+        window.trocarImagemPrincipal = (element, pinId) => {
+            const mainImg = document.getElementById(`main-img-${pinId}`);
+            if(mainImg) mainImg.src = element.src; 
+        };
+
+        window.verFull = (src) => {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').style.display = 'flex';
+        };
+
+        window.toggleExpandirLore = (btn, pinId) => {
+            const box = document.getElementById(`desc-box-${pinId}`);
+            const textarea = box.querySelector('.popup-desc-view');
+            const isSub = currentSubMarkers.some(m => m.id === pinId);
+            const activeMap = isSub ? subMap : mapMundi;
+
+            if (box.classList.contains('expanded')) {
+                box.classList.remove('expanded');
+                btn.textContent = '⤡ Clique para expandir lore ⤡';
+                box.style.width = ''; box.style.height = '';
+            } else {
+                box.classList.add('expanded');
+                btn.textContent = '✖ Clique para fechar';
+                box.style.width = '420px';
+                
+                // Auto-height baseado no texto
+                textarea.style.height = '1px'; 
+                let alturaTexto = textarea.scrollHeight;
+                textarea.style.height = 'auto'; 
+
+                let alturaAlvo = Math.max(150, Math.min(alturaTexto + 40, window.innerHeight * 0.55));
+                box.style.height = alturaAlvo + 'px';
+
+                // Pan da câmera para centralizar o lore expandido
+                setTimeout(() => {
+                    const rect = box.getBoundingClientRect();
+                    let panX = 0, panY = 0;
+                    if (rect.bottom > window.innerHeight) panY = (rect.bottom - window.innerHeight) + 30; 
+                    if (rect.top < 60) panY = rect.top - 60; 
+                    if (rect.right > window.innerWidth) panX = (rect.right - window.innerWidth) + 30;
+                    if (rect.left < 30) panX = rect.left - 30;
+
+                    if (panX !== 0 || panY !== 0) {
+                        activeMap.panBy([panX, panY], { animate: true, duration: 0.4 });
+                    }
+                }, 300);
+            }
+        };
+
+        // ================= FORMULÁRIO MODAL (CRIAÇÃO/EDIÇÃO) =================
+
+        function abrirModal(pinId, isSub) {
+            fecharContextMenu();
+            document.getElementById('modal-form').style.display = 'flex';
+            isEditingSubPin = isSub; // Guarda contexto
+            
+            const fieldSubMapUrl = document.getElementById('group-submap-url');
+
+            if (pinId) {
+                editId = pinId;
+                const pin = isSub ? currentSubMarkers.find(m => m.id === pinId) : markersMundi.find(m => m.id === pinId);
+                
+                document.getElementById('modal-title').innerText = isSub ? "Editar Ponto de Interesse" : "Editar Local Principal";
+                document.getElementById('btn-delete').style.display = 'block';
+                document.getElementById('input-nome').value = pin.nome;
+                document.getElementById('input-desc').value = pin.desc;
+                
+                // Campo mapa interno só aparece para pontos principais
+                if(!isSub) {
+                    fieldSubMapUrl.style.display = 'block';
+                    document.getElementById('input-submap-url').value = pin.subMapUrl || "";
+                } else {
+                    fieldSubMapUrl.style.display = 'none';
+                }
+
+                galleryImages = [...(pin.gallery || [])];
+                iconImage = pin.icon;
+            } else {
+                editId = null;
+                document.getElementById('modal-title').innerText = isSub ? "Novo Ponto de Interesse" : "Novo Local Principal";
+                document.getElementById('btn-delete').style.display = 'none';
+                document.getElementById('input-nome').value = "";
+                document.getElementById('input-desc').value = "";
+                
+                if(!isSub) {
+                    fieldSubMapUrl.style.display = 'block';
+                    document.getElementById('input-submap-url').value = "";
+                } else {
+                    fieldSubMapUrl.style.display = 'none';
+                }
+
+                galleryImages = [];
+                iconImage = null;
+                setTimeout(() => document.getElementById('input-nome').focus(), 100);
+            }
+            renderFormVisuals();
+            setPasteTarget('gallery');
+        }
+
+        function fecharModal() { document.getElementById('modal-form').style.display = 'none'; tempCoords = null;}
+
+        async function salvarPin() {
+            const nome = document.getElementById('input-nome').value;
+            const desc = document.getElementById('input-desc').value;
+            const subMapUrl = isEditingSubPin ? null : document.getElementById('input-submap-url').value;
+
+            if(!nome) { alert("O nome é obrigatório!"); return; }
+            const finalIcon = iconImage || IMG_DEFAULT_ICON;
+
+            // Objeto de dados base
+            let pinCoreData = {
+                nome, desc, icon: finalIcon, gallery: [...galleryImages]
+            };
+
+            if (editId) {
+                // MODO EDIÇÃO
+                if(isEditingSubPin) {
+                    // Atualiza no array temporário do submapa
+                    const subPin = currentSubMarkers.find(m => m.id === editId);
+                    Object.assign(subPin, pinCoreData);
+                    refreshMarkerVisuals(subPin, true);
+                    
+                    // IMPORTANTE: Achar o pin principal correspondente e atualizar o array subPins dele
+                    const mainPin = markersMundi.find(m => m.id === activeMainPinId);
+                    const index = mainPin.subPins.findIndex(sp => sp.id === editId);
+                    // Atualiza os dados no array que vai pro servidor, mantendo as coordenadas antigas
+                    Object.assign(mainPin.subPins[index], pinCoreData); 
+
+                } else {
+                    // Atualiza Pin Principal
+                    const pin = markersMundi.find(m => m.id === editId);
+                    Object.assign(pin, pinCoreData);
+                    pin.subMapUrl = subMapUrl; // Adiciona campo específico
+                    refreshMarkerVisuals(pin, false);
+                }
+            } else {
+                // MODO CRIAÇÃO
+                if(!tempCoords) { alert("Erro de posicionamento."); return; }
+                const novoId = Date.now();
+                const novaData = { ...pinCoreData, id: novoId, lat: tempCoords.lat, lng: tempCoords.lng };
+
+                if(isEditingSubPin) {
+                    novaData.isSub = true; // Flag útil
+                    // Adiciona visualmente ao submapa
+                    renderSubPins([...currentSubMarkers, novaData]);
+                    
+                    // Adiciona ao array do pin principal para salvar
+                    const mainPin = markersMundi.find(m => m.id === activeMainPinId);
+                    if(!mainPin.subPins) mainPin.subPins = [];
+                    mainPin.subPins.push(novaData);
+                } else {
+                    // Cria Pin Principal
+                    novaData.subMapUrl = subMapUrl;
+                    novaData.subPins = [];
+                    criarMarcadorMundi(novaData);
+                }
+            }
+
+            // Salva as alterações no servidor (sempre envia o estado do Mapa Mundi)
+            await salvarEstadoNoServidor();
+            fecharModal();
+            atualizarListaLateral();
+        }
+
+        async function deletarPin() {
+            if(!editId) return;
+            if(!confirm("Tem certeza que deseja apagar este ponto? Esta ação não pode ser desfeita.")) return;
+
+            if(isEditingSubPin) {
+                // Deleta SubPin
+                limparSubMarkers(); // Remove todos visualmente temporariamente
+                
+                // Acha o principal e remove do array de dados
+                const mainPin = markersMundi.find(m => m.id === activeMainPinId);
+                mainPin.subPins = mainPin.subPins.filter(sp => sp.id !== editId);
+                
+                // Re-renderiza o submapa com a lista atualizada
+                renderSubPins(mainPin.subPins);
+            } else {
+                // Deleta Pin Principal
+                const index = markersMundi.findIndex(m => m.id === editId);
+                if(index > -1) {
+                    mapMundi.removeLayer(markersMundi[index].marker);
+                    markersMundi.splice(index, 1);
+                }
+            }
+
+            await salvarEstadoNoServidor();
+            fecharModal();
+            atualizarListaLateral();
+        }
+
+        // ================= MENU DE CONTEXTO E CLIQUES NO MAPA =================
+
+        function abrirContextMenu(e, isSub) {
+            L.DomEvent.preventDefault(e);
+            if(isMeasuringSession) return;
+            
+            tempCoords = e.latlng;
+            const menu = document.getElementById('ctx-menu');
+            
+            // Define conteúdo baseado se é Mapa Mundi ou SubMapa
+            if(isSub) {
+                menu.innerHTML = `<div class="ctx-item" onclick="abrirModal(null, true)">📍 Criar Ponto de Interesse Aqui</div>`;
+            } else {
+                menu.innerHTML = `<div class="ctx-item" onclick="abrirModal(null, false)">🏰 Criar Local Principal Aqui</div>`;
+            }
+
+            menu.style.display = 'block';
+            menu.style.left = e.containerPoint.x + 'px';
+            menu.style.top = e.containerPoint.y + 'px';
+        }
+
+        function fecharContextMenu() { document.getElementById('ctx-menu').style.display = 'none'; }
+
+        function handleMapClick(e, activeMap) {
+            fecharContextMenu();
+            if (isMeasuringSession) {
+                if (!isDrawing) {
+                    isDrawing = true;
+                    measurePoints = [e.latlng]; 
+                    if (measureLine) activeMap.removeLayer(measureLine);
+                    measureLine = L.polyline(measurePoints, {color: '#9c27b0', dashArray: '10, 10'}).addTo(activeMap);
+                    document.getElementById('distancia-res').innerText = "Clique no destino para finalizar...";
+                } else {
+                    isDrawing = false;
+                    document.getElementById('distancia-res').innerText += " (Finalizado)";
+                    desativarMedicao();
+                }
+            }
+        }
+
+        function handleMapMouseMove(e, activeMap) {
+            if(isMeasuringSession && isDrawing) {
+                const mode = document.querySelector('input[name="measure-mode"]:checked').value;
+                if (mode === 'line') {
+                    measureLine.setLatLngs([measurePoints[0], e.latlng]);
+                    const distPixels = activeMap.project(measurePoints[0]).distanceTo(activeMap.project(e.latlng));
+                    const distMetros = (distPixels * 0.015).toFixed(1);
+                    document.getElementById('distancia-res').innerText = `${distMetros}m`;
+                } else {
+                    // Modo desenho livre (vários pontos)
+                    measurePoints.push(e.latlng);
+                    measureLine.setLatLngs(measurePoints);
+                    let totalPixels = 0;
+                    for(let i = 0; i < measurePoints.length - 1; i++) {
+                        totalPixels += activeMap.project(measurePoints[i]).distanceTo(activeMap.project(measurePoints[i+1]));
+                    }
+                    const distMetros = (totalPixels * 0.015).toFixed(1);
+                    document.getElementById('distancia-res').innerText = `${distMetros}m`;
+                }
+            }
+        }
+
+        // ================= PERSISTÊNCIA DE DADOS (SERVIDOR) =================
+
+        // Envia todo o estado atual do markersMundi (que contém os subPins embutidos)
+        async function salvarEstadoNoServidor() {
+            // Prepara dados limpando as referências circulares do Leaflet (marker)
+            const dadosParaSalvar = markersMundi.map(m => {
+                const { marker, ...resto } = m;
+                // Garante que subPins também não tenham referências circulares
+                if(resto.subPins) {
+                    resto.subPins = resto.subPins.map(sp => {
+                        const { marker: subMarker, ...subResto } = sp;
+                        return subResto;
+                    });
+                }
+                return resto;
+            });
+
+            try {
+                // O servidor usa uma rota genérica POST para salvar todo o array
+                const res = await fetch(`${API_URL}/mapa-pins`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dadosParaSalvar) // Envia o array completo
+                });
+                if(!res.ok) throw new Error("Falha ao salvar no servidor.");
+                console.log("Dados sincronizados com sucesso.");
+            } catch(e) { 
+                console.error("Erro na sincronização:", e);
+                alert("Aviso: Falha ao salvar dados no servidor. Verifique sua conexão. As alterações podem ser perdidas ao recarregar.");
+            }
+        }
+
+        // Carrega dados iniciais
+        async function carregarDadosServidor() {
+            try {
+                const res = await fetch(`${API_URL}/mapa-pins`);
+                if (!res.ok) return;
+                const pinsSalvos = await res.json();
+                
+                // O servidor deve retornar o array completo
+                if(Array.isArray(pinsSalvos)) {
+                    pinsSalvos.forEach(p => criarMarcadorMundi(p));
+                    atualizarListaLateral();
+                }
+            } catch(err) { console.error("Erro ao carregar dados:", err); }
+        }
+
+        // Sincronização automática em background (apenas para deletar/adicionar Pins Principais feitos por outros usuários)
+        async function sincronizarMapa() {
+            try {
+                const res = await fetch(`${API_URL}/mapa-pins`);
+                if (!res.ok) return;
+                const serverPins = await res.json();
+                if(!Array.isArray(serverPins)) return;
+
+                const serverPinIds = serverPins.map(p => p.id);
+
+                // 1. Remove Pins locais que não existem mais no servidor
+                markersMundi = markersMundi.filter(localPin => {
+                    if (!serverPinIds.includes(localPin.id)) {
+                        mapMundi.removeLayer(localPin.marker);
+                        return false;
+                    }
+                    return true;
+                });
+
+                // 2. Adiciona Pins novos ou atualiza Lore/Imagens
+                serverPins.forEach(sp => {
+                    const localPin = markersMundi.find(m => m.id === sp.id);
+                    if (!localPin) {
+                        criarMarcadorMundi(sp);
+                    } else {
+                        // Verifica se houve mudança estrutural ( lore, ícone, galeria, submapa, ou quantidade de subpins)
+                        const mudou = localPin.nome !== sp.nome || 
+                                      localPin.desc !== sp.desc || 
+                                      localPin.icon !== sp.icon || 
+                                      localPin.subMapUrl !== sp.subMapUrl ||
+                                      (localPin.subPins?.length || 0) !== (sp.subPins?.length || 0) ||
+                                      JSON.stringify(localPin.gallery) !== JSON.stringify(sp.gallery);
+                        
+                        if (mudou) {
+                            // Atualiza dados e visual
+                            Object.assign(localPin, sp);
+                            localPin.subPins = sp.subPins || []; // Garante atualização dos dados embutidos
+                            refreshMarkerVisuals(localPin, false);
+                        }
+                    }
+                });
+                atualizarListaLateral();
+            } catch(e) { console.error("Erro no sync automático:", e); }
+        }
+
+        // ================= SIDEBAR, PLANOS E FERRAMENTAS GERAIS =================
+
+        function toggleSidebar(forceClose = false) { 
+            const sb = document.getElementById('sidebar');
+            if(forceClose) sb.classList.add('collapsed');
+            else sb.classList.toggle('collapsed'); 
+        }
+
+        // Renderiza a seção fixa dos Planos de Existência
         function renderPlanes() {
             const container = document.getElementById('planes-container');
             container.innerHTML = "";
@@ -519,111 +1102,112 @@
             });
         }
 
+        // Muda a imagem de fundo do Mapa Mundi
         window.mudarMapa = function(url) {
-            if(imageOverlay) {
-                imageOverlay.setUrl(url);
-            }
+            if(mundiOverlay) mundiOverlay.setUrl(url);
         };
 
-        async function sincronizarMapa() {
-            if (document.getElementById('modal-form').style.display === 'flex') return;
+        // Filtro e Lista Lateral (Apenas pontos principais)
+        function atualizarListaLateral() {
+            const lista = document.getElementById('lista-locais');
+            lista.innerHTML = "";
+            const termo = document.getElementById('search-input').value.toLowerCase();
+            const filterType = document.querySelector('input[name="search-filter"]:checked').value;
 
-            try {
-                const res = await fetch(`${API_URL}/mapa-pins`);
-                if (!res.ok) return;
-                const serverPins = await res.json();
+            markersMundi.forEach(pin => {
+                let match = false;
+                if(filterType === 'nome') match = pin.nome.toLowerCase().includes(termo);
+                else match = (pin.desc || "").toLowerCase().includes(termo);
                 
-                const serverPinIds = serverPins.map(p => p.id);
+                if(termo !== "" && !match) return;
+                
+                const li = document.createElement('li');
+                li.className = 'location-item';
+                const iconSrc = pin.icon || IMG_DEFAULT_ICON;
+                li.innerHTML = `<img src="${iconSrc}" class="loc-icon-small"> <span>${pin.nome}</span>`;
+                
+                li.onclick = () => { 
+                    if(activeMainPinId) voltarMapaMundi(); // Sai do submapa se estiver dentro
+                    mapMundi.setMaxBounds(null); // Destrava bounds
+                    mapMundi.flyTo([pin.lat, pin.lng], 1, { animate: true, duration: 1 }); 
+                    setTimeout(() => pin.marker.openPopup(), 1200);
+                };
+                lista.appendChild(li);
+            });
+        }
+        function filtrarLocais() { atualizarListaLateral(); }
 
-                markers = markers.filter(localPin => {
-                    if (!serverPinIds.includes(localPin.id)) {
-                        map.removeLayer(localPin.marker);
-                        return false;
-                    }
-                    return true;
-                });
+        // --- Lógica das Imagens (Upload, Paste, Compress) ---
+        function setPasteTarget(target) {
+            pasteTarget = target;
+            document.getElementById('area-icon').classList.remove('paste-active');
+            document.getElementById('area-gallery').classList.remove('paste-active');
+            document.getElementById(`area-${target}`).classList.add('paste-active');
+        }
 
-                serverPins.forEach(sp => {
-                    const localPin = markers.find(m => m.id === sp.id);
-                    if (!localPin) {
-                        criarMarcador(sp.lat, sp.lng, sp.nome, sp.desc, sp.icon, sp.gallery, sp.id);
+        function comprimirImagem(file, callback) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = event => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX_SIZE = 800; // Max largura ou altura
+                    let width = img.width; height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; }
                     } else {
-                        const mudou = localPin.nome !== sp.nome || 
-                                      localPin.desc !== sp.desc || 
-                                      localPin.icon !== sp.icon || 
-                                      JSON.stringify(localPin.gallery) !== JSON.stringify(sp.gallery);
-                        
-                        if (mudou) {
-                            localPin.nome = sp.nome;
-                            localPin.desc = sp.desc;
-                            localPin.icon = sp.icon;
-                            localPin.gallery = sp.gallery;
-                            refreshMarkerVisuals(localPin);
-                        }
+                        if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; }
                     }
-                });
-                
-                atualizarListaLateral();
-            } catch(e) {
-                console.error("Erro no sync automático em background:", e);
+                    canvas.width = width; canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    callback(canvas.toDataURL('image/webp', 0.7)); // Salva como WebP comprimido
+                }
             }
         }
 
-        function toggleMedicao() {
-            isMeasuringSession = !isMeasuringSession;
-            const btn = document.getElementById('btn-medir');
-            if(isMeasuringSession) {
-                btn.classList.add('active');
-                document.getElementById('map').style.cursor = 'crosshair';
-                document.getElementById('distancia-res').innerText = "Clique no ponto A para começar...";
-                isDrawing = false;
-            } else {
-                desativarMedicao(btn);
+        // Eventos de Upload/Colagem
+        document.getElementById('area-icon').addEventListener('click', () => {
+            if (pasteTarget !== 'icon') setPasteTarget('icon'); 
+            else document.getElementById('file-icon').click();
+        });
+        document.getElementById('file-icon').addEventListener('change', e => {
+            const file = e.target.files[0];
+            if(file) comprimirImagem(file, res => { iconImage = res; renderFormVisuals(); });
+        });
+
+        document.getElementById('area-gallery').addEventListener('click', () => {
+            if (pasteTarget !== 'gallery') setPasteTarget('gallery'); 
+            else document.getElementById('file-gallery').click();
+        });
+        document.getElementById('file-gallery').addEventListener('change', e => {
+            Array.from(e.target.files).forEach(file => { 
+                comprimirImagem(file, res => { galleryImages.push(res); renderFormVisuals(); }); 
+            });
+        });
+
+        // Captura Ctrl+V global no modal
+        document.addEventListener('paste', e => {
+            if(document.getElementById('modal-form').style.display !== 'flex') return;
+            // Impede colagem padrão se estiver focado em input de texto
+            if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+            for (let item of items) {
+                if (item.kind === 'file' && item.type.includes('image/')) {
+                    comprimirImagem(item.getAsFile(), res => {
+                        if(pasteTarget === 'icon') iconImage = res;
+                        else galleryImages.push(res);
+                        renderFormVisuals();
+                    });
+                }
             }
-        }
+        });
 
-        function limparMedicao() {
-            if(measureLine) map.removeLayer(measureLine);
-            measureLine = null;
-            measurePoints = [];
-            isDrawing = false;
-            document.getElementById('distancia-res').innerText = isMeasuringSession ? "Clique no ponto A..." : "";
-        }
-
-        function desativarMedicao(btn) {
-            isMeasuringSession = false;
-            isDrawing = false;
-            btn.classList.remove('active');
-            document.getElementById('map').style.cursor = 'default';
-        }
-
-        function abrirModal(pinId) {
-            document.getElementById('ctx-menu').style.display = 'none';
-            document.getElementById('modal-form').style.display = 'flex';
-            
-            if (pinId) {
-                editId = pinId;
-                const pin = markers.find(m => m.id === pinId);
-                document.getElementById('modal-title').innerText = "Editar Local";
-                document.getElementById('btn-delete').style.display = 'block';
-                document.getElementById('input-nome').value = pin.nome;
-                document.getElementById('input-desc').value = pin.desc;
-                galleryImages = [...(pin.gallery || [])];
-                iconImage = pin.icon;
-            } else {
-                editId = null;
-                document.getElementById('modal-title').innerText = "Novo Local";
-                document.getElementById('btn-delete').style.display = 'none';
-                document.getElementById('input-nome').value = "";
-                document.getElementById('input-desc').value = "";
-                galleryImages = [];
-                iconImage = null;
-                setTimeout(() => document.getElementById('input-nome').focus(), 100);
-            }
-            renderFormVisuals();
-            setPasteTarget('gallery');
-        }
-
+        // Atualiza visualização no formulário
         function renderFormVisuals() {
             const container = document.getElementById('gallery-container');
             container.innerHTML = "";
@@ -650,292 +1234,57 @@
             }
         }
 
-        function fecharModal() { document.getElementById('modal-form').style.display = 'none'; }
-
-        async function deletarPin() {
-            if(!editId) return;
-            if(confirm("Tem certeza que deseja apagar este local?")) {
-                const index = markers.findIndex(m => m.id === editId);
-                if(index > -1) {
-                    map.removeLayer(markers[index].marker);
-                    markers.splice(index, 1);
-                    atualizarListaLateral();
-                }
-                try { await fetch(`${API_URL}/mapa-pins/${editId}`, { method: 'DELETE' }); } 
-                catch(e) { console.error("Erro ao deletar no banco", e); }
-                fecharModal();
-            }
-        }
-
-        async function salvarPin() {
-            const nome = document.getElementById('input-nome').value;
-            const desc = document.getElementById('input-desc').value;
-            if(!nome) { alert("Nome é obrigatório!"); return; }
-            const finalIcon = iconImage || IMG_DEFAULT_ICON;
-
-            let pinData;
-            if (editId) {
-                const pin = markers.find(m => m.id === editId);
-                pin.nome = nome;
-                pin.desc = desc;
-                pin.icon = finalIcon;
-                pin.gallery = [...galleryImages]; 
-                refreshMarkerVisuals(pin);
-                pinData = pin;
-            } else {
-                if(!tempCoords) { alert("Erro de posição."); return; }
-                const novoPinId = Date.now();
-                criarMarcador(tempCoords.lat, tempCoords.lng, nome, desc, finalIcon, [...galleryImages], novoPinId);
-                pinData = markers.find(m => m.id === novoPinId);
-            }
-
-            try {
-                const res = await fetch(`${API_URL}/mapa-pins`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        id: pinData.id,
-                        lat: pinData.lat,
-                        lng: pinData.lng,
-                        nome: pinData.nome,
-                        desc: pinData.desc,
-                        icon: pinData.icon,
-                        gallery: pinData.gallery
-                    })
-                });
-                if(!res.ok) {
-                    alert("Aviso: O pin apareceu no mapa, mas falhou ao salvar no servidor!");
-                }
-            } catch(e) { 
-                console.error("Erro ao salvar no banco", e);
-                alert("Erro grave ao comunicar com o servidor.");
-            }
-            fecharModal();
-            atualizarListaLateral();
-        }
-
-        function criarMarcador(lat, lng, nome, desc, iconSrc, galeria, idExistente = null) {
-            const safeIcon = iconSrc || IMG_DEFAULT_ICON;
-            const pinId = idExistente || Date.now(); 
-            const iconHtml = `<img src="${safeIcon}" class="custom-map-icon" style="width:40px; height:40px;">`;
-            const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -20] });
-            const marker = L.marker([lat, lng], {icon: customIcon}).addTo(map);
-            
-            // DESTRAVA O MAPA AO CLICAR NO PIN (crucial para o pan automático funcionar!)
-            marker.on('click', () => { map.setMaxBounds(null); });
-
-            const pinData = { id: pinId, marker, lat, lng, nome, desc, icon: safeIcon, gallery: galeria || [] };
-            marker.bindPopup(gerarPopupContent(pinData), { maxWidth: 2000 });
-            markers.push(pinData);
-            atualizarListaLateral();
-        }
-
-        function refreshMarkerVisuals(pin) {
-            const iconHtml = `<img src="${pin.icon}" class="custom-map-icon" style="width:40px; height:40px;">`;
-            const newIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -20] });
-            pin.marker.setIcon(newIcon);
-            pin.marker.setPopupContent(gerarPopupContent(pin));
-        }
-
-        window.trocarImagemPrincipal = function(element, pinId) {
-            const mainImg = document.getElementById(`main-img-${pinId}`);
-            if(mainImg) mainImg.src = element.src; 
-        };
-
-        window.toggleExpandir = function(btn, pinId) {
-            const box = document.getElementById(`desc-box-${pinId}`);
-            const textarea = box.querySelector('.popup-desc-view');
-
-            if (box.classList.contains('expanded')) {
-                // FECHANDO DETAILS
-                box.classList.remove('expanded');
-                btn.textContent = '⤡ Clique para expandir ⤡';
-                box.style.width = '';
-                box.style.height = '';
-            } else {
-                // ABRINDO DETAILS
-                box.classList.add('expanded');
-                btn.textContent = '✖ Clique para fechar';
-                box.style.width = '420px';
-
-                textarea.style.height = '1px'; 
-                let alturaDoTexto = textarea.scrollHeight;
-                textarea.style.height = 'auto'; 
-
-                let alturaAlvo = alturaDoTexto + 40;
-                if (alturaAlvo < 150) alturaAlvo = 150;
-                let alturaMaximaDaTela = window.innerHeight * 0.55; 
-
-                if (alturaAlvo > alturaMaximaDaTela) alturaAlvo = alturaMaximaDaTela;
-                box.style.height = alturaAlvo + 'px';
-
-                setTimeout(() => {
-                    const rect = box.getBoundingClientRect();
-                    let moverCameraX = 0;
-                    let moverCameraY = 0;
-
-                    if (rect.bottom > window.innerHeight) moverCameraY = (rect.bottom - window.innerHeight) + 30; 
-                    // Move a câmera para revelar o topo caso esteja cortado!
-                    if (rect.top < 60) moverCameraY = rect.top - 60; 
-
-                    if (rect.right > window.innerWidth) moverCameraX = (rect.right - window.innerWidth) + 30;
-                    if (rect.left < 30) moverCameraX = rect.left - 30;
-
-                    if (moverCameraX !== 0 || moverCameraY !== 0) {
-                        map.panBy([moverCameraX, moverCameraY], { animate: true, duration: 0.4 });
-                    }
-                }, 300);
-            }
-        };
-
-        function gerarPopupContent(pin) {
-            let html = `
-                <div class="popup-header">
-                    <img src="${pin.icon}" class="popup-header-icon">
-                    <span class="popup-title">${pin.nome}</span>
-                    <button class="popup-edit-btn" onclick="abrirModal(${pin.id})" title="Editar Local">✏️</button>
-                </div>
-            `;
-
-            let todasImagens = [];
-            if(pin.gallery && pin.gallery.length > 0) todasImagens.push(...pin.gallery);
-            if(pin.icon !== IMG_DEFAULT_ICON && !todasImagens.includes(pin.icon)) todasImagens.unshift(pin.icon);
-            if(todasImagens.length === 0) todasImagens.push(IMG_DEFAULT_ICON);
-
-            html += `<img src="${todasImagens[0]}" id="main-img-${pin.id}" class="popup-img-main" onclick="verFull(this.src)">`;
-
-            if(todasImagens.length > 1) {
-                html += `<div class="popup-gallery">`;
-                todasImagens.forEach((img) => {
-                    html += `<img src="${img}" class="popup-thumb" onclick="trocarImagemPrincipal(this, ${pin.id})">`;
-                });
-                html += `</div>`;
-            }
-
-            let descHtml = pin.desc || "Sem descrição.";
-            html += `
-                <div class="popup-desc-wrapper">
-                    <div class="popup-desc-container" id="desc-box-${pin.id}">
-                        <textarea readonly class="popup-desc-view">${descHtml}</textarea>
-                        <div class="popup-drag-handle" onclick="toggleExpandir(this, ${pin.id})">⤡ Clique para expandir ⤡</div>
-                    </div>
-                </div>
-            `;
-            return html;
-        }
-
-        function setPasteTarget(target) {
-            pasteTarget = target;
-            document.getElementById('area-icon').classList.remove('paste-active');
-            document.getElementById('area-gallery').classList.remove('paste-active');
-            document.getElementById(`area-${target}`).classList.add('paste-active');
-        }
-
-        function comprimirImagem(file, callback) {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = event => {
-                const img = new Image();
-                img.src = event.target.result;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 800;
-                    const MAX_HEIGHT = 800;
-                    let width = img.width;
-                    let height = img.height;
-
-                    if (width > height) {
-                        if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-                    } else {
-                        if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
-                    }
-
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    const dataUrl = canvas.toDataURL('image/webp', 0.7);
-                    callback(dataUrl);
-                }
-            }
-        }
-
-        document.getElementById('area-icon').addEventListener('click', (e) => {
-            if (pasteTarget !== 'icon') { setPasteTarget('icon'); } 
-            else { document.getElementById('file-icon').click(); }
-        });
-        document.getElementById('file-icon').addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if(file) comprimirImagem(file, (res) => { iconImage = res; renderFormVisuals(); });
-        });
-
-        document.getElementById('area-gallery').addEventListener('click', (e) => {
-            if (pasteTarget !== 'gallery') { setPasteTarget('gallery'); } 
-            else { document.getElementById('file-gallery').click(); }
-        });
-        document.getElementById('file-gallery').addEventListener('change', (e) => {
-            Array.from(e.target.files).forEach(file => { 
-                comprimirImagem(file, (res) => { galleryImages.push(res); renderFormVisuals(); }); 
-            });
-        });
-
-        document.addEventListener('paste', (e) => {
-            if(document.getElementById('modal-form').style.display !== 'flex') return;
-            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
-            for (let index in items) {
-                const item = items[index];
-                if (item.kind === 'file' && item.type.includes('image/')) {
-                    const file = item.getAsFile();
-                    comprimirImagem(file, (res) => {
-                        if(pasteTarget === 'icon') iconImage = res;
-                        else galleryImages.push(res);
-                        renderFormVisuals();
-                    });
-                }
-            }
-        });
-
-        window.removeImg = function(e, idx) {
+        window.removeImg = (e, idx) => {
             e.stopPropagation();
             galleryImages.splice(idx, 1);
             renderFormVisuals();
         };
 
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
-        
-        function atualizarListaLateral() {
-            const lista = document.getElementById('lista-locais');
-            lista.innerHTML = "";
-            const termo = document.getElementById('search-input').value.toLowerCase();
-            const filterType = document.querySelector('input[name="search-filter"]:checked').value;
+        // --- Funções da Ferramenta de Medição ---
+        function toggleMedicao() {
+            isMeasuringSession = !isMeasuringSession;
+            const btn = document.getElementById('btn-medir');
+            const activeMap = activeMainPinId ? subMap : mapMundi;
+            const mapDom = activeMainPinId ? document.getElementById('sub-map') : document.getElementById('map');
 
-            markers.forEach(pin => {
-                let match = false;
-                if(filterType === 'nome') match = pin.nome.toLowerCase().includes(termo);
-                else match = (pin.desc || "").toLowerCase().includes(termo);
-                if(!match && termo !== "") return;
+            if(isMeasuringSession) {
+                btn.classList.add('active');
+                mapDom.style.cursor = 'crosshair';
+                document.getElementById('distancia-res').innerText = "Clique no ponto A para começar...";
+                isDrawing = false;
                 
-                const li = document.createElement('li');
-                li.className = 'location-item';
-                const iconSrc = pin.icon || IMG_DEFAULT_ICON;
-                li.innerHTML = `<img src="${iconSrc}" class="loc-icon-small"> <span>${pin.nome}</span>`;
-                
-                // DESTRAVA O MAPA TAMBÉM SE CLICAR PELA BARRA LATERAL
-                li.onclick = () => { 
-                    map.setMaxBounds(null); 
-                    map.flyTo([pin.lat, pin.lng], 1); 
-                    pin.marker.openPopup(); 
-                };
-                lista.appendChild(li);
-            });
+                // Adiciona listeners temporários no mapa ativo
+                activeMap.on('mousemove', e => handleMapMouseMove(e, activeMap));
+                activeMap.on('click', e => handleMapClick(e, activeMap));
+            } else {
+                desativarMedicao();
+            }
         }
-        
-        function filtrarLocais() { atualizarListaLateral(); }
-        
-        window.verFull = function(src) {
-            document.getElementById('lightbox-img').src = src;
-            document.getElementById('lightbox').style.display = 'flex';
-        };
+
+        function desativarMedicao() {
+            isMeasuringSession = false;
+            isDrawing = false;
+            document.getElementById('btn-medir').classList.remove('active');
+            document.getElementById('map').style.cursor = 'default';
+            document.getElementById('sub-map').style.cursor = 'default';
+            
+            // Remove listeners
+            mapMundi.off('mousemove'); mapMundi.off('click', handleMapClick);
+            subMap.off('mousemove'); subMap.off('click', handleMapClick);
+            
+            // readiciona o click padrão para fechar context menu
+            mapMundi.on('click', e => handleMapClick(e, mapMundi));
+            subMap.on('click', fecharContextMenu);
+        }
+
+        function limparMedicao() {
+            const activeMap = activeMainPinId ? subMap : mapMundi;
+            if(measureLine) activeMap.removeLayer(measureLine);
+            measureLine = null;
+            measurePoints = [];
+            isDrawing = false;
+            document.getElementById('distancia-res').innerText = isMeasuringSession ? "Clique no ponto A..." : "";
+        }
 
     </script>
 </body>
