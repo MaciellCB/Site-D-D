@@ -313,6 +313,9 @@
         .lightbox { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index: 10000; display:none; justify-content:center; align-items:center; cursor: zoom-out; animation: fadeIn 0.2s; }
         .lightbox img { max-width: 95%; max-height: 95%; border: 2px solid #333; box-shadow: 0 0 50px black; border-radius: 4px; }
 
+        /* CORREÇÃO AQUI: A CLASSE ADICIONADA CORRETAMENTE NO CSS! */
+        .field-label { display:block; color:#aaa; font-size:12px; margin-bottom:5px; font-weight:bold; }
+
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
@@ -323,8 +326,10 @@
     <button id="btn-back-main" onclick="voltarMapaMundi()">⬅ Voltar para o Mapa Mundi</button>
 
     <div id="maps-wrapper">
+        <!-- Mapa Principal -->
         <div id="map" class="map-instance"></div>
         
+        <!-- Container do SubMapa -->
         <div id="sub-map-container" class="map-instance">
             <div id="sub-map"></div>
         </div>
@@ -340,7 +345,7 @@
         <div class="sidebar-content">
             
             <div class="map-switcher">
-                <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:5px; display:block;">ESTILO DE MAPA</label>
+                <label class="field-label">ESTILO DE MAPA</label>
                 <select id="map-style-select" class="input-dark" onchange="mudarMapa(this.value)">
                     <option value="img/imagem-no-site/mapa-runeterra.png">Mapa de Regiões</option>
                     <option value="img/imagem-no-site/mapa-runeterra-politico.png">Mapa Político</option>
@@ -350,7 +355,7 @@
             <hr style="border:0; border-top:1px solid #333; width:100%; margin:0;">
 
             <div class="measure-tools">
-                <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:5px; display:block;">FERRAMENTA DE MEDIÇÃO</label>
+                <label class="field-label">FERRAMENTA DE MEDIÇÃO</label>
                 
                 <div class="measure-options">
                     <label><input type="radio" name="measure-mode" value="line" checked> Reta</label>
@@ -378,20 +383,22 @@
             </div>
 
             <div class="locais-container">
-                <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:8px; display:block;">LOCAIS DESCOBERTOS</label>
+                <label class="field-label">LOCAIS DESCOBERTOS</label>
                 <ul id="lista-locais" class="location-list">
                 </ul>
             </div>
 
             <div class="planes-section">
-                <label style="font-size:11px; color:#666; font-weight:bold; margin-bottom:10px; display:block;">PLANOS DE EXISTÊNCIA</label>
+                <label class="field-label">PLANOS DE EXISTÊNCIA</label>
                 <div id="planes-container"></div>
             </div>
         </div>
     </div>
 
+    <!-- Menu de Contexto (Botão Direito) unificado -->
     <div id="ctx-menu">
-        </div>
+        <!-- Conteúdo dinâmico via JS -->
+    </div>
 
     <div class="modal-overlay" id="modal-form">
         <div class="modal">
@@ -467,14 +474,14 @@
         let mundiOverlay, subMapOverlay;
         
         // Estado Global
-        let markersMundi = []; // Pins do mapa principal [{id, marker, data...}]
-        let currentSubMarkers = []; // Pins do submapa atualmente aberto
-        let activeMainPinId = null; // ID do pin principal que estamos "dentro"
+        let markersMundi = []; 
+        let currentSubMarkers = []; 
+        let activeMainPinId = null; 
         
         // Variáveis temporárias de controle
         let tempCoords = null;
         let editId = null;
-        let isEditingSubPin = false; // Define se estamos editando um ponto principal ou sub-ponto
+        let isEditingSubPin = false; 
         let galleryImages = []; 
         let iconImage = null;
         let pasteTarget = 'gallery'; 
@@ -484,10 +491,6 @@
         let isDrawing = false; 
         let measureLine = null; 
         let measurePoints = []; 
-
-        // Adicionar classe CSS utilitária que faltava
-        const styleSheet = document.styleSheets[0];
-        styleSheet.insertRule('.field-label { display:block; color:#aaa; font-size:12px; margin-bottom:5px; font-weight:bold; }', styleSheet.cssRules.length);
 
         // Dados Fixos (Planos)
         const PLANE_CATEGORIES = [
@@ -531,7 +534,7 @@
             renderPlanes();
             carregarDadosServidor();
 
-            // Sincronização automática apenas se estivermos no Mapa Mundi e modal fechado
+            // Sincronização automática
             setInterval(() => {
                 if(!activeMainPinId && document.getElementById('modal-form').style.display !== 'flex') {
                     sincronizarMapa();
@@ -550,7 +553,6 @@
             mapMundi.fitBounds(MAP_BOUNDS);
             L.control.zoom({ position: 'bottomright' }).addTo(mapMundi);
 
-            // Eventos do Mapa Mundi
             mapMundi.on('contextmenu', e => abrirContextMenu(e, false));
             mapMundi.on('click', e => handleMapClick(e, mapMundi));
             mapMundi.on('mousemove', e => handleMapMouseMove(e, mapMundi));
@@ -563,16 +565,14 @@
             subMap = L.map('sub-map', {
                 crs: L.CRS.Simple, minZoom: -2, maxZoom: 3, zoomControl: false, attributionControl: false 
             });
-            // O overlay é criado dinamicamente ao entrar no local
             L.control.zoom({ position: 'bottomright' }).addTo(subMap);
 
-            // Eventos do SubMapa
             subMap.on('contextmenu', e => abrirContextMenu(e, true));
             subMap.on('click', fecharContextMenu);
             subMap.on('movestart', fecharContextMenu);
         }
 
-        // ================= SISTEMA DE DRILL-DOWN (ENTRAR/SAIR) =================
+        // ================= SISTEMA DE DRILL-DOWN =================
         
         window.entrarNoLocal = function(pinId) {
             const pinMundi = markersMundi.find(m => m.id === pinId);
@@ -581,53 +581,42 @@
                 return;
             }
 
-            // Define o local ativo e fecha popups
             activeMainPinId = pinId;
             pinMundi.marker.closePopup();
 
-            // Configura a imagem do submapa
             if(subMapOverlay) subMap.removeLayer(subMapOverlay);
             subMapOverlay = L.imageOverlay(pinMundi.subMapUrl, MAP_BOUNDS).addTo(subMap);
             
-            // Ativa visualmente o submapa
             document.body.classList.add('submap-active');
             
-            // Reseta view do submapa
-            subMap.setView([540, 960], -1); // Centro padrão ajustado para fit
+            subMap.setView([540, 960], -1); 
             subMap.fitBounds(MAP_BOUNDS);
 
-            // Carrega os sub-points deste local
             renderSubPins(pinMundi.subPins || []);
-            
-            toggleSidebar(true); // Força fechar sidebar se aberta
+            toggleSidebar(true); 
         }
 
         window.voltarMapaMundi = function() {
             document.body.classList.remove('submap-active');
             activeMainPinId = null;
             limparSubMarkers();
-            // Dá um pequeno tempo para a transição CSS e reajusta o mapa principal
             setTimeout(() => mapMundi.invalidateSize(), 500);
         }
 
-        // ================= GERENCIAMENTO DE PINS (MUNDI E SUB) =================
+        // ================= GERENCIAMENTO DE PINS =================
 
-        // Gera o HTML do ícone (unificado para mundi e sub)
         function gerarIconHtml(iconSrc, isSubPin) {
             const className = isSubPin ? 'sub-map-icon' : 'custom-map-icon';
             const size = isSubPin ? '24px' : '40px';
             return `<img src="${iconSrc}" class="${className}" style="width:${size}; height:${size};">`;
         }
 
-        // --- Mapa Mundi ---
         function criarMarcadorMundi(data) {
             const safeIcon = data.icon || IMG_DEFAULT_ICON;
             const iconHtml = gerarIconHtml(safeIcon, false);
             const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -20] });
             
             const marker = L.marker([data.lat, data.lng], {icon: customIcon}).addTo(mapMundi);
-            
-            // Destrava bounds ao clicar para permitir auto-pan
             marker.on('click', () => mapMundi.setMaxBounds(null));
 
             const pinData = { ...data, marker, subPins: data.subPins || [] };
@@ -635,7 +624,6 @@
             markersMundi.push(pinData);
         }
 
-        // --- Sub Mapa ---
         function renderSubPins(subPinsData) {
             limparSubMarkers();
             subPinsData.forEach(data => {
@@ -656,7 +644,6 @@
             currentSubMarkers = [];
         }
 
-        // Atualiza visual de um pin existente (unificado)
         function refreshMarkerVisuals(pin, isSub) {
             const iconHtml = gerarIconHtml(pin.icon, isSub);
             const size = isSub ? [24, 24] : [40, 40];
@@ -668,7 +655,7 @@
             pin.marker.setPopupContent(gerarPopupContent(pin, isSub));
         }
 
-        // ================= POPUP CONTENT E INTERAÇÕES =================
+        // ================= POPUP E INTERAÇÕES =================
 
         function gerarPopupContent(pin, isSub) {
             let html = `
@@ -681,7 +668,6 @@
                 </div>
             `;
 
-            // Lógica de imagens (galeria + ícone)
             let todasImagens = [];
             if(pin.gallery && pin.gallery.length > 0) todasImagens.push(...pin.gallery);
             if(pin.icon !== IMG_DEFAULT_ICON && !todasImagens.includes(pin.icon)) todasImagens.unshift(pin.icon);
@@ -697,7 +683,6 @@
                 html += `</div>`;
             }
 
-            // Lore expandível
             let descHtml = pin.desc || "Sem descrição disponível.";
             html += `
                 <div class="popup-desc-wrapper">
@@ -708,7 +693,6 @@
                 </div>
             `;
 
-            // BOTÃO MÁGICO: Apenas para pontos principais que possuem mapa interno
             if(!isSub && pin.subMapUrl) {
                 html += `
                     <button class="btn-action btn-enter-locale" onclick="entrarNoLocal(${pin.id})">
@@ -720,7 +704,6 @@
             return html;
         }
 
-        // Funções auxiliares do popup (globais para onclick)
         window.trocarImagemPrincipal = (element, pinId) => {
             const mainImg = document.getElementById(`main-img-${pinId}`);
             if(mainImg) mainImg.src = element.src; 
@@ -746,7 +729,6 @@
                 btn.textContent = '✖ Clique para fechar';
                 box.style.width = '420px';
                 
-                // Auto-height baseado no texto
                 textarea.style.height = '1px'; 
                 let alturaTexto = textarea.scrollHeight;
                 textarea.style.height = 'auto'; 
@@ -754,7 +736,6 @@
                 let alturaAlvo = Math.max(150, Math.min(alturaTexto + 40, window.innerHeight * 0.55));
                 box.style.height = alturaAlvo + 'px';
 
-                // Pan da câmera para centralizar o lore expandido
                 setTimeout(() => {
                     const rect = box.getBoundingClientRect();
                     let panX = 0, panY = 0;
@@ -770,12 +751,12 @@
             }
         };
 
-        // ================= FORMULÁRIO MODAL (CRIAÇÃO/EDIÇÃO) =================
+        // ================= FORMULÁRIO MODAL =================
 
         function abrirModal(pinId, isSub) {
             fecharContextMenu();
             document.getElementById('modal-form').style.display = 'flex';
-            isEditingSubPin = isSub; // Guarda contexto
+            isEditingSubPin = isSub; 
             
             const fieldSubMapUrl = document.getElementById('group-submap-url');
 
@@ -788,7 +769,6 @@
                 document.getElementById('input-nome').value = pin.nome;
                 document.getElementById('input-desc').value = pin.desc;
                 
-                // Campo mapa interno só aparece para pontos principais
                 if(!isSub) {
                     fieldSubMapUrl.style.display = 'block';
                     document.getElementById('input-submap-url').value = pin.subMapUrl || "";
@@ -830,56 +810,42 @@
             if(!nome) { alert("O nome é obrigatório!"); return; }
             const finalIcon = iconImage || IMG_DEFAULT_ICON;
 
-            // Objeto de dados base
-            let pinCoreData = {
-                nome, desc, icon: finalIcon, gallery: [...galleryImages]
-            };
+            let pinCoreData = { nome, desc, icon: finalIcon, gallery: [...galleryImages] };
 
             if (editId) {
-                // MODO EDIÇÃO
                 if(isEditingSubPin) {
-                    // Atualiza no array temporário do submapa
                     const subPin = currentSubMarkers.find(m => m.id === editId);
                     Object.assign(subPin, pinCoreData);
                     refreshMarkerVisuals(subPin, true);
                     
-                    // IMPORTANTE: Achar o pin principal correspondente e atualizar o array subPins dele
                     const mainPin = markersMundi.find(m => m.id === activeMainPinId);
                     const index = mainPin.subPins.findIndex(sp => sp.id === editId);
-                    // Atualiza os dados no array que vai pro servidor, mantendo as coordenadas antigas
                     Object.assign(mainPin.subPins[index], pinCoreData); 
-
                 } else {
-                    // Atualiza Pin Principal
                     const pin = markersMundi.find(m => m.id === editId);
                     Object.assign(pin, pinCoreData);
-                    pin.subMapUrl = subMapUrl; // Adiciona campo específico
+                    pin.subMapUrl = subMapUrl; 
                     refreshMarkerVisuals(pin, false);
                 }
             } else {
-                // MODO CRIAÇÃO
                 if(!tempCoords) { alert("Erro de posicionamento."); return; }
                 const novoId = Date.now();
                 const novaData = { ...pinCoreData, id: novoId, lat: tempCoords.lat, lng: tempCoords.lng };
 
                 if(isEditingSubPin) {
-                    novaData.isSub = true; // Flag útil
-                    // Adiciona visualmente ao submapa
+                    novaData.isSub = true; 
                     renderSubPins([...currentSubMarkers, novaData]);
                     
-                    // Adiciona ao array do pin principal para salvar
                     const mainPin = markersMundi.find(m => m.id === activeMainPinId);
                     if(!mainPin.subPins) mainPin.subPins = [];
                     mainPin.subPins.push(novaData);
                 } else {
-                    // Cria Pin Principal
                     novaData.subMapUrl = subMapUrl;
                     novaData.subPins = [];
                     criarMarcadorMundi(novaData);
                 }
             }
 
-            // Salva as alterações no servidor (sempre envia o estado do Mapa Mundi)
             await salvarEstadoNoServidor();
             fecharModal();
             atualizarListaLateral();
@@ -890,17 +856,11 @@
             if(!confirm("Tem certeza que deseja apagar este ponto? Esta ação não pode ser desfeita.")) return;
 
             if(isEditingSubPin) {
-                // Deleta SubPin
-                limparSubMarkers(); // Remove todos visualmente temporariamente
-                
-                // Acha o principal e remove do array de dados
+                limparSubMarkers(); 
                 const mainPin = markersMundi.find(m => m.id === activeMainPinId);
                 mainPin.subPins = mainPin.subPins.filter(sp => sp.id !== editId);
-                
-                // Re-renderiza o submapa com a lista atualizada
                 renderSubPins(mainPin.subPins);
             } else {
-                // Deleta Pin Principal
                 const index = markersMundi.findIndex(m => m.id === editId);
                 if(index > -1) {
                     mapMundi.removeLayer(markersMundi[index].marker);
@@ -913,7 +873,7 @@
             atualizarListaLateral();
         }
 
-        // ================= MENU DE CONTEXTO E CLIQUES NO MAPA =================
+        // ================= MENU E CLIQUES =================
 
         function abrirContextMenu(e, isSub) {
             L.DomEvent.preventDefault(e);
@@ -922,7 +882,6 @@
             tempCoords = e.latlng;
             const menu = document.getElementById('ctx-menu');
             
-            // Define conteúdo baseado se é Mapa Mundi ou SubMapa
             if(isSub) {
                 menu.innerHTML = `<div class="ctx-item" onclick="abrirModal(null, true)">📍 Criar Ponto de Interesse Aqui</div>`;
             } else {
@@ -962,7 +921,6 @@
                     const distMetros = (distPixels * 0.015).toFixed(1);
                     document.getElementById('distancia-res').innerText = `${distMetros}m`;
                 } else {
-                    // Modo desenho livre (vários pontos)
                     measurePoints.push(e.latlng);
                     measureLine.setLatLngs(measurePoints);
                     let totalPixels = 0;
@@ -975,14 +933,11 @@
             }
         }
 
-        // ================= PERSISTÊNCIA DE DADOS (SERVIDOR) =================
+        // ================= SERVIDOR =================
 
-        // Envia todo o estado atual do markersMundi (que contém os subPins embutidos)
         async function salvarEstadoNoServidor() {
-            // Prepara dados limpando as referências circulares do Leaflet (marker)
             const dadosParaSalvar = markersMundi.map(m => {
                 const { marker, ...resto } = m;
-                // Garante que subPins também não tenham referências circulares
                 if(resto.subPins) {
                     resto.subPins = resto.subPins.map(sp => {
                         const { marker: subMarker, ...subResto } = sp;
@@ -993,28 +948,24 @@
             });
 
             try {
-                // O servidor usa uma rota genérica POST para salvar todo o array
                 const res = await fetch(`${API_URL}/mapa-pins`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(dadosParaSalvar) // Envia o array completo
+                    body: JSON.stringify(dadosParaSalvar) 
                 });
-                if(!res.ok) throw new Error("Falha ao salvar no servidor.");
-                console.log("Dados sincronizados com sucesso.");
+                if(!res.ok) throw new Error("Falha ao salvar");
             } catch(e) { 
                 console.error("Erro na sincronização:", e);
-                alert("Aviso: Falha ao salvar dados no servidor. Verifique sua conexão. As alterações podem ser perdidas ao recarregar.");
+                alert("Aviso: Falha ao salvar dados no servidor. Verifique sua conexão.");
             }
         }
 
-        // Carrega dados iniciais
         async function carregarDadosServidor() {
             try {
                 const res = await fetch(`${API_URL}/mapa-pins`);
                 if (!res.ok) return;
                 const pinsSalvos = await res.json();
                 
-                // O servidor deve retornar o array completo
                 if(Array.isArray(pinsSalvos)) {
                     pinsSalvos.forEach(p => criarMarcadorMundi(p));
                     atualizarListaLateral();
@@ -1022,7 +973,6 @@
             } catch(err) { console.error("Erro ao carregar dados:", err); }
         }
 
-        // Sincronização automática em background (apenas para deletar/adicionar Pins Principais feitos por outros usuários)
         async function sincronizarMapa() {
             try {
                 const res = await fetch(`${API_URL}/mapa-pins`);
@@ -1032,7 +982,6 @@
 
                 const serverPinIds = serverPins.map(p => p.id);
 
-                // 1. Remove Pins locais que não existem mais no servidor
                 markersMundi = markersMundi.filter(localPin => {
                     if (!serverPinIds.includes(localPin.id)) {
                         mapMundi.removeLayer(localPin.marker);
@@ -1041,13 +990,11 @@
                     return true;
                 });
 
-                // 2. Adiciona Pins novos ou atualiza Lore/Imagens
                 serverPins.forEach(sp => {
                     const localPin = markersMundi.find(m => m.id === sp.id);
                     if (!localPin) {
                         criarMarcadorMundi(sp);
                     } else {
-                        // Verifica se houve mudança estrutural ( lore, ícone, galeria, submapa, ou quantidade de subpins)
                         const mudou = localPin.nome !== sp.nome || 
                                       localPin.desc !== sp.desc || 
                                       localPin.icon !== sp.icon || 
@@ -1056,9 +1003,8 @@
                                       JSON.stringify(localPin.gallery) !== JSON.stringify(sp.gallery);
                         
                         if (mudou) {
-                            // Atualiza dados e visual
                             Object.assign(localPin, sp);
-                            localPin.subPins = sp.subPins || []; // Garante atualização dos dados embutidos
+                            localPin.subPins = sp.subPins || []; 
                             refreshMarkerVisuals(localPin, false);
                         }
                     }
@@ -1067,7 +1013,7 @@
             } catch(e) { console.error("Erro no sync automático:", e); }
         }
 
-        // ================= SIDEBAR, PLANOS E FERRAMENTAS GERAIS =================
+        // ================= GERAIS =================
 
         function toggleSidebar(forceClose = false) { 
             const sb = document.getElementById('sidebar');
@@ -1075,7 +1021,6 @@
             else sb.classList.toggle('collapsed'); 
         }
 
-        // Renderiza a seção fixa dos Planos de Existência
         function renderPlanes() {
             const container = document.getElementById('planes-container');
             container.innerHTML = "";
@@ -1102,12 +1047,10 @@
             });
         }
 
-        // Muda a imagem de fundo do Mapa Mundi
         window.mudarMapa = function(url) {
             if(mundiOverlay) mundiOverlay.setUrl(url);
         };
 
-        // Filtro e Lista Lateral (Apenas pontos principais)
         function atualizarListaLateral() {
             const lista = document.getElementById('lista-locais');
             lista.innerHTML = "";
@@ -1127,8 +1070,8 @@
                 li.innerHTML = `<img src="${iconSrc}" class="loc-icon-small"> <span>${pin.nome}</span>`;
                 
                 li.onclick = () => { 
-                    if(activeMainPinId) voltarMapaMundi(); // Sai do submapa se estiver dentro
-                    mapMundi.setMaxBounds(null); // Destrava bounds
+                    if(activeMainPinId) voltarMapaMundi(); 
+                    mapMundi.setMaxBounds(null); 
                     mapMundi.flyTo([pin.lat, pin.lng], 1, { animate: true, duration: 1 }); 
                     setTimeout(() => pin.marker.openPopup(), 1200);
                 };
@@ -1137,7 +1080,6 @@
         }
         function filtrarLocais() { atualizarListaLateral(); }
 
-        // --- Lógica das Imagens (Upload, Paste, Compress) ---
         function setPasteTarget(target) {
             pasteTarget = target;
             document.getElementById('area-icon').classList.remove('paste-active');
@@ -1153,7 +1095,7 @@
                 img.src = event.target.result;
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    const MAX_SIZE = 800; // Max largura ou altura
+                    const MAX_SIZE = 800; 
                     let width = img.width; height = img.height;
 
                     if (width > height) {
@@ -1164,12 +1106,11 @@
                     canvas.width = width; canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-                    callback(canvas.toDataURL('image/webp', 0.7)); // Salva como WebP comprimido
+                    callback(canvas.toDataURL('image/webp', 0.7)); 
                 }
             }
         }
 
-        // Eventos de Upload/Colagem
         document.getElementById('area-icon').addEventListener('click', () => {
             if (pasteTarget !== 'icon') setPasteTarget('icon'); 
             else document.getElementById('file-icon').click();
@@ -1189,10 +1130,8 @@
             });
         });
 
-        // Captura Ctrl+V global no modal
         document.addEventListener('paste', e => {
             if(document.getElementById('modal-form').style.display !== 'flex') return;
-            // Impede colagem padrão se estiver focado em input de texto
             if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
             const items = (e.clipboardData || e.originalEvent.clipboardData).items;
@@ -1207,7 +1146,6 @@
             }
         });
 
-        // Atualiza visualização no formulário
         function renderFormVisuals() {
             const container = document.getElementById('gallery-container');
             container.innerHTML = "";
@@ -1240,7 +1178,6 @@
             renderFormVisuals();
         };
 
-        // --- Funções da Ferramenta de Medição ---
         function toggleMedicao() {
             isMeasuringSession = !isMeasuringSession;
             const btn = document.getElementById('btn-medir');
@@ -1253,7 +1190,6 @@
                 document.getElementById('distancia-res').innerText = "Clique no ponto A para começar...";
                 isDrawing = false;
                 
-                // Adiciona listeners temporários no mapa ativo
                 activeMap.on('mousemove', e => handleMapMouseMove(e, activeMap));
                 activeMap.on('click', e => handleMapClick(e, activeMap));
             } else {
@@ -1268,11 +1204,9 @@
             document.getElementById('map').style.cursor = 'default';
             document.getElementById('sub-map').style.cursor = 'default';
             
-            // Remove listeners
             mapMundi.off('mousemove'); mapMundi.off('click', handleMapClick);
             subMap.off('mousemove'); subMap.off('click', handleMapClick);
             
-            // readiciona o click padrão para fechar context menu
             mapMundi.on('click', e => handleMapClick(e, mapMundi));
             subMap.on('click', fecharContextMenu);
         }
