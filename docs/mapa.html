@@ -158,6 +158,8 @@
         .measure-options { display: flex; gap: 10px; font-size: 11px; color: #ccc; justify-content: center; }
         .measure-options label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
         
+        .route-mode-container { background: #1a101f; padding: 10px; border-radius: 8px; border: 1px solid #4a215a; }
+        
         .btn-action {
             width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #ccc;
             border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 13px;
@@ -239,13 +241,37 @@
         .leaflet-popup-tip { background: var(--accent); }
         .leaflet-popup-content { margin: 15px; width: 320px !important; }
         
-        /* Estilo para sub-points (menores e com sombra roxa) */
+        /* ================= ESTILOS DE PINOS ================= */
+        .custom-map-icon { 
+            border: 2px solid #fff; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.8); 
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s; background: #111; box-sizing: border-box; padding: 4px; object-fit: contain !important; 
+        }
+        .custom-map-icon:hover { transform: scale(1.3); border-color: var(--accent); z-index: 1000 !important; }
+
         .sub-map-icon {
-            border: 2px solid var(--accent); border-radius: 50%;
-            box-shadow: var(--shadow-sub);
-            transition: transform 0.2s; background: #000; box-sizing: border-box; padding: 2px; object-fit: contain !important;
+            border: 2px solid var(--accent); border-radius: 50%; box-shadow: var(--shadow-sub);
+            transition: 0.2s; background: #000; box-sizing: border-box; padding: 2px; object-fit: contain !important;
         }
         .sub-map-icon:hover { transform: scale(1.3); background: #1a1a1a; z-index: 1000 !important; }
+
+        .simple-map-icon {
+            border: 1px dashed #aaa; border-radius: 50%;
+            background: rgba(20, 20, 20, 0.6); opacity: 0.75;
+            box-sizing: border-box; padding: 2px;
+            object-fit: contain !important; filter: grayscale(40%);
+            transition: transform 0.3s, opacity 0.3s;
+        }
+        .simple-map-icon:hover { opacity: 1; transform: scale(1.2); border-color: #fff; z-index: 1000 !important;}
+
+        /* ESTADO: MODO DE ROTAS ATIVO (Encolhe todos os pinos) */
+        body.route-mode-active .custom-map-icon,
+        body.route-mode-active .simple-map-icon,
+        body.route-mode-active .sub-map-icon {
+            transform: scale(0.4) !important;
+            opacity: 0.3 !important;
+            filter: grayscale(100%);
+            pointer-events: none; /* Desativa o clique nos pinos para não atrapalhar o desenho */
+        }
 
         .popup-header { display:flex; align-items:center; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; margin-bottom: 10px; }
         .popup-header-icon { width: 32px; height: 32px; border-radius: 50%; object-fit:cover; border:1px solid #555; background:#000; }
@@ -303,19 +329,11 @@
         .popup-thumb { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; border: 1px solid #444; cursor: pointer; flex-shrink: 0; transition: 0.2s; }
         .popup-thumb:hover { border-color: var(--accent); transform: scale(1.1); }
 
-        /* Ícone padrão do Mapa Mundi */
-        .custom-map-icon { 
-            border: 2px solid #fff; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.8); 
-            transition: transform 0.2s; background: #111; box-sizing: border-box; padding: 4px; object-fit: contain !important; 
-        }
-        .custom-map-icon:hover { transform: scale(1.3); border-color: var(--accent); z-index: 1000 !important; }
-
         .lightbox { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index: 10000; display:none; justify-content:center; align-items:center; cursor: zoom-out; animation: fadeIn 0.2s; }
         .lightbox img { max-width: 95%; max-height: 95%; border: 2px solid #333; box-shadow: 0 0 50px black; border-radius: 4px; }
 
         .field-label { display:block; color:#aaa; font-size:12px; margin-bottom:5px; font-weight:bold; }
 
-        /* NOVA REGRA CSS: Garante que o preview do submapa não distorça e ocupe o tamanho exato */
         #preview-submap { 
             width: 100%; 
             height: 100%; 
@@ -356,11 +374,28 @@
                     <option value="img/imagem-no-site/mapa-runeterra-politico.png">Mapa Político</option>
                 </select>
             </div>
+
+            <hr style="border:0; border-top:1px solid #333; width:100%; margin:0;">
+
+            <div class="route-mode-container">
+                <button class="btn-action" id="btn-toggle-route" onclick="toggleRouteMode()" style="border-color: var(--accent); color: var(--accent);">🗺️ Rastro de Facções</button>
+                
+                <div id="route-panel" style="display: none; margin-top: 15px; flex-direction: column; gap: 10px;">
+                    <div>
+                        <label class="field-label">GRUPO / FACÇÃO</label>
+                        <select id="route-group-select" class="input-dark">
+                            </select>
+                    </div>
+                    
+                    <button class="btn-action" id="btn-draw-route" onclick="startDrawingRoute()" style="background:#222;">✏️ Adicionar Rota (Clique no mapa)</button>
+                    <button class="btn-action primary" onclick="saveRoute()" style="background:#2e7d32;">💾 Salvar Trajeto</button>
+                </div>
+            </div>
             
             <hr style="border:0; border-top:1px solid #333; width:100%; margin:0;">
 
             <div class="measure-tools">
-                <label class="field-label">FERRAMENTA DE MEDIÇÃO</label>
+                <label class="field-label">FERRAMENTA DE MEDIÇÃO (CALCULADORA DE VIAGEM)</label>
                 
                 <div class="measure-options">
                     <label><input type="radio" name="measure-mode" value="line" checked> Reta</label>
@@ -371,7 +406,7 @@
                     <button class="btn-action" id="btn-medir" onclick="toggleMedicao()" style="flex:1;">📏 Ativar (Clique A -> B)</button>
                     <button class="btn-action" onclick="limparMedicao()" style="width: auto; background: #221111; border-color: #442222; color: #ff8888;" title="Limpar Medição">🗑️</button>
                 </div>
-                <div id="distancia-res" style="font-size: 13px; color: #e0aaff; margin-top: 5px; text-align: center; min-height: 18px; font-weight: bold; font-family: monospace;"></div>
+                <div id="distancia-res" style="font-size: 13px; color: #e0aaff; margin-top: 8px; text-align: center; min-height: 40px; font-weight: bold; font-family: monospace; line-height: 1.4;"></div>
             </div>
 
             <hr style="border:0; border-top:1px solid #333; width:100%; margin:0;">
@@ -413,6 +448,16 @@
                 <div>
                     <label class="field-label">NOME DO LOCAL</label>
                     <input type="text" id="input-nome" class="input-dark" placeholder="Ex: Fortaleza Noxkraya ou Taverna do Dragão">
+                </div>
+
+                <div style="background: #151515; padding: 10px; border-radius: 6px; border: 1px solid #333;">
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#ccc; font-size: 13px; font-weight: bold;">
+                        <input type="checkbox" id="input-simple-pin" style="accent-color: var(--accent);"> 
+                        📌 Marcar como Pino Simples (Boato, Acampamento, Temporário)
+                    </label>
+                    <span style="font-size: 10px; color: #666; display: block; margin-top: 4px; margin-left: 25px;">
+                        Pinos simples são translúcidos e menores no mapa. Não possuem mapas internos exploráveis.
+                    </span>
                 </div>
 
                 <div id="group-submap-url" style="margin-bottom:20px;">
@@ -479,27 +524,47 @@
         const IMG_DEFAULT_ICON = 'https://cdn-icons-png.flaticon.com/512/684/684908.png';
         const MAP_BOUNDS = [[0,0], [1080,1920]]; // Limites padrão (Mundi e Sub)
 
+        // == ESCALA DO MAPA PARA A CALCULADORA ==
+        // Troque esse número. Quantos quilômetros representa 1 pixel no seu mapa original?
+        const ESCALA_KM_POR_PIXEL = 2.5;
+
+        // == SISTEMA DE ROTAS HISTÓRICAS ==
+        const FACCOES_RPG = [
+            { id: 'grupo_1', nome: 'Os Corvos', cor: '#d32f2f' },    // Vermelho
+            { id: 'grupo_2', nome: 'Guardiões', cor: '#388e3c' },    // Verde
+            { id: 'imperio', nome: 'Império Noxkraya', cor: '#7b1fa2' }, // Roxo
+            { id: 'culto',   nome: 'Culto do Vazio', cor: '#fbc02d' }    // Amarelo
+        ];
+
         // Instâncias dos Mapas
         let mapMundi, subMap;
         let mundiOverlay, subMapOverlay;
         
-        // Estado Global
+        // Estado Global (Pinos)
         let markersMundi = []; 
         let currentSubMarkers = []; 
         let activeMainPinId = null; 
         
-        // Variáveis temporárias de controle
+        // Estado Global (Rotas)
+        let rotasSalvas = []; 
+        let isRouteModeActive = false;
+        let isDrawingRoute = false;
+        let routeDrawPoints = [];
+        let currentRoutePolyline = null;
+        let renderedRouteLayers = [];
+        
+        // Variáveis temporárias de controle (Modal/Uploads)
         let tempCoords = null;
         let editId = null;
         let isEditingSubPin = false; 
         let galleryImages = []; 
         let iconImage = null;
-        let subMapImage = null; // NOVA VARIÁVEL GLOBAL
+        let subMapImage = null;
         let pasteTarget = 'gallery'; 
 
         // Ferramenta de medição
         let isMeasuringSession = false; 
-        let isDrawing = false; 
+        let isDrawingMeasure = false; 
         let measureLine = null; 
         let measurePoints = []; 
 
@@ -543,6 +608,7 @@
             initSubMap();
             
             renderPlanes();
+            popularSelectRoutas();
             carregarDadosServidor();
 
             // Sincronização automática
@@ -579,7 +645,8 @@
             L.control.zoom({ position: 'bottomright' }).addTo(subMap);
 
             subMap.on('contextmenu', e => abrirContextMenu(e, true));
-            subMap.on('click', fecharContextMenu);
+            subMap.on('click', e => handleMapClick(e, subMap));
+            subMap.on('mousemove', e => handleMapMouseMove(e, subMap));
             subMap.on('movestart', fecharContextMenu);
         }
 
@@ -616,15 +683,17 @@
 
         // ================= GERENCIAMENTO DE PINS =================
 
-        function gerarIconHtml(iconSrc, isSubPin) {
-            const className = isSubPin ? 'sub-map-icon' : 'custom-map-icon';
-            const size = isSubPin ? '24px' : '40px';
+        function gerarIconHtml(iconSrc, isSubPin, isSimple) {
+            let className = isSubPin ? 'sub-map-icon' : 'custom-map-icon';
+            if (isSimple && !isSubPin) className = 'simple-map-icon'; 
+            
+            let size = (isSubPin || isSimple) ? '24px' : '40px';
             return `<img src="${iconSrc}" class="${className}" style="width:${size}; height:${size};">`;
         }
 
         function criarMarcadorMundi(data) {
             const safeIcon = data.icon || IMG_DEFAULT_ICON;
-            const iconHtml = gerarIconHtml(safeIcon, false);
+            const iconHtml = gerarIconHtml(safeIcon, false, data.isSimple);
             const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -20] });
             
             const marker = L.marker([data.lat, data.lng], {icon: customIcon}).addTo(mapMundi);
@@ -639,7 +708,7 @@
             limparSubMarkers();
             subPinsData.forEach(data => {
                 const safeIcon = data.icon || IMG_DEFAULT_ICON;
-                const iconHtml = gerarIconHtml(safeIcon, true);
+                const iconHtml = gerarIconHtml(safeIcon, true, data.isSimple);
                 const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [24, 24], iconAnchor: [12, 12], popupAnchor: [0, -12] });
                 
                 const marker = L.marker([data.lat, data.lng], {icon: customIcon}).addTo(subMap);
@@ -656,7 +725,7 @@
         }
 
         function refreshMarkerVisuals(pin, isSub) {
-            const iconHtml = gerarIconHtml(pin.icon, isSub);
+            const iconHtml = gerarIconHtml(pin.icon, isSub, pin.isSimple);
             const size = isSub ? [24, 24] : [40, 40];
             const anchor = isSub ? [12, 12] : [20, 20];
             const pAnchor = isSub ? [0, -12] : [0, -20];
@@ -704,7 +773,7 @@
                 </div>
             `;
 
-            if(!isSub && pin.subMapUrl) {
+            if(!isSub && pin.subMapUrl && !pin.isSimple) {
                 html += `
                     <button class="btn-action btn-enter-locale" onclick="entrarNoLocal(${pin.id})">
                         🗺️ EXPLORAR MAPA INTERNO
@@ -779,10 +848,10 @@
                 document.getElementById('btn-delete').style.display = 'block';
                 document.getElementById('input-nome').value = pin.nome;
                 document.getElementById('input-desc').value = pin.desc;
+                document.getElementById('input-simple-pin').checked = !!pin.isSimple;
                 
                 if(!isSub) {
                     fieldSubMapUrl.style.display = 'block';
-                    // CARREGA A IMAGEM EXISTENTE DO SUBMAPA
                     subMapImage = pin.subMapUrl; 
                 } else {
                     fieldSubMapUrl.style.display = 'none';
@@ -796,10 +865,10 @@
                 document.getElementById('btn-delete').style.display = 'none';
                 document.getElementById('input-nome').value = "";
                 document.getElementById('input-desc').value = "";
+                document.getElementById('input-simple-pin').checked = false;
                 
                 if(!isSub) {
                     fieldSubMapUrl.style.display = 'block';
-                    // RESETA A IMAGEM DO SUBMAPA
                     subMapImage = null; 
                 } else {
                     fieldSubMapUrl.style.display = 'none';
@@ -807,7 +876,7 @@
 
                 galleryImages = [];
                 iconImage = null;
-                subMapImage = null; // Reseta para novo ponto
+                subMapImage = null; 
                 setTimeout(() => document.getElementById('input-nome').focus(), 100);
             }
             renderFormVisuals();
@@ -819,13 +888,13 @@
         async function salvarPin() {
             const nome = document.getElementById('input-nome').value;
             const desc = document.getElementById('input-desc').value;
-            // Pega a URL do submapa da variável, não mais do input texto
+            const isSimple = document.getElementById('input-simple-pin').checked;
             const finalSubMapUrl = subMapImage; 
 
             if(!nome) { alert("O nome é obrigatório!"); return; }
             const finalIcon = iconImage || IMG_DEFAULT_ICON;
 
-            let pinCoreData = { nome, desc, icon: finalIcon, gallery: [...galleryImages] };
+            let pinCoreData = { nome, desc, icon: finalIcon, gallery: [...galleryImages], isSimple: isSimple };
 
             if (editId) {
                 if(isEditingSubPin) {
@@ -839,7 +908,7 @@
                 } else {
                     const pin = markersMundi.find(m => m.id === editId);
                     Object.assign(pin, pinCoreData);
-                    pin.subMapUrl = finalSubMapUrl; // Atualiza com a data URL
+                    pin.subMapUrl = finalSubMapUrl; 
                     refreshMarkerVisuals(pin, false);
                 }
             } else {
@@ -855,7 +924,7 @@
                     if(!mainPin.subPins) mainPin.subPins = [];
                     mainPin.subPins.push(novaData);
                 } else {
-                    novaData.subMapUrl = finalSubMapUrl; // Salva data URL
+                    novaData.subMapUrl = finalSubMapUrl;
                     novaData.subPins = [];
                     criarMarcadorMundi(novaData);
                 }
@@ -888,11 +957,99 @@
             atualizarListaLateral();
         }
 
+        // ================= SISTEMA DE ROTAS =================
+
+        function popularSelectRoutas() {
+            const select = document.getElementById('route-group-select');
+            select.innerHTML = '';
+            FACCOES_RPG.forEach(fac => {
+                select.innerHTML += `<option value="${fac.id}">${fac.nome}</option>`;
+            });
+        }
+
+        function toggleRouteMode() {
+            isRouteModeActive = !isRouteModeActive;
+            const btn = document.getElementById('btn-toggle-route');
+            const panel = document.getElementById('route-panel');
+            
+            if (isRouteModeActive) {
+                btn.classList.add('active');
+                panel.style.display = 'flex';
+                document.body.classList.add('route-mode-active');
+                if(isMeasuringSession) desativarMedicao();
+                renderAllRoutes();
+            } else {
+                btn.classList.remove('active');
+                panel.style.display = 'none';
+                document.body.classList.remove('route-mode-active');
+                isDrawingRoute = false;
+                document.getElementById('btn-draw-route').classList.remove('active');
+                if(currentRoutePolyline) mapMundi.removeLayer(currentRoutePolyline);
+            }
+        }
+
+        function startDrawingRoute() {
+            isDrawingRoute = true;
+            document.getElementById('btn-draw-route').classList.add('active');
+            routeDrawPoints = [];
+            
+            const selectedGroupId = document.getElementById('route-group-select').value;
+            const groupDef = FACCOES_RPG.find(g => g.id === selectedGroupId);
+            
+            currentRoutePolyline = L.polyline([], {
+                color: groupDef.cor, weight: 4, dashArray: '10, 15', opacity: 0.8
+            }).addTo(mapMundi);
+        }
+
+        function saveRoute() {
+            if(!isDrawingRoute || routeDrawPoints.length < 2) {
+                alert("Você precisa desenhar pelo menos uma reta no mapa antes de salvar.");
+                return;
+            }
+            
+            const selectedGroupId = document.getElementById('route-group-select').value;
+            
+            rotasSalvas.push({
+                id: Date.now(),
+                grupoId: selectedGroupId,
+                latlngs: [...routeDrawPoints]
+            });
+
+            isDrawingRoute = false;
+            document.getElementById('btn-draw-route').classList.remove('active');
+            routeDrawPoints = [];
+            currentRoutePolyline = null; 
+
+            alert("Rota de Facção salva no mapa!");
+            
+            /* TODO (Opcional): Integrar com seu Backend
+            fetch(`${API_URL}/mapa-rotas`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(rotasSalvas) 
+            }); */
+        }
+
+        function renderAllRoutes() {
+            renderedRouteLayers.forEach(layer => mapMundi.removeLayer(layer));
+            renderedRouteLayers = [];
+
+            rotasSalvas.forEach(rota => {
+                const groupDef = FACCOES_RPG.find(g => g.id === rota.grupoId);
+                const color = groupDef ? groupDef.cor : '#fff';
+
+                const poly = L.polyline(rota.latlngs, {
+                    color: color, weight: 3, dashArray: '10, 15', opacity: 0.7
+                }).addTo(mapMundi);
+                
+                renderedRouteLayers.push(poly);
+            });
+        }
+
+
         // ================= MENU E CLIQUES =================
 
         function abrirContextMenu(e, isSub) {
             L.DomEvent.preventDefault(e);
-            if(isMeasuringSession) return;
+            if(isMeasuringSession || isRouteModeActive) return;
             
             tempCoords = e.latlng;
             const menu = document.getElementById('ctx-menu');
@@ -912,39 +1069,66 @@
 
         function handleMapClick(e, activeMap) {
             fecharContextMenu();
+            
+            // 1. Régua / Calculadora
             if (isMeasuringSession) {
-                if (!isDrawing) {
-                    isDrawing = true;
+                if (!isDrawingMeasure) {
+                    isDrawingMeasure = true;
                     measurePoints = [e.latlng]; 
                     if (measureLine) activeMap.removeLayer(measureLine);
                     measureLine = L.polyline(measurePoints, {color: '#9c27b0', dashArray: '10, 10'}).addTo(activeMap);
                     document.getElementById('distancia-res').innerText = "Clique no destino para finalizar...";
                 } else {
-                    isDrawing = false;
-                    document.getElementById('distancia-res').innerText += " (Finalizado)";
+                    isDrawingMeasure = false;
+                    document.getElementById('distancia-res').innerHTML += "<br><span style='font-size:10px; color:#666;'>(Medição Finalizada)</span>";
                     desativarMedicao();
                 }
+                return;
+            }
+
+            // 2. Rotas Históricas
+            if (isRouteModeActive && isDrawingRoute && activeMap === mapMundi) {
+                routeDrawPoints.push(e.latlng);
+                currentRoutePolyline.setLatLngs(routeDrawPoints);
+                return;
             }
         }
 
         function handleMapMouseMove(e, activeMap) {
-            if(isMeasuringSession && isDrawing) {
+            // 1. Régua / Calculadora
+            if(isMeasuringSession && isDrawingMeasure) {
                 const mode = document.querySelector('input[name="measure-mode"]:checked').value;
+                let calcPoints = measurePoints;
+
                 if (mode === 'line') {
                     measureLine.setLatLngs([measurePoints[0], e.latlng]);
-                    const distPixels = activeMap.project(measurePoints[0]).distanceTo(activeMap.project(e.latlng));
-                    const distMetros = (distPixels * 0.015).toFixed(1);
-                    document.getElementById('distancia-res').innerText = `${distMetros}m`;
+                    calcPoints = [measurePoints[0], e.latlng];
                 } else {
                     measurePoints.push(e.latlng);
                     measureLine.setLatLngs(measurePoints);
-                    let totalPixels = 0;
-                    for(let i = 0; i < measurePoints.length - 1; i++) {
-                        totalPixels += activeMap.project(measurePoints[i]).distanceTo(activeMap.project(measurePoints[i+1]));
-                    }
-                    const distMetros = (totalPixels * 0.015).toFixed(1);
-                    document.getElementById('distancia-res').innerText = `${distMetros}m`;
                 }
+
+                let totalPixels = 0;
+                for(let i = 0; i < calcPoints.length - 1; i++) {
+                    totalPixels += activeMap.project(calcPoints[i]).distanceTo(activeMap.project(calcPoints[i+1]));
+                }
+
+                // Matemática do RPG
+                const distKm = (totalPixels * ESCALA_KM_POR_PIXEL);
+                const diasPe = (distKm / 30).toFixed(1);
+                const diasCavalo = (distKm / 50).toFixed(1);
+                const diasCarr = (distKm / 40).toFixed(1);
+
+                document.getElementById('distancia-res').innerHTML = `
+                    <span style="font-size:16px; color:#fff;">${distKm.toFixed(1)} km</span><br>
+                    <span style="color:#aaa;">🚶 ${diasPe} dias | 🐎 ${diasCavalo} dias | 🐴🛤️ ${diasCarr} dias</span>
+                `;
+            }
+
+            // 2. Traçado de Rotas Históricas (Realtime)
+            if(isRouteModeActive && isDrawingRoute && routeDrawPoints.length > 0) {
+                const tempPoints = [...routeDrawPoints, e.latlng];
+                currentRoutePolyline.setLatLngs(tempPoints);
             }
         }
 
@@ -1013,6 +1197,7 @@
                         const mudou = localPin.nome !== sp.nome || 
                                       localPin.desc !== sp.desc || 
                                       localPin.icon !== sp.icon || 
+                                      localPin.isSimple !== sp.isSimple || 
                                       localPin.subMapUrl !== sp.subMapUrl ||
                                       (localPin.subPins?.length || 0) !== (sp.subPins?.length || 0) ||
                                       JSON.stringify(localPin.gallery) !== JSON.stringify(sp.gallery);
@@ -1086,6 +1271,7 @@
                 
                 li.onclick = () => { 
                     if(activeMainPinId) voltarMapaMundi(); 
+                    if(isRouteModeActive) toggleRouteMode(); // Desativa as rotas para conseguir ver o pin
                     mapMundi.setMaxBounds(null); 
                     mapMundi.flyTo([pin.lat, pin.lng], 1, { animate: true, duration: 1 }); 
                     setTimeout(() => pin.marker.openPopup(), 1200);
@@ -1099,7 +1285,7 @@
             pasteTarget = target;
             document.getElementById('area-icon').classList.remove('paste-active');
             document.getElementById('area-gallery').classList.remove('paste-active');
-            document.getElementById('area-submap').classList.remove('paste-active'); // Reseta submap
+            document.getElementById('area-submap').classList.remove('paste-active'); 
             document.getElementById(`area-${target}`).classList.add('paste-active');
         }
 
@@ -1146,7 +1332,6 @@
             });
         });
 
-        // NOVO: Upload do Submapa
         document.getElementById('area-submap').addEventListener('click', () => {
             if (pasteTarget !== 'submap') setPasteTarget('submap'); 
             else document.getElementById('file-submap').click();
@@ -1166,7 +1351,7 @@
                     comprimirImagem(item.getAsFile(), res => {
                         if(pasteTarget === 'icon') iconImage = res;
                         else if(pasteTarget === 'gallery') galleryImages.push(res);
-                        else if(pasteTarget === 'submap') subMapImage = res; // Adiciona para submapa
+                        else if(pasteTarget === 'submap') subMapImage = res; 
                         renderFormVisuals();
                     });
                 }
@@ -1198,10 +1383,18 @@
                 areaIcon.classList.remove('has-file');
             }
 
-            // NOVO: Preview do Submapa
             const prevSubmap = document.getElementById('preview-submap');
             const placeSubmap = document.getElementById('placeholder-submap');
             const areaSubmap = document.getElementById('area-submap');
+
+            // Lógica para esconder a interface de Submapa se for um Pino Simples
+            const isSimplePin = document.getElementById('input-simple-pin').checked;
+            const containerSubmapUrl = document.getElementById('group-submap-url');
+            if(isSimplePin || isEditingSubPin) {
+                containerSubmapUrl.style.display = 'none';
+            } else {
+                containerSubmapUrl.style.display = 'block';
+            }
 
             if(subMapImage) {
                 prevSubmap.src = subMapImage;
@@ -1215,6 +1408,9 @@
             }
         }
 
+        // Listener para esconder a caixa de submapa imediatamente se ele checar o box de Pinos Simples
+        document.getElementById('input-simple-pin').addEventListener('change', renderFormVisuals);
+
         window.removeImg = (e, idx) => {
             e.stopPropagation();
             galleryImages.splice(idx, 1);
@@ -1222,19 +1418,17 @@
         };
 
         function toggleMedicao() {
+            if(isRouteModeActive) return alert("Desative o Modo Rastro de Facções primeiro.");
+            
             isMeasuringSession = !isMeasuringSession;
             const btn = document.getElementById('btn-medir');
-            const activeMap = activeMainPinId ? subMap : mapMundi;
             const mapDom = activeMainPinId ? document.getElementById('sub-map') : document.getElementById('map');
 
             if(isMeasuringSession) {
                 btn.classList.add('active');
                 mapDom.style.cursor = 'crosshair';
                 document.getElementById('distancia-res').innerText = "Clique no ponto A para começar...";
-                isDrawing = false;
-                
-                activeMap.on('mousemove', e => handleMapMouseMove(e, activeMap));
-                activeMap.on('click', e => handleMapClick(e, activeMap));
+                isDrawingMeasure = false;
             } else {
                 desativarMedicao();
             }
@@ -1242,16 +1436,10 @@
 
         function desativarMedicao() {
             isMeasuringSession = false;
-            isDrawing = false;
+            isDrawingMeasure = false;
             document.getElementById('btn-medir').classList.remove('active');
             document.getElementById('map').style.cursor = 'default';
             document.getElementById('sub-map').style.cursor = 'default';
-            
-            mapMundi.off('mousemove'); mapMundi.off('click', handleMapClick);
-            subMap.off('mousemove'); subMap.off('click', handleMapClick);
-            
-            mapMundi.on('click', e => handleMapClick(e, mapMundi));
-            subMap.on('click', fecharContextMenu);
         }
 
         function limparMedicao() {
@@ -1259,7 +1447,7 @@
             if(measureLine) activeMap.removeLayer(measureLine);
             measureLine = null;
             measurePoints = [];
-            isDrawing = false;
+            isDrawingMeasure = false;
             document.getElementById('distancia-res').innerText = isMeasuringSession ? "Clique no ponto A..." : "";
         }
 
