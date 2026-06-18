@@ -19,12 +19,10 @@
             --danger: #d32f2f;
             --text-main: #e0e0e0;
             --shadow-sub: 0 0 20px rgba(156, 39, 176, 0.5);
+            --gold: #ffd700;
         }
 
-        body { 
-            margin: 0; padding: 0; background: var(--bg-dark); 
-            font-family: 'Segoe UI', Tahoma, sans-serif; overflow: hidden; color: var(--text-main); 
-        }
+        body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Segoe UI', Tahoma, sans-serif; overflow: hidden; color: var(--text-main); }
         
         #maps-wrapper { position: relative; width: 100vw; height: 100vh; z-index: 1; }
         .map-instance { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); cursor: default; transition: opacity 0.5s ease, z-index 0.5s step-end; }
@@ -35,12 +33,7 @@
         body.submap-active #map { opacity: 0; z-index: 1; pointer-events: none; }
         body.submap-active #sub-map-container { opacity: 1; z-index: 2; pointer-events: auto; }
 
-        #btn-back-main {
-            position: absolute; top: 20px; left: 20px; z-index: 3000; padding: 12px 20px;
-            background: rgba(10, 10, 10, 0.8); border: 2px solid var(--accent); color: #fff;
-            border-radius: 8px; cursor: pointer; font-weight: bold; display: none; align-items: center; gap: 8px;
-            backdrop-filter: blur(5px); box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: 0.2s;
-        }
+        #btn-back-main { position: absolute; top: 20px; left: 20px; z-index: 3000; padding: 12px 20px; background: rgba(10, 10, 10, 0.8); border: 2px solid var(--accent); color: #fff; border-radius: 8px; cursor: pointer; font-weight: bold; display: none; align-items: center; gap: 8px; backdrop-filter: blur(5px); box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: 0.2s; }
         #btn-back-main:hover { background: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow-sub); }
         body.submap-active #btn-back-main { display: flex; animation: fadeIn 0.5s; }
 
@@ -50,23 +43,10 @@
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
         /* ================= SIDEBAR ================= */
-        .sidebar {
-            position: fixed; top: 20px; right: 0; width: 340px; height: calc(100vh - 40px);
-            background: var(--bg-panel); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid var(--border); border-right: none; border-radius: 12px 0 0 12px;
-            box-shadow: -10px 20px 50px rgba(0,0,0,0.8); z-index: 2000;
-            display: flex; flex-direction: column; transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-        }
+        .sidebar { position: fixed; top: 20px; right: 0; width: 340px; height: calc(100vh - 40px); background: var(--bg-panel); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid var(--border); border-right: none; border-radius: 12px 0 0 12px; box-shadow: -10px 20px 50px rgba(0,0,0,0.8); z-index: 2000; display: flex; flex-direction: column; transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
         .sidebar.collapsed { transform: translateX(100%); }
-
-        .sidebar-toggle {
-            position: absolute; left: -40px; top: 20px; width: 40px; height: 40px;
-            background: #151515; border: 1px solid var(--border); border-right: none; border-radius: 8px 0 0 8px;
-            color: var(--accent); cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 20px; box-shadow: -5px 5px 15px rgba(0,0,0,0.3); transition: 0.2s;
-        }
+        .sidebar-toggle { position: absolute; left: -40px; top: 20px; width: 40px; height: 40px; background: #151515; border: 1px solid var(--border); border-right: none; border-radius: 8px 0 0 8px; color: var(--accent); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: -5px 5px 15px rgba(0,0,0,0.3); transition: 0.2s; }
         .sidebar-toggle:hover { color: #fff; background: var(--accent); border-color: var(--accent); padding-right: 5px; }
-
         .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); border-radius: 12px 0 0 0; flex-shrink: 0; }
         .sidebar-header h2 { margin: 0; font-size: 16px; color: #fff; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; display:flex; align-items:center; gap:10px; }
         .sidebar-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
@@ -74,10 +54,7 @@
         body.submap-active #sidebar { pointer-events: none; opacity: 0.5; }
         body.submap-active #sidebar .sidebar-toggle { pointer-events: auto; }
 
-        .input-dark {
-            width: 100%; background: #050505 !important; border: 1px solid #444; color: #fff !important;
-            padding: 12px; border-radius: 6px; box-sizing: border-box; transition: 0.2s; font-size: 14px; color-scheme: dark;
-        }
+        .input-dark { width: 100%; background: #050505 !important; border: 1px solid #444; color: #fff !important; padding: 12px; border-radius: 6px; box-sizing: border-box; transition: 0.2s; font-size: 14px; color-scheme: dark; }
         .input-dark:focus { outline: none; border-color: var(--accent); background: #000 !important; }
         textarea.input-dark { resize: vertical; min-height: 80px; line-height: 1.5; }
 
@@ -89,21 +66,14 @@
 
         .locais-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; min-height: 150px; }
         .location-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
-        .location-item {
-            padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid transparent; border-radius: 6px;
-            cursor: pointer; font-size: 14px; transition: 0.2s; display: flex; align-items: center; gap: 12px;
-        }
+        .location-item { padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid transparent; border-radius: 6px; cursor: pointer; font-size: 14px; transition: 0.2s; display: flex; align-items: center; gap: 12px; }
         .location-item:hover { border-color: #555; background: rgba(255,255,255,0.08); transform: translateX(2px); }
         .loc-icon-small { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; background: #000; border: 1px solid #555; }
 
         .measure-tools { display: flex; flex-direction: column; gap: 10px; background: #111; padding: 10px; border-radius: 8px; border: 1px solid #333; }
         .measure-options { display: flex; gap: 10px; font-size: 11px; color: #ccc; justify-content: center; }
 
-        .btn-action {
-            width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #ccc;
-            border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 13px;
-            display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase;
-        }
+        .btn-action { width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #ccc; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; }
         .btn-action:hover { background: #333; color: #fff; border-color: #666; }
         .btn-action.primary { background: var(--accent); color: white; border: none; }
         .btn-action.primary:hover { filter: brightness(1.2); box-shadow: 0 0 15px rgba(156, 39, 176, 0.4); }
@@ -154,18 +124,24 @@
         .leaflet-popup-tip { background: var(--accent); }
         .leaflet-popup-content { margin: 15px; width: 320px !important; }
         
-        .custom-map-icon { border: 2px solid #fff; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.8); transition: transform 0.2s, opacity 0.3s; background: #111; box-sizing: border-box; padding: 4px; object-fit: contain !important; }
+        .custom-map-icon { border: 2px solid #fff; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.8); transition: transform 0.2s, opacity 0.3s; background: #111; box-sizing: border-box; padding: 4px; object-fit: contain !important; z-index: 500; }
         .custom-map-icon:hover { transform: scale(1.3); border-color: var(--accent); z-index: 1000 !important; }
+        
         .sub-map-icon { border: 2px solid var(--accent); border-radius: 50%; box-shadow: var(--shadow-sub); transition: 0.2s, opacity 0.3s; background: #000; box-sizing: border-box; padding: 2px; object-fit: contain !important; }
         .sub-map-icon:hover { transform: scale(1.3); background: #1a1a1a; z-index: 1000 !important; }
         
         /* PIN SIMPLES (Boatos/Temporários) */
-        .simple-map-icon { border: 1px dashed #aaa; border-radius: 50%; background: rgba(20, 20, 20, 0.6); opacity: 0.8; box-sizing: border-box; padding: 2px; object-fit: contain !important; filter: grayscale(40%); transition: transform 0.3s, opacity 0.3s; }
-        .simple-map-icon:hover { opacity: 1; transform: scale(1.2); border-color: #fff; z-index: 1000 !important;}
+        .simple-map-icon { border: 1px dashed #aaa; border-radius: 50%; background: rgba(20, 20, 20, 0.4); opacity: 0.5; box-sizing: border-box; padding: 2px; object-fit: contain !important; filter: grayscale(40%); transition: transform 0.3s, opacity 0.3s; z-index: 400; }
+        .simple-map-icon:hover { opacity: 0.9; transform: scale(1.2); border-color: #fff; z-index: 1000 !important;}
+
+        /* PIN CAPITAL */
+        .capital-map-icon { border: 3px solid var(--gold); border-radius: 8px; box-shadow: 0 0 15px var(--gold), inset 0 0 10px var(--gold); transition: transform 0.2s; background: #222; box-sizing: border-box; padding: 4px; object-fit: cover !important; z-index: 800 !important; }
+        .capital-map-icon:hover { transform: scale(1.2); border-color: #fff; z-index: 1100 !important; }
 
         /* ESTADO: MODO DE ROTAS ATIVO (Encolhe todos os pinos) */
         body.route-mode-active .custom-map-icon,
         body.route-mode-active .simple-map-icon,
+        body.route-mode-active .capital-map-icon,
         body.route-mode-active .sub-map-icon { transform: scale(0.4) !important; opacity: 0.3 !important; filter: grayscale(100%); pointer-events: none; }
 
         .popup-header { display:flex; align-items:center; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; margin-bottom: 10px; }
@@ -258,7 +234,7 @@
 
                 <div style="display:flex; gap: 8px; margin-top: 10px;">
                     <button class="btn-action" id="btn-medir" onclick="toggleMedicao()" style="flex:1;">📏 Medir Trajeto</button>
-                    <button class="btn-action" onclick="limparMedicao(); desativarMedicao();" style="width: auto; background: #221111; border-color: #442222; color: #ff8888;" title="Limpar Medição">🗑️</button>
+                    <button class="btn-action" onclick="limparMedicao();" style="width: auto; background: #221111; border-color: #442222; color: #ff8888;" title="Limpar Medição">🗑️</button>
                 </div>
                 <div id="distancia-res" style="font-size: 13px; color: #e0aaff; margin-top: 8px; text-align: center; min-height: 40px; font-weight: bold; font-family: monospace; line-height: 1.4;"></div>
             </div>
@@ -302,14 +278,16 @@
                     <input type="text" id="input-nome" class="input-dark" placeholder="Ex: Fortaleza Noxkraya ou Taverna do Dragão">
                 </div>
 
-                <div style="background: #151515; padding: 10px; border-radius: 6px; border: 1px solid #333; margin-bottom: 10px;">
+                <div style="background: #151515; padding: 10px; border-radius: 6px; border: 1px solid #333; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px;">
                     <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#ccc; font-size: 13px; font-weight: bold;">
-                        <input type="checkbox" id="input-simple-pin" style="accent-color: var(--accent);"> 
-                        📌 Pino Simples (Boato, Acampamento, Temporário)
+                        <input type="checkbox" id="input-capital-pin" style="accent-color: var(--gold);" onchange="document.getElementById('input-simple-pin').checked = false;"> 
+                        🏰 Capital (Símbolo Quadrado Maior)
                     </label>
-                    <span style="font-size: 10px; color: #666; display: block; margin-top: 4px; margin-left: 25px;">
-                        Pinos simples são translúcidos e menores. Não possuem mapas internos exploráveis.
-                    </span>
+                    
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#ccc; font-size: 13px; font-weight: bold;">
+                        <input type="checkbox" id="input-simple-pin" style="accent-color: var(--accent);" onchange="document.getElementById('input-capital-pin').checked = false;"> 
+                        📌 Pino Simples (Boato, Acampamento)
+                    </label>
                 </div>
 
                 <div id="group-submap-url" style="margin-bottom:20px;">
@@ -455,44 +433,48 @@
                 }
             }, 10000); 
 
-            // Quando mudar de modo (Reta <-> Livre) durante a medição, fecha o segmento atual
+            // Quando mudar de modo (Reta <-> Livre) com as teclas ou mouse
             document.querySelectorAll('input[name="measure-mode"]').forEach(radio => {
                 radio.addEventListener('change', () => {
                     if (isMeasuringSession && isDrawingMeasure && currentFixedPoints.length > 0) {
                         const activeMap = activeMainPinId ? subMap : mapMundi;
+                        // Força o último ponto a ser um encerramento do trecho anterior
                         comitarTrechoDeMedicao(activeMap, currentFixedPoints[currentFixedPoints.length - 1]);
                     }
                 });
             });
         };
 
-        // ================= PROTEÇÃO DA SIDEBAR & TECLAS DE CANCELAMENTO =================
+        // ================= PROTEÇÃO DA SIDEBAR E CANCELAMENTO =================
         function configurarProtecaoSidebar() {
             const sidebarEl = document.getElementById('sidebar');
-            // Impede cliques no painel de vazarem para o mapa
             L.DomEvent.disableClickPropagation(sidebarEl);
             L.DomEvent.disableScrollPropagation(sidebarEl);
-            // Impede a linha de desenho de tentar seguir o mouse pra dentro do painel
-            sidebarEl.addEventListener('mousemove', e => L.DomEvent.stopPropagation(e));
+            sidebarEl.addEventListener('mousemove', e => {
+                L.DomEvent.stopPropagation(e);
+            });
         }
 
         document.addEventListener('keydown', (e) => {
             if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-            if (e.key === 'Escape' || e.key === 'Backspace') {
+            // Encerra e cancela as ações
+            if (e.key === 'Escape' || e.key === 'Backspace' || e.key.toLowerCase() === 'w') {
                 if (isMeasuringSession) {
-                    limparMedicao();
+                    if(isDrawingMeasure && currentFixedPoints.length > 0) {
+                        // Ao invés de apagar tudo, finaliza o trecho atual mas deixa desenhado
+                        const activeMap = activeMainPinId ? subMap : mapMundi;
+                        comitarTrechoDeMedicao(activeMap, currentFixedPoints[currentFixedPoints.length - 1]);
+                    }
                     desativarMedicao();
                 }
                 if (isRouteModeActive && isDrawingRoute) {
                     isDrawingRoute = false;
                     document.getElementById('btn-draw-route').classList.remove('active');
-                    if (currentRoutePolyline) mapMundi.removeLayer(currentRoutePolyline);
-                    routeDrawPoints = [];
-                    currentRoutePolyline = null;
                 }
             }
 
+            // Teclas de Troca Inteligente
             if (e.key.toLowerCase() === 'q') {
                 if(!isRouteModeActive) { 
                     if(!isMeasuringSession) toggleMedicao();
@@ -505,12 +487,6 @@
                     if(!isMeasuringSession) toggleMedicao();
                     const radio = document.querySelector('input[name="measure-mode"][value="draw"]');
                     if(!radio.checked) { radio.checked = true; radio.dispatchEvent(new Event('change')); }
-                }
-            }
-            if (e.key.toLowerCase() === 'w') {
-                if(isMeasuringSession) {
-                    limparMedicao();
-                    desativarMedicao();
                 }
             }
         });
@@ -530,6 +506,10 @@
             mapMundi.on('click', e => handleMapClick(e, mapMundi));
             mapMundi.on('mousemove', e => handleMapMouseMove(e, mapMundi));
             mapMundi.on('popupclose', () => mapMundi.setMaxBounds(MAP_BOUNDS));
+            
+            mapMundi.on('popupopen', function(e) {
+                if (isMeasuringSession || isRouteModeActive) { mapMundi.closePopup(e.popup); }
+            });
         }
 
         function initSubMap() {
@@ -542,6 +522,10 @@
             subMap.on('contextmenu', e => handleMapContextMenu(e, subMap));
             subMap.on('click', e => handleMapClick(e, subMap));
             subMap.on('mousemove', e => handleMapMouseMove(e, subMap));
+            
+            subMap.on('popupopen', function(e) {
+                if (isMeasuringSession || isRouteModeActive) { subMap.closePopup(e.popup); }
+            });
         }
 
         // ================= ROTAS HISTÓRICAS =================
@@ -574,7 +558,7 @@
                 btn.style.color = 'var(--accent)';
                 panel.style.display = 'flex';
                 document.body.classList.add('route-mode-active'); 
-                if(isMeasuringSession) { limparMedicao(); desativarMedicao(); }
+                if(isMeasuringSession) { desativarMedicao(); }
                 renderAllRoutes();
             } else {
                 btn.style.color = '#888';
@@ -637,7 +621,7 @@
             });
         }
 
-        // ================= SISTEMA DE PINS (COM ABERTURA MANUAL E SNAPPING) =================
+        // ================= SISTEMA DE PINS (CAPITAL E SIMPLES) =================
         window.entrarNoLocal = function(pinId) {
             const pinMundi = markersMundi.find(m => m.id === pinId);
             if(!pinMundi || !pinMundi.subMapUrl) return alert("Este local não possui um mapa interno configurado.");
@@ -662,17 +646,30 @@
             setTimeout(() => mapMundi.invalidateSize(), 500);
         }
 
-        function gerarIconHtml(iconSrc, isSubPin, isSimple) {
+        function gerarIconHtml(iconSrc, isSubPin, isSimple, isCapital) {
             let className = isSubPin ? 'sub-map-icon' : 'custom-map-icon';
-            if(isSimple && !isSubPin) className = 'simple-map-icon';
-            const size = (isSubPin || isSimple) ? '24px' : '40px';
+            let size = isSubPin ? '24px' : '40px';
+
+            if(isSimple && !isSubPin) {
+                className = 'simple-map-icon';
+                size = '24px';
+            }
+            if(isCapital && !isSubPin) {
+                className = 'capital-map-icon';
+                size = '48px';
+            }
+            
             return `<img src="${iconSrc}" class="${className}" style="width:${size}; height:${size};">`;
         }
 
         function criarMarcadorMundi(data) {
             const safeIcon = data.icon || IMG_DEFAULT_ICON;
-            const iconHtml = gerarIconHtml(safeIcon, false, data.isSimple);
-            const anchorPoint = data.isSimple ? [12,12] : [20,20];
+            const iconHtml = gerarIconHtml(safeIcon, false, data.isSimple, data.isCapital);
+            
+            let anchorPoint = [20,20];
+            if(data.isSimple) anchorPoint = [12,12];
+            if(data.isCapital) anchorPoint = [24,24];
+
             const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [40, 40], iconAnchor: anchorPoint, popupAnchor: [0, -20] });
             
             const marker = L.marker([data.lat, data.lng], {icon: customIcon}).addTo(mapMundi);
@@ -681,15 +678,10 @@
             marker.on('click', (e) => {
                 L.DomEvent.stopPropagation(e);
                 if (isMeasuringSession || isRouteModeActive) {
-                    // ÍMÃ: Gruda a linha no pino e continua/termina
                     handleMapClick({ latlng: marker.getLatLng() }, mapMundi);
                 } else {
-                    // Abre o popup normalmente se não estiver medindo
                     mapMundi.setMaxBounds(null);
-                    L.popup({ maxWidth: 2000 })
-                     .setLatLng(marker.getLatLng())
-                     .setContent(gerarPopupContent(pinData, false))
-                     .openOn(mapMundi);
+                    L.popup({ maxWidth: 2000 }).setLatLng(marker.getLatLng()).setContent(gerarPopupContent(pinData, false)).openOn(mapMundi);
                 }
             });
 
@@ -700,9 +692,8 @@
             limparSubMarkers();
             subPinsData.forEach(data => {
                 const safeIcon = data.icon || IMG_DEFAULT_ICON;
-                const iconHtml = gerarIconHtml(safeIcon, true, false);
+                const iconHtml = gerarIconHtml(safeIcon, true, false, false);
                 const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [24, 24], iconAnchor: [12, 12], popupAnchor: [0, -12] });
-                
                 const marker = L.marker([data.lat, data.lng], {icon: customIcon}).addTo(subMap);
                 const subPinObj = { ...data, marker };
                 
@@ -711,10 +702,7 @@
                     if (isMeasuringSession || isRouteModeActive) {
                         handleMapClick({ latlng: marker.getLatLng() }, subMap);
                     } else {
-                        L.popup({ maxWidth: 2000 })
-                         .setLatLng(marker.getLatLng())
-                         .setContent(gerarPopupContent(subPinObj, true))
-                         .openOn(subMap);
+                        L.popup({ maxWidth: 2000 }).setLatLng(marker.getLatLng()).setContent(gerarPopupContent(subPinObj, true)).openOn(subMap);
                     }
                 });
 
@@ -728,10 +716,14 @@
         }
 
         function refreshMarkerVisuals(pin, isSub) {
-            const iconHtml = gerarIconHtml(pin.icon, isSub, pin.isSimple);
-            const size = (isSub || pin.isSimple) ? [24, 24] : [40, 40];
-            const anchor = (isSub || pin.isSimple) ? [12, 12] : [20, 20];
+            const iconHtml = gerarIconHtml(pin.icon, isSub, pin.isSimple, pin.isCapital);
+            
+            let size = isSub ? [24, 24] : [40, 40];
+            let anchor = isSub ? [12, 12] : [20, 20];
             const pAnchor = isSub ? [0, -12] : [0, -20];
+
+            if(pin.isSimple) { size = [24,24]; anchor = [12,12]; }
+            if(pin.isCapital) { size = [48,48]; anchor = [24,24]; }
 
             const newIcon = L.divIcon({ html: iconHtml, className: '', iconSize: size, iconAnchor: anchor, popupAnchor: pAnchor });
             pin.marker.setIcon(newIcon);
@@ -814,6 +806,7 @@
             
             const fieldSubMapUrl = document.getElementById('group-submap-url');
             const checkboxSimple = document.getElementById('input-simple-pin');
+            const checkboxCapital = document.getElementById('input-capital-pin');
 
             if (pinId) {
                 editId = pinId;
@@ -823,20 +816,22 @@
                 document.getElementById('btn-delete').style.display = 'block';
                 document.getElementById('input-nome').value = pin.nome;
                 document.getElementById('input-desc').value = pin.desc;
+                
                 checkboxSimple.checked = pin.isSimple || false;
+                checkboxCapital.checked = pin.isCapital || false;
                 
                 if(!isSub) { fieldSubMapUrl.style.display = 'block'; subMapImage = pin.subMapUrl; } else { fieldSubMapUrl.style.display = 'none'; }
-                
                 galleryImages = [...(pin.gallery || [])]; iconImage = pin.icon;
             } else {
                 editId = null;
                 document.getElementById('modal-title').innerText = isSub ? "Novo Ponto de Interesse" : "Novo Local Principal";
                 document.getElementById('btn-delete').style.display = 'none';
                 document.getElementById('input-nome').value = ""; document.getElementById('input-desc').value = "";
+                
                 checkboxSimple.checked = false;
+                checkboxCapital.checked = false;
                 
                 if(!isSub) { fieldSubMapUrl.style.display = 'block'; subMapImage = null; } else { fieldSubMapUrl.style.display = 'none'; }
-                
                 galleryImages = []; iconImage = null; subMapImage = null; 
                 setTimeout(() => document.getElementById('input-nome').focus(), 100);
             }
@@ -849,11 +844,12 @@
             const nome = document.getElementById('input-nome').value;
             const desc = document.getElementById('input-desc').value;
             const isSimple = document.getElementById('input-simple-pin').checked;
+            const isCapital = document.getElementById('input-capital-pin').checked;
             const finalSubMapUrl = subMapImage; 
 
             if(!nome) return alert("O nome é obrigatório!"); 
             const finalIcon = iconImage || IMG_DEFAULT_ICON;
-            let pinCoreData = { nome, desc, icon: finalIcon, gallery: [...galleryImages], isSimple };
+            let pinCoreData = { nome, desc, icon: finalIcon, gallery: [...galleryImages], isSimple, isCapital };
 
             if (editId) {
                 if(isEditingSubPin) {
@@ -895,7 +891,7 @@
             await salvarEstadoNoServidor(); fecharModal(); atualizarListaLateral();
         }
 
-        // ================= CLIQUES, MOUSE E MEDIÇÃO =================
+        // ================= CLIQUES E MOUSE PARA MEDIÇÃO =================
         function comitarTrechoDeMedicao(activeMap, endPoint) {
             currentFixedPoints.push(endPoint); 
             
@@ -921,7 +917,7 @@
         function handleMapContextMenu(e, activeMap) {
             L.DomEvent.preventDefault(e);
 
-            // Botão direito salva o trecho e continua do mesmo lugar (Modo Partes implícito)
+            // Botão Direito corta e cria nova parte na medição (Qualquer modo)
             if(isMeasuringSession && isDrawingMeasure) {
                 comitarTrechoDeMedicao(activeMap, e.latlng);
                 return;
@@ -960,7 +956,7 @@
                     }
                 } else {
                     if (mode === 'line') {
-                        currentFixedPoints.push(e.latlng);
+                        currentFixedPoints.push(e.latlng); 
                     } else if (mode === 'draw') {
                         currentFixedPoints.push(e.latlng); 
                     }
@@ -1016,7 +1012,7 @@
             if(completedSegmentsKms.length > 0) {
                 html += `<div style="font-size:10px; color:#aaa; margin-bottom:5px; text-align:left; background:#111; padding:5px; border-radius:4px; max-height:100px; overflow-y:auto;">`;
                 completedSegmentsKms.forEach((km, idx) => {
-                    html += `<strong style="color:#e0aaff;">P${idx+1}:</strong> ${km}km <span style="font-size:9px; color:#888;">(${getTimesHTML(km)})</span><br>`;
+                    html += `<strong style="color:#e0aaff;">Trecho ${idx+1}:</strong> ${km}km <span style="font-size:9px; color:#888;">(${getTimesHTML(km)})</span><br>`;
                     totalGeral += parseFloat(km);
                 });
                 if(currentDistKm > 0.1) {
@@ -1037,7 +1033,6 @@
             if(isRouteModeActive) return alert("Desative o Modo Rastro primeiro para usar a régua.");
             
             if(isMeasuringSession) {
-                limparMedicao();
                 desativarMedicao();
             } else {
                 isMeasuringSession = true;
@@ -1118,7 +1113,7 @@
                     const localPin = markersMundi.find(m => m.id === sp.id);
                     if (!localPin) criarMarcadorMundi(sp);
                     else {
-                        const mudou = localPin.nome !== sp.nome || localPin.desc !== sp.desc || localPin.icon !== sp.icon || localPin.subMapUrl !== sp.subMapUrl || localPin.isSimple !== sp.isSimple || (localPin.subPins?.length || 0) !== (sp.subPins?.length || 0) || JSON.stringify(localPin.gallery) !== JSON.stringify(sp.gallery);
+                        const mudou = localPin.nome !== sp.nome || localPin.desc !== sp.desc || localPin.icon !== sp.icon || localPin.subMapUrl !== sp.subMapUrl || localPin.isSimple !== sp.isSimple || localPin.isCapital !== sp.isCapital || (localPin.subPins?.length || 0) !== (sp.subPins?.length || 0) || JSON.stringify(localPin.gallery) !== JSON.stringify(sp.gallery);
                         if (mudou) { Object.assign(localPin, sp); localPin.subPins = sp.subPins || []; refreshMarkerVisuals(localPin, false); }
                     }
                 });
