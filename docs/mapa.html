@@ -23,75 +23,22 @@
 
         body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Segoe UI', Tahoma, sans-serif; overflow: hidden; color: var(--text-main); }
         
-        /* Container principal para segurar os dois mapas */
-        #maps-wrapper {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1;
-        }
-
-        /* Estilo comum para os mapas */
-        .map-instance {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-dark);
-            cursor: default;
-            transition: opacity 0.5s ease, z-index 0.5s step-end;
-        }
-
-        /* Mapa Principal na frente */
+        #maps-wrapper { position: relative; width: 100vw; height: 100vh; z-index: 1; }
+        .map-instance { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); cursor: default; transition: opacity 0.5s ease, z-index 0.5s step-end; }
         #map { z-index: 2; opacity: 1; }
-
-        /* Mapa Secundário atrás, invisível inicialmente */
-        #sub-map-container {
-            z-index: 1;
-            opacity: 0;
-            pointer-events: none; /* Impede interações quando escondido */
-        }
-        
+        #sub-map-container { z-index: 1; opacity: 0; pointer-events: none; }
         #sub-map { width: 100%; height: 100%; }
 
-        /* Estado quando o SubMapa está ativo */
-        body.submap-active #map {
-            opacity: 0;
-            z-index: 1;
-            pointer-events: none;
-        }
-        body.submap-active #sub-map-container {
-            opacity: 1;
-            z-index: 2;
-            pointer-events: auto;
-        }
+        body.submap-active #map { opacity: 0; z-index: 1; pointer-events: none; }
+        body.submap-active #sub-map-container { opacity: 1; z-index: 2; pointer-events: auto; }
 
-        /* Botão flutuante para voltar do submapa */
         #btn-back-main {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 3000;
-            padding: 12px 20px;
-            background: rgba(10, 10, 10, 0.8);
-            border: 2px solid var(--accent);
-            color: #fff;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            display: none; /* Escondido por padrão */
-            align-items: center;
-            gap: 8px;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            transition: 0.2s;
+            position: absolute; top: 20px; left: 20px; z-index: 3000; padding: 12px 20px;
+            background: rgba(10, 10, 10, 0.8); border: 2px solid var(--accent); color: #fff;
+            border-radius: 8px; cursor: pointer; font-weight: bold; display: none; align-items: center; gap: 8px;
+            backdrop-filter: blur(5px); box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: 0.2s;
         }
-        #btn-back-main:hover {
-            background: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-sub);
-        }
+        #btn-back-main:hover { background: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow-sub); }
         body.submap-active #btn-back-main { display: flex; animation: fadeIn 0.5s; }
 
         ::-webkit-scrollbar { width: 6px; }
@@ -116,31 +63,22 @@
             font-size: 20px; box-shadow: -5px 5px 15px rgba(0,0,0,0.3); transition: 0.2s;
         }
         .sidebar-toggle:hover { color: #fff; background: var(--accent); border-color: var(--accent); padding-right: 5px; }
-
-        .sidebar-header {
-            padding: 20px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); border-radius: 12px 0 0 0; flex-shrink: 0;
-        }
+        .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); border-radius: 12px 0 0 0; flex-shrink: 0; }
         .sidebar-header h2 { margin: 0; font-size: 16px; color: #fff; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; display:flex; align-items:center; gap:10px; }
-
         .sidebar-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
 
-        /* Sidebar bloqueada quando no submapa */
-        body.submap-active #sidebar {
-            pointer-events: none;
-            opacity: 0.5;
-        }
-        body.submap-active #sidebar .sidebar-toggle { pointer-events: auto; } /* Permite fechar a sidebar */
+        body.submap-active #sidebar { pointer-events: none; opacity: 0.5; }
+        body.submap-active #sidebar .sidebar-toggle { pointer-events: auto; }
 
         .input-dark {
             width: 100%; background: #050505 !important; border: 1px solid #444; color: #fff !important;
-            padding: 12px; border-radius: 6px; box-sizing: border-box; transition: 0.2s; font-size: 14px;
-            color-scheme: dark;
+            padding: 12px; border-radius: 6px; box-sizing: border-box; transition: 0.2s; font-size: 14px; color-scheme: dark;
         }
         .input-dark:focus { outline: none; border-color: var(--accent); background: #000 !important; }
         textarea.input-dark { resize: vertical; min-height: 80px; line-height: 1.5; }
 
+        /* ================= PAINÉIS DA SIDEBAR ================= */
         .search-box { position: relative; margin-bottom: 10px; }
-        .search-box span { position: absolute; right: 12px; top: 12px; color: #666; pointer-events: none; }
         .search-options { display: flex; gap: 15px; font-size: 12px; color: #aaa; }
         .search-options label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
         .search-options input { accent-color: var(--accent); }
@@ -156,10 +94,8 @@
 
         .measure-tools { display: flex; flex-direction: column; gap: 10px; background: #111; padding: 10px; border-radius: 8px; border: 1px solid #333; }
         .measure-options { display: flex; gap: 10px; font-size: 11px; color: #ccc; justify-content: center; }
-        .measure-options label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
-        
         .route-mode-container { background: #1a101f; padding: 10px; border-radius: 8px; border: 1px solid #4a215a; }
-        
+
         .btn-action {
             width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #ccc;
             border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 13px;
@@ -171,12 +107,7 @@
         .btn-action.danger { background: #441111; color: #ff9999; border: 1px solid #662222; }
         .btn-action.danger:hover { background: var(--danger); color: white; }
         .btn-action.active { background: var(--accent); color: #fff; border-color: #d05ce3; }
-        
-        /* Botão específico para entrar no local no popup */
-        .btn-enter-locale {
-            background: #1a1a1a; border: 1px solid var(--accent); color: var(--accent);
-            margin-top: 8px; justify-content: center; font-size: 11px; letter-spacing: 1px;
-        }
+        .btn-enter-locale { background: #1a1a1a; border: 1px solid var(--accent); color: var(--accent); margin-top: 8px; justify-content: center; font-size: 11px; letter-spacing: 1px; }
         .btn-enter-locale:hover { background: var(--accent); color: #fff; box-shadow: var(--shadow-sub); }
 
         .planes-section { border-top: 1px solid var(--border); padding-top: 15px; margin-top: auto; flex-shrink: 0; max-height: 55vh; overflow-y: auto; display: flex; flex-direction: column; }
@@ -189,40 +120,22 @@
         .plane-card.open .plane-body { display: block; animation: fadeIn 0.3s; }
         .plane-card.open .plane-header { color: var(--accent); background: #222; border-bottom: 1px solid #333; }
 
-        /* Menu de contexto unificado */
-        #ctx-menu {
-            position: absolute; background: #151515; border: 1px solid var(--accent);
-            border-radius: 6px; padding: 5px 0; min-width: 180px; z-index: 9999; display: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        }
+        #ctx-menu { position: absolute; background: #151515; border: 1px solid var(--accent); border-radius: 6px; padding: 5px 0; min-width: 180px; z-index: 9999; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
         .ctx-item { padding: 10px 15px; color: #fff; font-size: 14px; cursor: pointer; transition: 0.2s; display:flex; gap:10px; align-items:center; }
         .ctx-item:hover { background: var(--accent); }
 
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000;
-            display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px);
-        }
-        .modal {
-            background: #111; border: 1px solid #444; width: 650px; max-width: 90%;
-            border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,1); display: flex; flex-direction: column;
-            animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+        /* ================= MODAL E FORMS ================= */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal { background: #111; border: 1px solid #444; width: 650px; max-width: 90%; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,1); display: flex; flex-direction: column; animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .modal-header { padding: 20px; background: #151515; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; border-radius: 12px 12px 0 0; }
         .modal-body { padding: 25px; overflow-y: auto; max-height: 70vh; display: flex; flex-direction: column; gap: 20px; }
         .modal-footer { padding: 20px; background: #151515; border-top: 1px solid #333; display: flex; justify-content: space-between; gap: 10px; border-radius: 0 0 12px 12px; }
 
-        .upload-area {
-            border: 2px dashed #444; background: #080808; border-radius: 8px; padding: 0;
-            text-align: center; cursor: pointer; transition: 0.2s; position: relative; overflow: hidden;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            min-height: 100px;
-        }
+        .upload-area { border: 2px dashed #444; background: #080808; border-radius: 8px; padding: 0; text-align: center; cursor: pointer; transition: 0.2s; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100px; }
         .upload-area:hover { border-color: #777; background: #111; }
         .upload-area.has-file { border-style: solid; border-color: #555; }
         .upload-area.paste-active { border-color: var(--accent); box-shadow: 0 0 15px rgba(156, 39, 176, 0.3); background: #150515; }
-        .upload-area.paste-active::after {
-            content: 'SELECIONADO (CLIQUE P/ ABRIR OU CTRL+V)'; position: absolute; bottom: 5px; font-size: 9px; color: var(--accent); font-weight: bold; background: rgba(0,0,0,0.8); padding: 2px 6px; border-radius: 4px; width: calc(100% - 12px); box-sizing: border-box; text-align: center;
-        }
+        .upload-area.paste-active::after { content: 'SELECIONADO (CLIQUE P/ ABRIR OU CTRL+V)'; position: absolute; bottom: 5px; font-size: 9px; color: var(--accent); font-weight: bold; background: rgba(0,0,0,0.8); padding: 2px 6px; border-radius: 4px; width: calc(100% - 12px); box-sizing: border-box; text-align: center; }
         .upload-placeholder { padding: 20px; pointer-events: none; }
         .preview-img { width: 100%; height: 100%; object-fit: cover; display:block; }
 
@@ -230,48 +143,26 @@
         .gallery-item { height: 90px; border-radius: 6px; border: 1px solid #444; overflow: hidden; position: relative; transition: transform 0.2s; }
         .gallery-item:hover { border-color: var(--accent); transform: scale(1.05); }
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
-        .gallery-remove { 
-            position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.8); color: #f44336; 
-            border: none; cursor: pointer; width: 20px; height: 20px; border-radius: 3px; 
-            display: flex; align-items: center; justify-content: center; font-weight: bold;
-        }
+        .gallery-remove { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.8); color: #f44336; border: none; cursor: pointer; width: 20px; height: 20px; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
-        /* Leaflet e Popup Customizado */
+        /* ================= LEAFLET E POPUPS ================= */
         .leaflet-popup-content-wrapper { background: #151515; border: 1px solid var(--accent); color: #ddd; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); padding: 0; overflow: visible; }
         .leaflet-popup-tip { background: var(--accent); }
         .leaflet-popup-content { margin: 15px; width: 320px !important; }
         
-        /* ================= ESTILOS DE PINOS ================= */
-        .custom-map-icon { 
-            border: 2px solid #fff; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.8); 
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s; background: #111; box-sizing: border-box; padding: 4px; object-fit: contain !important; 
-        }
+        .custom-map-icon { border: 2px solid #fff; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.8); transition: transform 0.2s, opacity 0.3s; background: #111; box-sizing: border-box; padding: 4px; object-fit: contain !important; }
         .custom-map-icon:hover { transform: scale(1.3); border-color: var(--accent); z-index: 1000 !important; }
-
-        .sub-map-icon {
-            border: 2px solid var(--accent); border-radius: 50%; box-shadow: var(--shadow-sub);
-            transition: 0.2s; background: #000; box-sizing: border-box; padding: 2px; object-fit: contain !important;
-        }
+        .sub-map-icon { border: 2px solid var(--accent); border-radius: 50%; box-shadow: var(--shadow-sub); transition: 0.2s, opacity 0.3s; background: #000; box-sizing: border-box; padding: 2px; object-fit: contain !important; }
         .sub-map-icon:hover { transform: scale(1.3); background: #1a1a1a; z-index: 1000 !important; }
-
-        .simple-map-icon {
-            border: 1px dashed #aaa; border-radius: 50%;
-            background: rgba(20, 20, 20, 0.6); opacity: 0.75;
-            box-sizing: border-box; padding: 2px;
-            object-fit: contain !important; filter: grayscale(40%);
-            transition: transform 0.3s, opacity 0.3s;
-        }
+        
+        /* PIN SIMPLES (Boatos/Temporários) */
+        .simple-map-icon { border: 1px dashed #aaa; border-radius: 50%; background: rgba(20, 20, 20, 0.6); opacity: 0.8; box-sizing: border-box; padding: 2px; object-fit: contain !important; filter: grayscale(40%); transition: transform 0.3s, opacity 0.3s; }
         .simple-map-icon:hover { opacity: 1; transform: scale(1.2); border-color: #fff; z-index: 1000 !important;}
 
         /* ESTADO: MODO DE ROTAS ATIVO (Encolhe todos os pinos) */
         body.route-mode-active .custom-map-icon,
         body.route-mode-active .simple-map-icon,
-        body.route-mode-active .sub-map-icon {
-            transform: scale(0.4) !important;
-            opacity: 0.3 !important;
-            filter: grayscale(100%);
-            pointer-events: none; /* Desativa o clique nos pinos para não atrapalhar o desenho */
-        }
+        body.route-mode-active .sub-map-icon { transform: scale(0.4) !important; opacity: 0.3 !important; filter: grayscale(100%); pointer-events: none; }
 
         .popup-header { display:flex; align-items:center; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; margin-bottom: 10px; }
         .popup-header-icon { width: 32px; height: 32px; border-radius: 50%; object-fit:cover; border:1px solid #555; background:#000; }
@@ -280,70 +171,28 @@
         .popup-edit-btn { background: none; border: none; color: #777; cursor: pointer; font-size: 16px; transition: 0.2s; padding: 0;}
         .popup-edit-btn:hover { color: #fff; transform: scale(1.1); }
 
-        /* === SISTEMA DE EXPANDIR O LORE === */
-        .popup-desc-wrapper {
-            position: relative;
-            width: 100%;
-            height: 90px;
-            margin-bottom: 10px;
-        }
-
-        .popup-desc-container {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%; 
-            display: flex; flex-direction: column;
-            border: 1px solid #333; border-radius: 6px; overflow: hidden; background: #0a0a0a;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            z-index: 100;
-        }
-
-        .popup-desc-container.expanded {
-            top: 15px; left: 20px; z-index: 9999;
-            border-color: var(--accent);
-            box-shadow: 0 10px 40px rgba(0,0,0,1), 0 0 20px rgba(156, 39, 176, 0.6);
-        }
-
-        .popup-desc-view {
-            width: 100%; flex: 1; padding: 15px; margin: 0; border: none; background: transparent;
-            color: #ccc; font-size: 14px; font-family: inherit; line-height: 1.6; outline: none;
-            resize: none; overflow-y: auto; white-space: pre-wrap; cursor: text;
-            box-sizing: border-box; min-height: 0; 
-        }
+        .popup-desc-wrapper { position: relative; width: 100%; height: 90px; margin-bottom: 10px; }
+        .popup-desc-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; border: 1px solid #333; border-radius: 6px; overflow: hidden; background: #0a0a0a; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); z-index: 100; }
+        .popup-desc-container.expanded { top: 15px; left: 20px; z-index: 9999; border-color: var(--accent); box-shadow: 0 10px 40px rgba(0,0,0,1), 0 0 20px rgba(156, 39, 176, 0.6); }
+        .popup-desc-view { width: 100%; flex: 1; padding: 15px; margin: 0; border: none; background: transparent; color: #ccc; font-size: 14px; font-family: inherit; line-height: 1.6; outline: none; resize: none; overflow-y: auto; white-space: pre-wrap; cursor: text; box-sizing: border-box; min-height: 0; }
         .popup-desc-view::-webkit-scrollbar { width: 4px; }
         .popup-desc-view::-webkit-scrollbar-thumb { background: #555; border-radius: 2px; }
-
-        .popup-drag-handle {
-            background: #1a1a1a; color: #666; text-align: center; font-size: 10px; font-weight: bold;
-            padding: 8px 0; border-top: 1px solid #333; width: 100%; user-select: none;
-            letter-spacing: 1px; flex-shrink: 0; cursor: pointer; transition: background 0.2s;
-            box-sizing: border-box;
-        }
+        .popup-drag-handle { background: #1a1a1a; color: #666; text-align: center; font-size: 10px; font-weight: bold; padding: 8px 0; border-top: 1px solid #333; width: 100%; user-select: none; letter-spacing: 1px; flex-shrink: 0; cursor: pointer; transition: background 0.2s; box-sizing: border-box; }
         .popup-drag-handle:hover { background: #222; color: var(--accent); }
         
-        .popup-img-main { 
-            width: 100%; height: 160px; object-fit: cover; border-radius: 6px; margin-bottom: 8px; cursor: pointer; border: 1px solid #333; display: block; transition: 0.2s;
-        }
+        .popup-img-main { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; margin-bottom: 8px; cursor: pointer; border: 1px solid #333; display: block; transition: 0.2s; }
         .popup-img-main:hover { border-color: var(--accent); }
-        
         .popup-gallery { display: flex; gap: 8px; overflow-x: auto; margin-top: 8px; padding-bottom: 5px; }
         .popup-thumb { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; border: 1px solid #444; cursor: pointer; flex-shrink: 0; transition: 0.2s; }
         .popup-thumb:hover { border-color: var(--accent); transform: scale(1.1); }
 
         .lightbox { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index: 10000; display:none; justify-content:center; align-items:center; cursor: zoom-out; animation: fadeIn 0.2s; }
         .lightbox img { max-width: 95%; max-height: 95%; border: 2px solid #333; box-shadow: 0 0 50px black; border-radius: 4px; }
-
         .field-label { display:block; color:#aaa; font-size:12px; margin-bottom:5px; font-weight:bold; }
-
-        #preview-submap { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover !important; 
-            border-radius: 6px; 
-        }
+        #preview-submap { width: 100%; height: 100%; object-fit: cover !important; border-radius: 6px; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
     </style>
 </head>
 <body>
@@ -352,15 +201,11 @@
 
     <div id="maps-wrapper">
         <div id="map" class="map-instance"></div>
-        
-        <div id="sub-map-container" class="map-instance">
-            <div id="sub-map"></div>
-        </div>
+        <div id="sub-map-container" class="map-instance"><div id="sub-map"></div></div>
     </div>
 
     <div class="sidebar collapsed" id="sidebar">
         <div class="sidebar-toggle" onclick="toggleSidebar()">⚙</div>
-        
         <div class="sidebar-header">
             <h2>Atlas de Herdeiros</h2>
         </div>
@@ -382,20 +227,21 @@
                 
                 <div id="route-panel" style="display: none; margin-top: 15px; flex-direction: column; gap: 10px;">
                     <div>
-                        <label class="field-label">GRUPO / FACÇÃO</label>
+                        <label class="field-label">SELECIONE O GRUPO / PASTA</label>
                         <select id="route-group-select" class="input-dark">
-                            </select>
+                            <option value="Padrão" data-color="#fff">Carregando grupos...</option>
+                        </select>
                     </div>
                     
                     <button class="btn-action" id="btn-draw-route" onclick="startDrawingRoute()" style="background:#222;">✏️ Adicionar Rota (Clique no mapa)</button>
                     <button class="btn-action primary" onclick="saveRoute()" style="background:#2e7d32;">💾 Salvar Trajeto</button>
                 </div>
             </div>
-            
+
             <hr style="border:0; border-top:1px solid #333; width:100%; margin:0;">
 
             <div class="measure-tools">
-                <label class="field-label">FERRAMENTA DE MEDIÇÃO (CALCULADORA DE VIAGEM)</label>
+                <label class="field-label">CALCULADORA DE VIAGEM</label>
                 
                 <div class="measure-options">
                     <label><input type="radio" name="measure-mode" value="line" checked> Reta</label>
@@ -403,7 +249,7 @@
                 </div>
 
                 <div style="display:flex; gap: 8px;">
-                    <button class="btn-action" id="btn-medir" onclick="toggleMedicao()" style="flex:1;">📏 Ativar (Clique A -> B)</button>
+                    <button class="btn-action" id="btn-medir" onclick="toggleMedicao()" style="flex:1;">📏 Medir</button>
                     <button class="btn-action" onclick="limparMedicao()" style="width: auto; background: #221111; border-color: #442222; color: #ff8888;" title="Limpar Medição">🗑️</button>
                 </div>
                 <div id="distancia-res" style="font-size: 13px; color: #e0aaff; margin-top: 8px; text-align: center; min-height: 40px; font-weight: bold; font-family: monospace; line-height: 1.4;"></div>
@@ -424,8 +270,7 @@
 
             <div class="locais-container">
                 <label class="field-label">LOCAIS DESCOBERTOS</label>
-                <ul id="lista-locais" class="location-list">
-                </ul>
+                <ul id="lista-locais" class="location-list"></ul>
             </div>
 
             <div class="planes-section">
@@ -435,8 +280,7 @@
         </div>
     </div>
 
-    <div id="ctx-menu">
-        </div>
+    <div id="ctx-menu"></div>
 
     <div class="modal-overlay" id="modal-form">
         <div class="modal">
@@ -450,13 +294,13 @@
                     <input type="text" id="input-nome" class="input-dark" placeholder="Ex: Fortaleza Noxkraya ou Taverna do Dragão">
                 </div>
 
-                <div style="background: #151515; padding: 10px; border-radius: 6px; border: 1px solid #333;">
+                <div style="background: #151515; padding: 10px; border-radius: 6px; border: 1px solid #333; margin-bottom: 10px;">
                     <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#ccc; font-size: 13px; font-weight: bold;">
                         <input type="checkbox" id="input-simple-pin" style="accent-color: var(--accent);"> 
-                        📌 Marcar como Pino Simples (Boato, Acampamento, Temporário)
+                        📌 Pino Simples (Boato, Acampamento, Temporário)
                     </label>
                     <span style="font-size: 10px; color: #666; display: block; margin-top: 4px; margin-left: 25px;">
-                        Pinos simples são translúcidos e menores no mapa. Não possuem mapas internos exploráveis.
+                        Pinos simples são translúcidos e menores. Não possuem mapas internos exploráveis.
                     </span>
                 </div>
 
@@ -522,53 +366,39 @@
         // ================= CONFIGURAÇÕES E ESTADO =================
         const API_URL = 'https://dandd-chan.onrender.com/api';
         const IMG_DEFAULT_ICON = 'https://cdn-icons-png.flaticon.com/512/684/684908.png';
-        const MAP_BOUNDS = [[0,0], [1080,1920]]; // Limites padrão (Mundi e Sub)
+        const MAP_BOUNDS = [[0,0], [1080,1920]]; 
+        
+        // Altere este valor. Representa quantos Km cada 1 "pixel" do mapa vale para a régua.
+        const ESCALA_KM_POR_PIXEL = 2.5; 
 
-        // == ESCALA DO MAPA PARA A CALCULADORA ==
-        // Troque esse número. Quantos quilômetros representa 1 pixel no seu mapa original?
-        const ESCALA_KM_POR_PIXEL = 2.5;
-
-        // == SISTEMA DE ROTAS HISTÓRICAS ==
-        const FACCOES_RPG = [
-            { id: 'grupo_1', nome: 'Os Corvos', cor: '#d32f2f' },    // Vermelho
-            { id: 'grupo_2', nome: 'Guardiões', cor: '#388e3c' },    // Verde
-            { id: 'imperio', nome: 'Império Noxkraya', cor: '#7b1fa2' }, // Roxo
-            { id: 'culto',   nome: 'Culto do Vazio', cor: '#fbc02d' }    // Amarelo
-        ];
-
-        // Instâncias dos Mapas
         let mapMundi, subMap;
         let mundiOverlay, subMapOverlay;
         
-        // Estado Global (Pinos)
         let markersMundi = []; 
         let currentSubMarkers = []; 
         let activeMainPinId = null; 
         
-        // Estado Global (Rotas)
+        // ROTAS HISTÓRICAS
         let rotasSalvas = []; 
         let isRouteModeActive = false;
         let isDrawingRoute = false;
         let routeDrawPoints = [];
         let currentRoutePolyline = null;
         let renderedRouteLayers = [];
-        
-        // Variáveis temporárias de controle (Modal/Uploads)
+
         let tempCoords = null;
         let editId = null;
         let isEditingSubPin = false; 
         let galleryImages = []; 
         let iconImage = null;
-        let subMapImage = null;
+        let subMapImage = null; 
         let pasteTarget = 'gallery'; 
 
-        // Ferramenta de medição
         let isMeasuringSession = false; 
         let isDrawingMeasure = false; 
         let measureLine = null; 
         let measurePoints = []; 
 
-        // Dados Fixos (Planos)
         const PLANE_CATEGORIES = [
             { id: 'central',   name: '🌍 Planos Centrais' },
             { id: 'superior',  name: '🌌 Planos Superiores' },
@@ -602,28 +432,22 @@
             { id: 'pandemonio', cat: 'infernal', name: 'Pandemônio', desc: 'Labirinto claustrofóbico de túneis com ventos gélidos que causam loucura.' }
         ];
 
-        // ================= INICIALIZAÇÃO =================
         window.onload = function() {
             initMapMundi();
             initSubMap();
-            
             renderPlanes();
-            popularSelectRoutas();
+            popularSelectRoutas(); // Puxa grupos do painel do mestre
             carregarDadosServidor();
 
-            // Sincronização automática
             setInterval(() => {
-                if(!activeMainPinId && document.getElementById('modal-form').style.display !== 'flex') {
+                if(!activeMainPinId && !isRouteModeActive && document.getElementById('modal-form').style.display !== 'flex') {
                     sincronizarMapa();
                 }
             }, 10000); 
         };
 
-        // Configuração do Mapa Principal
         function initMapMundi() {
-            mapMundi = L.map('map', {
-                crs: L.CRS.Simple, minZoom: -3, maxZoom: 2, zoomControl: false, attributionControl: false, maxBoundsViscosity: 0.8 
-            });
+            mapMundi = L.map('map', { crs: L.CRS.Simple, minZoom: -3, maxZoom: 2, zoomControl: false, attributionControl: false, maxBoundsViscosity: 0.8 });
             mapMundi.setMaxBounds(MAP_BOUNDS); 
             const initialMapUrl = document.getElementById('map-style-select').value;
             mundiOverlay = L.imageOverlay(initialMapUrl, MAP_BOUNDS).addTo(mapMundi);
@@ -637,334 +461,34 @@
             mapMundi.on('movestart', fecharContextMenu);
         }
 
-        // Configuração do Mapa Secundário (SubMapa)
         function initSubMap() {
-            subMap = L.map('sub-map', {
-                crs: L.CRS.Simple, minZoom: -2, maxZoom: 3, zoomControl: false, attributionControl: false 
-            });
+            subMap = L.map('sub-map', { crs: L.CRS.Simple, minZoom: -2, maxZoom: 3, zoomControl: false, attributionControl: false });
             L.control.zoom({ position: 'bottomright' }).addTo(subMap);
-
             subMap.on('contextmenu', e => abrirContextMenu(e, true));
             subMap.on('click', e => handleMapClick(e, subMap));
             subMap.on('mousemove', e => handleMapMouseMove(e, subMap));
             subMap.on('movestart', fecharContextMenu);
         }
 
-        // ================= SISTEMA DE DRILL-DOWN =================
-        
-        window.entrarNoLocal = function(pinId) {
-            const pinMundi = markersMundi.find(m => m.id === pinId);
-            if(!pinMundi || !pinMundi.subMapUrl) {
-                alert("Este local não possui um mapa interno configurado.");
-                return;
-            }
-
-            activeMainPinId = pinId;
-            pinMundi.marker.closePopup();
-
-            if(subMapOverlay) subMap.removeLayer(subMapOverlay);
-            subMapOverlay = L.imageOverlay(pinMundi.subMapUrl, MAP_BOUNDS).addTo(subMap);
-            
-            document.body.classList.add('submap-active');
-            
-            subMap.setView([540, 960], -1); 
-            subMap.fitBounds(MAP_BOUNDS);
-
-            renderSubPins(pinMundi.subPins || []);
-            toggleSidebar(true); 
-        }
-
-        window.voltarMapaMundi = function() {
-            document.body.classList.remove('submap-active');
-            activeMainPinId = null;
-            limparSubMarkers();
-            setTimeout(() => mapMundi.invalidateSize(), 500);
-        }
-
-        // ================= GERENCIAMENTO DE PINS =================
-
-        function gerarIconHtml(iconSrc, isSubPin, isSimple) {
-            let className = isSubPin ? 'sub-map-icon' : 'custom-map-icon';
-            if (isSimple && !isSubPin) className = 'simple-map-icon'; 
-            
-            let size = (isSubPin || isSimple) ? '24px' : '40px';
-            return `<img src="${iconSrc}" class="${className}" style="width:${size}; height:${size};">`;
-        }
-
-        function criarMarcadorMundi(data) {
-            const safeIcon = data.icon || IMG_DEFAULT_ICON;
-            const iconHtml = gerarIconHtml(safeIcon, false, data.isSimple);
-            const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -20] });
-            
-            const marker = L.marker([data.lat, data.lng], {icon: customIcon}).addTo(mapMundi);
-            marker.on('click', () => mapMundi.setMaxBounds(null));
-
-            const pinData = { ...data, marker, subPins: data.subPins || [] };
-            marker.bindPopup(() => gerarPopupContent(pinData, false), { maxWidth: 2000 });
-            markersMundi.push(pinData);
-        }
-
-        function renderSubPins(subPinsData) {
-            limparSubMarkers();
-            subPinsData.forEach(data => {
-                const safeIcon = data.icon || IMG_DEFAULT_ICON;
-                const iconHtml = gerarIconHtml(safeIcon, true, data.isSimple);
-                const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [24, 24], iconAnchor: [12, 12], popupAnchor: [0, -12] });
+        // ================= ROTAS HISTÓRICAS E PAINEL DO MESTRE =================
+        async function popularSelectRoutas() {
+            try {
+                const res = await fetch(`${API_URL}/layout`);
+                const layout = await res.json();
+                const select = document.getElementById('route-group-select');
+                select.innerHTML = '';
                 
-                const marker = L.marker([data.lat, data.lng], {icon: customIcon}).addTo(subMap);
+                const paletaCores = ['#d32f2f', '#388e3c', '#7b1fa2', '#fbc02d', '#1976d2', '#e64a19', '#009688'];
                 
-                const subPinObj = { ...data, marker };
-                marker.bindPopup(() => gerarPopupContent(subPinObj, true), { maxWidth: 2000 });
-                currentSubMarkers.push(subPinObj);
-            });
-        }
-
-        function limparSubMarkers() {
-            currentSubMarkers.forEach(m => subMap.removeLayer(m.marker));
-            currentSubMarkers = [];
-        }
-
-        function refreshMarkerVisuals(pin, isSub) {
-            const iconHtml = gerarIconHtml(pin.icon, isSub, pin.isSimple);
-            const size = isSub ? [24, 24] : [40, 40];
-            const anchor = isSub ? [12, 12] : [20, 20];
-            const pAnchor = isSub ? [0, -12] : [0, -20];
-
-            const newIcon = L.divIcon({ html: iconHtml, className: '', iconSize: size, iconAnchor: anchor, popupAnchor: pAnchor });
-            pin.marker.setIcon(newIcon);
-            pin.marker.setPopupContent(gerarPopupContent(pin, isSub));
-        }
-
-        // ================= POPUP E INTERAÇÕES =================
-
-        function gerarPopupContent(pin, isSub) {
-            let html = `
-                <div class="popup-header">
-                    <img src="${pin.icon}" class="popup-header-icon">
-                    <span class="popup-title">${pin.nome}</span>
-                    <div class="popup-actions">
-                        <button class="popup-edit-btn" onclick="abrirModal(${pin.id}, ${isSub})" title="Editar">✏️</button>
-                    </div>
-                </div>
-            `;
-
-            let todasImagens = [];
-            if(pin.gallery && pin.gallery.length > 0) todasImagens.push(...pin.gallery);
-            if(pin.icon !== IMG_DEFAULT_ICON && !todasImagens.includes(pin.icon)) todasImagens.unshift(pin.icon);
-            if(todasImagens.length === 0) todasImagens.push(IMG_DEFAULT_ICON);
-
-            html += `<img src="${todasImagens[0]}" id="main-img-${pin.id}" class="popup-img-main" onclick="verFull(this.src)">`;
-
-            if(todasImagens.length > 1) {
-                html += `<div class="popup-gallery">`;
-                todasImagens.forEach((img) => {
-                    html += `<img src="${img}" class="popup-thumb" onclick="trocarImagemPrincipal(this, ${pin.id})">`;
-                });
-                html += `</div>`;
-            }
-
-            let descHtml = pin.desc || "Sem descrição disponível.";
-            html += `
-                <div class="popup-desc-wrapper">
-                    <div class="popup-desc-container" id="desc-box-${pin.id}">
-                        <textarea readonly class="popup-desc-view">${descHtml}</textarea>
-                        <div class="popup-drag-handle" onclick="toggleExpandirLore(this, ${pin.id})">⤡ Clique para expandir lore ⤡</div>
-                    </div>
-                </div>
-            `;
-
-            if(!isSub && pin.subMapUrl && !pin.isSimple) {
-                html += `
-                    <button class="btn-action btn-enter-locale" onclick="entrarNoLocal(${pin.id})">
-                        🗺️ EXPLORAR MAPA INTERNO
-                    </button>
-                `;
-            }
-
-            return html;
-        }
-
-        window.trocarImagemPrincipal = (element, pinId) => {
-            const mainImg = document.getElementById(`main-img-${pinId}`);
-            if(mainImg) mainImg.src = element.src; 
-        };
-
-        window.verFull = (src) => {
-            document.getElementById('lightbox-img').src = src;
-            document.getElementById('lightbox').style.display = 'flex';
-        };
-
-        window.toggleExpandirLore = (btn, pinId) => {
-            const box = document.getElementById(`desc-box-${pinId}`);
-            const textarea = box.querySelector('.popup-desc-view');
-            const isSub = currentSubMarkers.some(m => m.id === pinId);
-            const activeMap = isSub ? subMap : mapMundi;
-
-            if (box.classList.contains('expanded')) {
-                box.classList.remove('expanded');
-                btn.textContent = '⤡ Clique para expandir lore ⤡';
-                box.style.width = ''; box.style.height = '';
-            } else {
-                box.classList.add('expanded');
-                btn.textContent = '✖ Clique para fechar';
-                box.style.width = '420px';
-                
-                textarea.style.height = '1px'; 
-                let alturaTexto = textarea.scrollHeight;
-                textarea.style.height = 'auto'; 
-
-                let alturaAlvo = Math.max(150, Math.min(alturaTexto + 40, window.innerHeight * 0.55));
-                box.style.height = alturaAlvo + 'px';
-
-                setTimeout(() => {
-                    const rect = box.getBoundingClientRect();
-                    let panX = 0, panY = 0;
-                    if (rect.bottom > window.innerHeight) panY = (rect.bottom - window.innerHeight) + 30; 
-                    if (rect.top < 60) panY = rect.top - 60; 
-                    if (rect.right > window.innerWidth) panX = (rect.right - window.innerWidth) + 30;
-                    if (rect.left < 30) panX = rect.left - 30;
-
-                    if (panX !== 0 || panY !== 0) {
-                        activeMap.panBy([panX, panY], { animate: true, duration: 0.4 });
-                    }
-                }, 300);
-            }
-        };
-
-        // ================= FORMULÁRIO MODAL =================
-
-        function abrirModal(pinId, isSub) {
-            fecharContextMenu();
-            document.getElementById('modal-form').style.display = 'flex';
-            isEditingSubPin = isSub; 
-            
-            const fieldSubMapUrl = document.getElementById('group-submap-url');
-
-            if (pinId) {
-                editId = pinId;
-                const pin = isSub ? currentSubMarkers.find(m => m.id === pinId) : markersMundi.find(m => m.id === pinId);
-                
-                document.getElementById('modal-title').innerText = isSub ? "Editar Ponto de Interesse" : "Editar Local Principal";
-                document.getElementById('btn-delete').style.display = 'block';
-                document.getElementById('input-nome').value = pin.nome;
-                document.getElementById('input-desc').value = pin.desc;
-                document.getElementById('input-simple-pin').checked = !!pin.isSimple;
-                
-                if(!isSub) {
-                    fieldSubMapUrl.style.display = 'block';
-                    subMapImage = pin.subMapUrl; 
+                if(layout.folders && layout.folders.length > 0) {
+                    layout.folders.forEach((pasta, index) => {
+                        const cor = paletaCores[index % paletaCores.length];
+                        select.innerHTML += `<option value="${pasta.name}" data-color="${cor}">${pasta.name}</option>`;
+                    });
                 } else {
-                    fieldSubMapUrl.style.display = 'none';
+                    select.innerHTML = '<option value="Padrão" data-color="#d32f2f">Padrão</option>';
                 }
-
-                galleryImages = [...(pin.gallery || [])];
-                iconImage = pin.icon;
-            } else {
-                editId = null;
-                document.getElementById('modal-title').innerText = isSub ? "Novo Ponto de Interesse" : "Novo Local Principal";
-                document.getElementById('btn-delete').style.display = 'none';
-                document.getElementById('input-nome').value = "";
-                document.getElementById('input-desc').value = "";
-                document.getElementById('input-simple-pin').checked = false;
-                
-                if(!isSub) {
-                    fieldSubMapUrl.style.display = 'block';
-                    subMapImage = null; 
-                } else {
-                    fieldSubMapUrl.style.display = 'none';
-                }
-
-                galleryImages = [];
-                iconImage = null;
-                subMapImage = null; 
-                setTimeout(() => document.getElementById('input-nome').focus(), 100);
-            }
-            renderFormVisuals();
-            setPasteTarget('gallery');
-        }
-
-        function fecharModal() { document.getElementById('modal-form').style.display = 'none'; tempCoords = null;}
-
-        async function salvarPin() {
-            const nome = document.getElementById('input-nome').value;
-            const desc = document.getElementById('input-desc').value;
-            const isSimple = document.getElementById('input-simple-pin').checked;
-            const finalSubMapUrl = subMapImage; 
-
-            if(!nome) { alert("O nome é obrigatório!"); return; }
-            const finalIcon = iconImage || IMG_DEFAULT_ICON;
-
-            let pinCoreData = { nome, desc, icon: finalIcon, gallery: [...galleryImages], isSimple: isSimple };
-
-            if (editId) {
-                if(isEditingSubPin) {
-                    const subPin = currentSubMarkers.find(m => m.id === editId);
-                    Object.assign(subPin, pinCoreData);
-                    refreshMarkerVisuals(subPin, true);
-                    
-                    const mainPin = markersMundi.find(m => m.id === activeMainPinId);
-                    const index = mainPin.subPins.findIndex(sp => sp.id === editId);
-                    Object.assign(mainPin.subPins[index], pinCoreData); 
-                } else {
-                    const pin = markersMundi.find(m => m.id === editId);
-                    Object.assign(pin, pinCoreData);
-                    pin.subMapUrl = finalSubMapUrl; 
-                    refreshMarkerVisuals(pin, false);
-                }
-            } else {
-                if(!tempCoords) { alert("Erro de posicionamento."); return; }
-                const novoId = Date.now();
-                const novaData = { ...pinCoreData, id: novoId, lat: tempCoords.lat, lng: tempCoords.lng };
-
-                if(isEditingSubPin) {
-                    novaData.isSub = true; 
-                    renderSubPins([...currentSubMarkers, novaData]);
-                    
-                    const mainPin = markersMundi.find(m => m.id === activeMainPinId);
-                    if(!mainPin.subPins) mainPin.subPins = [];
-                    mainPin.subPins.push(novaData);
-                } else {
-                    novaData.subMapUrl = finalSubMapUrl;
-                    novaData.subPins = [];
-                    criarMarcadorMundi(novaData);
-                }
-            }
-
-            await salvarEstadoNoServidor();
-            fecharModal();
-            atualizarListaLateral();
-        }
-
-        async function deletarPin() {
-            if(!editId) return;
-            if(!confirm("Tem certeza que deseja apagar este ponto? Esta ação não pode ser desfeita.")) return;
-
-            if(isEditingSubPin) {
-                limparSubMarkers(); 
-                const mainPin = markersMundi.find(m => m.id === activeMainPinId);
-                mainPin.subPins = mainPin.subPins.filter(sp => sp.id !== editId);
-                renderSubPins(mainPin.subPins);
-            } else {
-                const index = markersMundi.findIndex(m => m.id === editId);
-                if(index > -1) {
-                    mapMundi.removeLayer(markersMundi[index].marker);
-                    markersMundi.splice(index, 1);
-                }
-            }
-
-            await salvarEstadoNoServidor();
-            fecharModal();
-            atualizarListaLateral();
-        }
-
-        // ================= SISTEMA DE ROTAS =================
-
-        function popularSelectRoutas() {
-            const select = document.getElementById('route-group-select');
-            select.innerHTML = '';
-            FACCOES_RPG.forEach(fac => {
-                select.innerHTML += `<option value="${fac.id}">${fac.nome}</option>`;
-            });
+            } catch(e) { console.error("Erro ao puxar grupos do Mestre:", e); }
         }
 
         function toggleRouteMode() {
@@ -975,7 +499,7 @@
             if (isRouteModeActive) {
                 btn.classList.add('active');
                 panel.style.display = 'flex';
-                document.body.classList.add('route-mode-active');
+                document.body.classList.add('route-mode-active'); 
                 if(isMeasuringSession) desativarMedicao();
                 renderAllRoutes();
             } else {
@@ -993,39 +517,31 @@
             document.getElementById('btn-draw-route').classList.add('active');
             routeDrawPoints = [];
             
-            const selectedGroupId = document.getElementById('route-group-select').value;
-            const groupDef = FACCOES_RPG.find(g => g.id === selectedGroupId);
+            const select = document.getElementById('route-group-select');
+            const color = select.options[select.selectedIndex].getAttribute('data-color');
             
-            currentRoutePolyline = L.polyline([], {
-                color: groupDef.cor, weight: 4, dashArray: '10, 15', opacity: 0.8
-            }).addTo(mapMundi);
+            currentRoutePolyline = L.polyline([], { color: color, weight: 4, dashArray: '10, 15', opacity: 0.8 }).addTo(mapMundi);
         }
 
-        function saveRoute() {
+        async function saveRoute() {
             if(!isDrawingRoute || routeDrawPoints.length < 2) {
                 alert("Você precisa desenhar pelo menos uma reta no mapa antes de salvar.");
                 return;
             }
             
-            const selectedGroupId = document.getElementById('route-group-select').value;
+            const select = document.getElementById('route-group-select');
+            const grupoNome = select.value;
+            const cor = select.options[select.selectedIndex].getAttribute('data-color');
             
-            rotasSalvas.push({
-                id: Date.now(),
-                grupoId: selectedGroupId,
-                latlngs: [...routeDrawPoints]
-            });
+            rotasSalvas.push({ id: Date.now(), isRoute: true, grupoNome: grupoNome, cor: cor, latlngs: [...routeDrawPoints] });
 
             isDrawingRoute = false;
             document.getElementById('btn-draw-route').classList.remove('active');
             routeDrawPoints = [];
             currentRoutePolyline = null; 
 
-            alert("Rota de Facção salva no mapa!");
-            
-            /* TODO (Opcional): Integrar com seu Backend
-            fetch(`${API_URL}/mapa-rotas`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(rotasSalvas) 
-            }); */
+            await salvarEstadoNoServidor();
+            alert("Rota Histórica salva com sucesso!");
         }
 
         function renderAllRoutes() {
@@ -1033,60 +549,272 @@
             renderedRouteLayers = [];
 
             rotasSalvas.forEach(rota => {
-                const groupDef = FACCOES_RPG.find(g => g.id === rota.grupoId);
-                const color = groupDef ? groupDef.cor : '#fff';
-
-                const poly = L.polyline(rota.latlngs, {
-                    color: color, weight: 3, dashArray: '10, 15', opacity: 0.7
-                }).addTo(mapMundi);
+                const poly = L.polyline(rota.latlngs, { color: rota.cor, weight: 3, dashArray: '10, 15', opacity: 0.7 }).addTo(mapMundi);
                 
+                // Opção de deletar rota ao clicar nela
+                poly.on('click', async () => {
+                    if(isRouteModeActive && confirm(`Apagar trajeto histórico do grupo '${rota.grupoNome}'?`)) {
+                        rotasSalvas = rotasSalvas.filter(r => r.id !== rota.id);
+                        await salvarEstadoNoServidor();
+                        renderAllRoutes();
+                    }
+                });
+
                 renderedRouteLayers.push(poly);
             });
         }
 
+        // ================= SISTEMA DE PINS =================
+        window.entrarNoLocal = function(pinId) {
+            const pinMundi = markersMundi.find(m => m.id === pinId);
+            if(!pinMundi || !pinMundi.subMapUrl) return alert("Este local não possui um mapa interno configurado.");
+            activeMainPinId = pinId;
+            pinMundi.marker.closePopup();
+            if(subMapOverlay) subMap.removeLayer(subMapOverlay);
+            subMapOverlay = L.imageOverlay(pinMundi.subMapUrl, MAP_BOUNDS).addTo(subMap);
+            document.body.classList.add('submap-active');
+            subMap.setView([540, 960], -1); 
+            subMap.fitBounds(MAP_BOUNDS);
+            renderSubPins(pinMundi.subPins || []);
+            toggleSidebar(true); 
+        }
 
-        // ================= MENU E CLIQUES =================
+        window.voltarMapaMundi = function() {
+            document.body.classList.remove('submap-active');
+            activeMainPinId = null;
+            limparSubMarkers();
+            setTimeout(() => mapMundi.invalidateSize(), 500);
+        }
 
+        function gerarIconHtml(iconSrc, isSubPin, isSimple) {
+            let className = isSubPin ? 'sub-map-icon' : 'custom-map-icon';
+            if(isSimple && !isSubPin) className = 'simple-map-icon';
+            const size = (isSubPin || isSimple) ? '24px' : '40px';
+            return `<img src="${iconSrc}" class="${className}" style="width:${size}; height:${size};">`;
+        }
+
+        function criarMarcadorMundi(data) {
+            const safeIcon = data.icon || IMG_DEFAULT_ICON;
+            const iconHtml = gerarIconHtml(safeIcon, false, data.isSimple);
+            const anchorPoint = data.isSimple ? [12,12] : [20,20];
+            const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [40, 40], iconAnchor: anchorPoint, popupAnchor: [0, -20] });
+            
+            const marker = L.marker([data.lat, data.lng], {icon: customIcon}).addTo(mapMundi);
+            marker.on('click', () => mapMundi.setMaxBounds(null));
+
+            const pinData = { ...data, marker, subPins: data.subPins || [] };
+            marker.bindPopup(() => gerarPopupContent(pinData, false), { maxWidth: 2000 });
+            markersMundi.push(pinData);
+        }
+
+        function renderSubPins(subPinsData) {
+            limparSubMarkers();
+            subPinsData.forEach(data => {
+                const safeIcon = data.icon || IMG_DEFAULT_ICON;
+                const iconHtml = gerarIconHtml(safeIcon, true, false);
+                const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [24, 24], iconAnchor: [12, 12], popupAnchor: [0, -12] });
+                const marker = L.marker([data.lat, data.lng], {icon: customIcon}).addTo(subMap);
+                const subPinObj = { ...data, marker };
+                marker.bindPopup(() => gerarPopupContent(subPinObj, true), { maxWidth: 2000 });
+                currentSubMarkers.push(subPinObj);
+            });
+        }
+
+        function limparSubMarkers() {
+            currentSubMarkers.forEach(m => subMap.removeLayer(m.marker));
+            currentSubMarkers = [];
+        }
+
+        function refreshMarkerVisuals(pin, isSub) {
+            const iconHtml = gerarIconHtml(pin.icon, isSub, pin.isSimple);
+            const size = (isSub || pin.isSimple) ? [24, 24] : [40, 40];
+            const anchor = (isSub || pin.isSimple) ? [12, 12] : [20, 20];
+            const pAnchor = isSub ? [0, -12] : [0, -20];
+
+            const newIcon = L.divIcon({ html: iconHtml, className: '', iconSize: size, iconAnchor: anchor, popupAnchor: pAnchor });
+            pin.marker.setIcon(newIcon);
+            pin.marker.setPopupContent(gerarPopupContent(pin, isSub));
+        }
+
+        function gerarPopupContent(pin, isSub) {
+            let html = `
+                <div class="popup-header">
+                    <img src="${pin.icon}" class="popup-header-icon">
+                    <span class="popup-title">${pin.nome}</span>
+                    <div class="popup-actions">
+                        <button class="popup-edit-btn" onclick="abrirModal(${pin.id}, ${isSub})" title="Editar">✏️</button>
+                    </div>
+                </div>
+            `;
+            let todasImagens = [];
+            if(pin.gallery && pin.gallery.length > 0) todasImagens.push(...pin.gallery);
+            if(pin.icon !== IMG_DEFAULT_ICON && !todasImagens.includes(pin.icon)) todasImagens.unshift(pin.icon);
+            if(todasImagens.length === 0) todasImagens.push(IMG_DEFAULT_ICON);
+
+            html += `<img src="${todasImagens[0]}" id="main-img-${pin.id}" class="popup-img-main" onclick="verFull(this.src)">`;
+
+            if(todasImagens.length > 1) {
+                html += `<div class="popup-gallery">`;
+                todasImagens.forEach((img) => { html += `<img src="${img}" class="popup-thumb" onclick="trocarImagemPrincipal(this, ${pin.id})">`; });
+                html += `</div>`;
+            }
+
+            let descHtml = pin.desc || "Sem descrição disponível.";
+            html += `
+                <div class="popup-desc-wrapper">
+                    <div class="popup-desc-container" id="desc-box-${pin.id}">
+                        <textarea readonly class="popup-desc-view">${descHtml}</textarea>
+                        <div class="popup-drag-handle" onclick="toggleExpandirLore(this, ${pin.id})">⤡ Clique para expandir lore ⤡</div>
+                    </div>
+                </div>
+            `;
+            if(!isSub && pin.subMapUrl && !pin.isSimple) {
+                html += `<button class="btn-action btn-enter-locale" onclick="entrarNoLocal(${pin.id})">🗺️ EXPLORAR MAPA INTERNO</button>`;
+            }
+            return html;
+        }
+
+        window.trocarImagemPrincipal = (element, pinId) => {
+            const mainImg = document.getElementById(`main-img-${pinId}`);
+            if(mainImg) mainImg.src = element.src; 
+        };
+        window.verFull = (src) => { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').style.display = 'flex'; };
+        window.toggleExpandirLore = (btn, pinId) => {
+            const box = document.getElementById(`desc-box-${pinId}`);
+            const textarea = box.querySelector('.popup-desc-view');
+            const isSub = currentSubMarkers.some(m => m.id === pinId);
+            const activeMap = isSub ? subMap : mapMundi;
+
+            if (box.classList.contains('expanded')) {
+                box.classList.remove('expanded'); btn.textContent = '⤡ Clique para expandir lore ⤡';
+                box.style.width = ''; box.style.height = '';
+            } else {
+                box.classList.add('expanded'); btn.textContent = '✖ Clique para fechar'; box.style.width = '420px';
+                textarea.style.height = '1px'; let alturaTexto = textarea.scrollHeight; textarea.style.height = 'auto'; 
+                let alturaAlvo = Math.max(150, Math.min(alturaTexto + 40, window.innerHeight * 0.55));
+                box.style.height = alturaAlvo + 'px';
+                setTimeout(() => {
+                    const rect = box.getBoundingClientRect(); let panX = 0, panY = 0;
+                    if (rect.bottom > window.innerHeight) panY = (rect.bottom - window.innerHeight) + 30; 
+                    if (rect.top < 60) panY = rect.top - 60; 
+                    if (rect.right > window.innerWidth) panX = (rect.right - window.innerWidth) + 30;
+                    if (rect.left < 30) panX = rect.left - 30;
+                    if (panX !== 0 || panY !== 0) activeMap.panBy([panX, panY], { animate: true, duration: 0.4 });
+                }, 300);
+            }
+        };
+
+        // ================= FORMULÁRIO MODAL =================
+        function abrirModal(pinId, isSub) {
+            fecharContextMenu();
+            document.getElementById('modal-form').style.display = 'flex';
+            isEditingSubPin = isSub; 
+            const fieldSubMapUrl = document.getElementById('group-submap-url');
+            const checkboxSimple = document.getElementById('input-simple-pin');
+
+            if (pinId) {
+                editId = pinId;
+                const pin = isSub ? currentSubMarkers.find(m => m.id === pinId) : markersMundi.find(m => m.id === pinId);
+                document.getElementById('modal-title').innerText = isSub ? "Editar Ponto de Interesse" : "Editar Local Principal";
+                document.getElementById('btn-delete').style.display = 'block';
+                document.getElementById('input-nome').value = pin.nome;
+                document.getElementById('input-desc').value = pin.desc;
+                checkboxSimple.checked = pin.isSimple || false;
+                
+                if(!isSub) { fieldSubMapUrl.style.display = 'block'; subMapImage = pin.subMapUrl; } else { fieldSubMapUrl.style.display = 'none'; }
+                galleryImages = [...(pin.gallery || [])]; iconImage = pin.icon;
+            } else {
+                editId = null;
+                document.getElementById('modal-title').innerText = isSub ? "Novo Ponto de Interesse" : "Novo Local Principal";
+                document.getElementById('btn-delete').style.display = 'none';
+                document.getElementById('input-nome').value = ""; document.getElementById('input-desc').value = "";
+                checkboxSimple.checked = false;
+                if(!isSub) { fieldSubMapUrl.style.display = 'block'; subMapImage = null; } else { fieldSubMapUrl.style.display = 'none'; }
+                galleryImages = []; iconImage = null; subMapImage = null; 
+                setTimeout(() => document.getElementById('input-nome').focus(), 100);
+            }
+            renderFormVisuals(); setPasteTarget('gallery');
+        }
+
+        function fecharModal() { document.getElementById('modal-form').style.display = 'none'; tempCoords = null;}
+
+        async function salvarPin() {
+            const nome = document.getElementById('input-nome').value;
+            const desc = document.getElementById('input-desc').value;
+            const isSimple = document.getElementById('input-simple-pin').checked;
+            const finalSubMapUrl = subMapImage; 
+
+            if(!nome) return alert("O nome é obrigatório!"); 
+            const finalIcon = iconImage || IMG_DEFAULT_ICON;
+            let pinCoreData = { nome, desc, icon: finalIcon, gallery: [...galleryImages], isSimple };
+
+            if (editId) {
+                if(isEditingSubPin) {
+                    const subPin = currentSubMarkers.find(m => m.id === editId);
+                    Object.assign(subPin, pinCoreData); refreshMarkerVisuals(subPin, true);
+                    const mainPin = markersMundi.find(m => m.id === activeMainPinId);
+                    const index = mainPin.subPins.findIndex(sp => sp.id === editId);
+                    Object.assign(mainPin.subPins[index], pinCoreData); 
+                } else {
+                    const pin = markersMundi.find(m => m.id === editId);
+                    Object.assign(pin, pinCoreData); pin.subMapUrl = finalSubMapUrl; 
+                    refreshMarkerVisuals(pin, false);
+                }
+            } else {
+                if(!tempCoords) return alert("Erro de posicionamento."); 
+                const novoId = Date.now();
+                const novaData = { ...pinCoreData, id: novoId, lat: tempCoords.lat, lng: tempCoords.lng };
+                if(isEditingSubPin) {
+                    novaData.isSub = true; renderSubPins([...currentSubMarkers, novaData]);
+                    const mainPin = markersMundi.find(m => m.id === activeMainPinId);
+                    if(!mainPin.subPins) mainPin.subPins = []; mainPin.subPins.push(novaData);
+                } else {
+                    novaData.subMapUrl = finalSubMapUrl; novaData.subPins = []; criarMarcadorMundi(novaData);
+                }
+            }
+            await salvarEstadoNoServidor(); fecharModal(); atualizarListaLateral();
+        }
+
+        async function deletarPin() {
+            if(!editId) return;
+            if(!confirm("Tem certeza que deseja apagar este ponto? Esta ação não pode ser desfeita.")) return;
+            if(isEditingSubPin) {
+                limparSubMarkers(); const mainPin = markersMundi.find(m => m.id === activeMainPinId);
+                mainPin.subPins = mainPin.subPins.filter(sp => sp.id !== editId); renderSubPins(mainPin.subPins);
+            } else {
+                const index = markersMundi.findIndex(m => m.id === editId);
+                if(index > -1) { mapMundi.removeLayer(markersMundi[index].marker); markersMundi.splice(index, 1); }
+            }
+            await salvarEstadoNoServidor(); fecharModal(); atualizarListaLateral();
+        }
+
+        // ================= CLIQUES E MOUSE E EVENTOS GERAIS =================
         function abrirContextMenu(e, isSub) {
             L.DomEvent.preventDefault(e);
             if(isMeasuringSession || isRouteModeActive) return;
-            
             tempCoords = e.latlng;
             const menu = document.getElementById('ctx-menu');
-            
-            if(isSub) {
-                menu.innerHTML = `<div class="ctx-item" onclick="abrirModal(null, true)">📍 Criar Ponto de Interesse Aqui</div>`;
-            } else {
-                menu.innerHTML = `<div class="ctx-item" onclick="abrirModal(null, false)">🏰 Criar Local Principal Aqui</div>`;
-            }
-
-            menu.style.display = 'block';
-            menu.style.left = e.containerPoint.x + 'px';
-            menu.style.top = e.containerPoint.y + 'px';
+            menu.innerHTML = isSub ? `<div class="ctx-item" onclick="abrirModal(null, true)">📍 Criar Ponto de Interesse Aqui</div>` : `<div class="ctx-item" onclick="abrirModal(null, false)">🏰 Criar Local Aqui</div>`;
+            menu.style.display = 'block'; menu.style.left = e.containerPoint.x + 'px'; menu.style.top = e.containerPoint.y + 'px';
         }
-
         function fecharContextMenu() { document.getElementById('ctx-menu').style.display = 'none'; }
 
         function handleMapClick(e, activeMap) {
             fecharContextMenu();
             
-            // 1. Régua / Calculadora
+            // Desenho da Régua de Viagem
             if (isMeasuringSession) {
                 if (!isDrawingMeasure) {
-                    isDrawingMeasure = true;
-                    measurePoints = [e.latlng]; 
+                    isDrawingMeasure = true; measurePoints = [e.latlng]; 
                     if (measureLine) activeMap.removeLayer(measureLine);
                     measureLine = L.polyline(measurePoints, {color: '#9c27b0', dashArray: '10, 10'}).addTo(activeMap);
-                    document.getElementById('distancia-res').innerText = "Clique no destino para finalizar...";
                 } else {
                     isDrawingMeasure = false;
-                    document.getElementById('distancia-res').innerHTML += "<br><span style='font-size:10px; color:#666;'>(Medição Finalizada)</span>";
-                    desativarMedicao();
                 }
                 return;
             }
 
-            // 2. Rotas Históricas
+            // Desenho de Rota Histórica
             if (isRouteModeActive && isDrawingRoute && activeMap === mapMundi) {
                 routeDrawPoints.push(e.latlng);
                 currentRoutePolyline.setLatLngs(routeDrawPoints);
@@ -1095,79 +823,85 @@
         }
 
         function handleMapMouseMove(e, activeMap) {
-            // 1. Régua / Calculadora
+            // Lógica da Régua com Calculadora de RPG
             if(isMeasuringSession && isDrawingMeasure) {
                 const mode = document.querySelector('input[name="measure-mode"]:checked').value;
                 let calcPoints = measurePoints;
 
                 if (mode === 'line') {
-                    measureLine.setLatLngs([measurePoints[0], e.latlng]);
-                    calcPoints = [measurePoints[0], e.latlng];
+                    measureLine.setLatLngs([measurePoints[0], e.latlng]); calcPoints = [measurePoints[0], e.latlng];
                 } else {
-                    measurePoints.push(e.latlng);
-                    measureLine.setLatLngs(measurePoints);
+                    measurePoints.push(e.latlng); measureLine.setLatLngs(measurePoints);
                 }
 
                 let totalPixels = 0;
-                for(let i = 0; i < calcPoints.length - 1; i++) {
-                    totalPixels += activeMap.project(calcPoints[i]).distanceTo(activeMap.project(calcPoints[i+1]));
-                }
-
-                // Matemática do RPG
+                for(let i = 0; i < calcPoints.length - 1; i++) totalPixels += activeMap.project(calcPoints[i]).distanceTo(activeMap.project(calcPoints[i+1]));
+                
                 const distKm = (totalPixels * ESCALA_KM_POR_PIXEL);
-                const diasPe = (distKm / 30).toFixed(1);
-                const diasCavalo = (distKm / 50).toFixed(1);
-                const diasCarr = (distKm / 40).toFixed(1);
+                const diasPe = (distKm / 30).toFixed(1); const diasCav = (distKm / 50).toFixed(1); const diasCarr = (distKm / 40).toFixed(1);
 
                 document.getElementById('distancia-res').innerHTML = `
                     <span style="font-size:16px; color:#fff;">${distKm.toFixed(1)} km</span><br>
-                    <span style="color:#aaa;">🚶 ${diasPe} dias | 🐎 ${diasCavalo} dias | 🐴🛤️ ${diasCarr} dias</span>
+                    <span style="color:#aaa;">🚶 ${diasPe} dias | 🐎 ${diasCav} dias | 🐴🛤️ ${diasCarr} dias</span>
                 `;
             }
 
-            // 2. Traçado de Rotas Históricas (Realtime)
-            if(isRouteModeActive && isDrawingRoute && routeDrawPoints.length > 0) {
+            // Lógica do Desenho da Rota Histórica
+            if(isRouteModeActive && isDrawingRoute && routeDrawPoints.length > 0 && activeMap === mapMundi) {
                 const tempPoints = [...routeDrawPoints, e.latlng];
                 currentRoutePolyline.setLatLngs(tempPoints);
             }
         }
 
-        // ================= SERVIDOR =================
+        function toggleMedicao() {
+            if(isRouteModeActive) return alert("Desative o Modo Rastro primeiro para usar a régua.");
+            isMeasuringSession = !isMeasuringSession;
+            const btn = document.getElementById('btn-medir');
+            const mapDom = activeMainPinId ? document.getElementById('sub-map') : document.getElementById('map');
+            if(isMeasuringSession) {
+                btn.classList.add('active'); mapDom.style.cursor = 'crosshair'; isDrawingMeasure = false;
+                document.getElementById('distancia-res').innerHTML = "<br><span style='color:#666;'>Clique no mapa para medir</span>";
+            } else desativarMedicao();
+        }
 
+        function desativarMedicao() {
+            isMeasuringSession = false; isDrawingMeasure = false;
+            document.getElementById('btn-medir').classList.remove('active');
+            document.getElementById('map').style.cursor = 'default'; document.getElementById('sub-map').style.cursor = 'default';
+        }
+
+        function limparMedicao() {
+            const activeMap = activeMainPinId ? subMap : mapMundi;
+            if(measureLine) activeMap.removeLayer(measureLine); measureLine = null; measurePoints = []; isDrawingMeasure = false;
+            document.getElementById('distancia-res').innerHTML = "";
+        }
+
+        // ================= SERVIDOR (MÁGICA DAS ROTAS INCLUSAS) =================
         async function salvarEstadoNoServidor() {
-            const dadosParaSalvar = markersMundi.map(m => {
+            const dadosParaSalvarPinos = markersMundi.map(m => {
                 const { marker, ...resto } = m;
-                if(resto.subPins) {
-                    resto.subPins = resto.subPins.map(sp => {
-                        const { marker: subMarker, ...subResto } = sp;
-                        return subResto;
-                    });
-                }
+                if(resto.subPins) resto.subPins = resto.subPins.map(sp => { const { marker: subMarker, ...subResto } = sp; return subResto; });
                 return resto;
             });
-
+            const todosDados = [...dadosParaSalvarPinos, ...rotasSalvas]; // Salva rotas junto na mesma API!
             try {
-                const res = await fetch(`${API_URL}/mapa-pins`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(dadosParaSalvar) 
-                });
+                const res = await fetch(`${API_URL}/mapa-pins`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(todosDados) });
                 if(!res.ok) throw new Error("Falha ao salvar");
-            } catch(e) { 
-                console.error("Erro na sincronização:", e);
-                alert("Aviso: Falha ao salvar dados no servidor. Verifique sua conexão.");
-            }
+            } catch(e) { console.error("Erro na sincronização:", e); alert("Aviso: Falha ao salvar dados no servidor."); }
         }
 
         async function carregarDadosServidor() {
             try {
                 const res = await fetch(`${API_URL}/mapa-pins`);
                 if (!res.ok) return;
-                const pinsSalvos = await res.json();
-                
-                if(Array.isArray(pinsSalvos)) {
-                    pinsSalvos.forEach(p => criarMarcadorMundi(p));
+                const data = await res.json();
+                if(Array.isArray(data)) {
+                    // Separa o que é Pino do que é Rota
+                    const pinos = data.filter(d => !d.isRoute);
+                    rotasSalvas = data.filter(d => d.isRoute);
+                    pinos.forEach(p => criarMarcadorMundi(p));
                     atualizarListaLateral();
+                    if(isRouteModeActive) renderAllRoutes();
                 }
             } catch(err) { console.error("Erro ao carregar dados:", err); }
         }
@@ -1176,106 +910,62 @@
             try {
                 const res = await fetch(`${API_URL}/mapa-pins`);
                 if (!res.ok) return;
-                const serverPins = await res.json();
-                if(!Array.isArray(serverPins)) return;
+                const data = await res.json();
+                if(!Array.isArray(data)) return;
 
-                const serverPinIds = serverPins.map(p => p.id);
+                const pinosServidor = data.filter(d => !d.isRoute);
+                rotasSalvas = data.filter(d => d.isRoute); // Atualiza rotas de fundo
+                const serverPinIds = pinosServidor.map(p => p.id);
 
                 markersMundi = markersMundi.filter(localPin => {
-                    if (!serverPinIds.includes(localPin.id)) {
-                        mapMundi.removeLayer(localPin.marker);
-                        return false;
-                    }
-                    return true;
+                    if (!serverPinIds.includes(localPin.id)) { mapMundi.removeLayer(localPin.marker); return false; } return true;
                 });
 
-                serverPins.forEach(sp => {
+                pinosServidor.forEach(sp => {
                     const localPin = markersMundi.find(m => m.id === sp.id);
-                    if (!localPin) {
-                        criarMarcadorMundi(sp);
-                    } else {
-                        const mudou = localPin.nome !== sp.nome || 
-                                      localPin.desc !== sp.desc || 
-                                      localPin.icon !== sp.icon || 
-                                      localPin.isSimple !== sp.isSimple || 
-                                      localPin.subMapUrl !== sp.subMapUrl ||
-                                      (localPin.subPins?.length || 0) !== (sp.subPins?.length || 0) ||
-                                      JSON.stringify(localPin.gallery) !== JSON.stringify(sp.gallery);
-                        
-                        if (mudou) {
-                            Object.assign(localPin, sp);
-                            localPin.subPins = sp.subPins || []; 
-                            refreshMarkerVisuals(localPin, false);
-                        }
+                    if (!localPin) criarMarcadorMundi(sp);
+                    else {
+                        const mudou = localPin.nome !== sp.nome || localPin.desc !== sp.desc || localPin.icon !== sp.icon || localPin.subMapUrl !== sp.subMapUrl || localPin.isSimple !== sp.isSimple || (localPin.subPins?.length || 0) !== (sp.subPins?.length || 0) || JSON.stringify(localPin.gallery) !== JSON.stringify(sp.gallery);
+                        if (mudou) { Object.assign(localPin, sp); localPin.subPins = sp.subPins || []; refreshMarkerVisuals(localPin, false); }
                     }
                 });
                 atualizarListaLateral();
-            } catch(e) { console.error("Erro no sync automático:", e); }
+            } catch(e) {}
         }
 
-        // ================= GERAIS =================
-
+        // ================= GERAIS, SIDEBAR E COMPRESSÃO =================
         function toggleSidebar(forceClose = false) { 
             const sb = document.getElementById('sidebar');
-            if(forceClose) sb.classList.add('collapsed');
-            else sb.classList.toggle('collapsed'); 
+            if(forceClose) sb.classList.add('collapsed'); else sb.classList.toggle('collapsed'); 
         }
 
         function renderPlanes() {
-            const container = document.getElementById('planes-container');
-            container.innerHTML = "";
-
+            const container = document.getElementById('planes-container'); container.innerHTML = "";
             PLANE_CATEGORIES.forEach(cat => {
-                const catDiv = document.createElement('div');
-                catDiv.className = 'plane-category';
-                catDiv.innerHTML = `<div class="plane-cat-header">${cat.name}</div>`;
-
+                const catDiv = document.createElement('div'); catDiv.className = 'plane-category'; catDiv.innerHTML = `<div class="plane-cat-header">${cat.name}</div>`;
                 const planesInCat = PLANES_DATA.filter(p => p.cat === cat.id);
                 planesInCat.forEach(plane => {
-                    const card = document.createElement('div');
-                    card.className = 'plane-card';
-                    card.innerHTML = `
-                        <div class="plane-header" onclick="this.parentElement.classList.toggle('open')">
-                            <span>${plane.name}</span>
-                            <span>▾</span>
-                        </div>
-                        <div class="plane-body">${plane.desc.replace(/\n/g, '<br>')}</div>
-                    `;
+                    const card = document.createElement('div'); card.className = 'plane-card';
+                    card.innerHTML = `<div class="plane-header" onclick="this.parentElement.classList.toggle('open')"><span>${plane.name}</span><span>▾</span></div><div class="plane-body">${plane.desc.replace(/\n/g, '<br>')}</div>`;
                     catDiv.appendChild(card);
                 });
                 container.appendChild(catDiv);
             });
         }
 
-        window.mudarMapa = function(url) {
-            if(mundiOverlay) mundiOverlay.setUrl(url);
-        };
+        window.mudarMapa = function(url) { if(mundiOverlay) mundiOverlay.setUrl(url); };
 
         function atualizarListaLateral() {
-            const lista = document.getElementById('lista-locais');
-            lista.innerHTML = "";
+            const lista = document.getElementById('lista-locais'); lista.innerHTML = "";
             const termo = document.getElementById('search-input').value.toLowerCase();
             const filterType = document.querySelector('input[name="search-filter"]:checked').value;
-
             markersMundi.forEach(pin => {
                 let match = false;
-                if(filterType === 'nome') match = pin.nome.toLowerCase().includes(termo);
-                else match = (pin.desc || "").toLowerCase().includes(termo);
-                
+                if(filterType === 'nome') match = pin.nome.toLowerCase().includes(termo); else match = (pin.desc || "").toLowerCase().includes(termo);
                 if(termo !== "" && !match) return;
-                
-                const li = document.createElement('li');
-                li.className = 'location-item';
-                const iconSrc = pin.icon || IMG_DEFAULT_ICON;
-                li.innerHTML = `<img src="${iconSrc}" class="loc-icon-small"> <span>${pin.nome}</span>`;
-                
-                li.onclick = () => { 
-                    if(activeMainPinId) voltarMapaMundi(); 
-                    if(isRouteModeActive) toggleRouteMode(); // Desativa as rotas para conseguir ver o pin
-                    mapMundi.setMaxBounds(null); 
-                    mapMundi.flyTo([pin.lat, pin.lng], 1, { animate: true, duration: 1 }); 
-                    setTimeout(() => pin.marker.openPopup(), 1200);
-                };
+                const li = document.createElement('li'); li.className = 'location-item';
+                const iconSrc = pin.icon || IMG_DEFAULT_ICON; li.innerHTML = `<img src="${iconSrc}" class="loc-icon-small"> <span>${pin.nome}</span>`;
+                li.onclick = () => { if(activeMainPinId) voltarMapaMundi(); mapMundi.setMaxBounds(null); mapMundi.flyTo([pin.lat, pin.lng], 1, { animate: true, duration: 1 }); setTimeout(() => pin.marker.openPopup(), 1200); };
                 lista.appendChild(li);
             });
         }
@@ -1283,173 +973,54 @@
 
         function setPasteTarget(target) {
             pasteTarget = target;
-            document.getElementById('area-icon').classList.remove('paste-active');
-            document.getElementById('area-gallery').classList.remove('paste-active');
-            document.getElementById('area-submap').classList.remove('paste-active'); 
-            document.getElementById(`area-${target}`).classList.add('paste-active');
+            document.getElementById('area-icon').classList.remove('paste-active'); document.getElementById('area-gallery').classList.remove('paste-active'); document.getElementById('area-submap').classList.remove('paste-active'); document.getElementById(`area-${target}`).classList.add('paste-active');
         }
 
         function comprimirImagem(file, callback) {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
+            const reader = new FileReader(); reader.readAsDataURL(file);
             reader.onload = event => {
-                const img = new Image();
-                img.src = event.target.result;
+                const img = new Image(); img.src = event.target.result;
                 img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const MAX_SIZE = 800; 
-                    let width = img.width; height = img.height;
-
-                    if (width > height) {
-                        if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; }
-                    } else {
-                        if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; }
-                    }
-                    canvas.width = width; canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
+                    const canvas = document.createElement('canvas'); const MAX_SIZE = 800; let width = img.width; height = img.height;
+                    if (width > height) { if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; } } else { if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; } }
+                    canvas.width = width; canvas.height = height; const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height);
                     callback(canvas.toDataURL('image/webp', 0.7)); 
                 }
             }
         }
 
-        document.getElementById('area-icon').addEventListener('click', () => {
-            if (pasteTarget !== 'icon') setPasteTarget('icon'); 
-            else document.getElementById('file-icon').click();
-        });
-        document.getElementById('file-icon').addEventListener('change', e => {
-            const file = e.target.files[0];
-            if(file) comprimirImagem(file, res => { iconImage = res; renderFormVisuals(); });
-        });
-
-        document.getElementById('area-gallery').addEventListener('click', () => {
-            if (pasteTarget !== 'gallery') setPasteTarget('gallery'); 
-            else document.getElementById('file-gallery').click();
-        });
-        document.getElementById('file-gallery').addEventListener('change', e => {
-            Array.from(e.target.files).forEach(file => { 
-                comprimirImagem(file, res => { galleryImages.push(res); renderFormVisuals(); }); 
-            });
-        });
-
-        document.getElementById('area-submap').addEventListener('click', () => {
-            if (pasteTarget !== 'submap') setPasteTarget('submap'); 
-            else document.getElementById('file-submap').click();
-        });
-        document.getElementById('file-submap').addEventListener('change', e => {
-            const file = e.target.files[0];
-            if(file) comprimirImagem(file, res => { subMapImage = res; renderFormVisuals(); });
-        });
+        document.getElementById('area-icon').addEventListener('click', () => { if (pasteTarget !== 'icon') setPasteTarget('icon'); else document.getElementById('file-icon').click(); });
+        document.getElementById('file-icon').addEventListener('change', e => { const file = e.target.files[0]; if(file) comprimirImagem(file, res => { iconImage = res; renderFormVisuals(); }); });
+        document.getElementById('area-gallery').addEventListener('click', () => { if (pasteTarget !== 'gallery') setPasteTarget('gallery'); else document.getElementById('file-gallery').click(); });
+        document.getElementById('file-gallery').addEventListener('change', e => { Array.from(e.target.files).forEach(file => { comprimirImagem(file, res => { galleryImages.push(res); renderFormVisuals(); }); }); });
+        document.getElementById('area-submap').addEventListener('click', () => { if (pasteTarget !== 'submap') setPasteTarget('submap'); else document.getElementById('file-submap').click(); });
+        document.getElementById('file-submap').addEventListener('change', e => { const file = e.target.files[0]; if(file) comprimirImagem(file, res => { subMapImage = res; renderFormVisuals(); }); });
 
         document.addEventListener('paste', e => {
             if(document.getElementById('modal-form').style.display !== 'flex') return;
             if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
             const items = (e.clipboardData || e.originalEvent.clipboardData).items;
             for (let item of items) {
                 if (item.kind === 'file' && item.type.includes('image/')) {
                     comprimirImagem(item.getAsFile(), res => {
-                        if(pasteTarget === 'icon') iconImage = res;
-                        else if(pasteTarget === 'gallery') galleryImages.push(res);
-                        else if(pasteTarget === 'submap') subMapImage = res; 
-                        renderFormVisuals();
+                        if(pasteTarget === 'icon') iconImage = res; else if(pasteTarget === 'gallery') galleryImages.push(res); else if(pasteTarget === 'submap') subMapImage = res; renderFormVisuals();
                     });
                 }
             }
         });
 
         function renderFormVisuals() {
-            const container = document.getElementById('gallery-container');
-            container.innerHTML = "";
+            const container = document.getElementById('gallery-container'); container.innerHTML = "";
             galleryImages.forEach((img, idx) => {
-                const div = document.createElement('div');
-                div.className = 'gallery-item';
-                div.innerHTML = `<img src="${img}"><button class="gallery-remove" onclick="removeImg(event, ${idx})">×</button>`;
-                container.appendChild(div);
+                const div = document.createElement('div'); div.className = 'gallery-item'; div.innerHTML = `<img src="${img}"><button class="gallery-remove" onclick="removeImg(event, ${idx})">×</button>`; container.appendChild(div);
             });
-
-            const prevIcon = document.getElementById('preview-icon');
-            const placeIcon = document.getElementById('placeholder-icon');
-            const areaIcon = document.getElementById('area-icon');
-
-            if(iconImage && iconImage !== IMG_DEFAULT_ICON) {
-                prevIcon.src = iconImage;
-                prevIcon.style.display = 'block';
-                placeIcon.style.display = 'none';
-                areaIcon.classList.add('has-file');
-            } else {
-                prevIcon.style.display = 'none';
-                placeIcon.style.display = 'flex';
-                areaIcon.classList.remove('has-file');
-            }
-
-            const prevSubmap = document.getElementById('preview-submap');
-            const placeSubmap = document.getElementById('placeholder-submap');
-            const areaSubmap = document.getElementById('area-submap');
-
-            // Lógica para esconder a interface de Submapa se for um Pino Simples
-            const isSimplePin = document.getElementById('input-simple-pin').checked;
-            const containerSubmapUrl = document.getElementById('group-submap-url');
-            if(isSimplePin || isEditingSubPin) {
-                containerSubmapUrl.style.display = 'none';
-            } else {
-                containerSubmapUrl.style.display = 'block';
-            }
-
-            if(subMapImage) {
-                prevSubmap.src = subMapImage;
-                prevSubmap.style.display = 'block';
-                placeSubmap.style.display = 'none';
-                areaSubmap.classList.add('has-file');
-            } else {
-                prevSubmap.style.display = 'none';
-                placeSubmap.style.display = 'flex';
-                areaSubmap.classList.remove('has-file');
-            }
+            const prevIcon = document.getElementById('preview-icon'); const placeIcon = document.getElementById('placeholder-icon'); const areaIcon = document.getElementById('area-icon');
+            if(iconImage && iconImage !== IMG_DEFAULT_ICON) { prevIcon.src = iconImage; prevIcon.style.display = 'block'; placeIcon.style.display = 'none'; areaIcon.classList.add('has-file'); } else { prevIcon.style.display = 'none'; placeIcon.style.display = 'flex'; areaIcon.classList.remove('has-file'); }
+            const prevSubmap = document.getElementById('preview-submap'); const placeSubmap = document.getElementById('placeholder-submap'); const areaSubmap = document.getElementById('area-submap');
+            if(subMapImage) { prevSubmap.src = subMapImage; prevSubmap.style.display = 'block'; placeSubmap.style.display = 'none'; areaSubmap.classList.add('has-file'); } else { prevSubmap.style.display = 'none'; placeSubmap.style.display = 'flex'; areaSubmap.classList.remove('has-file'); }
         }
 
-        // Listener para esconder a caixa de submapa imediatamente se ele checar o box de Pinos Simples
-        document.getElementById('input-simple-pin').addEventListener('change', renderFormVisuals);
-
-        window.removeImg = (e, idx) => {
-            e.stopPropagation();
-            galleryImages.splice(idx, 1);
-            renderFormVisuals();
-        };
-
-        function toggleMedicao() {
-            if(isRouteModeActive) return alert("Desative o Modo Rastro de Facções primeiro.");
-            
-            isMeasuringSession = !isMeasuringSession;
-            const btn = document.getElementById('btn-medir');
-            const mapDom = activeMainPinId ? document.getElementById('sub-map') : document.getElementById('map');
-
-            if(isMeasuringSession) {
-                btn.classList.add('active');
-                mapDom.style.cursor = 'crosshair';
-                document.getElementById('distancia-res').innerText = "Clique no ponto A para começar...";
-                isDrawingMeasure = false;
-            } else {
-                desativarMedicao();
-            }
-        }
-
-        function desativarMedicao() {
-            isMeasuringSession = false;
-            isDrawingMeasure = false;
-            document.getElementById('btn-medir').classList.remove('active');
-            document.getElementById('map').style.cursor = 'default';
-            document.getElementById('sub-map').style.cursor = 'default';
-        }
-
-        function limparMedicao() {
-            const activeMap = activeMainPinId ? subMap : mapMundi;
-            if(measureLine) activeMap.removeLayer(measureLine);
-            measureLine = null;
-            measurePoints = [];
-            isDrawingMeasure = false;
-            document.getElementById('distancia-res').innerText = isMeasuringSession ? "Clique no ponto A..." : "";
-        }
+        window.removeImg = (e, idx) => { e.stopPropagation(); galleryImages.splice(idx, 1); renderFormVisuals(); };
 
     </script>
 </body>
