@@ -19,7 +19,6 @@
             --danger: #d32f2f;
             --text-main: #e0e0e0;
             --shadow-sub: 0 0 20px rgba(156, 39, 176, 0.5);
-            --gold: #ffd700;
         }
 
         body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Segoe UI', Tahoma, sans-serif; overflow: hidden; color: var(--text-main); }
@@ -130,12 +129,12 @@
         .sub-map-icon { border: 2px solid var(--accent); border-radius: 50%; box-shadow: var(--shadow-sub); transition: 0.2s, opacity 0.3s; background: #000; box-sizing: border-box; padding: 2px; object-fit: contain !important; }
         .sub-map-icon:hover { transform: scale(1.3); background: #1a1a1a; z-index: 1000 !important; }
         
-        /* PIN SIMPLES (Boatos/Temporários) */
-        .simple-map-icon { border: 1px dashed #aaa; border-radius: 50%; background: rgba(20, 20, 20, 0.4); opacity: 0.4; box-sizing: border-box; padding: 2px; object-fit: contain !important; filter: grayscale(40%); transition: transform 0.3s, opacity 0.3s; z-index: 400; }
+        /* PIN SIMPLES (Mais transparente) */
+        .simple-map-icon { border: 1px dashed #aaa; border-radius: 50%; background: rgba(20, 20, 20, 0.4); opacity: 0.5; box-sizing: border-box; padding: 2px; object-fit: contain !important; filter: grayscale(40%); transition: transform 0.3s, opacity 0.3s; z-index: 400; }
         .simple-map-icon:hover { opacity: 0.9; transform: scale(1.2); border-color: #fff; z-index: 1000 !important;}
 
-        /* PIN CAPITAL */
-        .capital-map-icon { border: 2px solid #fff; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.8); transition: transform 0.2s; background: #111; box-sizing: border-box; padding: 4px; object-fit: cover !important; z-index: 800 !important; }
+        /* PIN CAPITAL (Quadrado limpo sem brilho) */
+        .capital-map-icon { border: 2px solid #fff; border-radius: 4px; transition: transform 0.2s; background: #222; box-sizing: border-box; padding: 4px; object-fit: cover !important; z-index: 800 !important; }
         .capital-map-icon:hover { transform: scale(1.2); border-color: var(--accent); z-index: 1100 !important; }
 
         /* ESTADO: MODO DE ROTAS ATIVO (Encolhe todos os pinos) */
@@ -228,8 +227,8 @@
                 </div>
                 
                 <div style="font-size: 9px; color: #666; text-align: center; margin-top: 5px;">
-                    (Atalhos: <strong>Q</strong> = Reta | <strong>E</strong> = Livre | <strong>W/Esc</strong> = Finalizar)<br>
-                    (<strong>Botão Direito</strong> encerra um trecho e inicia o próximo)
+                    (Atalhos: <strong>Q</strong> = Reta | <strong>E</strong> = Livre | <strong>W/Esc</strong> = Pausar)<br>
+                    (<strong>Botão Direito</strong> no mapa encerra trecho e inicia o próximo)
                 </div>
 
                 <div style="display:flex; gap: 8px; margin-top: 10px;">
@@ -433,14 +432,22 @@
                 }
             }, 10000); 
 
-            // Quando mudar o modo (Reta <-> Livre) pelos botões visuais, a linha não reinicia mais.
+            // Troca de modo visual na régua sem perder a linha
             document.querySelectorAll('input[name="measure-mode"]').forEach(radio => {
-                radio.addEventListener('change', () => {
+                radio.addEventListener('change', (ev) => {
                     if (isMeasuringSession && isDrawingMeasure && currentFixedPoints.length > 0) {
                         const activeMap = activeMainPinId ? subMap : mapMundi;
-                        // Não encerra o trecho aqui! Apenas permite que o desenho continue no novo estilo do último ponto
-                        if (radio.value === 'line' && !tempPathLine) {
-                            tempPathLine = L.polyline([currentFixedPoints[currentFixedPoints.length - 1], currentFixedPoints[currentFixedPoints.length - 1]], {color: '#d05ce3', dashArray: '5, 5', weight: 2, opacity: 0.7}).addTo(activeMap);
+                        const lastPt = currentFixedPoints[currentFixedPoints.length - 1];
+                        
+                        if (ev.target.value === 'line') {
+                            if (!tempPathLine) {
+                                tempPathLine = L.polyline([lastPt, lastPt], {color: '#d05ce3', dashArray: '5, 5', weight: 2, opacity: 0.7}).addTo(activeMap);
+                            }
+                        } else if (ev.target.value === 'draw') {
+                            if (tempPathLine) {
+                                activeMap.removeLayer(tempPathLine);
+                                tempPathLine = null;
+                            }
                         }
                     }
                 });
@@ -453,7 +460,6 @@
             L.DomEvent.disableClickPropagation(sidebarEl);
             L.DomEvent.disableScrollPropagation(sidebarEl);
             
-            // Impede a linha de desenho de seguir o mouse se ele entrar na sidebar
             sidebarEl.addEventListener('mousemove', e => {
                 L.DomEvent.stopPropagation(e);
             });
@@ -462,16 +468,19 @@
         document.addEventListener('keydown', (e) => {
             if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-            // Encerramento suave do traçado sem apagar a linha da tela (como se fosse Botão Direito final)
+            // Esc / W / Backspace -> Apenas param o desenho, mantendo o traço na tela
             if (e.key === 'Escape' || e.key === 'Backspace' || e.key.toLowerCase() === 'w') {
                 if (isMeasuringSession) {
                     if(isDrawingMeasure && currentFixedPoints.length > 0) {
                         const activeMap = activeMainPinId ? subMap : mapMundi;
-                        // Finaliza o trecho atual mas deixa tudo desenhado
                         comitarTrechoDeMedicao(activeMap, currentFixedPoints[currentFixedPoints.length - 1]);
-                        if(tempPathLine) activeMap.removeLayer(tempPathLine);
+                        if(tempPathLine) {
+                            activeMap.removeLayer(tempPathLine);
+                            tempPathLine = null;
+                        }
                     }
                     isDrawingMeasure = false;
+                    document.getElementById('btn-medir').classList.remove('active');
                 }
                 if (isRouteModeActive && isDrawingRoute) {
                     isDrawingRoute = false;
@@ -479,17 +488,14 @@
                 }
             }
 
-            // Teclas de Troca de Modo (Continuando de onde parou sem criar pontos extras)
+            // Teclas de Troca Rápida de Medição
             if (e.key.toLowerCase() === 'q') {
                 if(!isRouteModeActive) { 
                     if(!isMeasuringSession) toggleMedicao();
                     const radio = document.querySelector('input[name="measure-mode"][value="line"]');
                     if(!radio.checked) { 
                         radio.checked = true; 
-                        if(isDrawingMeasure && !tempPathLine) {
-                             const activeMap = activeMainPinId ? subMap : mapMundi;
-                             tempPathLine = L.polyline([currentFixedPoints[currentFixedPoints.length - 1], currentFixedPoints[currentFixedPoints.length - 1]], {color: '#d05ce3', dashArray: '5, 5', weight: 2, opacity: 0.7}).addTo(activeMap);
-                        }
+                        radio.dispatchEvent(new Event('change'));
                     }
                 }
             }
@@ -499,6 +505,7 @@
                     const radio = document.querySelector('input[name="measure-mode"][value="draw"]');
                     if(!radio.checked) { 
                         radio.checked = true; 
+                        radio.dispatchEvent(new Event('change'));
                     }
                 }
             }
@@ -571,7 +578,11 @@
                 btn.style.color = 'var(--accent)';
                 panel.style.display = 'flex';
                 document.body.classList.add('route-mode-active'); 
-                if(isMeasuringSession) { limparMedicao(); desativarMedicao(); }
+                if(isMeasuringSession) { 
+                    isDrawingMeasure = false;
+                    isMeasuringSession = false;
+                    document.getElementById('btn-medir').classList.remove('active');
+                }
                 renderAllRoutes();
             } else {
                 btn.style.color = '#888';
@@ -930,7 +941,7 @@
         function handleMapContextMenu(e, activeMap) {
             L.DomEvent.preventDefault(e);
 
-            // Botão Direito corta e cria nova parte na medição (Qualquer modo)
+            // Botão Direito corta e cria nova parte na medição
             if(isMeasuringSession && isDrawingMeasure) {
                 comitarTrechoDeMedicao(activeMap, e.latlng);
                 return;
@@ -1025,7 +1036,7 @@
             if(completedSegmentsKms.length > 0) {
                 html += `<div style="font-size:10px; color:#aaa; margin-bottom:5px; text-align:left; background:#111; padding:5px; border-radius:4px; max-height:100px; overflow-y:auto;">`;
                 completedSegmentsKms.forEach((km, idx) => {
-                    html += `<strong style="color:#e0aaff;">P${idx+1}:</strong> ${km}km <span style="font-size:9px; color:#888;">(${getTimesHTML(km)})</span><br>`;
+                    html += `<strong style="color:#e0aaff;">Trecho ${idx+1}:</strong> ${km}km <span style="font-size:9px; color:#888;">(${getTimesHTML(km)})</span><br>`;
                     totalGeral += parseFloat(km);
                 });
                 if(currentDistKm > 0.1) {
@@ -1046,6 +1057,7 @@
             if(isRouteModeActive) return alert("Desative o Modo Rastro primeiro para usar a régua.");
             
             if(isMeasuringSession) {
+                // Ao clicar no botão de novo, ele PAUSA, não limpa
                 if(isDrawingMeasure) {
                     const activeMap = activeMainPinId ? subMap : mapMundi;
                     comitarTrechoDeMedicao(activeMap, currentFixedPoints[currentFixedPoints.length - 1]);
