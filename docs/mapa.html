@@ -246,18 +246,19 @@
             <div class="measure-tools">
                 <label class="field-label">CALCULADORA DE VIAGEM</label>
                 
-                <div class="measure-options" id="measure-radios">
+                <div class="measure-options">
                     <label><input type="radio" name="measure-mode" value="line" checked> Reta / Pontos</label>
                     <label><input type="radio" name="measure-mode" value="draw"> Livre</label>
                 </div>
                 
                 <div style="font-size: 9px; color: #666; text-align: center; margin-top: 5px;">
-                    (Botão Direito encerra um trecho e inicia o próximo)
+                    (Atalhos: <strong>Q</strong> = Reta | <strong>E</strong> = Livre | <strong>W</strong> = Sair)<br>
+                    (<strong>Botão Direito</strong> no mapa encerra trecho e inicia o próximo)
                 </div>
 
                 <div style="display:flex; gap: 8px; margin-top: 10px;">
                     <button class="btn-action" id="btn-medir" onclick="toggleMedicao()" style="flex:1;">📏 Medir Trajeto</button>
-                    <button class="btn-action" onclick="limparMedicao()" style="width: auto; background: #221111; border-color: #442222; color: #ff8888;" title="Limpar Medição">🗑️</button>
+                    <button class="btn-action" onclick="limparMedicao(); desativarMedicao();" style="width: auto; background: #221111; border-color: #442222; color: #ff8888;" title="Limpar Medição">🗑️</button>
                 </div>
                 <div id="distancia-res" style="font-size: 13px; color: #e0aaff; margin-top: 8px; text-align: center; min-height: 40px; font-weight: bold; font-family: monospace; line-height: 1.4;"></div>
             </div>
@@ -397,6 +398,7 @@
         let measurePolylines = []; 
         let currentFixedPoints = []; 
         let completedSegmentsKms = []; 
+        let tempPathLine = null; 
 
         let tempCoords = null;
         let editId = null;
@@ -453,7 +455,7 @@
                 }
             }, 10000); 
 
-            // Quando mudar de modo (Reta <-> Livre) durante a medição, fecha o segmento atual e continua normal
+            // Quando mudar de modo (Reta <-> Livre) durante a medição, fecha o segmento atual
             document.querySelectorAll('input[name="measure-mode"]').forEach(radio => {
                 radio.addEventListener('change', () => {
                     if (isMeasuringSession && isDrawingMeasure && currentFixedPoints.length > 0) {
@@ -467,23 +469,48 @@
         // ================= PROTEÇÃO DA SIDEBAR & TECLAS DE CANCELAMENTO =================
         function configurarProtecaoSidebar() {
             const sidebarEl = document.getElementById('sidebar');
+            // Impede cliques no painel de vazarem para o mapa
             L.DomEvent.disableClickPropagation(sidebarEl);
             L.DomEvent.disableScrollPropagation(sidebarEl);
+            // Impede a linha de desenho de tentar seguir o mouse pra dentro do painel
             sidebarEl.addEventListener('mousemove', e => L.DomEvent.stopPropagation(e));
         }
 
         document.addEventListener('keydown', (e) => {
+            if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
             if (e.key === 'Escape' || e.key === 'Backspace') {
                 if (isMeasuringSession) {
                     limparMedicao();
                     desativarMedicao();
                 }
-                if (isDrawingRoute) {
+                if (isRouteModeActive && isDrawingRoute) {
                     isDrawingRoute = false;
                     document.getElementById('btn-draw-route').classList.remove('active');
                     if (currentRoutePolyline) mapMundi.removeLayer(currentRoutePolyline);
                     routeDrawPoints = [];
                     currentRoutePolyline = null;
+                }
+            }
+
+            if (e.key.toLowerCase() === 'q') {
+                if(!isRouteModeActive) { 
+                    if(!isMeasuringSession) toggleMedicao();
+                    const radio = document.querySelector('input[name="measure-mode"][value="line"]');
+                    if(!radio.checked) { radio.checked = true; radio.dispatchEvent(new Event('change')); }
+                }
+            }
+            if (e.key.toLowerCase() === 'e') {
+                if(!isRouteModeActive) {
+                    if(!isMeasuringSession) toggleMedicao();
+                    const radio = document.querySelector('input[name="measure-mode"][value="draw"]');
+                    if(!radio.checked) { radio.checked = true; radio.dispatchEvent(new Event('change')); }
+                }
+            }
+            if (e.key.toLowerCase() === 'w') {
+                if(isMeasuringSession) {
+                    limparMedicao();
+                    desativarMedicao();
                 }
             }
         });
@@ -503,10 +530,6 @@
             mapMundi.on('click', e => handleMapClick(e, mapMundi));
             mapMundi.on('mousemove', e => handleMapMouseMove(e, mapMundi));
             mapMundi.on('popupclose', () => mapMundi.setMaxBounds(MAP_BOUNDS));
-            
-            mapMundi.on('popupopen', function(e) {
-                if (isMeasuringSession || isRouteModeActive) { mapMundi.closePopup(e.popup); }
-            });
         }
 
         function initSubMap() {
@@ -519,10 +542,6 @@
             subMap.on('contextmenu', e => handleMapContextMenu(e, subMap));
             subMap.on('click', e => handleMapClick(e, subMap));
             subMap.on('mousemove', e => handleMapMouseMove(e, subMap));
-            
-            subMap.on('popupopen', function(e) {
-                if (isMeasuringSession || isRouteModeActive) { subMap.closePopup(e.popup); }
-            });
         }
 
         // ================= ROTAS HISTÓRICAS =================
@@ -555,7 +574,7 @@
                 btn.style.color = 'var(--accent)';
                 panel.style.display = 'flex';
                 document.body.classList.add('route-mode-active'); 
-                if(isMeasuringSession) desativarMedicao();
+                if(isMeasuringSession) { limparMedicao(); desativarMedicao(); }
                 renderAllRoutes();
             } else {
                 btn.style.color = '#888';
@@ -618,12 +637,12 @@
             });
         }
 
-        // ================= SISTEMA DE PINS E CLIQUE (SNAPPING) =================
+        // ================= SISTEMA DE PINS (COM ABERTURA MANUAL E SNAPPING) =================
         window.entrarNoLocal = function(pinId) {
             const pinMundi = markersMundi.find(m => m.id === pinId);
             if(!pinMundi || !pinMundi.subMapUrl) return alert("Este local não possui um mapa interno configurado.");
             activeMainPinId = pinId;
-            pinMundi.marker.closePopup();
+            mapMundi.closePopup();
             
             if(subMapOverlay) subMap.removeLayer(subMapOverlay);
             subMapOverlay = L.imageOverlay(pinMundi.subMapUrl, MAP_BOUNDS).addTo(subMap);
@@ -657,19 +676,23 @@
             const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [40, 40], iconAnchor: anchorPoint, popupAnchor: [0, -20] });
             
             const marker = L.marker([data.lat, data.lng], {icon: customIcon}).addTo(mapMundi);
+            const pinData = { ...data, marker, subPins: data.subPins || [] };
             
-            // ÍMÃ: Se clicar no pino, a régua ou a rota vai grudar nele.
             marker.on('click', (e) => {
+                L.DomEvent.stopPropagation(e);
                 if (isMeasuringSession || isRouteModeActive) {
-                    L.DomEvent.stopPropagation(e);
+                    // ÍMÃ: Gruda a linha no pino e continua/termina
                     handleMapClick({ latlng: marker.getLatLng() }, mapMundi);
                 } else {
+                    // Abre o popup normalmente se não estiver medindo
                     mapMundi.setMaxBounds(null);
+                    L.popup({ maxWidth: 2000 })
+                     .setLatLng(marker.getLatLng())
+                     .setContent(gerarPopupContent(pinData, false))
+                     .openOn(mapMundi);
                 }
             });
 
-            const pinData = { ...data, marker, subPins: data.subPins || [] };
-            marker.bindPopup(() => gerarPopupContent(pinData, false), { maxWidth: 2000 });
             markersMundi.push(pinData);
         }
 
@@ -679,17 +702,22 @@
                 const safeIcon = data.icon || IMG_DEFAULT_ICON;
                 const iconHtml = gerarIconHtml(safeIcon, true, false);
                 const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [24, 24], iconAnchor: [12, 12], popupAnchor: [0, -12] });
+                
                 const marker = L.marker([data.lat, data.lng], {icon: customIcon}).addTo(subMap);
+                const subPinObj = { ...data, marker };
                 
                 marker.on('click', (e) => {
+                    L.DomEvent.stopPropagation(e);
                     if (isMeasuringSession || isRouteModeActive) {
-                        L.DomEvent.stopPropagation(e);
                         handleMapClick({ latlng: marker.getLatLng() }, subMap);
+                    } else {
+                        L.popup({ maxWidth: 2000 })
+                         .setLatLng(marker.getLatLng())
+                         .setContent(gerarPopupContent(subPinObj, true))
+                         .openOn(subMap);
                     }
                 });
 
-                const subPinObj = { ...data, marker };
-                marker.bindPopup(() => gerarPopupContent(subPinObj, true), { maxWidth: 2000 });
                 currentSubMarkers.push(subPinObj);
             });
         }
@@ -707,7 +735,6 @@
 
             const newIcon = L.divIcon({ html: iconHtml, className: '', iconSize: size, iconAnchor: anchor, popupAnchor: pAnchor });
             pin.marker.setIcon(newIcon);
-            pin.marker.setPopupContent(gerarPopupContent(pin, isSub));
         }
 
         function gerarPopupContent(pin, isSub) {
@@ -886,13 +913,15 @@
             const newLine = L.polyline([lastPoint, lastPoint], {color: '#9c27b0', dashArray: '10, 10', weight: 3}).addTo(activeMap);
             measurePolylines.push(newLine);
             
+            if(tempPathLine) tempPathLine.setLatLngs([lastPoint, lastPoint]);
+            
             atualizarPainelMedicao(0);
         }
 
         function handleMapContextMenu(e, activeMap) {
             L.DomEvent.preventDefault(e);
 
-            // Botão direito durante a régua SEMPRE fecha a parte e inicia outra (Independente do modo)
+            // Botão direito salva o trecho e continua do mesmo lugar (Modo Partes implícito)
             if(isMeasuringSession && isDrawingMeasure) {
                 comitarTrechoDeMedicao(activeMap, e.latlng);
                 return;
@@ -921,12 +950,17 @@
                     completedSegmentsKms = [];
                     measurePolylines.forEach(p => activeMap.removeLayer(p));
                     measurePolylines = [];
+                    if(tempPathLine) { activeMap.removeLayer(tempPathLine); tempPathLine = null; }
                     
                     const newLine = L.polyline([e.latlng, e.latlng], {color: '#9c27b0', dashArray: '10, 10', weight: 3}).addTo(activeMap);
                     measurePolylines.push(newLine);
+                    
+                    if(mode === 'line') {
+                        tempPathLine = L.polyline([e.latlng, e.latlng], {color: '#d05ce3', dashArray: '5, 5', weight: 2, opacity: 0.7}).addTo(activeMap);
+                    }
                 } else {
                     if (mode === 'line') {
-                        currentFixedPoints.push(e.latlng); // Trava o vértice
+                        currentFixedPoints.push(e.latlng);
                     } else if (mode === 'draw') {
                         currentFixedPoints.push(e.latlng); 
                     }
@@ -947,9 +981,10 @@
                 let calcPoints;
 
                 if (mode === 'line') {
-                    calcPoints = [...currentFixedPoints, e.latlng]; // Mantém os fixos e deixa o último solto
+                    calcPoints = [...currentFixedPoints, e.latlng]; 
+                    if(tempPathLine) tempPathLine.setLatLngs([currentFixedPoints[currentFixedPoints.length - 1], e.latlng]);
                 } else if (mode === 'draw') {
-                    currentFixedPoints.push(e.latlng); // Modo livre salva todos os movimentos
+                    currentFixedPoints.push(e.latlng); 
                     calcPoints = currentFixedPoints;
                 }
 
@@ -981,7 +1016,7 @@
             if(completedSegmentsKms.length > 0) {
                 html += `<div style="font-size:10px; color:#aaa; margin-bottom:5px; text-align:left; background:#111; padding:5px; border-radius:4px; max-height:100px; overflow-y:auto;">`;
                 completedSegmentsKms.forEach((km, idx) => {
-                    html += `<strong style="color:#e0aaff;">Trecho ${idx+1}:</strong> ${km}km <span style="font-size:9px; color:#888;">(${getTimesHTML(km)})</span><br>`;
+                    html += `<strong style="color:#e0aaff;">P${idx+1}:</strong> ${km}km <span style="font-size:9px; color:#888;">(${getTimesHTML(km)})</span><br>`;
                     totalGeral += parseFloat(km);
                 });
                 if(currentDistKm > 0.1) {
@@ -1025,10 +1060,12 @@
         function limparMedicao() {
             const activeMap = activeMainPinId ? subMap : mapMundi;
             measurePolylines.forEach(p => activeMap.removeLayer(p));
+            if(tempPathLine) activeMap.removeLayer(tempPathLine);
             
             measurePolylines = [];
             currentFixedPoints = [];
             completedSegmentsKms = [];
+            tempPathLine = null;
             isDrawingMeasure = false;
             document.getElementById('distancia-res').innerHTML = "";
         }
