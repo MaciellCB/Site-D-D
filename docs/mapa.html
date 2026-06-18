@@ -315,8 +315,13 @@
 
         .field-label { display:block; color:#aaa; font-size:12px; margin-bottom:5px; font-weight:bold; }
 
-        /* NOVA REGRA CSS: Garante que o preview do submapa não distorça e ocupe o espaço */
-        #preview-submap { object-fit: contain !important; width: 100%; height: 100%; }
+        /* NOVA REGRA CSS: Garante que o preview do submapa não distorça e ocupe o tamanho exato */
+        #preview-submap { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover !important; 
+            border-radius: 6px; 
+        }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -412,14 +417,14 @@
 
                 <div id="group-submap-url" style="margin-bottom:20px;">
                     <label class="field-label" style="color: var(--accent);">IMAGEM DO MAPA INTERNO (Opcional)</label>
-                    <div class="upload-area" id="area-submap" style="height:120px; min-height:auto;">
+                    <div class="upload-area" id="area-submap" style="width: 100%; height: 160px; min-height: 160px;">
                         <div class="upload-placeholder" id="placeholder-submap" style="display:flex; flex-direction:column; align-items:center;">
                             <span style="font-size:24px; margin-bottom:5px;">🗺️</span>
-                            <span style="font-size:11px; color:#666;">Clique para selecionar ou use Ctrl+V</span>
+                            <span style="font-size:11px; color:#666;">Clique aqui. Após ativo, use <strong>Ctrl+V</strong> ou Clique novamente</span>
                         </div>
                         <img id="preview-submap" class="preview-img" style="display:none;">
                     </div>
-                    <span style="font-size:10px; color:#666; margin-top:2px; display:block;">Coloque a imagem se este local tiver um mapa próprio explorável.</span>
+                    <span style="font-size:10px; color:#666; margin-top:4px; display:block;">Coloque a imagem se este local tiver um mapa próprio explorável.</span>
                     <input type="file" id="file-submap" accept="image/*" style="display:none;">
                 </div>
 
