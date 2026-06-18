@@ -246,15 +246,13 @@
             <div class="measure-tools">
                 <label class="field-label">CALCULADORA DE VIAGEM</label>
                 
-                <div class="measure-options">
+                <div class="measure-options" id="measure-radios">
                     <label><input type="radio" name="measure-mode" value="line" checked> Reta / Pontos</label>
                     <label><input type="radio" name="measure-mode" value="draw"> Livre</label>
                 </div>
-
-                <div class="measure-options" style="margin-top: 5px;">
-                    <label title="Com isso ativo, clique com o Botão Direito para encerrar um trecho e continuar do mesmo ponto.">
-                        <input type="checkbox" id="check-partes" style="accent-color: var(--accent);"> Modo Partes (Botão Direito)
-                    </label>
+                
+                <div style="font-size: 9px; color: #666; text-align: center; margin-top: 5px;">
+                    (Botão Direito encerra um trecho e inicia o próximo)
                 </div>
 
                 <div style="display:flex; gap: 8px; margin-top: 10px;">
@@ -393,13 +391,12 @@
         let currentRoutePolyline = null;
         let renderedRouteLayers = [];
 
-        // CALCULADORA DE MEDIÇÃO E PARTES
+        // CALCULADORA DE MEDIÇÃO MULTIPARTES
         let isMeasuringSession = false; 
         let isDrawingMeasure = false; 
         let measurePolylines = []; 
-        let currentSegmentPoints = []; 
-        let completedSegments = []; 
-        let tempPathLine = null; 
+        let currentFixedPoints = []; 
+        let completedSegmentsKms = []; 
 
         let tempCoords = null;
         let editId = null;
@@ -448,18 +445,37 @@
             renderPlanes();
             popularSelectRoutas(); 
             carregarDadosServidor();
+            configurarProtecaoSidebar();
 
             setInterval(() => {
                 if(!activeMainPinId && !isRouteModeActive && document.getElementById('modal-form').style.display !== 'flex') {
                     sincronizarMapa();
                 }
             }, 10000); 
+
+            // Quando mudar de modo (Reta <-> Livre) durante a medição, fecha o segmento atual e continua normal
+            document.querySelectorAll('input[name="measure-mode"]').forEach(radio => {
+                radio.addEventListener('change', () => {
+                    if (isMeasuringSession && isDrawingMeasure && currentFixedPoints.length > 0) {
+                        const activeMap = activeMainPinId ? subMap : mapMundi;
+                        comitarTrechoDeMedicao(activeMap, currentFixedPoints[currentFixedPoints.length - 1]);
+                    }
+                });
+            });
         };
 
-        // ================= CANCELAR AÇÕES (ESC E BACKSPACE) =================
+        // ================= PROTEÇÃO DA SIDEBAR & TECLAS DE CANCELAMENTO =================
+        function configurarProtecaoSidebar() {
+            const sidebarEl = document.getElementById('sidebar');
+            L.DomEvent.disableClickPropagation(sidebarEl);
+            L.DomEvent.disableScrollPropagation(sidebarEl);
+            sidebarEl.addEventListener('mousemove', e => L.DomEvent.stopPropagation(e));
+        }
+
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' || e.key === 'Backspace') {
                 if (isMeasuringSession) {
+                    limparMedicao();
                     desativarMedicao();
                 }
                 if (isDrawingRoute) {
@@ -488,7 +504,6 @@
             mapMundi.on('mousemove', e => handleMapMouseMove(e, mapMundi));
             mapMundi.on('popupclose', () => mapMundi.setMaxBounds(MAP_BOUNDS));
             
-            // Impede popup se tentar abrir na hora errada
             mapMundi.on('popupopen', function(e) {
                 if (isMeasuringSession || isRouteModeActive) { mapMundi.closePopup(e.popup); }
             });
@@ -603,7 +618,7 @@
             });
         }
 
-        // ================= SISTEMA DE PINS (COM SNAPPING) =================
+        // ================= SISTEMA DE PINS E CLIQUE (SNAPPING) =================
         window.entrarNoLocal = function(pinId) {
             const pinMundi = markersMundi.find(m => m.id === pinId);
             if(!pinMundi || !pinMundi.subMapUrl) return alert("Este local não possui um mapa interno configurado.");
@@ -643,23 +658,11 @@
             
             const marker = L.marker([data.lat, data.lng], {icon: customIcon}).addTo(mapMundi);
             
-            // ÍMÃ: Se clicar no pino, a linha gruda nele em vez de abrir
+            // ÍMÃ: Se clicar no pino, a régua ou a rota vai grudar nele.
             marker.on('click', (e) => {
                 if (isMeasuringSession || isRouteModeActive) {
                     L.DomEvent.stopPropagation(e);
-                    
-                    // Simula clique no mapa para grudar o traço na coordenada exata
                     handleMapClick({ latlng: marker.getLatLng() }, mapMundi);
-                    
-                    // Força o encerramento da ação (termina o caminho)
-                    if(isMeasuringSession) {
-                        isDrawingMeasure = false;
-                        if(tempPathLine) mapMundi.removeLayer(tempPathLine);
-                    }
-                    if(isRouteModeActive) {
-                        isDrawingRoute = false;
-                        document.getElementById('btn-draw-route').classList.remove('active');
-                    }
                 } else {
                     mapMundi.setMaxBounds(null);
                 }
@@ -682,10 +685,6 @@
                     if (isMeasuringSession || isRouteModeActive) {
                         L.DomEvent.stopPropagation(e);
                         handleMapClick({ latlng: marker.getLatLng() }, subMap);
-                        if(isMeasuringSession) {
-                            isDrawingMeasure = false;
-                            if(tempPathLine) subMap.removeLayer(tempPathLine);
-                        }
                     }
                 });
 
@@ -870,40 +869,32 @@
         }
 
         // ================= CLIQUES, MOUSE E MEDIÇÃO =================
+        function comitarTrechoDeMedicao(activeMap, endPoint) {
+            currentFixedPoints.push(endPoint); 
+            
+            let totalPixels = 0;
+            for(let i = 0; i < currentFixedPoints.length - 1; i++) {
+                totalPixels += activeMap.project(currentFixedPoints[i]).distanceTo(activeMap.project(currentFixedPoints[i+1]));
+            }
+            const distKm = (totalPixels * ESCALA_KM_POR_PIXEL).toFixed(1);
+            
+            if(distKm > 0) completedSegmentsKms.push(distKm);
+
+            const lastPoint = currentFixedPoints[currentFixedPoints.length - 1];
+            currentFixedPoints = [lastPoint];
+            
+            const newLine = L.polyline([lastPoint, lastPoint], {color: '#9c27b0', dashArray: '10, 10', weight: 3}).addTo(activeMap);
+            measurePolylines.push(newLine);
+            
+            atualizarPainelMedicao(0);
+        }
+
         function handleMapContextMenu(e, activeMap) {
             L.DomEvent.preventDefault(e);
 
-            // Se for botão direito medindo -> Corta trecho (se 'Partes' estiver marcado) ou finaliza o traço
+            // Botão direito durante a régua SEMPRE fecha a parte e inicia outra (Independente do modo)
             if(isMeasuringSession && isDrawingMeasure) {
-                const mode = document.querySelector('input[name="measure-mode"]:checked').value;
-                const isParts = document.getElementById('check-partes').checked;
-                
-                if(isParts) {
-                    currentSegmentPoints.push(e.latlng); 
-                    
-                    let totalPixels = 0;
-                    for(let i = 0; i < currentSegmentPoints.length - 1; i++) {
-                        totalPixels += activeMap.project(currentSegmentPoints[i]).distanceTo(activeMap.project(currentSegmentPoints[i+1]));
-                    }
-                    const distKm = (totalPixels * ESCALA_KM_POR_PIXEL).toFixed(1);
-                    
-                    if(distKm > 0) completedSegments.push({ km: distKm });
-
-                    const lastPoint = currentSegmentPoints[currentSegmentPoints.length - 1];
-                    currentSegmentPoints = [lastPoint];
-                    
-                    const newLine = L.polyline([lastPoint], {color: '#9c27b0', dashArray: '10, 10', weight: 3}).addTo(activeMap);
-                    measurePolylines.push(newLine);
-                    
-                    if(mode === 'line' && tempPathLine) {
-                        tempPathLine.setLatLngs([lastPoint, lastPoint]);
-                    }
-                    
-                    atualizarPainelMedicao(0);
-                } else {
-                    isDrawingMeasure = false;
-                    if(tempPathLine) activeMap.removeLayer(tempPathLine);
-                }
+                comitarTrechoDeMedicao(activeMap, e.latlng);
                 return;
             }
 
@@ -926,24 +917,18 @@
                 
                 if (!isDrawingMeasure) {
                     isDrawingMeasure = true; 
-                    currentSegmentPoints = [e.latlng]; 
-                    completedSegments = [];
+                    currentFixedPoints = [e.latlng]; 
+                    completedSegmentsKms = [];
                     measurePolylines.forEach(p => activeMap.removeLayer(p));
                     measurePolylines = [];
-                    if(tempPathLine) activeMap.removeLayer(tempPathLine);
                     
-                    const newLine = L.polyline([e.latlng], {color: '#9c27b0', dashArray: '10, 10', weight: 3}).addTo(activeMap);
+                    const newLine = L.polyline([e.latlng, e.latlng], {color: '#9c27b0', dashArray: '10, 10', weight: 3}).addTo(activeMap);
                     measurePolylines.push(newLine);
-                    
-                    if(mode === 'line') {
-                        tempPathLine = L.polyline([e.latlng, e.latlng], {color: '#d05ce3', dashArray: '5, 5', weight: 2, opacity: 0.7}).addTo(activeMap);
-                    }
                 } else {
                     if (mode === 'line') {
-                        currentSegmentPoints.push(e.latlng);
-                        measurePolylines[measurePolylines.length - 1].setLatLngs(currentSegmentPoints);
+                        currentFixedPoints.push(e.latlng); // Trava o vértice
                     } else if (mode === 'draw') {
-                        isDrawingMeasure = false; 
+                        currentFixedPoints.push(e.latlng); 
                     }
                 }
                 return;
@@ -959,16 +944,16 @@
         function handleMapMouseMove(e, activeMap) {
             if(isMeasuringSession && isDrawingMeasure) {
                 const mode = document.querySelector('input[name="measure-mode"]:checked').value;
-                let calcPoints = [...currentSegmentPoints];
+                let calcPoints;
 
                 if (mode === 'line') {
-                    calcPoints.push(e.latlng);
-                    if(tempPathLine) tempPathLine.setLatLngs([currentSegmentPoints[currentSegmentPoints.length - 1], e.latlng]);
+                    calcPoints = [...currentFixedPoints, e.latlng]; // Mantém os fixos e deixa o último solto
                 } else if (mode === 'draw') {
-                    currentSegmentPoints.push(e.latlng);
-                    calcPoints = currentSegmentPoints;
-                    measurePolylines[measurePolylines.length - 1].setLatLngs(calcPoints);
+                    currentFixedPoints.push(e.latlng); // Modo livre salva todos os movimentos
+                    calcPoints = currentFixedPoints;
                 }
+
+                measurePolylines[measurePolylines.length - 1].setLatLngs(calcPoints);
 
                 let totalPixels = 0;
                 for(let i = 0; i < calcPoints.length - 1; i++) {
@@ -992,13 +977,12 @@
         function atualizarPainelMedicao(currentDistKm) {
             let html = "";
             let totalGeral = currentDistKm;
-            const isParts = document.getElementById('check-partes').checked;
             
-            if(isParts && completedSegments.length > 0) {
+            if(completedSegmentsKms.length > 0) {
                 html += `<div style="font-size:10px; color:#aaa; margin-bottom:5px; text-align:left; background:#111; padding:5px; border-radius:4px; max-height:100px; overflow-y:auto;">`;
-                completedSegments.forEach((seg, idx) => {
-                    html += `<strong style="color:#e0aaff;">P${idx+1}:</strong> ${seg.km}km <span style="font-size:9px; color:#888;">(${getTimesHTML(seg.km)})</span><br>`;
-                    totalGeral += parseFloat(seg.km);
+                completedSegmentsKms.forEach((km, idx) => {
+                    html += `<strong style="color:#e0aaff;">Trecho ${idx+1}:</strong> ${km}km <span style="font-size:9px; color:#888;">(${getTimesHTML(km)})</span><br>`;
+                    totalGeral += parseFloat(km);
                 });
                 if(currentDistKm > 0.1) {
                     html += `<strong style="color:#fff;">Atual:</strong> ${currentDistKm.toFixed(1)}km <span style="font-size:9px; color:#888;">(${getTimesHTML(currentDistKm)})</span>`;
@@ -1018,8 +1002,8 @@
             if(isRouteModeActive) return alert("Desative o Modo Rastro primeiro para usar a régua.");
             
             if(isMeasuringSession) {
-                desativarMedicao();
                 limparMedicao();
+                desativarMedicao();
             } else {
                 isMeasuringSession = true;
                 document.getElementById('btn-medir').classList.add('active'); 
@@ -1041,12 +1025,10 @@
         function limparMedicao() {
             const activeMap = activeMainPinId ? subMap : mapMundi;
             measurePolylines.forEach(p => activeMap.removeLayer(p));
-            if(tempPathLine) activeMap.removeLayer(tempPathLine);
             
             measurePolylines = [];
-            currentSegmentPoints = [];
-            completedSegments = [];
-            tempPathLine = null;
+            currentFixedPoints = [];
+            completedSegmentsKms = [];
             isDrawingMeasure = false;
             document.getElementById('distancia-res').innerHTML = "";
         }
