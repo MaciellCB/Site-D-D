@@ -82,7 +82,7 @@
         .btn-action.primary:hover { filter: brightness(1.2); box-shadow: 0 0 15px rgba(156, 39, 176, 0.4); }
         .btn-action.danger { background: #441111; color: #ff9999; border: 1px solid #662222; }
         .btn-action.danger:hover { background: var(--danger); color: white; }
-        .btn-action.active { background: var(--accent); color: #fff; border-color: #d05ce3; }
+        .btn-action.danger.active { background: var(--accent); color: #fff; border-color: #d05ce3; }
         
         .btn-enter-locale { background: #1a1a1a; border: 1px solid var(--accent); color: var(--accent); margin-top: 8px; justify-content: center; font-size: 11px; letter-spacing: 1px; }
         .btn-enter-locale:hover { background: var(--accent); color: #fff; box-shadow: var(--shadow-sub); }
@@ -284,7 +284,7 @@
                 <div style="background: #151515; padding: 10px; border-radius: 6px; border: 1px solid #333; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px;">
                     <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#ccc; font-size: 13px; font-weight: bold;">
                         <input type="checkbox" id="input-capital-pin" style="accent-color: var(--accent);" onchange="document.getElementById('input-simple-pin').checked = false;"> 
-                         Baltic Capital (Símbolo Quadrado Maior)
+                        🏰 Capital (Símbolo Quadrado Maior)
                     </label>
                     
                     <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#ccc; font-size: 13px; font-weight: bold;">
@@ -381,6 +381,7 @@
         let completedSegmentsKms = []; 
         let tempPathLine = null; 
         let waitForClickToDraw = false;
+        let runningDrawPixels = 0; // OTIMIZAÇÃO: Guarda a soma acumulada de pixels no Modo Livre
 
         let tempCoords = null;
         let editId = null;
@@ -411,10 +412,10 @@
             { id: 'elem_terra', cat: 'elemental', name: 'Plano da Terra', desc: 'Dimensão maciça de rocha sólida, cavernas e veios de minérios Étreos.' },
             { id: 'elem_agua', cat: 'elemental', name: 'Plano da Água', desc: 'Oceano global sem fundo protegido de contaminações externas.' },
             { id: 'arborea', cat: 'externo', name: 'Arbórea', desc: 'Plano das paixões desenfreadas e da natureza em seu estado selvagem e gigante.' },
-            { id: 'arcadia', cat: 'externo', name: 'Arcádia', desc: 'Ordem perfeita aplicada à natureza. Tudo cresce em simetria matemática.' },
+            { id: 'arcadia', cat: 'externo', name: 'Arcádia', desc: 'Ordem perfeita aplicada à natureza. Tudo grows em simetria matemática.' },
             { id: 'bandopolis', cat: 'externo', name: 'Bandópolis', desc: 'Reino mágico atemporal habitado por yordles e seres de feitiçaria antiga.' },
             { id: 'bhasm', cat: 'externo', name: 'Bhasm', desc: 'Reflexo arruinado do mundo terreno. Um mundo silencioso de cinzas.' },
-            { id: 'mechanus', cat: 'externo', name: 'Mechanus', desc: 'Lógica pura e engrenagens infitinas governadas pela ley absoluta.' },
+            { id: 'mechanus', cat: 'externo', name: 'Mechanus', desc: 'Lógica pura e engrenagens infitinas governadas pela lei absoluta.' },
             { id: 'acheron', cat: 'externo', name: 'Acheron', desc: 'Cubos metálicos flutuantes no vazio servindo de cenário para guerra eterna.' },
             { id: 'hades', cat: 'infernal', name: 'Hades', desc: 'Desesperança total. Lugar cinzento que drena a cor e a vontade de viver das almas.' },
             { id: 'nove_infernos', cat: 'infernal', name: 'Os Nove Infernos', desc: 'Império burocrático de punição governado por Anilla e os Reis Demônios.' },
@@ -879,7 +880,7 @@
                 checkboxSimple.checked = false;
                 checkboxCapital.checked = false;
                 
-                if(!isSub) { fieldSubMapUrl.style.display = 'block'; subMapImage = null; } else { fieldSubMapUrl.style.display = 'none'; }
+                if(!isSub) { fieldSubMapUrl.style.display = 'block'; subMapImage = null; } else { fieldSubUrl.style.display = 'none'; }
                 galleryImages = []; iconImage = null; subMapImage = null; 
                 setTimeout(() => document.getElementById('input-nome').focus(), 100);
             }
@@ -953,6 +954,7 @@
 
             const lastPoint = currentFixedPoints[currentFixedPoints.length - 1];
             currentFixedPoints = [lastPoint];
+            runningDrawPixels = 0; // Reseta o cache de distância livre ao iniciar novo trecho
             
             const newLine = L.polyline([lastPoint, lastPoint], {color: '#9c27b0', dashArray: '10, 10', weight: 3}).addTo(activeMap);
             measurePolylines.push(newLine);
@@ -991,6 +993,7 @@
                 if (!isDrawingMeasure) {
                     isDrawingMeasure = true; 
                     currentFixedPoints = [e.latlng]; 
+                    runningDrawPixels = 0; // Inicializa o cache com 0
                     completedSegmentsKms = [];
                     measurePolylines.forEach(p => activeMap.removeLayer(p));
                     measurePolylines = [];
@@ -1008,6 +1011,8 @@
                     } else if (mode === 'draw') {
                         if (waitForClickToDraw) {
                             waitForClickToDraw = false;
+                            const lastPt = currentFixedPoints[currentFixedPoints.length - 1];
+                            runningDrawPixels += activeMap.project(lastPt).distanceTo(activeMap.project(e.latlng));
                         }
                         currentFixedPoints.push(e.latlng); 
                     }
@@ -1025,37 +1030,54 @@
         function handleMapMouseMove(e, activeMap) {
             if(isMeasuringSession && isDrawingMeasure) {
                 const mode = document.querySelector('input[name="measure-mode"]:checked').value;
-                let calcPoints;
+                let currentDistKm = 0;
 
                 if (mode === 'line') {
-                    calcPoints = [...currentFixedPoints, e.latlng]; 
+                    const calcPoints = [...currentFixedPoints, e.latlng]; 
                     if(tempPathLine) tempPathLine.setLatLngs([currentFixedPoints[currentFixedPoints.length - 1], e.latlng]);
+                    measurePolylines[measurePolylines.length - 1].setLatLngs(calcPoints);
+
+                    let totalPixels = 0;
+                    for(let i = 0; i < calcPoints.length - 1; i++) {
+                        totalPixels += activeMap.project(calcPoints[i]).distanceTo(activeMap.project(calcPoints[i+1]));
+                    }
+                    currentDistKm = (totalPixels * ESCALA_KM_POR_PIXEL);
+                    
                 } else if (mode === 'draw') {
                     if (waitForClickToDraw) {
-                        calcPoints = [...currentFixedPoints, e.latlng];
+                        const calcPoints = [...currentFixedPoints, e.latlng];
                         if (!tempPathLine) {
                             tempPathLine = L.polyline([currentFixedPoints[currentFixedPoints.length - 1], e.latlng], {color: '#d05ce3', dashArray: '5, 5', weight: 2, opacity: 0.7}).addTo(activeMap);
                         } else {
                             tempPathLine.setLatLngs([currentFixedPoints[currentFixedPoints.length - 1], e.latlng]);
                         }
+                        measurePolylines[measurePolylines.length - 1].setLatLngs(calcPoints);
+                        
+                        let totalPixels = runningDrawPixels + activeMap.project(currentFixedPoints[currentFixedPoints.length - 1]).distanceTo(activeMap.project(e.latlng));
+                        currentDistKm = (totalPixels * ESCALA_KM_POR_PIXEL);
                     } else {
-                        currentFixedPoints.push(e.latlng); 
-                        calcPoints = currentFixedPoints;
+                        const lastPt = currentFixedPoints[currentFixedPoints.length - 1];
+                        const lastProj = activeMap.project(lastPt);
+                        const currentProj = activeMap.project(e.latlng);
+                        const pixelDist = lastProj.distanceTo(currentProj);
+                        
+                        // OTIMIZAÇÃO: Filtro Throttling de 6 pixels para evitar gargalo de processamento
+                        if (pixelDist > 6) {
+                            currentFixedPoints.push(e.latlng);
+                            runningDrawPixels += pixelDist; // Soma no acumulador sem refazer loops
+                        }
+                        
+                        measurePolylines[measurePolylines.length - 1].setLatLngs(currentFixedPoints);
+                        
                         if(tempPathLine) {
                             activeMap.removeLayer(tempPathLine);
                             tempPathLine = null;
                         }
+                        
+                        currentDistKm = (runningDrawPixels * ESCALA_KM_POR_PIXEL);
                     }
                 }
 
-                measurePolylines[measurePolylines.length - 1].setLatLngs(calcPoints);
-
-                let totalPixels = 0;
-                for(let i = 0; i < calcPoints.length - 1; i++) {
-                    totalPixels += activeMap.project(calcPoints[i]).distanceTo(activeMap.project(calcPoints[i+1]));
-                }
-                
-                const currentDistKm = (totalPixels * ESCALA_KM_POR_PIXEL);
                 atualizarPainelMedicao(currentDistKm);
             }
 
@@ -1135,6 +1157,7 @@
             completedSegmentsKms = [];
             tempPathLine = null;
             isDrawingMeasure = false;
+            runningDrawPixels = 0; // Reseta o cache de distância livre
             document.getElementById('distancia-res').innerHTML = "";
         }
 
