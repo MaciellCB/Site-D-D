@@ -295,7 +295,7 @@
                 <div style="background: #151515; padding: 10px; border-radius: 6px; border: 1px solid #333; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px;">
                     <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#ccc; font-size: 13px; font-weight: bold;">
                         <input type="checkbox" id="input-capital-pin" style="accent-color: var(--accent);" onchange="document.getElementById('input-simple-pin').checked = false;"> 
-                        O Capital (Símbolo Quadrado Maior)
+                        🏰 Capital (Símbolo Quadrado Maior)
                     </label>
                     
                     <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#ccc; font-size: 13px; font-weight: bold;">
@@ -535,24 +535,18 @@
                 if (isMeasuringSession) {
                     const activeMap = activeMainPinId ? subMap : mapMundi;
 
-                    // Se havia uma linha temporária seguindo o mouse, removemos ela
                     if(tempPathLine) {
                         activeMap.removeLayer(tempPathLine);
                         tempPathLine = null;
                     }
 
-                    // Se já existia um traçado em andamento, ajustamos a última polilinha fixa 
-                    // para conter APENAS os pontos confirmados (removendo a projeção do mouse)
                     if (isDrawingMeasure && measurePolylines.length > 0 && currentFixedPoints.length > 0) {
                         measurePolylines[measurePolylines.length - 1].setLatLngs(currentFixedPoints);
                     }
 
-                    // Recalcula o painel com base apenas nos pontos fixos, sem o mouse
                     atualizarPainelMedicao(0);
-
-                    // Reseta os estados de desenho para parar completamente
                     isDrawingMeasure = false;
-                    isMeasuringSession = false; // Sai do modo de medição liberando o mapa
+                    isMeasuringSession = false;
                     waitForClickToDraw = false;
 
                     document.getElementById('btn-medir').classList.remove('active');
@@ -563,32 +557,24 @@
                 if (isRouteModeActive && isDrawingRoute) {
                     isDrawingRoute = false;
                     if(currentRoutePolyline) {
-                        // Mantém apenas os pontos realmente clicados
                         currentRoutePolyline.setLatLngs(routeDrawPoints); 
                     }
                     document.getElementById('btn-draw-route').classList.remove('active');
                 }
             }
 
-            // Teclas de Troca Rápida de Medição (Q = Reta, E = Livre)
             if (e.key.toLowerCase() === 'q') {
                 if(!isRouteModeActive) { 
                     if(!isMeasuringSession) toggleMedicao();
                     const radio = document.querySelector('input[name="measure-mode"][value="line"]');
-                    if(!radio.checked) { 
-                        radio.checked = true; 
-                        radio.dispatchEvent(new Event('change'));
-                    }
+                    if(!radio.checked) { radio.checked = true; radio.dispatchEvent(new Event('change')); }
                 }
             }
             if (e.key.toLowerCase() === 'e') {
                 if(!isRouteModeActive) {
                     if(!isMeasuringSession) toggleMedicao();
                     const radio = document.querySelector('input[name="measure-mode"][value="draw"]');
-                    if(!radio.checked) { 
-                        radio.checked = true; 
-                        radio.dispatchEvent(new Event('change'));
-                    }
+                    if(!radio.checked) { radio.checked = true; radio.dispatchEvent(new Event('change')); }
                 }
             }
         });
@@ -648,7 +634,7 @@
                 } else {
                     select.innerHTML = '<option value="Padrão" data-color="#d32f2f">Padrão</option>';
                 }
-            } catch(e) { console.error("Erro ao puxar grupos do Mestre:", e); }
+            } catch(e) { console.error("Erro ao puxar grupos:", e); }
         }
 
         function toggleRouteMode() {
@@ -704,8 +690,8 @@
             routeDrawPoints = [];
             currentRoutePolyline = null; 
 
-            await salvarEstadoNoServidor();
-            await exibirAviso("Rota Histórica salva com sucesso!");
+            const sucesso = await salvarEstadoNoServidor();
+            if(sucesso) await exibirAviso("Rota Histórica salva com sucesso!");
         }
 
         function renderAllRoutes() {
@@ -756,7 +742,6 @@
         }
 
         function gerarIconHtml(iconSrc, isSubPin, isSimple, isCapital) {
-            // Garante normalização estrita de tipos para evitar avaliações erradas de texto puro
             isSimple = isSimple === true || isSimple === 'true';
             isCapital = isCapital === true || isCapital === 'true';
 
@@ -776,7 +761,6 @@
         }
 
         function criarMarcadorMundi(data) {
-            // Normaliza estritamente os tipos de dados vindos do banco
             data.isSimple = data.isSimple === true || data.isSimple === 'true';
             data.isCapital = data.isCapital === true || data.isCapital === 'true';
 
@@ -834,7 +818,6 @@
         }
 
         function refreshMarkerVisuals(pin, isSub) {
-            // Força a conversão em boolean real para evitar bugs de strings como "false"
             pin.isSimple = pin.isSimple === true || pin.isSimple === 'true';
             pin.isCapital = pin.isCapital === true || pin.isCapital === 'true';
 
@@ -921,9 +904,8 @@
         };
 
         // ================= FORMULÁRIO MODAL =================
-        function abrirModal(pinId, isSub) {
+        async function abrirModal(pinId, isSub) {
             document.getElementById('ctx-menu').style.display = 'none';
-            document.getElementById('modal-form').style.display = 'flex';
             isEditingSubPin = isSub; 
             
             const fieldSubMapUrl = document.getElementById('group-submap-url');
@@ -934,13 +916,18 @@
                 editId = pinId;
                 const pin = isSub ? currentSubMarkers.find(m => m.id === editId) : markersMundi.find(m => m.id === editId);
                 
+                if (!pin) {
+                    await exibirAviso("Este local não está mais disponível na memória. Aguarde a sincronização ou recarregue a página.");
+                    return;
+                }
+
                 document.getElementById('modal-title').innerText = isSub ? "Editar Ponto de Interesse" : "Editar Local Principal";
                 document.getElementById('btn-delete').style.display = 'block';
                 document.getElementById('input-nome').value = pin.nome;
                 document.getElementById('input-desc').value = pin.desc;
                 
-                checkboxSimple.checked = pin.isSimple || false;
-                checkboxCapital.checked = pin.isCapital || false;
+                checkboxSimple.checked = pin.isSimple === true || pin.isSimple === 'true';
+                checkboxCapital.checked = pin.isCapital === true || pin.isCapital === 'true';
                 
                 if(!isSub) { fieldSubMapUrl.style.display = 'block'; subMapImage = pin.subMapUrl; } else { fieldSubMapUrl.style.display = 'none'; }
                 galleryImages = [...(pin.gallery || [])]; iconImage = pin.icon;
@@ -955,8 +942,10 @@
                 
                 if(!isSub) { fieldSubMapUrl.style.display = 'block'; subMapImage = null; } else { fieldSubMapUrl.style.display = 'none'; }
                 galleryImages = []; iconImage = null; subMapImage = null; 
-                setTimeout(() => document.getElementById('input-nome').focus(), 100);
             }
+            
+            document.getElementById('modal-form').style.display = 'flex';
+            if(!editId) setTimeout(() => document.getElementById('input-nome').focus(), 100);
             renderFormVisuals(); setPasteTarget('gallery');
         }
 
@@ -970,57 +959,96 @@
             const finalSubMapUrl = subMapImage; 
 
             if(!nome) {
-                await exibirAviso("O nome é obrigatório!");
+                await exibirAviso("O nome do local é obrigatório!");
                 return;
             }
+
             const finalIcon = iconImage || IMG_DEFAULT_ICON;
             let pinCoreData = { nome, desc, icon: finalIcon, gallery: [...galleryImages], isSimple, isCapital };
 
             if (editId) {
+                const targetArray = isEditingSubPin ? currentSubMarkers : markersMundi;
+                const pin = targetArray.find(m => m.id === editId);
+                
+                if (!pin) {
+                    await exibirAviso("Erro crítico: O local desapareceu antes de ser salvo. Verifique a sincronização com o servidor.");
+                    fecharModal();
+                    return;
+                }
+
                 if(isEditingSubPin) {
-                    const subPin = currentSubMarkers.find(m => m.id === editId);
-                    Object.assign(subPin, pinCoreData); 
-                    refreshMarkerVisuals(subPin, true);
+                    Object.assign(pin, pinCoreData); 
+                    refreshMarkerVisuals(pin, true);
                     const mainPin = markersMundi.find(m => m.id === activeMainPinId);
-                    const index = mainPin.subPins.findIndex(sp => sp.id === editId);
-                    Object.assign(mainPin.subPins[index], pinCoreData); 
+                    if(mainPin && mainPin.subPins) {
+                        const index = mainPin.subPins.findIndex(sp => sp.id === editId);
+                        if(index > -1) Object.assign(mainPin.subPins[index], pinCoreData); 
+                    }
                 } else {
-                    const pin = markersMundi.find(m => m.id === editId);
                     Object.assign(pin, pinCoreData); 
                     pin.subMapUrl = finalSubMapUrl; 
                     refreshMarkerVisuals(pin, false); 
                 }
             } else {
                 if(!tempCoords) {
-                    await exibirAviso("Erro de posicionamento.");
+                    await exibirAviso("Erro de posicionamento. Feche o menu e tente colocar o pino novamente.");
                     return;
                 }
                 const novoId = Date.now();
                 const novaData = { ...pinCoreData, id: novoId, lat: tempCoords.lat, lng: tempCoords.lng };
+                
                 if(isEditingSubPin) {
-                    novaData.isSub = true; renderSubPins([...currentSubMarkers, novaData]);
+                    novaData.isSub = true; 
+                    renderSubPins([...currentSubMarkers, novaData]);
                     const mainPin = markersMundi.find(m => m.id === activeMainPinId);
-                    if(!mainPin.subPins) mainPin.subPins = []; mainPin.subPins.push(novaData);
+                    if(mainPin) {
+                        if(!mainPin.subPins) mainPin.subPins = []; 
+                        mainPin.subPins.push(novaData);
+                    }
                 } else {
-                    novaData.subMapUrl = finalSubMapUrl; novaData.subPins = []; criarMarcadorMundi(novaData);
+                    novaData.subMapUrl = finalSubMapUrl; 
+                    novaData.subPins = []; 
+                    criarMarcadorMundi(novaData);
                 }
             }
-            await salvarEstadoNoServidor(); fecharModal(); atualizarListaLateral();
+
+            const sucesso = await salvarEstadoNoServidor();
+            
+            if (sucesso) {
+                fecharModal(); 
+                atualizarListaLateral();
+            } else {
+                await exibirAviso("Ocorreu um Erro 500 no Servidor. Isto acontece geralmente porque as imagens anexadas estão muito pesadas.<br><br>As suas alterações foram aplicadas visualmente, mas poderão desaparecer na próxima sincronização se não corrigir as imagens e salvar novamente.");
+            }
         }
 
         async function deletarPin() {
             if(!editId) return;
-            const confirmar = await exibirConfirmacao("Tem certeza que deseja apagar este ponto? Esta ação não pode ser desfeita.");
+            const confirmar = await exibirConfirmacao("Tem certeza que deseja apagar este local da existência? Esta ação não tem retorno.");
             if(!confirmar) return;
             
             if(isEditingSubPin) {
-                limparSubMarkers(); const mainPin = markersMundi.find(m => m.id === activeMainPinId);
-                mainPin.subPins = mainPin.subPins.filter(sp => sp.id !== editId); renderSubPins(mainPin.subPins);
+                limparSubMarkers(); 
+                const mainPin = markersMundi.find(m => m.id === activeMainPinId);
+                if(mainPin) {
+                    mainPin.subPins = mainPin.subPins.filter(sp => sp.id !== editId); 
+                    renderSubPins(mainPin.subPins);
+                }
             } else {
                 const index = markersMundi.findIndex(m => m.id === editId);
-                if(index > -1) { mapMundi.removeLayer(markersMundi[index].marker); markersMundi.splice(index, 1); }
+                if(index > -1) { 
+                    mapMundi.removeLayer(markersMundi[index].marker); 
+                    markersMundi.splice(index, 1); 
+                }
             }
-            await salvarEstadoNoServidor(); fecharModal(); atualizarListaLateral();
+            
+            const sucesso = await salvarEstadoNoServidor();
+            if(sucesso) {
+                fecharModal(); 
+                atualizarListaLateral();
+            } else {
+                await exibirAviso("Erro de conexão ao tentar deletar o ponto do servidor.");
+            }
         }
 
         // ================= CLIQUES E MOUSE PARA MEDIÇÃO =================
@@ -1197,7 +1225,10 @@
         }
 
         function toggleMedicao() {
-            if(isRouteModeActive) return exibirAviso("Desative o Modo Rastro primeiro para usar a régua.");
+            if(isRouteModeActive) {
+                exibirAviso("Desative o Modo Rastro primeiro para usar a régua.");
+                return;
+            }
             
             if(isMeasuringSession) {
                 if(isDrawingMeasure) {
@@ -1253,7 +1284,11 @@
             try {
                 const res = await fetch(`${API_URL}/mapa-pins`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(todosDados) });
                 if(!res.ok) throw new Error("Falha ao salvar");
-            } catch(e) { console.error("Erro na sincronização:", e); }
+                return true;
+            } catch(e) { 
+                console.error("Erro na sincronização:", e); 
+                return false;
+            }
         }
 
         async function carregarDadosServidor() {
@@ -1265,7 +1300,6 @@
                     const pinos = data.filter(d => !d.isRoute);
                     rotasSalvas = data.filter(d => d.isRoute);
                     pinos.forEach(p => {
-                        // Força a conversão em tipos primitivos corretos no carregamento inicial
                         p.isSimple = p.isSimple === true || p.isSimple === 'true';
                         p.isCapital = p.isCapital === true || p.isCapital === 'true';
                         criarMarcadorMundi(p);
@@ -1292,7 +1326,6 @@
                 });
 
                 pinosServidor.forEach(sp => {
-                    // Normaliza estritamente os tipos de dados vindos do polling assíncrono
                     sp.isSimple = sp.isSimple === true || sp.isSimple === 'true';
                     sp.isCapital = sp.isCapital === true || sp.isCapital === 'true';
 
@@ -1355,10 +1388,18 @@
             reader.onload = event => {
                 const img = new Image(); img.src = event.target.result;
                 img.onload = () => {
-                    const canvas = document.createElement('canvas'); const MAX_SIZE = 800; let width = img.width; height = img.height;
-                    if (width > height) { if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; } } else { if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; } }
-                    canvas.width = width; canvas.height = height; const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height);
-                    callback(canvas.toDataURL('image/webp', 0.7)); 
+                    const canvas = document.createElement('canvas'); 
+                    const MAX_SIZE = 500; // Reduzido de 800 para 500 para proteger o servidor
+                    let width = img.width; height = img.height;
+                    
+                    if (width > height) { if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; } } 
+                    else { if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; } }
+                    
+                    canvas.width = width; canvas.height = height; 
+                    const ctx = canvas.getContext('2d'); 
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    callback(canvas.toDataURL('image/webp', 0.5)); // Compressão WebP reforçada
                 }
             }
         }
