@@ -133,15 +133,15 @@
         .sub-map-icon { border: 2px solid var(--accent); border-radius: 50%; box-shadow: var(--shadow-sub); transition: 0.2s, opacity 0.3s; background: #000; box-sizing: border-box; padding: 2px; object-fit: contain !important; }
         .sub-map-icon:hover { transform: scale(1.3); background: #1a1a1a; z-index: 1000 !important; }
         
-        /* PIN SIMPLES (Mais transparente e invisível até hover) */
+        /* PIN SIMPLES */
         .simple-map-icon { border: 1px dashed #aaa; border-radius: 50%; background: rgba(20, 20, 20, 0.4); opacity: 0.4; box-sizing: border-box; padding: 2px; object-fit: contain !important; filter: grayscale(40%); transition: transform 0.3s, opacity 0.3s; z-index: 400; }
         .simple-map-icon:hover { opacity: 0.9; transform: scale(1.2); border-color: #fff; z-index: 1000 !important;}
 
-        /* PIN CAPITAL (Quadrado limpo sem brilho) */
+        /* PIN CAPITAL */
         .capital-map-icon { border: 2px solid #fff; border-radius: 4px; transition: transform 0.2s; background: #222; box-sizing: border-box; padding: 4px; object-fit: cover !important; z-index: 800 !important; }
         .capital-map-icon:hover { transform: scale(1.2); border-color: var(--accent); z-index: 1100 !important; }
 
-        /* ESTADO: MODO DE ROTAS ATIVO (Encolhe todos os pinos) */
+        /* ESTADO: MODO DE ROTAS ATIVO */
         body.route-mode-active .custom-map-icon,
         body.route-mode-active .simple-map-icon,
         body.route-mode-active .capital-map-icon,
@@ -173,6 +173,17 @@
         .lightbox img { max-width: 95%; max-height: 95%; border: 2px solid #333; box-shadow: 0 0 50px black; border-radius: 4px; }
         .field-label { display:block; color:#aaa; font-size:12px; margin-bottom:5px; font-weight:bold; }
         #preview-submap { width: 100%; height: 100%; object-fit: cover !important; border-radius: 6px; }
+
+        /* ================= COMPONENTES DE CONFIRMAÇÃO DIALOGS CUSTOMIZADOS ================= */
+        .custom-dialog-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px); z-index: 99999; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s ease; }
+        .custom-dialog { background: #121212; border: 1px solid var(--accent); width: 400px; max-width: 90%; border-radius: 10px; box-shadow: 0 15px 40px rgba(0,0,0,0.9), var(--shadow-sub); overflow: hidden; animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.2); }
+        .custom-dialog-body { padding: 25px 20px; font-size: 14px; color: #ddd; line-height: 1.5; text-align: center; }
+        .custom-dialog-footer { padding: 15px 20px; background: #0c0a0f; border-top: 1px solid #222; display: flex; justify-content: center; gap: 12px; }
+        .dialog-btn { padding: 10px 24px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.2s; font-size: 13px; text-transform: uppercase; border: none; }
+        .dialog-btn.confirm-yes { background: var(--accent); color: white; }
+        .dialog-btn.confirm-yes:hover { filter: brightness(1.2); box-shadow: 0 0 10px rgba(156, 39, 176, 0.4); }
+        .dialog-btn.confirm-no { background: #222; border: 1px solid #444; color: #aaa; }
+        .dialog-btn.confirm-no:hover { background: #333; color: white; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -407,7 +418,7 @@
             { id: 'elyseos', cat: 'superior', name: 'Campos Elíseos', desc: 'A camada mais alta da existência. Onde os deuses residem fisicamente.' },
             { id: 'asterios', cat: 'superior', name: 'Astérios', desc: 'Santuários criados pelos deuses para acolher as almas limpas de seus seguidores.' },
             { id: 'caos_elemental', cat: 'elemental', name: 'Caos Elemental', desc: 'Convergência violenta onde todos os elementos se chocam infinitamente.' },
-            { id: 'elem_ar', cat: 'elemental', name: 'Plano do Ar', desc: 'Céus infinitos e tempestades sencientes na pureza do elemento ar.' },
+            { id: 'elem_ar', cat: 'elemental', name: 'Plano do Air', desc: 'Céus infinitos e tempestades sencientes na pureza do elemento ar.' },
             { id: 'elem_fogo', cat: 'elemental', name: 'Plano do Fogo', desc: 'Inferno brilhante de lava e calor implacável sem necessidade de combustível.' },
             { id: 'elem_terra', cat: 'elemental', name: 'Plano da Terra', desc: 'Dimensão maciça de rocha sólida, cavernas e veios de minérios Étreos.' },
             { id: 'elem_agua', cat: 'elemental', name: 'Plano da Água', desc: 'Oceano global sem fundo protegido de contaminações externas.' },
@@ -457,6 +468,52 @@
                 });
             });
         };
+
+        // ================= SISTEMA DE POPUPS CONFIRM E ALERT ESTILIZADOS =================
+        function exibirAviso(mensagem) {
+            return new Promise((resolve) => {
+                const overlay = document.createElement('div');
+                overlay.className = 'custom-dialog-overlay';
+                overlay.innerHTML = `
+                    <div class="custom-dialog">
+                        <div class="custom-dialog-body">${mensagem}</div>
+                        <div class="custom-dialog-footer">
+                            <button class="dialog-btn confirm-yes">OK</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+                overlay.querySelector('.confirm-yes').onclick = () => {
+                    overlay.remove();
+                    resolve();
+                };
+            });
+        }
+
+        function exibirConfirmacao(mensagem) {
+            return new Promise((resolve) => {
+                const overlay = document.createElement('div');
+                overlay.className = 'custom-dialog-overlay';
+                overlay.innerHTML = `
+                    <div class="custom-dialog">
+                        <div class="custom-dialog-body">${mensagem}</div>
+                        <div class="custom-dialog-footer">
+                            <button class="dialog-btn confirm-no">Cancelar</button>
+                            <button class="dialog-btn confirm-yes">Confirmar</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+                overlay.querySelector('.confirm-no').onclick = () => {
+                    overlay.remove();
+                    resolve(false);
+                };
+                overlay.querySelector('.confirm-yes').onclick = () => {
+                    overlay.remove();
+                    resolve(true);
+                };
+            });
+        }
 
         // ================= PROTEÇÃO DA SIDEBAR E CANCELAMENTO SUAVE =================
         function configurarProtecaoSidebar() {
@@ -632,7 +689,7 @@
 
         async function saveRoute() {
             if(!isDrawingRoute || routeDrawPoints.length < 2) {
-                alert("Você precisa desenhar pelo menos uma reta no mapa antes de salvar.");
+                await exibirAviso("Você precisa desenhar pelo menos uma reta no mapa antes de salvar.");
                 return;
             }
             
@@ -648,7 +705,7 @@
             currentRoutePolyline = null; 
 
             await salvarEstadoNoServidor();
-            alert("Rota Histórica salva com sucesso!");
+            await exibirAviso("Rota Histórica salva com sucesso!");
         }
 
         function renderAllRoutes() {
@@ -659,10 +716,13 @@
                 const poly = L.polyline(rota.latlngs, { color: rota.cor, weight: 3, dashArray: '10, 15', opacity: 0.7 }).addTo(mapMundi);
                 
                 poly.on('click', async () => {
-                    if(isRouteModeActive && confirm(`Apagar trajeto histórico do grupo '${rota.grupoNome}'?`)) {
-                        rotasSalvas = rotasSalvas.filter(r => r.id !== rota.id);
-                        await salvarEstadoNoServidor();
-                        renderAllRoutes();
+                    if(isRouteModeActive) {
+                        const confirmar = await exibirConfirmacao(`Apagar trajeto histórico do grupo '${rota.grupoNome}'?`);
+                        if (confirmar) {
+                            rotasSalvas = rotasSalvas.filter(r => r.id !== rota.id);
+                            await salvarEstadoNoServidor();
+                            renderAllRoutes();
+                        }
                     }
                 });
 
@@ -671,9 +731,9 @@
         }
 
         // ================= SISTEMA DE PINS (CAPITAL E SIMPLES) =================
-        window.entrarNoLocal = function(pinId) {
+        window.entrarNoLocal = async function(pinId) {
             const pinMundi = markersMundi.find(m => m.id === pinId);
-            if(!pinMundi || !pinMundi.subMapUrl) return alert("Este local não possui um mapa interno configurado.");
+            if(!pinMundi || !pinMundi.subMapUrl) return await exibirAviso("Este local não possui um mapa interno configurado.");
             activeMainPinId = pinId;
             mapMundi.closePopup();
             
@@ -880,7 +940,7 @@
                 checkboxSimple.checked = false;
                 checkboxCapital.checked = false;
                 
-                if(!isSub) { fieldSubMapUrl.style.display = 'block'; subMapImage = null; } else { fieldSubUrl.style.display = 'none'; }
+                if(!isSub) { fieldSubMapUrl.style.display = 'block'; subMapImage = null; } else { fieldSubMapUrl.style.display = 'none'; }
                 galleryImages = []; iconImage = null; subMapImage = null; 
                 setTimeout(() => document.getElementById('input-nome').focus(), 100);
             }
@@ -896,24 +956,32 @@
             const isCapital = document.getElementById('input-capital-pin').checked;
             const finalSubMapUrl = subMapImage; 
 
-            if(!nome) return alert("O nome é obrigatório!"); 
+            if(!nome) {
+                await exibirAviso("O nome é obrigatório!");
+                return;
+            }
             const finalIcon = iconImage || IMG_DEFAULT_ICON;
             let pinCoreData = { nome, desc, icon: finalIcon, gallery: [...galleryImages], isSimple, isCapital };
 
             if (editId) {
                 if(isEditingSubPin) {
                     const subPin = currentSubMarkers.find(m => m.id === editId);
-                    Object.assign(subPin, pinCoreData); refreshMarkerVisuals(subPin, true);
+                    Object.assign(subPin, pinCoreData); 
+                    refreshMarkerVisuals(subPin, true);
                     const mainPin = markersMundi.find(m => m.id === activeMainPinId);
                     const index = mainPin.subPins.findIndex(sp => sp.id === editId);
                     Object.assign(mainPin.subPins[index], pinCoreData); 
                 } else {
                     const pin = markersMundi.find(m => m.id === editId);
-                    Object.assign(pin, pinCoreData); pin.subMapUrl = finalSubMapUrl; 
-                    refreshMarkerVisuals(pin, false);
+                    Object.assign(pin, pinCoreData); 
+                    pin.subMapUrl = finalSubMapUrl; 
+                    refreshMarkerVisuals(pin, false); // BUG CORRIGIDO: Agora re-renderiza respeitando as flags de capital/simples alteradas
                 }
             } else {
-                if(!tempCoords) return alert("Erro de posicionamento."); 
+                if(!tempCoords) {
+                    await exibirAviso("Erro de posicionamento.");
+                    return;
+                }
                 const novoId = Date.now();
                 const novaData = { ...pinCoreData, id: novoId, lat: tempCoords.lat, lng: tempCoords.lng };
                 if(isEditingSubPin) {
@@ -929,7 +997,9 @@
 
         async function deletarPin() {
             if(!editId) return;
-            if(!confirm("Tem certeza que deseja apagar este ponto? Esta ação não pode ser desfeita.")) return;
+            const confirmar = await exibirConfirmacao("Tem certeza que deseja apagar este ponto? Esta ação não pode ser desfeita.");
+            if(!confirmar) return;
+            
             if(isEditingSubPin) {
                 limparSubMarkers(); const mainPin = markersMundi.find(m => m.id === activeMainPinId);
                 mainPin.subPins = mainPin.subPins.filter(sp => sp.id !== editId); renderSubPins(mainPin.subPins);
@@ -954,7 +1024,7 @@
 
             const lastPoint = currentFixedPoints[currentFixedPoints.length - 1];
             currentFixedPoints = [lastPoint];
-            runningDrawPixels = 0; // Reseta o cache de distância livre ao iniciar novo trecho
+            runningDrawPixels = 0; 
             
             const newLine = L.polyline([lastPoint, lastPoint], {color: '#9c27b0', dashArray: '10, 10', weight: 3}).addTo(activeMap);
             measurePolylines.push(newLine);
@@ -967,7 +1037,6 @@
         function handleMapContextMenu(e, activeMap) {
             L.DomEvent.preventDefault(e);
 
-            // Botão Direito corta e cria nova parte na medição (Qualquer modo)
             if(isMeasuringSession && isDrawingMeasure) {
                 comitarTrechoDeMedicao(activeMap, e.latlng);
                 return;
@@ -993,7 +1062,7 @@
                 if (!isDrawingMeasure) {
                     isDrawingMeasure = true; 
                     currentFixedPoints = [e.latlng]; 
-                    runningDrawPixels = 0; // Inicializa o cache com 0
+                    runningDrawPixels = 0; 
                     completedSegmentsKms = [];
                     measurePolylines.forEach(p => activeMap.removeLayer(p));
                     measurePolylines = [];
@@ -1061,10 +1130,9 @@
                         const currentProj = activeMap.project(e.latlng);
                         const pixelDist = lastProj.distanceTo(currentProj);
                         
-                        // OTIMIZAÇÃO: Filtro Throttling de 6 pixels para evitar gargalo de processamento
                         if (pixelDist > 6) {
                             currentFixedPoints.push(e.latlng);
-                            runningDrawPixels += pixelDist; // Soma no acumulador sem refazer loops
+                            runningDrawPixels += pixelDist; 
                         }
                         
                         measurePolylines[measurePolylines.length - 1].setLatLngs(currentFixedPoints);
@@ -1116,7 +1184,7 @@
         }
 
         function toggleMedicao() {
-            if(isRouteModeActive) return alert("Desative o Modo Rastro primeiro para usar a régua.");
+            if(isRouteModeActive) return exibirAviso("Desative o Modo Rastro primeiro para usar a régua.");
             
             if(isMeasuringSession) {
                 if(isDrawingMeasure) {
@@ -1157,7 +1225,7 @@
             completedSegmentsKms = [];
             tempPathLine = null;
             isDrawingMeasure = false;
-            runningDrawPixels = 0; // Reseta o cache de distância livre
+            runningDrawPixels = 0; 
             document.getElementById('distancia-res').innerHTML = "";
         }
 
@@ -1172,7 +1240,7 @@
             try {
                 const res = await fetch(`${API_URL}/mapa-pins`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(todosDados) });
                 if(!res.ok) throw new Error("Falha ao salvar");
-            } catch(e) { console.error("Erro na sincronização:", e); alert("Aviso: Falha ao salvar dados no servidor."); }
+            } catch(e) { console.error("Erro na sincronização:", e); }
         }
 
         async function carregarDadosServidor() {
