@@ -284,7 +284,7 @@
                 <div style="background: #151515; padding: 10px; border-radius: 6px; border: 1px solid #333; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px;">
                     <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#ccc; font-size: 13px; font-weight: bold;">
                         <input type="checkbox" id="input-capital-pin" style="accent-color: var(--accent);" onchange="document.getElementById('input-simple-pin').checked = false;"> 
-                        🏰 Capital (Símbolo Quadrado Maior)
+                         Baltic Capital (Símbolo Quadrado Maior)
                     </label>
                     
                     <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#ccc; font-size: 13px; font-weight: bold;">
@@ -414,7 +414,7 @@
             { id: 'arcadia', cat: 'externo', name: 'Arcádia', desc: 'Ordem perfeita aplicada à natureza. Tudo cresce em simetria matemática.' },
             { id: 'bandopolis', cat: 'externo', name: 'Bandópolis', desc: 'Reino mágico atemporal habitado por yordles e seres de feitiçaria antiga.' },
             { id: 'bhasm', cat: 'externo', name: 'Bhasm', desc: 'Reflexo arruinado do mundo terreno. Um mundo silencioso de cinzas.' },
-            { id: 'mechanus', cat: 'externo', name: 'Mechanus', desc: 'Lógica pura e engrenagens infitinas governadas pela lei absoluta.' },
+            { id: 'mechanus', cat: 'externo', name: 'Mechanus', desc: 'Lógica pura e engrenagens infitinas governadas pela ley absoluta.' },
             { id: 'acheron', cat: 'externo', name: 'Acheron', desc: 'Cubos metálicos flutuantes no vazio servindo de cenário para guerra eterna.' },
             { id: 'hades', cat: 'infernal', name: 'Hades', desc: 'Desesperança total. Lugar cinzento que drena a cor e a vontade de viver das almas.' },
             { id: 'nove_infernos', cat: 'infernal', name: 'Os Nove Infernos', desc: 'Império burocrático de punição governado por Anilla e os Reis Demônios.' },
@@ -472,25 +472,42 @@
         document.addEventListener('keydown', (e) => {
             if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-            // Esc / W / Backspace -> Apenas param o desenho, mantendo o traço na tela
+            // Esc / W / Backspace -> Parar o traçado e fixar no ÚLTIMO ponto real
             if (e.key === 'Escape' || e.key === 'Backspace' || e.key.toLowerCase() === 'w') {
                 if (isMeasuringSession) {
-                    if(isDrawingMeasure && currentFixedPoints.length > 0) {
-                        const activeMap = activeMainPinId ? subMap : mapMundi;
-                        comitarTrechoDeMedicao(activeMap, currentFixedPoints[currentFixedPoints.length - 1]);
-                        if(tempPathLine) {
-                            activeMap.removeLayer(tempPathLine);
-                            tempPathLine = null;
-                        }
+                    const activeMap = activeMainPinId ? subMap : mapMundi;
+
+                    // Se havia uma linha temporária seguindo o mouse, removemos ela
+                    if(tempPathLine) {
+                        activeMap.removeLayer(tempPathLine);
+                        tempPathLine = null;
                     }
+
+                    // Se já existia um traçado em andamento, ajustamos a última polilinha fixa 
+                    // para conter APENAS os pontos confirmados (removendo a projeção do mouse)
+                    if (isDrawingMeasure && measurePolylines.length > 0 && currentFixedPoints.length > 0) {
+                        measurePolylines[measurePolylines.length - 1].setLatLngs(currentFixedPoints);
+                    }
+
+                    // Recalcula o painel com base apenas nos pontos fixos, sem o mouse
+                    atualizarPainelMedicao(0);
+
+                    // Reseta os estados de desenho para parar completamente
                     isDrawingMeasure = false;
-                    isMeasuringSession = false; // Sai 100% do modo, libera o mapa.
+                    isMeasuringSession = false; // Sai do modo de medição liberando o mapa
+                    waitForClickToDraw = false;
+
                     document.getElementById('btn-medir').classList.remove('active');
                     document.getElementById('map').style.cursor = 'default';
                     document.getElementById('sub-map').style.cursor = 'default';
                 }
+                
                 if (isRouteModeActive && isDrawingRoute) {
                     isDrawingRoute = false;
+                    if(currentRoutePolyline) {
+                        // Mantém apenas os pontos realmente clicados
+                        currentRoutePolyline.setLatLngs(routeDrawPoints); 
+                    }
                     document.getElementById('btn-draw-route').classList.remove('active');
                 }
             }
@@ -841,7 +858,7 @@
 
             if (pinId) {
                 editId = pinId;
-                const pin = isSub ? currentSubMarkers.find(m => m.id === pinId) : markersMundi.find(m => m.id === pinId);
+                const pin = isSub ? currentSubMarkers.find(m => m.id === editId) : markersMundi.find(m => m.id === editId);
                 
                 document.getElementById('modal-title').innerText = isSub ? "Editar Ponto de Interesse" : "Editar Local Principal";
                 document.getElementById('btn-delete').style.display = 'block';
@@ -989,8 +1006,6 @@
                     if (mode === 'line') {
                         currentFixedPoints.push(e.latlng); 
                     } else if (mode === 'draw') {
-                        // Se o modo livre estiver ativo e a pessoa clicar,
-                        // apenas adicionamos o ponto normalmente.
                         if (waitForClickToDraw) {
                             waitForClickToDraw = false;
                         }
@@ -1017,7 +1032,6 @@
                     if(tempPathLine) tempPathLine.setLatLngs([currentFixedPoints[currentFixedPoints.length - 1], e.latlng]);
                 } else if (mode === 'draw') {
                     if (waitForClickToDraw) {
-                        // Faz a linha se comportar como 'Reta' temporariamente até clicar
                         calcPoints = [...currentFixedPoints, e.latlng];
                         if (!tempPathLine) {
                             tempPathLine = L.polyline([currentFixedPoints[currentFixedPoints.length - 1], e.latlng], {color: '#d05ce3', dashArray: '5, 5', weight: 2, opacity: 0.7}).addTo(activeMap);
@@ -1025,7 +1039,6 @@
                             tempPathLine.setLatLngs([currentFixedPoints[currentFixedPoints.length - 1], e.latlng]);
                         }
                     } else {
-                        // Quando clicou e destravou, desenha livremente de fato
                         currentFixedPoints.push(e.latlng); 
                         calcPoints = currentFixedPoints;
                         if(tempPathLine) {
@@ -1269,7 +1282,6 @@
         }
 
         window.removeImg = (e, idx) => { e.stopPropagation(); galleryImages.splice(idx, 1); renderFormVisuals(); };
-
     </script>
 </body>
 </html>
