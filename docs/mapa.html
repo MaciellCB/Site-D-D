@@ -295,7 +295,7 @@
                 <div style="background: #151515; padding: 10px; border-radius: 6px; border: 1px solid #333; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px;">
                     <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#ccc; font-size: 13px; font-weight: bold;">
                         <input type="checkbox" id="input-capital-pin" style="accent-color: var(--accent);" onchange="document.getElementById('input-simple-pin').checked = false;"> 
-                        🏰 Capital (Símbolo Quadrado Maior)
+                        O Capital (Símbolo Quadrado Maior)
                     </label>
                     
                     <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#ccc; font-size: 13px; font-weight: bold;">
@@ -756,6 +756,10 @@
         }
 
         function gerarIconHtml(iconSrc, isSubPin, isSimple, isCapital) {
+            // Garante normalização estrita de tipos para evitar avaliações erradas de texto puro
+            isSimple = isSimple === true || isSimple === 'true';
+            isCapital = isCapital === true || isCapital === 'true';
+
             let className = isSubPin ? 'sub-map-icon' : 'custom-map-icon';
             let size = isSubPin ? '24px' : '40px';
 
@@ -772,14 +776,19 @@
         }
 
         function criarMarcadorMundi(data) {
+            // Normaliza estritamente os tipos de dados vindos do banco
+            data.isSimple = data.isSimple === true || data.isSimple === 'true';
+            data.isCapital = data.isCapital === true || data.isCapital === 'true';
+
             const safeIcon = data.icon || IMG_DEFAULT_ICON;
             const iconHtml = gerarIconHtml(safeIcon, false, data.isSimple, data.isCapital);
             
-            let anchorPoint = [20,20];
-            if(data.isSimple) anchorPoint = [12,12];
-            if(data.isCapital) anchorPoint = [24,24];
+            let size = [40, 40];
+            let anchorPoint = [20, 20];
+            if(data.isSimple) { size = [24, 24]; anchorPoint = [12, 12]; }
+            if(data.isCapital) { size = [48, 48]; anchorPoint = [24, 24]; }
 
-            const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [40, 40], iconAnchor: anchorPoint, popupAnchor: [0, -20] });
+            const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: size, iconAnchor: anchorPoint, popupAnchor: [0, -20] });
             
             const marker = L.marker([data.lat, data.lng], {icon: customIcon}).addTo(mapMundi);
             const pinData = { ...data, marker, subPins: data.subPins || [] };
@@ -825,14 +834,18 @@
         }
 
         function refreshMarkerVisuals(pin, isSub) {
+            // Força a conversão em boolean real para evitar bugs de strings como "false"
+            pin.isSimple = pin.isSimple === true || pin.isSimple === 'true';
+            pin.isCapital = pin.isCapital === true || pin.isCapital === 'true';
+
             const iconHtml = gerarIconHtml(pin.icon, isSub, pin.isSimple, pin.isCapital);
             
             let size = isSub ? [24, 24] : [40, 40];
             let anchor = isSub ? [12, 12] : [20, 20];
             const pAnchor = isSub ? [0, -12] : [0, -20];
 
-            if(pin.isSimple) { size = [24,24]; anchor = [12,12]; }
-            if(pin.isCapital) { size = [48,48]; anchor = [24,24]; }
+            if(pin.isSimple) { size = [24, 24]; anchor = [12, 12]; }
+            if(pin.isCapital) { size = [48, 48]; anchor = [24, 24]; }
 
             const newIcon = L.divIcon({ html: iconHtml, className: '', iconSize: size, iconAnchor: anchor, popupAnchor: pAnchor });
             pin.marker.setIcon(newIcon);
@@ -975,7 +988,7 @@
                     const pin = markersMundi.find(m => m.id === editId);
                     Object.assign(pin, pinCoreData); 
                     pin.subMapUrl = finalSubMapUrl; 
-                    refreshMarkerVisuals(pin, false); // BUG CORRIGIDO: Agora re-renderiza respeitando as flags de capital/simples alteradas
+                    refreshMarkerVisuals(pin, false); 
                 }
             } else {
                 if(!tempCoords) {
@@ -1251,7 +1264,12 @@
                 if(Array.isArray(data)) {
                     const pinos = data.filter(d => !d.isRoute);
                     rotasSalvas = data.filter(d => d.isRoute);
-                    pinos.forEach(p => criarMarcadorMundi(p));
+                    pinos.forEach(p => {
+                        // Força a conversão em tipos primitivos corretos no carregamento inicial
+                        p.isSimple = p.isSimple === true || p.isSimple === 'true';
+                        p.isCapital = p.isCapital === true || p.isCapital === 'true';
+                        criarMarcadorMundi(p);
+                    });
                     atualizarListaLateral();
                     if(isRouteModeActive) renderAllRoutes();
                 }
@@ -1274,6 +1292,10 @@
                 });
 
                 pinosServidor.forEach(sp => {
+                    // Normaliza estritamente os tipos de dados vindos do polling assíncrono
+                    sp.isSimple = sp.isSimple === true || sp.isSimple === 'true';
+                    sp.isCapital = sp.isCapital === true || sp.isCapital === 'true';
+
                     const localPin = markersMundi.find(m => m.id === sp.id);
                     if (!localPin) criarMarcadorMundi(sp);
                     else {
