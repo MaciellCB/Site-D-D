@@ -53,7 +53,7 @@ const PinSchema = new mongoose.Schema({
     desc: String,
     icon: String,
     gallery: [String]
-});
+    }, { strict: false });
 const Pin = mongoose.model('Pin', PinSchema);
 
 let serverTrackerList = []; 
@@ -175,7 +175,19 @@ app.get('/api/mapa-pins', async (req, res) => {
 
 app.post('/api/mapa-pins', async (req, res) => {
     try {
-        await Pin.findOneAndUpdate({ id: req.body.id }, req.body, { upsert: true, new: true });
+        // Verifica se o frontend está mandando uma lista completa (Array)
+        if (Array.isArray(req.body)) {
+            // Limpa o banco e reinsere os dados novos
+            // Isso garante que os pins apagados no mapa também sumam do banco
+            await Pin.deleteMany({});
+            
+            if (req.body.length > 0) {
+                await Pin.insertMany(req.body);
+            }
+        } else {
+            // Mantém o fallback caso envie apenas 1 objeto
+            await Pin.findOneAndUpdate({ id: req.body.id }, req.body, { upsert: true, new: true });
+        }
         res.json({ ok: true });
     } catch (error) { 
         console.error("Erro ao salvar no banco:", error.message);
