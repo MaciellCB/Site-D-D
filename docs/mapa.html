@@ -312,9 +312,10 @@
                             <span style="font-size:11px; color:#666;">Clique aqui. Após ativo, use <strong>Ctrl+V</strong> ou Clique novamente</span>
                         </div>
                         <img id="preview-submap" class="preview-img" style="display:none;">
+                        <video id="preview-submap-video" controls muted playsinline preload="metadata" style="display:none; width:100%; height:100%; object-fit:cover; background:#000;"></video>
                     </div>
-                    <span style="font-size:10px; color:#666; margin-top:4px; display:block;">Coloque a imagem se este local tiver um mapa próprio explorável.</span>
-                    <input type="file" id="file-submap" accept="image/*" style="display:none;">
+                    <span style="font-size:10px; color:#666; margin-top:4px; display:block;">Coloque uma imagem ou um vídeo curto se este local tiver um mapa próprio explorável.</span>
+                    <input type="file" id="file-submap" accept="image/*,video/*" style="display:none;">
                 </div>
 
                 <div style="display:flex; gap:20px;">
@@ -366,6 +367,13 @@
         const API_URL = 'https://dandd-chan.onrender.com/api';
         const IMG_DEFAULT_ICON = 'https://cdn-icons-png.flaticon.com/512/684/684908.png';
         const MAP_BOUNDS = [[0,0], [1080,1920]]; 
+        const MAP_MIN_ZOOM = -3;
+        const MAP_MAX_ZOOM = 2;
+        const SUBMAP_MIN_ZOOM = -3;
+        const SUBMAP_MAX_ZOOM = 16;
+        const MAP_ZOOM_SNAP = 0.25;
+        const MAP_ZOOM_DELTA = 0.25;
+        const MAP_WHEEL_PX_PER_ZOOM_LEVEL = 80;
         
         const ESCALA_KM_POR_PIXEL = 2.5; 
 
@@ -400,6 +408,7 @@
         let galleryImages = []; 
         let iconImage = null;
         let subMapImage = null; 
+        let subMapMediaType = 'image';
         let pasteTarget = 'gallery'; 
 
         const PLANE_CATEGORIES = [
@@ -691,8 +700,15 @@
 
         function initMapMundi() {
             mapMundi = L.map('map', { 
-                crs: L.CRS.Simple, minZoom: -3, maxZoom: 2, 
-                zoomControl: false, attributionControl: false, maxBoundsViscosity: 0.8 
+                crs: L.CRS.Simple,
+                minZoom: MAP_MIN_ZOOM,
+                maxZoom: MAP_MAX_ZOOM,
+                zoomSnap: MAP_ZOOM_SNAP,
+                zoomDelta: MAP_ZOOM_DELTA,
+                wheelPxPerZoomLevel: MAP_WHEEL_PX_PER_ZOOM_LEVEL,
+                zoomControl: false,
+                attributionControl: false,
+                maxBoundsViscosity: 0.8
             });
             mapMundi.setMaxBounds(MAP_BOUNDS); 
             const initialMapUrl = document.getElementById('map-style-select').value;
@@ -712,8 +728,14 @@
 
         function initSubMap() {
             subMap = L.map('sub-map', { 
-                crs: L.CRS.Simple, minZoom: -2, maxZoom: 3, 
-                zoomControl: false, attributionControl: false 
+                crs: L.CRS.Simple,
+                minZoom: SUBMAP_MIN_ZOOM,
+                maxZoom: SUBMAP_MAX_ZOOM,
+                zoomSnap: MAP_ZOOM_SNAP,
+                zoomDelta: MAP_ZOOM_DELTA,
+                wheelPxPerZoomLevel: MAP_WHEEL_PX_PER_ZOOM_LEVEL,
+                zoomControl: false,
+                attributionControl: false
             });
             L.control.zoom({ position: 'bottomright' }).addTo(subMap);
             
@@ -827,6 +849,23 @@
         }
 
         // ================= SISTEMA DE PINS (CAPITAL E SIMPLES) =================
+        function inferSubMapMediaType(urlOrData) {
+            if (typeof urlOrData === 'string') {
+                if (urlOrData.startsWith('data:video/')) return 'video';
+                if (urlOrData.startsWith('data:image/')) return 'image';
+                if (/\.(mp4|webm|ogg)(\?|$)/i.test(urlOrData)) return 'video';
+                if (/\.(png|jpe?g|gif|webp|svg)(\?|$)/i.test(urlOrData)) return 'image';
+            }
+            return 'image';
+        }
+
+        function readFileAsDataUrl(file, callback) {
+            const reader = new FileReader();
+            reader.onload = e => callback(e.target.result);
+            reader.onerror = () => callback(null);
+            reader.readAsDataURL(file);
+        }
+
         window.entrarNoLocal = async function(pinId) {
             const pinMundi = markersMundi.find(m => m.id === pinId);
             if(!pinMundi || !pinMundi.subMapUrl) return await exibirAviso("Este local não possui um mapa interno configurado.");
@@ -834,7 +873,20 @@
             mapMundi.closePopup();
             
             if(subMapOverlay) subMap.removeLayer(subMapOverlay);
-            subMapOverlay = L.imageOverlay(pinMundi.subMapUrl, MAP_BOUNDS).addTo(subMap);
+            const mediaType = pinMundi.subMapMediaType || inferSubMapMediaType(pinMundi.subMapUrl);
+            if (mediaType === 'video') {
+                const videoElement = document.createElement('video');
+                videoElement.src = pinMundi.subMapUrl;
+                videoElement.autoplay = true;
+                videoElement.loop = true;
+                videoElement.muted = true;
+                videoElement.playsInline = true;
+                videoElement.preload = 'auto';
+                subMapOverlay = L.videoOverlay(videoElement, MAP_BOUNDS, { autoplay: true, loop: true, muted: true }).addTo(subMap);
+                setTimeout(() => videoElement.play().catch(() => {}), 200);
+            } else {
+                subMapOverlay = L.imageOverlay(pinMundi.subMapUrl, MAP_BOUNDS).addTo(subMap);
+            }
             
             document.body.classList.add('submap-active');
             subMap.setView([540, 960], -1); 
@@ -848,6 +900,7 @@
             document.body.classList.remove('submap-active');
             activeMainPinId = null;
             limparSubMarkers();
+            if(subMapOverlay) { subMap.removeLayer(subMapOverlay); subMapOverlay = null; }
             setTimeout(() => mapMundi.invalidateSize(), 500);
         }
 
@@ -1039,7 +1092,7 @@
                 checkboxSimple.checked = pin.isSimple === true || pin.isSimple === 'true';
                 checkboxCapital.checked = pin.isCapital === true || pin.isCapital === 'true';
                 
-                if(!isSub) { fieldSubMapUrl.style.display = 'block'; subMapImage = pin.subMapUrl; } else { fieldSubMapUrl.style.display = 'none'; }
+                if(!isSub) { fieldSubMapUrl.style.display = 'block'; subMapImage = pin.subMapUrl || null; subMapMediaType = pin.subMapMediaType || inferSubMapMediaType(pin.subMapUrl); } else { fieldSubMapUrl.style.display = 'none'; }
                 galleryImages = [...(pin.gallery || [])]; iconImage = pin.icon;
             } else {
                 editId = null;
@@ -1050,8 +1103,8 @@
                 checkboxSimple.checked = false;
                 checkboxCapital.checked = false;
                 
-                if(!isSub) { fieldSubMapUrl.style.display = 'block'; subMapImage = null; } else { fieldSubMapUrl.style.display = 'none'; }
-                galleryImages = []; iconImage = null; subMapImage = null; 
+                if(!isSub) { fieldSubMapUrl.style.display = 'block'; subMapImage = null; subMapMediaType = 'image'; } else { fieldSubMapUrl.style.display = 'none'; }
+                galleryImages = []; iconImage = null; subMapImage = null; subMapMediaType = 'image'; 
             }
             
             document.getElementById('modal-form').style.display = 'flex';
@@ -1074,7 +1127,7 @@
             }
 
             const finalIcon = iconImage || IMG_DEFAULT_ICON;
-            let pinCoreData = { nome, desc, icon: finalIcon, gallery: [...galleryImages], isSimple, isCapital };
+            let pinCoreData = { nome, desc, icon: finalIcon, gallery: [...galleryImages], isSimple, isCapital, subMapMediaType };
 
             if (editId) {
                 const targetArray = isEditingSubPin ? currentSubMarkers : markersMundi;
@@ -1097,6 +1150,7 @@
                 } else {
                     Object.assign(pin, pinCoreData); 
                     pin.subMapUrl = finalSubMapUrl; 
+                    pin.subMapMediaType = subMapMediaType;
                     refreshMarkerVisuals(pin, false); 
                 }
             } else {
@@ -1117,6 +1171,7 @@
                     }
                 } else {
                     novaData.subMapUrl = finalSubMapUrl; 
+                    novaData.subMapMediaType = subMapMediaType;
                     novaData.subPins = []; 
                     criarMarcadorMundi(novaData);
                 }
@@ -1412,6 +1467,7 @@
                     pinos.forEach(p => {
                         p.isSimple = p.isSimple === true || p.isSimple === 'true';
                         p.isCapital = p.isCapital === true || p.isCapital === 'true';
+                        p.subMapMediaType = p.subMapMediaType || inferSubMapMediaType(p.subMapUrl);
                         criarMarcadorMundi(p);
                     });
                     atualizarListaLateral();
@@ -1438,11 +1494,12 @@
                 pinosServidor.forEach(sp => {
                     sp.isSimple = sp.isSimple === true || sp.isSimple === 'true';
                     sp.isCapital = sp.isCapital === true || sp.isCapital === 'true';
+                    sp.subMapMediaType = sp.subMapMediaType || inferSubMapMediaType(sp.subMapUrl);
 
                     const localPin = markersMundi.find(m => m.id === sp.id);
                     if (!localPin) criarMarcadorMundi(sp);
                     else {
-                        const mudou = localPin.nome !== sp.nome || localPin.desc !== sp.desc || localPin.icon !== sp.icon || localPin.subMapUrl !== sp.subMapUrl || localPin.isSimple !== sp.isSimple || localPin.isCapital !== sp.isCapital || (localPin.subPins?.length || 0) !== (sp.subPins?.length || 0) || JSON.stringify(localPin.gallery) !== JSON.stringify(sp.gallery);
+                        const mudou = localPin.nome !== sp.nome || localPin.desc !== sp.desc || localPin.icon !== sp.icon || localPin.subMapUrl !== sp.subMapUrl || localPin.subMapMediaType !== sp.subMapMediaType || localPin.isSimple !== sp.isSimple || localPin.isCapital !== sp.isCapital || (localPin.subPins?.length || 0) !== (sp.subPins?.length || 0) || JSON.stringify(localPin.gallery) !== JSON.stringify(sp.gallery);
                         if (mudou) { Object.assign(localPin, sp); localPin.subPins = sp.subPins || []; refreshMarkerVisuals(localPin, false); }
                     }
                 });
@@ -1537,7 +1594,25 @@
         document.getElementById('file-gallery').addEventListener('change', e => { Array.from(e.target.files).forEach(file => { comprimirImagem(file, 'gallery', res => { galleryImages.push(res); renderFormVisuals(); }); }); });
         
         document.getElementById('area-submap').addEventListener('click', () => { if (pasteTarget !== 'submap') setPasteTarget('submap'); else document.getElementById('file-submap').click(); });
-        document.getElementById('file-submap').addEventListener('change', e => { const file = e.target.files[0]; if(file) comprimirImagem(file, 'submap', res => { subMapImage = res; renderFormVisuals(); }); });
+        document.getElementById('file-submap').addEventListener('change', e => { 
+            const file = e.target.files[0];
+            if (!file) return;
+            if (file.type.startsWith('video/')) {
+                readFileAsDataUrl(file, res => {
+                    if (res) {
+                        subMapImage = res;
+                        subMapMediaType = 'video';
+                        renderFormVisuals();
+                    }
+                });
+            } else {
+                comprimirImagem(file, 'submap', res => { 
+                    subMapImage = res; 
+                    subMapMediaType = 'image';
+                    renderFormVisuals();
+                });
+            }
+        });
 
         // ATUALIZANDO O EVENTO DE COLAR (CTRL+V)
         document.addEventListener('paste', e => {
@@ -1545,13 +1620,21 @@
             if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
             const items = (e.clipboardData || e.originalEvent.clipboardData).items;
             for (let item of items) {
-                if (item.kind === 'file' && item.type.includes('image/')) {
-                    comprimirImagem(item.getAsFile(), pasteTarget, res => {
-                        if(pasteTarget === 'icon') iconImage = res; 
-                        else if(pasteTarget === 'gallery') galleryImages.push(res); 
-                        else if(pasteTarget === 'submap') subMapImage = res; 
-                        renderFormVisuals();
-                    });
+                if (item.kind === 'file') {
+                    const file = item.getAsFile();
+                    if (!file) continue;
+                    if (file.type.includes('image/')) {
+                        comprimirImagem(file, pasteTarget, res => {
+                            if(pasteTarget === 'icon') iconImage = res; 
+                            else if(pasteTarget === 'gallery') galleryImages.push(res); 
+                            else if(pasteTarget === 'submap') { subMapImage = res; subMapMediaType = 'image'; }
+                            renderFormVisuals();
+                        });
+                    } else if (pasteTarget === 'submap' && file.type.includes('video/')) {
+                        readFileAsDataUrl(file, res => {
+                            if (res) { subMapImage = res; subMapMediaType = 'video'; renderFormVisuals(); }
+                        });
+                    }
                 }
             }
         });
@@ -1563,8 +1646,22 @@
             });
             const prevIcon = document.getElementById('preview-icon'); const placeIcon = document.getElementById('placeholder-icon'); const areaIcon = document.getElementById('area-icon');
             if(iconImage && iconImage !== IMG_DEFAULT_ICON) { prevIcon.src = iconImage; prevIcon.style.display = 'block'; placeIcon.style.display = 'none'; areaIcon.classList.add('has-file'); } else { prevIcon.style.display = 'none'; placeIcon.style.display = 'flex'; areaIcon.classList.remove('has-file'); }
-            const prevSubmap = document.getElementById('preview-submap'); const placeSubmap = document.getElementById('placeholder-submap'); const areaSubmap = document.getElementById('area-submap');
-            if(subMapImage) { prevSubmap.src = subMapImage; prevSubmap.style.display = 'block'; placeSubmap.style.display = 'none'; areaSubmap.classList.add('has-file'); } else { prevSubmap.style.display = 'none'; placeSubmap.style.display = 'flex'; areaSubmap.classList.remove('has-file'); }
+            const prevSubmap = document.getElementById('preview-submap'); const prevSubmapVideo = document.getElementById('preview-submap-video'); const placeSubmap = document.getElementById('placeholder-submap'); const areaSubmap = document.getElementById('area-submap');
+            if(subMapImage) {
+                const isVideo = subMapMediaType === 'video' || subMapImage.startsWith('data:video/');
+                if (isVideo) {
+                    prevSubmap.style.display = 'none';
+                    prevSubmapVideo.src = subMapImage;
+                    prevSubmapVideo.style.display = 'block';
+                    prevSubmapVideo.load();
+                    prevSubmapVideo.play().catch(() => {});
+                    placeSubmap.style.display = 'none';
+                    areaSubmap.classList.add('has-file');
+                } else {
+                    prevSubmap.src = subMapImage; prevSubmap.style.display = 'block'; prevSubmapVideo.style.display = 'none'; prevSubmapVideo.pause();
+                    placeSubmap.style.display = 'none'; areaSubmap.classList.add('has-file');
+                }
+            } else { prevSubmap.style.display = 'none'; prevSubmapVideo.style.display = 'none'; prevSubmapVideo.pause(); placeSubmap.style.display = 'flex'; areaSubmap.classList.remove('has-file'); }
         }
 
         window.removeImg = (e, idx) => { e.stopPropagation(); galleryImages.splice(idx, 1); renderFormVisuals(); };
