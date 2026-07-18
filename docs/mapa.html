@@ -130,8 +130,8 @@
         .custom-map-icon { border: 2px solid #fff; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.8); transition: transform 0.2s, opacity 0.3s; background: #111; box-sizing: border-box; padding: 4px; object-fit: contain !important; z-index: 500; }
         .custom-map-icon:hover { transform: scale(1.3); border-color: var(--accent); z-index: 1000 !important; }
         
-        .sub-map-icon { border: 2px solid var(--accent); border-radius: 50%; box-shadow: var(--shadow-sub); transition: 0.2s, opacity 0.3s; background: #000; box-sizing: border-box; padding: 2px; object-fit: contain !important; }
-        .sub-map-icon:hover { transform: scale(1.3); background: #1a1a1a; z-index: 1000 !important; }
+        .sub-map-icon { border: 2px solid var(--accent); border-radius: 50%; box-shadow: var(--shadow-sub); transition: 0.2s, opacity 0.3s; background: #000; box-sizing: border-box; padding: 2px; object-fit: contain !important; transform: scale(1.25); }
+        .sub-map-icon:hover { transform: scale(1.6); background: #1a1a1a; z-index: 1000 !important; }
         
         /* PIN SIMPLES */
         .simple-map-icon { border: 1px dashed #aaa; border-radius: 50%; background: rgba(20, 20, 20, 0.4); opacity: 0.4; box-sizing: border-box; padding: 2px; object-fit: contain !important; filter: grayscale(40%); transition: transform 0.3s, opacity 0.3s; z-index: 400; }
@@ -909,7 +909,7 @@
             isCapital = isCapital === true || isCapital === 'true';
 
             let className = isSubPin ? 'sub-map-icon' : 'custom-map-icon';
-            let size = isSubPin ? '24px' : '40px';
+            let size = isSubPin ? '36px' : '40px';
 
             if(isSimple && !isSubPin) {
                 className = 'simple-map-icon';
