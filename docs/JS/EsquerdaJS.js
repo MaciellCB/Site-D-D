@@ -844,7 +844,7 @@ function inicializarDadosEsquerda() {
     state.inspiracao = parseInt(state.inspiracao) || 0;
     state.metros = parseFloat(state.metros) || 0;
     state.deslocamentoVoo = parseFloat(state.deslocamentoVoo) || 0;
-    state.deslocamentoNado = state.deslocamentoNado === true || state.deslocamentoNado === "true";
+    state.deslocamentoNado = parseFloat(state.deslocamentoNado) || 0;
 
     const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
     const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
@@ -864,35 +864,63 @@ function inicializarDadosEsquerda() {
         
         let containerVooM = document.getElementById('container-voo-m');
         let containerVooQ = document.getElementById('container-voo-q');
+        let containerNadoM = document.getElementById('container-nado-m');
+        let containerNadoQ = document.getElementById('container-nado-q');
         
         if (!containerVooM) {
-            // Pega a linha pai (.linha-metros)
             const linhaPai = elQuadrados.parentNode.parentNode; 
             
             containerVooM = document.createElement('div');
             containerVooM.id = 'container-voo-m';
-            containerVooM.className = 'metros-box'; // Reusa estilo
+            containerVooM.className = 'metros-box';
             containerVooM.innerHTML = `<label style="color:#4fc3f7;">Voo (m)</label><input id="voo-metros" type="number" style="border-color:#4fc3f7; color:#4fc3f7;">`;
             
             containerVooQ = document.createElement('div');
             containerVooQ.id = 'container-voo-q';
-            containerVooQ.className = 'quadrados-box'; // Reusa estilo
+            containerVooQ.className = 'quadrados-box';
             containerVooQ.innerHTML = `<label style="color:#4fc3f7;">Voo (q)</label><input id="voo-quadrados" type="number" style="border-color:#4fc3f7; color:#4fc3f7;">`;
+
+            containerNadoM = document.createElement('div');
+            containerNadoM.id = 'container-nado-m';
+            containerNadoM.className = 'metros-box';
+            containerNadoM.innerHTML = `<label style="color:#5dd0d6;">Nado (m)</label><input id="nado-metros" type="number" style="border-color:#5dd0d6; color:#5dd0d6;">`;
+
+            containerNadoQ = document.createElement('div');
+            containerNadoQ.id = 'container-nado-q';
+            containerNadoQ.className = 'quadrados-box';
+            containerNadoQ.innerHTML = `<label style="color:#5dd0d6;">Nado (q)</label><input id="nado-quadrados" type="number" style="border-color:#5dd0d6; color:#5dd0d6;">`;
             
             linhaPai.appendChild(containerVooM);
             linhaPai.appendChild(containerVooQ);
+            linhaPai.appendChild(containerNadoM);
+            linhaPai.appendChild(containerNadoQ);
         }
 
         const inputVooM = document.getElementById('voo-metros');
         const inputVooQ = document.getElementById('voo-quadrados');
+        const inputNadoM = document.getElementById('nado-metros');
+        const inputNadoQ = document.getElementById('nado-quadrados');
         if (state.deslocamentoVoo > 0) {
             inputVooM.value = state.deslocamentoVoo;
             inputVooQ.value = (state.deslocamentoVoo / 1.5).toFixed(1);
             containerVooM.style.display = 'flex';
             containerVooQ.style.display = 'flex';
         } else {
+            inputVooM.value = '';
+            inputVooQ.value = '';
             containerVooM.style.display = 'none';
             containerVooQ.style.display = 'none';
+        }
+        if (state.deslocamentoNado > 0) {
+            inputNadoM.value = state.deslocamentoNado;
+            inputNadoQ.value = (state.deslocamentoNado / 1.5).toFixed(1);
+            containerNadoM.style.display = 'flex';
+            containerNadoQ.style.display = 'flex';
+        } else {
+            inputNadoM.value = '';
+            inputNadoQ.value = '';
+            containerNadoM.style.display = 'none';
+            containerNadoQ.style.display = 'none';
         }
         inputVooM.oninput = (e) => {
             const val = parseFloat(e.target.value) || 0;
@@ -907,13 +935,17 @@ function inicializarDadosEsquerda() {
             inputVooM.value = metros; 
             saveStateToServer();
         };
-    }
-
-    const elNado = document.getElementById('nado-checkbox');
-    if (elNado) {
-        elNado.checked = !!state.deslocamentoNado;
-        elNado.onchange = () => {
-            state.deslocamentoNado = !!elNado.checked;
+        inputNadoM.oninput = (e) => {
+            const val = parseFloat(e.target.value) || 0;
+            state.deslocamentoNado = val;
+            inputNadoQ.value = (val / 1.5).toFixed(1);
+            saveStateToServer();
+        };
+        inputNadoQ.oninput = (e) => {
+            const val = parseFloat(e.target.value) || 0;
+            const metros = val * 1.5;
+            state.deslocamentoNado = metros;
+            inputNadoM.value = metros; 
             saveStateToServer();
         };
     }

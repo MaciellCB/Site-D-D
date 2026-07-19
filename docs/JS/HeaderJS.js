@@ -1137,10 +1137,10 @@ function openRaceSelectionModal() {
 
     overlay.innerHTML = `
         <div class="spell-modal" style="width: 850px; height: 650px; max-height: 95vh;">
-            <div class="modal-header">
-                <h3>Escolher Raça</h3>
-                <div style="display:flex; gap:10px;">
-                    ${jaTemRacaCustom ? `<button id="btn-edit-custom-race" class="btn-add" style="background: #222; border: 1px solid #444;">Editar</button>` : ''}
+            <div class="modal-header" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+                <h3 style="margin:0;">Escolher Raça</h3>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <button id="btn-edit-custom-race" class="btn-add" style="background: #222; border: 1px solid #444;" ${jaTemRacaCustom ? '' : 'disabled'}>Editar</button>
                     <button id="btn-custom-race" class="btn-add" style="background: #222; border: 1px solid #444;">Customizada +</button>
                     <button class="modal-close">✖</button>
                 </div>
@@ -2682,15 +2682,10 @@ function aplicarRacaNaFicha(raceData, variationData, lineageData, ancestryData =
     state.deslocamentoVoo = (lineageData && lineageData.flySpeed)
         ? lineageData.flySpeed
         : ((variationData && variationData.flySpeed) ? variationData.flySpeed : (raceData.flySpeed || 0));
-    const hasSwimBonus = Boolean(
-        (lineageData && lineageData.swimSpeed > 0) ||
-        (variationData && variationData.swimSpeed > 0) ||
-        (raceData && raceData.swimSpeed > 0) ||
-        (raceData && raceData.hasSwim) ||
-        (variationData && variationData.hasSwim) ||
-        (lineageData && lineageData.hasSwim)
-    );
-    state.deslocamentoNado = hasSwimBonus;
+    const swimValue = (lineageData && lineageData.swimSpeed)
+        ? lineageData.swimSpeed
+        : ((variationData && variationData.swimSpeed) ? variationData.swimSpeed : ((raceData && raceData.swimSpeed) ? raceData.swimSpeed : 0));
+    state.deslocamentoNado = parseFloat(swimValue) || 0;
 
     if (!state.abilities) state.abilities = [];
     state.abilities = state.abilities.filter(a => a.category !== 'Raça');
@@ -2743,9 +2738,6 @@ function aplicarRacaNaFicha(raceData, variationData, lineageData, ancestryData =
     state.abilities.unshift(...novasHabilidades.reverse());
     processarMecanicas(raceData, variationData, lineageData, ancestryData);
 
-    const elNado = document.getElementById('nado-checkbox');
-    if (elNado) elNado.checked = !!state.deslocamentoNado;
-
     atualizarHeader();
     if (typeof saveStateToServer === 'function') saveStateToServer();
     window.dispatchEvent(new CustomEvent('sheet-updated'));
@@ -2785,11 +2777,12 @@ function openCustomRaceCreator(editMode = false) {
         } else if (currentStep === 2) {
             const typesOptions = CREATURE_TYPES.map(t => `<option value="${t}" ${customRaceData.type === t ? 'selected' : ''}>${t}</option>`).join('');
             const sizesOptions = CREATURE_SIZES.map(s => `<option value="${s}" ${customRaceData.size === s ? 'selected' : ''}>${s}</option>`).join('');
-            contentDiv.innerHTML = `<div><h3 style="color:#fff;text-align:center;">Passo 2: Estatísticas</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:20px;"><div><label class="wizard-label">Tipo</label><select id="race-type-select" class="wizard-select">${typesOptions}</select></div><div><label class="wizard-label">Tamanho</label><select id="race-size-select" class="wizard-select">${sizesOptions}</select></div></div><div style="margin-top:20px; border-top:1px solid #333; padding-top:15px;"><label class="wizard-label" style="display:block;margin-bottom:10px;">Deslocamento</label><div style="display:flex;gap:20px;align-items:flex-end;"><div style="flex:1;"><label style="font-size:11px;color:#888;display:block;margin-bottom:4px;">Caminhada (m)</label><input type="number" id="race-speed-input" value="${customRaceData.speed}" class="wizard-input-small" style="width:100%;"></div><div style="flex:1;"><label class="wizard-check-label" style="margin-bottom:4px;"><input type="checkbox" id="race-fly-check" ${customRaceData.hasFly ? 'checked' : ''}>Voo?</label><input type="number" id="race-fly-input" value="${customRaceData.flySpeed}" class="wizard-input-small" style="width:100%;" ${customRaceData.hasFly ? '' : 'disabled'}></div></div><div style="margin-top:12px;"><label class="wizard-check-label"><input type="checkbox" id="race-swim-check" ${customRaceData.hasSwim ? 'checked' : ''}>Nado</label></div></div></div>`;
+            contentDiv.innerHTML = `<div><h3 style="color:#fff;text-align:center;">Passo 2: Estatísticas</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:20px;"><div><label class="wizard-label">Tipo</label><select id="race-type-select" class="wizard-select">${typesOptions}</select></div><div><label class="wizard-label">Tamanho</label><select id="race-size-select" class="wizard-select">${sizesOptions}</select></div></div><div style="margin-top:20px; border-top:1px solid #333; padding-top:15px;"><label class="wizard-label" style="display:block;margin-bottom:10px;">Deslocamento</label><div style="display:flex;gap:20px;align-items:flex-end;"><div style="flex:1;"><label style="font-size:11px;color:#888;display:block;margin-bottom:4px;">Caminhada (m)</label><input type="number" id="race-speed-input" value="${customRaceData.speed}" class="wizard-input-small" style="width:100%;"></div><div style="flex:1;"><label class="wizard-check-label" style="margin-bottom:4px;"><input type="checkbox" id="race-fly-check" ${customRaceData.hasFly ? 'checked' : ''}>Voo?</label><input type="number" id="race-fly-input" value="${customRaceData.flySpeed}" class="wizard-input-small" style="width:100%;" ${customRaceData.hasFly ? '' : 'disabled'}></div></div><div style="display:flex;gap:20px;align-items:flex-end;margin-top:12px;"><div style="flex:1;"><label class="wizard-check-label" style="margin-bottom:4px;"><input type="checkbox" id="race-swim-check" ${customRaceData.hasSwim ? 'checked' : ''}>Nado?</label><input type="number" id="race-swim-input" value="${customRaceData.swimSpeed}" class="wizard-input-small" style="width:100%;" ${customRaceData.hasSwim ? '' : 'disabled'}></div></div></div></div>`;
             setTimeout(() => {
                 const chk = overlay.querySelector('#race-fly-check');
                 const inp = overlay.querySelector('#race-fly-input');
                 const swimChk = overlay.querySelector('#race-swim-check');
+                const swimInp = overlay.querySelector('#race-swim-input');
                 overlay.querySelector('#race-type-select').onchange = (e) => customRaceData.type = e.target.value;
                 overlay.querySelector('#race-size-select').onchange = (e) => customRaceData.size = e.target.value;
                 chk.onchange = () => {
@@ -2799,8 +2792,16 @@ function openCustomRaceCreator(editMode = false) {
                 };
                 swimChk.onchange = () => {
                     customRaceData.hasSwim = swimChk.checked;
-                    if (swimChk.checked) customRaceData.swimSpeed = customRaceData.speed || 9;
-                    else customRaceData.swimSpeed = 0;
+                    swimInp.disabled = !swimChk.checked;
+                    if (swimChk.checked && !swimInp.value) swimInp.value = customRaceData.speed || 9;
+                    if (!swimChk.checked) customRaceData.swimSpeed = 0;
+                };
+                swimInp.oninput = () => {
+                    customRaceData.swimSpeed = parseFloat(swimInp.value) || 0;
+                    if (customRaceData.swimSpeed > 0) customRaceData.hasSwim = true;
+                    else customRaceData.hasSwim = false;
+                    swimChk.checked = customRaceData.hasSwim;
+                    swimInp.disabled = !customRaceData.hasSwim;
                 };
             }, 50);
         } else if (currentStep === 3) {
@@ -2832,10 +2833,11 @@ function openCustomRaceCreator(editMode = false) {
         else if (currentStep === 2) {
             customRaceData.speed = overlay.querySelector('#race-speed-input').value;
             const flyInput = overlay.querySelector('#race-fly-input');
-            const swimInput = overlay.querySelector('#race-swim-check');
+            const swimChk = overlay.querySelector('#race-swim-check');
+            const swimInp = overlay.querySelector('#race-swim-input');
             if (flyInput) customRaceData.flySpeed = flyInput.value;
-            customRaceData.hasSwim = !!(swimInput && swimInput.checked);
-            customRaceData.swimSpeed = customRaceData.hasSwim ? parseInt(customRaceData.speed) || 9 : 0;
+            customRaceData.hasSwim = !!(swimChk && swimChk.checked);
+            customRaceData.swimSpeed = (swimChk && swimChk.checked) ? (parseFloat(swimInp?.value) || 0) : 0;
             currentStep++;
         }
         else if (currentStep === 3) { customRaceData.description = overlay.querySelector('#custom-race-desc').value; currentStep++; }
