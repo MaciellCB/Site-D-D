@@ -2822,32 +2822,74 @@ function openCustomRaceCreator(editMode = false) {
         }
     }
 
-    overlay.innerHTML = `<div class="spell-modal" style="width:500px;height:600px;max-height:90vh;"><div class="modal-header"><h3>Criar Raça Customizada</h3><button class="modal-close">✖</button></div><div class="wizard-container"><div class="wizard-step-indicator"><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div></div><div id="wizard-content-area" class="wizard-content"></div><div class="wizard-btn-row"><button id="btn-wizard-prev" class="btn-add" style="background:transparent;border:1px solid #444;color:#aaa;">Voltar</button><button id="btn-wizard-next" class="btn-add">Próximo</button></div></div></div>`;
+    overlay.innerHTML = `<div class="spell-modal" style="width:500px;height:600px;max-height:90vh;"><div class="modal-header"><h3>${editMode ? 'Editar Raça Customizada' : 'Criar Raça Customizada'}</h3><button class="modal-close">✖</button></div><div class="wizard-container"><div class="wizard-step-indicator"><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div><div class="step-dot"></div></div><div id="wizard-content-area" class="wizard-content"></div><div class="wizard-btn-row"><button id="btn-wizard-prev" class="btn-add" style="background:transparent;border:1px solid #444;color:#aaa;">Voltar</button><button id="btn-wizard-skip" class="btn-add" style="background:transparent;border:1px solid #444;color:#aaa;">Pular</button><button id="btn-wizard-next" class="btn-add">Próximo</button></div></div></div>`;
     document.body.appendChild(overlay);
     renderWizardContent();
 
-    overlay.querySelector('.modal-close').onclick = () => { overlay.remove(); if (typeof checkScrollLock === 'function') checkScrollLock(); };
-
-    overlay.querySelector('#btn-wizard-next').onclick = () => {
-        if (currentStep === 1) { customRaceData.name = overlay.querySelector('#custom-race-name').value; currentStep++; }
+    function finalizeWizard(skipStep = false) {
+        if (currentStep === 1) {
+            const nameInput = overlay.querySelector('#custom-race-name');
+            if (!skipStep && nameInput) {
+                const trimmedName = nameInput.value.trim();
+                if (trimmedName) customRaceData.name = trimmedName;
+            }
+            currentStep++;
+        }
         else if (currentStep === 2) {
-            customRaceData.speed = overlay.querySelector('#race-speed-input').value;
+            const speedInput = overlay.querySelector('#race-speed-input');
+            const flyChk = overlay.querySelector('#race-fly-check');
             const flyInput = overlay.querySelector('#race-fly-input');
             const swimChk = overlay.querySelector('#race-swim-check');
             const swimInp = overlay.querySelector('#race-swim-input');
-            if (flyInput) customRaceData.flySpeed = flyInput.value;
-            customRaceData.hasSwim = !!(swimChk && swimChk.checked);
-            customRaceData.swimSpeed = (swimChk && swimChk.checked) ? (parseFloat(swimInp?.value) || 0) : 0;
+
+            if (!skipStep) {
+                if (speedInput && speedInput.value.trim() !== '') {
+                    const parsedSpeed = parseFloat(speedInput.value);
+                    if (!Number.isNaN(parsedSpeed)) customRaceData.speed = parsedSpeed;
+                }
+                if (flyChk) {
+                    const flyChanged = flyChk.checked !== !!customRaceData.hasFly;
+                    if (flyChanged) customRaceData.hasFly = flyChk.checked;
+                    if (flyChk.checked) {
+                        if (flyInput && flyInput.value.trim() !== '') {
+                            const parsedFly = parseFloat(flyInput.value);
+                            if (!Number.isNaN(parsedFly)) customRaceData.flySpeed = parsedFly;
+                        }
+                    } else if (flyChanged) {
+                        customRaceData.flySpeed = 0;
+                    }
+                }
+                if (swimChk) {
+                    const swimChanged = swimChk.checked !== !!customRaceData.hasSwim;
+                    if (swimChanged) customRaceData.hasSwim = swimChk.checked;
+                    if (swimChk.checked) {
+                        if (swimInp && swimInp.value.trim() !== '') {
+                            const parsedSwim = parseFloat(swimInp.value);
+                            if (!Number.isNaN(parsedSwim)) customRaceData.swimSpeed = parsedSwim;
+                        }
+                    } else if (swimChanged) {
+                        customRaceData.swimSpeed = 0;
+                    }
+                }
+            }
             currentStep++;
         }
-        else if (currentStep === 3) { customRaceData.description = overlay.querySelector('#custom-race-desc').value; currentStep++; }
+        else if (currentStep === 3) {
+            if (!skipStep) {
+                const descInput = overlay.querySelector('#custom-race-desc');
+                if (descInput) customRaceData.description = descInput.value;
+            }
+            currentStep++;
+        }
         else {
-            customRaceData.traits = [];
-            overlay.querySelectorAll('.wizard-trait-box').forEach(box => {
-                const n = box.querySelector('.trait-name-input').value.trim();
-                const d = box.querySelector('.trait-desc-input').value.trim();
-                if (n) customRaceData.traits.push({ name: n, desc: d });
-            });
+            if (!skipStep) {
+                customRaceData.traits = [];
+                overlay.querySelectorAll('.wizard-trait-box').forEach(box => {
+                    const n = box.querySelector('.trait-name-input').value.trim();
+                    const d = box.querySelector('.trait-desc-input').value.trim();
+                    if (n) customRaceData.traits.push({ name: n, desc: d });
+                });
+            }
             state.customRaceData = {
                 ...customRaceData,
                 traits: customRaceData.traits.map(t => ({ ...t }))
@@ -2855,9 +2897,15 @@ function openCustomRaceCreator(editMode = false) {
             aplicarRacaNaFicha(customRaceData, null, null);
             overlay.remove();
             if (typeof checkScrollLock === 'function') checkScrollLock();
+            return;
         }
         renderWizardContent();
-    };
+    }
+
+    overlay.querySelector('.modal-close').onclick = () => { overlay.remove(); if (typeof checkScrollLock === 'function') checkScrollLock(); };
+
+    overlay.querySelector('#btn-wizard-next').onclick = () => finalizeWizard(false);
+    overlay.querySelector('#btn-wizard-skip').onclick = () => finalizeWizard(true);
     overlay.querySelector('#btn-wizard-prev').onclick = () => { if (currentStep > 1) { currentStep--; renderWizardContent(); } };
 }
 
