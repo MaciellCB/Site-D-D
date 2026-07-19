@@ -1133,14 +1133,23 @@ function openRaceSelectionModal() {
     const overlay = document.createElement('div');
     overlay.className = 'spell-modal-overlay race-modal-overlay';
     overlay.style.zIndex = '12000';
-    const jaTemRacaCustom = !!(state && state.customRaceData && state.customRaceData.name);
+    const hasCustomRaceData = !!(state && state.customRaceData && (
+        state.customRaceData.name ||
+        state.customRaceData.description ||
+        state.customRaceData.traits?.length ||
+        state.customRaceData.speed ||
+        state.customRaceData.flySpeed ||
+        state.customRaceData.swimSpeed ||
+        state.customRaceData.hasFly ||
+        state.customRaceData.hasSwim
+    ));
 
     overlay.innerHTML = `
         <div class="spell-modal" style="width: 850px; height: 650px; max-height: 95vh;">
             <div class="modal-header" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
                 <h3 style="margin:0;">Escolher Raça</h3>
                 <div style="display:flex; gap:10px; align-items:center;">
-                    <button id="btn-edit-custom-race" class="btn-add" style="background: #222; border: 1px solid #444;" ${jaTemRacaCustom ? '' : 'disabled'}>Editar</button>
+                    <button id="btn-edit-custom-race" class="btn-add" style="background: #222; border: 1px solid #444;" ${hasCustomRaceData ? '' : ''}>Editar</button>
                     <button id="btn-custom-race" class="btn-add" style="background: #222; border: 1px solid #444;">Customizada +</button>
                     <button class="modal-close">✖</button>
                 </div>
@@ -1174,9 +1183,17 @@ function openRaceSelectionModal() {
 
     overlay.querySelector('.modal-close').onclick = () => { overlay.remove(); checkScrollLock(); };
     if (overlay.querySelector('#btn-edit-custom-race')) {
-        overlay.querySelector('#btn-edit-custom-race').onclick = () => { overlay.remove(); openCustomRaceCreator(true); };
+        overlay.querySelector('#btn-edit-custom-race').onclick = () => {
+            overlay.remove();
+            if (typeof checkScrollLock === 'function') checkScrollLock();
+            openCustomRaceCreator(true);
+        };
     }
-    overlay.querySelector('#btn-custom-race').onclick = () => { overlay.remove(); openCustomRaceCreator(false); };
+    overlay.querySelector('#btn-custom-race').onclick = () => {
+        overlay.remove();
+        if (typeof checkScrollLock === 'function') checkScrollLock();
+        openCustomRaceCreator(false);
+    };
 
     btnSelect.onclick = () => {
         if (selectedRaceBase) {
