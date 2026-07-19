@@ -4981,9 +4981,9 @@ const diceStyles = document.createElement('style');
 diceStyles.textContent = `
     #dice-results-container {
         position: fixed; 
-        bottom: 90px;
+        bottom: 20px;
         right: -350px; 
-        min-width: 280px; max-width: 400px;
+        min-width: 280px; max-width: min(400px, calc(100vw - 24px));
         background: #0f0f0f; border: 1px solid #9c27b0; border-radius: 8px;
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.9);
         color: #fff; 

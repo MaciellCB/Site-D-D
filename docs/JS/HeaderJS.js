@@ -1133,12 +1133,14 @@ function openRaceSelectionModal() {
     const overlay = document.createElement('div');
     overlay.className = 'spell-modal-overlay race-modal-overlay';
     overlay.style.zIndex = '12000';
+    const jaTemRacaCustom = !!(state && state.customRaceData && state.customRaceData.name);
 
     overlay.innerHTML = `
         <div class="spell-modal" style="width: 850px; height: 650px; max-height: 95vh;">
             <div class="modal-header">
                 <h3>Escolher Raça</h3>
                 <div style="display:flex; gap:10px;">
+                    ${jaTemRacaCustom ? `<button id="btn-edit-custom-race" class="btn-add" style="background: #222; border: 1px solid #444;">Editar</button>` : ''}
                     <button id="btn-custom-race" class="btn-add" style="background: #222; border: 1px solid #444;">Customizada +</button>
                     <button class="modal-close">✖</button>
                 </div>
@@ -1171,7 +1173,10 @@ function openRaceSelectionModal() {
     const detailsContainer = overlay.querySelector('#race-details-content');
 
     overlay.querySelector('.modal-close').onclick = () => { overlay.remove(); checkScrollLock(); };
-    overlay.querySelector('#btn-custom-race').onclick = () => { overlay.remove(); openCustomRaceCreator(); };
+    if (overlay.querySelector('#btn-edit-custom-race')) {
+        overlay.querySelector('#btn-edit-custom-race').onclick = () => { overlay.remove(); openCustomRaceCreator(true); };
+    }
+    overlay.querySelector('#btn-custom-race').onclick = () => { overlay.remove(); openCustomRaceCreator(false); };
 
     btnSelect.onclick = () => {
         if (selectedRaceBase) {
@@ -2677,6 +2682,15 @@ function aplicarRacaNaFicha(raceData, variationData, lineageData, ancestryData =
     state.deslocamentoVoo = (lineageData && lineageData.flySpeed)
         ? lineageData.flySpeed
         : ((variationData && variationData.flySpeed) ? variationData.flySpeed : (raceData.flySpeed || 0));
+    const hasSwimBonus = Boolean(
+        (lineageData && lineageData.swimSpeed > 0) ||
+        (variationData && variationData.swimSpeed > 0) ||
+        (raceData && raceData.swimSpeed > 0) ||
+        (raceData && raceData.hasSwim) ||
+        (variationData && variationData.hasSwim) ||
+        (lineageData && lineageData.hasSwim)
+    );
+    state.deslocamentoNado = hasSwimBonus;
 
     if (!state.abilities) state.abilities = [];
     state.abilities = state.abilities.filter(a => a.category !== 'Raça');
@@ -2729,6 +2743,9 @@ function aplicarRacaNaFicha(raceData, variationData, lineageData, ancestryData =
     state.abilities.unshift(...novasHabilidades.reverse());
     processarMecanicas(raceData, variationData, lineageData, ancestryData);
 
+    const elNado = document.getElementById('nado-checkbox');
+    if (elNado) elNado.checked = !!state.deslocamentoNado;
+
     atualizarHeader();
     if (typeof saveStateToServer === 'function') saveStateToServer();
     window.dispatchEvent(new CustomEvent('sheet-updated'));
@@ -2739,14 +2756,18 @@ function checkScrollLock() {
     document.body.style.overflow = activeModals.length > 0 ? 'hidden' : '';
 }
 
-function openCustomRaceCreator() {
+function openCustomRaceCreator(editMode = false) {
     const overlay = document.createElement('div');
     overlay.className = 'spell-modal-overlay race-modal-overlay';
     overlay.style.zIndex = '12100';
     if (typeof checkScrollLock === 'function') checkScrollLock();
 
+    const existingCustomData = editMode && state && state.customRaceData ? state.customRaceData : null;
     let currentStep = 1;
-    let customRaceData = { name: "", type: "Humanoide", size: "Médio", speed: 9, flySpeed: 0, hasFly: false, description: "", traits: [] };
+    let customRaceData = existingCustomData ? {
+        ...existingCustomData,
+        traits: Array.isArray(existingCustomData.traits) ? existingCustomData.traits.map(t => ({ ...t })) : []
+    } : { name: "", type: "Humanoide", size: "Médio", speed: 9, flySpeed: 0, hasFly: false, hasSwim: false, swimSpeed: 0, description: "", traits: [] };
 
     function renderWizardContent() {
         const contentDiv = overlay.querySelector('#wizard-content-area');
@@ -2764,16 +2785,22 @@ function openCustomRaceCreator() {
         } else if (currentStep === 2) {
             const typesOptions = CREATURE_TYPES.map(t => `<option value="${t}" ${customRaceData.type === t ? 'selected' : ''}>${t}</option>`).join('');
             const sizesOptions = CREATURE_SIZES.map(s => `<option value="${s}" ${customRaceData.size === s ? 'selected' : ''}>${s}</option>`).join('');
-            contentDiv.innerHTML = `<div><h3 style="color:#fff;text-align:center;">Passo 2: Estatísticas</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:20px;"><div><label class="wizard-label">Tipo</label><select id="race-type-select" class="wizard-select">${typesOptions}</select></div><div><label class="wizard-label">Tamanho</label><select id="race-size-select" class="wizard-select">${sizesOptions}</select></div></div><div style="margin-top:20px; border-top:1px solid #333; padding-top:15px;"><label class="wizard-label" style="display:block;margin-bottom:10px;">Deslocamento</label><div style="display:flex;gap:20px;align-items:flex-end;"><div style="flex:1;"><label style="font-size:11px;color:#888;display:block;margin-bottom:4px;">Caminhada (m)</label><input type="number" id="race-speed-input" value="${customRaceData.speed}" class="wizard-input-small" style="width:100%;"></div><div style="flex:1;"><label class="wizard-check-label" style="margin-bottom:4px;"><input type="checkbox" id="race-fly-check" ${customRaceData.hasFly ? 'checked' : ''}>Voo?</label><input type="number" id="race-fly-input" value="${customRaceData.flySpeed}" class="wizard-input-small" style="width:100%;" ${customRaceData.hasFly ? '' : 'disabled'}></div></div></div></div>`;
+            contentDiv.innerHTML = `<div><h3 style="color:#fff;text-align:center;">Passo 2: Estatísticas</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:20px;"><div><label class="wizard-label">Tipo</label><select id="race-type-select" class="wizard-select">${typesOptions}</select></div><div><label class="wizard-label">Tamanho</label><select id="race-size-select" class="wizard-select">${sizesOptions}</select></div></div><div style="margin-top:20px; border-top:1px solid #333; padding-top:15px;"><label class="wizard-label" style="display:block;margin-bottom:10px;">Deslocamento</label><div style="display:flex;gap:20px;align-items:flex-end;"><div style="flex:1;"><label style="font-size:11px;color:#888;display:block;margin-bottom:4px;">Caminhada (m)</label><input type="number" id="race-speed-input" value="${customRaceData.speed}" class="wizard-input-small" style="width:100%;"></div><div style="flex:1;"><label class="wizard-check-label" style="margin-bottom:4px;"><input type="checkbox" id="race-fly-check" ${customRaceData.hasFly ? 'checked' : ''}>Voo?</label><input type="number" id="race-fly-input" value="${customRaceData.flySpeed}" class="wizard-input-small" style="width:100%;" ${customRaceData.hasFly ? '' : 'disabled'}></div></div><div style="margin-top:12px;"><label class="wizard-check-label"><input type="checkbox" id="race-swim-check" ${customRaceData.hasSwim ? 'checked' : ''}>Nado</label></div></div></div>`;
             setTimeout(() => {
                 const chk = overlay.querySelector('#race-fly-check');
                 const inp = overlay.querySelector('#race-fly-input');
+                const swimChk = overlay.querySelector('#race-swim-check');
                 overlay.querySelector('#race-type-select').onchange = (e) => customRaceData.type = e.target.value;
                 overlay.querySelector('#race-size-select').onchange = (e) => customRaceData.size = e.target.value;
                 chk.onchange = () => {
                     inp.disabled = !chk.checked;
                     customRaceData.hasFly = chk.checked;
                     if (chk.checked && !inp.value) inp.value = 9;
+                };
+                swimChk.onchange = () => {
+                    customRaceData.hasSwim = swimChk.checked;
+                    if (swimChk.checked) customRaceData.swimSpeed = customRaceData.speed || 9;
+                    else customRaceData.swimSpeed = 0;
                 };
             }, 50);
         } else if (currentStep === 3) {
@@ -2805,7 +2832,10 @@ function openCustomRaceCreator() {
         else if (currentStep === 2) {
             customRaceData.speed = overlay.querySelector('#race-speed-input').value;
             const flyInput = overlay.querySelector('#race-fly-input');
+            const swimInput = overlay.querySelector('#race-swim-check');
             if (flyInput) customRaceData.flySpeed = flyInput.value;
+            customRaceData.hasSwim = !!(swimInput && swimInput.checked);
+            customRaceData.swimSpeed = customRaceData.hasSwim ? parseInt(customRaceData.speed) || 9 : 0;
             currentStep++;
         }
         else if (currentStep === 3) { customRaceData.description = overlay.querySelector('#custom-race-desc').value; currentStep++; }
@@ -2816,6 +2846,10 @@ function openCustomRaceCreator() {
                 const d = box.querySelector('.trait-desc-input').value.trim();
                 if (n) customRaceData.traits.push({ name: n, desc: d });
             });
+            state.customRaceData = {
+                ...customRaceData,
+                traits: customRaceData.traits.map(t => ({ ...t }))
+            };
             aplicarRacaNaFicha(customRaceData, null, null);
             overlay.remove();
             if (typeof checkScrollLock === 'function') checkScrollLock();
@@ -3381,6 +3415,15 @@ function tornarPopupArrastavel(elmnt, handle) {
     handle.onmousedown = dragMouseDown;
     handle.ontouchstart = dragTouchStart;
 
+    const clampPosition = () => {
+        const maxTop = Math.max(8, window.innerHeight - elmnt.offsetHeight - 8);
+        const maxLeft = Math.max(8, window.innerWidth - elmnt.offsetWidth - 8);
+        const nextTop = Math.min(Math.max(8, elmnt.offsetTop), maxTop);
+        const nextLeft = Math.min(Math.max(8, elmnt.offsetLeft), maxLeft);
+        elmnt.style.top = `${nextTop}px`;
+        elmnt.style.left = `${nextLeft}px`;
+    };
+
     function dragMouseDown(e) {
         e.preventDefault();
         pos3 = e.clientX;
@@ -3394,10 +3437,13 @@ function tornarPopupArrastavel(elmnt, handle) {
         pos2 = pos4 - e.clientY;
         pos3 = e.clientX;
         pos4 = e.clientY;
-        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        const nextTop = elmnt.offsetTop - pos2;
+        const nextLeft = elmnt.offsetLeft - pos1;
+        elmnt.style.top = `${Math.min(Math.max(8, nextTop), Math.max(8, window.innerHeight - elmnt.offsetHeight - 8))}px`;
+        elmnt.style.left = `${Math.min(Math.max(8, nextLeft), Math.max(8, window.innerWidth - elmnt.offsetWidth - 8))}px`;
     }
     function closeDragElement() {
+        clampPosition();
         document.onmouseup = null;
         document.onmousemove = null;
     }
@@ -3409,8 +3455,10 @@ function tornarPopupArrastavel(elmnt, handle) {
             const t = ev.touches[0];
             pos1 = pos3 - t.clientX; pos2 = pos4 - t.clientY;
             pos3 = t.clientX; pos4 = t.clientY;
-            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+            const nextTop = elmnt.offsetTop - pos2;
+            const nextLeft = elmnt.offsetLeft - pos1;
+            elmnt.style.top = `${Math.min(Math.max(8, nextTop), Math.max(8, window.innerHeight - elmnt.offsetHeight - 8))}px`;
+            elmnt.style.left = `${Math.min(Math.max(8, nextLeft), Math.max(8, window.innerWidth - elmnt.offsetWidth - 8))}px`;
         };
     }
 }

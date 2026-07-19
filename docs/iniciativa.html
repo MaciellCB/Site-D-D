@@ -120,8 +120,7 @@
         
         // Membros do grupo atual (vindo da URL do mestre)
         const rawMembros = params.get('membros') || "";
-        // Cria array de nomes em minúsculo
-        const listaMembros = rawMembros.toLowerCase().split(',').map(s => s.trim()).filter(s => s !== "");
+        const listaMembros = rawMembros.split(',').map(normalizarNome).filter(Boolean);
         const nomeGrupo = params.get('grupo') || "Combate";
 
         document.title = `Iniciativa: ${nomeGrupo}`;
@@ -129,6 +128,14 @@
         // Lista de todos os personagens conhecidos (para filtrar quem é de outro grupo)
         // Como esta página é isolada, vamos fazer um fetch rápido na API para saber quem são "Jogadores"
         let todosJogadores = [];
+        let trackerDataAtual = [];
+
+        const normalizarNome = (valor = "") => String(valor)
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, ' ');
 
         async function init() {
             try {
@@ -136,14 +143,18 @@
                 const res = await fetch('https://dandd-chan.onrender.com/api/lista-personagens');
                 if(res.ok) {
                     const lista = await res.json();
-                    todosJogadores = lista.map(n => n.toLowerCase());
+                    todosJogadores = lista.map(n => normalizarNome(n));
                 }
             } catch(e) {}
+            if (trackerDataAtual.length > 0) {
+                render(trackerDataAtual);
+            }
         }
         init();
 
         socket.on('sync_tracker_update', (lista) => {
-            render(lista);
+            trackerDataAtual = Array.isArray(lista) ? lista : [];
+            render(trackerDataAtual);
         });
 
         function render(lista) {
@@ -159,7 +170,7 @@
             lista.sort((a, b) => b.val - a.val);
 
             lista.forEach((item, index) => {
-                const nomeItem = item.name.toLowerCase().trim();
+                const nomeItem = normalizarNome(item.name || "");
                 
                 // --- FILTRAGEM RÍGIDA ---
                 let mostrar = false;

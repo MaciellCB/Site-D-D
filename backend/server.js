@@ -67,7 +67,9 @@ io.on('connection', (socket) => {
         io.emit('sync_tracker_update', serverTrackerList);
     });
     socket.on('add_to_tracker', (item) => {
-        const idx = serverTrackerList.findIndex(x => x.name === item.name);
+        const normalizeName = (value = '') => String(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+        const key = normalizeName(item?.name);
+        const idx = serverTrackerList.findIndex(x => normalizeName(x?.name) === key);
         if (idx >= 0) { serverTrackerList[idx] = item; } else { serverTrackerList.push(item); }
         io.emit('sync_tracker_update', serverTrackerList);
     });

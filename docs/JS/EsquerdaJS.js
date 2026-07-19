@@ -844,6 +844,7 @@ function inicializarDadosEsquerda() {
     state.inspiracao = parseInt(state.inspiracao) || 0;
     state.metros = parseFloat(state.metros) || 0;
     state.deslocamentoVoo = parseFloat(state.deslocamentoVoo) || 0;
+    state.deslocamentoNado = state.deslocamentoNado === true || state.deslocamentoNado === "true";
 
     const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
     const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
@@ -904,6 +905,15 @@ function inicializarDadosEsquerda() {
             const metros = val * 1.5;
             state.deslocamentoVoo = metros;
             inputVooM.value = metros; 
+            saveStateToServer();
+        };
+    }
+
+    const elNado = document.getElementById('nado-checkbox');
+    if (elNado) {
+        elNado.checked = !!state.deslocamentoNado;
+        elNado.onchange = () => {
+            state.deslocamentoNado = !!elNado.checked;
             saveStateToServer();
         };
     }

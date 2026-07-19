@@ -396,9 +396,10 @@ header {
 ============================================================= */
 #tracker-overlay {
     position: fixed;
-    top: 60px;
+    top: 20px;
     right: 20px;
-    width: 280px;
+    width: min(280px, calc(100vw - 24px));
+    max-height: calc(100vh - 24px);
     background: #111;
     border: 1px solid #444;
     border-radius: 8px;
@@ -428,7 +429,7 @@ header {
 
 .tracker-body {
     padding: 10px;
-    max-height: 400px;
+    max-height: min(400px, calc(100vh - 170px));
     overflow-y: auto;
 }
 
