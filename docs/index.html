@@ -603,8 +603,6 @@
         <div style="display:flex; gap:8px;">
           <button id="btn-account-login" onclick="tentarLogin()"
             style="flex:1; background:#9c27b0; color:#fff; border:none; padding:10px; cursor:pointer; font-weight:bold; border-radius:4px;">Entrar</button>
-          <button id="btn-account-register" onclick="abrirRegistro()"
-            style="flex:1; background:#222; color:#fff; border:1px solid #444; padding:10px; cursor:pointer; border-radius:4px;">Registrar</button>
         </div>
       </div>
 
@@ -617,14 +615,7 @@
         </div>
       </div>
 
-      <div id="register-box" style="display:none; margin-top:12px; text-align:left;">
-        <div style="color:#ccc; font-size:13px; margin-bottom:8px;">Registro de Conta</div>
-        <input type="text" id="reg-username" placeholder="Usuário"
-          style="width:100%; padding:8px; margin-bottom:8px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
-        <input type="password" id="reg-password" placeholder="Senha"
-          style="width:100%; padding:8px; margin-bottom:8px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
-        <div style="display:flex; gap:8px;"><button onclick="registrarConta()" style="flex:1; background:#9c27b0; color:#fff; border:none; padding:10px; cursor:pointer; border-radius:4px;">Registrar</button><button onclick="fecharRegistro()" style="flex:1; background:#222; color:#fff; border:1px solid #444; padding:10px; cursor:pointer; border-radius:4px;">Cancelar</button></div>
-      </div>
+      <!-- registration moved to Gerenciar Contas modal -->
 
     </div>
   </div>
@@ -965,18 +956,19 @@
     }
 
     function abrirRegistro() {
-      document.getElementById('account-forms').style.display = 'none';
-      document.getElementById('register-box').style.display = 'block';
+      exibirAvisoTemporario('Registro desativado aqui. Use Gerenciar Contas (botão Contas) para criar novas contas.');
     }
 
     function fecharRegistro() {
-      document.getElementById('register-box').style.display = 'none';
       document.getElementById('account-forms').style.display = 'block';
     }
 
     async function registrarConta() {
-      const username = document.getElementById('reg-username').value;
-      const password = document.getElementById('reg-password').value;
+      const usrEl = document.getElementById('reg-username');
+      const pwdEl = document.getElementById('reg-password');
+      if (!usrEl || !pwdEl) { exibirAvisoTemporario('Registro desativado aqui. Use Gerenciar Contas.'); return; }
+      const username = usrEl.value;
+      const password = pwdEl.value;
       const API_BASE = 'https://dandd-chan.onrender.com/api';
       if (!username || !password) { exibirAvisoTemporario('Preencha usuário e senha.'); return; }
       try {
@@ -1001,7 +993,6 @@
 
     function showAccountCharacters(acc) {
       document.getElementById('account-forms').style.display = 'none';
-      document.getElementById('register-box').style.display = 'none';
       document.getElementById('account-characters').style.display = 'block';
       const list = document.getElementById('chars-list');
       list.innerHTML = '';
