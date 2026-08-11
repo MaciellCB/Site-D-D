@@ -612,7 +612,7 @@
       style="background:#1a1a1a; padding:24px; border-radius:12px; border:2px solid #9c27b0; text-align:center; width:360px; max-width:92%;">
       <img src="img/imagem-no-site/dado-logo.png" style="width:96px; margin-bottom:12px; border-radius:50%; ">
       <h2 style="color:#fff; margin-bottom:12px; letter-spacing:1px;">LOGIN DE CONTA</h2>
-      <p style="color:#bbb; font-size:13px; margin-bottom:14px; line-height:1.4;">Cada conta pode ter várias fichas. Faça login na conta e então escolha a ficha que deseja abrir.</p>
+      <p style="color:#bbb; font-size:13px; margin-bottom:14px; line-height:1.4;"></p>
 
       <div id="account-forms">
         <input type="text" id="login-nome" name="login-username" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Conta (username)"
@@ -932,6 +932,56 @@
 
     window.alert = function (msg) { exibirAvisoTemporario(msg); };
 
+    let sessionExpiredBanner = null;
+
+    function triggerSessionExpired(motivo = 'Sua sessão expirou ou foi encerrada.') {
+      if (sessionExpiredBanner) return;
+      const currentToken = localStorage.getItem('authToken');
+      if (!currentToken) {
+        document.getElementById('login-overlay')?.style && (document.getElementById('login-overlay').style.display = 'flex');
+        return;
+      }
+      localStorage.removeItem('authToken');
+      window.currentAccount = null;
+      const div = document.createElement('div');
+      div.className = 'custom-toast-warning';
+      div.style.background = '#8e1d1d';
+      div.style.border = '1px solid #ff8d8d';
+      div.innerHTML = '<strong style="color:#e0aaff; display:block; margin-bottom:4px; font-size:11px; letter-spacing:1px;">SISTEMA</strong>' + (motivo + ' Faça login novamente.');
+      document.body.appendChild(div);
+      sessionExpiredBanner = div;
+      setTimeout(() => {
+        if (div.parentNode) div.remove();
+        sessionExpiredBanner = null;
+      }, 5000);
+      setTimeout(() => {
+        const loginOverlay = document.getElementById('login-overlay');
+        if (loginOverlay) loginOverlay.style.display = 'flex';
+        if (window.location.href.indexOf('?masterView=') !== -1) window.location.href = 'index.html';
+      }, 500);
+    }
+
+    async function fetchWithAuth(url, options = {}) {
+      const token = localStorage.getItem('authToken');
+      const headers = { ...(options.headers || {}) };
+      if (token) headers.Authorization = 'Bearer ' + token;
+      const response = await fetch(url, { ...options, headers });
+      if (response.status === 401 || response.status === 403) {
+        triggerSessionExpired('Sua sessão expirou ou foi encerrada em outra aba.');
+        throw new Error('AUTH_EXPIRED');
+      }
+      return response;
+    }
+
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'authToken' && !localStorage.getItem('authToken')) {
+        window.currentAccount = null;
+        const loginOverlay = document.getElementById('login-overlay');
+        if (loginOverlay) loginOverlay.style.display = 'flex';
+        exibirAvisoTemporario('Sessão alterada em outra aba. Faça login novamente.');
+      }
+    });
+
     async function tentarLogin() {
       const nome = document.getElementById('login-nome').value;
       const senha = document.getElementById('login-senha').value;
@@ -1006,7 +1056,7 @@
         if (res.ok) {
           const data = await res.json();
           localStorage.setItem('authToken', data.token);
-          const me = await fetch(`${API_BASE}/accounts/me`, { headers: { 'Authorization': 'Bearer ' + data.token } });
+          const me = await fetchWithAuth(`${API_BASE}/accounts/me`);
           if (me.ok) {
             const acc = await me.json();
             window.currentAccount = acc;
@@ -1073,11 +1123,14 @@
       const API_BASE = 'https://dandd-chan.onrender.com/api';
       const merged = Object.assign({}, window.currentAccount.preferences || {}, obj || {});
       try {
-        const res = await fetch(`${API_BASE}/accounts/preferences`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ preferences: merged }) });
+        const res = await fetchWithAuth(`${API_BASE}/accounts/preferences`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ preferences: merged }) });
         if (res.ok) {
           window.currentAccount.preferences = merged;
         }
-      } catch (e) { console.warn('Erro ao salvar preferências', e); }
+      } catch (e) {
+        if (e && e.message === 'AUTH_EXPIRED') return;
+        console.warn('Erro ao salvar preferências', e);
+      }
     }
 
     function abrirCriarFichaModal() {
@@ -1106,10 +1159,10 @@
       const token = localStorage.getItem('authToken');
       if (!token || !window.currentAccount) { exibirAvisoTemporario('Conta não autenticada.'); return; }
       try {
-        const res = await fetch(`${API_BASE}/criar-ficha`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ nome, accountUsername: window.currentAccount.username }) });
+        const res = await fetchWithAuth(`${API_BASE}/criar-ficha`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nome, accountUsername: window.currentAccount.username }) });
         if (res.ok) {
           // refresh account
-          const me = await fetch(`${API_BASE}/accounts/me`, { headers: { 'Authorization': 'Bearer ' + token } });
+          const me = await fetchWithAuth(`${API_BASE}/accounts/me`);
           if (me.ok) {
             const acc = await me.json(); window.currentAccount = acc; showAccountCharacters(acc);
             exibirAvisoTemporario('Ficha criada. Selecione-a para abrir.');
@@ -1118,7 +1171,10 @@
           const err = await res.json().catch(() => ({}));
           exibirAvisoTemporario(err.error || 'Erro ao criar personagem.');
         }
-      } catch (e) { exibirAvisoTemporario('Erro de conexão ao criar personagem.'); }
+      } catch (e) {
+        if (e && e.message === 'AUTH_EXPIRED') return;
+        exibirAvisoTemporario('Erro de conexão ao criar personagem.');
+      }
     }
 
     async function selectCharacter(nome) {
@@ -1126,7 +1182,7 @@
       const token = localStorage.getItem('authToken');
       if (!token) { exibirAvisoTemporario('Conta não autenticada.'); return; }
       try {
-        const res = await fetch(`${API_BASE}/load-ficha-account`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ nome }) });
+        const res = await fetchWithAuth(`${API_BASE}/load-ficha-account`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nome }) });
         if (res.ok) {
           const data = await res.json();
           if (typeof state !== 'undefined') {
@@ -1141,7 +1197,10 @@
         } else {
           exibirAvisoTemporario('Erro ao carregar personagem.');
         }
-      } catch (e) { exibirAvisoTemporario('Erro de conexão ao carregar personagem.'); }
+      } catch (e) {
+        if (e && e.message === 'AUTH_EXPIRED') return;
+        exibirAvisoTemporario('Erro de conexão ao carregar personagem.');
+      }
     }
 
     // Support masterView URL param when authToken is present
@@ -1153,9 +1212,9 @@
         // masterView must open a ficha directly using master token, not account ficha flow
         (async () => {
           try {
-            const res = await fetch('https://dandd-chan.onrender.com/api/load-ficha-mestre', {
+            const res = await fetchWithAuth('https://dandd-chan.onrender.com/api/load-ficha-mestre', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+              headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ nome: mv })
             });
             if (res.ok) {
@@ -1175,6 +1234,7 @@
               exibirAvisoTemporario('Erro ao carregar ficha do mestre: ' + (err.error || res.statusText));
             }
           } catch (e) {
+            if (e && e.message === 'AUTH_EXPIRED') return;
             exibirAvisoTemporario('Erro de conexão ao carregar ficha do mestre.');
           }
         })();
