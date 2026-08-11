@@ -67,6 +67,24 @@
       to { opacity: 0; transform: translateX(-50%) scale(0.9); }
     }
 
+    /* Account dashboard cards */
+    .account-grid { display:flex; gap:10px; flex-wrap:wrap; }
+    .account-card { background:linear-gradient(180deg,#0f0f0f,#121212); border:1px solid #222; padding:12px; border-radius:10px; width:180px; box-shadow: 0 6px 20px rgba(0,0,0,0.6); color:#ddd; }
+    .account-card img { width:64px; height:64px; border-radius:8px; object-fit:cover; border:1px solid #333; display:block; margin-bottom:8px; }
+    .account-card h4 { margin:0 0 6px 0; color:#e0aaff; font-size:15px; }
+    .account-card .card-actions { display:flex; gap:8px; margin-top:8px; }
+    .btn-open { flex:1; background:#9c27b0; color:#fff; border:none; padding:6px; border-radius:6px; cursor:pointer; }
+    .btn-edit-account { flex:1; background:#333; color:#fff; border:1px solid #444; padding:6px; border-radius:6px; cursor:pointer; }
+
+    /* Account dashboard cards */
+    .account-grid { display:flex; gap:10px; flex-wrap:wrap; }
+    .account-card { background:linear-gradient(180deg,#0f0f0f,#121212); border:1px solid #222; padding:12px; border-radius:10px; width:180px; box-shadow: 0 6px 20px rgba(0,0,0,0.6); color:#ddd; }
+    .account-card img { width:64px; height:64px; border-radius:8px; object-fit:cover; border:1px solid #333; display:block; margin-bottom:8px; }
+    .account-card h4 { margin:0 0 6px 0; color:#e0aaff; font-size:15px; }
+    .account-card .card-actions { display:flex; gap:8px; margin-top:8px; }
+    .btn-open { flex:1; background:#9c27b0; color:#fff; border:none; padding:6px; border-radius:6px; cursor:pointer; }
+    .btn-edit-account { flex:1; background:#333; color:#fff; border:1px solid #444; padding:6px; border-radius:6px; cursor:pointer; }
+
     /* Link específico para o Mestre voltar ao painel */
     .nav-mestre-link {
       display: none;
@@ -997,17 +1015,24 @@
       const list = document.getElementById('chars-list');
       list.innerHTML = '';
       const chars = acc.characters || [];
+      list.innerHTML = '';
+      const grid = document.createElement('div'); grid.className = 'account-grid';
       if (chars.length === 0) {
         const el = document.createElement('div'); el.style.color = '#aaa'; el.textContent = 'Nenhum personagem. Crie um novo abaixo.'; list.appendChild(el);
       }
       chars.forEach(n => {
-        const btn = document.createElement('button');
-        btn.className = 'btn-add';
-        btn.style = 'text-align:left; background:#222; border:1px solid #444; color:#fff; padding:8px; border-radius:6px;';
-        btn.textContent = n;
-        btn.onclick = () => selectCharacter(n);
-        list.appendChild(btn);
+        const card = document.createElement('div'); card.className = 'account-card';
+        const img = document.createElement('img'); img.src = 'img/imagem-no-site/personagem.png';
+        const h = document.createElement('h4'); h.textContent = n;
+        const desc = document.createElement('div'); desc.style = 'font-size:12px; color:#bbb; min-height:32px;'; desc.textContent = 'Abra para editar ou jogar.';
+        const actions = document.createElement('div'); actions.className = 'card-actions';
+        const openBtn = document.createElement('button'); openBtn.className = 'btn-open'; openBtn.textContent = 'Abrir'; openBtn.onclick = () => selectCharacter(n);
+        const editBtn = document.createElement('button'); editBtn.className = 'btn-edit-account'; editBtn.textContent = 'Editar (Mestre)'; editBtn.onclick = () => window.open(`mestre.html?open=${encodeURIComponent(n)}`,'_blank');
+        actions.appendChild(openBtn); actions.appendChild(editBtn);
+        card.appendChild(img); card.appendChild(h); card.appendChild(desc); card.appendChild(actions);
+        grid.appendChild(card);
       });
+      list.appendChild(grid);
       // Apply preferences if any
       const prefs = (acc && acc.preferences) ? acc.preferences : {};
       if (prefs.lastActiveTab && typeof setActiveTab === 'function') setActiveTab(prefs.lastActiveTab);
