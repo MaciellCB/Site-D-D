@@ -1245,6 +1245,20 @@
             list.innerHTML = '';
             if (!token) { list.innerHTML = '<div style="color:#999; padding:10px;">Faça login como master para ver contas ou crie uma conta abaixo.</div>'; accountSelectionCallback = null; return; }
             try {
+                const meRes = await fetchComAuth(`${API_URL}/accounts/me`, { headers: { 'Content-Type': 'application/json' } });
+                if (!meRes.ok) {
+                    const d = await meRes.json().catch(()=>({}));
+                    const msg = d.error || (meRes.statusText || 'Erro ao verificar conta.');
+                    mostrarAviso('Erro: ' + msg);
+                    return;
+                }
+                const me = await meRes.json();
+                if (!me.isMaster) {
+                    list.innerHTML = '<div style="color:#ffb3b3; padding:10px;">Esta conta não tem permissão de mestre para gerenciar contas.</div>';
+                    accountSelectionCallback = null;
+                    return;
+                }
+
                 const res = await fetchComAuth(`${API_URL}/accounts/list`, { headers: { 'Content-Type': 'application/json' } });
                 if (!res.ok) {
                     accountSelectionCallback = null;
@@ -1301,16 +1315,32 @@
                 try {
                     const res = await fetch(`${API_URL}/accounts/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password, isMaster }) });
                     if (res.ok) {
-                        mostrarAviso('Conta criada. Fazendo login...');
                         document.getElementById('admin-create-username').value=''; document.getElementById('admin-create-password').value='';
-                        // attempt automatic login
-                        try {
-                            const r2 = await fetch(`${API_URL}/accounts/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
-                            if (r2.ok) { const data = await r2.json(); localStorage.setItem('authToken', data.token); mostrarAviso('Logado como ' + username); loadAccountsRefresh(); }
-                            else { loadAccountsRefresh(); }
-                        } catch(e) { loadAccountsRefresh(); }
-                    } else { const d = await res.json().catch(()=>({})); mostrarAviso('Erro: '+(d.error||'Não foi possível criar.')); }
-                } catch (e) { mostrarAviso('Erro de conexão.'); }
+
+                        const currentToken = localStorage.getItem('authToken');
+                        if (currentToken) {
+                            try {
+                                const meRes = await fetchComAuth(`${API_URL}/accounts/me`, { headers: { 'Content-Type': 'application/json' } });
+                                if (meRes.ok) {
+                                    const me = await meRes.json();
+                                    if (me.isMaster) {
+                                        mostrarAviso('Conta criada com sucesso.');
+                                        await loadAccountsRefresh();
+                                        return;
+                                    }
+                                }
+                            } catch (e) {}
+                        }
+
+                        // If the current session is not master, do not trigger the admin list refresh
+                        mostrarAviso('Conta criada com sucesso. Faça login com ela para entrar.');
+                        return;
+                    }
+                    const d = await res.json().catch(()=>({}));
+                    mostrarAviso('Erro: '+(d.error||'Não foi possível criar.'));
+                } catch (e) {
+                    mostrarAviso('Erro de conexão.');
+                }
             }
 
             async function abrirModalEditarConta(username) {

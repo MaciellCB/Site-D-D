@@ -331,20 +331,22 @@
       try {
         const res = await fetch(`${API_BASE}/accounts/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
         if (res.ok) {
-          const data = await res.json();
-          localStorage.setItem('authToken', data.token);
-          const me = await fetchWithAuth(`${API_BASE}/accounts/me`);
-          if (me.ok) {
-            const acc = await me.json();
-            window.currentAccount = acc;
-            showAccountCharacters(acc);
-            exibirAvisoTemporario('Conta criada com sucesso.');
+          if (usrEl) usrEl.value = '';
+          if (pwdEl) pwdEl.value = '';
+
+          const currentToken = localStorage.getItem('authToken');
+          if (currentToken && window.currentAccount) {
+            exibirAvisoTemporario('Conta criada com sucesso. Você continua na conta atual. Faça login manualmente para entrar nela.');
             return;
           }
-        } else {
-          const err = await res.json().catch(() => ({}));
-          exibirAvisoTemporario(err.error || 'Erro ao criar conta.');
+
+          exibirAvisoTemporario('Conta criada com sucesso. Faça login para entrar nela.');
+          showLoginOverlay();
+          return;
         }
+
+        const err = await res.json().catch(() => ({}));
+        exibirAvisoTemporario(err.error || 'Erro ao criar conta.');
       } catch (e) { exibirAvisoTemporario('Erro de conexão ao criar conta.'); }
     }
 
