@@ -615,9 +615,9 @@
       <p style="color:#bbb; font-size:13px; margin-bottom:14px; line-height:1.4;">Cada conta pode ter várias fichas. Faça login na conta e então escolha a ficha que deseja abrir.</p>
 
       <div id="account-forms">
-        <input type="text" id="login-nome" placeholder="Conta (username)"
+        <input type="text" id="login-nome" name="login-username" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Conta (username)"
           style="width:100%; padding:10px; margin-bottom:8px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
-        <input type="password" id="login-senha" placeholder="Senha"
+        <input type="password" id="login-senha" name="login-password" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Senha"
           style="width:100%; padding:10px; margin-bottom:12px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
         <div style="display:flex; gap:8px;">
           <button id="btn-account-login" onclick="tentarLogin()"
@@ -631,6 +631,17 @@
         <div style="display:flex; gap:8px; margin-top:12px;">
           <button onclick="criarPersonagemPrompt()" class="btn-add" style="flex:1; background:#222; border:1px solid #444;">+ Nova Ficha</button>
           <button onclick="logoutAccount()" class="btn-add" style="flex:1; background:#441111; border:1px solid #662222;">Sair</button>
+        </div>
+      </div>
+
+      <div id="criar-ficha-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:100001; align-items:center; justify-content:center;">
+        <div style="background:#1a1a1a; padding:24px; border-radius:12px; border:2px solid #9c27b0; width:360px; max-width:92%; text-align:center;">
+          <h3 style="margin:0 0 12px; color:#fff;">Nova Ficha</h3>
+          <input id="novo-nome-ficha" type="text" placeholder="Nome da ficha" style="width:100%; padding:10px; margin-bottom:12px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
+          <div style="display:flex; gap:8px; justify-content:center;">
+            <button onclick="fecharCriarFichaModal()" class="btn-add" style="flex:1; background:#333; border:1px solid #444;">Cancelar</button>
+            <button onclick="criarPersonagemConfirm()" class="btn-add" style="flex:1; background:#9c27b0; border:none; color:#fff;">Criar</button>
+          </div>
         </div>
       </div>
 
@@ -927,59 +938,43 @@
       const API_BASE = 'https://dandd-chan.onrender.com/api';
 
       if (!nome || !senha) { exibirAvisoTemporario('Preencha todos os campos!'); return; }
-
-      if (nome.toLowerCase() === 'mestre') {
-        // Authenticate master via accounts API
-        const newWindow = window.open('', '_blank');
-        try {
-          const res = await fetch(`${API_BASE}/accounts/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: nome, password: senha }) });
-          if (res.ok) {
-            const data = await res.json();
-            localStorage.setItem('authToken', data.token);
-            if (newWindow) {
-              newWindow.location = 'mestre.html';
-            } else {
-              window.location.href = 'mestre.html';
-            }
-            document.getElementById('login-nome').value = '';
-            document.getElementById('login-senha').value = '';
-            exibirAvisoTemporario('Painel do Mestre aberto.');
-            return;
-          } else {
-            if (newWindow) newWindow.close();
-            exibirAvisoTemporario('Credenciais do Mestre inválidas.');
-            return;
-          }
-        } catch (e) {
-          if (newWindow) newWindow.close();
-          exibirAvisoTemporario('Erro de conexão ao autenticar Mestre.');
-          return;
-        }
-      }
-
-      // Try account login
+      const masterWindow = window.open('', '_blank');
       try {
         const res = await fetch(`${API_BASE}/accounts/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: nome, password: senha }) });
-        if (res.ok) {
-          const data = await res.json();
-          localStorage.setItem('authToken', data.token);
-          const me = await fetch(`${API_BASE}/accounts/me`, { headers: { 'Authorization': 'Bearer ' + data.token } });
-          if (me.ok) {
-            const acc = await me.json();
-            window.currentAccount = acc;
-            if (acc.isMaster) {
-              window.open('mestre.html', '_blank');
-              document.getElementById('login-nome').value = '';
-              document.getElementById('login-senha').value = '';
-              exibirAvisoTemporario('Painel do Mestre aberto em nova aba.');
-              return;
-            }
-            showAccountCharacters(acc);
-            return;
-          }
+        if (!res.ok) {
+          if (masterWindow) masterWindow.close();
+          const err = await res.json().catch(() => ({}));
+          exibirAvisoTemporario(err.error === 'Invalid' ? 'Credenciais inválidas.' : 'Erro ao autenticar.');
+          return;
         }
+        const data = await res.json();
+        localStorage.setItem('authToken', data.token);
+        const me = await fetch(`${API_BASE}/accounts/me`, { headers: { 'Authorization': 'Bearer ' + data.token } });
+        if (!me.ok) {
+          if (masterWindow) masterWindow.close();
+          exibirAvisoTemporario('Erro ao carregar a conta.');
+          return;
+        }
+        const acc = await me.json();
+        window.currentAccount = acc;
+        if (acc.isMaster) {
+          if (masterWindow) {
+            masterWindow.location = 'mestre.html';
+          } else {
+            window.location.href = 'mestre.html';
+          }
+          document.getElementById('login-nome').value = '';
+          document.getElementById('login-senha').value = '';
+          exibirAvisoTemporario('Painel do Mestre aberto.');
+          return;
+        }
+        if (masterWindow) masterWindow.close();
+        showAccountCharacters(acc);
+        return;
       } catch (e) {
-        console.warn('Account login failed', e);
+        if (masterWindow) masterWindow.close();
+        exibirAvisoTemporario('Erro de conexão ao autenticar.');
+        return;
       }
 
       // Fallback: legacy character login by name/password
@@ -1085,10 +1080,25 @@
       } catch (e) { console.warn('Erro ao salvar preferências', e); }
     }
 
+    function abrirCriarFichaModal() {
+      document.getElementById('novo-nome-ficha').value = '';
+      document.getElementById('criar-ficha-modal').style.display = 'flex';
+      document.getElementById('novo-nome-ficha').focus();
+    }
+
+    function fecharCriarFichaModal() {
+      document.getElementById('criar-ficha-modal').style.display = 'none';
+    }
+
     async function criarPersonagemPrompt() {
-      const nome = prompt('Nome do novo personagem:');
-      if (!nome) return;
-      await criarPersonagem(nome.trim());
+      abrirCriarFichaModal();
+    }
+
+    async function criarPersonagemConfirm() {
+      const nome = document.getElementById('novo-nome-ficha').value.trim();
+      if (!nome) return exibirAvisoTemporario('Digite o nome da ficha.');
+      await criarPersonagem(nome);
+      fecharCriarFichaModal();
     }
 
     async function criarPersonagem(nome) {
@@ -1102,7 +1112,7 @@
           const me = await fetch(`${API_BASE}/accounts/me`, { headers: { 'Authorization': 'Bearer ' + token } });
           if (me.ok) {
             const acc = await me.json(); window.currentAccount = acc; showAccountCharacters(acc);
-            exibirAvisoTemporario('Personagem criado. Selecione-o para abrir.');
+            exibirAvisoTemporario('Ficha criada. Selecione-a para abrir.');
           }
         } else {
           const err = await res.json().catch(() => ({}));

@@ -220,6 +220,14 @@ app.get('/api/accounts/me', authenticateToken, async (req, res) => {
     try {
         const acc = await Account.findById(req.account.id).lean();
         if (!acc) return res.status(404).json({ error: 'Not found' });
+
+        // Ensure the account always returns current linked fichas.
+        if (!acc.characters || acc.characters.length === 0) {
+            const chars = await Ficha.find({ accountUsername: { $regex: new RegExp(`^${acc.username}$`, 'i') } }, 'nome').lean();
+            acc.characters = chars.map(c => c.nome);
+            await Account.findByIdAndUpdate(acc._id, { $set: { characters: acc.characters } });
+        }
+
         delete acc.passwordHash;
         res.json(acc);
     } catch (e) { res.status(500).json({ error: 'Error' }); }
