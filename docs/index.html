@@ -1092,6 +1092,22 @@
       } catch (e) { exibirAvisoTemporario('Erro de conexão ao carregar personagem.'); }
     }
 
+    // Support masterView URL param when authToken is present
+    (function checkMasterView() {
+      const url = new URL(window.location.href);
+      const mv = url.searchParams.get('masterView');
+      const token = localStorage.getItem('authToken');
+      if (mv && token) {
+        // ensure account loaded then select
+        (async () => {
+          try {
+            const me = await fetch('https://dandd-chan.onrender.com/api/accounts/me', { headers: { 'Authorization': 'Bearer ' + token } });
+            if (me.ok) { window.currentAccount = await me.json(); showAccountCharacters(window.currentAccount); selectCharacter(mv); }
+          } catch (e) {}
+        })();
+      }
+    })();
+
     function logoutAccount() {
       localStorage.removeItem('authToken');
       window.currentAccount = null;

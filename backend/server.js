@@ -252,6 +252,40 @@ app.post('/api/accounts/admin/update', authenticateToken, async (req, res) => {
     } catch (e) { res.status(500).json({ error: 'Error' }); }
 });
 
+// Edit account credentials (username and/or password) - master only
+app.post('/api/accounts/admin/edit', authenticateToken, async (req, res) => {
+    try {
+        if (!req.account.isMaster) return res.status(403).json({ error: 'Forbidden' });
+        const { username, newUsername, newPassword } = req.body;
+        if (!username) return res.status(400).json({ error: 'Missing username' });
+        const acc = await Account.findOne({ username: { $regex: new RegExp(`^${username}$`, 'i') } });
+        if (!acc) return res.status(404).json({ error: 'Account not found' });
+        // If changing username, ensure uniqueness
+        if (newUsername && newUsername.toLowerCase() !== acc.username.toLowerCase()) {
+            const exists = await Account.findOne({ username: { $regex: new RegExp(`^${newUsername}$`, 'i') } });
+            if (exists) return res.status(400).json({ error: 'Username already exists' });
+        }
+        const prevUsername = acc.username;
+        if (newPassword) {
+            const hash = await bcrypt.hash(newPassword, 10);
+            acc.passwordHash = hash;
+        }
+        if (newUsername) acc.username = newUsername;
+        await acc.save();
+        // If username changed, update all fichas.accountUsername and account.characters sets
+        if (newUsername && newUsername.toLowerCase() !== prevUsername.toLowerCase()) {
+            await Ficha.updateMany({ accountUsername: { $regex: new RegExp(`^${prevUsername}$`, 'i') } }, { $set: { accountUsername: newUsername } });
+            // Move characters array if needed
+            await Account.updateMany({ username: { $regex: new RegExp(`^${prevUsername}$`, 'i') } }, { $unset: { characters: 1 } });
+            // Ensure target account has character refs (recompute from fichas)
+            const chars = await Ficha.find({ accountUsername: newUsername }, 'nome').lean();
+            await Account.findOneAndUpdate({ username: newUsername }, { $set: { characters: chars.map(c => c.nome) } });
+        }
+        await auditLog(req.account, { ip: req.ip }, 'edit_account', acc.username, { previous: prevUsername });
+        res.json({ ok: true });
+    } catch (e) { res.status(500).json({ error: 'Error' }); }
+});
+
 app.post('/api/accounts/admin/delete', authenticateToken, async (req, res) => {
     try {
         if (!req.account.isMaster) return res.status(403).json({ error: 'Forbidden' });

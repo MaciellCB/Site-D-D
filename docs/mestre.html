@@ -331,6 +331,23 @@
     <div id="area-trabalho">
         <p style="color:#666; margin:auto;">Carregando sistema...</p>
     </div>
+    <!-- Edit Account Modal -->
+    <div id="modal-edit-account" class="modal-overlay" style="display:none;">
+        <div class="modal-box" style="border-color:#2196F3; width:560px;">
+            <h3 class="modal-titulo" style="color:#2196F3;">Editar Conta</h3>
+            <p style="color:#aaa; font-size:0.9em; margin-bottom:5px;">Alterar acesso de: <strong id="modal-edit-account-name" style="color:white;"></strong></p>
+            <label style="color:#bbb; display:block; text-align:left; margin-bottom:5px;">Novo Nome:</label>
+            <input type="text" id="edit-account-username" class="modal-input" placeholder="Novo Nome">
+            <label style="color:#bbb; display:block; text-align:left; margin-bottom:5px;">Nova Senha:</label>
+            <input type="password" id="edit-account-password" class="modal-input" placeholder="Nova Senha">
+            <div style="margin-top:10px; color:#ccc;">Fichas vinculadas:</div>
+            <div id="edit-account-linked" style="max-height:160px; overflow:auto; padding:8px; background:#0b0b0b; border:1px solid #1b1b1b; border-radius:6px; margin-top:8px; color:#ddd"></div>
+            <div class="modal-buttons" style="margin-top:12px;">
+                <button class="btn-modal btn-cancelar" onclick="document.getElementById('modal-edit-account').style.display='none'">Cancelar</button>
+                <button class="btn-modal btn-confirmar" onclick="confirmarEdicaoConta()">Salvar</button>
+            </div>
+        </div>
+    </div>
 
     <button class="btn-nova-pasta" onclick="abrirModalNovaPasta()" title="Criar Nova Pasta">+</button>
 
@@ -367,13 +384,12 @@
             <p style="color:#aaa; font-size:0.9em; margin-bottom:15px;">
                 Alterar acesso de: <strong id="nome-antigo-display" style="color:white;"></strong>
             </p>
-            <label style="color: #bbb; display:block; text-align:left; margin-bottom:5px;">Novo Nome:</label>
-            <input type="text" id="edit-nome" class="modal-input" placeholder="Novo Nome" autocomplete="off">
-            <label style="color: #bbb; display:block; text-align:left; margin-bottom:5px;">Nova Senha:</label>
-            <input type="text" id="edit-senha" class="modal-input" placeholder="Nova Senha" autocomplete="off">
-            <div class="modal-buttons">
-                <button class="btn-modal btn-cancelar" onclick="fecharModalEditar()">Cancelar</button>
-                <button class="btn-modal btn-confirmar" style="background:#2196F3;" onclick="confirmarEdicao()">Salvar</button>
+            <div style="color:#ddd; margin-bottom:8px;">Conta vinculada:</div>
+            <div id="edit-linked-account" style="background:#0b0b0b; padding:8px; border-radius:6px; border:1px solid #1b1b1b; color:#ddd; margin-bottom:8px;">-</div>
+            <div style="display:flex; gap:8px;">
+                <button class="btn-modal btn-cancelar" onclick="fecharModalEditar()">Fechar</button>
+                <button class="btn-modal btn-confirmar" onclick="vincularContaModal()">Vincular Conta</button>
+                <button class="btn-modal btn-perigo" onclick="desvincularConta()">Desvincular</button>
             </div>
         </div>
     </div>
@@ -989,42 +1005,50 @@
         async function abrirModalEditar(e, nome) {
             e.stopPropagation();
             nomeEdicaoPendente = nome;
-            let senhaAtual = "";
             try {
                 const token = localStorage.getItem('authToken');
-                const res = await fetch(`${API_URL}/load-ficha-mestre`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-                    body: JSON.stringify({ nome: nome })
-                });
-                if (res.ok) { const d = await res.json(); senhaAtual = d.senha || ""; }
-            } catch (e) { }
-            document.getElementById('nome-antigo-display').innerText = nome;
-            document.getElementById('edit-nome').value = nome;
-            document.getElementById('edit-senha').value = senhaAtual;
-            document.getElementById('modal-editar').style.display = 'flex';
+                const headers = { 'Content-Type': 'application/json' };
+                if (token) headers['Authorization'] = 'Bearer ' + token;
+                const res = await fetch(`${API_URL}/load-ficha-mestre`, { method: 'POST', headers, body: JSON.stringify({ nome: nome }) });
+                if (res.ok) {
+                    const d = await res.json();
+                    document.getElementById('nome-antigo-display').innerText = nome;
+                    document.getElementById('edit-linked-account').innerText = d.accountUsername || '-';
+                    document.getElementById('modal-editar').style.display = 'flex';
+                } else {
+                    mostrarAviso('Erro ao obter ficha.');
+                }
+            } catch (e) { mostrarAviso('Erro conexão'); }
         }
+
         function fecharModalEditar() { document.getElementById('modal-editar').style.display = 'none'; }
 
-        async function confirmarEdicao() {
-            const novoNome = document.getElementById('edit-nome').value.trim();
-            const novaSenha = document.getElementById('edit-senha').value.trim();
-            if (!novoNome || !novaSenha) return mostrarAviso("Preencha tudo.");
-
+        async function desvincularConta() {
+            if (!nomeEdicaoPendente) return;
+            if (!confirm('Deseja desvincular a conta desta ficha?')) return;
             try {
                 const token = localStorage.getItem('authToken');
-                const res = await fetch(`${API_URL}/editar-credenciais`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-                    body: JSON.stringify({ nomeAntigo: nomeEdicaoPendente, novoNome, novaSenha })
-                });
-                if (res.ok) {
-                    mostrarAviso("Atualizado!");
-                    fecharModalEditar();
-                    carregarLista();
-                } else {
-                    const d = await res.json();
-                    mostrarAviso("Erro: " + d.error);
-                }
-            } catch (e) { mostrarAviso("Erro conexao"); }
+                if (!token) { mostrarAviso('Autenticação necessária.'); return; }
+                const resSave = await fetch(`${API_URL}/save-ficha`, { method: 'POST', headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token }, body: JSON.stringify({ nome: nomeEdicaoPendente, accountUsername: '' }) });
+                if (resSave.ok) { mostrarAviso('Desvinculado.'); document.getElementById('modal-editar').style.display='none'; }
+                else { mostrarAviso('Erro ao desvincular.'); }
+            } catch (e) { mostrarAviso('Erro conexao'); }
+        }
+
+        function vincularContaModal() {
+            const user = prompt('Nome de usuário para vincular:');
+            if (!user) return;
+            vincularConta(nomeEdicaoPendente, user);
+        }
+
+        async function vincularConta(nome, user) {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) { mostrarAviso('Autenticação necessária.'); return; }
+                const res = await fetch(`${API_URL}/save-ficha`, { method: 'POST', headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token }, body: JSON.stringify({ nome, accountUsername: user }) });
+                if (res.ok) { mostrarAviso('Vinculado a ' + user); document.getElementById('modal-editar').style.display='none'; }
+                else { const d = await res.json().catch(()=>({})); mostrarAviso('Erro: '+(d.error||'Não foi possível vincular.')); }
+            } catch (e) { mostrarAviso('Erro conexão'); }
         }
 
         async function carregarFotoIndividual(nome, imgId) {
@@ -1078,11 +1102,14 @@
                 const list = document.getElementById('admin-accounts-list');
                 list.innerHTML = '';
                 accounts.forEach(acc => {
+                    // hide default master account from front listing
+                    if ((acc.username||'').toLowerCase() === 'mestre') return;
                     const row = document.createElement('div');
                     row.className = 'account-row';
                     const left = document.createElement('div'); left.className = 'account-left';
                     left.innerHTML = `<div class="username">${acc.username}</div><div style="font-size:12px; color:#999;">${(acc.characters||[]).join(', ')}</div>`;
                     const right = document.createElement('div'); right.className = 'account-right';
+                    const editBtn = document.createElement('button'); editBtn.className = 'account-btn'; editBtn.textContent = 'Editar'; editBtn.onclick = () => abrirModalEditarConta(acc.username);
                     const toggle = document.createElement('button'); toggle.className = 'account-btn'; if (acc.isMaster) toggle.classList.add('master'); toggle.textContent = acc.isMaster ? 'Master ✅' : 'Tornar Master';
                     toggle.onclick = async () => {
                         const t = !acc.isMaster;
@@ -1097,7 +1124,7 @@
                         if (r.ok) { row.remove(); mostrarAviso('Deletado'); }
                         else { const dd = await r.json().catch(()=>({})); mostrarAviso('Erro: ' + (dd.error||'Erro ao deletar.')); }
                     };
-                    right.appendChild(toggle); right.appendChild(del);
+                    right.appendChild(editBtn); right.appendChild(toggle); right.appendChild(del);
                     row.appendChild(left); row.appendChild(right);
                     list.appendChild(row);
                 });
@@ -1122,6 +1149,39 @@
                             else { loadAccountsRefresh(); }
                         } catch(e) { loadAccountsRefresh(); }
                     } else { const d = await res.json().catch(()=>({})); mostrarAviso('Erro: '+(d.error||'Não foi possível criar.')); }
+                } catch (e) { mostrarAviso('Erro de conexão.'); }
+            }
+
+            async function abrirModalEditarConta(username) {
+                // fetch account details from server (must be master)
+                try {
+                    const token = localStorage.getItem('authToken');
+                    if (!token) { mostrarAviso('Autenticação necessária.'); return; }
+                    const res = await fetch(`${API_URL}/accounts/list`, { headers: { 'Authorization': 'Bearer ' + token } });
+                    if (!res.ok) { mostrarAviso('Erro ao buscar contas.'); return; }
+                    const accounts = await res.json();
+                    const acc = accounts.find(a => (a.username||'').toLowerCase() === (username||'').toLowerCase());
+                    if (!acc) { mostrarAviso('Conta não encontrada.'); return; }
+                    // populate modal fields
+                    document.getElementById('modal-edit-account-name').innerText = acc.username;
+                    document.getElementById('edit-account-username').value = acc.username;
+                    document.getElementById('edit-account-password').value = '';
+                    const list = document.getElementById('edit-account-linked'); list.innerHTML = '';
+                    (acc.characters || []).forEach(n => { const li = document.createElement('div'); li.style = 'color:#ddd; padding:6px 0;'; li.textContent = n; list.appendChild(li); });
+                    document.getElementById('modal-edit-account').style.display = 'flex';
+                } catch (e) { mostrarAviso('Erro de conexão.'); }
+            }
+
+            async function confirmarEdicaoConta() {
+                const original = document.getElementById('modal-edit-account-name').innerText;
+                const novo = document.getElementById('edit-account-username').value.trim();
+                const senha = document.getElementById('edit-account-password').value.trim();
+                if (!original) return;
+                try {
+                    const token = localStorage.getItem('authToken');
+                    const res = await fetch(`${API_URL}/accounts/admin/edit`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ username: original, newUsername: novo || undefined, newPassword: senha || undefined }) });
+                    if (res.ok) { mostrarAviso('Conta atualizada.'); document.getElementById('modal-edit-account').style.display = 'none'; loadAccountsRefresh(); }
+                    else { const d = await res.json().catch(()=>({})); mostrarAviso('Erro: ' + (d.error||'Não foi possível atualizar.')); }
                 } catch (e) { mostrarAviso('Erro de conexão.'); }
             }
 

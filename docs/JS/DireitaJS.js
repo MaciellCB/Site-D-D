@@ -110,6 +110,35 @@ async function carregarDadosIniciais(nome, senha) {
 
     if (response.ok) {
       const data = await response.json();
+      // If ficha is not linked to an account, offer to link/create
+      if (!data.accountUsername) {
+        const wants = confirm('Esta ficha não está vinculada a uma conta. Deseja criar/vincular uma conta agora?');
+        if (wants) {
+          const user = prompt('Nome de usuário para a nova conta (ou existente):', nome);
+          const pass = prompt('Senha para a conta:');
+          if (user && pass) {
+            try {
+              // Try to register; if exists, try to login
+              const r = await fetch(`${API_URL}/accounts/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: user, password: pass }) });
+              if (r.ok) {
+                const d = await r.json(); localStorage.setItem('authToken', d.token);
+              } else {
+                // try login
+                const r2 = await fetch(`${API_URL}/accounts/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: user, password: pass }) });
+                if (r2.ok) { const d = await r2.json(); localStorage.setItem('authToken', d.token); }
+                else { alert('Não foi possível criar ou logar na conta.'); }
+              }
+              // Now update ficha to set accountUsername
+              const token = localStorage.getItem('authToken');
+              if (token) {
+                const save = Object.assign({}, data, { accountUsername: user });
+                await fetch(`${API_URL}/save-ficha`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify(save) });
+                data.accountUsername = user;
+              }
+            } catch (e) { console.warn(e); }
+          }
+        }
+      }
       Object.assign(state, data);
 
       // Se por acaso ainda estiver vazio (internet lenta ou erro anterior), tenta de novo
