@@ -43,6 +43,18 @@
             color: #9c27b0;
         }
 
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+        .logo-icon:hover {
+            border-color: #9c27b0;
+        }
+
         .perfil-img {
             width: 40px;
             height: 40px;
@@ -321,9 +333,12 @@
 
     <header>
         <nav class="navbar">
-            <div class="nav-links">
-                <a href="#" onclick="mostrarAviso('Você já está no painel.')">Personagem</a>
-                <a href="#" class="active">Painel do Mestre</a>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <img src="img/imagem-no-site/logo.png" alt="Voltar para login" class="logo-icon" title="Voltar para login" onclick="returnToLogin()" />
+                <div class="nav-links">
+                    <a href="#" onclick="mostrarAviso('Você já está no painel.')">Personagem</a>
+                    <a href="#" class="active">Painel do Mestre</a>
+                </div>
             </div>
             <img src="img/imagem-no-site/perfil.png" alt="perfil" class="perfil-img" />
         </nav>
@@ -1117,6 +1132,11 @@
 
         function abrirFichaDoJogador(nome) {
             window.open(`index.html?masterView=${nome}`, '_blank');
+        }
+
+        function returnToLogin() {
+            localStorage.removeItem('authToken');
+            window.location.href = 'index.html';
         }
 
         function mostrarAviso(msg) {
