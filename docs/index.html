@@ -1184,9 +1184,15 @@
     function logoutAccount() {
       localStorage.removeItem('authToken');
       window.currentAccount = null;
-      document.getElementById('account-characters').style.display = 'none';
-      document.getElementById('register-box').style.display = 'none';
-      document.getElementById('account-forms').style.display = 'block';
+      if (window.location.href.indexOf('?masterView=') !== -1) {
+        window.location.href = 'index.html';
+      } else {
+        document.getElementById('account-characters').style.display = 'none';
+        document.getElementById('register-box').style.display = 'none';
+        document.getElementById('account-forms').style.display = 'block';
+        const loginOverlay = document.getElementById('login-overlay');
+        if (loginOverlay) loginOverlay.style.display = 'flex';
+      }
     }
 
   /* =================================================================
