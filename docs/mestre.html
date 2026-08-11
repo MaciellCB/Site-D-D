@@ -219,7 +219,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.85);
-            z-index: 100000;
+            z-index: 110000;
             justify-content: center;
             align-items: center;
             backdrop-filter: blur(3px);
@@ -231,7 +231,8 @@
             border-radius: 10px;
             padding: 30px;
             width: 90%;
-            max-width: 400px;
+            max-width: 760px;
+            min-width: 520px;
             text-align: center;
             box-shadow: 0 0 20px rgba(156, 39, 176, 0.2);
             animation: slideDown 0.3s ease;
@@ -379,16 +380,27 @@
     </div>
 
     <div id="modal-editar" class="modal-overlay">
-        <div class="modal-box" style="border-color: #2196F3;">
-            <h3 class="modal-titulo" style="color: #2196F3;">Editar Conta</h3>
-            <p style="color:#aaa; font-size:0.9em; margin-bottom:15px;">
-                Alterar acesso de: <strong id="nome-antigo-display" style="color:white;"></strong>
-            </p>
-            <div style="color:#ddd; margin-bottom:8px;">Conta vinculada:</div>
-            <div id="edit-linked-account" style="background:#0b0b0b; padding:8px; border-radius:6px; border:1px solid #1b1b1b; color:#ddd; margin-bottom:12px;">-</div>
-            <div style="display:flex; gap:10px; justify-content:center;">
-                <button class="btn-modal btn-cancelar" onclick="fecharModalEditar()">Fechar</button>
-                <button class="btn-modal btn-confirmar" onclick="abrirCriarContaFromFicha()">Criar Nova Conta</button>
+            <div class="modal-box" style="border-color: #2196F3; width:860px; max-width:95%;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:16px;">
+                    <div>
+                        <h3 class="modal-titulo" style="color: #2196F3; margin:0;">Editar Ficha</h3>
+                        <p style="color:#aaa; font-size:0.9em; margin-top:6px;">Alterar dados de: <strong id="nome-antigo-display" style="color:white;"></strong></p>
+                    </div>
+                    <button class="btn-modal btn-cancelar" style="padding:8px 14px; height:auto;" onclick="fecharModalEditar()">Cancelar</button>
+                </div>
+                <div style="display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin-bottom:16px;">
+                    <div style="flex:1; min-width:240px; text-align:left;">
+                        <label style="color:#bbb; display:block; margin-bottom:5px;">Novo nome da ficha:</label>
+                        <input type="text" id="edit-ficha-nome" class="modal-input" placeholder="Novo nome da ficha">
+                    </div>
+                    <div style="flex:1; min-width:240px; text-align:left;">
+                        <div style="color:#ddd; margin-bottom:8px;">Conta vinculada:</div>
+                        <div id="edit-linked-account" style="background:#0b0b0b; padding:12px; min-height:44px; border-radius:6px; border:1px solid #1b1b1b; color:#ddd;">-</div>
+                    </div>
+                </div>
+                <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:10px;">
+                <button class="btn-modal btn-confirmar" onclick="salvarEdicaoFicha()">Salvar Alterações</button>
+                <button class="btn-modal" style="background:#444; color:#fff;" onclick="abrirCriarContaFromFicha()">Criar Nova Conta</button>
                 <button class="btn-modal" style="background:#444; color:#fff;" onclick="openAccountSelector((u)=>vincularConta(nomeEdicaoPendente,u))">Vincular Existente</button>
                 <button class="btn-modal btn-perigo" onclick="desvincularConta()">Desvincular</button>
             </div>
@@ -1014,6 +1026,7 @@
                 if (res.ok) {
                     const d = await res.json();
                     document.getElementById('nome-antigo-display').innerText = nome;
+                    document.getElementById('edit-ficha-nome').value = d.nome || nome;
                     document.getElementById('edit-linked-account').innerText = d.accountUsername || '-';
                     document.getElementById('modal-editar').style.display = 'flex';
                 } else {
@@ -1022,7 +1035,12 @@
             } catch (e) { mostrarAviso('Erro conexão'); }
         }
 
-        function fecharModalEditar() { document.getElementById('modal-editar').style.display = 'none'; }
+        function fecharModalEditar() {
+            document.getElementById('modal-editar').style.display = 'none';
+            document.getElementById('edit-ficha-nome').value = '';
+            document.getElementById('edit-linked-account').innerText = '-';
+            nomeEdicaoPendente = null;
+        }
 
         async function desvincularConta() {
             if (!nomeEdicaoPendente) return;
@@ -1037,10 +1055,27 @@
         }
 
         function vincularContaModal() {
-            // Open account selector and link chosen account to the pending ficha
             openAccountSelector((username) => {
                 vincularConta(nomeEdicaoPendente, username);
             });
+        }
+
+        async function salvarEdicaoFicha() {
+            const novoNome = document.getElementById('edit-ficha-nome').value.trim();
+            if (!nomeEdicaoPendente || !novoNome) return mostrarAviso('Digite o novo nome da ficha.');
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) { mostrarAviso('Autenticação necessária.'); return; }
+                const res = await fetch(`${API_URL}/editar-credenciais`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ nomeAntigo: nomeEdicaoPendente, novoNome, novaSenha: '' }) });
+                if (res.ok) {
+                    mostrarAviso('Nome da ficha atualizado.');
+                    document.getElementById('modal-editar').style.display='none';
+                    carregarLista();
+                } else {
+                    const d = await res.json().catch(() => ({}));
+                    mostrarAviso('Erro: ' + (d.error || 'Não foi possível salvar.'));
+                }
+            } catch (e) { mostrarAviso('Erro conexão'); }
         }
 
         async function vincularConta(nome, user) {
@@ -1055,6 +1090,7 @@
 
         function abrirCriarContaFromFicha() {
             document.getElementById('modal-editar').style.display = 'none';
+            accountSelectionCallback = null;
             document.getElementById('admin-accounts-modal').style.display = 'flex';
             setTimeout(()=>{ document.getElementById('admin-create-username').focus(); },120);
         }
@@ -1095,28 +1131,38 @@
         let accountSelectionCallback = null;
 
         async function openAccountSelector(callback) {
-            accountSelectionCallback = callback;
+            accountSelectionCallback = typeof callback === 'function' ? callback : null;
             document.getElementById('modal-editar').style.display = 'none';
             await openAdminAccounts();
         }
 
+        function closeAdminAccounts() {
+            document.getElementById('admin-accounts-modal').style.display = 'none';
+            accountSelectionCallback = null;
+        }
+
         async function openAdminAccounts() {
             const token = localStorage.getItem('authToken');
-            // Always open modal so users can create accounts locally; only fetch list if authenticated as master
             document.getElementById('admin-accounts-modal').style.display = 'flex';
+            const header = document.getElementById('admin-accounts-header');
+            if (accountSelectionCallback) {
+                header.innerText = 'Vincular existente: selecione a conta desejada';
+            } else {
+                header.innerText = 'Contas existentes';
+            }
             const list = document.getElementById('admin-accounts-list');
             list.innerHTML = '';
-            if (!token) { list.innerHTML = '<div style="color:#999; padding:10px;">Faça login como master para ver contas ou crie uma conta abaixo.</div>'; return; }
+            if (!token) { list.innerHTML = '<div style="color:#999; padding:10px;">Faça login como master para ver contas ou crie uma conta abaixo.</div>'; accountSelectionCallback = null; return; }
             try {
                 const res = await fetch(`${API_URL}/accounts/list`, { headers: { 'Authorization': 'Bearer ' + token } });
                 if (!res.ok) {
+                    accountSelectionCallback = null;
                     const d = await res.json().catch(()=>({}));
                     const msg = d.error || (res.statusText || 'Erro ao buscar contas.');
                     mostrarAviso('Erro: ' + msg);
                     return;
                 }
-                const accounts = await res.json();
-                const list = document.getElementById('admin-accounts-list');
+                    const accounts = await res.json();
                 list.innerHTML = '';
                 accounts.forEach(acc => {
                     if ((acc.username||'').toLowerCase() === 'mestre') return; // hide default master
@@ -1177,16 +1223,16 @@
             }
 
             async function abrirModalEditarConta(username) {
-                // fetch account details from server (must be master)
-                try {
-                    const token = localStorage.getItem('authToken');
-                    if (!token) { mostrarAviso('Autenticação necessária.'); return; }
-                    const res = await fetch(`${API_URL}/accounts/list`, { headers: { 'Authorization': 'Bearer ' + token } });
-                    if (!res.ok) { mostrarAviso('Erro ao buscar contas.'); return; }
-                    const accounts = await res.json();
-                    const acc = accounts.find(a => (a.username||'').toLowerCase() === (username||'').toLowerCase());
-                    if (!acc) { mostrarAviso('Conta não encontrada.'); return; }
-                    // populate modal fields
+            document.getElementById('admin-accounts-modal').style.display = 'none';
+            accountSelectionCallback = null;
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) { mostrarAviso('Autenticação necessária.'); return; }
+                const res = await fetch(`${API_URL}/accounts/list`, { headers: { 'Authorization': 'Bearer ' + token } });
+                if (!res.ok) { mostrarAviso('Erro ao buscar contas.'); return; }
+                const accounts = await res.json();
+                const acc = accounts.find(a => (a.username||'').toLowerCase() === (username||'').toLowerCase());
+                if (!acc) { mostrarAviso('Conta não encontrada.'); return; }
                     document.getElementById('modal-edit-account-name').innerText = acc.username;
                     document.getElementById('edit-account-username').value = acc.username;
                     document.getElementById('edit-account-password').value = '';
@@ -1216,7 +1262,7 @@
         <div style="background:#0f0f0f; padding:16px; width:1100px; max-width:98%; max-height:88vh; overflow:auto; border-radius:10px; border:1px solid #333;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                 <h3 style="margin:0; color:#fff;">Gerenciar Contas</h3>
-                <button onclick="document.getElementById('admin-accounts-modal').style.display='none'" style="background:none; border:1px solid #444; color:#fff; padding:6px; border-radius:6px;">Fechar</button>
+                <button onclick="closeAdminAccounts()" style="background:none; border:1px solid #444; color:#fff; padding:6px; border-radius:6px;">Fechar</button>
             </div>
             <div style="display:flex; gap:16px; align-items:flex-start;">
                 <div style="flex:1; min-width:260px;">
@@ -1227,7 +1273,7 @@
                     <div style="margin-top:10px;"><button onclick="createAdminLocal()" class="btn-confirmar">Criar</button></div>
                 </div>
                 <div style="flex:2;">
-                    <div style="color:#ccc; font-size:13px; margin-bottom:8px;">Contas existentes</div>
+                    <div id="admin-accounts-header" style="color:#ccc; font-size:13px; margin-bottom:8px;">Contas existentes</div>
                     <div id="admin-accounts-list" style="display:flex; flex-direction:column; gap:8px; max-height:520px; overflow:auto; color:#ddd;"></div>
                 </div>
             </div>
