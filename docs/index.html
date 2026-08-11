@@ -930,21 +930,31 @@
 
       if (nome.toLowerCase() === 'mestre') {
         // Authenticate master via accounts API
+        const newWindow = window.open('', '_blank');
         try {
           const res = await fetch(`${API_BASE}/accounts/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: nome, password: senha }) });
           if (res.ok) {
             const data = await res.json();
             localStorage.setItem('authToken', data.token);
-            window.open('mestre.html', '_blank');
+            if (newWindow) {
+              newWindow.location = 'mestre.html';
+            } else {
+              window.location.href = 'mestre.html';
+            }
             document.getElementById('login-nome').value = '';
             document.getElementById('login-senha').value = '';
-            exibirAvisoTemporario('Painel do Mestre aberto em nova aba.');
+            exibirAvisoTemporario('Painel do Mestre aberto.');
             return;
           } else {
+            if (newWindow) newWindow.close();
             exibirAvisoTemporario('Credenciais do Mestre inválidas.');
             return;
           }
-        } catch (e) { exibirAvisoTemporario('Erro de conexão ao autenticar Mestre.'); return; }
+        } catch (e) {
+          if (newWindow) newWindow.close();
+          exibirAvisoTemporario('Erro de conexão ao autenticar Mestre.');
+          return;
+        }
       }
 
       // Try account login
