@@ -919,9 +919,10 @@
             };
 
             try {
+                const token = localStorage.getItem('authToken');
                 const res = await fetch(`${API_URL}/criar-ficha`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
                     body: JSON.stringify(novaFichaCompleta)
                 });
 
@@ -950,8 +951,9 @@
         async function confirmarDelecao() {
             if (!nomeDelecaoPendente) return;
             try {
+                const token = localStorage.getItem('authToken');
                 const res = await fetch(`${API_URL}/deletar-ficha`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
                     body: JSON.stringify({ nome: nomeDelecaoPendente })
                 });
                 if (res.ok) {
@@ -967,8 +969,9 @@
             nomeEdicaoPendente = nome;
             let senhaAtual = "";
             try {
+                const token = localStorage.getItem('authToken');
                 const res = await fetch(`${API_URL}/load-ficha-mestre`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
                     body: JSON.stringify({ nome: nome })
                 });
                 if (res.ok) { const d = await res.json(); senhaAtual = d.senha || ""; }
@@ -986,8 +989,9 @@
             if (!novoNome || !novaSenha) return mostrarAviso("Preencha tudo.");
 
             try {
+                const token = localStorage.getItem('authToken');
                 const res = await fetch(`${API_URL}/editar-credenciais`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
                     body: JSON.stringify({ nomeAntigo: nomeEdicaoPendente, novoNome, novaSenha })
                 });
                 if (res.ok) {
@@ -1030,7 +1034,56 @@
             document.body.appendChild(div);
             setTimeout(() => div.remove(), 3000);
         }
+
+        async function openAdminAccounts() {
+            const token = localStorage.getItem('authToken');
+            if (!token) { mostrarAviso('Autenticação necessária.'); return; }
+            try {
+                const res = await fetch(`${API_URL}/accounts/list`, { headers: { 'Authorization': 'Bearer ' + token } });
+                if (!res.ok) { mostrarAviso('Erro ao buscar contas.'); return; }
+                const accounts = await res.json();
+                const list = document.getElementById('admin-accounts-list');
+                list.innerHTML = '';
+                accounts.forEach(acc => {
+                    const row = document.createElement('div');
+                    row.style = 'display:flex; align-items:center; justify-content:space-between; gap:8px; background:#0b0b0b; padding:8px; border-radius:6px; border:1px solid #222;';
+                    const left = document.createElement('div'); left.style = 'flex:1;';
+                    left.innerHTML = `<div style="font-weight:700; color:#e0e0e0;">${acc.username}</div><div style="font-size:12px; color:#999;">${(acc.characters||[]).join(', ')}</div>`;
+                    const right = document.createElement('div'); right.style = 'display:flex; gap:8px;';
+                    const toggle = document.createElement('button'); toggle.textContent = acc.isMaster ? 'Master ✅' : 'Tornar Master'; toggle.style = 'background:#222; color:#fff; border:1px solid #444; padding:6px; border-radius:6px;';
+                    toggle.onclick = async () => {
+                        const t = !acc.isMaster;
+                        const r = await fetch(`${API_URL}/accounts/admin/update`, { method:'POST', headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token }, body: JSON.stringify({ username: acc.username, isMaster: t }) });
+                        if (r.ok) { acc.isMaster = t; toggle.textContent = t ? 'Master ✅' : 'Tornar Master'; mostrarAviso('Atualizado'); }
+                        else mostrarAviso('Erro ao atualizar.');
+                    };
+                    const del = document.createElement('button'); del.textContent = 'Deletar'; del.style = 'background:#441111; color:#fff; border:none; padding:6px; border-radius:6px;';
+                    del.onclick = async () => {
+                        if (!confirm('Deletar conta ' + acc.username + '?')) return;
+                        const r = await fetch(`${API_URL}/accounts/admin/delete`, { method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+token }, body: JSON.stringify({ username: acc.username }) });
+                        if (r.ok) { row.remove(); mostrarAviso('Deletado'); }
+                        else mostrarAviso('Erro ao deletar.');
+                    };
+                    right.appendChild(toggle); right.appendChild(del);
+                    row.appendChild(left); row.appendChild(right);
+                    list.appendChild(row);
+                });
+                document.getElementById('admin-accounts-modal').style.display = 'flex';
+            } catch (e) { mostrarAviso('Erro de conexão.'); }
+        }
     </script>
+    <!-- Admin Accounts Modal -->
+    <div id="admin-accounts-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:99999; align-items:center; justify-content:center;">
+        <div style="background:#0f0f0f; padding:16px; width:640px; max-width:95%; border-radius:8px; border:1px solid #333;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3 style="margin:0; color:#fff;">Gerenciar Contas</h3>
+                <button onclick="document.getElementById('admin-accounts-modal').style.display='none'" style="background:none; border:1px solid #444; color:#fff; padding:6px; border-radius:6px;">Fechar</button>
+            </div>
+            <div id="admin-accounts-list" style="display:flex; flex-direction:column; gap:8px; max-height:400px; overflow:auto; color:#ddd;"></div>
+        </div>
+    </div>
+
+    <button id="btn-open-admin-accounts" onclick="openAdminAccounts()" style="position:fixed; right:18px; bottom:18px; z-index:99999; padding:10px 12px; background:#9c27b0; color:#fff; border:none; border-radius:8px;">Contas</button>
 </body>
 
 </html>

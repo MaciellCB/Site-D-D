@@ -590,17 +590,42 @@
 
   <div id="login-overlay"
     style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:100000; display:flex; align-items:center; justify-content:center; font-family: sans-serif;">
-    <div
-      style="background:#1a1a1a; padding:40px; border-radius:12px; border:2px solid #9c27b0; text-align:center; width:320px;">
-      <img src="img/imagem-no-site/dado-logo.png" style="width:120px; margin-bottom:20px; border-radius:50%; ">
-      <h2 style="color:#fff; margin-bottom:25px; letter-spacing:1px;">ACESSO À FICHA</h2>
-      <input type="text" id="login-nome" placeholder="Nome do Personagem"
-        style="width:100%; padding:12px; margin-bottom:15px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
-      <input type="password" id="login-senha" placeholder="Senha"
-        style="width:100%; padding:12px; margin-bottom:25px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
-      <button onclick="tentarLogin()"
-        style="background:#9c27b0; color:#fff; border:none; padding:12px; cursor:pointer; font-weight:bold; width:100%; border-radius:4px;">ENTRAR
-        NA AVENTURA</button>
+    <div id="login-box"
+      style="background:#1a1a1a; padding:24px; border-radius:12px; border:2px solid #9c27b0; text-align:center; width:360px; max-width:92%;">
+      <img src="img/imagem-no-site/dado-logo.png" style="width:96px; margin-bottom:12px; border-radius:50%; ">
+      <h2 style="color:#fff; margin-bottom:12px; letter-spacing:1px;">ENTRAR NA CONTA</h2>
+
+      <div id="account-forms">
+        <input type="text" id="login-nome" placeholder="Conta (username)"
+          style="width:100%; padding:10px; margin-bottom:8px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
+        <input type="password" id="login-senha" placeholder="Senha"
+          style="width:100%; padding:10px; margin-bottom:12px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
+        <div style="display:flex; gap:8px;">
+          <button id="btn-account-login" onclick="tentarLogin()"
+            style="flex:1; background:#9c27b0; color:#fff; border:none; padding:10px; cursor:pointer; font-weight:bold; border-radius:4px;">Entrar</button>
+          <button id="btn-account-register" onclick="abrirRegistro()"
+            style="flex:1; background:#222; color:#fff; border:1px solid #444; padding:10px; cursor:pointer; border-radius:4px;">Registrar</button>
+        </div>
+      </div>
+
+      <div id="account-characters" style="display:none; margin-top:12px; text-align:left;">
+        <div style="color:#ccc; font-size:13px; margin-bottom:8px;">Personagens da conta:</div>
+        <div id="chars-list" style="display:flex; flex-direction:column; gap:8px; max-height:220px; overflow:auto;"></div>
+        <div style="display:flex; gap:8px; margin-top:12px;">
+          <button onclick="criarPersonagemPrompt()" class="btn-add" style="flex:1; background:#222; border:1px solid #444;">+ Novo Personagem</button>
+          <button onclick="logoutAccount()" class="btn-add" style="flex:1; background:#441111; border:1px solid #662222;">Sair</button>
+        </div>
+      </div>
+
+      <div id="register-box" style="display:none; margin-top:12px; text-align:left;">
+        <div style="color:#ccc; font-size:13px; margin-bottom:8px;">Registro de Conta</div>
+        <input type="text" id="reg-username" placeholder="Usuário"
+          style="width:100%; padding:8px; margin-bottom:8px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
+        <input type="password" id="reg-password" placeholder="Senha"
+          style="width:100%; padding:8px; margin-bottom:8px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
+        <div style="display:flex; gap:8px;"><button onclick="registrarConta()" style="flex:1; background:#9c27b0; color:#fff; border:none; padding:10px; cursor:pointer; border-radius:4px;">Registrar</button><button onclick="fecharRegistro()" style="flex:1; background:#222; color:#fff; border:1px solid #444; padding:10px; cursor:pointer; border-radius:4px;">Cancelar</button></div>
+      </div>
+
     </div>
   </div>
 
@@ -758,15 +783,39 @@
     /* =================================================================
        LÓGICA DO MESTRE & PREENCHIMENTO DE DADOS
        ================================================================= */
-    window.addEventListener('DOMContentLoaded', () => {
-      const params = new URLSearchParams(window.location.search);
-      const masterChar = params.get('masterView');
-
-      if (masterChar) {
-        document.getElementById('login-overlay').style.display = 'none';
-        document.getElementById('link-voltar-painel').style.display = 'block';
-        carregarFichaMestre(masterChar);
+    window.addEventListener('DOMContentLoaded', async () => {
+      // Try to auto-login using token stored in localStorage.
+      const API_BASE = 'https://dandd-chan.onrender.com/api';
+      try {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          const meRes = await fetch(`${API_BASE}/accounts/me`, { headers: { 'Authorization': 'Bearer ' + token } });
+          if (meRes.ok) {
+            const acc = await meRes.json();
+            window.currentAccount = acc;
+            if (acc.characters && acc.characters.length > 0) {
+              const first = acc.characters[0];
+              const res = await fetch(`${API_BASE}/load-ficha-account`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ nome: first }) });
+              if (res.ok) {
+                const data = await res.json();
+                if (typeof state !== 'undefined') {
+                  Object.assign(state, data);
+                  document.getElementById('login-overlay').style.display = 'none';
+                  setActiveTab(state.activeTab || 'Combate');
+                  window.dispatchEvent(new CustomEvent('sheet-updated'));
+                  if (typeof atualizarHeader === 'function') atualizarHeader();
+                  if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+                }
+                return;
+              }
+            }
+          }
+        }
+      } catch (e) {
+        // ignore and show login
+        console.warn('Auto-login failed', e);
       }
+      // If no token or auto-login failed, show login overlay normally.
     });
 
     async function carregarFichaMestre(nome) {
@@ -862,27 +911,202 @@
 
     window.alert = function (msg) { exibirAvisoTemporario(msg); };
 
-    function tentarLogin() {
+    async function tentarLogin() {
       const nome = document.getElementById('login-nome').value;
       const senha = document.getElementById('login-senha').value;
+      const API_BASE = 'https://dandd-chan.onrender.com/api';
 
-      if (nome.toLowerCase() === 'mestre' && senha === 'admin') {
-        window.open('mestre.html', '_blank');
-        document.getElementById('login-nome').value = '';
-        document.getElementById('login-senha').value = '';
-        exibirAvisoTemporario("Painel do Mestre aberto em nova aba.");
-        return;
+      if (!nome || !senha) { exibirAvisoTemporario('Preencha todos os campos!'); return; }
+
+      if (nome.toLowerCase() === 'mestre') {
+        // Authenticate master via accounts API
+        try {
+          const res = await fetch(`${API_BASE}/accounts/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: nome, password: senha }) });
+          if (res.ok) {
+            const data = await res.json();
+            localStorage.setItem('authToken', data.token);
+            window.open('mestre.html', '_blank');
+            document.getElementById('login-nome').value = '';
+            document.getElementById('login-senha').value = '';
+            exibirAvisoTemporario('Painel do Mestre aberto em nova aba.');
+            return;
+          } else {
+            exibirAvisoTemporario('Credenciais do Mestre inválidas.');
+            return;
+          }
+        } catch (e) { exibirAvisoTemporario('Erro de conexão ao autenticar Mestre.'); return; }
       }
 
-      if (nome && senha) {
-        if (typeof carregarDadosIniciais === 'function') {
-          carregarDadosIniciais(nome, senha);
-        } else {
-          alert("Erro: Scripts JS não carregados corretamente.");
+      // Try account login
+      try {
+        const res = await fetch(`${API_BASE}/accounts/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: nome, password: senha }) });
+        if (res.ok) {
+          const data = await res.json();
+          localStorage.setItem('authToken', data.token);
+          // load account
+          const me = await fetch(`${API_BASE}/accounts/me`, { headers: { 'Authorization': 'Bearer ' + data.token } });
+          if (me.ok) {
+            const acc = await me.json();
+            window.currentAccount = acc;
+            showAccountCharacters(acc);
+            return;
+          }
         }
-      } else {
-        exibirAvisoTemporario("Preencha todos os campos!");
+      } catch (e) {
+        console.warn('Account login failed', e);
       }
+
+      // Fallback: legacy character login by name/password
+      if (typeof carregarDadosIniciais === 'function') {
+        carregarDadosIniciais(nome, senha);
+      } else {
+        exibirAvisoTemporario('Erro: Não foi possível autenticar.');
+      }
+    }
+
+    function abrirRegistro() {
+      document.getElementById('account-forms').style.display = 'none';
+      document.getElementById('register-box').style.display = 'block';
+    }
+
+    function fecharRegistro() {
+      document.getElementById('register-box').style.display = 'none';
+      document.getElementById('account-forms').style.display = 'block';
+    }
+
+    async function registrarConta() {
+      const username = document.getElementById('reg-username').value;
+      const password = document.getElementById('reg-password').value;
+      const API_BASE = 'https://dandd-chan.onrender.com/api';
+      if (!username || !password) { exibirAvisoTemporario('Preencha usuário e senha.'); return; }
+      try {
+        const res = await fetch(`${API_BASE}/accounts/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
+        if (res.ok) {
+          const data = await res.json();
+          localStorage.setItem('authToken', data.token);
+          const me = await fetch(`${API_BASE}/accounts/me`, { headers: { 'Authorization': 'Bearer ' + data.token } });
+          if (me.ok) {
+            const acc = await me.json();
+            window.currentAccount = acc;
+            showAccountCharacters(acc);
+            exibirAvisoTemporario('Conta criada com sucesso.');
+            return;
+          }
+        } else {
+          const err = await res.json().catch(() => ({}));
+          exibirAvisoTemporario(err.error || 'Erro ao criar conta.');
+        }
+      } catch (e) { exibirAvisoTemporario('Erro de conexão ao criar conta.'); }
+    }
+
+    function showAccountCharacters(acc) {
+      document.getElementById('account-forms').style.display = 'none';
+      document.getElementById('register-box').style.display = 'none';
+      document.getElementById('account-characters').style.display = 'block';
+      const list = document.getElementById('chars-list');
+      list.innerHTML = '';
+      const chars = acc.characters || [];
+      if (chars.length === 0) {
+        const el = document.createElement('div'); el.style.color = '#aaa'; el.textContent = 'Nenhum personagem. Crie um novo abaixo.'; list.appendChild(el);
+      }
+      chars.forEach(n => {
+        const btn = document.createElement('button');
+        btn.className = 'btn-add';
+        btn.style = 'text-align:left; background:#222; border:1px solid #444; color:#fff; padding:8px; border-radius:6px;';
+        btn.textContent = n;
+        btn.onclick = () => selectCharacter(n);
+        list.appendChild(btn);
+      });
+      // Apply preferences if any
+      const prefs = (acc && acc.preferences) ? acc.preferences : {};
+      if (prefs.lastActiveTab && typeof setActiveTab === 'function') setActiveTab(prefs.lastActiveTab);
+      // Setup preferences sync (wraps setActiveTab to persist changes)
+      setupPreferencesSync();
+    }
+
+    function setupPreferencesSync() {
+      if (!window.currentAccount) return;
+      const token = localStorage.getItem('authToken');
+      if (!token) return;
+      // Wrap setActiveTab to save preference
+      if (typeof window.setActiveTab === 'function' && !window.setActiveTab._wrappedForPrefs) {
+        const orig = window.setActiveTab;
+        window.setActiveTab = function (tabName) {
+          orig(tabName);
+          savePreferences({ lastActiveTab: tabName });
+        };
+        window.setActiveTab._wrappedForPrefs = true;
+      }
+    }
+
+    async function savePreferences(obj) {
+      const token = localStorage.getItem('authToken');
+      if (!token || !window.currentAccount) return;
+      const API_BASE = 'https://dandd-chan.onrender.com/api';
+      const merged = Object.assign({}, window.currentAccount.preferences || {}, obj || {});
+      try {
+        const res = await fetch(`${API_BASE}/accounts/preferences`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ preferences: merged }) });
+        if (res.ok) {
+          window.currentAccount.preferences = merged;
+        }
+      } catch (e) { console.warn('Erro ao salvar preferências', e); }
+    }
+
+    async function criarPersonagemPrompt() {
+      const nome = prompt('Nome do novo personagem:');
+      if (!nome) return;
+      await criarPersonagem(nome.trim());
+    }
+
+    async function criarPersonagem(nome) {
+      const API_BASE = 'https://dandd-chan.onrender.com/api';
+      const token = localStorage.getItem('authToken');
+      if (!token || !window.currentAccount) { exibirAvisoTemporario('Conta não autenticada.'); return; }
+      try {
+        const res = await fetch(`${API_BASE}/criar-ficha`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ nome, accountUsername: window.currentAccount.username }) });
+        if (res.ok) {
+          // refresh account
+          const me = await fetch(`${API_BASE}/accounts/me`, { headers: { 'Authorization': 'Bearer ' + token } });
+          if (me.ok) {
+            const acc = await me.json(); window.currentAccount = acc; showAccountCharacters(acc);
+            exibirAvisoTemporario('Personagem criado. Selecione-o para abrir.');
+          }
+        } else {
+          const err = await res.json().catch(() => ({}));
+          exibirAvisoTemporario(err.error || 'Erro ao criar personagem.');
+        }
+      } catch (e) { exibirAvisoTemporario('Erro de conexão ao criar personagem.'); }
+    }
+
+    async function selectCharacter(nome) {
+      const API_BASE = 'https://dandd-chan.onrender.com/api';
+      const token = localStorage.getItem('authToken');
+      if (!token) { exibirAvisoTemporario('Conta não autenticada.'); return; }
+      try {
+        const res = await fetch(`${API_BASE}/load-ficha-account`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ nome }) });
+        if (res.ok) {
+          const data = await res.json();
+          if (typeof state !== 'undefined') {
+            Object.assign(state, data);
+            document.getElementById('login-overlay').style.display = 'none';
+            if (typeof setActiveTab === 'function') setActiveTab(state.activeTab || 'Combate');
+            window.dispatchEvent(new CustomEvent('sheet-updated'));
+            if (typeof atualizarHeader === 'function') atualizarHeader();
+            if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+            exibirAvisoTemporario('Personagem carregado: ' + nome);
+          }
+        } else {
+          exibirAvisoTemporario('Erro ao carregar personagem.');
+        }
+      } catch (e) { exibirAvisoTemporario('Erro de conexão ao carregar personagem.'); }
+    }
+
+    function logoutAccount() {
+      localStorage.removeItem('authToken');
+      window.currentAccount = null;
+      document.getElementById('account-characters').style.display = 'none';
+      document.getElementById('register-box').style.display = 'none';
+      document.getElementById('account-forms').style.display = 'block';
     }
 
   /* =================================================================

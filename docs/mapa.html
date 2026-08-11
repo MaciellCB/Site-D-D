@@ -1511,6 +1511,14 @@
         function toggleSidebar(forceClose = false) { 
             const sb = document.getElementById('sidebar');
             if(forceClose) sb.classList.add('collapsed'); else sb.classList.toggle('collapsed'); 
+            // persist preference if logged in
+            try { 
+                const token = localStorage.getItem('authToken');
+                if (token) {
+                    const collapsed = sb.classList.contains('collapsed');
+                    fetch('https://dandd-chan.onrender.com/api/accounts/preferences', { method: 'PUT', headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token }, body: JSON.stringify({ preferences: { sidebarCollapsed: collapsed } }) });
+                }
+            } catch(e) {}
         }
 
         function renderPlanes() {
@@ -1528,6 +1536,35 @@
         }
 
         window.mudarMapa = function(url) { if(mundiOverlay) mundiOverlay.setUrl(url); };
+
+        // Save map style preference when changed
+        const mapStyleSelect = document.getElementById('map-style-select');
+        if (mapStyleSelect) {
+            mapStyleSelect.addEventListener('change', (e) => {
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
+                const prefs = { mapStyle: e.target.value };
+                fetch('https://dandd-chan.onrender.com/api/accounts/preferences', { method: 'PUT', headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token }, body: JSON.stringify({ preferences: prefs }) });
+            });
+        }
+
+        // On load, try to apply account preferences (sidebar, map style)
+        (async function applyAccountPrefs() {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
+                const res = await fetch('https://dandd-chan.onrender.com/api/accounts/me', { headers: { 'Authorization': 'Bearer ' + token } });
+                if (!res.ok) return;
+                const acc = await res.json();
+                const prefs = acc.preferences || {};
+                if (prefs.sidebarCollapsed) {
+                    const sb = document.getElementById('sidebar'); if (sb) sb.classList.add('collapsed');
+                }
+                if (prefs.mapStyle) {
+                    const sel = document.getElementById('map-style-select'); if (sel) { sel.value = prefs.mapStyle; mudarMapa(prefs.mapStyle); }
+                }
+            } catch (e) { }
+        })();
 
         function atualizarListaLateral() {
             const lista = document.getElementById('lista-locais'); lista.innerHTML = "";

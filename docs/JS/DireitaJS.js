@@ -77,9 +77,12 @@ async function saveStateToServer() {
   // 2. Tempo super rápido de 100ms
   saveTimer = setTimeout(async () => {
     try {
+      const token = localStorage.getItem('authToken');
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = 'Bearer ' + token;
       await fetch(`${API_URL}/save-ficha`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(state)
       });
 

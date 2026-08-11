@@ -2771,11 +2771,38 @@ function openCustomRaceCreator(editMode = false) {
     overlay.style.zIndex = '12100';
     if (typeof checkScrollLock === 'function') checkScrollLock();
 
+    const deriveCurrentRaceData = () => {
+        if (!state || !state.raca) return null;
+        const speed = typeof state.metros !== 'undefined' ? parseFloat(state.metros) || 0 : 9;
+        const flySpeed = typeof state.deslocamentoVoo !== 'undefined' ? parseFloat(state.deslocamentoVoo) || 0 : 0;
+        const swimSpeed = typeof state.deslocamentoNado !== 'undefined' ? parseFloat(state.deslocamentoNado) || 0 : 0;
+        const traits = Array.isArray(state.abilities)
+            ? state.abilities
+                .filter(a => a.category === 'Raça')
+                .map(a => ({ name: a.title || '', desc: a.description || '' }))
+                .filter(t => t.name)
+            : [];
+
+        return {
+            name: state.raca || '',
+            type: state.racaTipo || 'Humanoide',
+            size: state.racaTamanho || 'Médio',
+            speed: speed || 9,
+            flySpeed: flySpeed || 0,
+            hasFly: flySpeed > 0,
+            swimSpeed: swimSpeed || 0,
+            hasSwim: swimSpeed > 0,
+            description: '',
+            traits
+        };
+    };
+
     const existingCustomData = editMode && state && state.customRaceData ? state.customRaceData : null;
+    const derivedCustomData = editMode && !existingCustomData ? deriveCurrentRaceData() : null;
     let currentStep = 1;
-    let customRaceData = existingCustomData ? {
-        ...existingCustomData,
-        traits: Array.isArray(existingCustomData.traits) ? existingCustomData.traits.map(t => ({ ...t })) : []
+    let customRaceData = existingCustomData || derivedCustomData ? {
+        ...(existingCustomData || derivedCustomData),
+        traits: Array.isArray((existingCustomData || derivedCustomData).traits) ? (existingCustomData || derivedCustomData).traits.map(t => ({ ...t })) : []
     } : { name: "", type: "Humanoide", size: "Médio", speed: 9, flySpeed: 0, hasFly: false, hasSwim: false, swimSpeed: 0, description: "", traits: [] };
 
     function renderWizardContent() {

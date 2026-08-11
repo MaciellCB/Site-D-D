@@ -5,6 +5,10 @@ const { Server } = require('socket.io');
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret_change_me';
 
 // --- CONFIGURAÇÃO DO APP ---
 const app = express();
@@ -32,11 +36,48 @@ if (!mongoURI) {
 }
 
 // --- MODELOS ---
+// Account model: users who own one or more fichas (characters)
+const AccountSchema = new mongoose.Schema({
+    username: { type: String, required: true, unique: true },
+    passwordHash: { type: String, required: true },
+    isMaster: { type: Boolean, default: false },
+    preferences: { type: mongoose.Schema.Types.Mixed, default: {} },
+    characters: [{ type: String }]
+}, { timestamps: true });
+const Account = mongoose.model('Account', AccountSchema);
+
+// Ficha (character) may be linked to an account via `accountUsername` field
 const FichaSchema = new mongoose.Schema({
     nome: { type: String, required: true, unique: true }, 
-    senha: { type: String, required: true },
+    senha: { type: String },
+    accountUsername: { type: String },
 }, { strict: false }); 
 const Ficha = mongoose.model('Ficha', FichaSchema);
+
+// Audit log schema to record important actions
+const AuditSchema = new mongoose.Schema({
+    actorId: String,
+    actorUsername: String,
+    ip: String,
+    action: String,
+    targetName: String,
+    details: mongoose.Schema.Types.Mixed
+}, { timestamps: true });
+const Audit = mongoose.model('Audit', AuditSchema);
+
+async function auditLog(reqAccount, reqObj, action, targetName, details) {
+    try {
+        const entry = new Audit({
+            actorId: reqAccount ? reqAccount.id : null,
+            actorUsername: reqAccount ? reqAccount.username : (reqObj && reqObj.username) || null,
+            ip: (reqObj && reqObj.ip) || null,
+            action,
+            targetName,
+            details: details || {}
+        });
+        await entry.save();
+    } catch (e) { console.warn('Falha ao gravar audit log', e.message); }
+}
 
 const LayoutSchema = new mongoose.Schema({
     id: { type: String, default: "master_layout" },
@@ -111,21 +152,121 @@ app.get('/api/lista-personagens', async (req, res) => {
     } catch (error) { res.status(500).json({ error: 'Erro ao buscar lista' }); }
 });
 
-app.post('/api/criar-ficha', async (req, res) => {
+app.post('/api/criar-ficha', authenticateToken, async (req, res) => {
     try {
-        const { nome, senha } = req.body;
-        if (!nome || !senha) return res.status(400).json({ error: "Obrigatórios" });
+        const { nome, senha, accountUsername } = req.body;
+        if (!nome) return res.status(400).json({ error: "Nome é obrigatório" });
+        // If creating for an account, ensure requestor owns that account or is master
+        if (accountUsername && accountUsername.toLowerCase() !== req.account.username.toLowerCase() && !req.account.isMaster) {
+            return res.status(403).json({ error: 'Forbidden' });
+        }
         const existe = await Ficha.findOne({ nome: { $regex: new RegExp(`^${nome}$`, 'i') } });
         if (existe) return res.status(400).json({ error: "Já existe!" });
         const novaFicha = new Ficha(req.body);
-        novaFicha.nome = nome; novaFicha.senha = senha;
+        novaFicha.nome = nome;
+        if (senha) novaFicha.senha = senha; // legacy support
+        if (accountUsername) novaFicha.accountUsername = accountUsername;
         await novaFicha.save();
+        // if linked to account, add to account.characters
+        if (accountUsername) {
+            await Account.findOneAndUpdate({ username: accountUsername }, { $addToSet: { characters: nome } });
+        }
+        // audit
+        await auditLog(req.account, { ip: req.ip }, 'create_ficha', nome, { accountUsername });
         res.json({ ok: true });
     } catch (error) { res.status(500).json({ error: "Erro ao criar." }); }
 });
 
-app.post('/api/load-ficha-mestre', async (req, res) => {
+// --- AUTH: registration, login, profile ---
+function authenticateToken(req, res, next) {
+    const auth = req.headers.authorization;
+    if (!auth || !auth.startsWith('Bearer ')) return res.status(401).json({ error: 'Unauthorized' });
+    const token = auth.substring(7);
     try {
+        const payload = jwt.verify(token, JWT_SECRET);
+        req.account = payload;
+        next();
+    } catch (e) { return res.status(401).json({ error: 'Invalid token' }); }
+}
+
+app.post('/api/accounts/register', async (req, res) => {
+    try {
+        const { username, password, isMaster } = req.body;
+        if (!username || !password) return res.status(400).json({ error: 'Missing' });
+        const exists = await Account.findOne({ username: { $regex: new RegExp(`^${username}$`, 'i') } });
+        if (exists) return res.status(400).json({ error: 'Username exists' });
+        const hash = await bcrypt.hash(password, 10);
+        const acc = new Account({ username, passwordHash: hash, isMaster: !!isMaster });
+        await acc.save();
+        const token = jwt.sign({ id: acc._id, username: acc.username, isMaster: acc.isMaster }, JWT_SECRET, { expiresIn: '30d' });
+        res.json({ token });
+    } catch (e) { res.status(500).json({ error: 'Error' }); }
+});
+
+app.post('/api/accounts/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        if (!username || !password) return res.status(400).json({ error: 'Missing' });
+        const acc = await Account.findOne({ username: { $regex: new RegExp(`^${username}$`, 'i') } });
+        if (!acc) return res.status(401).json({ error: 'Invalid' });
+        const ok = await bcrypt.compare(password, acc.passwordHash);
+        if (!ok) return res.status(401).json({ error: 'Invalid' });
+        const token = jwt.sign({ id: acc._id, username: acc.username, isMaster: acc.isMaster }, JWT_SECRET, { expiresIn: '30d' });
+        res.json({ token });
+    } catch (e) { res.status(500).json({ error: 'Error' }); }
+});
+
+app.get('/api/accounts/me', authenticateToken, async (req, res) => {
+    try {
+        const acc = await Account.findById(req.account.id).lean();
+        if (!acc) return res.status(404).json({ error: 'Not found' });
+        delete acc.passwordHash;
+        res.json(acc);
+    } catch (e) { res.status(500).json({ error: 'Error' }); }
+});
+
+app.put('/api/accounts/preferences', authenticateToken, async (req, res) => {
+    try {
+        const prefs = req.body.preferences || {};
+        await Account.findByIdAndUpdate(req.account.id, { $set: { preferences: prefs } });
+        res.json({ ok: true });
+    } catch (e) { res.status(500).json({ error: 'Error' }); }
+});
+
+// --- Admin account management (minimal) ---
+app.get('/api/accounts/list', authenticateToken, async (req, res) => {
+    try {
+        if (!req.account.isMaster) return res.status(403).json({ error: 'Forbidden' });
+        const accounts = await Account.find({}, '-passwordHash').lean();
+        res.json(accounts);
+    } catch (e) { res.status(500).json({ error: 'Error' }); }
+});
+
+app.post('/api/accounts/admin/update', authenticateToken, async (req, res) => {
+    try {
+        if (!req.account.isMaster) return res.status(403).json({ error: 'Forbidden' });
+        const { username, isMaster } = req.body;
+        if (!username) return res.status(400).json({ error: 'Missing' });
+        await Account.findOneAndUpdate({ username: { $regex: new RegExp(`^${username}$`, 'i') } }, { $set: { isMaster: !!isMaster } });
+        res.json({ ok: true });
+    } catch (e) { res.status(500).json({ error: 'Error' }); }
+});
+
+app.post('/api/accounts/admin/delete', authenticateToken, async (req, res) => {
+    try {
+        if (!req.account.isMaster) return res.status(403).json({ error: 'Forbidden' });
+        const { username } = req.body;
+        if (!username) return res.status(400).json({ error: 'Missing' });
+        await Account.findOneAndDelete({ username: { $regex: new RegExp(`^${username}$`, 'i') } });
+        // Optionally, you may also orphan linked fichas or remove accountUsername
+        await Ficha.updateMany({ accountUsername: { $regex: new RegExp(`^${username}$`, 'i') } }, { $unset: { accountUsername: 1 } });
+        res.json({ ok: true });
+    } catch (e) { res.status(500).json({ error: 'Error' }); }
+});
+
+app.post('/api/load-ficha-mestre', authenticateToken, async (req, res) => {
+    try {
+        if (!req.account.isMaster) return res.status(403).json({ error: 'Forbidden' });
         const ficha = await Ficha.findOne({ nome: { $regex: new RegExp(`^${req.body.nome}$`, 'i') } });
         if (!ficha) return res.status(404).json({ error: "Não encontrado" });
         res.json(ficha);
@@ -141,29 +282,67 @@ app.post('/api/load-ficha', async (req, res) => {
     } catch (error) { res.status(500).send(); }
 });
 
-app.post('/api/save-ficha', async (req, res) => {
+// Load ficha by account (authenticated)
+app.post('/api/load-ficha-account', authenticateToken, async (req, res) => {
     try {
-        await Ficha.findOneAndUpdate({ nome: { $regex: new RegExp(`^${req.body.nome}$`, 'i') } }, req.body, { upsert: true });
+        const nome = req.body.nome;
+        if (!nome) return res.status(400).json({ error: 'Missing name' });
+        const ficha = await Ficha.findOne({ nome: { $regex: new RegExp(`^${nome}$`, 'i') }, accountUsername: req.account.username });
+        if (!ficha) return res.status(404).json({ error: 'Not found' });
+        res.json(ficha);
+    } catch (e) { res.status(500).json({ error: 'Error' }); }
+});
+
+app.post('/api/save-ficha', authenticateToken, async (req, res) => {
+    try {
+        const nome = req.body.nome;
+        if (!nome) return res.status(400).json({ error: 'Missing name' });
+        // Ensure the requester owns this ficha or is master
+        const existing = await Ficha.findOne({ nome: { $regex: new RegExp(`^${nome}$`, 'i') } });
+        if (existing && existing.accountUsername && existing.accountUsername.toLowerCase() !== req.account.username.toLowerCase() && !req.account.isMaster) {
+            return res.status(403).json({ error: 'Forbidden' });
+        }
+        // If no existing and attempting to upsert without proper ownership, prevent unless master
+        if (!existing && req.body.accountUsername && req.body.accountUsername.toLowerCase() !== req.account.username.toLowerCase() && !req.account.isMaster) {
+            return res.status(403).json({ error: 'Forbidden' });
+        }
+        await Ficha.findOneAndUpdate({ nome: { $regex: new RegExp(`^${nome}$`, 'i') } }, req.body, { upsert: true });
         io.emit('ficha_atualizada', req.body);
+        await auditLog(req.account, { ip: req.ip }, 'save_ficha', nome, { size: JSON.stringify(req.body).length });
         res.json({ ok: true });
     } catch (error) { res.status(500).json({ error: "Erro ao salvar" }); }
 });
 
-app.post('/api/deletar-ficha', async (req, res) => {
+app.post('/api/deletar-ficha', authenticateToken, async (req, res) => {
     try {
-        await Ficha.findOneAndDelete({ nome: { $regex: new RegExp(`^${req.body.nome}$`, 'i') } });
+        const nome = req.body.nome;
+        if (!nome) return res.status(400).json({ error: 'Missing name' });
+        const existing = await Ficha.findOne({ nome: { $regex: new RegExp(`^${nome}$`, 'i') } });
+        if (!existing) return res.status(404).json({ error: 'Not found' });
+        if (existing.accountUsername && existing.accountUsername.toLowerCase() !== req.account.username.toLowerCase() && !req.account.isMaster) {
+            return res.status(403).json({ error: 'Forbidden' });
+        }
+        await Ficha.findOneAndDelete({ nome: { $regex: new RegExp(`^${nome}$`, 'i') } });
+        await auditLog(req.account, { ip: req.ip }, 'delete_ficha', nome, {});
         res.json({ ok: true });
     } catch (error) { res.status(500).json({ error: "Erro ao deletar" }); }
 });
 
-app.post('/api/editar-credenciais', async (req, res) => {
+app.post('/api/editar-credenciais', authenticateToken, async (req, res) => {
     try {
         const { nomeAntigo, novoNome, novaSenha } = req.body;
+        const existing = await Ficha.findOne({ nome: { $regex: new RegExp(`^${nomeAntigo}$`, 'i') } });
+        if (!existing) return res.status(404).json({ error: 'Not found' });
+        // Only owner or master can change credentials
+        if (existing.accountUsername && existing.accountUsername.toLowerCase() !== req.account.username.toLowerCase() && !req.account.isMaster) {
+            return res.status(403).json({ error: 'Forbidden' });
+        }
         if (nomeAntigo.toLowerCase() !== novoNome.toLowerCase()) {
             const existe = await Ficha.findOne({ nome: { $regex: new RegExp(`^${novoNome}$`, 'i') } });
             if (existe) return res.status(400).json({ error: "Nome já existe!" });
         }
         await Ficha.findOneAndUpdate({ nome: { $regex: new RegExp(`^${nomeAntigo}$`, 'i') } }, { $set: { nome: novoNome, senha: novaSenha } });
+        await auditLog(req.account, { ip: req.ip }, 'edit_credentials', novoNome, { previous: nomeAntigo });
         res.json({ ok: true });
     } catch (error) { res.status(500).json({ error: "Erro ao editar." }); }
 });
