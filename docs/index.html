@@ -821,22 +821,8 @@
         if (meRes.ok) {
           const acc = await meRes.json();
           window.currentAccount = acc;
-          if (acc.characters && acc.characters.length > 0) {
-            const first = acc.characters[0];
-            const res = await fetchWithAuth(`${API_BASE}/load-ficha-account`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nome: first }) });
-            if (res.ok) {
-              const data = await res.json();
-              if (typeof state !== 'undefined') {
-                Object.assign(state, data);
-                hideLoginOverlay();
-                setActiveTab(state.activeTab || 'Combate');
-                window.dispatchEvent(new CustomEvent('sheet-updated'));
-                if (typeof atualizarHeader === 'function') atualizarHeader();
-                if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
-              }
-              return;
-            }
-          }
+          showAccountCharacters(acc);
+          return;
         }
       } catch (e) {
         if (e && e.message === 'AUTH_EXPIRED') return;
