@@ -385,3 +385,23 @@ app.delete('/api/mapa-pins/:id', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`Rodando na porta ${PORT}`));
+
+// --- STARTUP: ensure a master account exists (temporary convenience)
+// To disable automatic creation in production set SKIP_CREATE_DEFAULT_MASTER=1
+;(async function ensureDefaultMaster(){
+    try {
+        if (!mongoURI) return; // no DB configured
+        if (process.env.SKIP_CREATE_DEFAULT_MASTER === '1') return;
+        const anyMaster = await Account.findOne({ isMaster: true }).lean();
+        if (!anyMaster) {
+            const defaultUser = process.env.DEFAULT_MASTER_USERNAME || 'mestre';
+            const defaultPass = process.env.DEFAULT_MASTER_PASSWORD || 'mestre';
+            const hash = await bcrypt.hash(defaultPass, 10);
+            const acc = new Account({ username: defaultUser, passwordHash: hash, isMaster: true });
+            await acc.save();
+            console.warn(`⚠️ Default master account created: ${defaultUser}/${defaultPass} — remove or change in production.`);
+        }
+    } catch (e) {
+        console.error('Erro ao garantir conta mestre padrão:', e && e.message);
+    }
+})();
