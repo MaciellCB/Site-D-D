@@ -952,11 +952,17 @@
         if (res.ok) {
           const data = await res.json();
           localStorage.setItem('authToken', data.token);
-          // load account
           const me = await fetch(`${API_BASE}/accounts/me`, { headers: { 'Authorization': 'Bearer ' + data.token } });
           if (me.ok) {
             const acc = await me.json();
             window.currentAccount = acc;
+            if (acc.isMaster) {
+              window.open('mestre.html', '_blank');
+              document.getElementById('login-nome').value = '';
+              document.getElementById('login-senha').value = '';
+              exibirAvisoTemporario('Painel do Mestre aberto em nova aba.');
+              return;
+            }
             showAccountCharacters(acc);
             return;
           }

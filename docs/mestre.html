@@ -219,7 +219,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.85);
-            z-index: 9999;
+            z-index: 100000;
             justify-content: center;
             align-items: center;
             backdrop-filter: blur(3px);
@@ -1054,7 +1054,7 @@
         }
 
         function abrirCriarContaFromFicha() {
-            // open admin modal and focus create panel so user can create new account
+            document.getElementById('modal-editar').style.display = 'none';
             document.getElementById('admin-accounts-modal').style.display = 'flex';
             setTimeout(()=>{ document.getElementById('admin-create-username').focus(); },120);
         }
@@ -1096,6 +1096,7 @@
 
         async function openAccountSelector(callback) {
             accountSelectionCallback = callback;
+            document.getElementById('modal-editar').style.display = 'none';
             await openAdminAccounts();
         }
 
@@ -1211,7 +1212,7 @@
             async function loadAccountsRefresh() { try { await openAdminAccounts(); } catch(e){} }
     </script>
     <!-- Admin Accounts Modal -->
-    <div id="admin-accounts-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:99999; align-items:center; justify-content:center;">
+    <div id="admin-accounts-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:100001; align-items:center; justify-content:center;">
         <div style="background:#0f0f0f; padding:16px; width:1100px; max-width:98%; max-height:88vh; overflow:auto; border-radius:10px; border:1px solid #333;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                 <h3 style="margin:0; color:#fff;">Gerenciar Contas</h3>
