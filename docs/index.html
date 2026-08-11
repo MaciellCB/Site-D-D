@@ -1130,12 +1130,33 @@
       const mv = url.searchParams.get('masterView');
       const token = localStorage.getItem('authToken');
       if (mv && token) {
-        // ensure account loaded then select
+        // masterView must open a ficha directly using master token, not account ficha flow
         (async () => {
           try {
-            const me = await fetch('https://dandd-chan.onrender.com/api/accounts/me', { headers: { 'Authorization': 'Bearer ' + token } });
-            if (me.ok) { window.currentAccount = await me.json(); showAccountCharacters(window.currentAccount); selectCharacter(mv); }
-          } catch (e) {}
+            const res = await fetch('https://dandd-chan.onrender.com/api/load-ficha-mestre', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+              body: JSON.stringify({ nome: mv })
+            });
+            if (res.ok) {
+              const data = await res.json();
+              if (typeof state !== 'undefined') {
+                Object.assign(state, data);
+                document.getElementById('login-overlay').style.display = 'none';
+                if (typeof setActiveTab === 'function') setActiveTab(state.activeTab || 'Combate');
+                window.dispatchEvent(new CustomEvent('sheet-updated'));
+                if (typeof atualizarHeader === 'function') atualizarHeader();
+                if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+                exibirAvisoTemporario('Mestre: ficha carregada: ' + mv);
+                return;
+              }
+            } else {
+              const err = await res.json().catch(() => ({}));
+              exibirAvisoTemporario('Erro ao carregar ficha do mestre: ' + (err.error || res.statusText));
+            }
+          } catch (e) {
+            exibirAvisoTemporario('Erro de conexão ao carregar ficha do mestre.');
+          }
         })();
       }
     })();
