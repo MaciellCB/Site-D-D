@@ -611,7 +611,8 @@
     <div id="login-box"
       style="background:#1a1a1a; padding:24px; border-radius:12px; border:2px solid #9c27b0; text-align:center; width:360px; max-width:92%;">
       <img src="img/imagem-no-site/dado-logo.png" style="width:96px; margin-bottom:12px; border-radius:50%; ">
-      <h2 style="color:#fff; margin-bottom:12px; letter-spacing:1px;">ENTRAR NA CONTA</h2>
+      <h2 style="color:#fff; margin-bottom:12px; letter-spacing:1px;">LOGIN DE CONTA</h2>
+      <p style="color:#bbb; font-size:13px; margin-bottom:14px; line-height:1.4;">Cada conta pode ter várias fichas. Faça login na conta e então escolha a ficha que deseja abrir.</p>
 
       <div id="account-forms">
         <input type="text" id="login-nome" placeholder="Conta (username)"
@@ -625,10 +626,10 @@
       </div>
 
       <div id="account-characters" style="display:none; margin-top:12px; text-align:left;">
-        <div style="color:#ccc; font-size:13px; margin-bottom:8px;">Personagens da conta:</div>
+        <div style="color:#ccc; font-size:13px; margin-bottom:8px;">Fichas desta conta:</div>
         <div id="chars-list" style="display:flex; flex-direction:column; gap:8px; max-height:220px; overflow:auto;"></div>
         <div style="display:flex; gap:8px; margin-top:12px;">
-          <button onclick="criarPersonagemPrompt()" class="btn-add" style="flex:1; background:#222; border:1px solid #444;">+ Novo Personagem</button>
+          <button onclick="criarPersonagemPrompt()" class="btn-add" style="flex:1; background:#222; border:1px solid #444;">+ Nova Ficha</button>
           <button onclick="logoutAccount()" class="btn-add" style="flex:1; background:#441111; border:1px solid #662222;">Sair</button>
         </div>
       </div>
@@ -1024,7 +1025,7 @@
       list.innerHTML = '';
       const grid = document.createElement('div'); grid.className = 'account-grid';
       if (chars.length === 0) {
-        const el = document.createElement('div'); el.style.color = '#aaa'; el.textContent = 'Nenhum personagem. Crie um novo abaixo.'; list.appendChild(el);
+        const el = document.createElement('div'); el.style.color = '#aaa'; el.textContent = 'Nenhuma ficha. Crie uma nova abaixo.'; list.appendChild(el);
       }
       chars.forEach(n => {
         const card = document.createElement('div'); card.className = 'account-card';
@@ -1032,8 +1033,8 @@
         const h = document.createElement('h4'); h.textContent = n;
         const desc = document.createElement('div'); desc.style = 'font-size:12px; color:#bbb; min-height:32px;'; desc.textContent = 'Abra para editar ou jogar.';
         const actions = document.createElement('div'); actions.className = 'card-actions';
-        const openBtn = document.createElement('button'); openBtn.className = 'btn-open'; openBtn.textContent = 'Abrir'; openBtn.onclick = () => selectCharacter(n);
-        const editBtn = document.createElement('button'); editBtn.className = 'btn-edit-account'; editBtn.textContent = 'Editar (Mestre)'; editBtn.onclick = () => window.open(`mestre.html?open=${encodeURIComponent(n)}`,'_blank');
+        const openBtn = document.createElement('button'); openBtn.className = 'btn-open'; openBtn.textContent = 'Abrir ficha'; openBtn.onclick = () => selectCharacter(n);
+        const editBtn = document.createElement('button'); editBtn.className = 'btn-edit-account'; editBtn.textContent = 'Ver / Editar (Mestre)'; editBtn.onclick = () => window.open(`mestre.html?open=${encodeURIComponent(n)}`,'_blank');
         actions.appendChild(openBtn); actions.appendChild(editBtn);
         card.appendChild(img); card.appendChild(h); card.appendChild(desc); card.appendChild(actions);
         grid.appendChild(card);
