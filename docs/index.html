@@ -607,7 +607,7 @@
   </div>
 
   <div id="login-overlay"
-    style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:100000; display:flex; align-items:center; justify-content:center; font-family: sans-serif;">
+    style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:100000; display:none; align-items:center; justify-content:center; font-family: sans-serif;">
     <div id="login-box"
       style="background:#1a1a1a; padding:24px; border-radius:12px; border:2px solid #9c27b0; text-align:center; width:360px; max-width:92%;">
       <img src="img/imagem-no-site/dado-logo.png" style="width:96px; margin-bottom:12px; border-radius:50%; ">
@@ -805,38 +805,45 @@
        LÓGICA DO MESTRE & PREENCHIMENTO DE DADOS
        ================================================================= */
     window.addEventListener('DOMContentLoaded', async () => {
+      const overlay = document.getElementById('login-overlay');
+      if (overlay) overlay.style.display = 'none';
+
       // Try to auto-login using token stored in localStorage.
       const API_BASE = 'https://dandd-chan.onrender.com/api';
       try {
         const token = localStorage.getItem('authToken');
-        if (token) {
-          const meRes = await fetch(`${API_BASE}/accounts/me`, { headers: { 'Authorization': 'Bearer ' + token } });
-          if (meRes.ok) {
-            const acc = await meRes.json();
-            window.currentAccount = acc;
-            if (acc.characters && acc.characters.length > 0) {
-              const first = acc.characters[0];
-              const res = await fetch(`${API_BASE}/load-ficha-account`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ nome: first }) });
-              if (res.ok) {
-                const data = await res.json();
-                if (typeof state !== 'undefined') {
-                  Object.assign(state, data);
-                  document.getElementById('login-overlay').style.display = 'none';
-                  setActiveTab(state.activeTab || 'Combate');
-                  window.dispatchEvent(new CustomEvent('sheet-updated'));
-                  if (typeof atualizarHeader === 'function') atualizarHeader();
-                  if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
-                }
-                return;
+        if (!token) {
+          showLoginOverlay();
+          return;
+        }
+
+        const meRes = await fetchWithAuth(`${API_BASE}/accounts/me`);
+        if (meRes.ok) {
+          const acc = await meRes.json();
+          window.currentAccount = acc;
+          if (acc.characters && acc.characters.length > 0) {
+            const first = acc.characters[0];
+            const res = await fetchWithAuth(`${API_BASE}/load-ficha-account`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nome: first }) });
+            if (res.ok) {
+              const data = await res.json();
+              if (typeof state !== 'undefined') {
+                Object.assign(state, data);
+                hideLoginOverlay();
+                setActiveTab(state.activeTab || 'Combate');
+                window.dispatchEvent(new CustomEvent('sheet-updated'));
+                if (typeof atualizarHeader === 'function') atualizarHeader();
+                if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
               }
+              return;
             }
           }
         }
       } catch (e) {
-        // ignore and show login
+        if (e && e.message === 'AUTH_EXPIRED') return;
         console.warn('Auto-login failed', e);
       }
-      // If no token or auto-login failed, show login overlay normally.
+
+      showLoginOverlay();
     });
 
     async function carregarFichaMestre(nome) {
@@ -932,6 +939,16 @@
 
     window.alert = function (msg) { exibirAvisoTemporario(msg); };
 
+    function showLoginOverlay() {
+      const overlay = document.getElementById('login-overlay');
+      if (overlay) overlay.style.display = 'flex';
+    }
+
+    function hideLoginOverlay() {
+      const overlay = document.getElementById('login-overlay');
+      if (overlay) overlay.style.display = 'none';
+    }
+
     let sessionExpiredBanner = null;
 
     function triggerSessionExpired(motivo = 'Sua sessão expirou ou foi encerrada.') {
@@ -999,7 +1016,7 @@
         }
         const data = await res.json();
         localStorage.setItem('authToken', data.token);
-        const me = await fetch(`${API_BASE}/accounts/me`, { headers: { 'Authorization': 'Bearer ' + data.token } });
+        const me = await fetchWithAuth(`${API_BASE}/accounts/me`);
         if (!me.ok) {
           if (masterWindow) masterWindow.close();
           exibirAvisoTemporario('Erro ao carregar a conta.');
@@ -1074,6 +1091,7 @@
     function showAccountCharacters(acc) {
       document.getElementById('account-forms').style.display = 'none';
       document.getElementById('account-characters').style.display = 'block';
+      hideLoginOverlay();
       const list = document.getElementById('chars-list');
       list.innerHTML = '';
       const chars = acc.characters || [];
@@ -1082,17 +1100,33 @@
       if (chars.length === 0) {
         const el = document.createElement('div'); el.style.color = '#aaa'; el.textContent = 'Nenhuma ficha. Crie uma nova abaixo.'; list.appendChild(el);
       }
-      chars.forEach(n => {
+      chars.forEach(async (n) => {
         const card = document.createElement('div'); card.className = 'account-card';
-        const img = document.createElement('img'); img.src = 'img/imagem-no-site/personagem.png';
+        const img = document.createElement('img');
+        img.src = 'img/imagem-no-site/personagem.png';
+        img.alt = n;
+        img.style.objectFit = 'cover';
+        img.style.width = '100%';
+        img.style.height = '90px';
         const h = document.createElement('h4'); h.textContent = n;
         const desc = document.createElement('div'); desc.style = 'font-size:12px; color:#bbb; min-height:32px;'; desc.textContent = 'Abra para editar ou jogar.';
         const actions = document.createElement('div'); actions.className = 'card-actions';
         const openBtn = document.createElement('button'); openBtn.className = 'btn-open'; openBtn.textContent = 'Abrir ficha'; openBtn.onclick = () => selectCharacter(n);
-        const editBtn = document.createElement('button'); editBtn.className = 'btn-edit-account'; editBtn.textContent = 'Ver / Editar (Mestre)'; editBtn.onclick = () => window.open(`mestre.html?open=${encodeURIComponent(n)}`,'_blank');
-        actions.appendChild(openBtn); actions.appendChild(editBtn);
+        actions.appendChild(openBtn);
         card.appendChild(img); card.appendChild(h); card.appendChild(desc); card.appendChild(actions);
         grid.appendChild(card);
+
+        try {
+          const fichaRes = await fetchWithAuth(`${API_BASE}/load-ficha-account`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nome: n }) });
+          if (fichaRes.ok) {
+            const ficha = await fichaRes.json();
+            if (ficha && ficha.fotoPerfil && ficha.fotoPerfil.length > 20) {
+              img.src = ficha.fotoPerfil;
+            }
+          }
+        } catch (e) {
+          // ignorar avatar faltante; mantém o padrão
+        }
       });
       list.appendChild(grid);
       // Apply preferences if any
