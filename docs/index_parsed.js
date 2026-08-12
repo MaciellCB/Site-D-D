@@ -166,7 +166,7 @@
               Object.assign(state, data);
               document.getElementById('login-overlay').style.display = 'none';
               const mainSheet = document.querySelector('main');
-              if (mainSheet) mainSheet.style.display = 'grid';
+              if (mainSheet) mainSheet.style.display = 'flex';
               if (typeof setActiveTab === 'function') setActiveTab(state.activeTab || 'Combate');
               if (typeof preencherFichaNaTela === 'function') preencherFichaNaTela(data);
               if (typeof atualizarHeader === 'function') atualizarHeader();
@@ -313,7 +313,7 @@
       const overlay = document.getElementById('login-overlay');
       if (overlay) overlay.style.display = 'none';
       const mainSheet = document.querySelector('main');
-      if (mainSheet) mainSheet.style.display = 'grid';
+      if (mainSheet) mainSheet.style.display = 'flex';
     }
 
     let sessionExpiredBanner = null;
@@ -643,7 +643,7 @@
           if (typeof state !== 'undefined') {
             Object.assign(state, data);
             const mainSheet = document.querySelector('main');
-            if (mainSheet) mainSheet.style.display = 'grid';
+            if (mainSheet) mainSheet.style.display = 'flex';
             document.getElementById('login-overlay').style.display = 'none';
             if (typeof setActiveTab === 'function') setActiveTab(state.activeTab || 'Combate');
             if (typeof preencherFichaNaTela === 'function') preencherFichaNaTela(data);
