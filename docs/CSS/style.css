@@ -90,10 +90,10 @@ header {
 }
 
 /* =============================================================
-   4. MODO MOBILE (Telas < 768px)
+   4. MODO MOBILE (Telas < 768px em toque)
    (CORREÇÃO DEFINITIVA DE LAYOUT COLAPSADO)
 ============================================================= */
-@media (max-width: 768px) {
+@media (max-width: 768px) and (pointer: coarse) {
 
   /* --- 4.1. ESTRUTURA BASE --- */
   body {
@@ -123,6 +123,14 @@ header {
     border: none !important;
     padding: 0 !important;
     box-sizing: border-box !important;
+  }
+
+  /* Garante que o layout desktop não seja escondido por outros triggers */
+  body[data-mobile-view="header"] .info-personagem,
+  body[data-mobile-view="status"] .lado-esquerdo,
+  body[data-mobile-view="pericia"] .lado-centro,
+  body[data-mobile-view="inventario"] .lado-direito {
+    display: block !important;
   }
 
   /* --- 4.3. VIEWS E NAVEGAÇÃO --- */
