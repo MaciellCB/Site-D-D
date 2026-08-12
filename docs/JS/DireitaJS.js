@@ -148,9 +148,10 @@ async function carregarDadosIniciais(nome, senha) {
       setActiveTab(state.activeTab || 'Combate');
 
       // Atualiza tudo
-      window.dispatchEvent(new CustomEvent('sheet-updated'));
-      if (typeof atualizarHeader === 'function') atualizarHeader();
       if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+      if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
+      if (typeof atualizarHeader === 'function') atualizarHeader();
+      window.dispatchEvent(new CustomEvent('sheet-updated'));
 
     } else {
       alert("Nome ou senha incorretos.");

@@ -852,6 +852,7 @@
 
       if (typeof atualizarHeader === 'function') atualizarHeader();
       if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+      if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
       if (typeof preencherFichaNaTela === 'function') preencherFichaNaTela(state || {});
       window.dispatchEvent(new CustomEvent('sheet-updated'));
     }
@@ -883,6 +884,7 @@
               if (typeof preencherFichaNaTela === 'function') preencherFichaNaTela(data);
               if (typeof atualizarHeader === 'function') atualizarHeader();
               if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+              if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
               window.dispatchEvent(new CustomEvent('sheet-updated'));
               return;
             }
@@ -1361,6 +1363,7 @@
             if (typeof preencherFichaNaTela === 'function') preencherFichaNaTela(data);
             if (typeof atualizarHeader === 'function') atualizarHeader();
             if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+            if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
             window.dispatchEvent(new CustomEvent('sheet-updated'));
             exibirAvisoTemporario('Personagem carregado: ' + nome);
           }
@@ -1391,11 +1394,16 @@
               const data = await res.json();
               if (typeof state !== 'undefined') {
                 Object.assign(state, data);
+                const mainSheet = document.querySelector('main');
+                if (mainSheet) mainSheet.style.display = 'grid';
                 document.getElementById('login-overlay').style.display = 'none';
                 if (typeof setActiveTab === 'function') setActiveTab(state.activeTab || 'Combate');
+                if (typeof preencherFichaNaTela === 'function') preencherFichaNaTela(data);
+                if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
                 window.dispatchEvent(new CustomEvent('sheet-updated'));
                 if (typeof atualizarHeader === 'function') atualizarHeader();
                 if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+                if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
                 exibirAvisoTemporario('Mestre: ficha carregada: ' + mv);
                 return;
               }
