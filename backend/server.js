@@ -390,6 +390,28 @@ app.post('/api/editar-credenciais', authenticateToken, async (req, res) => {
     } catch (error) { res.status(500).json({ error: "Erro ao editar." }); }
 });
 
+// Remove character from account linkage (master only)
+app.post('/api/ficha/unlink-account', authenticateToken, async (req, res) => {
+    try {
+        if (!req.account.isMaster) return res.status(403).json({ error: 'Forbidden' });
+        const { nome, accountUsername } = req.body;
+        if (!nome || !accountUsername) return res.status(400).json({ error: 'Missing name or account' });
+        
+        await Ficha.findOneAndUpdate(
+            { nome: { $regex: new RegExp(`^${nome}$`, 'i') } },
+            { $unset: { accountUsername: 1 } }
+        );
+        
+        await Account.findOneAndUpdate(
+            { username: { $regex: new RegExp(`^${accountUsername}$`, 'i') } },
+            { $pull: { characters: nome } }
+        );
+        
+        await auditLog(req.account, { ip: req.ip }, 'unlink_character', nome, { account: accountUsername });
+        res.json({ ok: true });
+    } catch (error) { res.status(500).json({ error: "Erro ao desvincular." }); }
+});
+
 app.get('/api/mapa-pins', async (req, res) => {
     try {
         const pins = await Pin.find({});

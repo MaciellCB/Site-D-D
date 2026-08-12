@@ -880,7 +880,12 @@
                     document.getElementById('edit-account-username').value = acc.username;
                     document.getElementById('edit-account-password').value = '';
                     const list = document.getElementById('edit-account-linked'); list.innerHTML = '';
-                    (acc.characters || []).forEach(n => { const li = document.createElement('div'); li.style = 'color:#ddd; padding:6px 0;'; li.textContent = n; list.appendChild(li); });
+                    (acc.characters || []).forEach(n => {
+                        const li = document.createElement('div');
+                        li.style = 'color:#ddd; padding:6px 4px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #222;';
+                        li.innerHTML = `<span>${n}</span><button style="background:#c62828; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:11px;" onclick="removerFichaDaConta('${n}', '${acc.username}')">Remover</button>`;
+                        list.appendChild(li);
+                    });
                     document.getElementById('modal-edit-account').style.display = 'flex';
                 } catch (e) { mostrarAviso('Erro de conexão.'); }
             }
@@ -895,6 +900,27 @@
                     const res = await fetch(`${API_URL}/accounts/admin/edit`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ username: original, newUsername: novo || undefined, newPassword: senha || undefined }) });
                     if (res.ok) { mostrarAviso('Conta atualizada.'); document.getElementById('modal-edit-account').style.display = 'none'; loadAccountsRefresh(); }
                     else { const d = await res.json().catch(()=>({})); mostrarAviso('Erro: ' + (d.error||'Não foi possível atualizar.')); }
+                } catch (e) { mostrarAviso('Erro de conexão.'); }
+            }
+
+            async function removerFichaDaConta(nomePersonagem, nomeAccount) {
+                if (!confirm(`Remover "${nomePersonagem}" da conta "${nomeAccount}"?`)) return;
+                try {
+                    const token = localStorage.getItem('authToken');
+                    const res = await fetch(`${API_URL}/ficha/unlink-account`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                        body: JSON.stringify({ nome: nomePersonagem, accountUsername: nomeAccount })
+                    });
+                    if (res.ok) {
+                        mostrarAviso('Ficha desvinculada.');
+                        // Recarregar o modal
+                        const originalUsername = document.getElementById('modal-edit-account-name').innerText;
+                        if (originalUsername) abrirModalEditarConta(originalUsername);
+                    } else {
+                        const d = await res.json().catch(()=>({}));
+                        mostrarAviso('Erro: ' + (d.error||'Não foi possível desvincular.'));
+                    }
                 } catch (e) { mostrarAviso('Erro de conexão.'); }
             }
 
