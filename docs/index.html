@@ -860,16 +860,46 @@
       const overlay = document.getElementById('login-overlay');
       if (overlay) overlay.style.display = 'none';
 
-      // Try to auto-login using token stored in localStorage.
       const API_BASE = 'https://dandd-chan.onrender.com/api';
-      try {
-        const token = localStorage.getItem('authToken');
-        if (!token) {
-          resetSheetState();
-          showLoginOverlay();
-          return;
-        }
+      const token = localStorage.getItem('authToken');
+      const url = new URL(window.location.href);
+      const masterView = url.searchParams.get('masterView');
 
+      if (token && masterView) {
+        try {
+          const res = await fetchWithAuth(`${API_BASE}/load-ficha-mestre`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome: masterView })
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (typeof state !== 'undefined') {
+              Object.assign(state, data);
+              document.getElementById('login-overlay').style.display = 'none';
+              const mainSheet = document.querySelector('main');
+              if (mainSheet) mainSheet.style.display = 'grid';
+              if (typeof setActiveTab === 'function') setActiveTab(state.activeTab || 'Combate');
+              if (typeof preencherFichaNaTela === 'function') preencherFichaNaTela(data);
+              if (typeof atualizarHeader === 'function') atualizarHeader();
+              if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+              window.dispatchEvent(new CustomEvent('sheet-updated'));
+              return;
+            }
+          }
+        } catch (e) {
+          if (e && e.message === 'AUTH_EXPIRED') return;
+          console.warn('Master view failed', e);
+        }
+      }
+
+      if (!token) {
+        resetSheetState();
+        showLoginOverlay();
+        return;
+      }
+
+      try {
         const meRes = await fetchWithAuth(`${API_BASE}/accounts/me`);
         if (meRes.ok) {
           const acc = await meRes.json();
@@ -983,11 +1013,15 @@
     function showLoginOverlay() {
       const overlay = document.getElementById('login-overlay');
       if (overlay) overlay.style.display = 'flex';
+      const mainSheet = document.querySelector('main');
+      if (mainSheet) mainSheet.style.display = 'none';
     }
 
     function hideLoginOverlay() {
       const overlay = document.getElementById('login-overlay');
       if (overlay) overlay.style.display = 'none';
+      const mainSheet = document.querySelector('main');
+      if (mainSheet) mainSheet.style.display = 'grid';
     }
 
     let sessionExpiredBanner = null;
@@ -1133,6 +1167,12 @@
     }
 
     function showAccountCharacters(acc) {
+      const loginBox = document.getElementById('login-box');
+      if (loginBox) {
+        loginBox.style.width = '760px';
+        loginBox.style.maxWidth = '92vw';
+      }
+
       document.getElementById('account-forms').style.display = 'none';
       document.getElementById('account-characters').style.display = 'block';
       showLoginOverlay();
@@ -1140,7 +1180,12 @@
       list.innerHTML = '';
       const chars = acc.characters || [];
       list.innerHTML = '';
-      const grid = document.createElement('div'); grid.className = 'account-grid';
+      const grid = document.createElement('div');
+      grid.className = 'account-grid';
+      grid.style.display = 'grid';
+      grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(180px, 1fr))';
+      grid.style.gap = '10px';
+      grid.style.width = '100%';
       if (chars.length === 0) {
         const el = document.createElement('div'); el.style.color = '#aaa'; el.textContent = 'Nenhuma ficha. Crie uma nova abaixo.'; list.appendChild(el);
       }
@@ -1232,14 +1277,49 @@
       fecharCriarFichaModal();
     }
 
+    const FICHA_BASE_PADRAO = {
+      fotoPerfil: '',
+      activeTab: 'Combate',
+      atributos: { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 },
+      pericias: {
+        Acrobacia: 0, Arcanismo: 0, Atletismo: 0, Atuação: 0, Furtividade: 0, História: 0,
+        Intimidação: 0, Intuição: 0, Investigação: 0, Medicina: 0, Natureza: 0,
+        Percepção: 0, Performance: 0, Persuasão: 0, Religião: 0, Sobrevivência: 0,
+        LidarComAnimais: 0, Ladinagem: 0
+      },
+      niveisClasses: {},
+      xp: '0',
+      marco: 0,
+      vidaAtual: 1,
+      vidaTotalCalculada: 1,
+      inventory: [],
+      abilities: [],
+      spells: [],
+      description: { anotacoes: '', aparencia: '', personalidade: '', objetivo: '', ideais: '', vinculos: '', fraquezas: '', historia: '' },
+      spellSlots: {
+        '1': { used: 0, status: [] }, '2': { used: 0, status: [] },
+        '3': { used: 0, status: [] }, '4': { used: 0, status: [] },
+        '5': { used: 0, status: [] }, '6': { used: 0, status: [] },
+        '7': { used: 0, status: [] }, '8': { used: 0, status: [] },
+        '9': { used: 0, status: [] }, pact: { used: 0, status: [] },
+        ki: { used: 0, status: [] }, furia: { used: 0, status: [] },
+        sorcery: { used: 0, status: [] }, mutagen: { used: 0, status: [] }
+      }
+    };
+
     async function criarPersonagem(nome) {
       const API_BASE = 'https://dandd-chan.onrender.com/api';
       const token = localStorage.getItem('authToken');
       if (!token || !window.currentAccount) { exibirAvisoTemporario('Conta não autenticada.'); return; }
+      const payload = {
+        nome,
+        senha: '',
+        accountUsername: window.currentAccount.username,
+        ...FICHA_BASE_PADRAO
+      };
       try {
-        const res = await fetchWithAuth(`${API_BASE}/criar-ficha`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nome, accountUsername: window.currentAccount.username }) });
+        const res = await fetchWithAuth(`${API_BASE}/criar-ficha`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         if (res.ok) {
-          // refresh account
           const me = await fetchWithAuth(`${API_BASE}/accounts/me`);
           if (me.ok) {
             const acc = await me.json(); window.currentAccount = acc; showAccountCharacters(acc);
