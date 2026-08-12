@@ -610,7 +610,6 @@
       if (!token || !window.currentAccount) { exibirAvisoTemporario('Conta não autenticada.'); return; }
       const payload = {
         nome,
-        senha: '',
         accountUsername: window.currentAccount.username,
         ...FICHA_BASE_PADRAO
       };

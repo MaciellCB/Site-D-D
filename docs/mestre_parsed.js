@@ -521,7 +521,6 @@
 
         function abrirModalCriar() {
             document.getElementById('novo-nome').value = '';
-            document.getElementById('novo-senha').value = '';
             document.getElementById('modal-criar').style.display = 'flex';
             document.getElementById('novo-nome').focus();
         }
@@ -529,13 +528,11 @@
 
         async function confirmarCriacao() {
             const nome = document.getElementById('novo-nome').value.trim();
-            const senha = document.getElementById('novo-senha').value.trim();
 
-            if (!nome || !senha) return mostrarAviso("Preencha tudo!");
+            if (!nome) return mostrarAviso("Digite o nome da ficha!");
 
             const novaFichaCompleta = {
                 nome: nome,
-                senha: senha,
                 fotoPerfil: "",
                 activeTab: "Inventário",
                 atributos: { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 },
