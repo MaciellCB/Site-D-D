@@ -64,6 +64,58 @@
     /* =================================================================
        LÓGICA DO MESTRE & PREENCHIMENTO DE DADOS
        ================================================================= */
+    function resetSheetState() {
+      if (typeof window.state !== 'undefined') {
+        try {
+          window.state = {
+            nome: '',
+            senha: '',
+            activeTab: 'Combate',
+            spellDCConfig: { selectedAttr: '', extraMod: 0, lastKnownLevel: 0 },
+            dtMagias: 'Selecione',
+            inventory: [],
+            abilities: [],
+            description: { anotacoes: '', aparencia: '', personalidade: '', objetivo: '', ideais: '', vinculos: '', fraquezas: '', historia: '' }
+          };
+        } catch (e) {}
+      }
+      if (typeof state !== 'undefined') {
+        state = {
+          nome: '',
+          senha: '',
+          activeTab: 'Combate',
+          spellDCConfig: { selectedAttr: '', extraMod: 0, lastKnownLevel: 0 },
+          dtMagias: 'Selecione',
+          inventory: [],
+          abilities: [],
+          description: { anotacoes: '', aparencia: '', personalidade: '', objetivo: '', ideais: '', vinculos: '', fraquezas: '', historia: '' }
+        };
+      }
+
+      const camposVisuais = [
+        'input-personagem', 'input-jogador', 'input-raca', 'btn-antecedente',
+        'nome-personagem-overlay', 'img-personagem-visual', 'input-foto-upload'
+      ];
+      camposVisuais.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (el.tagName === 'INPUT') el.value = '';
+        else if (el.tagName === 'IMG') el.src = 'img/imagem-no-site/personagem.png';
+        else el.textContent = '';
+      });
+
+      const personagemImg = document.getElementById('img-personagem-visual');
+      if (personagemImg) personagemImg.src = 'img/imagem-no-site/personagem.png';
+
+      const conteudo = document.querySelector('.lado-direito .conteudo');
+      if (conteudo) conteudo.innerHTML = '<p>Carregando...</p>';
+
+      if (typeof atualizarHeader === 'function') atualizarHeader();
+      if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+      if (typeof preencherFichaNaTela === 'function') preencherFichaNaTela(state || {});
+      window.dispatchEvent(new CustomEvent('sheet-updated'));
+    }
+
     window.addEventListener('DOMContentLoaded', async () => {
       const overlay = document.getElementById('login-overlay');
       if (overlay) overlay.style.display = 'none';
@@ -73,6 +125,7 @@
       try {
         const token = localStorage.getItem('authToken');
         if (!token) {
+          resetSheetState();
           showLoginOverlay();
           return;
         }
@@ -81,28 +134,16 @@
         if (meRes.ok) {
           const acc = await meRes.json();
           window.currentAccount = acc;
-          if (acc.characters && acc.characters.length > 0) {
-            const first = acc.characters[0];
-            const res = await fetchWithAuth(`${API_BASE}/load-ficha-account`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nome: first }) });
-            if (res.ok) {
-              const data = await res.json();
-              if (typeof state !== 'undefined') {
-                Object.assign(state, data);
-                hideLoginOverlay();
-                setActiveTab(state.activeTab || 'Combate');
-                window.dispatchEvent(new CustomEvent('sheet-updated'));
-                if (typeof atualizarHeader === 'function') atualizarHeader();
-                if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
-              }
-              return;
-            }
-          }
+          resetSheetState();
+          showAccountCharacters(acc);
+          return;
         }
       } catch (e) {
         if (e && e.message === 'AUTH_EXPIRED') return;
         console.warn('Auto-login failed', e);
       }
 
+      resetSheetState();
       showLoginOverlay();
     });
 
@@ -284,6 +325,7 @@
         }
         const acc = await me.json();
         window.currentAccount = acc;
+        resetSheetState();
         if (acc.isMaster) {
           if (masterWindow) {
             masterWindow.location = 'mestre.html';
@@ -353,7 +395,7 @@
     function showAccountCharacters(acc) {
       document.getElementById('account-forms').style.display = 'none';
       document.getElementById('account-characters').style.display = 'block';
-      hideLoginOverlay();
+      showLoginOverlay();
       const list = document.getElementById('chars-list');
       list.innerHTML = '';
       const chars = acc.characters || [];
@@ -483,11 +525,14 @@
           const data = await res.json();
           if (typeof state !== 'undefined') {
             Object.assign(state, data);
+            const mainSheet = document.querySelector('main');
+            if (mainSheet) mainSheet.style.display = 'grid';
             document.getElementById('login-overlay').style.display = 'none';
             if (typeof setActiveTab === 'function') setActiveTab(state.activeTab || 'Combate');
-            window.dispatchEvent(new CustomEvent('sheet-updated'));
+            if (typeof preencherFichaNaTela === 'function') preencherFichaNaTela(data);
             if (typeof atualizarHeader === 'function') atualizarHeader();
             if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+            window.dispatchEvent(new CustomEvent('sheet-updated'));
             exibirAvisoTemporario('Personagem carregado: ' + nome);
           }
         } else {
@@ -540,14 +585,23 @@
     function logoutAccount() {
       localStorage.removeItem('authToken');
       window.currentAccount = null;
+      resetSheetState();
+      const chars = document.getElementById('chars-list');
+      if (chars) chars.innerHTML = '';
+      const lista = document.getElementById('account-characters');
+      if (lista) lista.style.display = 'none';
+      const forms = document.getElementById('account-forms');
+      if (forms) forms.style.display = 'block';
+      const loginInput = document.getElementById('login-nome');
+      const senhaInput = document.getElementById('login-senha');
+      if (loginInput) loginInput.value = '';
+      if (senhaInput) senhaInput.value = '';
+      const loginOverlay = document.getElementById('login-overlay');
+      if (loginOverlay) loginOverlay.style.display = 'flex';
+      const mainSheet = document.querySelector('main');
+      if (mainSheet) mainSheet.style.display = 'none';
       if (window.location.href.indexOf('?masterView=') !== -1) {
         window.location.href = 'index.html';
-      } else {
-        document.getElementById('account-characters').style.display = 'none';
-        document.getElementById('register-box').style.display = 'none';
-        document.getElementById('account-forms').style.display = 'block';
-        const loginOverlay = document.getElementById('login-overlay');
-        if (loginOverlay) loginOverlay.style.display = 'flex';
       }
     }
 
