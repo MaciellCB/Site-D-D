@@ -68,13 +68,17 @@
     }
 
     /* Account dashboard cards - DESKTOP */
-    .account-grid { display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); width:100%; }
-    .account-card { background:linear-gradient(180deg,#0f0f0f,#121212); border:1px solid #222; padding:12px; border-radius:10px; min-width:0; box-shadow: 0 6px 20px rgba(0,0,0,0.6); color:#ddd; display:flex; flex-direction:column; }
-    .account-card img { width:100%; height:120px; border-radius:8px; object-fit:cover; border:1px solid #333; display:block; margin-bottom:8px; }
-    .account-card h4 { margin:0 0 6px 0; color:#e0aaff; font-size:14px; white-space:normal; word-wrap:break-word; }
+    .account-grid { display:grid; gap:16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); width:100%; max-width:1200px; margin:0 auto; }
+    .account-card { background:linear-gradient(180deg,#0f0f0f,#121212); border:1px solid #333; padding:16px; border-radius:12px; min-width:0; box-shadow: 0 8px 24px rgba(0,0,0,0.7); color:#ddd; display:flex; flex-direction:column; transition:all 0.3s ease; }
+    .account-card:hover { border-color:#9c27b0; box-shadow: 0 12px 32px rgba(156, 39, 176, 0.3); }
+    .account-card img { width:100%; height:160px; border-radius:10px; object-fit:cover; border:1px solid #444; display:block; margin-bottom:12px; }
+    .account-card h4 { margin:0 0 8px 0; color:#e0aaff; font-size:16px; font-weight:bold; white-space:normal; word-wrap:break-word; }
+    .account-card > div:nth-child(3) { font-size:13px; color:#999; margin-bottom:12px; flex-grow:1; }
     .account-card .card-actions { display:flex; gap:8px; margin-top:auto; }
-    .btn-open { flex:1; background:#9c27b0; color:#fff; border:none; padding:8px; border-radius:6px; cursor:pointer; font-size:13px; }
-    .btn-edit-account { flex:1; background:#333; color:#fff; border:1px solid #444; padding:8px; border-radius:6px; cursor:pointer; font-size:13px; }
+    .btn-open { flex:1; background:#9c27b0; color:#fff; border:none; padding:10px 12px; border-radius:6px; cursor:pointer; font-size:13px; font-weight:bold; transition:all 0.2s; }
+    .btn-open:hover { background:#b32fc2; }
+    .btn-edit-account { flex:1; background:#333; color:#fff; border:1px solid #555; padding:10px 12px; border-radius:6px; cursor:pointer; font-size:13px; transition:all 0.2s; }
+    .btn-edit-account:hover { background:#444; border-color:#9c27b0; }
 
     /* MOBILE: Login responsivo */
     @media (max-width: 768px) {
@@ -108,16 +112,23 @@
     /* DESKTOP: Login otimizado */
     @media (min-width: 769px) {
       #login-overlay {
-        padding: 40px !important;
+        padding: 60px 40px !important;
       }
 
       #login-box {
-        width: 500px !important;
-        max-width: 90vw !important;
+        width: 100% !important;
+        max-width: 1400px !important;
+        min-height: auto !important;
       }
 
       .account-grid {
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+        gap: 20px !important;
+      }
+
+      #chars-list {
+        min-height: 400px !important;
+        max-height: 600px !important;
       }
     }
 
@@ -162,14 +173,16 @@
     }
 
     #login-box {
-      background: #1a1a1a;
-      padding: 24px;
-      border-radius: 12px;
+      background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+      padding: 40px;
+      border-radius: 16px;
       border: 2px solid #9c27b0;
+      border-top: 1px solid #b32fc2;
       text-align: center;
       width: 100%;
-      max-width: 500px;
+      max-width: 600px;
       box-sizing: border-box;
+      box-shadow: 0 20px 60px rgba(156, 39, 176, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.05);
     }
 
     #login-box img {
@@ -180,35 +193,240 @@
     }
 
     #login-box h2 {
-      color: #fff;
-      margin-bottom: 12px;
-      letter-spacing: 1px;
+      color: #e0aaff;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
       margin-top: 0;
+      font-size: 24px;
+      text-transform: uppercase;
+    }
+
+    #login-box > p {
+      color: #aaa;
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+
+    #account-forms {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
     }
 
     #account-forms input,
     #novo-nome-ficha {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 8px;
+      padding: 12px 14px;
+      margin-bottom: 0;
       background: #000;
       color: #fff;
       border: 1px solid #333;
-      border-radius: 4px;
+      border-radius: 6px;
       box-sizing: border-box;
       font-size: 14px;
+      transition: all 0.2s;
     }
 
     #account-forms input:focus,
     #novo-nome-ficha:focus {
       outline: none;
       border-color: #9c27b0;
-      box-shadow: 0 0 8px rgba(156, 39, 176, 0.3);
+      box-shadow: 0 0 12px rgba(156, 39, 176, 0.4);
+      background: #0a0a0a;
+    }
+
+    #account-forms > div {
+      display: flex;
+      gap: 10px;
+    }
+
+    #account-forms button {
+      flex: 1;
+      padding: 12px;
+      font-weight: bold;
+      font-size: 13px;
+      transition: all 0.2s;
+      border-radius: 6px;
+    }
+
+    #btn-account-login {
+      background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    #btn-account-login:hover {
+      background: linear-gradient(135deg, #b32fc2, #9c27b0);
+      box-shadow: 0 4px 16px rgba(156, 39, 176, 0.4);
     }
 
     #account-characters {
       text-align: left;
-      margin-top: 12px;
+      margin-top: 0;
+    }
+
+    #account-characters > div:first-child {
+      color: #bbb;
+      font-size: 13px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: bold;
+    }
+
+    #chars-list {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 420px;
+      overflow-y: auto;
+    }
+
+    #chars-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #chars-list::-webkit-scrollbar-track {
+      background: #0a0a0a;
+      border-radius: 3px;
+    }
+
+    #chars-list::-webkit-scrollbar-thumb {
+      background: #9c27b0;
+      border-radius: 3px;
+    }
+
+    #chars-list::-webkit-scrollbar-thumb:hover {
+      background: #b32fc2;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    #account-characters button {
+      flex: 1;
+      min-width: 140px;
+      padding: 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 13px;
+      transition: all 0.2s;
+      border: 1px solid;
+    }
+
+    #account-characters .btn-add:first-child {
+      background: #222;
+      color: #fff;
+      border-color: #444;
+    }
+
+    #account-characters .btn-add:first-child:hover {
+      background: #333;
+      border-color: #9c27b0;
+    }
+
+    #account-characters .btn-add:last-child {
+      background: #5a2a2a;
+      color: #fff;
+      border-color: #8a4a4a;
+    }
+
+    #account-characters .btn-add:last-child:hover {
+      background: #6a3a3a;
+      border-color: #ff6b6b;
+    }
+
+    #criar-ficha-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 100001;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #criar-ficha-modal > div {
+      background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+      padding: 32px;
+      border-radius: 14px;
+      border: 2px solid #9c27b0;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(156, 39, 176, 0.2);
+    }
+
+    #criar-ficha-modal h3 {
+      margin: 0 0 24px;
+      color: #e0aaff;
+      font-size: 20px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    #criar-ficha-modal input {
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 20px;
+      background: #000;
+      color: #fff;
+      border: 1px solid #333;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    #criar-ficha-modal input:focus {
+      outline: none;
+      border-color: #9c27b0;
+      box-shadow: 0 0 12px rgba(156, 39, 176, 0.4);
+    }
+
+    #criar-ficha-modal > div > div {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    #criar-ficha-modal button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 13px;
+      transition: all 0.2s;
+      border: 1px solid;
+    }
+
+    #criar-ficha-modal button:first-child {
+      background: #333;
+      color: #fff;
+      border-color: #444;
+    }
+
+    #criar-ficha-modal button:first-child:hover {
+      background: #444;
+      border-color: #555;
+    }
+
+    #criar-ficha-modal button:last-child {
+      background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+      color: #fff;
+      border: none;
+    }
+
+    #criar-ficha-modal button:last-child:hover {
+      background: linear-gradient(135deg, #b32fc2, #9c27b0);
+      box-shadow: 0 4px 16px rgba(156, 39, 176, 0.4);
     }
 
     /* =========================================================================
@@ -714,34 +932,33 @@
     <div id="login-box"
       style="background:#1a1a1a; padding:24px; border-radius:12px; border:2px solid #9c27b0; text-align:center;">
       <img src="img/imagem-no-site/dado-logo.png" style="width:96px; height:96px; margin-bottom:12px; border-radius:50%;">
-      <h2 style="color:#fff; margin-bottom:12px; letter-spacing:1px;">LOGIN DE CONTA</h2>
-      <p style="color:#bbb; font-size:13px; margin-bottom:14px; line-height:1.4;"></p>
+      <h2>LOGIN DE CONTA</h2>
+      <p></p>
 
       <div id="account-forms">
         <input type="text" id="login-nome" name="login-username" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Conta (username)">
         <input type="password" id="login-senha" name="login-password" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Senha">
-        <div style="display:flex; gap:8px;">
-          <button id="btn-account-login" onclick="tentarLogin()"
-            style="flex:1; background:#9c27b0; color:#fff; border:none; padding:12px 10px; cursor:pointer; font-weight:bold; border-radius:4px; font-size:14px; transition:all 0.2s;">Entrar</button>
+        <div>
+          <button id="btn-account-login" onclick="tentarLogin()">Entrar</button>
         </div>
       </div>
 
-      <div id="account-characters" style="display:none; margin-top:12px; text-align:left;">
-        <div style="color:#ccc; font-size:13px; margin-bottom:8px;">Fichas desta conta:</div>
-        <div id="chars-list" style="display:flex; flex-direction:column; gap:8px; max-height:320px; overflow-y:auto; width:100%; box-sizing:border-box;"></div>
-        <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
-          <button onclick="criarPersonagemPrompt()" class="btn-add" style="flex:1; min-width:120px; background:#222; color:#fff; border:1px solid #444; padding:10px; border-radius:4px; cursor:pointer; font-size:13px;">+ Nova Ficha</button>
-          <button onclick="logoutAccount()" class="btn-add" style="flex:1; min-width:120px; background:#441111; color:#fff; border:1px solid #662222; padding:10px; border-radius:4px; cursor:pointer; font-size:13px;">Sair</button>
+      <div id="account-characters" style="display:none;">
+        <div>Fichas desta conta:</div>
+        <div id="chars-list"></div>
+        <div class="action-buttons">
+          <button onclick="criarPersonagemPrompt()" class="btn-add">+ Nova Ficha</button>
+          <button onclick="logoutAccount()" class="btn-add">Sair</button>
         </div>
       </div>
 
-      <div id="criar-ficha-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:100001; align-items:center; justify-content:center;">
-        <div style="background:#1a1a1a; padding:24px; border-radius:12px; border:2px solid #9c27b0; width:360px; max-width:92%; text-align:center;">
-          <h3 style="margin:0 0 12px; color:#fff;">Nova Ficha</h3>
-          <input id="novo-nome-ficha" type="text" placeholder="Nome da ficha" style="width:100%; padding:10px; margin-bottom:12px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
-          <div style="display:flex; gap:8px; justify-content:center;">
-            <button onclick="fecharCriarFichaModal()" class="btn-add" style="flex:1; background:#333; border:1px solid #444;">Cancelar</button>
-            <button onclick="criarPersonagemConfirm()" class="btn-add" style="flex:1; background:#9c27b0; border:none; color:#fff;">Criar</button>
+      <div id="criar-ficha-modal">
+        <div>
+          <h3>Nova Ficha</h3>
+          <input id="novo-nome-ficha" type="text" placeholder="Nome da ficha">
+          <div>
+            <button onclick="fecharCriarFichaModal()" class="btn-add">Cancelar</button>
+            <button onclick="criarPersonagemConfirm()" class="btn-add">Criar</button>
           </div>
         </div>
       </div>
