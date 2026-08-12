@@ -760,8 +760,13 @@
       window.scrollTo(0, 0);
     }
 
-    if (window.innerWidth <= 768) {
+    const isLikelyMobileDevice = /Mobi|Android|iPhone|iPad|Tablet/i.test(navigator.userAgent) ||
+      (window.matchMedia && window.matchMedia('(pointer: coarse)').matches && window.innerWidth <= 1024);
+
+    if (isLikelyMobileDevice && window.innerWidth <= 768) {
       setMobileView('status');
+    } else {
+      document.body.removeAttribute('data-mobile-view');
     }
 
     /* =================================================================
