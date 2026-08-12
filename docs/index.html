@@ -67,23 +67,58 @@
       to { opacity: 0; transform: translateX(-50%) scale(0.9); }
     }
 
-    /* Account dashboard cards */
-    .account-grid { display:flex; gap:10px; flex-wrap:wrap; }
-    .account-card { background:linear-gradient(180deg,#0f0f0f,#121212); border:1px solid #222; padding:12px; border-radius:10px; width:180px; box-shadow: 0 6px 20px rgba(0,0,0,0.6); color:#ddd; }
-    .account-card img { width:64px; height:64px; border-radius:8px; object-fit:cover; border:1px solid #333; display:block; margin-bottom:8px; }
-    .account-card h4 { margin:0 0 6px 0; color:#e0aaff; font-size:15px; }
-    .account-card .card-actions { display:flex; gap:8px; margin-top:8px; }
-    .btn-open { flex:1; background:#9c27b0; color:#fff; border:none; padding:6px; border-radius:6px; cursor:pointer; }
-    .btn-edit-account { flex:1; background:#333; color:#fff; border:1px solid #444; padding:6px; border-radius:6px; cursor:pointer; }
+    /* Account dashboard cards - DESKTOP */
+    .account-grid { display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); width:100%; }
+    .account-card { background:linear-gradient(180deg,#0f0f0f,#121212); border:1px solid #222; padding:12px; border-radius:10px; min-width:0; box-shadow: 0 6px 20px rgba(0,0,0,0.6); color:#ddd; display:flex; flex-direction:column; }
+    .account-card img { width:100%; height:120px; border-radius:8px; object-fit:cover; border:1px solid #333; display:block; margin-bottom:8px; }
+    .account-card h4 { margin:0 0 6px 0; color:#e0aaff; font-size:14px; white-space:normal; word-wrap:break-word; }
+    .account-card .card-actions { display:flex; gap:8px; margin-top:auto; }
+    .btn-open { flex:1; background:#9c27b0; color:#fff; border:none; padding:8px; border-radius:6px; cursor:pointer; font-size:13px; }
+    .btn-edit-account { flex:1; background:#333; color:#fff; border:1px solid #444; padding:8px; border-radius:6px; cursor:pointer; font-size:13px; }
 
-    /* Account dashboard cards */
-    .account-grid { display:flex; gap:10px; flex-wrap:wrap; }
-    .account-card { background:linear-gradient(180deg,#0f0f0f,#121212); border:1px solid #222; padding:12px; border-radius:10px; width:180px; box-shadow: 0 6px 20px rgba(0,0,0,0.6); color:#ddd; }
-    .account-card img { width:64px; height:64px; border-radius:8px; object-fit:cover; border:1px solid #333; display:block; margin-bottom:8px; }
-    .account-card h4 { margin:0 0 6px 0; color:#e0aaff; font-size:15px; }
-    .account-card .card-actions { display:flex; gap:8px; margin-top:8px; }
-    .btn-open { flex:1; background:#9c27b0; color:#fff; border:none; padding:6px; border-radius:6px; cursor:pointer; }
-    .btn-edit-account { flex:1; background:#333; color:#fff; border:1px solid #444; padding:6px; border-radius:6px; cursor:pointer; }
+    /* MOBILE: Login responsivo */
+    @media (max-width: 768px) {
+      #login-overlay {
+        padding: 20px !important;
+      }
+      
+      #login-box {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 20px !important;
+      }
+
+      .account-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      .account-card img {
+        height: 100px !important;
+      }
+
+      .account-card h4 {
+        font-size: 13px !important;
+      }
+
+      #chars-list {
+        width: 100% !important;
+      }
+    }
+
+    /* DESKTOP: Login otimizado */
+    @media (min-width: 769px) {
+      #login-overlay {
+        padding: 40px !important;
+      }
+
+      #login-box {
+        min-width: 380px !important;
+      }
+
+      .account-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+      }
+    }
 
     /* Link específico para o Mestre voltar ao painel */
     .nav-mestre-link {
@@ -106,6 +141,73 @@
       opacity: 0.8;
       transform: scale(1.02);
       border: 2px solid #9c27b0;
+    }
+
+    /* Login Box - Melhorias Gerais */
+    #login-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 100000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-family: sans-serif;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    #login-box {
+      background: #1a1a1a;
+      padding: 24px;
+      border-radius: 12px;
+      border: 2px solid #9c27b0;
+      text-align: center;
+      width: 100%;
+      max-width: calc(100% - 40px);
+      box-sizing: border-box;
+    }
+
+    #login-box img {
+      width: 96px;
+      height: 96px;
+      margin-bottom: 12px;
+      border-radius: 50%;
+    }
+
+    #login-box h2 {
+      color: #fff;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+      margin-top: 0;
+    }
+
+    #account-forms input,
+    #novo-nome-ficha {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 8px;
+      background: #000;
+      color: #fff;
+      border: 1px solid #333;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    #account-forms input:focus,
+    #novo-nome-ficha:focus {
+      outline: none;
+      border-color: #9c27b0;
+      box-shadow: 0 0 8px rgba(156, 39, 176, 0.3);
+    }
+
+    #account-characters {
+      text-align: left;
+      margin-top: 12px;
     }
 
     /* =========================================================================
@@ -615,22 +717,20 @@
       <p style="color:#bbb; font-size:13px; margin-bottom:14px; line-height:1.4;"></p>
 
       <div id="account-forms">
-        <input type="text" id="login-nome" name="login-username" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Conta (username)"
-          style="width:100%; padding:10px; margin-bottom:8px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
-        <input type="password" id="login-senha" name="login-password" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Senha"
-          style="width:100%; padding:10px; margin-bottom:12px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
+        <input type="text" id="login-nome" name="login-username" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Conta (username)">
+        <input type="password" id="login-senha" name="login-password" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Senha">
         <div style="display:flex; gap:8px;">
           <button id="btn-account-login" onclick="tentarLogin()"
-            style="flex:1; background:#9c27b0; color:#fff; border:none; padding:10px; cursor:pointer; font-weight:bold; border-radius:4px;">Entrar</button>
+            style="flex:1; background:#9c27b0; color:#fff; border:none; padding:12px 10px; cursor:pointer; font-weight:bold; border-radius:4px; font-size:14px; transition:all 0.2s;">Entrar</button>
         </div>
       </div>
 
       <div id="account-characters" style="display:none; margin-top:12px; text-align:left;">
         <div style="color:#ccc; font-size:13px; margin-bottom:8px;">Fichas desta conta:</div>
-        <div id="chars-list" style="display:flex; flex-direction:column; gap:8px; max-height:220px; overflow:auto;"></div>
-        <div style="display:flex; gap:8px; margin-top:12px;">
-          <button onclick="criarPersonagemPrompt()" class="btn-add" style="flex:1; background:#222; border:1px solid #444;">+ Nova Ficha</button>
-          <button onclick="logoutAccount()" class="btn-add" style="flex:1; background:#441111; border:1px solid #662222;">Sair</button>
+        <div id="chars-list" style="display:flex; flex-direction:column; gap:8px; max-height:320px; overflow-y:auto; width:100%; box-sizing:border-box;"></div>
+        <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+          <button onclick="criarPersonagemPrompt()" class="btn-add" style="flex:1; min-width:120px; background:#222; color:#fff; border:1px solid #444; padding:10px; border-radius:4px; cursor:pointer; font-size:13px;">+ Nova Ficha</button>
+          <button onclick="logoutAccount()" class="btn-add" style="flex:1; min-width:120px; background:#441111; color:#fff; border:1px solid #662222; padding:10px; border-radius:4px; cursor:pointer; font-size:13px;">Sair</button>
         </div>
       </div>
 
@@ -1180,8 +1280,8 @@
 
       const loginBox = document.getElementById('login-box');
       if (loginBox) {
-        loginBox.style.width = '760px';
-        loginBox.style.maxWidth = '92vw';
+        loginBox.style.maxWidth = 'calc(100vw - 40px)';
+        loginBox.style.width = 'auto';
       }
 
       document.getElementById('account-forms').style.display = 'none';
@@ -1193,10 +1293,6 @@
       list.innerHTML = '';
       const grid = document.createElement('div');
       grid.className = 'account-grid';
-      grid.style.display = 'grid';
-      grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(180px, 1fr))';
-      grid.style.gap = '10px';
-      grid.style.width = '100%';
       if (chars.length === 0) {
         const el = document.createElement('div'); el.style.color = '#aaa'; el.textContent = 'Nenhuma ficha. Crie uma nova abaixo.'; list.appendChild(el);
       }
@@ -1205,9 +1301,6 @@
         const img = document.createElement('img');
         img.src = 'img/imagem-no-site/personagem.png';
         img.alt = n;
-        img.style.objectFit = 'cover';
-        img.style.width = '100%';
-        img.style.height = '90px';
         const h = document.createElement('h4'); h.textContent = n;
         const desc = document.createElement('div'); desc.style = 'font-size:12px; color:#bbb; min-height:32px;'; desc.textContent = 'Abra para editar ou jogar.';
         const actions = document.createElement('div'); actions.className = 'card-actions';
