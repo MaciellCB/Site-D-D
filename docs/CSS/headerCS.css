@@ -37,24 +37,27 @@
 
 /* =============================================================
    AJUSTE DE TAMANHOS DO HEADER (LINHA 2)
-   Configuração Vencedora (Mais recente)
+   Configuração Vencedora (Mais recente) - DESATIVADA (novo layout em grid)
 ============================================================= */
 
-/* 1. Antecedente (1ª coluna): Bem menor para dar espaço às classes */
+/* ESTILOS ANTIGOS - DESATIVADOS
+1. Antecedente (1ª coluna): Bem menor para dar espaço às classes */
+/*
 .info-direita .linha-info:nth-child(2) .campo:nth-child(1) {
   flex: 0.5 ;
   min-width: 90px;
 }
 
-/* 2. Classes (2ª coluna): Ocupa a maior parte do espaço */
+2. Classes (2ª coluna): Ocupa a maior parte do espaço 
 .info-direita .linha-info:nth-child(2) .campo:nth-child(2) {
   flex: 2.5 ;
 }
 
-/* 3. Raça (3ª coluna): Tamanho médio */
+3. Raça (3ª coluna): Tamanho médio 
 .info-direita .linha-info:nth-child(2) .campo:nth-child(3) {
   flex: 0.8 ;
 }
+*/
 
 /* =============================================================
    ESTILOS ESPECÍFICOS DO HEADER (CLASSES & TEXTAREA)
@@ -903,12 +906,14 @@
 }
 
 /* =============================================================
-   AJUSTE DA LINHA 1 (PERSONAGEM / JOGADOR / ALINHAMENTO)
+   AJUSTE DA LINHA 1 (PERSONAGEM / JOGADOR / ALINHAMENTO) - DESATIVADO
 ============================================================= */
-/* Força os 3 itens da primeira linha a terem tamanhos equilibrados */
-.info-direita .linha-info:nth-child(1) .campo:nth-child(1) { flex: 1.2; } /* Personagem um pouco maior */
-.info-direita .linha-info:nth-child(1) .campo:nth-child(2) { flex: 1; }   /* Jogador */
-.info-direita .linha-info:nth-child(1) .campo:nth-child(3) { flex: 0.8; } /* Alinhamento menor */
+/* ESTILOS ANTIGOS - DESATIVADOS (novo layout em grid)
+Força os 3 itens da primeira linha a terem tamanhos equilibrados
+.info-direita .linha-info:nth-child(1) .campo:nth-child(1) { flex: 1.2; } Personagem um pouco maior 
+.info-direita .linha-info:nth-child(1) .campo:nth-child(2) { flex: 1; }   Jogador 
+.info-direita .linha-info:nth-child(1) .campo:nth-child(3) { flex: 0.8; } Alinhamento menor 
+*/
 
 /* =============================================================
    MODAL DE ALINHAMENTO (GRID 3x3)
@@ -965,6 +970,116 @@
     position: absolute;
     opacity: 0.15;
     z-index: 0;
+}
+
+/* =============================================================
+   REORGANIZAÇÃO DO HEADER EM 3 BLOCOS VISUAIS
+============================================================= */
+
+/* Reorganiza a estrutura em grade de 3 colunas */
+.info-personagem .info-direita {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 20px !important;
+    width: 100% !important;
+    flex: none !important;
+    flex-direction: initial !important;
+}
+
+/* Remove as linhas de info e faz cada campo ocupar um bloco */
+.info-personagem .info-direita .linha-info {
+    display: contents !important;
+    gap: initial !important;
+}
+
+/* Estilo dos blocos individuais */
+.info-personagem .info-direita .campo {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: none !important;
+    gap: 8px;
+    padding: 16px;
+    background: linear-gradient(135deg, #0f0f0f 0%, #121212 100%);
+    border: 1px solid #333;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.info-personagem .info-direita .campo:hover {
+    border-color: #9c27b0;
+    background: linear-gradient(135deg, #1a0a2e 0%, #16213e 100%);
+    box-shadow: 0 4px 12px rgba(156, 39, 176, 0.2);
+}
+
+/* Labels mais visuais */
+.info-personagem .info-direita .campo label {
+    color: #9c27b0 !important;
+    font-size: 11px !important;
+    letter-spacing: 2px !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+    margin-bottom: 8px !important;
+    margin-top: 0 !important;
+}
+
+/* Inputs mais legíveis */
+.info-personagem .info-direita .campo input,
+.info-personagem .info-direita .campo .input-simulado,
+.info-personagem .info-direita .campo textarea {
+    background: #000 !important;
+    border: 1px solid #444 !important;
+    border-radius: 6px !important;
+    color: #e0aaff !important;
+    padding: 10px 12px !important;
+    font-size: 14px !important;
+    transition: all 0.2s;
+}
+
+.info-personagem .info-direita .campo input:focus,
+.info-personagem .info-direita .campo .input-simulado:focus,
+.info-personagem .info-direita .campo textarea:focus {
+    outline: none !important;
+    border-color: #9c27b0 !important;
+    background: #0a0a0a !important;
+    box-shadow: 0 0 12px rgba(156, 39, 176, 0.3) !important;
+}
+
+.info-personagem .info-direita .campo .input-simulado {
+    cursor: pointer !important;
+    border-bottom: none !important;
+    text-align: center !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+}
+
+.info-personagem .info-direita .campo .input-simulado:hover {
+    background: #1a1a1a !important;
+    border-color: #9c27b0 !important;
+}
+
+/* Textarea do header (Classes/Raça) */
+.info-personagem .info-direita .campo textarea.header-textarea {
+    background: #000 !important;
+    border: 1px solid #444 !important;
+    border-radius: 6px !important;
+    resize: vertical !important;
+    min-height: 40px !important;
+    padding: 10px 12px !important;
+}
+
+.info-personagem .info-direita .campo textarea.header-textarea:focus {
+    border-color: #9c27b0 !important;
+    background: #0a0a0a !important;
+    box-shadow: 0 0 12px rgba(156, 39, 176, 0.3) !important;
+}
+
+/* Mobile: volta a layout de linhas */
+@media (max-width: 768px) {
+    .info-personagem .info-direita {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+        padding: 0 15px !important;
+    }
 }
 
 .alignment-option-card:hover .alignment-sigla {
