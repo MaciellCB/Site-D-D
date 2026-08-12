@@ -165,6 +165,10 @@
           const acc = await meRes.json();
           window.currentAccount = acc;
           resetSheetState();
+          if (acc.isMaster) {
+            window.location.href = 'mestre.html';
+            return;
+          }
           showAccountCharacters(acc);
           return;
         }
@@ -427,6 +431,11 @@
     }
 
     function showAccountCharacters(acc) {
+      if (acc && acc.isMaster) {
+        window.location.href = 'mestre.html';
+        return;
+      }
+
       const loginBox = document.getElementById('login-box');
       if (loginBox) {
         loginBox.style.width = '760px';
@@ -683,6 +692,12 @@
       if (window.location.href.indexOf('?masterView=') !== -1) {
         window.location.href = 'index.html';
       }
+      if (window.location.href.indexOf('mestre.html') !== -1) {
+        window.location.href = 'index.html';
+      }
+      const url = new URL(window.location.href);
+      url.searchParams.delete('masterView');
+      window.history.replaceState({}, '', url);
     }
 
   /* =================================================================
