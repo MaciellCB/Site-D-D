@@ -743,6 +743,7 @@ function bindInventoryCardEvents() {
   // --- 2. CHECKBOX EQUIPAR ---
   document.querySelectorAll('.item-equip-checkbox').forEach(ch => {
     ch.onchange = (ev) => {
+      window.travarTelaParaClique();
       const rawId = ev.target.getAttribute('data-id');
       const item = findItemById(rawId);
       const isChecked = ev.target.checked;
@@ -778,6 +779,7 @@ function bindInventoryCardEvents() {
   // --- 3. ALTERNAR 2 MÃOS (CORREÇÃO DE MÚLTIPLOS CLIQUES) ---
   document.querySelectorAll('.toggle-versatile').forEach(ch => {
     ch.onchange = (ev) => {
+      window.travarTelaParaClique();
       const rawId = ev.target.getAttribute('data-id');
       const item = findItemById(rawId);
 
@@ -1550,6 +1552,7 @@ function bindAbilityEvents() {
     const chk = card.querySelector('.hab-activate');
     if (chk) {
       chk.onchange = (ev) => {
+        window.travarTelaParaClique();
         const hab = findHab();
         if (hab) {
           hab.active = ev.target.checked;
@@ -2784,6 +2787,7 @@ function bindSpellEvents() {
     const ch = card.querySelector('.spell-activate');
     if (ch) {
       ch.onchange = (ev) => {
+        window.travarTelaParaClique();
         const s = state.spells.find(x => String(x.id) === String(rawId));
         if (s) {
           s.active = ev.target.checked;
@@ -3679,6 +3683,7 @@ function renderPreparedSpells() {
   // B. Checkbox (Despreparar)
   conteudoEl.querySelectorAll('.spell-activate').forEach(ch => {
     ch.addEventListener('change', (ev) => {
+      window.travarTelaParaClique();
       const id = Number(ev.target.dataset.id);
       const s = state.spells.find(x => x.id === id);
       if (s) {
@@ -3731,6 +3736,7 @@ function renderPreparedSpells() {
   // B. Checkbox (Desativar)
   conteudoEl.querySelectorAll('.hab-activate').forEach(ch => {
     ch.addEventListener('change', (ev) => {
+      window.travarTelaParaClique();
       const id = Number(ev.target.dataset.id);
       const hab = state.abilities.find(a => a.id === id);
       if (hab) {
@@ -5904,6 +5910,15 @@ window.mesclarEstadoVisual = function (estadoAntigo, estadoNovo) {
   if (window.isUserInteracting && estadoAntigo.spellSlots) {
     console.log("Protegendo slots locais contra sobrescrita do servidor...");
     estadoNovo.spellSlots = JSON.parse(JSON.stringify(estadoAntigo.spellSlots));
+  }
+
+  // Checkboxes alteram estas coleções localmente; uma resposta antiga não pode desfazer o clique.
+  if (window.isUserInteracting) {
+    ['inventory', 'abilities', 'spells'].forEach(collection => {
+      if (estadoAntigo[collection]) {
+        estadoNovo[collection] = JSON.parse(JSON.stringify(estadoAntigo[collection]));
+      }
+    });
   }
 
   // 3. Preserva Seções Colapsadas
