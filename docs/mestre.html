@@ -302,6 +302,32 @@
         .account-btn { background:#222; color:#fff; border:1px solid #333; padding:6px 8px; border-radius:6px; cursor:pointer; }
         .account-btn.master { background:#6a1b9a; border-color:#7b1fa2; }
         .account-btn.delete { background:#5a1313; border-color:#7a1a1a; }
+        .admin-accounts-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.82); z-index:100001; align-items:center; justify-content:center; padding:16px; }
+        .admin-modal-box { width:min(1100px, 100%); max-height:90vh; overflow:auto; }
+        .admin-modal-heading { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:16px; }
+        .admin-modal-heading h3 { margin:0; color:#fff; font-size:22px; }
+        .admin-modal-subtitle { color:#999; font-size:13px; margin:4px 0 0; }
+        .admin-modal-layout { display:grid; grid-template-columns:minmax(240px, .8fr) minmax(0, 1.5fr); gap:18px; align-items:start; }
+        .admin-create-panel { background:#0b0b0b; padding:16px; border-radius:8px; border:1px solid #1e1e1e }
+        .admin-create-panel h4 { margin:0 0 12px; color:#fff; font-size:15px; }
+        .admin-list-panel { min-width:0; }
+        .admin-list-toolbar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+        .admin-list-toolbar strong { color:#fff; font-size:15px; }
+        .admin-search { width:210px; margin:0; }
+        .account-row { align-items:flex-start; }
+        .account-row .account-left .account-meta { color:#999; font-size:12px; margin-top:4px; }
+        .account-btn { transition:background .15s, border-color .15s; }
+        .account-btn:hover { border-color:#9c27b0; }
+        .admin-empty { color:#999; padding:22px 10px; text-align:center; border:1px dashed #333; border-radius:8px; }
+
+        @media (max-width: 720px) {
+            .admin-modal-layout { grid-template-columns:1fr; }
+            .admin-list-toolbar { align-items:stretch; flex-direction:column; }
+            .admin-search { width:100%; }
+            .account-row { flex-direction:column; }
+            .account-row .account-right { width:100%; flex-wrap:wrap; }
+            .account-btn { flex:1; min-width:92px; }
+        }
 
         .floating-admin-btn { position:fixed; left:18px; bottom:18px; z-index:99999; padding:12px 14px; background:#9c27b0; color:#fff; border:none; border-radius:10px; box-shadow:0 8px 30px rgba(156,39,176,0.18); font-weight:700; cursor:pointer; }
         .floating-admin-btn:hover { transform:translateY(-3px); }
@@ -1265,12 +1291,20 @@
                 }
                     const accounts = await res.json();
                 list.innerHTML = '';
-                accounts.forEach(acc => {
-                    if ((acc.username||'').toLowerCase() === 'mestre') return; // hide default master
+                const renderAccounts = (filter = '') => {
+                    const normalizedFilter = filter.trim().toLowerCase();
+                    list.innerHTML = '';
+                    const visibleAccounts = accounts.filter(acc => (acc.username || '').toLowerCase().includes(normalizedFilter));
+                    if (!visibleAccounts.length) {
+                        list.innerHTML = '<div class="admin-empty">Nenhuma conta encontrada.</div>';
+                        return;
+                    }
+                    visibleAccounts.forEach(acc => {
                     const row = document.createElement('div');
                     row.className = 'account-row';
                     const left = document.createElement('div'); left.className = 'account-left';
-                    left.innerHTML = `<div class="username">${acc.username}</div><div style="font-size:12px; color:#999;">${(acc.characters||[]).slice(0,8).join(', ')}</div>`;
+                    const characters = (acc.characters || []).slice(0, 8);
+                    left.innerHTML = `<div class="username">${acc.username}</div><div class="account-meta">${characters.length ? characters.join(', ') : 'Nenhuma ficha vinculada'}</div>`;
                     const right = document.createElement('div'); right.className = 'account-right';
 
                     if (accountSelectionCallback) {
@@ -1290,7 +1324,7 @@
                         del.onclick = async () => {
                             if (!confirm('Deletar conta ' + acc.username + '?')) return;
                             const r = await fetch(`${API_URL}/accounts/admin/delete`, { method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+token }, body: JSON.stringify({ username: acc.username }) });
-                            if (r.ok) { row.remove(); mostrarAviso('Deletado'); }
+                            if (r.ok) { row.remove(); mostrarAviso('Conta deletada.'); if (!list.children.length) list.innerHTML = '<div class="admin-empty">Nenhuma conta encontrada.</div>'; }
                             else { const dd = await r.json().catch(()=>({})); mostrarAviso('Erro: ' + (dd.error||'Erro ao deletar.')); }
                         };
                         right.appendChild(editBtn); right.appendChild(toggle); right.appendChild(del);
@@ -1299,6 +1333,11 @@
                     row.appendChild(left); row.appendChild(right);
                     list.appendChild(row);
                 });
+                };
+                renderAccounts();
+                const search = document.getElementById('admin-accounts-search');
+                search.value = '';
+                search.oninput = () => renderAccounts(search.value);
                 document.getElementById('admin-accounts-modal').style.display = 'flex';
             } catch (e) { mostrarAviso('Erro de conexão.'); }
         }
@@ -1401,22 +1440,22 @@
             async function loadAccountsRefresh() { try { await openAdminAccounts(); } catch(e){} }
     </script>
     <!-- Admin Accounts Modal -->
-    <div id="admin-accounts-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:100001; align-items:center; justify-content:center;">
-        <div style="background:#0f0f0f; padding:16px; width:1100px; max-width:98%; max-height:88vh; overflow:auto; border-radius:10px; border:1px solid #333;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3 style="margin:0; color:#fff;">Gerenciar Contas</h3>
-                <button onclick="closeAdminAccounts()" style="background:none; border:1px solid #444; color:#fff; padding:6px; border-radius:6px;">Fechar</button>
+    <div id="admin-accounts-modal" class="admin-accounts-modal">
+        <div class="admin-modal-box">
+            <div class="admin-modal-heading">
+                <div><h3>Gerenciar Contas</h3><p class="admin-modal-subtitle">Crie, edite permissões e remova acessos.</p></div>
+                <button onclick="closeAdminAccounts()" class="btn-cancelar">Fechar</button>
             </div>
-            <div style="display:flex; gap:16px; align-items:flex-start;">
-                <div style="flex:1; min-width:260px;">
-                    <div style="color:#ccc; font-size:13px; margin-bottom:8px;">Criar Conta</div>
+            <div class="admin-modal-layout">
+                <div class="admin-create-panel">
+                    <h4>Criar conta</h4>
                     <input id="admin-create-username" placeholder="Usuário" class="modal-input">
                     <input id="admin-create-password" type="password" placeholder="Senha" class="modal-input">
                     <label style="display:flex; align-items:center; gap:8px; color:#ddd; font-size:13px;"><input id="admin-create-ismaster" type="checkbox"> Tornar Master</label>
-                    <div style="margin-top:10px;"><button onclick="createAdminLocal()" class="btn-confirmar">Criar</button></div>
+                    <div style="margin-top:12px;"><button onclick="createAdminLocal()" class="btn-confirmar">Criar conta</button></div>
                 </div>
-                <div style="flex:2;">
-                    <div id="admin-accounts-header" style="color:#ccc; font-size:13px; margin-bottom:8px;">Contas existentes</div>
+                <div class="admin-list-panel">
+                    <div class="admin-list-toolbar"><strong id="admin-accounts-header">Contas existentes</strong><input id="admin-accounts-search" class="modal-input admin-search" placeholder="Buscar conta..." aria-label="Buscar conta"></div>
                     <div id="admin-accounts-list" style="display:flex; flex-direction:column; gap:8px; max-height:520px; overflow:auto; color:#ddd;"></div>
                 </div>
             </div>
