@@ -221,7 +221,7 @@ app.get('/api/accounts/me', authenticateToken, async (req, res) => {
         const acc = await Account.findById(req.account.id).lean();
         if (!acc) return res.status(404).json({ error: 'Not found' });
 
-        const chars = await Ficha.find({ accountUsername: { $regex: new RegExp(`^${acc.username}$`, 'i') } }, 'nome').lean();
+        const chars = await Ficha.find({ accountUsername: { $regex: new RegExp(`^${acc.username}$`, 'i') } }, 'nome fotoPerfil').lean();
         const linkedCharacters = [...new Set(chars.map(c => c.nome))].sort((a, b) => a.localeCompare(b));
 
         if (!acc.characters || acc.characters.length !== linkedCharacters.length || !linkedCharacters.every((nome, index) => acc.characters[index] === nome)) {
@@ -230,6 +230,7 @@ app.get('/api/accounts/me', authenticateToken, async (req, res) => {
         }
 
         delete acc.passwordHash;
+        acc.characterProfiles = chars.map(({ nome, fotoPerfil }) => ({ nome, fotoPerfil: fotoPerfil || '' }));
         res.json(acc);
     } catch (e) { res.status(500).json({ error: 'Error' }); }
 });

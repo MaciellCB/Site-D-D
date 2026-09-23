@@ -1059,6 +1059,13 @@
       if (mainSheet) mainSheet.style.display = 'none';
     }
 
+    function resetLoginBoxSize() {
+      const loginBox = document.getElementById('login-box');
+      if (!loginBox) return;
+      loginBox.style.width = '360px';
+      loginBox.style.maxWidth = '92%';
+    }
+
     function hideLoginOverlay() {
       const overlay = document.getElementById('login-overlay');
       if (overlay) overlay.style.display = 'none';
@@ -1226,6 +1233,7 @@
       const list = document.getElementById('chars-list');
       list.innerHTML = '';
       const chars = acc.characters || [];
+      const characterProfiles = new Map((acc.characterProfiles || []).map(profile => [profile.nome, profile]));
       list.innerHTML = '';
       const grid = document.createElement('div');
       grid.className = 'account-grid';
@@ -1239,7 +1247,8 @@
       chars.forEach(async (n) => {
         const card = document.createElement('div'); card.className = 'account-card';
         const img = document.createElement('img');
-        img.src = 'img/imagem-no-site/personagem.png';
+        const profile = characterProfiles.get(n);
+        img.src = profile && profile.fotoPerfil ? profile.fotoPerfil : 'img/imagem-no-site/personagem.png';
         img.alt = n;
         img.style.objectFit = 'cover';
         img.style.width = '100%';
@@ -1256,7 +1265,7 @@
           const fichaRes = await fetchWithAuth(`${API_BASE}/load-ficha-account`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nome: n }) });
           if (fichaRes.ok) {
             const ficha = await fichaRes.json();
-            if (ficha && ficha.fotoPerfil && ficha.fotoPerfil.length > 20) {
+            if (ficha && ficha.fotoPerfil) {
               img.src = ficha.fotoPerfil;
             }
           }
@@ -1466,6 +1475,7 @@
       if (lista) lista.style.display = 'none';
       const forms = document.getElementById('account-forms');
       if (forms) forms.style.display = 'block';
+      resetLoginBoxSize();
       const loginInput = document.getElementById('login-nome');
       const senhaInput = document.getElementById('login-senha');
       if (loginInput) loginInput.value = '';
