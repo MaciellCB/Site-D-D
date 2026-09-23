@@ -450,6 +450,58 @@ body.no-scroll {
   color: #fff ;
 }
 
+.organization-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  color: #aaa;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.organization-label {
+  color: #777;
+}
+
+.organization-select {
+  min-width: 74px;
+  padding: 3px 5px;
+  border: 1px solid rgba(156, 39, 176, 0.45);
+  border-radius: 4px;
+  background: #111;
+  color: #ddd;
+  font-size: 10px;
+}
+
+.organization-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+}
+
+.organization-check input {
+  display: none;
+}
+
+.organization-check-box {
+  width: 14px;
+  height: 14px;
+  border: 1px solid #555;
+  border-radius: 3px;
+  color: transparent;
+  text-align: center;
+  line-height: 13px;
+  font-size: 10px;
+}
+
+.organization-check input:checked + .organization-check-box {
+  border-color: #9c27b0;
+  background: #9c27b0;
+  color: #fff;
+}
+
 /* Checkboxes (Equipamento / Ativar) */
 .header-equip,
 .check-ativar {

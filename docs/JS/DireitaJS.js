@@ -82,9 +82,101 @@ function saveLocalUiState() {
     spellsExpanded: Object.fromEntries((state.spells || []).map(spell => [String(spell.id), !!spell.expanded])),
     abilitiesExpanded: Object.fromEntries((state.abilities || []).map(ability => [String(ability.id), !!ability.expanded])),
     minimizedPreparedSpells: !!state.minimizedPreparedSpells,
-    minimizedPreparedAbilities: !!state.minimizedPreparedAbilities
+    minimizedPreparedAbilities: !!state.minimizedPreparedAbilities,
+    organization: getLocalUiState().organization || {}
   };
   localStorage.setItem(`${LOCAL_UI_PREFIX}${state.nome}`, JSON.stringify(uiState));
+}
+
+const ORGANIZATION_OPTIONS = {
+  inventory: [
+    { value: 'name', label: 'Nome' },
+    { value: 'damage', label: 'Dano' },
+    { value: 'type', label: 'Tipo' }
+  ],
+  spells: [
+    { value: 'name', label: 'Nome' },
+    { value: 'level', label: 'Nível' },
+    { value: 'school', label: 'Escola' }
+  ],
+  prepared: [
+    { value: 'level', label: 'Nível' },
+    { value: 'name', label: 'Nome' },
+    { value: 'school', label: 'Escola' }
+  ]
+};
+
+function getOrganizationConfig(listKey) {
+  const saved = getLocalUiState().organization?.[listKey] || {};
+  return {
+    sort: saved.sort || ORGANIZATION_OPTIONS[listKey][0].value,
+    selectedFirst: saved.selectedFirst !== false
+  };
+}
+
+function saveOrganizationConfig(listKey, config) {
+  const uiState = getLocalUiState();
+  uiState.organization = { ...(uiState.organization || {}), [listKey]: config };
+  if (state.nome) localStorage.setItem(`${LOCAL_UI_PREFIX}${state.nome}`, JSON.stringify(uiState));
+}
+
+function renderOrganizationControls(listKey) {
+  const config = getOrganizationConfig(listKey);
+  const options = ORGANIZATION_OPTIONS[listKey].map(option =>
+    `<option value="${option.value}" ${option.value === config.sort ? 'selected' : ''}>${option.label}</option>`
+  ).join('');
+
+  return `
+    <div class="organization-controls" data-organization="${listKey}" title="Organizar lista">
+      <span class="organization-label">Organizar:</span>
+      <select class="organization-select" aria-label="Critério de organização">${options}</select>
+      <label class="organization-check" title="Manter selecionados no topo">
+        <input class="organization-selected-first" type="checkbox" ${config.selectedFirst ? 'checked' : ''}>
+        <span class="organization-check-box">✓</span>
+        <span>Selecionados</span>
+      </label>
+    </div>
+  `;
+}
+
+function bindOrganizationControls(listKey, rerender) {
+  const controls = document.querySelector(`[data-organization="${listKey}"]`);
+  if (!controls) return;
+
+  controls.addEventListener('click', event => event.stopPropagation());
+
+  const update = () => {
+    saveOrganizationConfig(listKey, {
+      sort: controls.querySelector('.organization-select').value,
+      selectedFirst: controls.querySelector('.organization-selected-first').checked
+    });
+    rerender();
+  };
+
+  controls.querySelector('.organization-select').onchange = update;
+  controls.querySelector('.organization-selected-first').onchange = update;
+}
+
+function sortOrganizedList(items, listKey, selectedProperty) {
+  const config = getOrganizationConfig(listKey);
+  const result = [...items];
+  const text = value => String(value || '').toLowerCase();
+  const number = value => parseInt(String(value || '').match(/-?\d+/)?.[0], 10) || 0;
+
+  result.sort((a, b) => {
+    if (config.selectedFirst && !!a[selectedProperty] !== !!b[selectedProperty]) {
+      return a[selectedProperty] ? -1 : 1;
+    }
+
+    let comparison = 0;
+    if (config.sort === 'damage') comparison = number(a.damage) - number(b.damage);
+    if (config.sort === 'level') comparison = number(a.levelNumber ?? a.level ?? a.baseLevel) - number(b.levelNumber ?? b.level ?? b.baseLevel);
+    if (config.sort === 'type') comparison = text(a.type).localeCompare(text(b.type));
+    if (config.sort === 'school') comparison = text(a.school).localeCompare(text(b.school));
+    if (config.sort === 'name') comparison = text(a.name || a.title).localeCompare(text(b.name || b.title));
+    return comparison || text(a.name || a.title).localeCompare(text(b.name || b.title));
+  });
+  return result;
 }
 
 window.aplicarEstadoVisualLocal = function (target = state) {
@@ -580,9 +672,9 @@ function renderInventory() {
   });
 
   // 2. Separa em Grupos
-  const armas = itensFiltrados.filter(i => i.type === 'Arma');
-  const armaduras = itensFiltrados.filter(i => i.type === 'Proteção' || i.type === 'protecao');
-  const gerais = itensFiltrados.filter(i => i.type !== 'Arma' && i.type !== 'Proteção' && i.type !== 'protecao');
+  const armas = sortOrganizedList(itensFiltrados.filter(i => i.type === 'Arma'), 'inventory', 'equip');
+  const armaduras = sortOrganizedList(itensFiltrados.filter(i => i.type === 'Proteção' || i.type === 'protecao'), 'inventory', 'equip');
+  const gerais = sortOrganizedList(itensFiltrados.filter(i => i.type !== 'Arma' && i.type !== 'Proteção' && i.type !== 'protecao'), 'inventory', 'equip');
 
   // Se tem texto, expande. Se não, recolhe.
   const forceExpand = termo.length > 0;
@@ -599,6 +691,7 @@ function renderInventory() {
         <div class="inventory-controls controls-row">
             <input id="filterItens" placeholder="Filtrar itens..." value="${escapeHtml(termo)}" />
             <div class="right-controls" style="display:flex; align-items:center;">
+            ${renderOrganizationControls('inventory')}
                 <button id="botAddItem" class="btn-add">Adicionar</button>
             </div>
         </div>
@@ -613,6 +706,7 @@ function renderInventory() {
   conteudoEl.innerHTML = html;
 
   document.getElementById('botAddItem').addEventListener('click', () => openItemCatalogOverlay());
+  bindOrganizationControls('inventory', renderInventory);
 
   bindInventoryCardEvents();
   bindInventorySectionEvents();
@@ -2653,12 +2747,13 @@ function renderSpells() {
          </div>
       </div>
 
-     <div style="display:flex; align-items:center; margin:15px 0 10px 4px;">
-      <h4 style="margin:0; color:#ddd; font-size:16px;">Minhas Magias</h4>
-  </div>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin:15px 0 10px 4px;">
+        <h4 style="margin:0; color:#ddd; font-size:16px;">Minhas Magias</h4>
+        ${renderOrganizationControls('spells')}
+      </div>
 
       <div class="spells-list">
-        ${state.spells.map(formatMySpellCard).join('')}
+        ${sortOrganizedList(state.spells, 'spells', 'active').map(formatMySpellCard).join('')}
       </div>
     </div>
   `;
@@ -2666,6 +2761,7 @@ function renderSpells() {
   conteudoEl.innerHTML = html;
   bindSpellEvents();
   bindSlotEvents();
+  bindOrganizationControls('spells', renderSpells);
   aplicarFiltrosMagias();
   bindHeaderDiceEvents();
 
@@ -3536,18 +3632,44 @@ function renderPreparedSpells() {
   const styleMagias = isMagiasMin ? 'display:none;' : '';
   const styleHabs = isHabsMin ? 'display:none;' : '';
 
-  // HTML Magias (Usa o formatador padrão que já tem os botões)
+  // HTML Magias: grupos por nível, com organização configurável dentro de cada grupo.
   let magiasHTML = '';
   if (magiasPreparadas.length > 0) {
+    const magiasPorNivel = new Map();
+    sortOrganizedList(magiasPreparadas, 'prepared', 'active').forEach(magia => {
+      const nivel = parseInt(magia.levelNumber) || 0;
+      if (!magiasPorNivel.has(nivel)) magiasPorNivel.set(nivel, []);
+      magiasPorNivel.get(nivel).push(magia);
+    });
+
+    const gruposNivelHTML = [...magiasPorNivel.entries()].sort((a, b) => a[0] - b[0]).map(([nivel, magias]) => {
+      const chave = `prepared-spells-level-${nivel}`;
+      const recolhido = !!state.collapsedSections?.[chave];
+      const titulo = nivel === 0 ? 'Truques' : `${nivel}º Círculo`;
+      return `
+        <div class="prepared-level-group" style="margin-bottom:8px;">
+          <div class="prepared-level-header" data-key="${chave}" style="cursor:pointer; display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.03); padding:7px 8px; border-radius:4px; border:1px solid rgba(255,255,255,0.05);">
+            <span class="prepared-level-arrow" style="color:#9c27b0; width:14px;">${recolhido ? '▸' : '▾'}</span>
+            <span style="font-weight:700; font-size:12px; color:#ccc; text-transform:uppercase;">${titulo}</span>
+            <span style="margin-left:auto; font-size:10px; color:#666; background:#111; padding:2px 6px; border-radius:4px;">${magias.length}</span>
+          </div>
+          <div class="prepared-level-content" style="${recolhido ? 'display:none;' : ''}">
+            ${magias.map(formatMySpellCard).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+
     magiasHTML = `
             <div id="toggle-magias" class="toggle-section-header" style="margin: 10px 0 6px 4px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; cursor:pointer; display:flex; align-items:center;">
                 <span style="font-size:16px; color:#9c27b0; width:15px;">${arrowMagias}</span> 
                 <span style="color: #ddd; text-transform: uppercase; font-size: 14px; font-weight:700;">Magias Preparadas</span>
+                ${renderOrganizationControls('prepared')}
                 ${getHeaderDiceHtml('Ataque Mágico (Preparadas)')}
             </div>
 
             <div id="content-magias" class="section-content" style="${styleMagias}">
-                ${magiasPreparadas.map(formatMySpellCard).join('')}
+                ${gruposNivelHTML}
             </div>
         `;
   }
@@ -3610,6 +3732,7 @@ function renderPreparedSpells() {
             <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 12px; margin-top: -4px;">
                 ${getHeaderDiceHtml('Ataque Mágico')}
             </div>
+              ${listaContent}
         </div>
     `;
 
@@ -3650,6 +3773,19 @@ function renderPreparedSpells() {
       renderActiveTab();
     });
   }
+
+  conteudoEl.querySelectorAll('.prepared-level-header').forEach(header => {
+    header.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const key = header.getAttribute('data-key');
+      state.collapsedSections = state.collapsedSections || {};
+      state.collapsedSections[key] = !state.collapsedSections[key];
+      saveLocalUiState();
+      renderActiveTab();
+    });
+  });
+
+  bindOrganizationControls('prepared', renderPreparedSpells);
   const btnToggleHabs = document.getElementById('toggle-habs');
   if (btnToggleHabs) {
     btnToggleHabs.addEventListener('click', () => {
@@ -3670,8 +3806,8 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.spell-card .card-header').forEach(h => {
     h.addEventListener('click', (ev) => {
       if (ev.target.closest('.check-ativar') || ev.target.closest('.spell-right')) return;
-      const id = Number(h.closest('.card').dataset.id);
-      const s = state.spells.find(x => x.id === id);
+      const id = h.closest('.card').dataset.id;
+      const s = state.spells.find(x => String(x.id) === String(id));
       if (s) {
         s.expanded = !s.expanded;
         rememberExpanded('spells', id, s.expanded);
@@ -3684,8 +3820,8 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.spell-activate').forEach(ch => {
     ch.addEventListener('change', (ev) => {
       window.travarTelaParaClique();
-      const id = Number(ev.target.dataset.id);
-      const s = state.spells.find(x => x.id === id);
+      const id = ev.target.dataset.id;
+      const s = state.spells.find(x => String(x.id) === String(id));
       if (s) {
         s.active = ev.target.checked;
         saveStateToServer();
@@ -3699,8 +3835,8 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.remover-spell').forEach(btn => {
     btn.addEventListener('click', (ev) => {
       ev.preventDefault();
-      const id = Number(btn.dataset.id);
-      state.spells = state.spells.filter(s => s.id !== id);
+      const id = btn.dataset.id;
+      state.spells = state.spells.filter(s => String(s.id) !== String(id));
       saveStateToServer();
       renderActiveTab();
     });
@@ -3710,8 +3846,8 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.editar-spell').forEach(btn => {
     btn.addEventListener('click', (ev) => {
       ev.preventDefault();
-      const id = Number(btn.dataset.id);
-      const s = state.spells.find(x => x.id === id);
+      const id = btn.dataset.id;
+      const s = state.spells.find(x => String(x.id) === String(id));
       if (s) openSpellModal(s);
     });
   });
@@ -3723,8 +3859,8 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.hab-card .card-header').forEach(h => {
     h.addEventListener('click', (ev) => {
       if (ev.target.closest('.check-ativar')) return;
-      const id = Number(h.closest('.card').dataset.id);
-      const hab = state.abilities.find(a => a.id === id);
+      const id = h.closest('.card').dataset.id;
+      const hab = state.abilities.find(a => String(a.id) === String(id));
       if (hab) {
         hab.expanded = !hab.expanded;
           rememberExpanded('abilities', id, hab.expanded);
@@ -3737,8 +3873,8 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.hab-activate').forEach(ch => {
     ch.addEventListener('change', (ev) => {
       window.travarTelaParaClique();
-      const id = Number(ev.target.dataset.id);
-      const hab = state.abilities.find(a => a.id === id);
+      const id = ev.target.dataset.id;
+      const hab = state.abilities.find(a => String(a.id) === String(id));
       if (hab) {
         hab.active = ev.target.checked;
         saveStateToServer();
@@ -3752,8 +3888,8 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.remover-hab').forEach(btn => {
     btn.addEventListener('click', (ev) => {
       ev.preventDefault();
-      const id = Number(btn.dataset.id);
-      state.abilities = state.abilities.filter(a => a.id !== id);
+      const id = btn.dataset.id;
+      state.abilities = state.abilities.filter(a => String(a.id) !== String(id));
       saveStateToServer();
       renderActiveTab();
 
@@ -3764,8 +3900,8 @@ function renderPreparedSpells() {
   conteudoEl.querySelectorAll('.editar-hab').forEach(btn => {
     btn.addEventListener('click', (ev) => {
       ev.preventDefault();
-      const id = Number(btn.dataset.id);
-      const hab = state.abilities.find(a => a.id === id);
+      const id = btn.dataset.id;
+      const hab = state.abilities.find(a => String(a.id) === String(id));
       if (hab) openNewAbilityModal(hab);
     });
   });
