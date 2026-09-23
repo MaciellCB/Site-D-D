@@ -738,6 +738,7 @@ function formatInventoryItem(item) {
 
   // 1. DADOS ESPECÍFICOS DE TIPO (ARMA / ARMADURA)
   if (item.type === 'Arma') {
+    const damageDetails = getItemDamageDetails(item);
     let statsLine = '';
     statsLine += createSimpleStat('Critico', item.crit);
     statsLine += createSimpleStat('Mult', item.multiplicador);
