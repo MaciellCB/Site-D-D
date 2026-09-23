@@ -1353,37 +1353,41 @@ function vincularEventosInputs() {
     });
 }
 
-document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
-    if (!btn.closest('.vida-bar') && !btn.closest('.barra-secundaria')) return;
+if (!window.__vidaButtonsBound) {
+    window.__vidaButtonsBound = true;
+    document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
+        if (!btn.closest('.vida-bar') && !btn.closest('.barra-secundaria')) return;
 
-    btn.onclick = () => {
-        if (dsSaveTimer) { clearTimeout(dsSaveTimer); dsSaveTimer = null; }
-        ativarBloqueioUI();
+        btn.addEventListener('click', () => {
+            if (window.uiLock) return;
+            if (dsSaveTimer) { clearTimeout(dsSaveTimer); dsSaveTimer = null; }
+            ativarBloqueioUI();
 
-        let key = 'vidaAtual';
-        const barraSecundaria = btn.closest('.barra-secundaria');
-        if (barraSecundaria) {
-            const titulo = barraSecundaria.querySelector('h3')?.textContent || '';
-            key = titulo.toLowerCase().includes('dano') ? 'danoNecroAtual' : 'vidaTempAtual';
-        }
+            let key = 'vidaAtual';
+            const barraSecundaria = btn.closest('.barra-secundaria');
+            if (barraSecundaria) {
+                const titulo = barraSecundaria.querySelector('h3')?.textContent || '';
+                key = titulo.toLowerCase().includes('dano') ? 'danoNecroAtual' : 'vidaTempAtual';
+            }
 
-        let step = btn.classList.contains('menos5') ? -5 : (btn.classList.contains('menos1') ? -1 : (btn.classList.contains('mais1') ? 1 : 5));
-        let max = key === 'vidaAtual' ? parseInt(document.getElementById('vida-total').textContent) : 9999;
+            let step = btn.classList.contains('menos5') ? -5 : (btn.classList.contains('menos1') ? -1 : (btn.classList.contains('mais1') ? 1 : 5));
+            let max = key === 'vidaAtual' ? parseInt(document.getElementById('vida-total').textContent) : 9999;
 
-        const anterior = parseInt(state[key]) || 0;
-        let novo = Math.max(0, Math.min(max, anterior + step));
+            const anterior = parseInt(state[key]) || 0;
+            let novo = Math.max(0, Math.min(max, anterior + step));
 
-        if (key === 'vidaAtual' && novo <= 0 && anterior > 0) {
-             state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
-             atualizarBolinhasVisualmente(true);
-        }
+            if (key === 'vidaAtual' && novo <= 0 && anterior > 0) {
+                state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
+                atualizarBolinhasVisualmente(true);
+            }
 
-        state[key] = novo;
-        registrarInteracaoLocal();
-        atualizarVidaCalculada();
-        saveStateToServer();
-    };
-});
+            state[key] = novo;
+            registrarInteracaoLocal();
+            atualizarVidaCalculada();
+            saveStateToServer();
+        }, { passive: true });
+    });
+}
 
 document.getElementById('inspiraLeft').onclick = () => { state.inspiracao = Math.max(0, (parseInt(state.inspiracao) || 0) - 1); document.getElementById('inspiraValor').textContent = state.inspiracao; saveStateToServer(); };
 document.getElementById('inspiraRight').onclick = () => { state.inspiracao = (parseInt(state.inspiracao) || 0) + 1; document.getElementById('inspiraValor').textContent = state.inspiracao; saveStateToServer(); };

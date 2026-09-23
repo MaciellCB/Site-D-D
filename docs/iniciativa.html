@@ -118,9 +118,10 @@
         const socket = io('https://dandd-chan.onrender.com');
         const params = new URLSearchParams(window.location.search);
         
-        // Membros do grupo atual (vindo da URL do mestre)
+        // Membros do grupo atual (vindo da URL do mestre).
+        // Mantém a URL estável: se não vier filtro explícito, o tracker mostra tudo.
         const rawMembros = params.get('membros') || "";
-        const listaMembros = rawMembros.split(',').map(normalizarNome).filter(Boolean);
+        const listaMembros = rawMembros ? rawMembros.split(',').map(normalizarNome).filter(Boolean) : [];
         const nomeGrupo = params.get('grupo') || "Combate";
 
         document.title = `Iniciativa: ${nomeGrupo}`;
@@ -171,22 +172,20 @@
 
             lista.forEach((item, index) => {
                 const nomeItem = normalizarNome(item.name || "");
-                
-                // --- FILTRAGEM RÍGIDA ---
-                let mostrar = false;
-                let cssClass = "enemy"; // Vermelho por padrão (Monstros)
 
-                // 1. É membro deste grupo?
-                if (listaMembros.includes(nomeItem)) {
+                let mostrar = false;
+                let cssClass = "enemy";
+
+                if (listaMembros.length === 0) {
                     mostrar = true;
-                    cssClass = "my-group"; // Roxo
+                    cssClass = "my-group";
+                } else if (listaMembros.includes(nomeItem)) {
+                    mostrar = true;
+                    cssClass = "my-group";
+                } else if (!todosJogadores.includes(nomeItem)) {
+                    mostrar = true;
+                    cssClass = "enemy";
                 }
-                // 2. É um monstro/NPC (não é um jogador registrado no banco)?
-                else if (!todosJogadores.includes(nomeItem)) {
-                    mostrar = true; 
-                    // Monstros aparecem para todos os grupos
-                }
-                // 3. É jogador de OUTRO grupo? -> mostrar = false (já é o padrão)
 
                 if (mostrar) {
                     const div = document.createElement('div');

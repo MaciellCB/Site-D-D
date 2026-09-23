@@ -896,9 +896,8 @@
                 font-weight: bold; cursor: pointer; font-size: 11px; text-transform: uppercase;
             `;
             btnObs.onclick = () => {
-                const cards = content.querySelectorAll('.card-personagem');
-                const nomesMembros = Array.from(cards).map(c => c.dataset.nome).join(',');
-                window.open(`iniciativa.html?grupo=${encodeURIComponent(titulo)}&membros=${encodeURIComponent(nomesMembros)}&master=true`, '_blank');
+                const grupo = encodeURIComponent(titulo || 'Combate');
+                window.open(`iniciativa.html?grupo=${grupo}&master=true`, '_blank');
             };
 
             const rowSmallBtns = document.createElement('div');
