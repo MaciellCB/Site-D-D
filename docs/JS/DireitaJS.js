@@ -692,7 +692,8 @@ function formatItemDamageRollDetail(rollResult, item) {
   const formatted = details.terms.map((term, index) => {
     const rolledValue = rolledParts[index] || term.value;
     const prefix = index === 0 ? '' : '+';
-    return `${prefix}${rolledValue}(${term.value})`;
+    const source = term.source === 'Base' ? term.value : term.source;
+    return `${prefix}${rolledValue}(${source})`;
   });
 
   return formatted.join('');
