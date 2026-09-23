@@ -169,7 +169,23 @@ function sortOrganizedList(items, listKey, selectedProperty) {
   const config = getOrganizationConfig(listKey);
   const result = [...items];
   const text = value => String(value || '').toLowerCase();
-  const number = value => parseInt(String(value || '').match(/-?\d+/)?.[0], 10) || 0;
+  const damageScore = value => {
+    const expression = String(value || '').replace(/,/g, '.');
+    let score = 0;
+    let foundDice = false;
+
+    expression.replace(/(\d*)d(\d+)/gi, (_, quantityText, facesText) => {
+      const quantity = parseInt(quantityText, 10) || 1;
+      const faces = parseInt(facesText, 10) || 0;
+      score += quantity * ((faces + 1) / 2);
+      foundDice = true;
+      return '';
+    });
+
+    const flatNumbers = expression.replace(/\d*d\d+/gi, '').match(/[-+]?\d+(?:\.\d+)?/g) || [];
+    score += flatNumbers.reduce((total, numberText) => total + (parseFloat(numberText) || 0), 0);
+    return foundDice || flatNumbers.length ? score : 0;
+  };
 
   result.sort((a, b) => {
     if (config.selectedFirst && !!a[selectedProperty] !== !!b[selectedProperty]) {
@@ -177,7 +193,11 @@ function sortOrganizedList(items, listKey, selectedProperty) {
     }
 
     let comparison = 0;
-    if (config.sort === 'damage') comparison = number(a.damage) - number(b.damage);
+    if (config.sort === 'damage') {
+      const damageA = a.damage || a.damage2Hands || a.damageBonus;
+      const damageB = b.damage || b.damage2Hands || b.damageBonus;
+      comparison = damageScore(damageA) - damageScore(damageB);
+    }
     if (config.sort === 'type') {
       const typeA = a.type || a.category || a.class;
       const typeB = b.type || b.category || b.class;
