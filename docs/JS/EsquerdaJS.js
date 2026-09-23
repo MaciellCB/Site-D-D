@@ -209,10 +209,13 @@ function renderMultiSelect(elementId, optionsList, currentSelection, stateKey) {
 
 function renderCheckboxes(container, defaultOptions, currentSelection, stateKey, displayElement) {
     if (!Array.isArray(currentSelection)) currentSelection = [];
-    const allItems = [...new Set([...defaultOptions, ...currentSelection])].sort();
+    const menuSelection = stateKey === 'idiomasList'
+        ? currentSelection.filter(opt => opt !== 'Comum')
+        : currentSelection;
+    const allItems = [...new Set([...defaultOptions, ...menuSelection])].sort();
 
     container.innerHTML = allItems.map(opt => {
-        const isChecked = currentSelection.includes(opt);
+        const isChecked = menuSelection.includes(opt);
         const isCustom = !defaultOptions.includes(opt);
         const styleColor = isCustom ? '#e0aaff' : '#fff';
         
@@ -801,6 +804,7 @@ window.abrirPortraitOBS = function() {
 };
 
 function inicializarDadosEsquerda() {
+    if (typeof window.aplicarEstadoVisualLocal === 'function') window.aplicarEstadoVisualLocal(state);
     if (!state.atributos) state.atributos = { n1: 10, n2: 10, n3: 10, n4: 10, n5: 10, n6: 10 };
     if (!state.niveisClasses) state.niveisClasses = {};
     if (!state.vidaDadosSalvos) state.vidaDadosSalvos = {};
@@ -832,7 +836,8 @@ function inicializarDadosEsquerda() {
     if (!state.resistenciasList) state.resistenciasList = [];
     if (!state.imunidadesList) state.imunidadesList = [];
     if (!state.proficienciasList) state.proficienciasList = [];
-    if (!state.idiomasList) state.idiomasList = [];
+    if (!Array.isArray(state.idiomasList)) state.idiomasList = [];
+    if (!state.idiomasList.includes('Comum')) state.idiomasList.unshift('Comum');
 
     state.acOutros = parseInt(state.acOutros) || 0;
     state.iniciativaBonus = parseInt(state.iniciativaBonus) || 0;

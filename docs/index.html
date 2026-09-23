@@ -617,7 +617,7 @@
       <div id="account-forms">
         <input type="text" id="login-nome" name="login-username" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Conta (username)"
           style="width:100%; padding:10px; margin-bottom:8px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
-        <input type="password" id="login-senha" name="login-password" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Senha"
+        <input type="password" id="login-senha" name="account-secret" autocomplete="new-password" autocapitalize="none" spellcheck="false" data-lpignore="true" data-1p-ignore="true" placeholder="Senha"
           style="width:100%; padding:10px; margin-bottom:12px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
         <div style="display:flex; gap:8px;">
           <button id="btn-account-login" onclick="tentarLogin()"
@@ -816,6 +816,7 @@
 
         // 2. Atualiza o estado com os dados mesclados (Preservando abertas/fechadas)
         Object.assign(state, estadoFinal);
+        if (typeof window.aplicarEstadoVisualLocal === 'function') window.aplicarEstadoVisualLocal(state);
 
         // 3. Atualiza a tela
         if (typeof preencherFichaNaTela === 'function') preencherFichaNaTela(state);
@@ -896,6 +897,12 @@
 
       if (token && masterView) {
         try {
+          const meRes = await fetchWithAuth(`${API_BASE}/accounts/me`);
+          const me = meRes.ok ? await meRes.json() : null;
+          if (!me || !me.isMaster) {
+            url.searchParams.delete('masterView');
+            window.history.replaceState({}, '', url);
+          } else {
           const res = await fetchWithAuth(`${API_BASE}/load-ficha-mestre`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -916,6 +923,7 @@
               window.dispatchEvent(new CustomEvent('sheet-updated'));
               return;
             }
+          }
           }
         } catch (e) {
           if (e && e.message === 'AUTH_EXPIRED') return;
@@ -1331,6 +1339,7 @@
       marco: 0,
       vidaAtual: 1,
       vidaTotalCalculada: 1,
+                idiomasList: ['Comum'],
       inventory: [],
       abilities: [],
       spells: [],
@@ -1567,8 +1576,8 @@
 
       // 2. Verifica se é para a ficha que estou aberto
       // (Compara o nome da ficha aberta com o nome da ficha que rolou o dado)
-      if (state && state.nome && data.personagem &&
-        data.personagem.toLowerCase() === state.nome.toLowerCase()) {
+      const nomesDaFicha = [state?.nome, state?.personagem].filter(Boolean).map(nome => nome.toLowerCase());
+      if (nomesDaFicha.includes((data.personagem || '').toLowerCase())) {
 
         console.log("Recebendo rolagem remota de outra tela...");
 

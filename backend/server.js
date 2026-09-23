@@ -340,17 +340,32 @@ app.post('/api/save-ficha', authenticateToken, async (req, res) => {
     try {
         const nome = req.body.nome;
         if (!nome) return res.status(400).json({ error: 'Missing name' });
+        const fichaData = { ...req.body };
+        delete fichaData.collapsedSections;
+        ['inventory', 'spells', 'abilities'].forEach(collection => {
+            if (Array.isArray(fichaData[collection])) {
+                fichaData[collection] = fichaData[collection].map(item => {
+                    const cleanItem = { ...item };
+                    delete cleanItem.expanded;
+                    return cleanItem;
+                });
+            }
+        });
         // Ensure the requester owns this ficha or is master
         const existing = await Ficha.findOne({ nome: { $regex: new RegExp(`^${nome}$`, 'i') } });
         if (existing && existing.accountUsername && existing.accountUsername.toLowerCase() !== req.account.username.toLowerCase() && !req.account.isMaster) {
             return res.status(403).json({ error: 'Forbidden' });
         }
         // If no existing and attempting to upsert without proper ownership, prevent unless master
-        if (!existing && req.body.accountUsername && req.body.accountUsername.toLowerCase() !== req.account.username.toLowerCase() && !req.account.isMaster) {
+        if (!existing && fichaData.accountUsername && fichaData.accountUsername.toLowerCase() !== req.account.username.toLowerCase() && !req.account.isMaster) {
             return res.status(403).json({ error: 'Forbidden' });
         }
-        await Ficha.findOneAndUpdate({ nome: { $regex: new RegExp(`^${nome}$`, 'i') } }, req.body, { upsert: true });
-        io.emit('ficha_atualizada', req.body);
+        const savedFicha = await Ficha.findOneAndUpdate(
+            { nome: { $regex: new RegExp(`^${nome}$`, 'i') } },
+            fichaData,
+            { upsert: true, new: true, lean: true }
+        );
+        io.emit('ficha_atualizada', savedFicha);
         await auditLog(req.account, { ip: req.ip }, 'save_ficha', nome, { size: JSON.stringify(req.body).length });
         res.json({ ok: true });
     } catch (error) { res.status(500).json({ error: "Erro ao salvar" }); }

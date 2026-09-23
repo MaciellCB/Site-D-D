@@ -874,6 +874,10 @@
         "desc": "Você tem deslocamento de voo igual ao seu deslocamento de caminhada. <u>Não pode usar com armadura média ou pesada.</u>"
       },
       {
+        "name": "Travessia Feérica",
+        "desc": "Seu corpo flexível e esguio permite que você passe por lugares de até 1/3 do seu tamanho. Além disso, você pode passar por quadrados ocupados por outras pessoas, contanto que ao fim do seu turno você não esteja sobre esse quadrado."
+      },
+      {
         "name": "Magia das Fadas",
         "desc": "Conhece o truque <i>druidismo</i>. Nv 3: <i>fogo das fadas</i> (1/longo). Nv 5: <i>aumentar/reduzir</i> (1/longo). Escolha Int, Sab ou Car."
       }

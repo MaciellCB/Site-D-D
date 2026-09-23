@@ -63,6 +63,53 @@ carregarCatalogosDireita();
 
 let saveTimer = null;
 let isUserInteracting = false; // NOVA VARIÁVEL: O "Escudo"
+const LOCAL_UI_PREFIX = 'dnd-sheet-ui:';
+
+function getLocalUiState(nome = state.nome) {
+  if (!nome) return {};
+  try {
+    return JSON.parse(localStorage.getItem(`${LOCAL_UI_PREFIX}${nome}`) || '{}');
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveLocalUiState() {
+  if (!state.nome) return;
+  const uiState = {
+    collapsedSections: state.collapsedSections || {},
+    inventoryExpanded: Object.fromEntries((state.inventory || []).map(item => [String(item.id), !!item.expanded])),
+    spellsExpanded: Object.fromEntries((state.spells || []).map(spell => [String(spell.id), !!spell.expanded])),
+    abilitiesExpanded: Object.fromEntries((state.abilities || []).map(ability => [String(ability.id), !!ability.expanded])),
+    minimizedPreparedSpells: !!state.minimizedPreparedSpells,
+    minimizedPreparedAbilities: !!state.minimizedPreparedAbilities
+  };
+  localStorage.setItem(`${LOCAL_UI_PREFIX}${state.nome}`, JSON.stringify(uiState));
+}
+
+window.aplicarEstadoVisualLocal = function (target = state) {
+  if (!target || !target.nome) return;
+  const uiState = getLocalUiState(target.nome);
+  target.collapsedSections = uiState.collapsedSections || {};
+  target.minimizedPreparedSpells = !!uiState.minimizedPreparedSpells;
+  target.minimizedPreparedAbilities = !!uiState.minimizedPreparedAbilities;
+
+  const applyExpanded = (collection, key) => {
+    const expanded = uiState[key] || {};
+    (target[collection] || []).forEach(item => {
+      item.expanded = expanded[String(item.id)] === true;
+    });
+  };
+  applyExpanded('inventory', 'inventoryExpanded');
+  applyExpanded('spells', 'spellsExpanded');
+  applyExpanded('abilities', 'abilitiesExpanded');
+};
+
+function rememberExpanded(collection, id, value) {
+  const item = (state[collection] || []).find(entry => String(entry.id) === String(id));
+  if (item) item.expanded = !!value;
+  saveLocalUiState();
+}
 
 async function saveStateToServer() {
   if (!state.nome) return;
@@ -80,10 +127,17 @@ async function saveStateToServer() {
       const token = localStorage.getItem('authToken');
       const headers = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = 'Bearer ' + token;
+      const fichaParaSalvar = JSON.parse(JSON.stringify(state));
+      delete fichaParaSalvar.collapsedSections;
+      ['inventory', 'spells', 'abilities'].forEach(collection => {
+        if (Array.isArray(fichaParaSalvar[collection])) {
+          fichaParaSalvar[collection].forEach(item => delete item.expanded);
+        }
+      });
       await fetch(`${API_URL}/save-ficha`, {
         method: 'POST',
         headers,
-        body: JSON.stringify(state)
+        body: JSON.stringify(fichaParaSalvar)
       });
 
       // 3. Desativa o escudo 500ms DEPOIS de salvar, para garantir que o servidor já atualizou
@@ -625,7 +679,7 @@ function bindInventoryCardEvents() {
           card.classList.remove('expanded');
         }
 
-        saveStateToServer();
+        rememberExpanded('inventory', rawId, it.expanded);
       };
     }
 
@@ -809,6 +863,7 @@ function bindInventorySectionEvents() {
 
       const key = header.getAttribute('data-key');
       state.collapsedSections[key] = !state.collapsedSections[key];
+      saveLocalUiState();
 
       // REMOVIDO: saveStateToServer(); <-- NÃO SALVAR NO SERVER
       // A função mesclarEstadoVisual já cuida de manter isso salvo localmente quando atualiza
@@ -1415,6 +1470,7 @@ function bindAbilitySectionEvents() {
       const key = header.getAttribute('data-key');
       const current = state.collapsedSections[key] !== undefined ? state.collapsedSections[key] : true;
       state.collapsedSections[key] = !current;
+      saveLocalUiState();
 
       // REMOVIDO: saveStateToServer(); <-- NÃO SALVAR NO SERVER
 
@@ -1467,6 +1523,7 @@ function bindAbilityEvents() {
         const hab = findHab();
         if (hab) {
           hab.expanded = !hab.expanded;
+          rememberExpanded('abilities', habId, hab.expanded);
 
           // Atualização DOM direta para performance
           const body = card.querySelector('.card-body');
@@ -2718,7 +2775,7 @@ function bindSpellEvents() {
             card.classList.remove('expanded');
             if (caret) caret.textContent = '▸';
           }
-          saveStateToServer();
+          rememberExpanded('spells', rawId, s.expanded);
         }
       };
     }
@@ -3584,6 +3641,7 @@ function renderPreparedSpells() {
     btnToggleMagias.addEventListener('click', (e) => {
       if (e.target.closest('#btnRollSpellAttack_PrepHeader')) return;
       state.minimizedPreparedSpells = !state.minimizedPreparedSpells;
+      saveLocalUiState();
       // saveStateToServer(); <--- REMOVA ISSO
       renderActiveTab();
     });
@@ -3592,6 +3650,7 @@ function renderPreparedSpells() {
   if (btnToggleHabs) {
     btnToggleHabs.addEventListener('click', () => {
       state.minimizedPreparedAbilities = !state.minimizedPreparedAbilities;
+      saveLocalUiState();
       // saveStateToServer(); <--- REMOVA ISSO
       renderActiveTab();
     });
@@ -3611,7 +3670,7 @@ function renderPreparedSpells() {
       const s = state.spells.find(x => x.id === id);
       if (s) {
         s.expanded = !s.expanded;
-        // saveStateToServer();  <--- REMOVA OU COMENTE ISSO
+        rememberExpanded('spells', id, s.expanded);
         renderActiveTab();
       }
     });
@@ -3663,7 +3722,7 @@ function renderPreparedSpells() {
       const hab = state.abilities.find(a => a.id === id);
       if (hab) {
         hab.expanded = !hab.expanded;
-        // saveStateToServer(); <--- REMOVA OU COMENTE ISSO
+          rememberExpanded('abilities', id, hab.expanded);
         renderActiveTab();
       }
     });
@@ -5244,7 +5303,8 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
   if (!isRemote && typeof socket !== 'undefined') {
     const payload = {
       socketId: socket.id,
-      personagem: state.nome || "Desconhecido",
+      personagem: state.nome || state.personagem || "Desconhecido",
+      tipo: title.startsWith('Cura') ? 'cura' : 'rolagem',
       titulo: title,
       ataque: null,
       dano: null,
