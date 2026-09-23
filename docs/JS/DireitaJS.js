@@ -96,15 +96,18 @@ const ORGANIZATION_OPTIONS = {
   ],
   spells: [
     { value: 'name', label: 'Nome' },
-    { value: 'level', label: 'Nível' },
     { value: 'school', label: 'Escola' }
+  ],
+  combat: [
+    { value: 'name', label: 'Nome' },
+    { value: 'damage', label: 'Dano' },
+    { value: 'type', label: 'Tipo' }
   ],
   abilities: [
     { value: 'name', label: 'Nome' },
     { value: 'type', label: 'Tipo' }
   ],
   prepared: [
-    { value: 'level', label: 'Nível' },
     { value: 'name', label: 'Nome' },
     { value: 'school', label: 'Escola' }
   ]
@@ -112,8 +115,9 @@ const ORGANIZATION_OPTIONS = {
 
 function getOrganizationConfig(listKey) {
   const saved = getLocalUiState().organization?.[listKey] || {};
+  const validSort = ORGANIZATION_OPTIONS[listKey].some(option => option.value === saved.sort);
   return {
-    sort: saved.sort || ORGANIZATION_OPTIONS[listKey][0].value,
+    sort: validSort ? saved.sort : ORGANIZATION_OPTIONS[listKey][0].value,
     selectedFirst: saved.selectedFirst !== false
   };
 }
@@ -174,7 +178,6 @@ function sortOrganizedList(items, listKey, selectedProperty) {
 
     let comparison = 0;
     if (config.sort === 'damage') comparison = number(a.damage) - number(b.damage);
-    if (config.sort === 'level') comparison = number(a.levelNumber ?? a.level ?? a.baseLevel) - number(b.levelNumber ?? b.level ?? b.baseLevel);
     if (config.sort === 'type') {
       const typeA = a.type || a.category || a.class;
       const typeB = b.type || b.category || b.class;
@@ -185,6 +188,46 @@ function sortOrganizedList(items, listKey, selectedProperty) {
     return comparison || text(a.name || a.title).localeCompare(text(b.name || b.title));
   });
   return result;
+}
+
+function renderSpellLevelGroups(spells, listKey) {
+  const spellsByLevel = new Map();
+  sortOrganizedList(spells, listKey, 'active').forEach(spell => {
+    const level = parseInt(spell.levelNumber) || 0;
+    if (!spellsByLevel.has(level)) spellsByLevel.set(level, []);
+    spellsByLevel.get(level).push(spell);
+  });
+
+  return [...spellsByLevel.entries()].sort((a, b) => a[0] - b[0]).map(([level, levelSpells]) => {
+    const key = `${listKey}-spells-level-${level}`;
+    const collapsed = !!state.collapsedSections?.[key];
+    const title = level === 0 ? 'Truques' : `${level}º Círculo`;
+    return `
+      <div class="prepared-level-group" style="margin-bottom:8px;">
+        <div class="spell-level-header" data-key="${key}" style="cursor:pointer; display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.03); padding:7px 8px; border-radius:4px; border:1px solid rgba(255,255,255,0.05);">
+          <span class="prepared-level-arrow" style="color:#9c27b0; width:14px;">${collapsed ? '▸' : '▾'}</span>
+          <span style="font-weight:700; font-size:12px; color:#ccc; text-transform:uppercase;">${title}</span>
+          <span style="margin-left:auto; font-size:10px; color:#666; background:#111; padding:2px 6px; border-radius:4px;">${levelSpells.length}</span>
+        </div>
+        <div class="prepared-level-content" style="${collapsed ? 'display:none;' : ''}">
+          ${levelSpells.map(formatMySpellCard).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function bindSpellLevelHeaders(rerender) {
+  conteudoEl.querySelectorAll('.spell-level-header').forEach(header => {
+    header.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const key = header.getAttribute('data-key');
+      state.collapsedSections = state.collapsedSections || {};
+      state.collapsedSections[key] = !state.collapsedSections[key];
+      saveLocalUiState();
+      rerender();
+    });
+  });
 }
 
 window.aplicarEstadoVisualLocal = function (target = state) {
@@ -872,6 +915,10 @@ function bindInventoryCardEvents() {
       if (item) item.equip = isChecked;
       saveStateToServer();
 
+      // Reordena imediatamente quando a opção "Selecionados" está ativa.
+      if (state.activeTab === 'Inventário') renderInventory();
+      if (state.activeTab === 'Combate') renderCombat();
+
       // Atualiza Esquerda
       if (typeof atualizarAC === 'function') atualizarAC();
       if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
@@ -998,9 +1045,9 @@ function renderCombat() {
   const equipados = state.inventory.filter(i => i.equip && (i.name + (i.description || "")).toLowerCase().includes(termo));
 
   // 2. Agrupa
-  const armas = equipados.filter(i => i.type === 'Arma');
-  const defesas = equipados.filter(i => i.type === 'Proteção' || i.type === 'protecao');
-  const outros = equipados.filter(i => i.type !== 'Arma' && i.type !== 'Proteção' && i.type !== 'protecao');
+  const armas = sortOrganizedList(equipados.filter(i => i.type === 'Arma'), 'combat', 'equip');
+  const defesas = sortOrganizedList(equipados.filter(i => i.type === 'Proteção' || i.type === 'protecao'), 'combat', 'equip');
+  const outros = sortOrganizedList(equipados.filter(i => i.type !== 'Arma' && i.type !== 'Proteção' && i.type !== 'protecao'), 'combat', 'equip');
 
   // 3. Monta HTML
   let listaHTML = '';
@@ -1017,8 +1064,11 @@ function renderCombat() {
   }
 
   const html = `
-        <div class="controls-row">
+        <div class="list-main-controls">
             <input id="filterCombat" placeholder="Filtrar combate..." value="${escapeHtml(termo)}" />
+        </div>
+        <div class="list-organization-row">
+          ${renderOrganizationControls('combat')}
         </div>
         <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 12px; margin-top: -4px;">
             ${getHeaderDiceHtml('Dados Puros')}
@@ -1029,6 +1079,7 @@ function renderCombat() {
     `;
 
   conteudoEl.innerHTML = html;
+  bindOrganizationControls('combat', renderCombat);
 
   bindInventoryCardEvents();
   bindInventorySectionEvents();
@@ -2758,7 +2809,7 @@ function renderSpells() {
       <div class="list-organization-row">${renderOrganizationControls('spells')}</div>
 
       <div class="spells-list">
-        ${sortOrganizedList(state.spells, 'spells', 'active').map(formatMySpellCard).join('')}
+        ${renderSpellLevelGroups(state.spells, 'spells')}
       </div>
     </div>
   `;
@@ -2767,6 +2818,7 @@ function renderSpells() {
   bindSpellEvents();
   bindSlotEvents();
   bindOrganizationControls('spells', renderSpells);
+  bindSpellLevelHeaders(renderSpells);
   aplicarFiltrosMagias();
   bindHeaderDiceEvents();
 
@@ -3640,41 +3692,15 @@ function renderPreparedSpells() {
   // HTML Magias: grupos por nível, com organização configurável dentro de cada grupo.
   let magiasHTML = '';
   if (magiasPreparadas.length > 0) {
-    const magiasPorNivel = new Map();
-    sortOrganizedList(magiasPreparadas, 'prepared', 'active').forEach(magia => {
-      const nivel = parseInt(magia.levelNumber) || 0;
-      if (!magiasPorNivel.has(nivel)) magiasPorNivel.set(nivel, []);
-      magiasPorNivel.get(nivel).push(magia);
-    });
-
-    const gruposNivelHTML = [...magiasPorNivel.entries()].sort((a, b) => a[0] - b[0]).map(([nivel, magias]) => {
-      const chave = `prepared-spells-level-${nivel}`;
-      const recolhido = !!state.collapsedSections?.[chave];
-      const titulo = nivel === 0 ? 'Truques' : `${nivel}º Círculo`;
-      return `
-        <div class="prepared-level-group" style="margin-bottom:8px;">
-          <div class="prepared-level-header" data-key="${chave}" style="cursor:pointer; display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.03); padding:7px 8px; border-radius:4px; border:1px solid rgba(255,255,255,0.05);">
-            <span class="prepared-level-arrow" style="color:#9c27b0; width:14px;">${recolhido ? '▸' : '▾'}</span>
-            <span style="font-weight:700; font-size:12px; color:#ccc; text-transform:uppercase;">${titulo}</span>
-            <span style="margin-left:auto; font-size:10px; color:#666; background:#111; padding:2px 6px; border-radius:4px;">${magias.length}</span>
-          </div>
-          <div class="prepared-level-content" style="${recolhido ? 'display:none;' : ''}">
-            ${magias.map(formatMySpellCard).join('')}
-          </div>
-        </div>
-      `;
-    }).join('');
-
     magiasHTML = `
             <div id="toggle-magias" class="toggle-section-header" style="margin: 10px 0 6px 4px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; cursor:pointer; display:flex; align-items:center;">
                 <span style="font-size:16px; color:#9c27b0; width:15px;">${arrowMagias}</span> 
                 <span style="color: #ddd; text-transform: uppercase; font-size: 14px; font-weight:700;">Magias Preparadas</span>
-                ${getHeaderDiceHtml('Ataque Mágico (Preparadas)')}
             </div>
             <div class="list-organization-row prepared-organization-row">${renderOrganizationControls('prepared')}</div>
 
             <div id="content-magias" class="section-content" style="${styleMagias}">
-                ${gruposNivelHTML}
+                ${renderSpellLevelGroups(magiasPreparadas, 'prepared')}
             </div>
         `;
   }
@@ -3779,17 +3805,7 @@ function renderPreparedSpells() {
     });
   }
 
-  conteudoEl.querySelectorAll('.prepared-level-header').forEach(header => {
-    header.addEventListener('click', (event) => {
-      event.stopPropagation();
-      const key = header.getAttribute('data-key');
-      state.collapsedSections = state.collapsedSections || {};
-      state.collapsedSections[key] = !state.collapsedSections[key];
-      saveLocalUiState();
-      renderActiveTab();
-    });
-  });
-
+  bindSpellLevelHeaders(renderPreparedSpells);
   bindOrganizationControls('prepared', renderPreparedSpells);
   const btnToggleHabs = document.getElementById('toggle-habs');
   if (btnToggleHabs) {
