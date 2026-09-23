@@ -92,33 +92,42 @@ const ORGANIZATION_OPTIONS = {
   inventory: [
     { value: 'name', label: 'Nome' },
     { value: 'damage', label: 'Dano' },
-    { value: 'type', label: 'Tipo' }
+    { value: 'type', label: 'Tipo' },
+    { value: 'custom', label: 'Personalizado' }
   ],
   spells: [
     { value: 'name', label: 'Nome' },
-    { value: 'school', label: 'Escola' }
+    { value: 'damage', label: 'Dano' },
+    { value: 'school', label: 'Escola' },
+    { value: 'custom', label: 'Personalizado' }
   ],
   combat: [
     { value: 'name', label: 'Nome' },
     { value: 'damage', label: 'Dano' },
-    { value: 'type', label: 'Tipo' }
+    { value: 'type', label: 'Tipo' },
+    { value: 'custom', label: 'Personalizado' }
   ],
   abilities: [
     { value: 'name', label: 'Nome' },
-    { value: 'type', label: 'Tipo' }
+    { value: 'type', label: 'Tipo' },
+    { value: 'custom', label: 'Personalizado' }
   ],
   prepared: [
     { value: 'name', label: 'Nome' },
-    { value: 'school', label: 'Escola' }
+    { value: 'damage', label: 'Dano' },
+    { value: 'school', label: 'Escola' },
+    { value: 'custom', label: 'Personalizado' }
   ]
 };
 
 function getOrganizationConfig(listKey) {
   const saved = getLocalUiState().organization?.[listKey] || {};
   const validSort = ORGANIZATION_OPTIONS[listKey].some(option => option.value === saved.sort);
+  const defaultSort = validSort ? saved.sort : ORGANIZATION_OPTIONS[listKey][0].value;
   return {
-    sort: validSort ? saved.sort : ORGANIZATION_OPTIONS[listKey][0].value,
-    selectedFirst: saved.selectedFirst !== false
+    sort: defaultSort,
+    selectedFirst: saved.selectedFirst !== false,
+    direction: saved.direction === 'desc' || (!saved.direction && defaultSort === 'damage') ? 'desc' : 'asc'
   };
 }
 
@@ -143,6 +152,7 @@ function renderOrganizationControls(listKey) {
         <span class="organization-check-box">✓</span>
         <span>Selecionados</span>
       </label>
+      <button type="button" class="organization-expand" title="Abrir organizador completo">Expandir lista</button>
     </div>
   `;
 }
@@ -152,22 +162,36 @@ function bindOrganizationControls(listKey, rerender) {
   if (!controls) return;
 
   controls.addEventListener('click', event => event.stopPropagation());
+  const select = controls.querySelector('.organization-select');
 
   const update = () => {
     saveOrganizationConfig(listKey, {
-      sort: controls.querySelector('.organization-select').value,
-      selectedFirst: controls.querySelector('.organization-selected-first').checked
+      sort: select.value,
+      selectedFirst: controls.querySelector('.organization-selected-first').checked,
+      direction: select.dataset.direction || getOrganizationConfig(listKey).direction
     });
     rerender();
   };
 
-  controls.querySelector('.organization-select').onchange = update;
+  select.onchange = () => {
+    select.dataset.direction = select.value === 'damage' ? 'desc' : 'asc';
+    update();
+  };
+  select.onmousedown = () => {
+    if (document.activeElement === select) {
+      const current = getOrganizationConfig(listKey).direction;
+      select.dataset.direction = current === 'desc' ? 'asc' : 'desc';
+      update();
+    }
+  };
   controls.querySelector('.organization-selected-first').onchange = update;
+  controls.querySelector('.organization-expand').onclick = () => openOrganizationOverlay(listKey);
 }
 
 function sortOrganizedList(items, listKey, selectedProperty) {
   const config = getOrganizationConfig(listKey);
   const result = [...items];
+  const customOrder = getLocalUiState().organization?.[listKey]?.customOrder || [];
   const text = value => String(value || '').toLowerCase();
   const damageScore = value => {
     const expression = String(value || '').replace(/,/g, '.');
@@ -193,9 +217,14 @@ function sortOrganizedList(items, listKey, selectedProperty) {
     }
 
     let comparison = 0;
+    if (config.sort === 'custom') {
+      const indexA = customOrder.indexOf(String(a.id));
+      const indexB = customOrder.indexOf(String(b.id));
+      comparison = (indexA < 0 ? Number.MAX_SAFE_INTEGER : indexA) - (indexB < 0 ? Number.MAX_SAFE_INTEGER : indexB);
+    }
     if (config.sort === 'damage') {
-      const damageA = a.damage || a.damage2Hands || a.damageBonus;
-      const damageB = b.damage || b.damage2Hands || b.damageBonus;
+      const damageA = a.type ? getItemDamageDetails(a).expression : a.damage;
+      const damageB = b.type ? getItemDamageDetails(b).expression : b.damage;
       comparison = damageScore(damageA) - damageScore(damageB);
     }
     if (config.sort === 'type') {
@@ -205,9 +234,81 @@ function sortOrganizedList(items, listKey, selectedProperty) {
     }
     if (config.sort === 'school') comparison = text(a.school).localeCompare(text(b.school));
     if (config.sort === 'name') comparison = text(a.name || a.title).localeCompare(text(b.name || b.title));
+    if (config.direction === 'desc') comparison *= -1;
     return comparison || text(a.name || a.title).localeCompare(text(b.name || b.title));
   });
   return result;
+}
+
+function openOrganizationOverlay(listKey) {
+  const collections = {
+    inventory: state.inventory || [],
+    combat: (state.inventory || []).filter(item => item.equip),
+    spells: state.spells || [],
+    prepared: (state.spells || []).filter(spell => spell.active),
+    abilities: state.abilities || []
+  };
+  let items = sortOrganizedList(collections[listKey], listKey, listKey === 'abilities' ? 'active' : (listKey === 'spells' || listKey === 'prepared' ? 'active' : 'equip'));
+  const overlay = document.createElement('div');
+  overlay.className = 'organization-overlay';
+  overlay.innerHTML = `
+    <div class="organization-modal">
+      <div class="organization-modal-header">
+        <h2>Organizar ${listKey === 'combat' ? 'Combate' : listKey === 'inventory' ? 'Inventário' : listKey === 'abilities' ? 'Habilidades' : 'Magias'}</h2>
+        <button type="button" class="organization-close">✖</button>
+      </div>
+      <p class="organization-modal-help">Use as setas para montar uma ordem personalizada.</p>
+      <div class="organization-modal-list"></div>
+      <div class="organization-modal-actions">
+        <button type="button" class="btn-add organization-use-custom">Usar ordem personalizada</button>
+        <button type="button" class="btn-add organization-close-action">Concluir</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  const listElement = overlay.querySelector('.organization-modal-list');
+  const renderItems = () => {
+    listElement.innerHTML = items.map((item, index) => `
+      <div class="organization-modal-item" data-index="${index}">
+        <span>${escapeHtml(item.name || item.title || 'Sem nome')}</span>
+        <span class="organization-modal-arrows">
+          <button type="button" class="organization-move-up" ${index === 0 ? 'disabled' : ''}>↑</button>
+          <button type="button" class="organization-move-down" ${index === items.length - 1 ? 'disabled' : ''}>↓</button>
+        </span>
+      </div>
+    `).join('');
+    listElement.querySelectorAll('.organization-modal-item').forEach(row => {
+      const index = Number(row.dataset.index);
+      row.querySelector('.organization-move-up').onclick = () => {
+        [items[index - 1], items[index]] = [items[index], items[index - 1]];
+        renderItems();
+      };
+      row.querySelector('.organization-move-down').onclick = () => {
+        [items[index], items[index + 1]] = [items[index + 1], items[index]];
+        renderItems();
+      };
+    });
+  };
+  renderItems();
+
+  const close = () => overlay.remove();
+  overlay.querySelector('.organization-close').onclick = close;
+  overlay.querySelector('.organization-close-action').onclick = close;
+  overlay.querySelector('.organization-use-custom').onclick = () => {
+    const uiState = getLocalUiState();
+    uiState.organization = {
+      ...(uiState.organization || {}),
+      [listKey]: {
+        ...getOrganizationConfig(listKey),
+        sort: 'custom',
+        customOrder: items.map(item => String(item.id))
+      }
+    };
+    if (state.nome) localStorage.setItem(`${LOCAL_UI_PREFIX}${state.nome}`, JSON.stringify(uiState));
+    close();
+    renderActiveTab();
+  };
 }
 
 function renderSpellLevelGroups(spells, listKey) {
@@ -541,6 +642,43 @@ function setActiveTab(tabName) {
 }
 
 /* ---------------- INVENTÁRIO (VISUAL LIMPO: APENAS DADO BASE) ---------------- */
+function getItemDamageDetails(item) {
+  const baseDamage = item.empunhadura === 'Versátil' && item.useTwoHands
+    ? (item.damage2Hands || item.damage)
+    : item.damage;
+  const terms = [];
+  if (baseDamage) terms.push({ value: baseDamage, source: 'Base' });
+
+  (item.moreDmgList || []).forEach(extra => {
+    if (extra.dano) terms.push({ value: extra.dano, source: 'Extra' });
+  });
+
+  let damageAttribute = item.damageAttribute;
+  if (!damageAttribute || damageAttribute === 'Nenhum') {
+    damageAttribute = item.type === 'Arma' ? item.attackAttribute : 'Nenhum';
+  }
+  if (damageAttribute && damageAttribute !== 'Nenhum') {
+    const modifier = typeof getAttributeMod === 'function' ? getAttributeMod(damageAttribute) : 0;
+    if (modifier !== 0) terms.push({ value: modifier, source: damageAttribute.substring(0, 3).toUpperCase() });
+  }
+
+  const bonus = parseInt(item.damageBonus) || 0;
+  if (bonus !== 0) terms.push({ value: bonus, source: 'Bônus' });
+
+  const expression = terms.map((term, index) => {
+    if (index === 0) return term.value;
+    const prefix = typeof term.value === 'number' && term.value < 0 ? '' : '+';
+    return `${prefix}${term.value}`;
+  }).join('') || '-';
+  const display = terms.map((term, index) => {
+    if (index === 0) return `${term.value} <small>(${term.source})</small>`;
+    const prefix = typeof term.value === 'number' && term.value < 0 ? '' : '+';
+    return `${prefix}${term.value} <small>(${term.source})</small>`;
+  }).join(' ') || '-';
+
+  return { expression, display, terms };
+}
+
 function formatInventoryItem(item) {
   let subTitle = '';
   let rightSideHtml = '';
@@ -551,18 +689,8 @@ function formatInventoryItem(item) {
     subTitle = [item.proficiency, item.tipoArma].filter(Boolean).join(' • ');
 
     // Lógica Versátil
-    let baseDamage = item.damage;
-    if (item.empunhadura === 'Versátil' && item.useTwoHands && item.damage2Hands) {
-      baseDamage = item.damage2Hands;
-    }
-
-    // --- VISUAL: MOSTRA APENAS O DADO BASE (SEM SOMAR ATRIBUTO) ---
-    // O modificador será calculado apenas na hora de rolar (clique)
-    let dmgParts = [baseDamage];
-    if (item.moreDmgList) {
-      item.moreDmgList.forEach(m => { if (m.dano) dmgParts.push(m.dano); });
-    }
-    const finalDamageDisplay = dmgParts.join(' + ') || '-';
+    const damageDetails = getItemDamageDetails(item);
+    const finalDamageDisplay = damageDetails.display;
 
     let dmgFontSize = 18;
     if (finalDamageDisplay.length > 5) {
@@ -632,8 +760,8 @@ function formatInventoryItem(item) {
       <div style="margin-bottom:8px;">${empHTML}</div>
       
       <div class="item-data-row">
-          <span class="purple-label">Dano Base:</span> 
-          <span class="white-val bold">${(item.empunhadura === 'Versátil' && item.useTwoHands) ? (item.damage2Hands || item.damage) : item.damage || '-'}</span>
+          <span class="purple-label">Dano:</span>
+          <span class="white-val bold">${damageDetails.display}</span>
           ${item.damageTypes ? `<span class="separator"></span><span class="purple-label">Tipo:</span> <span class="white-val">${item.damageTypes.join(', ')}</span>` : ''}
       </div>
       
@@ -854,20 +982,7 @@ function bindInventoryCardEvents() {
 
       // Helper interno para calcular a expressão de dano COM os atributos e bônus
       const getExprDanoAtualizada = (itemData) => {
-        let exprBase = card.querySelector('.spell-damage span') ? card.querySelector('.spell-damage span').textContent : itemData.damage;
-        let modDano = 0;
-        if (itemData.damageAttribute && itemData.damageAttribute !== 'Nenhum') {
-          modDano = typeof getAttributeMod === 'function' ? getAttributeMod(itemData.damageAttribute) : 0;
-        } else if (itemData.type === 'Arma') {
-          modDano = typeof getItemAttackValues === 'function' ? getItemAttackValues(itemData).modAttr : 0;
-        }
-        const totalModDano = modDano + (parseInt(itemData.damageBonus) || 0);
-
-        if (totalModDano !== 0) {
-          const sinal = totalModDano >= 0 ? '+' : '';
-          exprBase = `${exprBase}${sinal}${totalModDano}`;
-        }
-        return exprBase;
+        return getItemDamageDetails(itemData).expression;
       };
 
       // Clique esquerdo (Normal)

@@ -564,6 +564,109 @@ body.no-scroll {
   color: #fff;
 }
 
+.organization-expand {
+  padding: 4px 7px;
+  border: 1px solid rgba(156, 39, 176, 0.55);
+  border-radius: 4px;
+  background: #171117;
+  color: #d9a7e2;
+  cursor: pointer;
+  font-size: 10px;
+}
+
+.organization-expand:hover {
+  background: #9c27b0;
+  color: #fff;
+}
+
+.organization-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 25000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.78);
+}
+
+.organization-modal {
+  width: min(720px, 100%);
+  max-height: 88vh;
+  overflow: auto;
+  padding: 18px;
+  border: 1px solid rgba(156, 39, 176, 0.55);
+  border-radius: 8px;
+  background: #181818;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.organization-modal-header,
+.organization-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.organization-modal-header h2 {
+  margin: 0;
+  color: #eee;
+  font-size: 20px;
+}
+
+.organization-close {
+  border: 0;
+  background: transparent;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.organization-modal-help {
+  color: #999;
+  font-size: 12px;
+}
+
+.organization-modal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 14px 0;
+}
+
+.organization-modal-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 10px;
+  border: 1px solid #303030;
+  border-radius: 4px;
+  background: #111;
+  color: #eee;
+}
+
+.organization-modal-arrows {
+  display: flex;
+  gap: 4px;
+}
+
+.organization-modal-arrows button {
+  width: 28px;
+  height: 26px;
+  border: 1px solid #555;
+  border-radius: 3px;
+  background: #222;
+  color: #fff;
+  cursor: pointer;
+}
+
+.organization-modal-arrows button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
 /* Checkboxes (Equipamento / Ativar) */
 .header-equip,
 .check-ativar {
