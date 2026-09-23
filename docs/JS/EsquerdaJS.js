@@ -1261,6 +1261,9 @@ function atualizarProficiencia() {
 }
 
 function vincularEventosInputs() {
+    if (window.__vincularEventosInputsBound) return;
+    window.__vincularEventosInputsBound = true;
+
     const addEnterBlur = (el, stateKey) => {
         if (!el) return;
         if (document.activeElement !== el) {
@@ -1326,28 +1329,22 @@ function vincularEventosInputs() {
         const el = document.getElementById(id);
         if (el) {
             el.oninput = () => {
-                // CANCELA qualquer save de bolinha pendente se mexer na vida
                 if (dsSaveTimer) { clearTimeout(dsSaveTimer); dsSaveTimer = null; }
-                ativarBloqueioUI(); // Ativa a proteção de eco
+                ativarBloqueioUI();
 
-                const val = parseInt(el.textContent) || 0;
+                const val = Math.max(0, parseInt(el.textContent) || 0);
                 const key = id.includes('temp') ? 'vidaTempAtual' : (id.includes('necro') ? 'danoNecroAtual' : 'vidaAtual');
                 
-                // RESET DE BOLINHAS SE VIDA SUBIR ACIMA DE 0 OU ZERAR (Lógica de segurança)
                 if (key === 'vidaAtual') {
                      const anterior = state[key] || 0;
                      if (val <= 0 && anterior > 0) {
-                         // Se zerou, limpa (quebrando referência)
                          state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
-                         atualizarBolinhasVisualmente(true); // FORÇA VISUAL LIMPO AGORA
+                         atualizarBolinhasVisualmente(true);
                      }
                 }
                 
                 state[key] = val;
-                
-                // REGISTRA INTERAÇÃO NA MEMÓRIA
                 registrarInteracaoLocal();
-
                 atualizarVidaCalculada();
             };
             el.onblur = () => saveStateToServer();
@@ -1358,29 +1355,31 @@ function vincularEventosInputs() {
 
 document.querySelectorAll('.lado-esquerdo button').forEach(btn => {
     if (!btn.closest('.vida-bar') && !btn.closest('.barra-secundaria')) return;
-    
-    btn.onclick = () => {
-        // CANCELA qualquer save de bolinha pendente se mexer na vida
-        if (dsSaveTimer) { clearTimeout(dsSaveTimer); dsSaveTimer = null; }
-        ativarBloqueioUI(); // Ativa a proteção de eco
 
-        let key = btn.closest('.vida-container') ? "vidaAtual" : (btn.closest('.barra-secundaria:nth-child(1)') ? "vidaTempAtual" : "danoNecroAtual");
+    btn.onclick = () => {
+        if (dsSaveTimer) { clearTimeout(dsSaveTimer); dsSaveTimer = null; }
+        ativarBloqueioUI();
+
+        let key = 'vidaAtual';
+        const barraSecundaria = btn.closest('.barra-secundaria');
+        if (barraSecundaria) {
+            const titulo = barraSecundaria.querySelector('h3')?.textContent || '';
+            key = titulo.toLowerCase().includes('dano') ? 'danoNecroAtual' : 'vidaTempAtual';
+        }
+
         let step = btn.classList.contains('menos5') ? -5 : (btn.classList.contains('menos1') ? -1 : (btn.classList.contains('mais1') ? 1 : 5));
         let max = key === 'vidaAtual' ? parseInt(document.getElementById('vida-total').textContent) : 9999;
-        
+
         const anterior = parseInt(state[key]) || 0;
         let novo = Math.max(0, Math.min(max, anterior + step));
-        
+
         if (key === 'vidaAtual' && novo <= 0 && anterior > 0) {
              state.deathSaves = { successes: [false, false, false], failures: [false, false, false] };
-             atualizarBolinhasVisualmente(true); // FORÇA VISUAL LIMPO AGORA
+             atualizarBolinhasVisualmente(true);
         }
 
         state[key] = novo;
-        
-        // REGISTRA INTERAÇÃO NA MEMÓRIA
         registrarInteracaoLocal();
-
         atualizarVidaCalculada();
         saveStateToServer();
     };

@@ -3348,7 +3348,11 @@ let trackerListGlobal = [];
 let tempImgSrc = "img/imagem-no-site/dado.png";
 
 // 1. GARANTIR CONEXÃO SOCKET
-// Se o script do index.html ainda não criou, criamos aqui
+// Se o script do index.html já criou, reaproveita; caso contrário, cria aqui.
+const socketGlobal = typeof socket !== 'undefined' ? socket : null;
+if (socketGlobal && !window.socket) {
+    window.socket = socketGlobal;
+}
 if (typeof io !== 'undefined' && !window.socket) {
     window.socket = io('https://dandd-chan.onrender.com');
 }

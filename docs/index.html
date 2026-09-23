@@ -795,7 +795,8 @@
     /* =================================================================
        LÓGICA DO SOCKET.IO (SINCRONIZAÇÃO EM TEMPO REAL)
        ================================================================= */
-    const socket = io('https://dandd-chan.onrender.com');
+    window.socket = io('https://dandd-chan.onrender.com');
+    const socket = window.socket;
 
     socket.on('connect', () => {
       console.log("Conectado ao servidor de atualizações! ID:", socket.id);
