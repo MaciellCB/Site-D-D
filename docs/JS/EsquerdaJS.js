@@ -106,7 +106,7 @@ function ativarBloqueioUI() {
     if (window.uiUnlockTimer) clearTimeout(window.uiUnlockTimer);
     window.uiUnlockTimer = setTimeout(() => {
         window.uiLock = false;
-    }, 2000);
+    }, 180);
 }
 
 // ======================================
@@ -1359,7 +1359,6 @@ if (!window.__vidaButtonsBound) {
         if (!btn.closest('.vida-bar') && !btn.closest('.barra-secundaria')) return;
 
         btn.addEventListener('click', () => {
-            if (window.uiLock) return;
             if (dsSaveTimer) { clearTimeout(dsSaveTimer); dsSaveTimer = null; }
             ativarBloqueioUI();
 
