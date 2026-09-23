@@ -106,7 +106,7 @@ function ativarBloqueioUI() {
     if (window.uiUnlockTimer) clearTimeout(window.uiUnlockTimer);
     window.uiUnlockTimer = setTimeout(() => {
         window.uiLock = false;
-    }, 2000);
+    }, 180);
 }
 
 // ======================================
@@ -1360,6 +1360,7 @@ if (!window.__vidaButtonsBound) {
 
         btn.addEventListener('click', () => {
             if (dsSaveTimer) { clearTimeout(dsSaveTimer); dsSaveTimer = null; }
+            ativarBloqueioUI();
 
             let key = 'vidaAtual';
             const barraSecundaria = btn.closest('.barra-secundaria');
@@ -1367,9 +1368,6 @@ if (!window.__vidaButtonsBound) {
                 const titulo = barraSecundaria.querySelector('h3')?.textContent || '';
                 key = titulo.toLowerCase().includes('dano') ? 'danoNecroAtual' : 'vidaTempAtual';
             }
-
-            if (key === 'vidaAtual' && window.uiLock) return;
-            if (key === 'vidaAtual') ativarBloqueioUI();
 
             let step = btn.classList.contains('menos5') ? -5 : (btn.classList.contains('menos1') ? -1 : (btn.classList.contains('mais1') ? 1 : 5));
             let max = key === 'vidaAtual' ? parseInt(document.getElementById('vida-total').textContent) : 9999;
