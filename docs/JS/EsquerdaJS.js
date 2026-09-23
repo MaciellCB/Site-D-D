@@ -82,7 +82,9 @@ window.localMemory = {
     active: false,
     timestamp: 0,
     deathSaves: null, // Guarda estado local das bolinhas
-    vidaAtual: null   // Guarda estado local da vida
+    vidaAtual: null,  // Guarda estado local da vida
+    vidaTempAtual: null,
+    danoNecroAtual: null
 };
 
 // Função: Registra o que o usuário acabou de fazer e diz "Isso é verdade absoluta pelos próximos 3s"
@@ -95,6 +97,8 @@ function registrarInteracaoLocal() {
         window.localMemory.deathSaves = JSON.parse(JSON.stringify(state.deathSaves));
     }
     window.localMemory.vidaAtual = state.vidaAtual;
+    window.localMemory.vidaTempAtual = state.vidaTempAtual;
+    window.localMemory.danoNecroAtual = state.danoNecroAtual;
 }
 
 var uiLock = false;
@@ -820,6 +824,12 @@ function inicializarDadosEsquerda() {
         }
         if (window.localMemory.vidaAtual !== null) {
             state.vidaAtual = window.localMemory.vidaAtual;
+        }
+        if (window.localMemory.vidaTempAtual !== null) {
+            state.vidaTempAtual = window.localMemory.vidaTempAtual;
+        }
+        if (window.localMemory.danoNecroAtual !== null) {
+            state.danoNecroAtual = window.localMemory.danoNecroAtual;
         }
     }
     // =========================================================
