@@ -659,7 +659,13 @@ function getItemDamageDetails(item) {
   }
   if (damageAttribute && damageAttribute !== 'Nenhum') {
     const modifier = typeof getAttributeMod === 'function' ? getAttributeMod(damageAttribute) : 0;
-    if (modifier !== 0) terms.push({ value: modifier, source: damageAttribute.substring(0, 3).toUpperCase() });
+    if (modifier !== 0) {
+      terms.push({
+        value: modifier,
+        source: damageAttribute.substring(0, 3).toUpperCase(),
+        isAttribute: true
+      });
+    }
   }
 
   const bonus = parseInt(item.damageBonus) || 0;
@@ -670,7 +676,8 @@ function getItemDamageDetails(item) {
     const prefix = typeof term.value === 'number' && term.value < 0 ? '' : '+';
     return `${prefix}${term.value}`;
   }).join('') || '-';
-  const display = terms.map((term, index) => {
+  const displayTerms = terms.filter(term => !term.isAttribute);
+  const display = displayTerms.map((term, index) => {
     if (index === 0) return `${term.value}`;
     const prefix = typeof term.value === 'number' && term.value < 0 ? '' : '+';
     return `${prefix}${term.value}`;
