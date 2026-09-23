@@ -671,12 +671,17 @@ function getItemDamageDetails(item) {
     return `${prefix}${term.value}`;
   }).join('') || '-';
   const display = terms.map((term, index) => {
-    if (index === 0) return `${term.value} <small>(${term.source})</small>`;
+    if (index === 0) return `${term.value}`;
     const prefix = typeof term.value === 'number' && term.value < 0 ? '' : '+';
-    return `${prefix}${term.value} <small>(${term.source})</small>`;
+    return `${prefix}${term.value}`;
   }).join(' ') || '-';
 
-  return { expression, display, terms };
+  const explanation = terms.map((term, index) => {
+    const prefix = index === 0 ? '' : (typeof term.value === 'number' && term.value < 0 ? '' : '+');
+    return `${prefix}${term.value} (${term.source})`;
+  }).join(' ') || '-';
+
+  return { expression, display, explanation, terms };
 }
 
 function formatInventoryItem(item) {
@@ -702,7 +707,7 @@ function formatInventoryItem(item) {
          <span style="font-weight: 800; color: #9c27b0; font-size: ${dmgFontSize}px; white-space: nowrap; transition: font-size 0.2s;">
             ${finalDamageDisplay}
          </span>
-         <img class="dice-img" src="img/imagem-no-site/dado.png" alt="dado" style="width: 20px; height: 20px;" title="Rolar Dano" />
+         <img class="dice-img" src="img/imagem-no-site/dado.png" alt="dado" style="width: 20px; height: 20px;" title="Rolar Dano: ${damageDetails.explanation}" />
        </div>
     `;
 
@@ -999,6 +1004,7 @@ function bindInventoryCardEvents() {
 
         const atkRes = usaAtaque ? rollDiceWithAdvantage(exprAtk, 0, 0) : null;
         const dmgRes = rollDiceExpression(exprDanoReal);
+        dmgRes.detail = `${dmgRes.detail} <span class="damage-source-detail">(${getItemDamageDetails(item).explanation})</span>`;
 
         showCombatResults(item.name, atkRes, dmgRes);
       });
