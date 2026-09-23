@@ -5568,7 +5568,10 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
   }
 
   if (damageResult) {
-    let totalClass = damageResult.isCrit ? "crit-total" : "";
+    // Dano nunca recebe destaque de crítico/máximo; apenas o acerto é colorido.
+    const damageDetail = String(damageResult.detail || '')
+      .replace(/<span class="dice-roll-max"(?:\s+[^>]*)?>(.*?)<\/span>/g, '$1')
+      .replace(/<span class="dice-roll-min"(?:\s+[^>]*)?>(.*?)<\/span>/g, '$1');
 
     // AQUI ESTÁ A MUDANÇA: Usa damageResult.label ou o padrão "DANO"
     const labelTexto = damageResult.label || "DANO";
@@ -5577,8 +5580,8 @@ function showCombatResults(title, attackResult, damageResult, isRemote = false) 
             <div class="dice-row">
                 <div class="dice-label">${labelTexto}</div>
                 <div class="dice-value-wrapper">
-                    <div class="dice-value ${totalClass}">${damageResult.text}</div>
-                    <div class="dice-tooltip">${damageResult.detail || ''}</div>
+                  <div class="dice-value">${damageResult.text}</div>
+                  <div class="dice-tooltip">${damageDetail}</div>
                 </div>
             </div>
         `;
@@ -6037,8 +6040,8 @@ document.addEventListener('click', function (e) {
         }
         damageRes = rollDiceExpression(damageFormula);
         if (attackRes && attackRes.isCrit) {
-          damageRes.isCrit = true;
-          damageRes.label = `CRÍTICO (${critMult}x)`;
+          damageRes.isCrit = false;
+          damageRes.label = "DANO";
         }
       }
 
@@ -6113,8 +6116,8 @@ document.addEventListener('click', function (e) {
               if (bonusExtraCrit > 0) novaExpressao += `+${bonusExtraCrit}`;
 
               damageRes = rollDiceExpression(novaExpressao);
-              damageRes.isCrit = true;
-              damageRes.label = `CRÍTICO (${fator}x DADOS)`;
+              damageRes.isCrit = false;
+              damageRes.label = "DANO";
             } else {
               let danoFixo = rollDiceExpression(expressionDano).total;
               let totalCrit = (danoFixo * fator) + bonusExtraCrit;
@@ -6122,8 +6125,8 @@ document.addEventListener('click', function (e) {
                 total: totalCrit,
                 text: totalCrit.toString(),
                 detail: `${danoFixo} x ${fator} + ${bonusExtraCrit}`,
-                isCrit: true,
-                label: "DANO CRÍTICO"
+                isCrit: false,
+                label: "DANO"
               };
             }
           } else {
@@ -6492,8 +6495,8 @@ window.abrirMenuRolagem = function (e, titulo, expressionAttack, expressionDamag
           formulaDano = `${qtd}d${match[2]}${match[3] || ''}`;
         }
         damageRes = rollDiceExpression(formulaDano);
-        damageRes.isCrit = true;
-        damageRes.label = "DANO CRÍTICO";
+        damageRes.isCrit = false;
+        damageRes.label = "DANO";
       } else {
         damageRes = rollDiceExpression(formulaDano);
       }
