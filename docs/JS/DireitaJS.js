@@ -684,6 +684,20 @@ function getItemDamageDetails(item) {
   return { expression, display, explanation, terms };
 }
 
+function formatItemDamageRollDetail(rollResult, item) {
+  const details = getItemDamageDetails(item);
+  const rolledParts = String(rollResult.detail || '').split(/\s+\+\s+/);
+  if (!details.terms.length || !rolledParts.length) return rollResult.detail;
+
+  const formatted = details.terms.map((term, index) => {
+    const rolledValue = rolledParts[index] || term.value;
+    const prefix = index === 0 ? '' : '+';
+    return `${prefix}${rolledValue}(${term.value})`;
+  });
+
+  return formatted.join('');
+}
+
 function formatInventoryItem(item) {
   let subTitle = '';
   let rightSideHtml = '';
@@ -1011,7 +1025,7 @@ function bindInventoryCardEvents() {
           atkRes.detail = attackParts.join(' + ');
         }
         const dmgRes = rollDiceExpression(exprDanoReal);
-        dmgRes.detail = `${dmgRes.detail} <span class="damage-source-detail">(${getItemDamageDetails(item).explanation})</span>`;
+        dmgRes.detail = formatItemDamageRollDetail(dmgRes, item);
 
         showCombatResults(item.name, atkRes, dmgRes);
       });
@@ -6110,7 +6124,7 @@ document.addEventListener('click', function (e) {
         }
 
         if (damageRes) {
-          damageRes.detail = `${damageRes.detail} <span class="damage-source-detail">(${getItemDamageDetails(item).explanation})</span>`;
+          damageRes.detail = formatItemDamageRollDetail(damageRes, item);
         }
 
         if (attackRes || damageRes) showCombatResults(item.name, attackRes, damageRes);
