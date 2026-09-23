@@ -99,6 +99,10 @@ const ORGANIZATION_OPTIONS = {
     { value: 'level', label: 'Nível' },
     { value: 'school', label: 'Escola' }
   ],
+  abilities: [
+    { value: 'name', label: 'Nome' },
+    { value: 'type', label: 'Tipo' }
+  ],
   prepared: [
     { value: 'level', label: 'Nível' },
     { value: 'name', label: 'Nome' },
@@ -171,7 +175,11 @@ function sortOrganizedList(items, listKey, selectedProperty) {
     let comparison = 0;
     if (config.sort === 'damage') comparison = number(a.damage) - number(b.damage);
     if (config.sort === 'level') comparison = number(a.levelNumber ?? a.level ?? a.baseLevel) - number(b.levelNumber ?? b.level ?? b.baseLevel);
-    if (config.sort === 'type') comparison = text(a.type).localeCompare(text(b.type));
+    if (config.sort === 'type') {
+      const typeA = a.type || a.category || a.class;
+      const typeB = b.type || b.category || b.class;
+      comparison = text(typeA).localeCompare(text(typeB));
+    }
     if (config.sort === 'school') comparison = text(a.school).localeCompare(text(b.school));
     if (config.sort === 'name') comparison = text(a.name || a.title).localeCompare(text(b.name || b.title));
     return comparison || text(a.name || a.title).localeCompare(text(b.name || b.title));
@@ -688,12 +696,12 @@ function renderInventory() {
   if (!listaHTML) listaHTML = `<div class="empty-tip">Nenhum item encontrado.</div>`;
 
   const html = `
-        <div class="inventory-controls controls-row">
+        <div class="list-main-controls inventory-controls">
             <input id="filterItens" placeholder="Filtrar itens..." value="${escapeHtml(termo)}" />
-            <div class="right-controls" style="display:flex; align-items:center;">
-            ${renderOrganizationControls('inventory')}
-                <button id="botAddItem" class="btn-add">Adicionar</button>
-            </div>
+          <button id="botAddItem" class="btn-add">Adicionar</button>
+        </div>
+        <div class="list-organization-row">
+          ${renderOrganizationControls('inventory')}
         </div>
         <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 12px; margin-top: -4px;">
             ${getHeaderDiceHtml('Dados Puros')}
@@ -1499,18 +1507,13 @@ function renderAbilities() {
     }
   });
 
-  const sortActiveFirst = (a, b) => {
-    if (a.active && !b.active) return -1;
-    if (!a.active && b.active) return 1;
-    return a.title.localeCompare(b.title);
-  };
-
   let htmlFinal = `
-        <div class="abilities-controls controls-row">
+      <div class="list-main-controls abilities-controls">
             <input id="filterHabs" placeholder="Filtrar habilidades..." value="${escapeHtml(termoBusca)}" />
-            <div class="right-controls" style="display:flex; align-items:center;">
-                <button id="botOpenCatalogHab" class="btn-add">Adicionar</button>
-            </div>
+        <button id="botOpenCatalogHab" class="btn-add">Adicionar</button>
+      </div>
+      <div class="list-organization-row">
+        ${renderOrganizationControls('abilities')}
         </div>
         <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 12px; margin-top: -4px;">
             ${getHeaderDiceHtml('Dados Puros')}
@@ -1523,16 +1526,16 @@ function renderAbilities() {
 
   let temConteudo = false;
   Object.keys(grupos.classes).sort().forEach(nomeClasse => {
-    const lista = grupos.classes[nomeClasse].sort(sortActiveFirst);
+    const lista = sortOrganizedList(grupos.classes[nomeClasse], 'abilities', 'active');
     if (lista.length > 0) {
       htmlFinal += renderAbilitySection(`Habilidades de ${nomeClasse}`, lista, `class-${nomeClasse}`, forceExpand);
       temConteudo = true;
     }
   });
 
-  if (grupos.talentos.length > 0) { grupos.talentos.sort(sortActiveFirst); htmlFinal += renderAbilitySection("Talentos", grupos.talentos, "talentos", forceExpand); temConteudo = true; }
-  if (grupos.origem.length > 0) { grupos.origem.sort(sortActiveFirst); htmlFinal += renderAbilitySection("Raça & Antecedente", grupos.origem, "origem", forceExpand); temConteudo = true; }
-  if (grupos.outros.length > 0) { grupos.outros.sort(sortActiveFirst); htmlFinal += renderAbilitySection("Outras Habilidades", grupos.outros, "outros", forceExpand); temConteudo = true; }
+  if (grupos.talentos.length > 0) { htmlFinal += renderAbilitySection("Talentos", sortOrganizedList(grupos.talentos, 'abilities', 'active'), "talentos", forceExpand); temConteudo = true; }
+  if (grupos.origem.length > 0) { htmlFinal += renderAbilitySection("Raça & Antecedente", sortOrganizedList(grupos.origem, 'abilities', 'active'), "origem", forceExpand); temConteudo = true; }
+  if (grupos.outros.length > 0) { htmlFinal += renderAbilitySection("Outras Habilidades", sortOrganizedList(grupos.outros, 'abilities', 'active'), "outros", forceExpand); temConteudo = true; }
 
   if (!temConteudo) htmlFinal += `<div class="empty-tip">Nenhuma habilidade encontrada.</div>`;
   htmlFinal += `</div>`;
@@ -1543,6 +1546,7 @@ function renderAbilities() {
 
   bindAbilityEvents();
   bindAbilitySectionEvents();
+  bindOrganizationControls('abilities', renderAbilities);
   bindHeaderDiceEvents();
 
   // --- CORREÇÃO DO FOCO AUTOMÁTICO ---
@@ -2719,16 +2723,17 @@ function renderSpells() {
       ${slotsHTML}
       ${slotsHTML ? '<hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 15px 0;">' : ''}
 
-     <div class="right-controls" style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:5px;">
-          <div style="display:flex; align-items:center; gap:8px;">
-              <button id="botAddSpell" class="btn-add">Nova Magia</button>
-          </div>
+    <div class="list-main-controls spells-main-controls">
+      <input id="filterMagias" placeholder="Filtrar magias..." value="${escapeHtml(state.spellFilters.text || '')}" />
+      <button id="botAddSpell" class="btn-add">Nova Magia</button>
+    </div>
+    <div class="spells-secondary-controls">
           <div class="dt-magias" id="btnOpenDTConfig" style="cursor:pointer;" title="Clique para configurar">
             <label style="cursor:pointer; color:#9c27b0;">DT DE MAGIAS ⚙️</label>
             <input id="dtMagiasInput" type="text" value="${state.dtMagias}" readonly 
                    style="cursor:pointer; font-weight:bold; color:#fff; text-align:center; min-width:80px;" />
           </div>
-        </div>
+    </div>
       </div>
       
       <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 12px; margin-top: 5px;">
@@ -2747,10 +2752,10 @@ function renderSpells() {
          </div>
       </div>
 
-      <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin:15px 0 10px 4px;">
+      <div class="list-section-title">
         <h4 style="margin:0; color:#ddd; font-size:16px;">Minhas Magias</h4>
-        ${renderOrganizationControls('spells')}
       </div>
+      <div class="list-organization-row">${renderOrganizationControls('spells')}</div>
 
       <div class="spells-list">
         ${sortOrganizedList(state.spells, 'spells', 'active').map(formatMySpellCard).join('')}
@@ -3664,9 +3669,9 @@ function renderPreparedSpells() {
             <div id="toggle-magias" class="toggle-section-header" style="margin: 10px 0 6px 4px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; cursor:pointer; display:flex; align-items:center;">
                 <span style="font-size:16px; color:#9c27b0; width:15px;">${arrowMagias}</span> 
                 <span style="color: #ddd; text-transform: uppercase; font-size: 14px; font-weight:700;">Magias Preparadas</span>
-                ${renderOrganizationControls('prepared')}
                 ${getHeaderDiceHtml('Ataque Mágico (Preparadas)')}
             </div>
+            <div class="list-organization-row prepared-organization-row">${renderOrganizationControls('prepared')}</div>
 
             <div id="content-magias" class="section-content" style="${styleMagias}">
                 ${gruposNivelHTML}

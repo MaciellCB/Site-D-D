@@ -454,10 +454,72 @@ body.no-scroll {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  margin-left: auto;
   color: #aaa;
   font-size: 10px;
   white-space: nowrap;
+}
+
+.list-main-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin: 6px 0 8px;
+}
+
+.list-main-controls input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px;
+  background: #111;
+  border: 1px solid #272727;
+  color: #ddd;
+  border-radius: 4px;
+}
+
+.list-main-controls .btn-add {
+  flex: 0 0 auto;
+}
+
+.list-organization-row {
+  display: flex;
+  align-items: center;
+  min-height: 30px;
+  width: 100%;
+  margin: 0 0 14px;
+  padding: 4px 2px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.list-section-title {
+  margin: 15px 0 3px 4px;
+}
+
+.spells-secondary-controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  margin: 2px 0 8px;
+}
+
+.prepared-organization-row {
+  margin-left: 4px;
+}
+
+@media (max-width: 520px) {
+  .organization-controls {
+    flex-wrap: wrap;
+  }
+
+  .list-main-controls {
+    gap: 8px;
+  }
+
+  .list-main-controls .btn-add {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }
 
 .organization-label {
