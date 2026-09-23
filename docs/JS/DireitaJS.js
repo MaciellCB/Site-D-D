@@ -1003,6 +1003,13 @@ function bindInventoryCardEvents() {
         const usaAtaque = (item.type === 'Arma' || (item.attackAttribute && item.attackAttribute !== 'Nenhum'));
 
         const atkRes = usaAtaque ? rollDiceWithAdvantage(exprAtk, 0, 0) : null;
+        if (atkRes) {
+          const attackParts = [atkRes.detail];
+          if (modAttr !== 0) attackParts.push(`${modAttr} (${(attrUsed || 'Força').substring(0, 3)})`);
+          if (profBonus !== 0) attackParts.push(`${profBonus} (Prof)`);
+          if (itemBonus !== 0) attackParts.push(`${itemBonus} (Item)`);
+          atkRes.detail = attackParts.join(' + ');
+        }
         const dmgRes = rollDiceExpression(exprDanoReal);
         dmgRes.detail = `${dmgRes.detail} <span class="damage-source-detail">(${getItemDamageDetails(item).explanation})</span>`;
 
@@ -5761,6 +5768,7 @@ function getFieldNum(k) {
 function getItemAttackValues(item) {
   let modAttr = 0;
   let attrName = item.attackAttribute ? item.attackAttribute.trim() : '';
+  let attrUsed = attrName;
 
   // 1. Se for "Nenhum", zera o mod
   if (attrName === 'Nenhum') {
@@ -5773,6 +5781,7 @@ function getItemAttackValues(item) {
       // Armas a distância usam DEX, o resto usa FOR
       const key = (tipo.includes('distancia') || tipo.includes('distância')) ? 'dex' : 'for';
       modAttr = getAttributeMod(key);
+      attrUsed = key === 'dex' ? 'Destreza' : 'Força';
     }
   }
   // 3. Caso normal: tem atributo definido (ex: "Força", "Inteligência")
@@ -5791,7 +5800,7 @@ function getItemAttackValues(item) {
   // Bônus Mágico do Item
   const itemBonus = parseInt(item.attackBonus) || 0;
 
-  return { modAttr, profBonus, itemBonus };
+  return { modAttr, profBonus, itemBonus, attrUsed };
 }
 
 // Calcula ataque de Magia (Spell)
@@ -6061,22 +6070,7 @@ document.addEventListener('click', function (e) {
           baseDano = item.damage2Hands;
         }
 
-        let modDano = 0;
-        if (item.damageAttribute && item.damageAttribute !== 'Nenhum') {
-          modDano = getAttributeMod(item.damageAttribute);
-        } else if (item.type === 'Arma') {
-          const { modAttr } = getItemAttackValues(item);
-          modDano = modAttr;
-        }
-        const bonusDano = parseInt(item.damageBonus) || 0;
-        const totalModDano = modDano + bonusDano;
-
-        if (totalModDano !== 0) {
-          const sinal = totalModDano >= 0 ? '+' : '';
-          expressionDano = `${baseDano}${sinal}${totalModDano}`;
-        } else {
-          expressionDano = baseDano;
-        }
+        expressionDano = getItemDamageDetails(item).expression;
 
         if (expressionDano && expressionDano !== '-' && expressionDano !== '0') {
           if (attackRes && attackRes.isCrit) {
@@ -6113,6 +6107,10 @@ document.addEventListener('click', function (e) {
           } else {
             damageRes = rollDiceExpression(expressionDano);
           }
+        }
+
+        if (damageRes) {
+          damageRes.detail = `${damageRes.detail} <span class="damage-source-detail">(${getItemDamageDetails(item).explanation})</span>`;
         }
 
         if (attackRes || damageRes) showCombatResults(item.name, attackRes, damageRes);
