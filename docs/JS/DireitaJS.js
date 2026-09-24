@@ -282,7 +282,7 @@ function openOrganizationOverlay(listKey) {
         <aside class="organization-details"><span class="organization-details-empty">Selecione um item para ver os detalhes.</span></aside>
       </div>
       <div class="organization-modal-actions">
-        <span class="organization-modal-help">Use as setas para definir a ordem da lista.</span>
+        <span class="organization-modal-help">Arraste a alça de três linhas para reorganizar.</span>
         <div><button type="button" class="btn-add organization-use-custom">Usar esta ordem</button><button type="button" class="btn-add organization-close-action">Concluir</button></div>
       </div>
     </div>
@@ -326,7 +326,6 @@ function openOrganizationOverlay(listKey) {
     listElement.innerHTML = visibleItems.length ? visibleItems.map(item => {
       const index = items.indexOf(item);
       const secondary = item.type === 'Arma' ? getItemDamageDetails(item).display : (item.type === 'Proteção' || item.type === 'protecao' ? `CA ${item.defense || '-'}` : category(item));
-      return `<div class="organization-modal-item ${item.equip ? 'is-equipped' : ''}" data-id="${item.id}"><button type="button" class="organization-item-main"><span class="organization-item-name">${escapeHtml(itemName(item))}</span><span class="organization-item-meta">${escapeHtml(secondary)}${item.equip ? ' · Equipado' : ''}</span></button><span class="organization-modal-arrows"><button type="button" class="organization-move-up" data-index="${index}" ${index === 0 ? 'disabled' : ''} aria-label="Mover para cima">↑</button><button type="button" class="organization-move-down" data-index="${index}" ${index === items.length - 1 ? 'disabled' : ''} aria-label="Mover para baixo">↓</button></span></div>`;
       return `<div class="organization-modal-item ${item.equip ? 'is-equipped' : ''}" data-id="${item.id}" draggable="true"><button type="button" class="organization-drag-handle" aria-label="Arrastar item" title="Arrastar para reorganizar">☰</button><button type="button" class="organization-item-main"><span class="organization-item-name">${escapeHtml(itemName(item))}</span><span class="organization-item-meta">${escapeHtml(secondary)}${item.equip ? ' · Equipado' : ''}</span></button></div>`;
     }).join('') : '<div class="organization-empty">Nenhum item corresponde à busca.</div>';
     listElement.querySelectorAll('.organization-modal-item').forEach(row => {
