@@ -663,6 +663,8 @@ body.no-scroll {
 .organization-modal-item.is-equipped { border-left: 3px solid #9c27b0; }
 .organization-modal-item.drag-over { border-color: #c237b6; background: #251a27; }
 .organization-modal-item.is-dragging { opacity: .45; }
+.organization-modal-item.drag-before { border-top: 2px solid #d88ce4; }
+.organization-modal-item.drag-after { border-bottom: 2px solid #d88ce4; }
 .organization-drag-handle { width: 28px; flex: 0 0 28px; border: 0; background: transparent; color: #9c27b0; cursor: grab; font-size: 22px; line-height: 1; padding: 0; }
 .organization-drag-handle:active { cursor: grabbing; }
 .organization-item-main { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; flex: 1; min-width: 0; border: 0; background: transparent; color: inherit; cursor: pointer; text-align: left; }

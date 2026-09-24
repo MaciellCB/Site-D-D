@@ -333,17 +333,29 @@ function openOrganizationOverlay(listKey) {
       row.querySelector('.organization-item-main')?.addEventListener('click', () => renderDetails(item));
       row.addEventListener('dragstart', event => { event.dataTransfer.effectAllowed = 'move'; event.dataTransfer.setData('text/plain', String(item.id)); row.classList.add('is-dragging'); });
       row.addEventListener('dragend', () => row.classList.remove('is-dragging'));
-      row.addEventListener('dragover', event => { event.preventDefault(); row.classList.add('drag-over'); });
-      row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
+      row.addEventListener('dragover', event => {
+        event.preventDefault();
+        const bounds = row.getBoundingClientRect();
+        const insertAfter = event.clientY > bounds.top + bounds.height / 2;
+        row.classList.toggle('drag-before', !insertAfter);
+        row.classList.toggle('drag-after', insertAfter);
+        event.dataTransfer.dropEffect = 'move';
+      });
+      row.addEventListener('dragleave', event => {
+        if (!row.contains(event.relatedTarget)) row.classList.remove('drag-before', 'drag-after');
+      });
       row.addEventListener('drop', event => {
         event.preventDefault();
-        row.classList.remove('drag-over');
+        row.classList.remove('drag-before', 'drag-after');
         const sourceId = event.dataTransfer.getData('text/plain');
         const sourceIndex = items.findIndex(entry => String(entry.id) === sourceId);
         const targetIndex = items.indexOf(item);
-        if (sourceIndex < 0 || sourceIndex === targetIndex) return;
+        const bounds = row.getBoundingClientRect();
+        const insertAfter = event.clientY > bounds.top + bounds.height / 2;
+        if (sourceIndex < 0 || sourceIndex === targetIndex || (insertAfter && sourceIndex === targetIndex - 1) || (!insertAfter && sourceIndex === targetIndex + 1)) return;
         const [moved] = items.splice(sourceIndex, 1);
-        items.splice(items.indexOf(item), 0, moved);
+        const adjustedTargetIndex = items.indexOf(item) + (insertAfter ? 1 : 0);
+        items.splice(adjustedTargetIndex, 0, moved);
         renderItems();
       });
     });
