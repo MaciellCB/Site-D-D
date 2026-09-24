@@ -361,10 +361,9 @@ function openOrganizationOverlay(listKey) {
         clearDropPlaceholder();
         const sourceId = event.dataTransfer.getData('text/plain');
         const sourceIndex = items.findIndex(entry => String(entry.id) === sourceId);
-        const targetIndex = items.indexOf(item);
         const bounds = row.getBoundingClientRect();
         const insertAfter = event.clientY > bounds.top + bounds.height / 2;
-        if (sourceIndex < 0 || sourceIndex === targetIndex || (insertAfter && sourceIndex === targetIndex - 1) || (!insertAfter && sourceIndex === targetIndex + 1)) return;
+        if (sourceIndex < 0 || sourceIndex === targetIndex) return;
         const [moved] = items.splice(sourceIndex, 1);
         const adjustedTargetIndex = items.indexOf(item) + (insertAfter ? 1 : 0);
         items.splice(adjustedTargetIndex, 0, moved);
