@@ -691,19 +691,28 @@ function getItemDamageDetails(item) {
   return { expression, display, explanation, terms };
 }
 
-function formatItemDamageRollDetail(rollResult, item) {
+function formatItemDamageRollDetail(rollResult, item, criticalMultiplier = 1) {
   const details = getItemDamageDetails(item);
-  const rolledParts = String(rollResult.detail || '').split(/\s+\+\s+/);
+  const cleanDetail = String(rollResult.detail || '')
+    .replace(/<span[^>]*>(.*?)<\/span>/g, '$1')
+    .replace(/<[^>]+>/g, '');
+  const rolledParts = cleanDetail.split(/\s+\+\s+/);
   if (!details.terms.length || !rolledParts.length) return rollResult.detail;
 
-  const formatted = details.terms.map((term, index) => {
-    const rolledValue = rolledParts[index] || term.value;
-    const prefix = index === 0 ? '' : '+';
-    const source = term.source === 'Base' ? term.value : term.source;
-    return `${prefix}${rolledValue}(${source})`;
+  let rollIndex = 0;
+  const formatted = [];
+  details.terms.forEach(term => {
+    const diceMatch = String(term.value).match(/^(\d*)d(\d+)/i);
+    const repetitions = diceMatch ? criticalMultiplier : 1;
+
+    for (let repetition = 0; repetition < repetitions; repetition++) {
+      const rolledValue = rolledParts[rollIndex++] || term.value;
+      const source = diceMatch ? term.value : term.source;
+      formatted.push(`${rolledValue}(${source})`);
+    }
   });
 
-  return formatted.join('');
+  return formatted.map((part, index) => `${index > 0 ? '+' : ''}${part}`).join('');
 }
 
 function formatInventoryItem(item) {
@@ -6090,6 +6099,7 @@ document.addEventListener('click', function (e) {
 
         let damageRes = null;
         let expressionDano = "";
+        let damageCriticalMultiplier = 1;
         let baseDano = item.damage || '0';
         if (item.empunhadura === 'Versátil' && item.useTwoHands && item.damage2Hands) {
           baseDano = item.damage2Hands;
@@ -6103,6 +6113,7 @@ document.addEventListener('click', function (e) {
             const partes = multStr.split('+');
             const fator = parseInt(partes[0]) || 2;
             const bonusExtraCrit = partes.length > 1 ? (parseInt(partes[1]) || 0) : 0;
+            damageCriticalMultiplier = fator;
 
             const regexDice = /^(\d*)d(\d+)(.*)$/i;
             const match = expressionDano.match(regexDice);
@@ -6135,7 +6146,7 @@ document.addEventListener('click', function (e) {
         }
 
         if (damageRes) {
-          damageRes.detail = formatItemDamageRollDetail(damageRes, item);
+          damageRes.detail = formatItemDamageRollDetail(damageRes, item, damageCriticalMultiplier);
         }
 
         if (attackRes || damageRes) showCombatResults(item.name, attackRes, damageRes);
