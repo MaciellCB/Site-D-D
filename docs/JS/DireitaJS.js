@@ -252,34 +252,56 @@ function openOrganizationOverlay(listKey) {
   const overlay = document.createElement('div');
   overlay.className = 'organization-overlay';
   overlay.innerHTML = `
-    <div class="organization-modal">
+    <div class="organization-modal organization-modal-wide">
       <div class="organization-modal-header">
-        <h2>Organizar ${listKey === 'combat' ? 'Combate' : listKey === 'inventory' ? 'Inventário' : listKey === 'abilities' ? 'Habilidades' : 'Magias'}</h2>
-        <button type="button" class="organization-close">✖</button>
+        <div><span class="organization-kicker">VISÃO GERAL</span><h2>${listKey === 'combat' ? 'Combate' : listKey === 'inventory' ? 'Inventário' : listKey === 'abilities' ? 'Habilidades' : 'Magias'}</h2></div>
+        <button type="button" class="organization-close" aria-label="Fechar">✖</button>
       </div>
-      <p class="organization-modal-help">Use as setas para montar uma ordem personalizada.</p>
-      <div class="organization-modal-list"></div>
+      <div class="organization-summary"></div>
+      <div class="organization-toolbar">
+        <input class="organization-search" type="search" placeholder="Buscar por nome, tipo ou descrição..." aria-label="Buscar no inventário">
+        <select class="organization-filter" aria-label="Filtrar categoria"><option value="all">Todas as categorias</option></select>
+        <label class="organization-selected-toggle"><input type="checkbox"> Equipados primeiro</label>
+      </div>
+      <div class="organization-workspace">
+        <div class="organization-modal-list"></div>
+        <aside class="organization-details"><span class="organization-details-empty">Selecione um item para ver os detalhes.</span></aside>
+      </div>
       <div class="organization-modal-actions">
-        <button type="button" class="btn-add organization-use-custom">Usar ordem personalizada</button>
-        <button type="button" class="btn-add organization-close-action">Concluir</button>
+        <span class="organization-modal-help">Use as setas para definir a ordem da lista.</span>
+        <div><button type="button" class="btn-add organization-use-custom">Usar esta ordem</button><button type="button" class="btn-add organization-close-action">Concluir</button></div>
       </div>
     </div>
   `;
   document.body.appendChild(overlay);
 
   const listElement = overlay.querySelector('.organization-modal-list');
+  const detailsElement = overlay.querySelector('.organization-details');
+  const searchElement = overlay.querySelector('.organization-search');
+  const filterElement = overlay.querySelector('.organization-filter');
+  const selectedElement = overlay.querySelector('.organization-selected-toggle input');
+  const itemName = item => item.name || item.title || 'Sem nome';
+  const category = item => item.type === 'Proteção' || item.type === 'protecao' ? 'Proteção' : (item.type || item.category || item.class || 'Geral');
+  const detailValue = (label, value) => value ? `<div><span>${label}</span><strong>${escapeHtml(String(value))}</strong></div>` : '';
+  const renderDetails = item => {
+    if (!item) { detailsElement.innerHTML = '<span class="organization-details-empty">Selecione um item para ver os detalhes.</span>'; return; }
+    const damage = item.type === 'Arma' ? getItemDamageDetails(item) : null;
+    detailsElement.innerHTML = `<span class="organization-kicker">DETALHES</span><h3>${escapeHtml(itemName(item))}</h3><span class="organization-detail-type">${escapeHtml(category(item))}${item.equip ? ' · EQUIPADO' : ''}</span><div class="organization-detail-grid">${detailValue('Dano', damage?.display)}${detailValue('Defesa', item.defense ? `CA ${item.defense}` : '')}${detailValue('Alcance', item.alcance)}${detailValue('Empunhadura', item.empunhadura)}${detailValue('Proficiência', item.proficiency)}${detailValue('Requisito', item.minStrength ? `FOR ${item.minStrength}` : '')}</div>${item.description ? `<p class="organization-detail-description">${escapeHtml(item.description)}</p>` : '<p class="organization-detail-description muted">Sem descrição cadastrada.</p>'}`;
+  };
   const renderItems = () => {
-    listElement.innerHTML = items.map((item, index) => `
-      <div class="organization-modal-item" data-index="${index}">
-        <span>${escapeHtml(item.name || item.title || 'Sem nome')}</span>
-        <span class="organization-modal-arrows">
-          <button type="button" class="organization-move-up" ${index === 0 ? 'disabled' : ''}>↑</button>
-          <button type="button" class="organization-move-down" ${index === items.length - 1 ? 'disabled' : ''}>↓</button>
-        </span>
-      </div>
-    `).join('');
+    const query = searchElement.value.trim().toLowerCase();
+    const chosenCategory = filterElement.value;
+    const visibleItems = items.filter(item => `${itemName(item)} ${category(item)} ${item.description || ''}`.toLowerCase().includes(query) && (chosenCategory === 'all' || category(item) === chosenCategory));
+    overlay.querySelector('.organization-summary').innerHTML = `<strong>${visibleItems.length}</strong> de ${items.length} itens <span>· ${items.filter(item => item.equip).length} equipados</span>`;
+    listElement.innerHTML = visibleItems.length ? visibleItems.map(item => {
+      const index = items.indexOf(item);
+      const secondary = item.type === 'Arma' ? getItemDamageDetails(item).display : (item.type === 'Proteção' || item.type === 'protecao' ? `CA ${item.defense || '-'}` : category(item));
+      return `<div class="organization-modal-item ${item.equip ? 'is-equipped' : ''}" data-id="${item.id}"><button type="button" class="organization-item-main"><span class="organization-item-name">${escapeHtml(itemName(item))}</span><span class="organization-item-meta">${escapeHtml(secondary)}${item.equip ? ' · Equipado' : ''}</span></button><span class="organization-modal-arrows"><button type="button" class="organization-move-up" data-index="${index}" ${index === 0 ? 'disabled' : ''} aria-label="Mover para cima">↑</button><button type="button" class="organization-move-down" data-index="${index}" ${index === items.length - 1 ? 'disabled' : ''} aria-label="Mover para baixo">↓</button></span></div>`;
+    }).join('') : '<div class="organization-empty">Nenhum item corresponde à busca.</div>';
     listElement.querySelectorAll('.organization-modal-item').forEach(row => {
-      const index = Number(row.dataset.index);
+      const item = items.find(entry => String(entry.id) === String(row.dataset.id));
+      row.querySelector('.organization-item-main')?.addEventListener('click', () => renderDetails(item));
+      const index = items.indexOf(item);
       row.querySelector('.organization-move-up').onclick = () => {
         [items[index - 1], items[index]] = [items[index], items[index - 1]];
         renderItems();
@@ -290,6 +312,10 @@ function openOrganizationOverlay(listKey) {
       };
     });
   };
+  [...new Set(items.map(category))].sort().forEach(value => filterElement.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`));
+  searchElement.oninput = renderItems;
+  filterElement.onchange = renderItems;
+  selectedElement.onchange = () => { items = sortOrganizedList(items, listKey, listKey === 'abilities' ? 'active' : (listKey === 'spells' || listKey === 'prepared' ? 'active' : 'equip')); renderItems(); };
   renderItems();
 
   const close = () => overlay.remove();
