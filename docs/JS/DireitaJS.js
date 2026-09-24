@@ -345,16 +345,20 @@ function openOrganizationOverlay(listKey) {
         event.preventDefault();
         const bounds = row.getBoundingClientRect();
         const insertAfter = event.clientY > bounds.top + bounds.height / 2;
-        clearDropPlaceholder();
-        dropPlaceholder = document.createElement('div');
-        dropPlaceholder.className = 'organization-drop-placeholder';
-        dropPlaceholder.innerHTML = '<span>Soltar aqui</span>';
-        if (insertAfter) row.after(dropPlaceholder);
-        else row.before(dropPlaceholder);
+        const nextAnchor = insertAfter ? row.nextElementSibling : row.previousElementSibling;
+        const placeholderIsInPosition = dropPlaceholder && (
+          (insertAfter && nextAnchor === dropPlaceholder) ||
+          (!insertAfter && nextAnchor === dropPlaceholder)
+        );
+        if (!placeholderIsInPosition) {
+          clearDropPlaceholder();
+          dropPlaceholder = document.createElement('div');
+          dropPlaceholder.className = 'organization-drop-placeholder';
+          dropPlaceholder.innerHTML = '<span>Soltar aqui</span>';
+          if (insertAfter) row.after(dropPlaceholder);
+          else row.before(dropPlaceholder);
+        }
         event.dataTransfer.dropEffect = 'move';
-      });
-      row.addEventListener('dragleave', event => {
-        if (!row.contains(event.relatedTarget) && !dropPlaceholder?.contains(event.relatedTarget)) clearDropPlaceholder();
       });
       row.addEventListener('drop', event => {
         event.preventDefault();
