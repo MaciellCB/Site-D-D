@@ -294,6 +294,11 @@ function openOrganizationOverlay(listKey) {
   const searchElement = overlay.querySelector('.organization-search');
   const filterElement = overlay.querySelector('.organization-filter');
   const selectedElement = overlay.querySelector('.organization-selected-toggle input');
+  let dropPlaceholder = null;
+  const clearDropPlaceholder = () => {
+    dropPlaceholder?.remove();
+    dropPlaceholder = null;
+  };
   const itemName = item => item.name || item.title || 'Sem nome';
   const category = item => item.type === 'Proteção' || item.type === 'protecao' ? 'Proteção' : (item.type || item.category || item.class || 'Geral');
   const detailValue = (label, value) => value !== undefined && value !== null && String(value) !== '' ? `<div><span>${label}</span><strong>${escapeHtml(String(value))}</strong></div>` : '';
@@ -332,21 +337,28 @@ function openOrganizationOverlay(listKey) {
       const item = items.find(entry => String(entry.id) === String(row.dataset.id));
       row.querySelector('.organization-item-main')?.addEventListener('click', () => renderDetails(item));
       row.addEventListener('dragstart', event => { event.dataTransfer.effectAllowed = 'move'; event.dataTransfer.setData('text/plain', String(item.id)); row.classList.add('is-dragging'); });
-      row.addEventListener('dragend', () => row.classList.remove('is-dragging'));
+      row.addEventListener('dragend', () => {
+        row.classList.remove('is-dragging');
+        clearDropPlaceholder();
+      });
       row.addEventListener('dragover', event => {
         event.preventDefault();
         const bounds = row.getBoundingClientRect();
         const insertAfter = event.clientY > bounds.top + bounds.height / 2;
-        row.classList.toggle('drag-before', !insertAfter);
-        row.classList.toggle('drag-after', insertAfter);
+        clearDropPlaceholder();
+        dropPlaceholder = document.createElement('div');
+        dropPlaceholder.className = 'organization-drop-placeholder';
+        dropPlaceholder.innerHTML = '<span>Soltar aqui</span>';
+        if (insertAfter) row.after(dropPlaceholder);
+        else row.before(dropPlaceholder);
         event.dataTransfer.dropEffect = 'move';
       });
       row.addEventListener('dragleave', event => {
-        if (!row.contains(event.relatedTarget)) row.classList.remove('drag-before', 'drag-after');
+        if (!row.contains(event.relatedTarget) && !dropPlaceholder?.contains(event.relatedTarget)) clearDropPlaceholder();
       });
       row.addEventListener('drop', event => {
         event.preventDefault();
-        row.classList.remove('drag-before', 'drag-after');
+        clearDropPlaceholder();
         const sourceId = event.dataTransfer.getData('text/plain');
         const sourceIndex = items.findIndex(entry => String(entry.id) === sourceId);
         const targetIndex = items.indexOf(item);
