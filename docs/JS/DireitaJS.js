@@ -240,6 +240,20 @@ function sortOrganizedList(items, listKey, selectedProperty) {
   return result;
 }
 
+function formatRichDescription(value, fallback = '') {
+  if (!value) return fallback;
+  const source = String(value);
+  const documentFragment = new DOMParser().parseFromString(source, 'text/html').body;
+  const allowedTags = new Set(['P', 'BR', 'UL', 'OL', 'LI', 'STRONG', 'B', 'EM', 'I', 'U']);
+  const renderNode = node => {
+    if (node.nodeType === Node.TEXT_NODE) return escapeHtml(node.nodeValue);
+    if (node.nodeType !== Node.ELEMENT_NODE) return '';
+    const children = Array.from(node.childNodes).map(renderNode).join('');
+    return allowedTags.has(node.tagName) ? `<${node.tagName.toLowerCase()}>${children}</${node.tagName.toLowerCase()}>` : children;
+  };
+  return Array.from(documentFragment.childNodes).map(renderNode).join('') || escapeHtml(source);
+}
+
 function openOrganizationOverlay(listKey) {
   const collections = {
     inventory: state.inventory || [],
@@ -282,11 +296,27 @@ function openOrganizationOverlay(listKey) {
   const selectedElement = overlay.querySelector('.organization-selected-toggle input');
   const itemName = item => item.name || item.title || 'Sem nome';
   const category = item => item.type === 'Proteção' || item.type === 'protecao' ? 'Proteção' : (item.type || item.category || item.class || 'Geral');
-  const detailValue = (label, value) => value ? `<div><span>${label}</span><strong>${escapeHtml(String(value))}</strong></div>` : '';
+  const detailValue = (label, value) => value !== undefined && value !== null && String(value) !== '' ? `<div><span>${label}</span><strong>${escapeHtml(String(value))}</strong></div>` : '';
   const renderDetails = item => {
     if (!item) { detailsElement.innerHTML = '<span class="organization-details-empty">Selecione um item para ver os detalhes.</span>'; return; }
     const damage = item.type === 'Arma' ? getItemDamageDetails(item) : null;
-    detailsElement.innerHTML = `<span class="organization-kicker">DETALHES</span><h3>${escapeHtml(itemName(item))}</h3><span class="organization-detail-type">${escapeHtml(category(item))}${item.equip ? ' · EQUIPADO' : ''}</span><div class="organization-detail-grid">${detailValue('Dano', damage?.display)}${detailValue('Defesa', item.defense ? `CA ${item.defense}` : '')}${detailValue('Alcance', item.alcance)}${detailValue('Empunhadura', item.empunhadura)}${detailValue('Proficiência', item.proficiency)}${detailValue('Requisito', item.minStrength ? `FOR ${item.minStrength}` : '')}</div>${item.description ? `<p class="organization-detail-description">${escapeHtml(item.description)}</p>` : '<p class="organization-detail-description muted">Sem descrição cadastrada.</p>'}`;
+    const isSpell = listKey === 'spells' || listKey === 'prepared';
+    const spellAttrs = item.attrs || {};
+    const details = isSpell ? [
+      detailValue('Nível', item.levelNumber === 0 ? 'Truque' : item.levelNumber), detailValue('Escola', item.school),
+      detailValue('Execução', spellAttrs.execucao), detailValue('Alcance', spellAttrs.alcance),
+      detailValue('Duração', spellAttrs.duracao), detailValue('Área', spellAttrs.area), detailValue('Alvo', spellAttrs.alvo),
+      detailValue('Resistência', spellAttrs.resistencia), detailValue('Dano', item.damage),
+      detailValue('Componentes', [item.components?.V && 'V', item.components?.S && 'S', item.components?.M && 'M'].filter(Boolean).join(' · ')),
+      detailValue('Material', item.material)
+    ].join('') : [
+      detailValue('Dano', damage?.display), detailValue('Dano detalhado', damage?.explanation), detailValue('Tipo de dano', item.damageTypes?.join(', ') || item.damageType),
+      detailValue('Defesa', item.defense ? `CA ${item.defense}` : ''), detailValue('Bônus de acerto', item.acertoBonus || item.attackBonus), detailValue('Bônus de dano', item.damageBonus),
+      detailValue('Atributo de ataque', item.attackAttribute), detailValue('Atributo de dano', item.damageAttribute), detailValue('Crítico', item.crit), detailValue('Multiplicador', item.multiplicador),
+      detailValue('Alcance', item.alcance), detailValue('Empunhadura', item.empunhadura), detailValue('Proficiência', item.proficiency), detailValue('Requisito', item.minStrength ? `FOR ${item.minStrength}` : ''),
+      detailValue('Características', item.caracteristicas?.join(', ')), detailValue('Vantagens', item.advantageSkill?.join(', ')), detailValue('Desvantagens', item.disadvantageSkill?.join(', '))
+    ].join('');
+    detailsElement.innerHTML = `<span class="organization-kicker">DETALHES</span><h3>${escapeHtml(itemName(item))}</h3><span class="organization-detail-type">${escapeHtml(category(item))}${item.equip ? ' · EQUIPADO' : ''}</span><div class="organization-detail-grid">${details}</div>${item.description ? `<div class="organization-detail-description">${formatRichDescription(item.description)}</div>` : '<p class="organization-detail-description muted">Sem descrição cadastrada.</p>'}`;
   };
   const renderItems = () => {
     const query = searchElement.value.trim().toLowerCase();
@@ -297,19 +327,26 @@ function openOrganizationOverlay(listKey) {
       const index = items.indexOf(item);
       const secondary = item.type === 'Arma' ? getItemDamageDetails(item).display : (item.type === 'Proteção' || item.type === 'protecao' ? `CA ${item.defense || '-'}` : category(item));
       return `<div class="organization-modal-item ${item.equip ? 'is-equipped' : ''}" data-id="${item.id}"><button type="button" class="organization-item-main"><span class="organization-item-name">${escapeHtml(itemName(item))}</span><span class="organization-item-meta">${escapeHtml(secondary)}${item.equip ? ' · Equipado' : ''}</span></button><span class="organization-modal-arrows"><button type="button" class="organization-move-up" data-index="${index}" ${index === 0 ? 'disabled' : ''} aria-label="Mover para cima">↑</button><button type="button" class="organization-move-down" data-index="${index}" ${index === items.length - 1 ? 'disabled' : ''} aria-label="Mover para baixo">↓</button></span></div>`;
+      return `<div class="organization-modal-item ${item.equip ? 'is-equipped' : ''}" data-id="${item.id}" draggable="true"><button type="button" class="organization-drag-handle" aria-label="Arrastar item" title="Arrastar para reorganizar">☰</button><button type="button" class="organization-item-main"><span class="organization-item-name">${escapeHtml(itemName(item))}</span><span class="organization-item-meta">${escapeHtml(secondary)}${item.equip ? ' · Equipado' : ''}</span></button></div>`;
     }).join('') : '<div class="organization-empty">Nenhum item corresponde à busca.</div>';
     listElement.querySelectorAll('.organization-modal-item').forEach(row => {
       const item = items.find(entry => String(entry.id) === String(row.dataset.id));
       row.querySelector('.organization-item-main')?.addEventListener('click', () => renderDetails(item));
-      const index = items.indexOf(item);
-      row.querySelector('.organization-move-up').onclick = () => {
-        [items[index - 1], items[index]] = [items[index], items[index - 1]];
+      row.addEventListener('dragstart', event => { event.dataTransfer.effectAllowed = 'move'; event.dataTransfer.setData('text/plain', String(item.id)); row.classList.add('is-dragging'); });
+      row.addEventListener('dragend', () => row.classList.remove('is-dragging'));
+      row.addEventListener('dragover', event => { event.preventDefault(); row.classList.add('drag-over'); });
+      row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
+      row.addEventListener('drop', event => {
+        event.preventDefault();
+        row.classList.remove('drag-over');
+        const sourceId = event.dataTransfer.getData('text/plain');
+        const sourceIndex = items.findIndex(entry => String(entry.id) === sourceId);
+        const targetIndex = items.indexOf(item);
+        if (sourceIndex < 0 || sourceIndex === targetIndex) return;
+        const [moved] = items.splice(sourceIndex, 1);
+        items.splice(items.indexOf(item), 0, moved);
         renderItems();
-      };
-      row.querySelector('.organization-move-down').onclick = () => {
-        [items[index], items[index + 1]] = [items[index + 1], items[index]];
-        renderItems();
-      };
+      });
     });
   };
   [...new Set(items.map(category))].sort().forEach(value => filterElement.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`));
@@ -884,7 +921,7 @@ function formatInventoryItem(item) {
 
   bodyContent += bonusHTML;
 
-  const descHtml = item.description ? `<div class="item-description-text">${item.description}</div>` : '';
+  const descHtml = item.description ? `<div class="item-description-text">${formatRichDescription(item.description)}</div>` : '';
 
   return `
     <div class="card item-card ${item.expanded ? 'expanded' : ''}" data-id="${item.id}">
@@ -2280,7 +2317,7 @@ function formatMySpellCard(s) {
             ${specsGridHTML}
             ${compHTML}
             <div class="spell-desc-box">
-                ${s.description || '<em style="color:#666;">Sem descrição.</em>'}
+              ${s.description ? formatRichDescription(s.description) : '<em style="color:#666;">Sem descrição.</em>'}
             </div>
             ${castControlsHTML}
             <div style="margin-top:12px; display:flex; justify-content:space-between;">
