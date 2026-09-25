@@ -125,17 +125,34 @@
             .trim()
             .replace(/\s+/g, ' ');
 
-        const rawMembros = params.get('membros') || "";
-        const listaMembros = rawMembros ? rawMembros.split(',').map(normalizarNome).filter(Boolean) : [];
+        const grupoId = params.get('grupoId') || "";
+        const gruposSelecionados = (params.get('grupos') || grupoId).split(',').map(id => id.trim()).filter(Boolean);
         const nomeGrupo = params.get('grupo') || "Combate";
 
         document.title = `Iniciativa: ${nomeGrupo}`;
 
+        let listaMembros = [];
+        let filtroPronto = gruposSelecionados.length === 0;
         let trackerDataAtual = [];
 
         async function init() {
             try {
+                if (gruposSelecionados.length > 0) {
+                    const res = await fetch('https://dandd-chan.onrender.com/api/layout');
+                    if (res.ok) {
+                        const layout = await res.json();
+                        const grupos = [
+                            { id: 'uncategorized', items: layout.uncategorized || [] },
+                            ...(layout.folders || [])
+                        ];
+                        listaMembros = [...new Set(grupos
+                            .filter(grupo => gruposSelecionados.includes(String(grupo.id)))
+                            .flatMap(grupo => grupo.items || []))]
+                            .map(normalizarNome);
+                    }
+                }
             } catch(e) {}
+            filtroPronto = true;
             if (trackerDataAtual.length > 0) {
                 render(trackerDataAtual);
             }
@@ -151,6 +168,11 @@
             const container = document.getElementById('tracker-container');
             container.innerHTML = "";
 
+            if (!filtroPronto) {
+                container.innerHTML = '<div class="empty-msg">Carregando...</div>';
+                return;
+            }
+
             if (!lista || lista.length === 0) {
                 container.innerHTML = '<div class="empty-msg">Aguardando...</div>';
                 return;
@@ -165,7 +187,7 @@
                 let mostrar = false;
                 let cssClass = "enemy";
 
-                if (listaMembros.length === 0) {
+                if (gruposSelecionados.length === 0) {
                     mostrar = true;
                     cssClass = "my-group";
                 } else if (listaMembros.includes(nomeItem)) {
