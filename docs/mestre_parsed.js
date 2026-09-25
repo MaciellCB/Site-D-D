@@ -397,7 +397,8 @@
             `;
             btnObs.onclick = () => {
                 const grupo = encodeURIComponent(titulo || 'Combate');
-                window.open(`iniciativa.html?grupo=${grupo}&master=true`, '_blank');
+                const membros = encodeURIComponent(itens.join(','));
+                window.open(`iniciativa.html?grupo=${grupo}&membros=${membros}&master=true`, '_blank');
             };
 
             const rowSmallBtns = document.createElement('div');
@@ -428,6 +429,45 @@
             col.appendChild(footer);
 
             return col;
+        }
+
+        function obterGruposParaIniciativa() {
+            return [
+                { id: 'uncategorized', name: 'Sem Grupo', items: layoutAtual.uncategorized || [] },
+                ...(layoutAtual.folders || []).map(pasta => ({ id: pasta.id, name: pasta.name, items: pasta.items || [] }))
+            ];
+        }
+
+        function abrirModalIniciativaGeral() {
+            const lista = document.getElementById('lista-grupos-iniciativa');
+            lista.innerHTML = obterGruposParaIniciativa().map(grupo => `
+                <label style="display:flex; align-items:center; gap:8px; padding:9px; color:#eee; cursor:pointer; border-bottom:1px solid #222;">
+                    <input type="checkbox" value="${grupo.id}">
+                    <span>${grupo.name}</span>
+                    <small style="color:#888; margin-left:auto;">${grupo.items.length} ficha(s)</small>
+                </label>
+            `).join('');
+            document.getElementById('modal-iniciativa-geral').style.display = 'flex';
+        }
+
+        function fecharModalIniciativaGeral() {
+            document.getElementById('modal-iniciativa-geral').style.display = 'none';
+        }
+
+        function abrirIniciativaSelecionada() {
+            const idsSelecionados = [...document.querySelectorAll('#lista-grupos-iniciativa input:checked')].map(input => input.value);
+            const gruposSelecionados = obterGruposParaIniciativa().filter(grupo => idsSelecionados.includes(String(grupo.id)));
+            const membros = [...new Set(gruposSelecionados.flatMap(grupo => grupo.items))];
+
+            if (membros.length === 0) {
+                mostrarAviso('Selecione ao menos um grupo com fichas.');
+                return;
+            }
+
+            const nomesGrupos = gruposSelecionados.map(grupo => grupo.name).join(', ');
+            const url = `iniciativa.html?grupo=${encodeURIComponent(nomesGrupos)}&membros=${encodeURIComponent(membros.join(','))}&master=true`;
+            fecharModalIniciativaGeral();
+            window.open(url, '_blank');
         }
 
         function criarCardHTML(nome) {
