@@ -42,8 +42,8 @@ const DADOS_VALORES = {
 
 // --- LISTAS DE SELEÇÃO ---
 const TIPOS_DANO_LISTA = [
-    'Ácido', 'Contundente','Doenças', 'Cortante', 'Perfurante', 'Fogo', 'Frio',
-    'Elétrico', 'Trovão', 'Veneno', 'Radiante', 'Necrótico', 'Psíquico', 'Energético'
+    'Ácido', 'Contundente','Doenças', 'Cortante', 'Perfurante', 'Ígneo', 'Frio',
+    'Elétrico', 'Trovejante', 'Veneno', 'Radiante', 'Necrótico', 'Psíquico', 'Energético'
 ];
 
 const PROFICIENCIAS_LISTA_ESQUERDA = [
@@ -81,16 +81,20 @@ const hexOverlay = document.querySelector('.hex-overlay');
 window.localMemory = {
     active: false,
     timestamp: 0,
+    nome: null,
     deathSaves: null, // Guarda estado local das bolinhas
     vidaAtual: null,  // Guarda estado local da vida
     vidaTempAtual: null,
-    danoNecroAtual: null
+    danoNecroAtual: null,
+    vidaDadosSalvos: null,
+    dadosVidaGastos: null
 };
 
 // Função: Registra o que o usuário acabou de fazer e diz "Isso é verdade absoluta pelos próximos 3s"
 function registrarInteracaoLocal() {
     window.localMemory.active = true;
     window.localMemory.timestamp = Date.now();
+    window.localMemory.nome = state.nome;
     
     // Clona o estado atual das deathSaves para a memória
     if (state.deathSaves) {
@@ -99,6 +103,8 @@ function registrarInteracaoLocal() {
     window.localMemory.vidaAtual = state.vidaAtual;
     window.localMemory.vidaTempAtual = state.vidaTempAtual;
     window.localMemory.danoNecroAtual = state.danoNecroAtual;
+    window.localMemory.vidaDadosSalvos = { ...(state.vidaDadosSalvos || {}) };
+    window.localMemory.dadosVidaGastos = { ...(state.dadosVidaGastos || {}) };
 }
 
 var uiLock = false;
@@ -137,6 +143,13 @@ function renderMultiSelect(elementId, optionsList, currentSelection, stateKey) {
     if (!container) return;
 
     if (!Array.isArray(currentSelection)) currentSelection = [];
+    if (['fraquezasList', 'resistenciasList', 'imunidadesList'].includes(stateKey)) {
+        const nomesCanonicos = { fogo: 'Ígneo', 'trovão': 'Trovejante' };
+        currentSelection = currentSelection.map(tipo =>
+            nomesCanonicos[String(tipo).toLocaleLowerCase('pt-BR')] || tipo
+        );
+        state[stateKey] = currentSelection;
+    }
 
     const updateDisplay = () => {
         const display = container.querySelector('.multi-select-display');
@@ -435,6 +448,7 @@ window.usarDadoVida = function(classKey, dadoTipo) {
 
     state.vidaAtual = novaVida;
     state.dadosVidaGastos[classKey] = gastos + 1;
+    registrarInteracaoLocal();
 
     saveStateToServer();
     atualizarTudoVisual(); 
@@ -472,6 +486,7 @@ window.realizarDescansoLongo = function() {
             state.dadosVidaGastos[key] = Math.max(0, gastos - recuperar);
         }
     });
+    registrarInteracaoLocal();
     saveStateToServer();
     atualizarTudoVisual();
     const container = document.getElementById('listaDadosVida');
@@ -604,6 +619,7 @@ function renderizarDadosVida() {
 window.rolarDadoVida = (id, dado) => {
     const faces = parseInt(dado.replace('d', ''));
     state.vidaDadosSalvos[id] = Math.floor(Math.random() * faces) + 1;
+    registrarInteracaoLocal();
     renderizarDadosVida();
     atualizarTudoVisual();
     saveStateToServer();
@@ -611,6 +627,7 @@ window.rolarDadoVida = (id, dado) => {
 
 window.salvarDadoVida = (id, val) => {
     state.vidaDadosSalvos[id] = parseInt(val) || 0;
+    registrarInteracaoLocal();
     atualizarVidaCalculada();
     saveStateToServer();
 };
@@ -817,7 +834,9 @@ function inicializarDadosEsquerda() {
     // =========================================================
     // A MÁGICA: SOBRESCREVENDO O SERVIDOR COM A MEMÓRIA LOCAL
     // Se a última interação foi há menos de 4 segundos...
-    if (window.localMemory.active && (Date.now() - window.localMemory.timestamp < 4000)) {
+    if (window.localMemory.active &&
+        window.localMemory.nome === state.nome &&
+        Date.now() - window.localMemory.timestamp < 4000) {
         // ...RESTAURA a vida e as bolinhas locais, ignorando o que veio do servidor
         if (window.localMemory.deathSaves) {
             state.deathSaves = JSON.parse(JSON.stringify(window.localMemory.deathSaves));
@@ -830,6 +849,12 @@ function inicializarDadosEsquerda() {
         }
         if (window.localMemory.danoNecroAtual !== null) {
             state.danoNecroAtual = window.localMemory.danoNecroAtual;
+        }
+        if (window.localMemory.vidaDadosSalvos) {
+            state.vidaDadosSalvos = { ...window.localMemory.vidaDadosSalvos };
+        }
+        if (window.localMemory.dadosVidaGastos) {
+            state.dadosVidaGastos = { ...window.localMemory.dadosVidaGastos };
         }
     }
     // =========================================================

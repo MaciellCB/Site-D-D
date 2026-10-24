@@ -134,7 +134,7 @@
       "duracao": "10 min",
       "resistencia": "-"
     },
-    "description": "<p>Uma chama tremeluzente aparece na sua mão. Ela permanece lá pela duração e não fere nem você nem seu equipamento. A chama emite luz plena num raio de 3 metros e penumbra por mais 3 metros.</p><p>Você pode atacar arremessando a chama (alcance 9m). Faça um ataque à distância com magia. Se atingir, causa <strong>1d8</strong> de dano de fogo.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d8</strong> nos níveis 5 (2d8), 11 (3d8) e 17 (4d8).</p>"
+    "description": "<p>Uma chama tremeluzente aparece na sua mão. Ela permanece lá pela duração e não fere nem você nem seu equipamento. A chama emite luz plena num raio de 3 metros e penumbra por mais 3 metros.</p><p>Você pode atacar arremessando a chama (alcance 9m). Faça um ataque à distância com magia. Se atingir, causa <strong>1d8</strong> de dano Ígneo.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d8</strong> nos níveis 5 (2d8), 11 (3d8) e 17 (4d8).</p>"
   },
   {
     "id": "s_criar_fogueira",
@@ -153,7 +153,7 @@
       "duracao": "Até 1 min",
       "resistencia": "Destreza"
     },
-    "description": "<p>Você cria uma fogueira mágica no chão que preenche um cubo de 1,5 metro e que requer concentração. A fogueira inflama objetos inflamáveis na área que não estejam sendo vestidos ou carregados.</p><p>Qualquer criatura no espaço da fogueira quando você a conjura, ou que entrar na fogueira pela primeira vez num turno ou terminar seu turno nela, deve fazer um teste de resistência de <strong>Destreza</strong>, sofrendo <strong>1d8</strong> de dano de fogo se falhar.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d8</strong> nos níveis 5 (2d8), 11 (3d8) e 17 (4d8).</p>"
+    "description": "<p>Você cria uma fogueira mágica no chão que preenche um cubo de 1,5 metro e que requer concentração. A fogueira inflama objetos inflamáveis na área que não estejam sendo vestidos ou carregados.</p><p>Qualquer criatura no espaço da fogueira quando você a conjura, ou que entrar na fogueira pela primeira vez num turno ou terminar seu turno nela, deve fazer um teste de resistência de <strong>Destreza</strong>, sofrendo <strong>1d8</strong> de dano Ígneo se falhar.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d8</strong> nos níveis 5 (2d8), 11 (3d8) e 17 (4d8).</p>"
   },
   {
     "id": "s_druidismo",
@@ -558,7 +558,7 @@
       "duracao": "Instantânea",
       "resistencia": "-"
     },
-    "description": "<p>Você arremessa um cisco de fogo em uma criatura ou objeto ao alcance. Faça um ataque à distância com magia.</p><p>Se atingir, o alvo sofre <strong>1d10</strong> de dano de fogo. Um objeto inflamável atingido por essa magia incendeia se não estiver sendo vestido ou carregado.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d10</strong> nos níveis 5 (2d10), 11 (3d10) e 17 (4d10).</p>"
+    "description": "<p>Você arremessa um cisco de fogo em uma criatura ou objeto ao alcance. Faça um ataque à distância com magia.</p><p>Se atingir, o alvo sofre <strong>1d10</strong> de dano Ígneo. Um objeto inflamável atingido por essa magia incendeia se não estiver sendo vestido ou carregado.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d10</strong> nos níveis 5 (2d10), 11 (3d10) e 17 (4d10).</p>"
   },
   {
     "id": "s_raio_gelo",
@@ -785,7 +785,7 @@
       "duracao": "1 rodada",
       "resistencia": "-"
     },
-    "description": "<p>A magia captura parte da energia de entrada, diminuindo seu efeito em você e armazenando-a para o seu próximo ataque corpo-a-corpo. Você usa essa reação quando sofre dano de ácido, frio, fogo, elétrico ou trovejante.</p><p>Você tem <strong>resistência</strong> ao tipo de dano ativador até o início do seu próximo turno. Além disso, a primeira vez que você atingir com um ataque corpo-a-corpo no seu próximo turno, o alvo sofre <strong>1d6</strong> de dano extra do tipo ativador, e a magia termina.</p><p><strong>Níveis Superiores:</strong> O dano extra aumenta em <strong>1d6</strong> para cada nível de slot acima do 1º.</p>"
+    "description": "<p>A magia captura parte da energia de entrada, diminuindo seu efeito em você e armazenando-a para o seu próximo ataque corpo-a-corpo. Você usa essa reação quando sofre dano de ácido, frio, Ígneo, elétrico ou trovejante.</p><p>Você tem <strong>resistência</strong> ao tipo de dano ativador até o início do seu próximo turno. Além disso, a primeira vez que você atingir com um ataque corpo-a-corpo no seu próximo turno, o alvo sofre <strong>1d6</strong> de dano extra do tipo ativador, e a magia termina.</p><p><strong>Níveis Superiores:</strong> O dano extra aumenta em <strong>1d6</strong> para cada nível de slot acima do 1º.</p>"
   },
   {
     "id": "s_alarme",
@@ -1216,7 +1216,7 @@
       "duracao": "Até 1 min",
       "resistencia": "Constituição"
     },
-    "description": "<p>A próxima vez que você atingir com um ataque corpo-a-corpo com arma, o ataque causa <strong>1d6</strong> de dano de fogo extra e o alvo é incendiado.</p><p>No começo de cada turno do alvo, ele deve fazer uma resistência de <strong>Constituição</strong>. Falha: <strong>1d6</strong> de dano de fogo. Sucesso: a magia acaba. O alvo ou uma criatura a 1,5m pode usar uma ação para apagar as chamas.</p><p><strong>Níveis Superiores:</strong> O dano inicial aumenta em <strong>1d6</strong> para cada nível de slot acima do 1º.</p>"
+    "description": "<p>A próxima vez que você atingir com um ataque corpo-a-corpo com arma, o ataque causa <strong>1d6</strong> de dano Ígneo extra e o alvo é incendiado.</p><p>No começo de cada turno do alvo, ele deve fazer uma resistência de <strong>Constituição</strong>. Falha: <strong>1d6</strong> de dano Ígneo. Sucesso: a magia acaba. O alvo ou uma criatura a 1,5m pode usar uma ação para apagar as chamas.</p><p><strong>Níveis Superiores:</strong> O dano inicial aumenta em <strong>1d6</strong> para cada nível de slot acima do 1º.</p>"
   },
   {
     "id": "s_destruicao_trovejante",
@@ -1661,7 +1661,7 @@
       "duracao": "Instantânea",
       "resistencia": "Destreza"
     },
-    "description": "<p>Um cone de chamas sai das pontas dos seus dedos estendidos. Cada criatura num cone de 4,5 metros deve realizar um teste de resistência de <strong>Destreza</strong>.</p><p>A criatura sofre <strong>3d6</strong> de dano de fogo se falhar, ou metade se passar. A magia incendeia quaisquer objetos inflamáveis na área que não estejam sendo vestidos ou carregados.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> para cada nível de slot acima do 1º.</p>"
+    "description": "<p>Um cone de chamas sai das pontas dos seus dedos estendidos. Cada criatura num cone de 4,5 metros deve realizar um teste de resistência de <strong>Destreza</strong>.</p><p>A criatura sofre <strong>3d6</strong> de dano Ígneo se falhar, ou metade se passar. A magia incendeia quaisquer objetos inflamáveis na área que não estejam sendo vestidos ou carregados.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> para cada nível de slot acima do 1º.</p>"
   },
   {
     "id": "s_marca_cacador",
@@ -1933,7 +1933,7 @@
       "duracao": "Instantânea",
       "resistencia": "-"
     },
-    "description": "<p>Você arremessa uma massa ondulante de energia caótica. Faça um ataque à distância com magia contra uma criatura. Se atingir, o alvo sofre <strong>2d8 + 1d6</strong> de dano. Escolha um dos d8s rolados para determinar o tipo de dano: 1-Ácido, 2-Frio, 3-Fogo, 4-Energia, 5-Elétrico, 6-Veneno, 7-Psíquico, 8-Trovejante.</p><p>Se você rolar o mesmo número em ambos os d8s, a energia caótica salta do alvo para uma criatura diferente a até 9 metros. Faça um novo ataque e role o dano novamente.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> para cada nível de slot acima do 1º.</p>"
+    "description": "<p>Você arremessa uma massa ondulante de energia caótica. Faça um ataque à distância com magia contra uma criatura. Se atingir, o alvo sofre <strong>2d8 + 1d6</strong> de dano. Escolha um dos d8s rolados para determinar o tipo de dano: 1-Ácido, 2-Frio, 3-Ígneo, 4-Energia, 5-Elétrico, 6-Veneno, 7-Psíquico, 8-Trovejante.</p><p>Se você rolar o mesmo número em ambos os d8s, a energia caótica salta do alvo para uma criatura diferente a até 9 metros. Faça um novo ataque e role o dano novamente.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> para cada nível de slot acima do 1º.</p>"
   },
   {
     "id": "s_raio_guiador",
@@ -1990,7 +1990,7 @@
       "duracao": "Instantânea",
       "resistencia": "Destreza"
     },
-    "description": "<p>Você aponta seu dedo e a criatura que causou dano a você é momentaneamente envolvida por chamas infernais. Reação que você usa em resposta a sofrer dano de uma criatura a até 18 metros de você que você possa ver.</p><p>A criatura deve fazer um teste de resistência de <strong>Destreza</strong>. Ela sofre <strong>2d10</strong> de dano de fogo se falhar, ou metade se passar.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d10</strong> para cada nível de slot acima do 1º.</p>"
+    "description": "<p>Você aponta seu dedo e a criatura que causou dano a você é momentaneamente envolvida por chamas infernais. Reação que você usa em resposta a sofrer dano de uma criatura a até 18 metros de você que você possa ver.</p><p>A criatura deve fazer um teste de resistência de <strong>Destreza</strong>. Ela sofre <strong>2d10</strong> de dano Ígneo se falhar, ou metade se passar.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d10</strong> para cada nível de slot acima do 1º.</p>"
   },
   {
     "id": "s_riso_tasha",
@@ -2495,7 +2495,7 @@
       "duracao": "Instantânea",
       "resistencia": "Destreza"
     },
-    "description": "<p>Uma linha de chamas agitadas com 9 metros de comprimento e 1,5 metro de largura emana de você na direção que você escolher. Cada criatura na linha deve fazer um teste de resistência de <strong>Destreza</strong>. A criatura sofre <strong>3d8</strong> de dano de fogo se falhar na resistência, ou metade desse dano se passar.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d8</strong> para cada nível de slot acima do 2º.</p>"
+    "description": "<p>Uma linha de chamas agitadas com 9 metros de comprimento e 1,5 metro de largura emana de você na direção que você escolher. Cada criatura na linha deve fazer um teste de resistência de <strong>Destreza</strong>. A criatura sofre <strong>3d8</strong> de dano Ígneo se falhar na resistência, ou metade desse dano se passar.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d8</strong> para cada nível de slot acima do 2º.</p>"
   },
   {
     "id": "s_chama_continua",
@@ -2751,7 +2751,7 @@
       "duracao": "Até 1 min",
       "resistencia": "Destreza"
     },
-    "description": "<p>Uma esfera de fogo de 1,5 metro de diâmetro aparece. Qualquer criatura que terminar o turno a 1,5 metro da esfera deve fazer resistência de <strong>Destreza</strong>.</p><p>Sofre <strong>2d6</strong> de dano de fogo se falhar, ou metade se passar. Como uma ação bônus, você pode mover a esfera até 9 metros. Se atropelar uma criatura, ela faz o teste de resistência imediatamente.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> para cada nível de slot acima do 2º.</p>"
+    "description": "<p>Uma esfera de fogo de 1,5 metro de diâmetro aparece. Qualquer criatura que terminar o turno a 1,5 metro da esfera deve fazer resistência de <strong>Destreza</strong>.</p><p>Sofre <strong>2d6</strong> de dano Ígneo se falhar, ou metade se passar. Como uma ação bônus, você pode mover a esfera até 9 metros. Se atropelar uma criatura, ela faz o teste de resistência imediatamente.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> para cada nível de slot acima do 2º.</p>"
   },
   {
     "id": "s_espirito_curativo",
@@ -2790,7 +2790,7 @@
       "duracao": "Até 1 min",
       "resistencia": "Constituição"
     },
-    "description": "<p>Você aquece um objeto de metal manufaturado (como uma arma ou armadura) até ficar incandescente. Qualquer criatura em contato físico com o objeto sofre <strong>2d8</strong> de dano de fogo quando você conjura a magia.</p><p>Até a magia acabar, você pode usar uma ação bônus em turnos subsequentes para causar o dano novamente. Se a criatura estiver segurando ou vestindo o objeto, deve passar em resistência de <strong>Constituição</strong> ou terá de largar o objeto (se puder). Se não largar, tem desvantagem em ataques e testes de habilidade.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d8</strong> para cada nível de slot acima do 2º.</p>"
+    "description": "<p>Você aquece um objeto de metal manufaturado (como uma arma ou armadura) até ficar incandescente. Qualquer criatura em contato físico com o objeto sofre <strong>2d8</strong> de dano Ígneo quando você conjura a magia.</p><p>Até a magia acabar, você pode usar uma ação bônus em turnos subsequentes para causar o dano novamente. Se a criatura estiver segurando ou vestindo o objeto, deve passar em resistência de <strong>Constituição</strong> ou terá de largar o objeto (se puder). Se não largar, tem desvantagem em ataques e testes de habilidade.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d8</strong> para cada nível de slot acima do 2º.</p>"
   },
   {
     "id": "s_fardo_terra",
@@ -2849,7 +2849,7 @@
       "duracao": "Até 1 min",
       "resistencia": "Inteligência"
     },
-    "description": "<p>Você cria uma ilusão que se enraíza na mente de uma criatura. O alvo deve passar em resistência de <strong>Inteligência</strong> ou acreditará que a ilusão é real (incluindo som, temperatura e cheiro).</p><p>A ilusão pode causar dano se for perigosa (como fogo ou ácido ilusório): o alvo sofre <strong>1d6</strong> de dano psíquico no turno dele. O alvo pode usar uma ação para Investigar a ilusão contra sua CD.</p>"
+    "description": "<p>Você cria uma ilusão que se enraíza na mente de uma criatura. O alvo deve passar em resistência de <strong>Inteligência</strong> ou acreditará que a ilusão é real (incluindo som, temperatura e cheiro).</p><p>A ilusão pode causar dano se for perigosa (como Ígneo ou ácido ilusório): o alvo sofre <strong>1d6</strong> de dano psíquico no turno dele. O alvo pode usar uma ação para Investigar a ilusão contra sua CD.</p>"
   },
   {
     "id": "s_imobilizar_pessoa",
@@ -2928,7 +2928,7 @@
       "duracao": "Até 10 min",
       "resistencia": "-"
     },
-    "description": "<p>Você evoca uma lâmina de fogo na sua mão livre. A lâmina é similar a uma cimitarra. Você pode usar sua ação para fazer um ataque corpo-a-corpo com magia com a lâmina.</p><p>Se atingir, o alvo sofre <strong>3d6</strong> de dano de fogo. A lâmina emite luz plena num raio de 3m e penumbra por mais 3m.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> para cada dois níveis de slot acima do 2º.</p>"
+    "description": "<p>Você evoca uma lâmina de fogo na sua mão livre. A lâmina é similar a uma cimitarra. Você pode usar sua ação para fazer um ataque corpo-a-corpo com magia com a lâmina.</p><p>Se atingir, o alvo sofre <strong>3d6</strong> de dano Ígneo. A lâmina emite luz plena num raio de 3m e penumbra por mais 3m.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> para cada dois níveis de slot acima do 2º.</p>"
   },
   {
     "id": "s_levitacao",
@@ -3223,7 +3223,7 @@
       "duracao": "Instantânea",
       "resistencia": "-"
     },
-    "description": "<p>Você cria três raios de fogo e os arremessa em alvos dentro do alcance. Você pode arremessá-los em um único alvo ou em vários.</p><p>Faça um ataque à distância com magia para cada raio. Se atingir, o alvo sofre <strong>2d6</strong> de dano de fogo.</p><p><strong>Níveis Superiores:</strong> Você cria um raio adicional para cada nível de slot acima do 2º.</p>"
+    "description": "<p>Você cria três raios de fogo e os arremessa em alvos dentro do alcance. Você pode arremessá-los em um único alvo ou em vários.</p><p>Faça um ataque à distância com magia para cada raio. Se atingir, o alvo sofre <strong>2d6</strong> de dano Ígneo.</p><p><strong>Níveis Superiores:</strong> Você cria um raio adicional para cada nível de slot acima do 2º.</p>"
   },
   {
     "id": "s_raio_enfraquecimento",
@@ -3398,7 +3398,7 @@
       "duracao": "Até 1 hora",
       "resistencia": "Destreza"
     },
-    "description": "<p>Você conjura uma massa de teias pegajosas e espessas num cubo de 6 metros. As teias tornam a área difícil de ser vista (obscurecimento leve) e terreno difícil.</p><p>Cada criatura que começar seu turno nas teias ou que entrar nelas durante seu turno deve fazer uma resistência de <strong>Destreza</strong>. Se falhar, fica <strong>impedida</strong>. Uma criatura impedida pode usar sua ação para fazer um teste de Força contra sua CD para se libertar.</p><p>As teias são inflamáveis. Se expostas a fogo, queimam em 1 rodada, causando <strong>2d4</strong> de dano de fogo a qualquer criatura na área.</p>"
+    "description": "<p>Você conjura uma massa de teias pegajosas e espessas num cubo de 6 metros. As teias tornam a área difícil de ser vista (obscurecimento leve) e terreno difícil.</p><p>Cada criatura que começar seu turno nas teias ou que entrar nelas durante seu turno deve fazer uma resistência de <strong>Destreza</strong>. Se falhar, fica <strong>impedida</strong>. Uma criatura impedida pode usar sua ação para fazer um teste de Força contra sua CD para se libertar.</p><p>As teias são inflamáveis. Se expostas a fogo, queimam em 1 rodada, causando <strong>2d4</strong> de dano Ígneo a qualquer criatura na área.</p>"
   },
   {
     "id": "s_tranca_arcana",
@@ -3631,7 +3631,7 @@
       "duracao": "Até 1 hora",
       "resistencia": "-"
     },
-    "description": "<p>Uma arma não mágica que você tocar se torna mágica. Escolha um tipo de dano: ácido, elétrico, frio, fogo ou trovejante.</p><p>Pela duração, a arma tem um bônus de <strong>+1</strong> nas jogadas de ataque e causa <strong>1d4</strong> de dano extra do tipo escolhido ao atingir.</p><p><strong>Níveis Superiores:</strong> Slot de 5º nível ou superior: +2 no ataque e +2d4 de dano. Slot de 7º nível ou superior: +3 no ataque e +3d4 de dano.</p>"
+    "description": "<p>Uma arma não mágica que você tocar se torna mágica. Escolha um tipo de dano: ácido, elétrico, frio, Ígneo ou trovejante.</p><p>Pela duração, a arma tem um bônus de <strong>+1</strong> nas jogadas de ataque e causa <strong>1d4</strong> de dano extra do tipo escolhido ao atingir.</p><p><strong>Níveis Superiores:</strong> Slot de 5º nível ou superior: +2 no ataque e +2d4 de dano. Slot de 7º nível ou superior: +3 no ataque e +3d4 de dano.</p>"
   },
   {
     "id": "s_aura_vitalidade",
@@ -3670,7 +3670,7 @@
       "duracao": "Instantânea",
       "resistencia": "Destreza"
     },
-    "description": "<p>Um feixe brilhante voa do seu dedo para um ponto escolhido e explode em chamas com um rugido baixo.</p><p>Cada criatura numa esfera de 6 metros de raio deve fazer uma resistência de <strong>Destreza</strong>. Sofre <strong>8d6</strong> de dano de fogo se falhar, ou metade se passar. O fogo se espalha dobrando esquinas e incendeia objetos inflamáveis.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> para cada nível de slot acima do 3º.</p>"
+    "description": "<p>Um feixe brilhante voa do seu dedo para um ponto escolhido e explode em chamas com um rugido baixo.</p><p>Cada criatura numa esfera de 6 metros de raio deve fazer uma resistência de <strong>Destreza</strong>. Sofre <strong>8d6</strong> de dano Ígneo se falhar, ou metade se passar. O fogo se espalha dobrando esquinas e incendeia objetos inflamáveis.</p><p><strong>Níveis Superiores:</strong> O dano aumenta em <strong>1d6</strong> para cada nível de slot acima do 3º.</p>"
   },
   {
     "id": "s_circulo_magico",
@@ -4022,7 +4022,7 @@
       "duracao": "Até 1 hora",
       "resistencia": "-"
     },
-    "description": "<p>Você toca uma aljava contendo flechas ou virotes. Quando um alvo é atingido por um ataque à distância usando munição retirada dessa aljava, ele sofre <strong>1d6</strong> de dano de fogo extra.</p><p>A magia afeta até doze peças de munição. A magia acaba quando a última peça for usada.</p><p><strong>Níveis Superiores:</strong> A quantidade de peças de munição que você pode encantar aumenta em 2 para cada nível de slot acima do 3º.</p>"
+    "description": "<p>Você toca uma aljava contendo flechas ou virotes. Quando um alvo é atingido por um ataque à distância usando munição retirada dessa aljava, ele sofre <strong>1d6</strong> de dano Ígneo extra.</p><p>A magia afeta até doze peças de munição. A magia acaba quando a última peça for usada.</p><p><strong>Níveis Superiores:</strong> A quantidade de peças de munição que você pode encantar aumenta em 2 para cada nível de slot acima do 3º.</p>"
   },
   {
     "id": "s_fome_hadar",
@@ -4102,7 +4102,7 @@
       "duracao": "Até dissipada ou ativada",
       "resistencia": "Destreza"
     },
-    "description": "<p>Você inscreve um glifo que fere criaturas ou ativa efeitos mágicos quando disparado. Você define as condições do gatilho.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Runas Explosivas:</strong> Explode numa esfera de 6m. Criaturas devem passar em resistência de <strong>Destreza</strong> ou sofrem <strong>5d8</strong> de dano (ácido, frio, fogo, elétrico ou trovejante).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Glifo de Magia:</strong> Você armazena uma magia de preparação de 3º nível ou inferior no glifo. Ela é conjurada no alvo quando ativada.</li></ul><p><strong>Níveis Superiores:</strong> +1d8 de dano ou nível da magia armazenada por slot acima do 3º.</p>"
+    "description": "<p>Você inscreve um glifo que fere criaturas ou ativa efeitos mágicos quando disparado. Você define as condições do gatilho.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Runas Explosivas:</strong> Explode numa esfera de 6m. Criaturas devem passar em resistência de <strong>Destreza</strong> ou sofrem <strong>5d8</strong> de dano (ácido, frio, Ígneo, elétrico ou trovejante).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Glifo de Magia:</strong> Você armazena uma magia de preparação de 3º nível ou inferior no glifo. Ela é conjurada no alvo quando ativada.</li></ul><p><strong>Níveis Superiores:</strong> +1d8 de dano ou nível da magia armazenada por slot acima do 3º.</p>"
   },
   {
     "id": "s_idiomas",
@@ -4455,7 +4455,7 @@
       "duracao": "Até 10 min",
       "resistencia": "Destreza"
     },
-    "description": "<p>Você cria seis meteoros do tamanho de pedrinhas em sua órbita. Quando conjura a magia, e com uma <strong>ação bônus</strong> nos seus turnos subsequentes, você pode gastar um ou dois meteoros enviando-os para colidir em pontos que você possa ver a até 36 metros de você.</p><p>O meteoro explode se atingir uma criatura ou superfície. Cada criatura a até 1,5 metro do impacto deve fazer uma resistência de <strong>Destreza</strong>. Sofre <strong>2d6</strong> de dano de fogo se falhar, ou metade se passar.</p><p><strong>Níveis Superiores:</strong> Você cria 2 meteoros adicionais para cada nível de slot acima do 3º.</p>"
+    "description": "<p>Você cria seis meteoros do tamanho de pedrinhas em sua órbita. Quando conjura a magia, e com uma <strong>ação bônus</strong> nos seus turnos subsequentes, você pode gastar um ou dois meteoros enviando-os para colidir em pontos que você possa ver a até 36 metros de você.</p><p>O meteoro explode se atingir uma criatura ou superfície. Cada criatura a até 1,5 metro do impacto deve fazer uma resistência de <strong>Destreza</strong>. Sofre <strong>2d6</strong> de dano Ígneo se falhar, ou metade se passar.</p><p><strong>Níveis Superiores:</strong> Você cria 2 meteoros adicionais para cada nível de slot acima do 3º.</p>"
   },
   {
     "id": "s_piscar",
@@ -4493,7 +4493,7 @@
       "duracao": "Até 1 hora",
       "resistencia": "-"
     },
-    "description": "<p>Pela duração, a criatura voluntária que você tocar tem resistência a um tipo de dano à sua escolha: ácido, frio, fogo, elétrico ou trovejante.</p>"
+    "description": "<p>Pela duração, a criatura voluntária que você tocar tem resistência a um tipo de dano à sua escolha: ácido, frio, Ígneo, elétrico ou trovejante.</p>"
   },
   {
     "id": "s_relampago",
@@ -4826,7 +4826,7 @@
   },
   {
     "id": "s_cao_fiel",
-    "name": "Cão Fiel de Mordenkainen",
+    "name": "Cão Fiel de Mordekaiser",
     "levelNumber": 4,
     "school": "Conjuração",
     "spellClass": "Mago, Artífice",
@@ -5056,7 +5056,7 @@
       "duracao": "10 min",
       "resistencia": "-"
     },
-    "description": "<p>Chamas finas e wispy envolvem seu corpo, emitindo luz. Você ganha resistência a um tipo de dano e causa dano a quem te ataca. Escolha um escudo:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Escudo Quente:</strong> Você tem resistência a dano de frio. Causa <strong>2d8</strong> de dano de fogo a quem te atingir com ataque corpo-a-corpo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Escudo Frio:</strong> Você tem resistência a dano de fogo. Causa <strong>2d8</strong> de dano de frio a quem te atingir com ataque corpo-a-corpo.</li></ul>"
+    "description": "<p>Chamas finas e wispy envolvem seu corpo, emitindo luz. Você ganha resistência a um tipo de dano e causa dano a quem te ataca. Escolha um escudo:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Escudo Quente:</strong> Você tem resistência a dano de frio. Causa <strong>2d8</strong> de dano Ígneo a quem te atingir com ataque corpo-a-corpo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Escudo Frio:</strong> Você tem resistência a dano Ígneo. Causa <strong>2d8</strong> de dano de frio a quem te atingir com ataque corpo-a-corpo.</li></ul>"
   },
   {
     "id": "s_esfera_aquatica",
@@ -5465,11 +5465,11 @@
       "duracao": "Até 1 min",
       "resistencia": "Constituição"
     },
-    "description": "<p>Escolha uma criatura que possa ver dentro do alcance e um tipo de dano: ácido, frio, fogo, elétrico ou trovejante. O alvo deve fazer uma resistência de <strong>Constituição</strong> ou será afetado pela magia.</p><p>A primeira vez em cada turno que o alvo sofrer dano do tipo escolhido, ele sofre <strong>2d8</strong> de dano extra desse mesmo tipo. Além disso, o alvo perde qualquer resistência que tenha a esse tipo de dano pela duração.</p><p><strong>Níveis Superiores:</strong> Você pode afetar uma criatura adicional para cada nível de slot acima do 4º.</p>"
+    "description": "<p>Escolha uma criatura que possa ver dentro do alcance e um tipo de dano: ácido, frio, Ígneo, elétrico ou trovejante. O alvo deve fazer uma resistência de <strong>Constituição</strong> ou será afetado pela magia.</p><p>A primeira vez em cada turno que o alvo sofrer dano do tipo escolhido, ele sofre <strong>2d8</strong> de dano extra desse mesmo tipo. Além disso, o alvo perde qualquer resistência que tenha a esse tipo de dano pela duração.</p><p><strong>Níveis Superiores:</strong> Você pode afetar uma criatura adicional para cada nível de slot acima do 4º.</p>"
   },
   {
     "id": "s_santuario_particular",
-    "name": "Santuário Particular de Mordenkainen",
+    "name": "Santuário Particular de Mordekaiser",
     "levelNumber": 4,
     "school": "Abjuração",
     "spellClass": "Mago, Artífice",
@@ -5776,7 +5776,7 @@
       "duracao": "Instantânea",
       "resistencia": "Destreza"
     },
-    "description": "<p>Uma coluna vertical de fogo divino ruge para baixo do céu. Cada criatura num cilindro de 3 metros de raio e 12 metros de altura deve fazer uma resistência de <strong>Destreza</strong>.</p><p>Sofre <strong>4d6</strong> de dano de fogo e <strong>4d6</strong> de dano radiante se falhar, ou metade se passar.</p><p><strong>Níveis Superiores:</strong> O dano (fogo ou radiante, sua escolha) aumenta em <strong>1d6</strong> para cada nível de slot acima do 5º.</p>"
+    "description": "<p>Uma coluna vertical de fogo divino ruge para baixo do céu. Cada criatura num cilindro de 3 metros de raio e 12 metros de altura deve fazer uma resistência de <strong>Destreza</strong>.</p><p>Sofre <strong>4d6</strong> de dano Ígneo e <strong>4d6</strong> de dano radiante se falhar, ou metade se passar.</p><p><strong>Níveis Superiores:</strong> O dano (Ígneo ou radiante, sua escolha) aumenta em <strong>1d6</strong> para cada nível de slot acima do 5º.</p>"
   },
   {
     "id": "s_comunhao",
@@ -6205,7 +6205,7 @@
       "duracao": "Até 1 min",
       "resistencia": "Destreza"
     },
-    "description": "<p>Chamas envolvem uma criatura que você possa ver. O alvo deve fazer uma resistência de <strong>Destreza</strong>. Sofre <strong>8d6</strong> de dano de fogo se falhar, ou metade se passar.</p><p>Se falhar, o alvo também queima e emite luz plena num raio de 9 metros (e penumbra por mais 9m). No final de cada um dos turnos dele, o alvo deve fazer outro teste de Destreza. Se falhar novamente, sofre <strong>4d6</strong> de dano de fogo. Se passar, a magia termina. Danos de água ou frio não apagam esse fogo, apenas um teste bem-sucedido ou o fim da magia.</p>"
+    "description": "<p>Chamas envolvem uma criatura que você possa ver. O alvo deve fazer uma resistência de <strong>Destreza</strong>. Sofre <strong>8d6</strong> de dano Ígneo se falhar, ou metade se passar.</p><p>Se falhar, o alvo também queima e emite luz plena num raio de 9 metros (e penumbra por mais 9m). No final de cada um dos turnos dele, o alvo deve fazer outro teste de Destreza. Se falhar novamente, sofre <strong>4d6</strong> de dano Ígneo. Se passar, a magia termina. Danos de água ou frio não apagam esse Ígneo, apenas um teste bem-sucedido ou o fim da magia.</p>"
   },
   {
     "id": "s_inundacao_energia_magica",
@@ -7137,7 +7137,7 @@
       "duracao": "Até 10 min",
       "resistencia": "Destreza"
     },
-    "description": "<p>Chamas correm pelo seu corpo. Você ganha imunidade a dano de fogo e resistência a dano de frio.</p><p>Qualquer criatura que se mover para até 1,5 metro de você ou terminar o turno dela lá sofre <strong>1d10</strong> de dano de fogo.</p><p>Você pode usar sua ação para criar uma linha de fogo de 4,5m emanando de você. Criaturas nela fazem resistência de <strong>Destreza</strong>, sofrendo <strong>4d8</strong> de dano de fogo se falhar, ou metade se passar.</p>"
+    "description": "<p>Chamas correm pelo seu corpo. Você ganha imunidade a dano Ígneo e resistência a dano de frio.</p><p>Qualquer criatura que se mover para até 1,5 metro de você ou terminar o turno dela lá sofre <strong>1d10</strong> de dano Ígneo.</p><p>Você pode usar sua ação para criar uma linha de fogo de 4,5m emanando de você. Criaturas nela fazem resistência de <strong>Destreza</strong>, sofrendo <strong>4d8</strong> de dano Ígneo se falhar, ou metade se passar.</p>"
   },
   {
     "id": "s_investidura_gelo",
@@ -7156,7 +7156,7 @@
       "duracao": "Até 10 min",
       "resistencia": "Constituição"
     },
-    "description": "<p>Gelo cobre seu corpo. Você ganha imunidade a dano de frio e resistência a dano de fogo.</p><p>Você ignora terreno difícil criado por gelo ou neve. O chão a até 3m de você fica coberto de gelo escorregadio, virando terreno difícil para as outras criaturas.</p><p>Você pode usar sua ação para criar um cone de 4,5m de frio congelante. Criaturas nele fazem resistência de <strong>Constituição</strong>, sofrendo <strong>4d6</strong> de dano de frio se falhar (e tendo o deslocamento reduzido pela metade), ou sofrendo metade do dano se passar.</p>"
+    "description": "<p>Gelo cobre seu corpo. Você ganha imunidade a dano de frio e resistência a dano Ígneo.</p><p>Você ignora terreno difícil criado por gelo ou neve. O chão a até 3m de você fica coberto de gelo escorregadio, virando terreno difícil para as outras criaturas.</p><p>Você pode usar sua ação para criar um cone de 4,5m de frio congelante. Criaturas nele fazem resistência de <strong>Constituição</strong>, sofrendo <strong>4d6</strong> de dano de frio se falhar (e tendo o deslocamento reduzido pela metade), ou sofrendo metade do dano se passar.</p>"
   },
   {
     "id": "s_investidura_vento",
@@ -7390,7 +7390,7 @@
       "duracao": "Até 1 min",
       "resistencia": "-"
     },
-    "description": "<p>Você ganha resistência a dano de ácido, frio, fogo, elétrico e trovejante pela duração.</p><p>Quando você sofrer um dano de algum desses tipos, pode usar sua reação para ganhar <strong>imunidade</strong> contra aquele tipo de dano (incluindo contra o próprio ataque que desencadeou a reação) até o final do seu próximo turno. Feito isso, a magia termina.</p>"
+    "description": "<p>Você ganha resistência a dano de ácido, frio, Ígneo, elétrico e trovejante pela duração.</p><p>Quando você sofrer um dano de algum desses tipos, pode usar sua reação para ganhar <strong>imunidade</strong> contra aquele tipo de dano (incluindo contra o próprio ataque que desencadeou a reação) até o final do seu próximo turno. Feito isso, a magia termina.</p>"
   },
   {
     "id": "s_proteger_fortaleza",
@@ -7565,7 +7565,7 @@
       "duracao": "Até 1 min",
       "resistencia": "Destreza"
     },
-    "description": "<p>Um feixe de luz amarelada é disparado do seu dedo e se condensa numa conta brilhante num ponto ao alcance. Quando a magia termina, a conta detona numa explosão de chamas de 6 metros de raio.</p><p>Cada criatura na área deve fazer uma resistência de <strong>Destreza</strong>. Sofre o dano de fogo acumulado se falhar, ou metade se passar. O dano base é <strong>12d6</strong>. Se a conta não detonar no final do seu turno, o dano aumenta em <strong>1d6</strong>.</p><p>Se uma criatura tocar a conta antes da detonação, deve fazer um teste de Destreza. Se falhar, a magia detona. Se passar, ela pode arremessar a conta a até 12 metros.</p><p><strong>Níveis Superiores:</strong> O dano base aumenta em <strong>1d6</strong> para cada nível de slot acima do 7º.</p>"
+    "description": "<p>Um feixe de luz amarelada é disparado do seu dedo e se condensa numa conta brilhante num ponto ao alcance. Quando a magia termina, a conta detona numa explosão de chamas de 6 metros de raio.</p><p>Cada criatura na área deve fazer uma resistência de <strong>Destreza</strong>. Sofre o dano Ígneo acumulado se falhar, ou metade se passar. O dano base é <strong>12d6</strong>. Se a conta não detonar no final do seu turno, o dano aumenta em <strong>1d6</strong>.</p><p>Se uma criatura tocar a conta antes da detonação, deve fazer um teste de Destreza. Se falhar, a magia detona. Se passar, ela pode arremessar a conta a até 12 metros.</p><p><strong>Níveis Superiores:</strong> O dano base aumenta em <strong>1d6</strong> para cada nível de slot acima do 7º.</p>"
   },
   {
     "id": "s_conjurar_celestial",
@@ -7625,8 +7625,8 @@
     "description": "<p>Você envia energia negativa para uma criatura que possa ver dentro do alcance. O alvo deve fazer uma resistência de <strong>Constituição</strong>.</p><p>Sofre <strong>7d8 + 30</strong> de dano necrótico se falhar, ou metade se passar. Se este dano matar um humanoide, ele se ergue como um <strong>Zumbi</strong> sob seu controle no início do seu próximo turno. O zumbi fica sob seu controle permanentemente.</p>"
   },
   {
-    "id": "s_espada_mordenkainen",
-    "name": "Espada de Mordenkainen",
+    "id": "s_espada_Mordekaiser",
+    "name": "Espada de Mordekaiser",
     "levelNumber": 7,
     "school": "Evocação",
     "spellClass": "Bardo, Mago",
@@ -7705,7 +7705,7 @@
   },
   {
     "id": "s_mansao_magnifica",
-    "name": "Mansão Magnífica de Mordenkainen",
+    "name": "Mansão Magnífica de Mordekaiser",
     "levelNumber": 7,
     "school": "Conjuração",
     "spellClass": "Bardo, Mago",
@@ -7838,7 +7838,7 @@
       "duracao": "Instantânea",
       "resistencia": "Destreza"
     },
-    "description": "<p>Oito raios de luz multicoloridos lampejam das suas mãos. Cada raio é de uma cor diferente e tem um poder e propósito diferente.</p><p>Cada criatura num cone de 18 metros deve fazer uma resistência de <strong>Destreza</strong>. Para cada alvo, role um <strong>d8</strong> para determinar qual raio o atinge.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 1-5 (Vermelho a Azul):</strong> 10d6 de dano (Fogo, Ácido, Elétrico, Veneno ou Frio). Metade se passar.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 6 (Anil):</strong> Se falhar, fica impedido e deve fazer testes de CON para não ser petrificado.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 7 (Violeta):</strong> Se falhar, fica cego e deve fazer testes de SAB para não ser banido.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 8 (Especial):</strong> Atingido por dois raios. Role duas vezes novamente.</li></ul>"
+    "description": "<p>Oito raios de luz multicoloridos lampejam das suas mãos. Cada raio é de uma cor diferente e tem um poder e propósito diferente.</p><p>Cada criatura num cone de 18 metros deve fazer uma resistência de <strong>Destreza</strong>. Para cada alvo, role um <strong>d8</strong> para determinar qual raio o atinge.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 1-5 (Vermelho a Azul):</strong> 10d6 de dano (Ígneo, Ácido, Elétrico, Veneno ou Frio). Metade se passar.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 6 (Anil):</strong> Se falhar, fica impedido e deve fazer testes de CON para não ser petrificado.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 7 (Violeta):</strong> Se falhar, fica cego e deve fazer testes de SAB para não ser banido.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ 8 (Especial):</strong> Atingido por dois raios. Role duas vezes novamente.</li></ul>"
   },
   {
     "id": "s_redemoinho",
@@ -7976,7 +7976,7 @@
       "duracao": "Instantânea",
       "resistencia": "Destreza"
     },
-    "description": "<p>Uma tempestade de lençóis de fogo rugindo aparece na área. A área consiste em até dez cubos de 3 metros, que você pode arranjar como desejar (devem ter pelo menos uma face adjacente a outro cubo).</p><p>Cada criatura na área deve fazer uma resistência de <strong>Destreza</strong>. Sofre <strong>7d10</strong> de dano de fogo se falhar, ou metade se passar. Você pode escolher que o fogo não afete a vida vegetal na área.</p>"
+    "description": "<p>Uma tempestade de lençóis de fogo rugindo aparece na área. A área consiste em até dez cubos de 3 metros, que você pode arranjar como desejar (devem ter pelo menos uma face adjacente a outro cubo).</p><p>Cada criatura na área deve fazer uma resistência de <strong>Destreza</strong>. Sofre <strong>7d10</strong> de dano Ígneo se falhar, ou metade se passar. Você pode escolher que o fogo não afete a vida vegetal na área.</p>"
   },
   {
     "id": "s_templo_dos_deuses",
@@ -8172,7 +8172,7 @@
       "duracao": "Até 1 min",
       "resistencia": "Sabedoria/Inteligência"
     },
-    "description": "<p>Você cria um dragão ilusório Enorme num espaço desocupado a até 36 metros. Quando ele aparece, inimigos que puderem vê-lo devem fazer resistência de <strong>Sabedoria</strong> ou ficam <strong>amedrontados</strong> por 1 minuto (podem repetir o teste no final de seus turnos).</p><p>Com uma ação bônus, você pode mover a ilusão 18 metros e fazê-la expelir energia num cone de 18 metros. Cada criatura no cone deve fazer resistência de <strong>Inteligência</strong>, sofrendo <strong>7d6</strong> de dano (ácido, frio, fogo, elétrico, necrótico ou venenoso, escolhido ao conjurar) se falhar, ou metade se passar. A ilusão é tangível, mas ataques contra ela falham automaticamente.</p>"
+    "description": "<p>Você cria um dragão ilusório Enorme num espaço desocupado a até 36 metros. Quando ele aparece, inimigos que puderem vê-lo devem fazer resistência de <strong>Sabedoria</strong> ou ficam <strong>amedrontados</strong> por 1 minuto (podem repetir o teste no final de seus turnos).</p><p>Com uma ação bônus, você pode mover a ilusão 18 metros e fazê-la expelir energia num cone de 18 metros. Cada criatura no cone deve fazer resistência de <strong>Inteligência</strong>, sofrendo <strong>7d6</strong> de dano (ácido, frio, Ígneo, elétrico, necrótico ou venenoso, escolhido ao conjurar) se falhar, ou metade se passar. A ilusão é tangível, mas ataques contra ela falham automaticamente.</p>"
   },
   {
     "id": "s_enfraquecer_intelecto",
@@ -8367,7 +8367,7 @@
       "duracao": "Até 1 min",
       "resistencia": "Destreza"
     },
-    "description": "<p>Uma nuvem rodopiante de fumaça, brasas e cinzas incandescentes aparece numa esfera de 6 metros. A nuvem se espalha dobrando esquinas e é escuridão densa.</p><p>Cada criatura na área deve fazer resistência de <strong>Destreza</strong>. Sofre <strong>10d8</strong> de dano de fogo se falhar, ou metade se passar. A nuvem se afasta 3 metros de você no início de cada turno seu.</p>"
+    "description": "<p>Uma nuvem rodopiante de fumaça, brasas e cinzas incandescentes aparece numa esfera de 6 metros. A nuvem se espalha dobrando esquinas e é escuridão densa.</p><p>Cada criatura na área deve fazer resistência de <strong>Destreza</strong>. Sofre <strong>10d8</strong> de dano Ígneo se falhar, ou metade se passar. A nuvem se afasta 3 metros de você no início de cada turno seu.</p>"
   },
   {
     "id": "s_palavra_poder_atordoar",
@@ -8540,7 +8540,7 @@
       "duracao": "Instantânea",
       "resistencia": "Destreza"
     },
-    "description": "<p>Esferas de fogo despencam do céu em quatro pontos diferentes que você possa ver. Cada criatura numa esfera de 12 metros de raio centrada em cada ponto deve fazer resistência de <strong>Destreza</strong>.</p><p>Sofre <strong>20d6</strong> de dano de fogo e <strong>20d6</strong> de dano de concussão se falhar, ou metade se passar. Uma criatura na área de mais de uma esfera sofre o dano apenas uma vez. A magia incendeia objetos e danifica estruturas.</p>"
+    "description": "<p>Esferas de fogo despencam do céu em quatro pontos diferentes que você possa ver. Cada criatura numa esfera de 12 metros de raio centrada em cada ponto deve fazer resistência de <strong>Destreza</strong>.</p><p>Sofre <strong>20d6</strong> de dano Ígneo e <strong>20d6</strong> de dano de concussão se falhar, ou metade se passar. Uma criatura na área de mais de uma esfera sofre o dano apenas uma vez. A magia incendeia objetos e danifica estruturas.</p>"
   },
   {
     "id": "s_cura_completa_massa",
@@ -8695,7 +8695,7 @@
       "duracao": "10 min",
       "resistencia": "Destreza"
     },
-    "description": "<p>Uma muralha cintilante e multicolorida aparece. Ela tem 7 camadas, cada uma com uma cor e efeito. Se uma criatura tentar passar, deve fazer resistência de <strong>Destreza</strong> para cada camada. Falha causa <strong>10d6</strong> de dano do tipo da camada (Fogo, Ácido, Eletricidade, Veneno, Frio).</p><p>As duas últimas camadas causam, respectivamente: <strong>Petrificação</strong> (teste de DES) e <strong>Cegueira/Banimento</strong> (teste de SAB). A muralha é imune a quase tudo e cada camada deve ser destruída por uma magia específica em ordem.</p>"
+    "description": "<p>Uma muralha cintilante e multicolorida aparece. Ela tem 7 camadas, cada uma com uma cor e efeito. Se uma criatura tentar passar, deve fazer resistência de <strong>Destreza</strong> para cada camada. Falha causa <strong>10d6</strong> de dano do tipo da camada (Ígneo, Ácido, Eletricidade, Veneno, Frio).</p><p>As duas últimas camadas causam, respectivamente: <strong>Petrificação</strong> (teste de DES) e <strong>Cegueira/Banimento</strong> (teste de SAB). A muralha é imune a quase tudo e cada camada deve ser destruída por uma magia específica em ordem.</p>"
   },
   {
     "id": "s_palavra_poder_curar",

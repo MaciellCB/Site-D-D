@@ -3,6 +3,13 @@
 ============================================================= */
 window.invSaveTimer = null;
 const API_URL = 'https://dandd-chan.onrender.com/api';
+function normalizarTipoDano(tipo) {
+  return String(tipo || '').split('/').map(parte => {
+    const nome = parte.trim();
+    const chave = nome.toLocaleLowerCase('pt-BR');
+    return { fogo: 'Ígneo', 'trovão': 'Trovejante' }[chave] || nome;
+  }).join('/');
+}
 
 // --- VARIÁVEIS GLOBAIS DE CATÁLOGO ---
 let spellCatalog = [];
@@ -62,6 +69,8 @@ carregarCatalogosDireita();
 
 
 let saveTimer = null;
+let saveQueue = Promise.resolve();
+let saveGeneration = 0;
 let isUserInteracting = false; // NOVA VARIÁVEL: O "Escudo"
 const LOCAL_UI_PREFIX = 'dnd-sheet-ui:';
 
@@ -315,7 +324,7 @@ function openOrganizationOverlay(listKey) {
       detailValue('Componentes', [item.components?.V && 'V', item.components?.S && 'S', item.components?.M && 'M'].filter(Boolean).join(' · ')),
       detailValue('Material', item.material)
     ].join('') : [
-      detailValue('Dano', damage?.display), detailValue('Dano detalhado', damage?.explanation), detailValue('Tipo de dano', item.damageTypes?.join(', ') || item.damageType),
+      detailValue('Dano', damage?.display), detailValue('Dano detalhado', damage?.explanation), detailValue('Tipo de dano', item.damageTypes?.map(normalizarTipoDano).join(', ') || normalizarTipoDano(item.damageType)),
       detailValue('Defesa', item.defense ? `CA ${item.defense}` : ''), detailValue('Bônus de acerto', item.acertoBonus || item.attackBonus), detailValue('Bônus de dano', item.damageBonus),
       detailValue('Atributo de ataque', item.attackAttribute), detailValue('Atributo de dano', item.damageAttribute), detailValue('Crítico', item.crit), detailValue('Multiplicador', item.multiplicador),
       detailValue('Alcance', item.alcance), detailValue('Empunhadura', item.empunhadura), detailValue('Proficiência', item.proficiency), detailValue('Requisito', item.minStrength ? `FOR ${item.minStrength}` : ''),
@@ -467,41 +476,54 @@ function rememberExpanded(collection, id, value) {
 async function saveStateToServer() {
   if (!state.nome) return;
 
-  // 1. Ativa o escudo: O usuário está clicando, bloqueie a recriação da tela.
+  const generation = ++saveGeneration;
+  window.isUserInteracting = true;
   isUserInteracting = true;
 
   if (saveTimer) {
     clearTimeout(saveTimer);
   }
 
-  // 2. Tempo super rápido de 100ms
-  saveTimer = setTimeout(async () => {
-    try {
-      const token = localStorage.getItem('authToken');
-      const headers = { 'Content-Type': 'application/json' };
-      if (token) headers['Authorization'] = 'Bearer ' + token;
-      const fichaParaSalvar = JSON.parse(JSON.stringify(state));
-      delete fichaParaSalvar.collapsedSections;
-      ['inventory', 'spells', 'abilities'].forEach(collection => {
-        if (Array.isArray(fichaParaSalvar[collection])) {
-          fichaParaSalvar[collection].forEach(item => delete item.expanded);
+  saveTimer = setTimeout(() => {
+    saveTimer = null;
+    const fichaParaSalvar = JSON.parse(JSON.stringify(state));
+    delete fichaParaSalvar.collapsedSections;
+    ['inventory', 'spells', 'abilities'].forEach(collection => {
+      if (Array.isArray(fichaParaSalvar[collection])) {
+        fichaParaSalvar[collection].forEach(item => delete item.expanded);
+      }
+    });
+
+    saveQueue = saveQueue.catch(error => {
+      console.error("Erro em salvamento anterior da ficha:", error);
+    }).then(async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = 'Bearer ' + token;
+        const response = await fetch(`${API_URL}/save-ficha`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(fichaParaSalvar)
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      } catch (error) {
+        console.error("Erro ao salvar a ficha:", error);
+        if (generation === saveGeneration && !saveTimer) {
+          window.isUserInteracting = false;
+          isUserInteracting = false;
         }
-      });
-      await fetch(`${API_URL}/save-ficha`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(fichaParaSalvar)
-      });
+        return;
+      }
 
-      // 3. Desativa o escudo 500ms DEPOIS de salvar, para garantir que o servidor já atualizou
-      setTimeout(() => {
-        isUserInteracting = false;
-      }, 500);
-
-    } catch (e) {
-      console.error("Erro silencioso de conexão:", e);
-      isUserInteracting = false;
-    }
+      if (generation === saveGeneration && !saveTimer) {
+        setTimeout(() => {
+          if (generation !== saveGeneration || saveTimer) return;
+          window.isUserInteracting = false;
+          isUserInteracting = false;
+        }, 500);
+      }
+    });
   }, 100);
 }
 
@@ -676,7 +698,7 @@ const CLASSES_WITH_SUBCLASSES = {
   'Artífice': ['Alquimista', 'Armeiro', 'Artilheiro', 'Ferreiro de Batalha', 'Arquivista', 'Infusão'],
   'Bárbaro': ['Caminho do Berserker', 'Caminho do Guerreiro Totêmico', 'Caminho do Guardião Ancestral', 'Caminho da Alma Selvagem', 'Caminho do Arauto da Tempestade', 'Caminho do Fanático', 'Caminho da Besta', 'Caminho da Magia Selvagem'],
   'Bardo': ['Colégio do Conhecimento', 'Colégio da Criação', 'Colégio da Bravura', 'Colégio do Glamour', 'Colégio das Espadas', 'Colégio dos Sussurros', 'Colégio da Criação', 'Colégio da Eloquência', 'Colégio dos Espíritos'],
-  'Bruxo': ['O Arquifada', 'O Corruptor', 'O Grande Antigo', 'O Celestial', 'Hexblade', 'O Insondável', 'O Gênio', 'A Luz Imortal', 'O Morto-Vivo', 'Shinigami', 'Fantasma do Maquinario', 'O Buscador', 'Invocações Místicas'],
+  'Bruxo': ['O Arquifada', 'O Corruptor', 'O Grande Antigo', 'O Celestial', 'Hexblade', 'O Insondável', 'O Gênio', 'A Luz Imortal', 'O Morto-Vivo', 'Servo da Rainha dos Corvos', 'Fantasma do Maquinario', 'O Buscador', 'Invocações Místicas'],
   'Blood Hunter': ['Ordem do Caça-Fantasmas', 'Ordem do Licantropo', 'Ordem do Mutante', 'Ordem da Alma Profana', 'Maldições de Sangue'],
   'Clérigo': ['Domínio do Conhecimento', 'Domínio da Vida', 'Domínio da Luz', 'Domínio do Zelo', 'Domínio da Natureza', 'Domínio do Destino', 'Domínio da Solidariedade', 'Domínio da Tempestade', 'Domínio da Cidade ', 'Domínio da Força', 'Domínio da Unidade', 'Domínio da Ambição', 'Domínio da Enganação', 'Domínio de Proteção', 'Domínio da Guerra', 'Domínio do Crepúsculo', 'Domínio da Forja', 'Domínio da Sepultura', 'Domínio da Ordem', 'Domínio da Paz', 'Domínio do Crepúsculo', 'Domínio Arcano', 'Domínio da Morte'],
   'Druida': ['Círculo da Terra', 'Círculo da Lua', 'Círculo dos Sonhos', 'Círculo do Pastor', 'Círculo dos Esporos', 'Círculo das Estrelas', 'Círculo do Fogo Selvagem', 'Círculo do Primordial', 'Círculo do Crepúsculo'],
@@ -888,7 +910,7 @@ function formatInventoryItem(item) {
       <div class="item-data-row">
           <span class="purple-label">Dano:</span>
           <span class="white-val bold">${damageDetails.display}</span>
-          ${item.damageTypes ? `<span class="separator"></span><span class="purple-label">Tipo:</span> <span class="white-val">${item.damageTypes.join(', ')}</span>` : ''}
+          ${item.damageTypes ? `<span class="separator"></span><span class="purple-label">Tipo:</span> <span class="white-val">${item.damageTypes.map(normalizarTipoDano).join(', ')}</span>` : ''}
       </div>
       
       ${(item.moreDmgList || []).map(extra => `
@@ -922,7 +944,7 @@ function formatInventoryItem(item) {
 
   offenseGroup += createSimpleStat('Acerto Bônus', item.acertoBonus || item.attackBonus);
   offenseGroup += createSimpleStat('Dano Bônus', item.damageBonus);
-  offenseGroup += createSimpleStat('Tipo Dano', item.damageType);
+  offenseGroup += createSimpleStat('Tipo Dano', normalizarTipoDano(item.damageType));
 
   // Grupo Defensivo
   let defenseGroup = '';
@@ -1504,7 +1526,7 @@ function openItemModal(existingItem = null) {
             <div><label>Atributo Dano</label><select id="item-damage-attr" class="dark-select">${renderAttrOptions(defaultDamageAttr)}</select></div>
             <div><label>Bônus de Acerto</label><input id="item-attack-bonus" type="number" value="${defaultAttackBonus}" placeholder="+1, +2..." /></div>
             <div><label>Dano Bônus (Fixo)</label><input id="item-danobonus" type="text" value="${escapeHtml(pre.damageBonus || '')}" /></div>
-            <div><label>Tipo de Dano</label><input id="item-dmgtype" type="text" value="${escapeHtml(pre.damageType || '')}" /></div>
+            <div><label>Tipo de Dano</label><input id="item-dmgtype" type="text" value="${escapeHtml(normalizarTipoDano(pre.damageType))}" /></div>
             <div style="grid-column: 1 / span 1;"><label>Defesa(CA) Bonus</label><input id="item-defense" type="text" value="${escapeHtml(pre.defenseBonus || '')}" /></div>
             <div style="grid-column: 2 / span 2;"><label>Tipo de Defesa</label><input id="item-defensetype" type="text" value="${escapeHtml(pre.defenseType || '')}" placeholder="Ex: Mágico, Escudo..." /></div>
             <div style="grid-column: 1 / span 1.5;"><label>Desvantagem</label>${renderPericiaMulti('disadv-field-item', disadv)}</div>
@@ -1719,7 +1741,7 @@ function openItemModal(existingItem = null) {
       newItem.type = 'Geral'; newItem.isEquipable = true;
       newItem.acertoBonus = modal.querySelector('#item-attack-bonus').value;
       newItem.damageBonus = modal.querySelector('#item-danobonus').value;
-      newItem.damageType = modal.querySelector('#item-dmgtype').value;
+      newItem.damageType = normalizarTipoDano(modal.querySelector('#item-dmgtype').value);
       newItem.defenseBonus = modal.querySelector('#item-defense').value;
       newItem.defenseType = modal.querySelector('#item-defensetype').value;
       const disPanel = modal.querySelector('#disadv-field-item .panel'); newItem.disadvantageSkill = disPanel ? Array.from(disPanel.querySelectorAll('input:checked')).map(x => x.value) : [];
@@ -1795,6 +1817,11 @@ const LISTA_CLASSES_RPG = [
   'Paladino', 'Patrulheiro'
 ];
 
+function isInfusionAbility(ability) {
+  const normalize = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  return normalize(ability.subclass) === 'infusao' || normalize(ability.title).startsWith('(infusao');
+}
+
 /* ---------------- HABILIDADES (CORRIGIDO: NÃO FOCA SE ESTIVER VAZIO) ---------------- */
 function renderAbilities() {
   const inputAntigo = document.getElementById('filterHabs');
@@ -1807,9 +1834,14 @@ function renderAbilities() {
   });
 
   // 2. Agrupamento
-  const grupos = { classes: {}, talentos: [], origem: [], outros: [] };
+  const grupos = { classes: {}, talentos: [], origem: [], outros: [], infusoes: [] };
 
   habilidadesFiltradas.forEach(hab => {
+    if (isInfusionAbility(hab)) {
+      grupos.infusoes.push(hab);
+      return;
+    }
+
     const cat = (hab.category || "").toLowerCase().trim();
     const classeOriginal = (hab.class || "").trim();
     const classeLower = classeOriginal.toLowerCase();
@@ -1852,6 +1884,11 @@ function renderAbilities() {
       temConteudo = true;
     }
   });
+
+  if (grupos.infusoes.length > 0) {
+    htmlFinal += renderAbilitySection("Infusões", sortOrganizedList(grupos.infusoes, 'abilities', 'active'), "infusoes", forceExpand);
+    temConteudo = true;
+  }
 
   if (grupos.talentos.length > 0) { htmlFinal += renderAbilitySection("Talentos", sortOrganizedList(grupos.talentos, 'abilities', 'active'), "talentos", forceExpand); temConteudo = true; }
   if (grupos.origem.length > 0) { htmlFinal += renderAbilitySection("Raça & Antecedente", sortOrganizedList(grupos.origem, 'abilities', 'active'), "origem", forceExpand); temConteudo = true; }
@@ -3225,8 +3262,8 @@ function bindSpellEvents() {
       btnRemove.onclick = (ev) => {
         ev.preventDefault();
         state.spells = state.spells.filter(s => String(s.id) !== String(rawId));
-        card.remove();
         saveStateToServer();
+        renderSpells();
       }
     }
 
@@ -3946,7 +3983,8 @@ function renderPreparedSpells() {
   state.dtMagias = calculateSpellDC();
   const slotsHTML = renderSpellSlotsHTML();
 
-  const habilidadesPreparadas = state.abilities.filter(h => h.active);
+  const habilidadesPreparadas = state.abilities.filter(h => h.active && !isInfusionAbility(h));
+  const infusoesPreparadas = state.abilities.filter(h => h.active && isInfusionAbility(h));
   const magiasPreparadas = state.spells.filter(s => s.active);
 
   // Estados iniciais (Minimizar seções)
@@ -3957,6 +3995,31 @@ function renderPreparedSpells() {
   const arrowHabs = isHabsMin ? '▸' : '▾';
   const styleMagias = isMagiasMin ? 'display:none;' : '';
   const styleHabs = isHabsMin ? 'display:none;' : '';
+  const infusionsCollapsed = state.collapsedSections?.['prepared-infusions'] !== false;
+
+  const renderPreparedAbilityCards = abilities => abilities.map(a => `
+      <div class="card hab-card ${a.expanded ? 'expanded' : ''}" data-id="${a.id}" data-type="hab">
+          <div class="card-header">
+              <div class="left" data-id="${a.id}" style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+                  <span class="caret">${a.expanded ? '▾' : '▸'}</span>
+                  <div class="card-title" style="color:#b39cff;">${a.title}</div>
+              </div>
+              <div class="right">
+                  <label class="check-ativar" title="Remover dos Preparados">
+                      <input class="hab-activate" type="checkbox" data-id="${a.id}" checked />
+                      <span class="square-check"></span>
+                  </label>
+              </div>
+          </div>
+          <div class="card-body" style="${a.expanded ? '' : 'display:none;'}">
+              <div>${a.description || 'Sem descrição.'}</div>
+              <div style="margin-top:8px;">
+                  <a href="#" class="remover-hab" data-id="${a.id}">Remover</a>
+                  <a href="#" class="editar-hab" data-id="${a.id}" style="float:right;color:#2e7d32">Editar</a>
+              </div>
+          </div>
+      </div>
+  `).join('');
 
   // HTML Magias: grupos por nível, com organização configurável dentro de cada grupo.
   let magiasHTML = '';
@@ -3976,41 +4039,29 @@ function renderPreparedSpells() {
 
   // HTML Habilidades
   let habilidadesHTML = '';
-  if (habilidadesPreparadas.length > 0) {
+  if (habilidadesPreparadas.length > 0 || infusoesPreparadas.length > 0) {
     habilidadesHTML = `
             <h4 id="toggle-habs" class="toggle-section-header" style="margin: 20px 0 6px 4px; color: #b39cff; text-transform: uppercase; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px; cursor:pointer;">
                 <span style="font-size:14px; color:#9c27b0; width:12px;">${arrowHabs}</span> Habilidades Ativas
             </h4>
             <div id="content-habs" class="section-content" style="${styleHabs}">
-                ${habilidadesPreparadas.map(a => `
-                    <div class="card hab-card ${a.expanded ? 'expanded' : ''}" data-id="${a.id}" data-type="hab">
-                        <div class="card-header">
-                            <div class="left" data-id="${a.id}" style="cursor:pointer; display:flex; align-items:center; gap:8px;">
-                                <span class="caret">${a.expanded ? '▾' : '▸'}</span>
-                                <div class="card-title" style="color:#b39cff;">${a.title}</div>
-                            </div>
-                            <div class="right">
-                                <label class="check-ativar" title="Remover dos Preparados">
-                                    <input class="hab-activate" type="checkbox" data-id="${a.id}" checked />
-                                    <span class="square-check"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="card-body" style="${a.expanded ? '' : 'display:none;'}">
-                            <div>${a.description || 'Sem descrição.'}</div>
-                            <div style="margin-top:8px;">
-                                <a href="#" class="remover-hab" data-id="${a.id}">Remover</a>
-                                <a href="#" class="editar-hab" data-id="${a.id}" style="float:right;color:#2e7d32">Editar</a>
-                            </div>
-                        </div>
+                ${renderPreparedAbilityCards(habilidadesPreparadas)}
+                ${infusoesPreparadas.length ? `
+                    <div class="spell-level-header" data-key="prepared-infusions" style="cursor:pointer; display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.03); padding:7px 8px; border-radius:4px; border:1px solid rgba(255,255,255,0.05); margin:8px 0;">
+                        <span class="prepared-level-arrow" style="color:#9c27b0; width:14px;">${infusionsCollapsed ? '▸' : '▾'}</span>
+                        <span style="font-weight:700; font-size:12px; color:#ccc; text-transform:uppercase;">Infusões</span>
+                        <span style="margin-left:auto; font-size:10px; color:#666; background:#111; padding:2px 6px; border-radius:4px;">${infusoesPreparadas.length}</span>
                     </div>
-                `).join('')}
+                    <div class="prepared-level-content" style="${infusionsCollapsed ? 'display:none;' : ''}">
+                        ${renderPreparedAbilityCards(infusoesPreparadas)}
+                    </div>
+                ` : ''}
             </div>
         `;
   }
 
   let listaContent = `${magiasHTML}${habilidadesHTML}`;
-  if (!habilidadesPreparadas.length && !magiasPreparadas.length) {
+  if (!habilidadesPreparadas.length && !infusoesPreparadas.length && !magiasPreparadas.length) {
     listaContent = `<div class="empty-tip">Nenhuma habilidade ou magia preparada/ativa.</div>`;
   }
 
@@ -4311,7 +4362,7 @@ window.openItemCatalogOverlay = () => {
 
       if (item.category === 'Armas') {
         const dano2M = item.damage2Hands ? ` / ${item.damage2Hands}` : '';
-        const tDano = Array.isArray(item.damageTypes) ? item.damageTypes[0] : (item.damageType || '');
+        const tDano = Array.isArray(item.damageTypes) ? normalizarTipoDano(item.damageTypes[0]) : normalizarTipoDano(item.damageType);
         metaInfo = `${item.tipoArma || ''} • ${item.proficiency || ''} ${tDano ? `• ${tDano}` : ''}`;
         highlightVal = `${item.damage}${dano2M}`;
       } else if (item.category === 'Armaduras') {
@@ -4342,7 +4393,7 @@ window.openItemCatalogOverlay = () => {
                 <div class="catalog-card-body" style="display:none; padding:12px; color:#ddd; font-size:14px; line-height:1.5;">
                     <div style="margin-bottom:8px; font-size:13px; color:#ccc; display:grid; grid-template-columns: 1fr 1fr; gap:4px;">
                         ${item.damage ? `<div><strong class="purple">Dano:</strong> ${item.damage} ${item.damage2Hands ? `(2M: ${item.damage2Hands})` : ''}</div>` : ''}
-                        ${item.category === 'Armas' ? `<div><strong class="purple">Tipo:</strong> ${Array.isArray(item.damageTypes) ? item.damageTypes.join(', ') : (item.damageType || '-')}</div>` : ''}
+                        ${item.category === 'Armas' ? `<div><strong class="purple">Tipo:</strong> ${Array.isArray(item.damageTypes) ? item.damageTypes.map(normalizarTipoDano).join(', ') : (normalizarTipoDano(item.damageType) || '-')}</div>` : ''}
                         ${item.empunhadura ? `<div><strong class="purple">Mãos:</strong> ${item.empunhadura}</div>` : ''}
                         ${item.alcance ? `<div><strong class="purple">Alcance:</strong> ${item.alcance}</div>` : ''}
                     </div>
@@ -4705,7 +4756,7 @@ function openAbilityCatalogOverlay() {
 
           // --- DADOS MATEMÁTICOS ---
           damage: c.damage || '',
-          damageType: c.damageType || '',
+          damageType: normalizarTipoDano(c.damageType),
           damageAttribute: c.damageAttribute || '',
 
           attackBonus: c.attackBonus || '',
@@ -4871,7 +4922,7 @@ function openNewAbilityModal(existingAbility = null) {
     // DANO E ATRIBUTO SOMADO
     damage: existingAbility ? existingAbility.damage : '',
     damageAttribute: existingAbility ? existingAbility.damageAttribute : '', // <--- NOVO
-    damageType: existingAbility ? existingAbility.damageType : '',
+    damageType: existingAbility ? normalizarTipoDano(existingAbility.damageType) : '',
 
     // CAMPOS DE ATAQUE E EFEITOS
     attackBonus: existingAbility ? existingAbility.attackBonus : '',
@@ -4932,7 +4983,7 @@ function openNewAbilityModal(existingAbility = null) {
               </div>
               <div>
                   <label>Tipo de Dano</label>
-                  <input id="hab-dmg-type" type="text" value="${escapeHtml(vals.damageType)}" placeholder="Ex: Fogo" />
+                  <input id="hab-dmg-type" type="text" value="${escapeHtml(vals.damageType)}" placeholder="Ex: Ígneo" />
               </div>
 
               <div style="background:#222; padding:5px; border-radius:4px; border:1px solid #333; grid-column: span 3; display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; align-items:end;">
@@ -5048,7 +5099,7 @@ function openNewAbilityModal(existingAbility = null) {
       // SALVANDO DANO E ATRIBUTO SOMADO
       damage: modal.querySelector('#hab-damage').value.trim(),
       damageAttribute: modal.querySelector('#hab-damage-attr').value, // Salva "Força", "Destreza", etc.
-      damageType: modal.querySelector('#hab-dmg-type').value.trim(),
+      damageType: normalizarTipoDano(modal.querySelector('#hab-dmg-type').value.trim()),
 
       useStandardAttack: chkStd.checked,
       attackAttribute: modal.querySelector('#hab-attack-attr').value,
@@ -5214,7 +5265,7 @@ function renderAbilitySection(titulo, listaCards, chaveUnica, forceExpand = fals
     if (a.attackBonus) parts.push(`<span class="purple">Ataque:</span> <span class="white-val">${a.attackBonus}</span>`);
     if (a.defenseBonus) parts.push(`<span class="purple">CA/Defesa:</span> <span class="white-val">${a.defenseBonus}</span>`);
     if (a.speedBonus) parts.push(`<span class="purple">Deslocamento:</span> <span class="white-val">${a.speedBonus}</span>`);
-    if (a.damageType) parts.push(`<span class="purple">Tipo:</span> <span class="white-val">${a.damageType}</span>`);
+    if (a.damageType) parts.push(`<span class="purple">Tipo:</span> <span class="white-val">${normalizarTipoDano(a.damageType)}</span>`);
     if (a.saveDC) parts.push(`<span class="purple">CD:</span> <span class="white-val">${a.saveDC}</span>`);
 
     if (parts.length > 0) {

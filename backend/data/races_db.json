@@ -321,7 +321,7 @@
     "traits": [
       {
         "name": "Herança Dracônica",
-        "desc": "Sua herança determina seu ataque de sopro e resistência a dano (Ex: Ouro = Fogo, Azul = Elétrico, etc)."
+        "desc": "Sua herança determina seu ataque de sopro e resistência a dano (Ex: Ouro = Ígneo, Azul = Elétrico, etc)."
       },
       {
         "name": "Ataque de Sopro",
@@ -1039,7 +1039,7 @@
     "description": "Com sangue de gênios Efreet, os Genasi do Fogo têm temperamentos explosivos e pele em tons de brasa ou carvão. Chamas parecem dançar em seus olhos.",
     "image": "img/races/Genasi do Fogo.png",
     "resistances": [
-      "Fogo"
+      "Ígneo"
     ],
     "languages": [
       "Comum",
@@ -1047,7 +1047,7 @@
     ],
     "traits": [
       {
-        "name": "Resistência a Fogo",
+        "name": "Resistência a Dano Ígneo",
         "desc": "Você tem resistência a dano ígneo."
       },
       {
@@ -2248,7 +2248,7 @@
     ],
     "traits": [
       {
-        "name": "Bênção do Shinigami",
+        "name": "Bênção do Servo da Rainha dos Corvos",
         "desc": "<b>Ação bônus</b> para teleportar 9m. A partir do 3º nível, você ganha <b>resistência a todo dano</b> até o início do seu próximo turno após teleportar."
       },
       {
@@ -2332,7 +2332,7 @@
     "description": "Tocados pelo inferno, os Tiferinos (Tieflings) carregam chifres, caudas e a marca de um pacto ancestral. Frequentemente párias, eles forjam seu próprio destino com carisma e magia infernal.",
     "image": "img/races/Tiferinos.png",
     "resistances": [
-      "Fogo"
+      "Ígneo"
     ],
     "languages": [
       "Comum",

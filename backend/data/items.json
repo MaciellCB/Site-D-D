@@ -679,7 +679,7 @@
     "type": "Arma",
     "tipoArma": "A Distancia",
     "damage": "3d6",
-    "damageType": "Fogo",
+    "damageType": "Ígneo",
     "description": "<p>Uma esfera de ferro fundido com um pavio curto. Arremesso (18m). Todos a 1,5m do impacto devem fazer resistência de Destreza (CD 12) ou sofrem o dano.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 6 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
   },
   
@@ -691,7 +691,7 @@
     "type": "Arma",
     "tipoArma": "A Distancia",
     "damage": "2d4",
-    "damageType": "Fogo",
+    "damageType": "Ígneo",
     "description": "<p>Recipiente impermeável contendo pólvora negra de qualidade. Se incendiado, explode em raio de 1,5m. CD 12 Destreza para metade.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 3 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
   },
   {
@@ -1243,7 +1243,7 @@
     "category": "Utensílios",
     "subcategory": "Utensílios gerais",
     "type": "Geral",
-    "description": "<p>Um frasco de vidro contendo um líquido volátil que entra em combustão ao contato com o ar. Causa 1d4 de dano de fogo persistente.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 8 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
+    "description": "<p>Um frasco de vidro contendo um líquido volátil que entra em combustão ao contato com o ar. Causa 1d4 de dano Ígneo persistente.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 8 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 0,5 kg</li></ul>"
   },
  
   {
@@ -1746,7 +1746,7 @@
     "proficiency": "Pesada",
     "tipoItem": "Armadura",
     "disadvantageSkill": "Furtividade",
-    "description": "<p>Possui acolchoamento tratado alquimicamente sob o metal. Reduz o dano de fogo pela metade (uma vez por descanso).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 18 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 25 kg</li></ul>"
+    "description": "<p>Possui acolchoamento tratado alquimicamente sob o metal. Reduz o dano Ígneo pela metade (uma vez por descanso).</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 18 po</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 25 kg</li></ul>"
   },
   {
     "id": "i_arm_guerra",
@@ -2790,7 +2790,7 @@
     "subcategory": "Munição",
     "type": "Item",
     "damage": "10d6",
-    "damageType": "Fogo",
+    "damageType": "Ígneo",
     "description": "<p>Um barril cheio de pólvora negra refinada. Instável e devastador. Se incendiado, explode em raio de 6m. CD 12 Destreza para metade.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Preço:</strong> 50 pl</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Peso:</strong> 25 kg</li></ul>"
   },
   {

@@ -225,7 +225,7 @@
     "class": "Artífice",
     "subclass": "Infusão",
     "name": "(Infusão, 6º nível) Armadura Resistente",
-    "description": "<p><strong>Item:</strong> Uma armadura (Requer Sintonização)</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Adaptação:</strong> Ao realizar esta infusão, escolha um tipo de dano: ácido, frio, fogo, <strong>energia</strong>, elétrico, necrótico, veneno, psíquico, radiante ou trovão.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Proteção:</strong> O usuário possui <strong>Resistência</strong> ao tipo de dano escolhido (recebe metade do dano).</li></ul>"
+    "description": "<p><strong>Item:</strong> Uma armadura (Requer Sintonização)</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Adaptação:</strong> Ao realizar esta infusão, escolha um tipo de dano: ácido, frio, Ígneo, <strong>energia</strong>, elétrico, necrótico, veneno, psíquico, radiante ou trovão.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Proteção:</strong> O usuário possui <strong>Resistência</strong> ao tipo de dano escolhido (recebe metade do dano).</li></ul>"
   },
  {
     "id": "art_inf_retorna",
@@ -277,7 +277,7 @@
     "class": "Artífice",
     "subclass": "Alquimista",
     "name": "(Alquimista, 5º nível) Sábio Alquímico",
-    "description": "<p>Seu domínio sobre fluidos mágicos aumenta.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Potência:</strong> Sempre que você conjurar uma magia usando seus suprimentos de alquimista como foco, você ganha um bônus em uma rolagem da magia.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Requisito:</strong> A magia deve curar pontos de vida ou causar dano de ácido, fogo, necrótico ou veneno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Valor:</strong> O bônus é igual ao seu Modificador de Inteligência (mínimo +1).</li></ul>"
+    "description": "<p>Seu domínio sobre fluidos mágicos aumenta.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Potência:</strong> Sempre que você conjurar uma magia usando seus suprimentos de alquimista como foco, você ganha um bônus em uma rolagem da magia.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Requisito:</strong> A magia deve curar pontos de vida ou causar dano de ácido, Ígneo, necrótico ou veneno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Valor:</strong> O bônus é igual ao seu Modificador de Inteligência (mínimo +1).</li></ul>"
   },
   {
     "id": "art_alq_9_reagente",
@@ -326,11 +326,11 @@
     "subclass": "Armeiro",
     "name": "(Armeiro, 3º nível) Modelo de Armadura",
     "damage": "1d8",
-    "damageType": "Trovão",
+    "damageType": "Trovejante",
     "useStandardAttack": true,
     "damageAttribute": "Inteligência",
     "speedBonus": "+1.5",
-    "description": "<p>Você pode personalizar sua armadura. Ao terminar um descanso, escolha um modelo (Guardião ou Infiltrador). As armas da armadura usam seu Mod. INT para ataque e dano.</p><hr style='border:0; border-top:1px solid rgba(255,255,255,0.1); margin:10px 0;'><strong style='display:block; margin-bottom:8px; color:#fff;'>Guardião (Tanque)</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Manoplas Trovejantes:</strong> Armas simples de corpo a corpo. Dano: 1d8 Trovão.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Distração:</strong> Criatura atingida pelas manoplas tem <strong>Desvantagem</strong> em ataques contra qualquer alvo que não seja você até o início do seu próximo turno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Campo Defensivo (Ação Bônus):</strong> Ganha PV Temporários iguais ao seu nível de Artífice. (Usos = Bônus Proficiência/dia).</li></ul><hr style='border:0; border-top:1px solid rgba(255,255,255,0.1); margin:10px 0;'><strong style='display:block; margin-bottom:8px; color:#fff;'>Infiltrador (Furtivo)</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Lançador de Raios:</strong> Arma simples à distância (Alcance 27m/90m). Dano: 1d6 Elétrico. Uma vez por turno, causa +1d6 extra ao acertar.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Passos Rápidos:</strong> Deslocamento base aumenta em 1,5m. Vantagem em testes de Furtividade (Stealth).</li></ul>"
+    "description": "<p>Você pode personalizar sua armadura. Ao terminar um descanso, escolha um modelo (Guardião ou Infiltrador). As armas da armadura usam seu Mod. INT para ataque e dano.</p><hr style='border:0; border-top:1px solid rgba(255,255,255,0.1); margin:10px 0;'><strong style='display:block; margin-bottom:8px; color:#fff;'>Guardião (Tanque)</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Manoplas Trovejantes:</strong> Armas simples de corpo a corpo. Dano: 1d8 Trovejante.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Distração:</strong> Criatura atingida pelas manoplas tem <strong>Desvantagem</strong> em ataques contra qualquer alvo que não seja você até o início do seu próximo turno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Campo Defensivo (Ação Bônus):</strong> Ganha PV Temporários iguais ao seu nível de Artífice. (Usos = Bônus Proficiência/dia).</li></ul><hr style='border:0; border-top:1px solid rgba(255,255,255,0.1); margin:10px 0;'><strong style='display:block; margin-bottom:8px; color:#fff;'>Infiltrador (Furtivo)</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Lançador de Raios:</strong> Arma simples à distância (Alcance 27m/90m). Dano: 1d6 Elétrico. Uma vez por turno, causa +1d6 extra ao acertar.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Passos Rápidos:</strong> Deslocamento base aumenta em 1,5m. Vantagem em testes de Furtividade (Stealth).</li></ul>"
   },
   {
     "id": "art_arm_5_ataque",
@@ -379,8 +379,8 @@
     "subclass": "Artilheiro",
     "name": "(Artilheiro, 3º nível) Canhão Eldritch",
     "damage": "2d8",
-    "damageType": "Fogo",
-    "description": "<p><strong>Ação:</strong> Ação Padrão (Criar)<br><strong>Duração:</strong> 1 hora</p><p>Você cria um canhão mágico (Pequeno ou Minúsculo). Ele tem CA 18 e PV igual a 5x seu nível de Artífice. Imune a dano psíquico e veneno.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ativação (Ação Bônus):</strong> Você comanda o canhão a se mover 4,5m e/ou disparar (se estiver a até 18m dele).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Lança-chamas:</strong> Cone de 4,5m. Todos na área fazem Salvaguarda de DEX. Dano: 2d8 Fogo (metade se passar).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Balista de Energia:</strong> Ataque mágico à distância (36m). Dano: 2d8 <strong>Energia</strong> + empurrão de 1,5m.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Protetor:</strong> Emanação de 3m. O canhão emite energia positiva. Criaturas à escolha ganham 1d8 + Mod. INT em PV temporários.</li></ul>"
+    "damageType": "Ígneo",
+    "description": "<p><strong>Ação:</strong> Ação Padrão (Criar)<br><strong>Duração:</strong> 1 hora</p><p>Você cria um canhão mágico (Pequeno ou Minúsculo). Ele tem CA 18 e PV igual a 5x seu nível de Artífice. Imune a dano psíquico e veneno.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ativação (Ação Bônus):</strong> Você comanda o canhão a se mover 4,5m e/ou disparar (se estiver a até 18m dele).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Lança-chamas:</strong> Cone de 4,5m. Todos na área fazem Salvaguarda de DEX. Dano: 2d8 Ígneo (metade se passar).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Balista de Energia:</strong> Ataque mágico à distância (36m). Dano: 2d8 <strong>Energia</strong> + empurrão de 1,5m.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Protetor:</strong> Emanação de 3m. O canhão emite energia positiva. Criaturas à escolha ganham 1d8 + Mod. INT em PV temporários.</li></ul>"
   },
   {
     "id": "art_art_5_fogo",
@@ -761,7 +761,7 @@
     "name": "(Arauto, 3º nível) Aura da Tempestade",
     "damage": "1d6",
     "damageType": "Elétrico",
-    "description": "<p>Ao entrar em Fúria, você emana uma aura mágica de 3m. Você pode ativar o efeito novamente a cada turno como uma <strong>Ação Bônus</strong>.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Deserto:</strong> Todas as outras criaturas na aura sofrem 2 de dano de fogo (escala com nível).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Mar:</strong> Uma criatura na aura sofre 1d6 de dano elétrico (escala com nível). Salvaguarda de DEX para metade.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Tundra:</strong> Criaturas de sua escolha na aura ganham 2 PV temporários (escala com nível).</li></ul>"
+    "description": "<p>Ao entrar em Fúria, você emana uma aura mágica de 3m. Você pode ativar o efeito novamente a cada turno como uma <strong>Ação Bônus</strong>.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Deserto:</strong> Todas as outras criaturas na aura sofrem 2 de dano Ígneo (escala com nível).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Mar:</strong> Uma criatura na aura sofre 1d6 de dano elétrico (escala com nível). Salvaguarda de DEX para metade.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Tundra:</strong> Criaturas de sua escolha na aura ganham 2 PV temporários (escala com nível).</li></ul>"
   },
   {
     "id": "bar_tem_6_alma",
@@ -769,7 +769,7 @@
     "class": "Bárbaro",
     "subclass": "Caminho do Arauto da Tempestade",
     "name": "(Arauto, 6º nível) Alma da Tempestade",
-    "description": "<p>Você ganha benefícios passivos baseados no ambiente escolhido (mesmo fora de fúria):</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Deserto:</strong> Resistência a dano de fogo. Ignora efeitos de calor extremo. Pode tocar objetos para incendiá-los.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Mar:</strong> Resistência a dano elétrico. Pode respirar na água. Ganha deslocamento de natação de 9m.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Tundra:</strong> Resistência a dano de frio. Ignora efeitos de frio extremo. Pode tocar água para congelar um cubo de 1,5m.</li></ul>"
+    "description": "<p>Você ganha benefícios passivos baseados no ambiente escolhido (mesmo fora de fúria):</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Deserto:</strong> Resistência a dano Ígneo. Ignora efeitos de calor extremo. Pode tocar objetos para incendiá-los.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Mar:</strong> Resistência a dano elétrico. Pode respirar na água. Ganha deslocamento de natação de 9m.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Tundra:</strong> Resistência a dano de frio. Ignora efeitos de frio extremo. Pode tocar água para congelar um cubo de 1,5m.</li></ul>"
   },
   {
     "id": "bar_tem_10_prote",
@@ -785,7 +785,7 @@
     "class": "Bárbaro",
     "subclass": "Caminho do Arauto da Tempestade",
     "name": "(Arauto, 14º nível) Tempestade Furiosa",
-    "description": "<p>Você ganha efeitos de reação baseados no seu ambiente:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Deserto:</strong> Imediatamente após ser atingido por um ataque, o atacante sofre dano de fogo igual à metade do seu nível de Bárbaro.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Mar:</strong> Ao acertar uma criatura com um ataque, você pode forçá-la a uma Salvaguarda de Força. Falha: Fica caída (Prone).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Tundra:</strong> Quando uma criatura na aura atacar, você pode forçá-la a uma Salvaguarda de Força. Falha: Deslocamento reduzido a 0 até o próximo turno.</li></ul>"
+    "description": "<p>Você ganha efeitos de reação baseados no seu ambiente:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Deserto:</strong> Imediatamente após ser atingido por um ataque, o atacante sofre dano Ígneo igual à metade do seu nível de Bárbaro.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Mar:</strong> Ao acertar uma criatura com um ataque, você pode forçá-la a uma Salvaguarda de Força. Falha: Fica caída (Prone).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Tundra:</strong> Quando uma criatura na aura atacar, você pode forçá-la a uma Salvaguarda de Força. Falha: Deslocamento reduzido a 0 até o próximo turno.</li></ul>"
   },
   {
     "id": "bar_zel_3_furia",
@@ -1330,7 +1330,7 @@
     "class": "Bardo",
     "subclass": "Colégio dos Espíritos",
     "name": "(Espíritos, 3º nível) Contos do Além",
-    "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Enquanto segura seu Foco Espiritual, você pode gastar um uso de Inspiração Bárdica para rolar na tabela de Contos Espirituais. Você retém o conto em sua mente até usá-lo ou terminar um descanso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Uso (Ação):</strong> Escolha uma criatura a até 9m para receber o efeito do conto rolado.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Efeitos:</strong> Variam conforme o número rolado no dado de inspiração (ex: bônus em testes mentais, dano de fogo, teleporte, cura ou condições como invisibilidade).</li></ul>"
+    "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Enquanto segura seu Foco Espiritual, você pode gastar um uso de Inspiração Bárdica para rolar na tabela de Contos Espirituais. Você retém o conto em sua mente até usá-lo ou terminar um descanso.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Uso (Ação):</strong> Escolha uma criatura a até 9m para receber o efeito do conto rolado.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Efeitos:</strong> Variam conforme o número rolado no dado de inspiração (ex: bônus em testes mentais, dano Ígneo, teleporte, cura ou condições como invisibilidade).</li></ul>"
   },
   {
     "id": "bar_esi_6_sessao",
@@ -1706,7 +1706,7 @@
     "class": "Bruxo",
     "subclass": "O Celestial",
     "name": "(Celestial, 6º nível) Alma Radiante",
-    "description": "<p>Sua ligação com o divino lhe concede resistência a dano radiante. Além disso, quando você conjurar uma magia que cause dano radiante ou de fogo, você pode adicionar seu Modificador de Carisma a uma das rolagens de dano dessa magia contra um dos alvos.</p>"
+    "description": "<p>Sua ligação com o divino lhe concede resistência a dano radiante. Além disso, quando você conjurar uma magia que cause dano radiante ou de Ígneo, você pode adicionar seu Modificador de Carisma a uma das rolagens de dano dessa magia contra um dos alvos.</p>"
   },
   {
     "id": "bru_cel_10_resistencia",
@@ -1832,7 +1832,7 @@
     "class": "Bruxo",
     "subclass": "O Gênio",
     "name": "(Gênio, 1º nível) Vaso do Gênio",
-    "description": "<p>Você recebe um receptáculo mágico (lâmpada, anel, urna) que serve como foco.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Refúgio (Ação):</strong> Você entra no espaço extradimensional do vaso. Duração: horas iguais a 2x Bônus de Proficiência.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ira do Gênio:</strong> Uma vez por turno, ao acertar um ataque, você pode adicionar seu Bônus de Proficiência ao dano. O tipo depende do gênio (Dao: Contundente, Djinni: Trovão, Efreeti: Fogo, Marid: Frio).</li></ul>"
+    "description": "<p>Você recebe um receptáculo mágico (lâmpada, anel, urna) que serve como foco.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Refúgio (Ação):</strong> Você entra no espaço extradimensional do vaso. Duração: horas iguais a 2x Bônus de Proficiência.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ira do Gênio:</strong> Uma vez por turno, ao acertar um ataque, você pode adicionar seu Bônus de Proficiência ao dano. O tipo depende do gênio (Dao: Contundente, Djinni: Trovejante, Efreeti: Ígneo, Marid: Frio).</li></ul>"
   },
   {
     "id": "bru_gen_6_dom",
@@ -1960,7 +1960,7 @@
     "class": "Bruxo",
     "subclass": "A Luz Imortal",
     "name": "(Luz Imortal, 1º nível) Alma Radiante",
-    "description": "<p>Você ganha resistência a dano radiante. Além disso, ao conjurar magias que causam dano radiante ou de fogo, você adiciona seu Modificador de Carisma ao dano. Você também aprende os truques <em>Luz</em> e <em>Chama Sagrada</em>.</p>"
+    "description": "<p>Você ganha resistência a dano radiante. Além disso, ao conjurar magias que causam dano radiante ou de Ígneo, você adiciona seu Modificador de Carisma ao dano. Você também aprende os truques <em>Luz</em> e <em>Chama Sagrada</em>.</p>"
   },
   {
     "id": "bru_lim_6_vinganca",
@@ -1986,40 +1986,40 @@
     "id": "bru_shi_1_spells",
     "category": "Classe",
     "class": "Bruxo",
-    "subclass": "Shinigami",
-    "name": "Feitiços do Shinigami (Homebrew)",
+    "subclass": "Servo da Rainha dos Corvos",
+    "name": "Feitiços do Servo da Rainha dos Corvos ",
     "description": "<p>Magias expandidas: Vida Falsa, Santuário, Silêncio, Arma Espiritual, Fingir Morte, Falar com Mortos, Tempestade de Gelo, Localizar Criatura, Comuna, Cone de Frio.</p>"
   },
   {
     "id": "bru_shi_1_corvo",
     "category": "Classe",
     "class": "Bruxo",
-    "subclass": "Shinigami",
-    "name": "(Shinigami, 1º nível) Corvo Sentinela",
+    "subclass": "Servo da Rainha dos Corvos",
+    "name": "(Servo da Rainha dos Corvos, 1º nível) Corvo Sentinela",
     "description": "<p>Um espírito-corvo o acompanha, servindo seus interesses.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Sentidos:</strong> Concede Visão no Escuro (9m) e bônus em testes de Percepção. Você pode ver através dos olhos dele.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Vingança:</strong> Se o corvo for morto por uma criatura, você ganha <strong>Vantagem</strong> em todas as jogadas de ataque contra o assassino pelas próximas 24 horas.</li></ul>"
   },
   {
     "id": "bru_shi_6_alma",
     "category": "Classe",
     "class": "Bruxo",
-    "subclass": "Shinigami",
-    "name": "(Shinigami, 6º nível) Alma do Corvo",
+    "subclass": "Servo da Rainha dos Corvos",
+    "name": "(Servo da Rainha dos Corvos, 6º nível) Alma do Corvo",
     "description": "<p><strong>Ação:</strong> Ação Bônus</p><p>Você pode se fundir ao seu corvo, assumindo sua forma (estatísticas de Corvo/Minúsculo). Você ganha a velocidade de voo dele, mas não pode atacar ou conjurar magias nessa forma. Você pode reverter a forma com outra ação bônus.</p>"
   },
   {
     "id": "bru_shi_10_escudo",
     "category": "Classe",
     "class": "Bruxo",
-    "subclass": "Shinigami",
-    "name": "(Shinigami, 10º nível) Escudo do Corvo",
+    "subclass": "Servo da Rainha dos Corvos",
+    "name": "(Servo da Rainha dos Corvos, 10º nível) Escudo do Corvo",
     "description": "<p>Sua proximidade com a morte o protege. Você ganha <strong>Vantagem</strong> em testes de resistência contra a morte, imunidade à condição <strong>Amedrontado</strong> e resistência a dano necrótico.</p>"
   },
   {
     "id": "bru_shi_14_mao",
     "category": "Classe",
     "class": "Bruxo",
-    "subclass": "Shinigami",
-    "name": "(Shinigami, 14º nível) Mão Direita",
+    "subclass": "Servo da Rainha dos Corvos",
+    "name": "(Servo da Rainha dos Corvos, 14º nível) Mão Direita",
     "description": "<p>Você recebe autoridade sobre a vida e a morte. Você pode conjurar a magia <em>Dedo da Morte</em> (Finger of Death) uma vez por dia sem gastar um espaço de magia. Recarga: Descanso Longo.</p>"
   },
   {
@@ -2427,7 +2427,7 @@
     "class": "Bruxo",
     "subclass": "Invocações Místicas",
     "name": "Tumba de Levistus",
-    "description": "<p>Você aprende a se envolver em um gelo protetor que troca mobilidade por resistência. Uma vez por Descanso Curto, como reação ao sofrer um ataque, você pode envolver-se em gelo: recebe Pontos de Vida Temporários iguais a seu nível x 10 imediatamente; logo após o dano, você fica incapacitado, com deslocamento 0 e vulnerabilidade ao fogo até o fim do próximo turno. Use como último recurso para absorver um golpe mortal e talvez virar o jogo — mas cuidado com fogo e imobilidade temporária.</p><p>Pré-Requisitos: Nível mínimo 5.</p>"
+    "description": "<p>Você aprende a se envolver em um gelo protetor que troca mobilidade por resistência. Uma vez por Descanso Curto, como reação ao sofrer um ataque, você pode envolver-se em gelo: recebe Pontos de Vida Temporários iguais a seu nível x 10 imediatamente; logo após o dano, você fica incapacitado, com deslocamento 0 e vulnerabilidade ao Ígneo até o fim do próximo turno. Use como último recurso para absorver um golpe mortal e talvez virar o jogo — mas cuidado com fogo e imobilidade temporária.</p><p>Pré-Requisitos: Nível mínimo 5.</p>"
   },
   {
     "id": "invoca-um-com-as-sombras",
@@ -2883,7 +2883,7 @@
     "class": "Blood Hunter",
     "subclass": "Ordem da Alma Profana",
     "name": "(Alma Profana, 3º nível) Rito Foco",
-    "description": "<p>Enquanto seu Rito Carmesim estiver ativo, você ganha benefícios baseados no seu Patrono:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Arquifada:</strong> Alvo atingido brilha, perdendo benefícios de invisibilidade ou cobertura.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Celestial:</strong> Ação Bônus para gastar uso de Maldição e curar aliado a 18m.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Demônio:</strong> Ao rolar 1 ou 2 em dano de fogo (rito), você pode rerrolar o dado.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Gênio:</strong> Ação Bônus para gastar uso de Maldição e ganhar voo (9m).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Grande Antigo:</strong> Crítico causa Amedrontado em criaturas próximas ao alvo, esse efeito dura ate seu proximo turno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Hexblade:</strong> +Proficiência no dano contra alvos amaldiçoados ou marcados.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Morto-Vivo:</strong> Reação para reduzir dano necrótico sofrido à metade.</li></ul>"
+    "description": "<p>Enquanto seu Rito Carmesim estiver ativo, você ganha benefícios baseados no seu Patrono:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Arquifada:</strong> Alvo atingido brilha, perdendo benefícios de invisibilidade ou cobertura.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Celestial:</strong> Ação Bônus para gastar uso de Maldição e curar aliado a 18m.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Demônio:</strong> Ao rolar 1 ou 2 em dano Ígneo (rito), você pode rerrolar o dado.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Gênio:</strong> Ação Bônus para gastar uso de Maldição e ganhar voo (9m).</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Grande Antigo:</strong> Crítico causa Amedrontado em criaturas próximas ao alvo, esse efeito dura ate seu proximo turno.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Hexblade:</strong> +Proficiência no dano contra alvos amaldiçoados ou marcados.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Morto-Vivo:</strong> Reação para reduzir dano necrótico sofrido à metade.</li></ul>"
   },
   {
     "id": "csa_pro_7_frenesi",
@@ -3267,7 +3267,7 @@
     "class": "Clérigo",
     "subclass": "Domínio do Zelo",
     "name": "(Zelo, 2º nível) Canalizar Divindade: Fervor Consumidor",
-    "description": "<p><strong>Ação:</strong> Livre (Gatilho)</p><p>Quando você rolar dano de <strong>fogo</strong> ou <strong>trovejante</strong>, você pode usar seu Canalizar Divindade para causar o dano máximo possível, em vez de rolar.</p>"
+    "description": "<p><strong>Ação:</strong> Livre (Gatilho)</p><p>Quando você rolar dano Ígneo ou <strong>trovejante</strong>, você pode usar seu Canalizar Divindade para causar o dano máximo possível, em vez de rolar.</p>"
   },
   {
     "id": "cle_zel_6_retumbante",
@@ -3275,7 +3275,7 @@
     "class": "Clérigo",
     "subclass": "Domínio do Zelo",
     "name": "(Zelo, 6º nível) Golpe Retumbante",
-    "description": "<p>Quando você causar dano de trovão a uma criatura Grande ou menor, você pode empurrá-la até 3 metros (10 pés) para longe de você.</p>"
+    "description": "<p>Quando você causar dano trovejante a uma criatura Grande ou menor, você pode empurrá-la até 3 metros (10 pés) para longe de você.</p>"
   },
   {
     "id": "cle_zel_8_golpe",
@@ -3293,8 +3293,8 @@
     "subclass": "Domínio do Zelo",
     "name": "(Zelo, 17º nível) Chama da Glória",
     "damage": "5d10",
-    "damageType": "Fogo",
-    "description": "<p><strong>Ação:</strong> Reação</p><p>Quando você for reduzido a 0 PV por um atacante que você possa ver, mesmo que morra, você pode usar sua reação para se mover até seu deslocamento em direção ao atacante e fazer um ataque corpo a corpo com arma contra ele com <strong>Vantagem</strong>.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano Extra:</strong> Se acertar, causa <strong>5d10</strong> de fogo + <strong>5d10</strong> de dano da arma extra.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Consequência:</strong> Após o ataque, você sofre o efeito do dano original (cai inconsciente ou morre). Recarga: Descanso Longo.</li></ul>"
+    "damageType": "Ígneo",
+    "description": "<p><strong>Ação:</strong> Reação</p><p>Quando você for reduzido a 0 PV por um atacante que você possa ver, mesmo que morra, você pode usar sua reação para se mover até seu deslocamento em direção ao atacante e fazer um ataque corpo a corpo com arma contra ele com <strong>Vantagem</strong>.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano Extra:</strong> Se acertar, causa <strong>5d10</strong> de dano ígneo + <strong>5d10</strong> de dano da arma extra.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Consequência:</strong> Após o ataque, você sofre o efeito do dano original (cai inconsciente ou morre). Recarga: Descanso Longo.</li></ul>"
   },
   {
     "id": "cle_des_spells",
@@ -3707,7 +3707,7 @@
     "subclass": "Domínio da Forja",
     "name": "(Forja, 6º nível) Alma da Forja",
     "defenseBonus": "+1",
-    "description": "<p>Você ganha resistência a dano de fogo. Além disso, enquanto estiver usando armadura pesada, você ganha +1 na sua Classe de Armadura.</p>"
+    "description": "<p>Você ganha resistência a dano Ígneo. Além disso, enquanto estiver usando armadura pesada, você ganha +1 na sua Classe de Armadura.</p>"
   },
   {
     "id": "cle_forj_8_golpe",
@@ -3716,8 +3716,8 @@
     "subclass": "Domínio da Forja",
     "name": "(Forja, 8º nível) Golpe Divino",
     "damage": "1d8",
-    "damageType": "Fogo",
-    "description": "<p>Uma vez por turno ao acertar ataque com arma, cause <strong>1d8</strong> extra de dano de fogo. No 14º nível, o dano extra aumenta para <strong>2d8</strong>.</p>"
+    "damageType": "Ígneo",
+    "description": "<p>Uma vez por turno ao acertar ataque com arma, cause <strong>1d8</strong> extra de dano Ígneo. No 14º nível, o dano extra aumenta para <strong>2d8</strong>.</p>"
   },
   {
     "id": "cle_forj_17_santo",
@@ -3725,7 +3725,7 @@
     "class": "Clérigo",
     "subclass": "Domínio da Forja",
     "name": "(Forja, 17º nível) Santo da Forja",
-    "description": "<p>Você ganha imunidade a dano de fogo. Além disso, enquanto estiver usando armadura pesada, você tem resistência a dano de concussão, perfuração e corte de ataques não mágicos.</p>"
+    "description": "<p>Você ganha imunidade a dano Ígneo. Além disso, enquanto estiver usando armadura pesada, você tem resistência a dano de concussão, perfuração e corte de ataques não mágicos.</p>"
   },
   {
     "id": "cle_sep_spells",
@@ -3924,7 +3924,7 @@
     "class": "Clérigo",
     "subclass": "Domínio da Luz",
     "name": "(Luz, 17º nível) Coroa de Luz",
-    "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Você emite uma aura de luz brilhante de 18m por 1 minuto. Inimigos na luz brilhante têm <strong>Desvantagem</strong> em testes de resistência contra magias que causem dano de fogo ou radiante.</p>"
+    "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Você emite uma aura de luz brilhante de 18m por 1 minuto. Inimigos na luz brilhante têm <strong>Desvantagem</strong> em testes de resistência contra magias que causem dano Ígneo ou radiante.</p>"
   },
   {
     "id": "cle_nat_spells",
@@ -3956,7 +3956,7 @@
     "class": "Clérigo",
     "subclass": "Domínio da Natureza",
     "name": "(Natureza, 6º nível) Elementos de Amortecimento",
-    "description": "<p><strong>Ação:</strong> Reação</p><p>Quando você ou uma criatura a até 9m sofrer dano de ácido, frio, fogo, relâmpago ou trovão, você pode conceder <strong>Resistência</strong> a esse dano contra aquele ataque.</p>"
+    "description": "<p><strong>Ação:</strong> Reação</p><p>Quando você ou uma criatura a até 9m sofrer dano de ácido, frio, Ígneo, relâmpago ou Trovejante, você pode conceder <strong>Resistência</strong> a esse dano contra aquele ataque.</p>"
   },
   {
     "id": "cle_nat_8_golpe",
@@ -3965,8 +3965,8 @@
     "subclass": "Domínio da Natureza",
     "name": "(Natureza, 8º nível) Golpe Divino",
     "damage": "1d8",
-    "damageType": "Frio/Fogo/Elétrico",
-    "description": "<p>Uma vez por turno ao acertar ataque com arma, cause <strong>1d8</strong> extra de dano de frio, fogo ou relâmpago (sua escolha). No 14º nível, o dano extra aumenta para <strong>2d8</strong>.</p>"
+    "damageType": "Frio/Ígneo/Elétrico",
+    "description": "<p>Uma vez por turno ao acertar ataque com arma, cause <strong>1d8</strong> extra de dano de frio, Ígneo ou relâmpago (sua escolha). No 14º nível, o dano extra aumenta para <strong>2d8</strong>.</p>"
   },
   {
     "id": "cle_nat_17_mestre",
@@ -4583,8 +4583,8 @@
     "subclass": "Círculo do Fogo Selvagem",
     "name": "(Fogo, 2º nível) Invocar Espírito de Fogo Selvagem",
     "damage": "2d6",
-    "damageType": "Fogo",
-    "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Você pode gastar um uso de <em>Forma Selvagem</em> para invocar um espírito de fogo selvagem. Ele aparece em um espaço a até 9m. Cada criatura a 3m de onde ele aparece (exceto você) deve fazer uma Salvaguarda de Destreza ou sofrer 2d6 de fogo. O espírito dura 1 hora.</p><strong style='display:block; margin:8px 0; color:#fff;'>Ações do Espírito (Sua Ação Bônus):</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Semente de Fogo:</strong> Ataque à distância (18m). Dano: 1d6 + PB de fogo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Teleporte Ardente:</strong> O espírito e cada criatura voluntária a 1,5m dele se teleportam até 4,5m. Criaturas deixadas para trás no espaço original sofrem 1d6 + PB de fogo.</li></ul>"
+    "damageType": "Ígneo",
+    "description": "<p><strong>Ação:</strong> Ação Padrão</p><p>Você pode gastar um uso de <em>Forma Selvagem</em> para invocar um espírito de fogo selvagem. Ele aparece em um espaço a até 9m. Cada criatura a 3m de onde ele aparece (exceto você) deve fazer uma Salvaguarda de Destreza ou sofrer 2d6 de fogo. O espírito dura 1 hora.</p><strong style='display:block; margin:8px 0; color:#fff;'>Ações do Espírito (Sua Ação Bônus):</strong><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Semente de Fogo:</strong> Ataque à distância (18m). Dano: 1d6 + PB de Ígneo.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Teleporte Ardente:</strong> O espírito e cada criatura voluntária a 1,5m dele se teleportam até 4,5m. Criaturas deixadas para trás no espaço original sofrem 1d6 + PB de fogo.</li></ul>"
   },
   {
     "id": "dru_fog_6_vinculo",
@@ -4593,8 +4593,8 @@
     "subclass": "Círculo do Fogo Selvagem",
     "name": "(Fogo, 6º nível) Vínculo Reforçado",
     "damage": "1d8",
-    "damageType": "Fogo/Cura",
-    "description": "<p>Enquanto seu espírito estiver ativo, sempre que você conjurar uma magia que cause dano de fogo ou restaure pontos de vida, você pode adicionar <strong>1d8</strong> a uma rolagem da magia. Além disso, você pode conjurar magias a partir do espaço do espírito.</p>"
+    "damageType": "Ígneo/Cura",
+    "description": "<p>Enquanto seu espírito estiver ativo, sempre que você conjurar uma magia que cause dano Ígneo ou restaure pontos de vida, você pode adicionar <strong>1d8</strong> a uma rolagem da magia. Além disso, você pode conjurar magias a partir do espaço do espírito.</p>"
   },
  {
     "id": "dru_fog_10_cauterizar",
@@ -4603,9 +4603,9 @@
     "subclass": "Círculo do Fogo Selvagem",
     "name": "(Fogo, 10º nível) Chamas Cauterizantes",
     "damage": "2d10",
-    "damageType": "Fogo/Cura",
+    "damageType": "Ígneo/Cura",
     "damageAttribute": "Sabedoria",
-    "description": "<p><strong>Ação:</strong> Reação</p><p>Quando uma criatura morre a até 9m de você ou do seu espírito, você pode fazer com que chamas espectrais surjam no espaço da criatura morta. A criatura de sua escolha no espaço ou a 1,5m dele recupera PV ou sofre dano de fogo igual a <strong>2d10 + seu Modificador de Sabedoria</strong>. Usos iguais ao Bônus de Proficiência.</p>"
+    "description": "<p><strong>Ação:</strong> Reação</p><p>Quando uma criatura morre a até 9m de você ou do seu espírito, você pode fazer com que chamas espectrais surjam no espaço da criatura morta. A criatura de sua escolha no espaço ou a 1,5m dele recupera PV ou sofre dano Ígneo igual a <strong>2d10 + seu Modificador de Sabedoria</strong>. Usos iguais ao Bônus de Proficiência.</p>"
   },
   {
     "id": "dru_fog_14_renascimento",
@@ -4846,7 +4846,7 @@
     "class": "Feiticeiro",
     "subclass": "Linhagem Dracônica",
     "name": "(Dracônica, 1º nível) Ancestral Dragão",
-    "description": "<p>Você escolhe um tipo de dragão como seu ancestral. Isso determina seu tipo de dano (Ácido, Raio, Fogo, Veneno ou Frio). Você pode falar, ler e escrever Dracônico. Além disso, sempre que fizer um teste de Carisma ao interagir com dragões, seu bônus de proficiência é dobrado.</p>"
+    "description": "<p>Você escolhe um tipo de dragão como seu ancestral. Isso determina seu tipo de dano (Ácido, Raio, Ígneo, Veneno ou Frio). Você pode falar, ler e escrever Dracônico. Além disso, sempre que fizer um teste de Carisma ao interagir com dragões, seu bônus de proficiência é dobrado.</p>"
   },
   {
     "id": "sor_dra_1_resiliencia",
@@ -5088,8 +5088,8 @@
     "class": "Feiticeiro",
     "subclass": "Alma Piromantica",
     "name": "(Piromancia, 1º nível) Coração de Fogo",
-    "damageType": "Fogo",
-    "description": "<p>Sempre que você conjurar uma magia de 1º nível ou superior que cause dano de fogo, criaturas à sua escolha a até 3m de você sofrem dano de fogo igual à metade do seu nível de feiticeiro.</p>"
+    "damageType": "Ígneo",
+    "description": "<p>Sempre que você conjurar uma magia de 1º nível ou superior que cause dano Ígneo, criaturas à sua escolha a até 3m de você sofrem dano Ígneo igual à metade do seu nível de feiticeiro.</p>"
   },
   {
     "id": "sor_pir_6_veias",
@@ -5097,7 +5097,7 @@
     "class": "Feiticeiro",
     "subclass": "Alma Piromantica",
     "name": "(Piromancia, 6º nível) Fogo nas Veias",
-    "description": "<p>Você ganha resistência a dano de fogo. Além disso, magias que você conjurar ignoram resistência a dano de fogo.</p>"
+    "description": "<p>Você ganha resistência a dano Ígneo. Além disso, magias que você conjurar ignoram resistência a dano Ígneo.</p>"
   },
   {
     "id": "sor_pir_14_furia",
@@ -5105,8 +5105,8 @@
     "class": "Feiticeiro",
     "subclass": "Alma Piromantica",
     "name": "(Piromancia, 14º nível) Fúria do Piromante",
-    "damageType": "Fogo",
-    "description": "<p><strong>Ação:</strong> Reação</p><p>Quando você for atingido por um ataque corpo a corpo, você pode causar dano de fogo ao atacante igual ao seu nível de feiticeiro. Esse dano ignora resistência a dano de fogo.</p>"
+    "damageType": "Ígneo",
+    "description": "<p><strong>Ação:</strong> Reação</p><p>Quando você for atingido por um ataque corpo a corpo, você pode causar dano Ígneo ao atacante igual ao seu nível de feiticeiro. Esse dano ignora resistência a dano Ígneo.</p>"
   },
   {
     "id": "sor_pir_18_alma",
@@ -5114,7 +5114,7 @@
     "class": "Feiticeiro",
     "subclass": "Alma Piromantica",
     "name": "(Piromancia, 18º nível) Alma Ardente",
-    "description": "<p>Você ganha imunidade a dano de fogo. Além disso, qualquer magia que você conjure trata imunidade a dano de fogo como resistência.</p>"
+    "description": "<p>Você ganha imunidade a dano Ígneo. Além disso, qualquer magia que você conjure trata imunidade a dano Ígneo como resistência.</p>"
   },
   {
     "id": "sor_fav_1_divina",
@@ -5188,9 +5188,9 @@
     "class": "Feiticeiro",
     "subclass": "Feitiçaria da Fênix",
     "name": "(Fênix, 1º nível) Manto de Chamas",
-    "damageType": "Fogo",
+    "damageType": "Ígneo",
     "damageAttribute": "Carisma",
-    "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Duração:</strong> 1 minuto</p><p>Você se envolve em fogo. Você emite luz, qualquer criatura que te tocar sofre dano de fogo e você adiciona seu Modificador de Carisma ao dano de suas magias de fogo. Recarga: Descanso Longo.</p>"
+    "description": "<p><strong>Ação:</strong> Ação Bônus<br><strong>Duração:</strong> 1 minuto</p><p>Você se envolve em fogo. Você emite luz, qualquer criatura que te tocar sofre dano Ígneo e você adiciona seu Modificador de Carisma ao dano de suas magias de Ígneo. Recarga: Descanso Longo.</p>"
   },
   {
     "id": "sor_fen_6_faisca",
@@ -5199,8 +5199,8 @@
     "subclass": "Feitiçaria da Fênix",
     "name": "(Fênix, 6º nível) Faísca de Fênix",
     "damage": "10",
-    "damageType": "Fogo",
-    "description": "<p><strong>Ação:</strong> Reação</p><p>Se você for reduzido a 0 PV, você pode cair a 1 PV. Cada criatura a até 3m de você sofre dano de fogo igual a 10 + Nível de Feiticeiro. Recarga: Descanso Longo.</p>"
+    "damageType": "Ígneo",
+    "description": "<p><strong>Ação:</strong> Reação</p><p>Se você for reduzido a 0 PV, você pode cair a 1 PV. Cada criatura a até 3m de você sofre dano Ígneo igual a 10 + Nível de Feiticeiro. Recarga: Descanso Longo.</p>"
   },
  {
     "id": "sor_fen_14_nutritivo",
@@ -5210,7 +5210,7 @@
     "name": "(Fênix, 14º nível) Fogo Nutritivo",
     "damageType": "Cura",
     "damageAttribute": "Carisma",
-    "description": "<p>Quando você conjura uma magia que causa dano de fogo, você recupera pontos de vida iguais ao nível do espaço de magia + seu Modificador de Carisma.</p>"
+    "description": "<p>Quando você conjura uma magia que causa dano Ígneo, você recupera pontos de vida iguais ao nível do espaço de magia + seu Modificador de Carisma.</p>"
   },
   {
     "id": "sor_fen_18_forma",
@@ -5268,7 +5268,7 @@
     "class": "Feiticeiro",
     "subclass": "Mente Marinha",
     "name": "(Marinha, 6º nível) Defesa Aquosa",
-    "description": "<p>Você ganha resistência a dano de fogo.</p><p><strong>Ação:</strong> Reação</p><p>Quando atingido por um ataque, você pode reduzir o dano e se mover até 9m sem provocar ataques de oportunidade.</p>"
+    "description": "<p>Você ganha resistência a dano Ígneo.</p><p><strong>Ação:</strong> Reação</p><p>Quando atingido por um ataque, você pode reduzir o dano e se mover até 9m sem provocar ataques de oportunidade.</p>"
   },
   {
     "id": "sor_mar_14_mutavel",
@@ -7440,7 +7440,7 @@
     "class": "Mago",
     "subclass": "Transmutação",
     "name": "(Transmutação, 6º nível) Pedra do Transmutador",
-    "description": "<p>Você pode gastar 8 horas criando uma pedra do transmutador. Ela concede um benefício a quem a portar:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'>• Visão no Escuro (18m).</li><li style='margin-bottom:4px;'>• Aumento de 3m no deslocamento.</li><li style='margin-bottom:4px;'>• Proficiência em testes de resistência de Constituição.</li><li style='margin-bottom:4px;'>• Resistência a dano de ácido, frio, fogo, raio ou trovão.</li></ul><p>Você pode mudar o benefício ao conjurar uma magia de transmutação de 1º nível ou superior (se estiver com a pedra).</p>"
+    "description": "<p>Você pode gastar 8 horas criando uma pedra do transmutador. Ela concede um benefício a quem a portar:</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'>• Visão no Escuro (18m).</li><li style='margin-bottom:4px;'>• Aumento de 3m no deslocamento.</li><li style='margin-bottom:4px;'>• Proficiência em testes de resistência de Constituição.</li><li style='margin-bottom:4px;'>• Resistência a dano de ácido, frio, Ígneo, raio ou Trovejante.</li></ul><p>Você pode mudar o benefício ao conjurar uma magia de transmutação de 1º nível ou superior (se estiver com a pedra).</p>"
   },
   {
     "id": "mag_tra_10_metamorfo",
@@ -8017,7 +8017,7 @@
     "subclass": "Caminho do Eu Astral",
     "name": "(Astral, 11º nível) Corpo do Eu Astral",
     "damageType": "Redução",
-    "description": "<p>Quando você tem seus Braços e Aparência ativos, o corpo astral cobre você.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Defesa (Reação):</strong> Quando sofre dano ácido, frio, fogo, força, elétrico ou trovão, reduza o dano em 1d10 + Mod. SAB.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque:</strong> Uma vez por turno, ao acertar um ataque com os Braços Astrais, cause dano extra igual a um dado de artes marciais.</li></ul>"
+    "description": "<p>Quando você tem seus Braços e Aparência ativos, o corpo astral cobre você.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Defesa (Reação):</strong> Quando sofre dano ácido, frio, Ígneo, força, elétrico ou Trovejante, reduza o dano em 1d10 + Mod. SAB.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Ataque:</strong> Uma vez por turno, ao acertar um ataque com os Braços Astrais, cause dano extra igual a um dado de artes marciais.</li></ul>"
   },
   {
     "id": "mon_ast_17_desperto",
@@ -8036,7 +8036,7 @@
     "name": "(Dragão, 3º nível) Discípulo Dracônico e Sopro",
     "damage": "2d4",
     "damageType": "Elemental",
-    "description": "<p>Você pode mudar o dano de seus ataques desarmados para ácido, frio, fogo, raio ou veneno. Você pode rerolar um teste de Intimidação ou Persuasão falho (1x/descanso).</p><p><strong>Ação:</strong> Ação Padrão</p><p>Você exala energia destrutiva (Cone de 6m ou Linha de 9m). Criaturas fazem salvaguarda de DES ou CON. Dano: 2 dados de artes marciais (metade no sucesso). Usos = Proficiência (ou 2 Ki).</p>"
+    "description": "<p>Você pode mudar o dano de seus ataques desarmados para ácido, frio, Ígneo, raio ou veneno. Você pode rerolar um teste de Intimidação ou Persuasão falho (1x/descanso).</p><p><strong>Ação:</strong> Ação Padrão</p><p>Você exala energia destrutiva (Cone de 6m ou Linha de 9m). Criaturas fazem salvaguarda de DES ou CON. Dano: 2 dados de artes marciais (metade no sucesso). Usos = Proficiência (ou 2 Ki).</p>"
   },
   {
     "id": "mon_dra_6_asas",
@@ -9040,7 +9040,7 @@
     "class": "Talentos",
     "subclass": "",
     "name": "Adepto Elemental",
-    "description": "<p><strong>Pré-requisito:</strong> Capacidade de conjurar pelo menos uma magia.</p><p>Escolha um tipo de dano: ácido, fogo, frio, elétrico ou trovão.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Potência:</strong> Magias que você conjurar ignoram <strong>Resistência</strong> ao tipo de dano escolhido.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano Mínimo:</strong> Ao rolar dano para uma magia desse tipo, você pode tratar qualquer 1 rolado em um dado de dano como um 2.</li></ul>"
+    "description": "<p><strong>Pré-requisito:</strong> Capacidade de conjurar pelo menos uma magia.</p><p>Escolha um tipo de dano: ácido, Ígneo, frio, elétrico ou Trovejante.</p><ul style='list-style:none; padding-left:0; margin:0;'><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Potência:</strong> Magias que você conjurar ignoram <strong>Resistência</strong> ao tipo de dano escolhido.</li><li style='margin-bottom:4px;'><strong style='color:#9c27b0;'>◈ Dano Mínimo:</strong> Ao rolar dano para uma magia desse tipo, você pode tratar qualquer 1 rolado em um dado de dano como um 2.</li></ul>"
   },
   {
     "id": "feat_adepto_marcial",
@@ -9540,8 +9540,8 @@
     "subclass": "",
     "name": "Chamas de Phlegethos (Tiefling)",
     "damage": "1d4",
-    "damageType": "Fogo",
-    "description": "<p>+1 em Inteligência ou Carisma. Quando você rola dano de fogo para uma magia, pode rolar novamente qualquer 1. Sempre que conjurar uma magia de fogo, você pode se envolver em chamas que causam 1d4 de dano a quem te atacar corpo a corpo.</p>"
+    "damageType": "Ígneo",
+    "description": "<p>+1 em Inteligência ou Carisma. Quando você rola dano Ígneo para uma magia, pode rolar novamente qualquer 1. Sempre que conjurar uma magia de fogo, você pode se envolver em chamas que causam 1d4 de dano a quem te atacar corpo a corpo.</p>"
   },
   {
     "id": "feat_rac_infernal",

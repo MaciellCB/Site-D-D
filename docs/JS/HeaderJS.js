@@ -1690,6 +1690,21 @@ function exibirAvisoTemporario(mensagem) {
     }, 5000);
 }
 
+function normalizarTextoClasse(valor) {
+    return String(valor || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+}
+
+function obterNiveisAumentoAtributos(cls) {
+    const feature = (cls.features || []).find(item =>
+        normalizarTextoClasse(item.name).includes('aumento no valor de atributo')
+    );
+    if (!feature) return [];
+
+    const description = String(feature.description || '').replace(/<[^>]*>/g, ' ').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const milestones = description.match(/niveis?:\s*([\d,\se]+)/i);
+    return milestones ? (milestones[1].match(/\d+/g) || []).map(Number) : [Number(feature.level) || 4];
+}
+
 
 /* =============================================================
    APLICAR CLASSE NA FICHA
@@ -1779,6 +1794,8 @@ function aplicarClasseNaFicha(cls, subCls) {
                 }
             }
 
+            if (classKey === 'artifice' && normalizarTextoClasse(feat.name).startsWith('(infusao')) return;
+
             if (fLvl <= newLevelInClass) addFeatureToState(feat, 'Classe', cls.name, '');
         });
     }
@@ -1832,6 +1849,73 @@ function aplicarClasseNaFicha(cls, subCls) {
                         level: 3
                     }, 'Classe', 'Bruxo', '');
                 }
+                next();
+            });
+        });
+    }
+
+    // TASK: ARTÍFICE - ALCANÇAR O TOTAL DE INFUSÕES CONHECIDAS DA PROGRESSÃO
+    const totalInfusoesArtificePorNivel = { 2: 4, 6: 6, 10: 8, 14: 10, 18: 12 };
+    if (classKey === 'artifice' && totalInfusoesArtificePorNivel[newLevelInClass]) {
+        tasks.push((next) => {
+            const abrirSeletorInfusoes = async () => {
+                const infusoesConhecidas = (state.abilities || []).filter(item =>
+                    normalizarTextoClasse(item.class) === classKey &&
+                    (normalizarTextoClasse(item.subclass) === 'infusao' ||
+                        normalizarTextoClasse(item.title).startsWith('(infusao'))
+                );
+                const quantidadeAEscolher = Math.max(
+                    0,
+                    totalInfusoesArtificePorNivel[newLevelInClass] - infusoesConhecidas.length
+                );
+
+                if (!quantidadeAEscolher) {
+                    next();
+                    return;
+                }
+
+                if (!abilityCatalog.length) {
+                    const response = await fetch(`${BASE_API_URL}/catalog/abilities`);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    abilityCatalog = await response.json();
+                }
+
+                const conhecidas = new Set((state.abilities || []).map(item => normalizarTextoClasse(item.title)));
+                const opcoes = abilityCatalog
+                    .filter(item =>
+                        normalizarTextoClasse(item.class) === classKey &&
+                        normalizarTextoClasse(item.subclass) === 'infusao' &&
+                        !conhecidas.has(normalizarTextoClasse(item.name))
+                    )
+                    .filter(item => {
+                        const requisito = normalizarTextoClasse(item.name).match(/(\d+)\s*(?:º|o)?\s*nivel/);
+                        return !requisito || Number(requisito[1]) <= newLevelInClass;
+                    });
+
+                if (!opcoes.length) {
+                    exibirAvisoTemporario('Não há novas infusões disponíveis para escolher neste nível.');
+                    next();
+                    return;
+                }
+
+                const opcoesPorNome = new Map(opcoes.map(item => [item.name, item]));
+                openGenericSelector(
+                    `Artífice nível ${newLevelInClass}: escolha ${quantidadeAEscolher} Infusões`,
+                    quantidadeAEscolher,
+                    [...opcoesPorNome.keys()],
+                    (selecionadas) => {
+                        selecionadas.forEach(nome => {
+                            const infusao = opcoesPorNome.get(nome);
+                            if (infusao) addFeatureToState(infusao, 'Classe', cls.name, 'Infusão');
+                        });
+                        next();
+                    }
+                );
+            };
+
+            abrirSeletorInfusoes().catch(error => {
+                console.error('Erro ao carregar opções de Infusão:', error);
+                exibirAvisoTemporario('Não foi possível carregar as Infusões. Verifique a conexão e tente novamente.');
                 next();
             });
         });
@@ -1920,6 +2004,15 @@ function aplicarClasseNaFicha(cls, subCls) {
             const qtd = (classKey === 'ladino' || classKey === 'ranger' || classKey === 'patrulheiro') ? 1 : 1;
             tasks.push((next) => openSkillSelector(qtd, `Multiclasse ${cls.name}`, listaMC, next));
         }
+    }
+
+    if (obterNiveisAumentoAtributos(cls).includes(newLevelInClass)) {
+        tasks.push((next) => {
+            exibirAvisoTemporario(
+                `Nível ${newLevelInClass} de ${cls.name}: você recebeu 2 pontos para aumentar atributos (máximo 20) ou pode escolher um talento.`
+            );
+            next();
+        });
     }
 
     if (typeof saveStateToServer === 'function') saveStateToServer();
@@ -3223,6 +3316,30 @@ function abrirModalAjudaExpandida(item) {
     `;
 
     document.body.appendChild(detalheOverlay);
+
+    const configurarBuscaCards = (inputSelector, cardSelector, emptySelector) => {
+        const input = detalheOverlay.querySelector(inputSelector);
+        if (!input) return;
+
+        const cards = [...detalheOverlay.querySelectorAll(cardSelector)];
+        const vazio = detalheOverlay.querySelector(emptySelector);
+        input.addEventListener('input', () => {
+            const termo = normalizarTextoClasse(input.value);
+            let encontrados = 0;
+
+            cards.forEach(card => {
+                const textoBusca = normalizarTextoClasse(`${card.dataset.search || ''} ${card.textContent}`);
+                const corresponde = textoBusca.includes(termo);
+                card.hidden = !corresponde;
+                if (corresponde) encontrados++;
+            });
+
+            if (vazio) vazio.style.display = encontrados ? 'none' : 'block';
+        });
+    };
+
+    configurarBuscaCards('.ajuda-condicoes-busca', '.ajuda-condicao-card', '.ajuda-condicoes-vazio');
+    configurarBuscaCards('.ajuda-dano-busca', '.ajuda-dano-card', '.ajuda-danos-vazio');
 
     // Fecha apenas o modal de detalhe, mantendo a pesquisa de ajuda aberta atrás
     detalheOverlay.querySelector('.modal-close-detalhe').onclick = () => {
