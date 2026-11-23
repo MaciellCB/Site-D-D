@@ -1,0 +1,229 @@
+<script lang="ts">
+import debounce from "lodash/debounce";
+import throttle from "lodash/throttle";
+import { defineComponent, onMounted, onUnmounted, watchEffect } from "vue";
+
+import { useModal } from "../core/plugins/modals/plugin";
+import { unloadRoomMods } from "../mods";
+import { modEvents } from "../mods/events";
+import { coreStore } from "../store/core";
+
+import { createConnection, socket } from "./api/socket";
+import { handleDropEvent } from "./dropAsset";
+import { useIdleReporting } from "./idle";
+import { scrollZoom } from "./input/mouse";
+import { clearUndoStacks } from "./operations/undo";
+import { getGestureScale } from "./rendering/core";
+import { renderingState } from "./rendering/state";
+import { floorSystem } from "./systems/floors";
+import { gameState } from "./systems/game/state";
+import { playerSettingsState } from "./systems/settings/players/state";
+import { setSelectionBoxFunction } from "./temp";
+import {
+    keyDown,
+    keyUp,
+    mouseDown,
+    mouseLeave,
+    mouseMove,
+    mouseUp,
+    touchEnd,
+    touchMove,
+    touchStart,
+} from "./tools/events";
+// import DebugInfo from "./ui/DebugInfo.vue";
+import UI from "./ui/UI.vue";
+// oxlint-disable-next-line import/no-unassigned-import
+import "./api/events";
+
+let throttledMove: (event: MouseEvent) => void = (_event: MouseEvent) => {};
+let throttledTouchMove: (event: TouchEvent) => void = (_event: TouchEvent) => {};
+const throttledZoom = throttle(scrollZoom, 15);
+let zooming = false;
+
+function _zoomStopped(): void {
+    zooming = false;
+    renderingState.mutableReactive.gestureScale = null;
+}
+const zoomStopped = debounce(_zoomStopped, 100);
+
+// Window events
+function zoom(event: WheelEvent): void {
+    if (playerSettingsState.raw.disableScrollToZoom.value) return;
+    if (!event.target || !(event.target as HTMLElement).tagName || (event.target as HTMLElement).tagName !== "CANVAS")
+        return;
+    if (!zooming) {
+        zooming = true;
+        renderingState.mutableReactive.gestureScale = getGestureScale();
+    }
+    throttledZoom(event);
+    zoomStopped();
+}
+
+function resizeWindow(): void {
+    floorSystem.resize();
+}
+
+export default defineComponent({
+    // eslint-disable-next-line vue/multi-word-component-names
+    name: "Game",
+    components: { UI }, // DebugInfo
+    beforeRouteEnter(to) {
+        coreStore.setLoading(true);
+        createConnection(to);
+    },
+    beforeRouteLeave() {
+        socket.disconnect();
+    },
+    setup() {
+        const modals = useModal();
+        setSelectionBoxFunction(modals.selectionBox);
+        useIdleReporting();
+
+        const mediaQuery = matchMedia(`(resolution: ${devicePixelRatio}dppx)`);
+        let throttledMoveSet = false;
+        let throttledTouchMoveSet = false;
+
+        watchEffect(() => {
+            if (!gameState.reactive.boardInitialized) {
+                throttledMoveSet = false;
+                throttledTouchMoveSet = false;
+            }
+        });
+
+        onMounted(async () => {
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            window.addEventListener("keyup", keyUp);
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            window.addEventListener("keydown", keyDown);
+            window.addEventListener("resize", resizeWindow);
+            clearUndoStacks();
+            mediaQuery.addEventListener("change", resizeWindow);
+
+            await modEvents.gameOpened();
+        });
+
+        onUnmounted(() => {
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            window.removeEventListener("keyup", keyUp);
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            window.removeEventListener("keydown", keyDown);
+            window.removeEventListener("resize", resizeWindow);
+            mediaQuery.removeEventListener("change", resizeWindow);
+            unloadRoomMods();
+        });
+
+        // Touch events
+
+        function touchmove(event: TouchEvent): void {
+            // limit the number of touch moves to ease server load
+            if (!throttledTouchMoveSet) {
+                throttledTouchMoveSet = true;
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                throttledTouchMove = throttle(touchMove, 5);
+            }
+            // after throttling pass event to object
+            throttledTouchMove(event);
+        }
+
+        function mousemove(event: MouseEvent): void {
+            if (!throttledMoveSet) {
+                throttledMoveSet = true;
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                throttledMove = throttle(mouseMove, 15);
+            }
+            throttledMove(event);
+        }
+
+        return {
+            drop: handleDropEvent,
+            gameState,
+            mouseDown,
+            mouseLeave,
+            mousemove,
+            mouseUp,
+            touchStart,
+            touchmove,
+            touchEnd,
+            zoom,
+        };
+    },
+});
+</script>
+
+<template>
+    <div id="main" @mouseleave="mouseLeave" @wheel.passive="zoom">
+        <canvas id="babylon"></canvas>
+        <div id="board" :class="{ disconnected: !gameState.reactive.isConnected }">
+            <div
+                id="layers"
+                @mousedown="mouseDown"
+                @mouseup="mouseUp"
+                @mousemove="mousemove"
+                @contextmenu.prevent.stop
+                @dragover.prevent
+                @drop.prevent.stop="drop"
+                @touchmove="touchmove"
+                @touchstart="touchStart"
+                @touchend="touchEnd"
+            ></div>
+        </div>
+        <UI ref="ui" />
+        <!-- <DebugInfo /> -->
+    </div>
+</template>
+
+<style>
+a,
+a:visited,
+a:hover,
+a:active {
+    color: inherit;
+}
+
+svg {
+    cursor: pointer;
+}
+
+.notAllowed,
+.notAllowed > * {
+    cursor: not-allowed !important;
+}
+
+#layers,
+#layers canvas {
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+}
+</style>
+
+<style scoped lang="scss">
+#main {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+#board {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    touch-action: none;
+
+    &.disconnected {
+        border: solid 5px red;
+    }
+}
+
+#babylon {
+    z-index: 11;
+    pointer-events: none;
+    width: 100%;
+    height: 100vh;
+}
+</style>

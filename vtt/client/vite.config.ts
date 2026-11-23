@@ -1,0 +1,81 @@
+/// <reference types="vitest" />
+
+import { EsmExternalsPlugin } from "@esbuild-plugins/esm-externals";
+import vueI18n from "@intlify/unplugin-vue-i18n/vite";
+import vue from "@vitejs/plugin-vue";
+import { fileURLToPath, URL } from "node:url";
+import path from "path";
+import { transformLazyShow } from "v-lazy-show";
+import { defineConfig, loadEnv } from "vite";
+import { ViteEjsPlugin } from "vite-plugin-ejs";
+// import VueDevTools from "vite-plugin-vue-devtools";
+
+const isProduction = (process.env.NODE_ENV ?? "production") === "production";
+const viteEnv = loadEnv(process.env.NODE_ENV ?? "production", process.cwd());
+
+// https://vitejs.dev/config/
+export default defineConfig({
+    plugins: [
+        vue({ template: { compilerOptions: { nodeTransforms: [transformLazyShow] } } }),
+        vueI18n({
+            include: path.resolve(import.meta.dirname, "./src/locales/**"),
+        }),
+        ViteEjsPlugin({
+            localVue: viteEnv.VITE_VUE_URL.startsWith("."),
+            vueUrl: viteEnv.VITE_VUE_URL.replace("../server/", ""),
+        }),
+        // ...(!isProduction ? [VueDevTools()] : []),
+    ],
+    server: {
+        host: "0.0.0.0",
+        port: 8080,
+        hmr: {
+            port: 9324,
+        },
+        fs: {
+            strict: false,
+        },
+    },
+    base: process.env.PA_BASEPATH,
+    build: {
+        assetsDir: isProduction ? "static/vite" : "dev-static",
+        outDir: "../server",
+        chunkSizeWarningLimit: 2500,
+        rolldownOptions: {
+            external: ["vue"],
+            output: { globals: { vue: "Vue" } },
+        },
+        commonjsOptions: {
+            esmExternals: true,
+        },
+    },
+    optimizeDeps: {
+        rolldownOptions: {
+            plugins: [EsmExternalsPlugin({ externals: ["vue"] })],
+        },
+        exclude: ["@babylonjs/havok"],
+    },
+    resolve: {
+        // this is only here for testing against a local planarally-dice copy
+        dedupe: ["@babylonjs/core", "@babylonjs/havok"],
+        alias: [
+            {
+                find: "@planarally/mod-api",
+                replacement: fileURLToPath(new URL("../mod-api/src/index.ts", import.meta.url)),
+            },
+            {
+                find: new RegExp("^vue$"),
+                replacement: viteEnv.VITE_VUE_URL.startsWith(".")
+                    ? fileURLToPath(new URL(viteEnv.VITE_VUE_URL, import.meta.url))
+                    : viteEnv.VITE_VUE_URL,
+            },
+        ],
+    },
+    test: {
+        environment: "happy-dom",
+        setupFiles: ["./test/setup.ts"],
+        coverage: {
+            reporter: ["text", "html"],
+        },
+    },
+});
