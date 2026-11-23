@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Painel do Mestre - Gerenciamento</title>
     <link rel="stylesheet" href="CSS/style.css" />
+    <script src="config.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
     
@@ -25,50 +26,128 @@
         /* --- NAVBAR --- */
         .navbar {
             display: flex;
-            justify-content: space-between;
-            padding: 15px 30px;
+            justify-content: flex-start;
+            gap: 20px;
+            padding: 10px 24px;
             background: #1a1a1a;
             align-items: center;
             border-bottom: 1px solid #333;
-        }
-
-        .nav-links a {
-            color: #aaa;
-            text-decoration: none;
-            margin-right: 20px;
-            font-weight: bold;
-        }
-
-        .nav-links a.active {
-            color: #9c27b0;
+            min-height: 56px;
+            box-sizing: border-box;
         }
 
         .logo-icon {
             width: 36px;
             height: 36px;
-            cursor: pointer;
-            border-radius: 10px;
-            border: 2px solid transparent;
-            transition: border-color 0.2s ease;
-        }
-        .logo-icon:hover {
-            border-color: #9c27b0;
-        }
-
-        .perfil-img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid #9c27b0;
-        }
-
-        .btn-iniciativa-geral {
+            border-radius: 9px;
             flex: 0 0 auto;
-            width: auto;
-            margin-left: 12px;
+        }
+
+        .admin-nav-tabs {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .admin-nav-tab {
+            min-height: 38px;
             padding: 8px 14px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            color: #bbb;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
             white-space: nowrap;
         }
+
+        .admin-nav-tab:hover,
+        .admin-nav-tab.active {
+            color: #fff;
+            border-color: #562060;
+            background: #29152e;
+        }
+
+        .admin-nav-tab.active {
+            box-shadow: inset 0 -2px #c34bd6;
+        }
+
+        .navbar .btn-iniciativa-geral {
+            flex: 0 0 auto;
+            width: auto;
+            margin: 0;
+            padding: 8px 12px;
+            white-space: nowrap;
+            font-size: 12px;
+            min-width: 145px;
+        }
+
+        .dashboard-panel { display: none; }
+        .dashboard-panel.active { display: block; }
+
+        .dashboard-panel-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 22px 40px 0;
+        }
+
+        .dashboard-panel-heading h1 {
+            margin: 0;
+            color: #fff;
+            font-size: 22px;
+        }
+
+        .dashboard-panel-heading p {
+            margin: 5px 0 0;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .map-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; padding: 20px 40px 36px; }
+        .map-card { min-width: 0; background: #141414; border: 1px solid #303030; border-radius: 9px; overflow: hidden; }
+        .map-card-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 16px; border-bottom: 1px solid #303030; }
+        .map-card-heading h2 { margin: 0; color: #e0aaff; font-size: 17px; }
+        .map-card-heading p { margin: 5px 0 0; color: #999; font-size: 12px; }
+        .map-location { padding: 14px 16px; border-bottom: 1px solid #242424; }
+        .map-location:last-child { border-bottom: 0; }
+        .map-location-title { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 9px; color: #eee; font-size: 13px; font-weight: 700; }
+        .map-token-list { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+        .map-token { padding: 4px 8px; background: #252525; border: 1px solid #393939; border-radius: 20px; color: #c9c9c9; font-size: 11px; }
+        .map-ficha-list { display: grid; gap: 8px; }
+        .map-ficha-item { padding: 11px; background: #191919; border: 1px solid #303030; border-radius: 7px; }
+        .map-ficha-selector { display: flex; align-items: flex-start; gap: 9px; cursor: pointer; }
+        .map-ficha-selector input { margin-top: 3px; accent-color: #b044c6; }
+        .map-ficha-selector input:disabled { cursor: default; }
+        .map-ficha-selector-copy { display: grid; gap: 4px; min-width: 0; flex: 1; }
+        .map-ficha-name { color: #eee; font-size: 13px; font-weight: 700; }
+        .map-ficha-meta { color: #999; font-size: 11px; overflow-wrap: anywhere; }
+        .map-access-status { flex: 0 0 auto; padding: 3px 7px; border-radius: 12px; color: #aaa; background: #292929; font-size: 10px; }
+        .map-access-status.is-linked { color: #c7f0c7; background: #1d3821; }
+        .map-access-status.is-missing { color: #ffd27d; background: #3a2f16; }
+        .map-edit-access { margin: 10px 0 0 22px; padding: 5px 9px; border: 1px solid #444; border-radius: 5px; background: #242424; color: #ddd; cursor: pointer; font-size: 11px; }
+        .map-edit-access:hover { border-color: #9c27b0; color: #fff; }
+        .map-revoke-access { margin: 10px 0 0 8px; padding: 5px 9px; border: 1px solid #7a3434; border-radius: 5px; background: #351919; color: #ffcaca; cursor: pointer; font-size: 11px; }
+        .map-revoke-access:hover { border-color: #d34b4b; background: #4a2020; color: #fff; }
+        .map-access-details { margin: 11px 0 0 22px; padding-top: 11px; border-top: 1px solid #303030; }
+        .map-access-details[hidden] { display: none; }
+        .map-access-summary { margin: 0 0 10px; color: #b6e2b6; font-size: 12px; overflow-wrap: anywhere; }
+        .map-access-note { margin: 0 0 10px; color: #999; font-size: 11px; line-height: 1.5; }
+        .map-association-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; align-items: end; }
+        .map-association-form label { display: flex; flex-direction: column; gap: 5px; color: #aaa; font-size: 11px; }
+        .map-association-form input, .map-association-form select { width: 100%; min-width: 0; box-sizing: border-box; padding: 8px; background: #090909; border: 1px solid #393939; border-radius: 5px; color: #eee; }
+        .map-association-form button { grid-column: 1 / -1; padding: 9px; background: #702184; border: 1px solid #8e2ca4; border-radius: 5px; color: white; font-weight: 700; cursor: pointer; }
+        .map-association-form button:hover { background: #8a2ba0; }
+        .map-empty { grid-column: 1 / -1; padding: 28px; color: #aaa; background: #141414; border: 1px dashed #383838; border-radius: 8px; text-align: center; }
+        .admin-accounts-modal { display: block; position: static; inset: auto; width: auto; padding: 20px 40px; background: transparent; }
+        .admin-accounts-modal.selection-mode { display: flex; position: fixed; inset: 0; width: auto; padding: 16px; background: rgba(0,0,0,.82); z-index: 100001; align-items: center; justify-content: center; }
+        .admin-accounts-modal.selection-mode .admin-modal-box { max-height: 90vh; overflow: auto; }
+        .admin-account-badge { display: inline-block; margin-left: 8px; padding: 3px 7px; border-radius: 12px; background: #351643; color: #e0aaff; font-size: 10px; vertical-align: middle; }
+        .admin-logout { margin-left: auto; background: transparent; border: 1px solid #393939; border-radius: 6px; color: #bbb; padding: 8px 11px; cursor: pointer; }
+        .admin-logout:hover { border-color: #9c27b0; color: #fff; }
 
         /* --- ÁREA DE TRABALHO (PASTAS) --- */
         #area-trabalho {
@@ -77,7 +156,7 @@
             gap: 20px;
             padding: 20px 40px;
             overflow-x: auto;
-            height: calc(100vh - 100px);
+            height: calc(100vh - 72px);
             box-sizing: border-box;
         }
 
@@ -310,7 +389,7 @@
         .account-btn { background:#222; color:#fff; border:1px solid #333; padding:6px 8px; border-radius:6px; cursor:pointer; }
         .account-btn.master { background:#6a1b9a; border-color:#7b1fa2; }
         .account-btn.delete { background:#5a1313; border-color:#7a1a1a; }
-        .admin-accounts-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.82); z-index:100001; align-items:center; justify-content:center; padding:16px; }
+        .admin-accounts-modal.selection-mode { position:fixed; inset:0; background:rgba(0,0,0,0.82); z-index:100001; align-items:center; justify-content:center; padding:16px; }
         .admin-modal-box { width:min(1100px, 100%); max-height:90vh; overflow:auto; }
         .admin-modal-heading { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:16px; }
         .admin-modal-heading h3 { margin:0; color:#fff; font-size:22px; }
@@ -329,6 +408,15 @@
         .admin-empty { color:#999; padding:22px 10px; text-align:center; border:1px dashed #333; border-radius:8px; }
 
         @media (max-width: 720px) {
+            .navbar { flex-wrap:wrap; gap:8px; padding:8px 12px; }
+            .admin-nav-tabs { order:3; flex-basis:100%; overflow-x:auto; }
+            .admin-nav-tab { flex:1; padding:8px 7px; font-size:12px; }
+            .btn-iniciativa-geral { margin-left:auto; }
+            .dashboard-panel-heading { padding:18px 16px 0; }
+            .map-list, .admin-accounts-modal { padding-left:16px; padding-right:16px; }
+            #area-trabalho { padding:18px 16px; }
+            .map-association-form { grid-template-columns:1fr; }
+            .map-association-form button { grid-column:auto; }
             .admin-modal-layout { grid-template-columns:1fr; }
             .admin-list-toolbar { align-items:stretch; flex-direction:column; }
             .admin-search { width:100%; }
@@ -336,9 +424,6 @@
             .account-row .account-right { width:100%; flex-wrap:wrap; }
             .account-btn { flex:1; min-width:92px; }
         }
-
-        .floating-admin-btn { position:fixed; left:18px; bottom:18px; z-index:99999; padding:12px 14px; background:#9c27b0; color:#fff; border:none; border-radius:10px; box-shadow:0 8px 30px rgba(156,39,176,0.18); font-weight:700; cursor:pointer; }
-        .floating-admin-btn:hover { transform:translateY(-3px); }
 
         /* TOAST */
         .custom-toast {
@@ -367,21 +452,63 @@
 
     <header>
         <nav class="navbar">
-            <div style="display:flex; align-items:center; gap:12px;">
-                <img src="img/imagem-no-site/logo.png" alt="Voltar para login" class="logo-icon" title="Voltar para login" onclick="returnToLogin()" />
-                <div class="nav-links">
-                    <a href="#" onclick="mostrarAviso('Você já está no painel.')">Personagem</a>
-                    <a href="#" class="active">Painel do Mestre</a>
-                </div>
+            <img src="img/imagem-no-site/logo.png" alt="Herdeiros do Caos" class="logo-icon" />
+            <div class="admin-nav-tabs" role="tablist" aria-label="Painéis do mestre">
+                <button class="admin-nav-tab active" role="tab" aria-selected="true" aria-controls="painel-fichas" onclick="setPainelMestre('fichas')">Painel de Fichas</button>
+                <button class="admin-nav-tab" role="tab" aria-selected="false" aria-controls="painel-mapas" onclick="setPainelMestre('mapas')">Painel de Mapas</button>
+                <button class="admin-nav-tab" role="tab" aria-selected="false" aria-controls="painel-contas" onclick="openAdminAccounts()">Painel de Contas</button>
             </div>
-            <img src="img/imagem-no-site/perfil.png" alt="perfil" class="perfil-img" />
             <button class="btn-modal btn-confirmar btn-iniciativa-geral" onclick="abrirModalIniciativaGeral()">Iniciativa geral</button>
+            <button class="admin-logout" onclick="returnToLogin()">Sair</button>
         </nav>
     </header>
 
-    <div id="area-trabalho">
-        <p style="color:#666; margin:auto;">Carregando sistema...</p>
-    </div>
+    <main class="dashboard-panels">
+        <section id="painel-fichas" class="dashboard-panel active" role="tabpanel">
+            <div id="area-trabalho">
+                <p style="color:#666; margin:auto;">Carregando sistema...</p>
+            </div>
+            <button class="btn-nova-pasta" onclick="abrirModalNovaPasta()" title="Criar Nova Pasta">+</button>
+        </section>
+
+        <section id="painel-mapas" class="dashboard-panel" role="tabpanel">
+            <div class="dashboard-panel-heading">
+                <div>
+                    <h1>Painel de Mapas</h1>
+                    <p>Atualiza automaticamente a cada 10 segundos enquanto este painel estiver aberto.</p>
+                </div>
+                <button class="btn-modal btn-confirmar" onclick="carregarMapasPlanarAlly()">Atualizar mapas</button>
+            </div>
+            <div id="mapas-status" class="map-list">
+                <div class="map-empty">Abra este painel para carregar os grids disponíveis.</div>
+            </div>
+            <div id="mapas-lista" class="map-list" style="padding-top:0;"></div>
+        </section>
+
+        <section id="painel-contas" class="dashboard-panel" role="tabpanel">
+            <div id="admin-accounts-modal" class="admin-accounts-modal">
+                <div class="admin-modal-box">
+                    <div class="admin-modal-heading">
+                        <div><h3>Painel de Contas</h3><p class="admin-modal-subtitle">Veja as fichas vinculadas, crie contas e gerencie permissões.</p></div>
+                        <button onclick="closeAdminAccounts()" class="btn-cancelar">Voltar às fichas</button>
+                    </div>
+                    <div class="admin-modal-layout">
+                        <div class="admin-create-panel">
+                            <h4>Criar conta</h4>
+                            <input id="admin-create-username" placeholder="Usuário" class="modal-input">
+                            <input id="admin-create-password" type="password" placeholder="Senha" class="modal-input">
+                            <label style="display:flex; align-items:center; gap:8px; color:#ddd; font-size:13px;"><input id="admin-create-ismaster" type="checkbox"> Tornar Master</label>
+                            <div style="margin-top:12px;"><button onclick="createAdminLocal()" class="btn-confirmar">Criar conta</button></div>
+                        </div>
+                        <div class="admin-list-panel">
+                            <div class="admin-list-toolbar"><strong id="admin-accounts-header">Contas existentes</strong><input id="admin-accounts-search" class="modal-input admin-search" placeholder="Buscar conta..." aria-label="Buscar conta"></div>
+                            <div id="admin-accounts-list" style="display:flex; flex-direction:column; gap:8px; max-height:calc(100vh - 220px); overflow:auto; color:#ddd;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
     <!-- Edit Account Modal -->
     <div id="modal-edit-account" class="modal-overlay" style="display:none;">
         <div class="modal-box" style="border-color:#2196F3; width:560px;">
@@ -399,8 +526,6 @@
             </div>
         </div>
     </div>
-
-    <button class="btn-nova-pasta" onclick="abrirModalNovaPasta()" title="Criar Nova Pasta">+</button>
 
     <div id="modal-criar" class="modal-overlay">
         <div class="modal-box">
@@ -523,8 +648,8 @@
     </div>
 
     <script>
-        const API_URL = 'https://dandd-chan.onrender.com/api';
-        window.socket = io('https://dandd-chan.onrender.com');
+        const API_URL = window.APP_CONFIG.apiUrl;
+        window.socket = io(window.APP_CONFIG.serverUrl);
         let nomeDelecaoPendente = '';
         let nomeEdicaoPendente = '';
         let pastaIdDelecaoPendente = '';
@@ -720,7 +845,7 @@
             const val = parseInt(document.getElementById('manual-init-val').value) || 0;
             
             if (nome) {
-                if (!window.socket) window.socket = io('https://dandd-chan.onrender.com');
+                if (!window.socket) window.socket = io(window.APP_CONFIG.serverUrl);
 
                 window.socket.emit('add_to_tracker', {
                     id: Date.now(),
@@ -737,6 +862,442 @@
         // DADOS GLOBAIS E INICIALIZAÇÃO
         let layoutAtual = { folders: [], uncategorized: [] };
         let todosPersonagens = [];
+        let mapasPlanarAlly = [];
+        let contasPlanarAlly = [];
+        let associacoesPlanarAlly = [];
+        let snapshotMapasPlanarAlly = null;
+        let carregamentoMapasEmAndamento = null;
+
+        function setPainelMestre(painel) {
+            document.querySelectorAll('.dashboard-panel').forEach(section => {
+                section.classList.toggle('active', section.id === `painel-${painel}`);
+            });
+            document.querySelectorAll('.admin-nav-tab').forEach(button => {
+                const active = button.getAttribute('aria-controls') === `painel-${painel}`;
+                button.classList.toggle('active', active);
+                button.setAttribute('aria-selected', String(active));
+            });
+            if (painel === 'mapas') carregarMapasPlanarAlly();
+        }
+
+        function mapaTemEdicaoAberta() {
+            return Boolean(document.querySelector('#mapas-lista .map-access-details:not([hidden])'));
+        }
+
+        async function carregarMapasPlanarAlly(silenciosa = false, forcar = false) {
+            if (carregamentoMapasEmAndamento) {
+                await carregamentoMapasEmAndamento;
+                if (forcar) return carregarMapasPlanarAlly(silenciosa, forcar);
+                return;
+            }
+            if (mapaTemEdicaoAberta() && !forcar) {
+                if (!silenciosa) mostrarAviso('Feche ou salve a edição da ficha antes de atualizar os mapas.');
+                return;
+            }
+
+            const status = document.getElementById('mapas-status');
+            const list = document.getElementById('mapas-lista');
+            if (!silenciosa && snapshotMapasPlanarAlly === null) {
+                status.innerHTML = '<div class="map-empty">Carregando grids...</div>';
+                list.innerHTML = '';
+            } else if (!silenciosa) {
+                status.textContent = 'Atualizando grids...';
+            }
+            const request = (async () => {
+                try {
+                    const res = await fetchComAuth(`${API_URL}/mapas`, { cache: 'no-store' });
+                    if (!res.ok) {
+                        const error = await res.json().catch(() => ({}));
+                        const message = error.error || 'Não foi possível carregar os grids.';
+                        status.textContent = silenciosa
+                            ? `${message} Tentando novamente.`
+                            : message;
+                        if (snapshotMapasPlanarAlly === null) {
+                            const empty = document.createElement('div');
+                            empty.className = 'map-empty';
+                            empty.textContent = message;
+                            list.replaceChildren(empty);
+                        }
+                        return;
+                    }
+                    const data = await res.json();
+                    const mapas = Array.isArray(data.mapas) ? data.mapas : [];
+                    const contas = Array.isArray(data.contas) ? data.contas : [];
+                    const associacoes = Array.isArray(data.associacoes) ? data.associacoes : [];
+                    const snapshot = JSON.stringify([mapas, contas, associacoes]);
+                    const needsRender = snapshot !== snapshotMapasPlanarAlly || list.childElementCount === 0;
+                    if (needsRender) {
+                        if (mapaTemEdicaoAberta() && !forcar) {
+                            status.textContent = 'Há mudanças nos grids; feche a edição para aplicá-las sem perder o que digitou.';
+                            return;
+                        }
+                        mapasPlanarAlly = mapas;
+                        contasPlanarAlly = contas;
+                        associacoesPlanarAlly = associacoes;
+                        snapshotMapasPlanarAlly = snapshot;
+                        renderizarMapasPlanarAlly();
+                    }
+                    const updatedAt = new Date().toLocaleTimeString('pt-BR', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    });
+                    status.innerHTML = `<div style="color:#aaa; font-size:13px;">${mapasPlanarAlly.length} grid(s) encontrado(s) · atualizado às ${updatedAt}.</div>`;
+                } catch (error) {
+                    if (error && error.message === 'AUTH_EXPIRED') return;
+                    const message = 'Erro de conexão ao buscar grids do PlanarAlly.';
+                    status.textContent = silenciosa
+                        ? `${message} Tentando novamente.`
+                        : message;
+                    if (snapshotMapasPlanarAlly === null) {
+                        const empty = document.createElement('div');
+                        empty.className = 'map-empty';
+                        empty.textContent = message;
+                        list.replaceChildren(empty);
+                    }
+                }
+            })();
+            carregamentoMapasEmAndamento = request;
+            try {
+                await request;
+            } finally {
+                if (carregamentoMapasEmAndamento === request) carregamentoMapasEmAndamento = null;
+            }
+        }
+
+        function sincronizarMapasQuandoVisiveis() {
+            const painelMapas = document.getElementById('painel-mapas');
+            if (document.visibilityState === 'visible' && painelMapas && painelMapas.classList.contains('active')) {
+                carregarMapasPlanarAlly(true);
+            }
+        }
+
+        setInterval(sincronizarMapasQuandoVisiveis, 10000);
+        window.addEventListener('focus', sincronizarMapasQuandoVisiveis);
+        document.addEventListener('visibilitychange', sincronizarMapasQuandoVisiveis);
+
+        function criarOpcaoSelect(select, value, label) {
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = label;
+            select.appendChild(option);
+        }
+
+        function renderizarMapasPlanarAlly() {
+            const list = document.getElementById('mapas-lista');
+            list.innerHTML = '';
+            if (!mapasPlanarAlly.length) {
+                list.innerHTML = '<div class="map-empty">Nenhum grid disponível no PlanarAlly.</div>';
+                return;
+            }
+
+            mapasPlanarAlly.forEach(mapa => {
+                const card = document.createElement('article');
+                card.className = 'map-card';
+                const heading = document.createElement('div');
+                heading.className = 'map-card-heading';
+                const title = document.createElement('div');
+                const name = document.createElement('h2');
+                name.textContent = mapa.room_name || 'Mapa sem nome';
+                const creator = document.createElement('p');
+                creator.textContent = `Criado por ${mapa.creator || 'desconhecido'}`;
+                title.append(name, creator);
+                heading.appendChild(title);
+                if (mapa.redirect_path) {
+                    const openButton = document.createElement('button');
+                    openButton.className = 'account-btn';
+                    openButton.textContent = 'Abrir grid';
+                    openButton.onclick = () => abrirMapaPlanarAlly(mapa.redirect_path);
+                    heading.appendChild(openButton);
+                }
+                card.appendChild(heading);
+
+                const locations = Array.isArray(mapa.locations) ? mapa.locations : [];
+                if (!locations.length) {
+                    const empty = document.createElement('div');
+                    empty.className = 'map-location';
+                    empty.textContent = 'Este mapa ainda não tem grids/localizações.';
+                    card.appendChild(empty);
+                }
+                locations.forEach(location => card.appendChild(criarLocalizacaoMapa(mapa, location)));
+                list.appendChild(card);
+            });
+        }
+
+        function criarLocalizacaoMapa(mapa, location) {
+            const section = document.createElement('section');
+            section.className = 'map-location';
+            const title = document.createElement('div');
+            title.className = 'map-location-title';
+            const locationName = document.createElement('span');
+            locationName.textContent = location.name || `Localização ${location.id}`;
+            const tokenList = Array.isArray(location.tokens) ? location.tokens : [];
+            const tokenCount = document.createElement('span');
+            tokenCount.style.color = '#999';
+            tokenCount.textContent = `${tokenList.length} token(s)`;
+            title.append(locationName, tokenCount);
+            section.appendChild(title);
+
+            const tokens = document.createElement('div');
+            tokens.className = 'map-token-list';
+            if (tokenList.length) {
+                tokenList.forEach(token => {
+                    const chip = document.createElement('span');
+                    chip.className = 'map-token';
+                    chip.textContent = token.name || token.uuid || 'Token sem nome';
+                    tokens.appendChild(chip);
+                });
+            } else {
+                const empty = document.createElement('span');
+                empty.className = 'map-token';
+                empty.textContent = 'Nenhum token nesta localização';
+                tokens.appendChild(empty);
+            }
+            section.appendChild(tokens);
+
+            const associations = associacoesPlanarAlly.filter(link =>
+                link.creator === mapa.creator
+                && link.room_name === mapa.room_name
+                && String(link.location_id) === String(location.id)
+            );
+            const fichaList = document.createElement('div');
+            fichaList.className = 'map-ficha-list';
+            const contasComFichas = contasPlanarAlly.filter(account =>
+                Array.isArray(account.characters) && account.characters.length
+            );
+            if (!contasComFichas.length) {
+                const empty = document.createElement('p');
+                empty.className = 'map-access-note';
+                empty.textContent = 'Nenhuma ficha vinculada a uma conta do Site-D-D.';
+                fichaList.appendChild(empty);
+            }
+
+            contasComFichas.forEach(account => {
+                account.characters.forEach(fichaNome => {
+                    const link = associations.find(item => item.ficha === fichaNome);
+                    const linkTokenExists = Boolean(link && tokenList.some(token =>
+                        token && typeof token.name === 'string' && token.name.trim() === link.personagem
+                    ));
+                    const item = document.createElement('div');
+                    item.className = 'map-ficha-item';
+
+                    const selector = document.createElement('label');
+                    selector.className = 'map-ficha-selector';
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = linkTokenExists;
+                    checkbox.setAttribute('aria-label', linkTokenExists
+                        ? `Revogar acesso de ${fichaNome} nesta localização`
+                        : `Configurar acesso de ${fichaNome} nesta localização`);
+
+                    const selectorCopy = document.createElement('span');
+                    selectorCopy.className = 'map-ficha-selector-copy';
+                    const fichaLabel = document.createElement('span');
+                    fichaLabel.className = 'map-ficha-name';
+                    fichaLabel.textContent = fichaNome;
+                    const accountLabel = document.createElement('span');
+                    accountLabel.className = 'map-ficha-meta';
+                    accountLabel.textContent = `Conta no Site-D-D: ${account.username}`;
+                    selectorCopy.append(fichaLabel, accountLabel);
+
+                    const accessStatus = document.createElement('span');
+                    accessStatus.className = `map-access-status${linkTokenExists ? ' is-linked' : link ? ' is-missing' : ''}`;
+                    accessStatus.textContent = linkTokenExists ? 'Acesso vinculado' : link ? 'Token removido do grid' : 'Sem vínculo';
+                    selector.append(checkbox, selectorCopy, accessStatus);
+
+                    const details = document.createElement('div');
+                    details.className = 'map-access-details';
+                    details.hidden = true;
+                    checkbox.addEventListener('change', async () => {
+                        if (linkTokenExists && !checkbox.checked) {
+                            checkbox.checked = true;
+                            checkbox.disabled = true;
+                            try {
+                                await revogarVinculoMapa(fichaNome, account.username, link, locationName.textContent);
+                            } finally {
+                                if (checkbox.isConnected) checkbox.disabled = false;
+                            }
+                            return;
+                        }
+                        details.hidden = !checkbox.checked;
+                    });
+
+                    let editButton = null;
+                    if (link) {
+                        const collapsedEditLabel = linkTokenExists ? 'Editar dados' : 'Corrigir vínculo';
+                        editButton = document.createElement('button');
+                        editButton.type = 'button';
+                        editButton.className = 'map-edit-access';
+                        editButton.textContent = collapsedEditLabel;
+                        editButton.setAttribute('aria-expanded', 'false');
+                        editButton.addEventListener('click', () => {
+                            details.hidden = !details.hidden;
+                            editButton.textContent = details.hidden ? collapsedEditLabel : 'Recolher';
+                            editButton.setAttribute('aria-expanded', String(!details.hidden));
+                        });
+                        const summary = document.createElement('p');
+                        summary.className = 'map-access-summary';
+                        summary.textContent = linkTokenExists
+                            ? `Conta no PlanarAlly: ${link.username} · Token: ${link.personagem}`
+                            : `Vínculo salvo para ${link.username}, mas o token "${link.personagem}" não existe mais nesta localização.`;
+                        details.appendChild(summary);
+                        const note = document.createElement('p');
+                        note.className = 'map-access-note';
+                        note.textContent = !linkTokenExists
+                            ? 'Revogue este vínculo antigo ou selecione um token válido para vinculá-lo novamente.'
+                            : link.scope === 'location'
+                            ? 'Revogar remove a permissão deste token nesta localização.'
+                            : 'Vínculo antigo: permissões de tokens com o mesmo nome em outras localizações da campanha também podem ser removidas.';
+                        details.appendChild(note);
+                    } else {
+                        const note = document.createElement('p');
+                        note.className = 'map-access-note';
+                        note.textContent = 'Ao salvar, a ficha e a conta do PlanarAlly receberão acesso a esta localização.';
+                        details.appendChild(note);
+                    }
+
+                    const form = document.createElement('div');
+                    form.className = 'map-association-form';
+                    const playerInput = document.createElement('input');
+                    playerInput.type = 'text';
+                    playerInput.placeholder = 'Usuário no PlanarAlly';
+                    playerInput.value = link ? link.username : '';
+                    const playerLabel = document.createElement('label');
+                    playerLabel.textContent = 'Conta no PlanarAlly';
+                    playerLabel.appendChild(playerInput);
+
+                    const tokenSelect = document.createElement('select');
+                    criarOpcaoSelect(tokenSelect, '', 'Selecione um token');
+                    const availableTokenNames = tokenList
+                        .map(token => token && typeof token.name === 'string' ? token.name.trim() : '')
+                        .filter((name, index, names) => name && names.indexOf(name) === index);
+                    availableTokenNames.forEach(tokenName => criarOpcaoSelect(tokenSelect, tokenName, tokenName));
+                    if (linkTokenExists) tokenSelect.value = link.personagem;
+                    const tokenLabel = document.createElement('label');
+                    tokenLabel.textContent = 'Token desta localização';
+                    tokenLabel.appendChild(tokenSelect);
+
+                    const submit = document.createElement('button');
+                    submit.type = 'button';
+                    submit.textContent = link ? 'Salvar alterações' : 'Vincular ficha a este grid';
+                    submit.disabled = !availableTokenNames.length;
+                    submit.onclick = async () => {
+                        if (!playerInput.value.trim() || !tokenSelect.value) {
+                            mostrarAviso('Informe a conta no PlanarAlly e selecione um token desta localização.');
+                            return;
+                        }
+                        submit.disabled = true;
+                        try {
+                            const response = await fetchComAuth(`${API_URL}/mapas/associar`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    ficha: fichaNome,
+                                    accountUsername: account.username,
+                                    username: playerInput.value.trim(),
+                                    personagem: tokenSelect.value,
+                                    creator: mapa.creator,
+                                    room_name: mapa.room_name,
+                                    location_id: location.id
+                                })
+                            });
+                            const result = await response.json().catch(() => ({}));
+                            if (!response.ok) {
+                                mostrarAviso(result.error || 'Não foi possível vincular o personagem ao grid.');
+                                return;
+                            }
+                            mostrarAviso(`Ficha ${result.ficha} vinculada; ${result.tokens_vinculados || 0} token(s) atualizado(s).`);
+                            await carregarMapasPlanarAlly(false, true);
+                        } catch (error) {
+                            if (error && error.message === 'AUTH_EXPIRED') return;
+                            mostrarAviso('Erro de conexão ao vincular personagem ao grid.');
+                        } finally {
+                            submit.disabled = false;
+                        }
+                    };
+                    form.append(playerLabel, tokenLabel, submit);
+                    details.appendChild(form);
+                    if (link) {
+                        const revokeButton = document.createElement('button');
+                        revokeButton.type = 'button';
+                        revokeButton.className = 'map-revoke-access';
+                        revokeButton.textContent = linkTokenExists ? 'Revogar acesso' : 'Remover vínculo';
+                        revokeButton.onclick = async () => {
+                            revokeButton.disabled = true;
+                            try {
+                                await revogarVinculoMapa(fichaNome, account.username, link, locationName.textContent);
+                            } finally {
+                                revokeButton.disabled = false;
+                            }
+                        };
+                        details.appendChild(revokeButton);
+                    }
+                    item.append(selector);
+                    if (editButton) item.appendChild(editButton);
+                    item.appendChild(details);
+                    fichaList.appendChild(item);
+                });
+            });
+            section.appendChild(fichaList);
+            return section;
+        }
+
+        async function revogarVinculoMapa(ficha, accountUsername, link, locationName) {
+            const legacyWarning = link.scope === 'location'
+                ? ''
+                : '\n\nEste vínculo antigo pode remover também permissões de cópias do token em outras localizações da campanha.';
+            const confirmed = window.confirm(
+                `Revogar o acesso de ${link.username} ao token "${link.personagem}" da ficha "${ficha}" em "${locationName}"?\n\nA permissão do token será removida no PlanarAlly e o vínculo será apagado do painel.${legacyWarning}`
+            );
+            if (!confirmed) return false;
+
+            try {
+                const response = await fetchComAuth(`${API_URL}/mapas/revogar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ficha,
+                        accountUsername,
+                        username: link.username,
+                        personagem: link.personagem,
+                        creator: link.creator,
+                        room_name: link.room_name,
+                        location_id: link.location_id
+                    })
+                });
+                const result = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    mostrarAviso(result.error || 'Não foi possível revogar o acesso ao token.');
+                    return false;
+                }
+                mostrarAviso(`Acesso da ficha ${result.ficha} revogado; ${result.tokens_revogados || 0} token(s) atualizado(s).`);
+                await carregarMapasPlanarAlly(false, true);
+                return true;
+            } catch (error) {
+                if (error && error.message === 'AUTH_EXPIRED') return false;
+                mostrarAviso('Erro de conexão ao revogar o acesso no PlanarAlly.');
+                return false;
+            }
+        }
+
+        async function abrirMapaPlanarAlly(redirectPath) {
+            const mapWindow = window.open('', '_blank');
+            try {
+                const res = await fetchComAuth(`${API_URL}/mapa-sso?redirect=${encodeURIComponent(redirectPath)}`);
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok || !data.url) {
+                    if (mapWindow) mapWindow.close();
+                    mostrarAviso(data.error || 'Não foi possível abrir o mapa.');
+                    return;
+                }
+                if (mapWindow) mapWindow.location = data.url;
+                else window.location.href = data.url;
+            } catch (error) {
+                if (mapWindow) mapWindow.close();
+                if (error && error.message === 'AUTH_EXPIRED') return;
+                mostrarAviso('Erro de conexão ao abrir o mapa.');
+            }
+        }
 
         const PERICIAS_PADRAO = {
             "Atletismo": { "atributo": "FOR", "treinado": false, "outros": 0 },
@@ -938,7 +1499,7 @@
             btnClear.title = "Limpar Iniciativa de Todos";
             btnClear.style.cssText = "width: 30px; background: #3a1a1a; border: 1px solid #b71c1c; color: #ff9999; padding: 4px; font-size: 10px; cursor: pointer; border-radius: 4px;";
             btnClear.onclick = () => {
-                if (!window.socket) window.socket = io('https://dandd-chan.onrender.com');
+                if (!window.socket) window.socket = io(window.APP_CONFIG.serverUrl);
                 window.socket.emit('update_tracker', []);
             };
 
@@ -1253,10 +1814,10 @@
             }
         }
 
-        function abrirCriarContaFromFicha() {
+        async function abrirCriarContaFromFicha() {
             document.getElementById('modal-editar').style.display = 'none';
             accountSelectionCallback = null;
-            document.getElementById('admin-accounts-modal').style.display = 'flex';
+            await openAdminAccounts();
             setTimeout(()=>{ document.getElementById('admin-create-username').focus(); },120);
         }
 
@@ -1282,7 +1843,9 @@
         }
 
         function abrirFichaDoJogador(nome) {
-            window.open(`index.html?masterView=${nome}`, '_blank');
+            const url = new URL('index.html', window.location.href);
+            url.hash = new URLSearchParams({ masterView: nome }).toString();
+            window.open(url, '_blank');
         }
 
         function returnToLogin() {
@@ -1308,13 +1871,33 @@
         }
 
         function closeAdminAccounts() {
-            document.getElementById('admin-accounts-modal').style.display = 'none';
-            accountSelectionCallback = null;
+            const panel = document.getElementById('admin-accounts-modal');
+            if (accountSelectionCallback) {
+                panel.classList.remove('selection-mode');
+                panel.style.display = 'block';
+                accountSelectionCallback = null;
+                const previousPanel = (panel.dataset.previousPanel || 'painel-fichas').replace('painel-', '');
+                setPainelMestre(previousPanel);
+                return;
+            }
+            setPainelMestre('fichas');
         }
 
         async function openAdminAccounts() {
             const token = localStorage.getItem('authToken');
-            document.getElementById('admin-accounts-modal').style.display = 'flex';
+            const panel = document.getElementById('admin-accounts-modal');
+            const selectionMode = Boolean(accountSelectionCallback);
+            if (selectionMode) {
+                const activePanel = document.querySelector('.dashboard-panel.active');
+                panel.dataset.previousPanel = activePanel ? activePanel.id : 'painel-fichas';
+                setPainelMestre('contas');
+                panel.classList.add('selection-mode');
+                panel.style.display = 'flex';
+            } else {
+                panel.classList.remove('selection-mode');
+                panel.style.display = 'block';
+                setPainelMestre('contas');
+            }
             const header = document.getElementById('admin-accounts-header');
             if (accountSelectionCallback) {
                 header.innerText = 'Vincular existente: selecione a conta desejada';
@@ -1361,13 +1944,34 @@
                     const row = document.createElement('div');
                     row.className = 'account-row';
                     const left = document.createElement('div'); left.className = 'account-left';
-                    const characters = (acc.characters || []).slice(0, 8);
-                    left.innerHTML = `<div class="username">${acc.username}</div><div class="account-meta">${characters.length ? characters.join(', ') : 'Nenhuma ficha vinculada'}</div>`;
+                    const username = document.createElement('div');
+                    username.className = 'username';
+                    username.textContent = acc.username;
+                    if (acc.isMaster) {
+                        const badge = document.createElement('span');
+                        badge.className = 'admin-account-badge';
+                        badge.textContent = 'MESTRE';
+                        username.appendChild(badge);
+                    }
+                    const characters = Array.isArray(acc.characters) ? acc.characters : [];
+                    const meta = document.createElement('div');
+                    meta.className = 'account-meta';
+                    meta.textContent = characters.length ? `${characters.length} ficha(s): ${characters.join(', ')}` : 'Nenhuma ficha vinculada';
+                    left.append(username, meta);
                     const right = document.createElement('div'); right.className = 'account-right';
 
                     if (accountSelectionCallback) {
                         const selectBtn = document.createElement('button'); selectBtn.className = 'account-btn'; selectBtn.textContent = 'Selecionar';
-                        selectBtn.onclick = () => { accountSelectionCallback(acc.username); accountSelectionCallback = null; document.getElementById('admin-accounts-modal').style.display='none'; };
+                        selectBtn.onclick = () => {
+                            const callback = accountSelectionCallback;
+                            accountSelectionCallback = null;
+                            const selectionPanel = document.getElementById('admin-accounts-modal');
+                            selectionPanel.classList.remove('selection-mode');
+                            selectionPanel.style.display = 'block';
+                            const previousPanel = (selectionPanel.dataset.previousPanel || 'painel-fichas').replace('painel-', '');
+                            setPainelMestre(previousPanel);
+                            callback(acc.username);
+                        };
                         right.appendChild(selectBtn);
                     } else {
                         const editBtn = document.createElement('button'); editBtn.className = 'account-btn'; editBtn.textContent = 'Editar'; editBtn.onclick = () => abrirModalEditarConta(acc.username);
@@ -1396,7 +2000,7 @@
                 const search = document.getElementById('admin-accounts-search');
                 search.value = '';
                 search.oninput = () => renderAccounts(search.value);
-                document.getElementById('admin-accounts-modal').style.display = 'flex';
+                panel.style.display = selectionMode ? 'flex' : 'block';
             } catch (e) { mostrarAviso('Erro de conexão.'); }
         }
         
@@ -1497,30 +2101,6 @@
 
             async function loadAccountsRefresh() { try { await openAdminAccounts(); } catch(e){} }
     </script>
-    <!-- Admin Accounts Modal -->
-    <div id="admin-accounts-modal" class="admin-accounts-modal">
-        <div class="admin-modal-box">
-            <div class="admin-modal-heading">
-                <div><h3>Gerenciar Contas</h3><p class="admin-modal-subtitle">Crie, edite permissões e remova acessos.</p></div>
-                <button onclick="closeAdminAccounts()" class="btn-cancelar">Fechar</button>
-            </div>
-            <div class="admin-modal-layout">
-                <div class="admin-create-panel">
-                    <h4>Criar conta</h4>
-                    <input id="admin-create-username" placeholder="Usuário" class="modal-input">
-                    <input id="admin-create-password" type="password" placeholder="Senha" class="modal-input">
-                    <label style="display:flex; align-items:center; gap:8px; color:#ddd; font-size:13px;"><input id="admin-create-ismaster" type="checkbox"> Tornar Master</label>
-                    <div style="margin-top:12px;"><button onclick="createAdminLocal()" class="btn-confirmar">Criar conta</button></div>
-                </div>
-                <div class="admin-list-panel">
-                    <div class="admin-list-toolbar"><strong id="admin-accounts-header">Contas existentes</strong><input id="admin-accounts-search" class="modal-input admin-search" placeholder="Buscar conta..." aria-label="Buscar conta"></div>
-                    <div id="admin-accounts-list" style="display:flex; flex-direction:column; gap:8px; max-height:520px; overflow:auto; color:#ddd;"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <button id="btn-open-admin-accounts" onclick="openAdminAccounts()" class="floating-admin-btn">Contas</button>
 </body>
 
 </html>

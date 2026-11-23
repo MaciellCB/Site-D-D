@@ -5,6 +5,7 @@
     <title>Atlas de Herdeiros do Caos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="dark">
+    <script src="config.js"></script>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
@@ -364,7 +365,7 @@
     
     <script>
         // ================= CONFIGURAÇÕES E ESTADO =================
-        const API_URL = 'https://dandd-chan.onrender.com/api';
+        const API_URL = window.APP_CONFIG.apiUrl;
         const IMG_DEFAULT_ICON = 'https://cdn-icons-png.flaticon.com/512/684/684908.png';
         const MAP_BOUNDS = [[0,0], [1080,1920]]; 
         const MAP_MIN_ZOOM = -3;
@@ -1516,7 +1517,7 @@
                 const token = localStorage.getItem('authToken');
                 if (token) {
                     const collapsed = sb.classList.contains('collapsed');
-                    fetch('https://dandd-chan.onrender.com/api/accounts/preferences', { method: 'PUT', headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token }, body: JSON.stringify({ preferences: { sidebarCollapsed: collapsed } }) });
+                    fetch(`${window.APP_CONFIG.apiUrl}/accounts/preferences`, { method: 'PUT', headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token }, body: JSON.stringify({ preferences: { sidebarCollapsed: collapsed } }) });
                 }
             } catch(e) {}
         }
@@ -1544,7 +1545,7 @@
                 const token = localStorage.getItem('authToken');
                 if (!token) return;
                 const prefs = { mapStyle: e.target.value };
-                fetch('https://dandd-chan.onrender.com/api/accounts/preferences', { method: 'PUT', headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token }, body: JSON.stringify({ preferences: prefs }) });
+                fetch(`${window.APP_CONFIG.apiUrl}/accounts/preferences`, { method: 'PUT', headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token }, body: JSON.stringify({ preferences: prefs }) });
             });
         }
 
@@ -1553,7 +1554,7 @@
             try {
                 const token = localStorage.getItem('authToken');
                 if (!token) return;
-                const res = await fetch('https://dandd-chan.onrender.com/api/accounts/me', { headers: { 'Authorization': 'Bearer ' + token } });
+                const res = await fetch(`${window.APP_CONFIG.apiUrl}/accounts/me`, { headers: { 'Authorization': 'Bearer ' + token } });
                 if (!res.ok) return;
                 const acc = await res.json();
                 const prefs = acc.preferences || {};

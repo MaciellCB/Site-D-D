@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Iniciativa - Web View</title>
+    <script src="config.js"></script>
     <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;900&display=swap" rel="stylesheet">
     <style>
@@ -115,7 +116,7 @@
     </div>
 
     <script>
-        const socket = io('https://dandd-chan.onrender.com');
+        const socket = io(window.APP_CONFIG.serverUrl);
         const params = new URLSearchParams(window.location.search);
         
         const normalizarNome = (valor = "") => String(valor)
@@ -138,7 +139,7 @@
         async function init() {
             try {
                 if (gruposSelecionados.length > 0) {
-                    const res = await fetch('https://dandd-chan.onrender.com/api/layout');
+                    const res = await fetch(`${window.APP_CONFIG.apiUrl}/layout`);
                     if (res.ok) {
                         const layout = await res.json();
                         const grupos = [

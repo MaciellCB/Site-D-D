@@ -2,7 +2,7 @@
    JS/DireitaJS.js - INTEGRAÇÃO E LÓGICA PRINCIPAL
 ============================================================= */
 window.invSaveTimer = null;
-const API_URL = 'https://dandd-chan.onrender.com/api';
+const API_URL = window.APP_CONFIG.apiUrl;
 function normalizarTipoDano(tipo) {
   return String(tipo || '').split('/').map(parte => {
     const nome = parte.trim();

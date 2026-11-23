@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="CSS/meioCS.css">
   <link rel="stylesheet" href="CSS/headerCS.css">
 
+  <script src="config.js"></script>
   <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
 
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
@@ -313,6 +314,7 @@
     <button onclick="abrirPortraitOBS()">🔗 Abrir OBS</button>
     <div style="height: 1px; background: #333; margin: 4px 0;"></div>
     <button onclick="window.open('mapa.html', '_blank')">🗺️ Abrir Mapa Mundi</button>
+    <button onclick="abrirTabuleiroVTT()">🎲 Abrir Tabuleiro VTT</button>
     <button onclick="toggleTracker()">⚔️ Iniciativas</button>
     
     <button onclick="abrirHistoricoDados()">🎲 Histórico de Dados</button>
@@ -795,7 +797,7 @@
     /* =================================================================
        LÓGICA DO SOCKET.IO (SINCRONIZAÇÃO EM TEMPO REAL)
        ================================================================= */
-    window.socket = io('https://dandd-chan.onrender.com');
+    window.socket = io(window.APP_CONFIG.serverUrl);
     const socket = window.socket;
 
     socket.on('connect', () => {
@@ -891,10 +893,11 @@
       const overlay = document.getElementById('login-overlay');
       if (overlay) overlay.style.display = 'none';
 
-      const API_BASE = 'https://dandd-chan.onrender.com/api';
+      const API_BASE = window.APP_CONFIG.apiUrl;
       const token = localStorage.getItem('authToken');
       const url = new URL(window.location.href);
-      const masterView = url.searchParams.get('masterView');
+      const masterView = url.searchParams.get('masterView')
+        || new URLSearchParams(url.hash.slice(1)).get('masterView');
 
       if (token && masterView) {
         try {
@@ -902,33 +905,40 @@
           const me = meRes.ok ? await meRes.json() : null;
           if (!me || !me.isMaster) {
             url.searchParams.delete('masterView');
+            url.hash = '';
             window.history.replaceState({}, '', url);
           } else {
-          const res = await fetchWithAuth(`${API_BASE}/load-ficha-mestre`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nome: masterView })
-          });
-          if (res.ok) {
-            const data = await res.json();
-            if (typeof state !== 'undefined') {
-              Object.assign(state, data);
-              document.getElementById('login-overlay').style.display = 'none';
-              const mainSheet = document.querySelector('main');
-              if (mainSheet) mainSheet.style.display = 'flex';
-              if (typeof setActiveTab === 'function') setActiveTab(state.activeTab || 'Combate');
-              if (typeof preencherFichaNaTela === 'function') preencherFichaNaTela(data);
-              if (typeof atualizarHeader === 'function') atualizarHeader();
-              if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
-              if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
-              window.dispatchEvent(new CustomEvent('sheet-updated'));
-              return;
+            const res = await fetchWithAuth(`${API_BASE}/load-ficha-mestre`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ nome: masterView })
+            });
+            if (!res.ok) {
+              const error = await res.json().catch(() => ({}));
+              throw new Error(error.error || `HTTP ${res.status}`);
             }
-          }
+
+            const data = await res.json();
+            Object.assign(state, data);
+            if (overlay) overlay.style.display = 'none';
+            const mainSheet = document.querySelector('main');
+            if (mainSheet) mainSheet.style.display = 'flex';
+            if (typeof setActiveTab === 'function') setActiveTab(state.activeTab || 'Combate');
+            if (typeof preencherFichaNaTela === 'function') preencherFichaNaTela(data);
+            if (typeof atualizarHeader === 'function') atualizarHeader();
+            if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
+            if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
+            window.dispatchEvent(new CustomEvent('sheet-updated'));
+            url.searchParams.delete('masterView');
+            url.hash = '';
+            window.history.replaceState({}, '', url);
+            return;
           }
         } catch (e) {
           if (e && e.message === 'AUTH_EXPIRED') return;
-          console.warn('Master view failed', e);
+          console.error('Master view failed', e);
+          exibirAvisoTemporario('Erro ao carregar a ficha do mestre.');
+          return;
         }
       }
 
@@ -962,7 +972,7 @@
 
     async function carregarFichaMestre(nome) {
       try {
-        const res = await fetch('https://dandd-chan.onrender.com/api/load-ficha-mestre', {
+        const res = await fetch(`${window.APP_CONFIG.apiUrl}/load-ficha-mestre`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ nome: nome })
@@ -1127,7 +1137,7 @@
     async function tentarLogin() {
       const nome = document.getElementById('login-nome').value;
       const senha = document.getElementById('login-senha').value;
-      const API_BASE = 'https://dandd-chan.onrender.com/api';
+      const API_BASE = window.APP_CONFIG.apiUrl;
 
       if (!nome || !senha) { exibirAvisoTemporario('Preencha todos os campos!'); return; }
       const masterWindow = window.open('', '_blank');
@@ -1192,7 +1202,7 @@
       if (!usrEl || !pwdEl) { exibirAvisoTemporario('Registro desativado aqui. Use Gerenciar Contas.'); return; }
       const username = usrEl.value;
       const password = pwdEl.value;
-      const API_BASE = 'https://dandd-chan.onrender.com/api';
+      const API_BASE = window.APP_CONFIG.apiUrl;
       if (!username || !password) { exibirAvisoTemporario('Preencha usuário e senha.'); return; }
       try {
         const res = await fetch(`${API_BASE}/accounts/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
@@ -1300,7 +1310,7 @@
     async function savePreferences(obj) {
       const token = localStorage.getItem('authToken');
       if (!token || !window.currentAccount) return;
-      const API_BASE = 'https://dandd-chan.onrender.com/api';
+      const API_BASE = window.APP_CONFIG.apiUrl;
       const merged = Object.assign({}, window.currentAccount.preferences || {}, obj || {});
       try {
         const res = await fetchWithAuth(`${API_BASE}/accounts/preferences`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ preferences: merged }) });
@@ -1366,7 +1376,7 @@
     };
 
     async function criarPersonagem(nome) {
-      const API_BASE = 'https://dandd-chan.onrender.com/api';
+      const API_BASE = window.APP_CONFIG.apiUrl;
       const token = localStorage.getItem('authToken');
       if (!token || !window.currentAccount) { exibirAvisoTemporario('Conta não autenticada.'); return; }
       const payload = {
@@ -1394,7 +1404,7 @@
     }
 
     async function selectCharacter(nome) {
-      const API_BASE = 'https://dandd-chan.onrender.com/api';
+      const API_BASE = window.APP_CONFIG.apiUrl;
       const token = localStorage.getItem('authToken');
       if (!token) { exibirAvisoTemporario('Conta não autenticada.'); return; }
       try {
@@ -1423,48 +1433,7 @@
       }
     }
 
-    // Support masterView URL param when authToken is present
-    (function checkMasterView() {
-      const url = new URL(window.location.href);
-      const mv = url.searchParams.get('masterView');
-      const token = localStorage.getItem('authToken');
-      if (mv && token) {
-        // masterView must open a ficha directly using master token, not account ficha flow
-        (async () => {
-          try {
-            const res = await fetchWithAuth('https://dandd-chan.onrender.com/api/load-ficha-mestre', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ nome: mv })
-            });
-            if (res.ok) {
-              const data = await res.json();
-              if (typeof state !== 'undefined') {
-                Object.assign(state, data);
-                const mainSheet = document.querySelector('main');
-                if (mainSheet) mainSheet.style.display = 'flex';
-                document.getElementById('login-overlay').style.display = 'none';
-                if (typeof setActiveTab === 'function') setActiveTab(state.activeTab || 'Combate');
-                if (typeof preencherFichaNaTela === 'function') preencherFichaNaTela(data);
-                if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
-                window.dispatchEvent(new CustomEvent('sheet-updated'));
-                if (typeof atualizarHeader === 'function') atualizarHeader();
-                if (typeof inicializarDadosEsquerda === 'function') inicializarDadosEsquerda();
-                if (typeof atualizarTudoVisual === 'function') atualizarTudoVisual();
-                exibirAvisoTemporario('Mestre: ficha carregada: ' + mv);
-                return;
-              }
-            } else {
-              const err = await res.json().catch(() => ({}));
-              exibirAvisoTemporario('Erro ao carregar ficha do mestre: ' + (err.error || res.statusText));
-            }
-          } catch (e) {
-            if (e && e.message === 'AUTH_EXPIRED') return;
-            exibirAvisoTemporario('Erro de conexão ao carregar ficha do mestre.');
-          }
-        })();
-      }
-    })();
+
 
     function logoutAccount() {
       localStorage.removeItem('authToken');
@@ -1494,6 +1463,39 @@
       const url = new URL(window.location.href);
       url.searchParams.delete('masterView');
       window.history.replaceState({}, '', url);
+    }
+
+    async function abrirTabuleiroVTT(caminhoCampanha) {
+      const API_BASE = window.APP_CONFIG.apiUrl;
+      const vttWindow = window.open('', '_blank');
+      const redirectPath = caminhoCampanha
+        || (typeof state !== 'undefined' && state.planarAllyMap && state.planarAllyMap.redirect_path)
+        || '/';
+
+      try {
+        exibirAvisoTemporario('Conectando ao Tabuleiro VTT...');
+        const res = await fetchWithAuth(`${API_BASE}/mapa-sso?redirect=${encodeURIComponent(redirectPath)}`);
+        if (!res.ok) {
+          if (vttWindow) vttWindow.close();
+          exibirAvisoTemporario('Erro ao gerar acesso ao Tabuleiro VTT.');
+          return;
+        }
+
+        const data = await res.json();
+        if (data.url) {
+          if (vttWindow) {
+            vttWindow.location = data.url;
+          } else {
+            window.location.href = data.url;
+          }
+        } else {
+          if (vttWindow) vttWindow.close();
+        }
+      } catch (e) {
+        if (vttWindow) vttWindow.close();
+        if (e && e.message === 'AUTH_EXPIRED') return;
+        exibirAvisoTemporario('Erro de conexão com o servidor do VTT.');
+      }
     }
 
   /* =================================================================

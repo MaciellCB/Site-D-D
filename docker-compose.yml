@@ -1,0 +1,65 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: site-dd-mongo-local
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: dnd
+      MONGO_INITDB_ROOT_PASSWORD: dnd-local
+      MONGO_INITDB_DATABASE: dnd
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test:
+        - CMD
+        - mongosh
+        - --quiet
+        - --username
+        - dnd
+        - --password
+        - dnd-local
+        - --authenticationDatabase
+        - admin
+        - --eval
+        - "quit(db.adminCommand('ping').ok ? 0 : 1)"
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    container_name: site-dd-backend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      PORT: 3000
+      MONGO_URI: mongodb://dnd:dnd-local@mongo:27017/dnd?authSource=admin
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in the root .env file}
+      SSO_SECRET: ${SSO_SECRET:?Set SSO_SECRET in the root .env file}
+      PLANARALLY_URL: ${PLANARALLY_URL:-http://localhost:8000}
+      PLANARALLY_INTERNAL_URL: http://planarally:8000
+    depends_on:
+      mongo:
+        condition: service_healthy
+      planarally:
+        condition: service_started
+
+  planarally:
+    build:
+      context: ./vtt
+    container_name: site-dd-planarally
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      SSO_SECRET: ${SSO_SECRET:?Set SSO_SECRET in the root .env file}
+    volumes:
+      - ./vtt/server/data:/planarally/data
+      - ./vtt/server/static/assets:/planarally/static/assets
+
+volumes:
+  mongo_data:

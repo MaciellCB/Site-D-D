@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>OBS Portrait - HUD Pro</title>
+    <script src="config.js"></script>
     <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Roboto:wght@500;900&display=swap"
@@ -443,7 +444,7 @@
     </div>
 
     <script>
-        const socket = io('https://dandd-chan.onrender.com');
+        const socket = io(window.APP_CONFIG.serverUrl);
         const params = new URLSearchParams(window.location.search);
         const nomeOriginalURL = params.get('nome');
 
@@ -617,7 +618,7 @@
         async function carregarDados() {
             if (!nomeOriginalURL) return;
             try {
-                const res = await fetch('https://dandd-chan.onrender.com/api/load-ficha-mestre', {
+                const res = await fetch(`${window.APP_CONFIG.apiUrl}/load-ficha-mestre`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ nome: nomeOriginalURL })
                 });

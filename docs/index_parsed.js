@@ -55,7 +55,7 @@
     /* =================================================================
        LÓGICA DO SOCKET.IO (SINCRONIZAÇÃO EM TEMPO REAL)
        ================================================================= */
-    const socket = io('https://dandd-chan.onrender.com');
+    const socket = io(window.APP_CONFIG.serverUrl);
 
     socket.on('connect', () => {
       console.log("Conectado ao servidor de atualizações! ID:", socket.id);
@@ -148,7 +148,7 @@
       const overlay = document.getElementById('login-overlay');
       if (overlay) overlay.style.display = 'none';
 
-      const API_BASE = 'https://dandd-chan.onrender.com/api';
+      const API_BASE = window.APP_CONFIG.apiUrl;
       const token = localStorage.getItem('authToken');
       const url = new URL(window.location.href);
       const masterView = url.searchParams.get('masterView');
@@ -211,7 +211,7 @@
 
     async function carregarFichaMestre(nome) {
       try {
-        const res = await fetch('https://dandd-chan.onrender.com/api/load-ficha-mestre', {
+        const res = await fetch(`${window.APP_CONFIG.apiUrl}/load-ficha-mestre`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ nome: nome })
@@ -369,7 +369,7 @@
     async function tentarLogin() {
       const nome = document.getElementById('login-nome').value;
       const senha = document.getElementById('login-senha').value;
-      const API_BASE = 'https://dandd-chan.onrender.com/api';
+      const API_BASE = window.APP_CONFIG.apiUrl;
 
       if (!nome || !senha) { exibirAvisoTemporario('Preencha todos os campos!'); return; }
       const masterWindow = window.open('', '_blank');
@@ -434,7 +434,7 @@
       if (!usrEl || !pwdEl) { exibirAvisoTemporario('Registro desativado aqui. Use Gerenciar Contas.'); return; }
       const username = usrEl.value;
       const password = pwdEl.value;
-      const API_BASE = 'https://dandd-chan.onrender.com/api';
+      const API_BASE = window.APP_CONFIG.apiUrl;
       if (!username || !password) { exibirAvisoTemporario('Preencha usuário e senha.'); return; }
       try {
         const res = await fetch(`${API_BASE}/accounts/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
@@ -540,7 +540,7 @@
     async function savePreferences(obj) {
       const token = localStorage.getItem('authToken');
       if (!token || !window.currentAccount) return;
-      const API_BASE = 'https://dandd-chan.onrender.com/api';
+      const API_BASE = window.APP_CONFIG.apiUrl;
       const merged = Object.assign({}, window.currentAccount.preferences || {}, obj || {});
       try {
         const res = await fetchWithAuth(`${API_BASE}/accounts/preferences`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ preferences: merged }) });
@@ -605,7 +605,7 @@
     };
 
     async function criarPersonagem(nome) {
-      const API_BASE = 'https://dandd-chan.onrender.com/api';
+      const API_BASE = window.APP_CONFIG.apiUrl;
       const token = localStorage.getItem('authToken');
       if (!token || !window.currentAccount) { exibirAvisoTemporario('Conta não autenticada.'); return; }
       const payload = {
@@ -632,7 +632,7 @@
     }
 
     async function selectCharacter(nome) {
-      const API_BASE = 'https://dandd-chan.onrender.com/api';
+      const API_BASE = window.APP_CONFIG.apiUrl;
       const token = localStorage.getItem('authToken');
       if (!token) { exibirAvisoTemporario('Conta não autenticada.'); return; }
       try {
@@ -669,7 +669,7 @@
         // masterView must open a ficha directly using master token, not account ficha flow
         (async () => {
           try {
-            const res = await fetchWithAuth('https://dandd-chan.onrender.com/api/load-ficha-mestre', {
+            const res = await fetchWithAuth(`${window.APP_CONFIG.apiUrl}/load-ficha-mestre`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ nome: mv })

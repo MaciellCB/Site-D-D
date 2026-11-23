@@ -1,3 +1,5 @@
+require('dotenv').config({ path: require('path').join(__dirname, '.env') });
+
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
@@ -9,6 +11,13 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret_change_me';
+const PLANARALLY_URL = (process.env.PLANARALLY_URL || 'http://localhost:8000').replace(/\/+$/, '');
+const PLANARALLY_INTERNAL_URL = (process.env.PLANARALLY_INTERNAL_URL || PLANARALLY_URL).replace(/\/+$/, '');
+const SSO_SECRET = process.env.SSO_SECRET;
+
+if (!SSO_SECRET) {
+    console.warn('⚠️ Integração PlanarAlly desativada: SSO_SECRET não configurado.');
+}
 
 // --- CONFIGURAÇÃO DO APP ---
 const app = express();
@@ -248,7 +257,17 @@ app.get('/api/accounts/list', authenticateToken, async (req, res) => {
     try {
         if (!req.account.isMaster) return res.status(403).json({ error: 'Forbidden' });
         const accounts = await Account.find({}, '-passwordHash').lean();
-        res.json(accounts);
+        const fichas = await Ficha.find({ accountUsername: { $exists: true, $ne: '' } }, 'nome accountUsername').lean();
+        const linkedByAccount = new Map();
+        fichas.forEach(ficha => {
+            const key = String(ficha.accountUsername || '').toLowerCase();
+            if (!linkedByAccount.has(key)) linkedByAccount.set(key, []);
+            linkedByAccount.get(key).push(ficha.nome);
+        });
+        res.json(accounts.map(account => ({
+            ...account,
+            characters: linkedByAccount.get(account.username.toLowerCase()) || []
+        })));
     } catch (e) { res.status(500).json({ error: 'Error' }); }
 });
 
@@ -367,9 +386,322 @@ app.post('/api/save-ficha', authenticateToken, async (req, res) => {
             { upsert: true, new: true, lean: true }
         );
         io.emit('ficha_atualizada', savedFicha);
+        if (SSO_SECRET) {
+            fetch(`${PLANARALLY_INTERNAL_URL}/api/sync-ficha`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${SSO_SECRET}`
+                },
+                body: JSON.stringify({
+                    nome: savedFicha.nome,
+                    personagem: savedFicha.personagem || savedFicha.nome,
+                    vidaAtual: savedFicha.vidaAtual,
+                    vidaTotalCalculada: savedFicha.vidaTotalCalculada,
+                    vidaTempAtual: savedFicha.vidaTempAtual
+                }),
+                signal: AbortSignal.timeout(5000)
+            }).then(response => {
+                if (!response.ok) {
+                    console.warn(`PlanarAlly rejeitou a sincronização da ficha (HTTP ${response.status}).`);
+                }
+            }).catch(error => {
+                console.warn('Falha ao sincronizar ficha com PlanarAlly:', error.message);
+            });
+        }
         await auditLog(req.account, { ip: req.ip }, 'save_ficha', nome, { size: JSON.stringify(req.body).length });
         res.json({ ok: true });
     } catch (error) { res.status(500).json({ error: "Erro ao salvar" }); }
+});
+
+app.get('/api/mapa-sso', authenticateToken, (req, res) => {
+    if (!SSO_SECRET) {
+        return res.status(503).json({ error: 'Integração PlanarAlly não configurada.' });
+    }
+
+    const requestedRedirect = req.query.redirect;
+    const redirect = typeof requestedRedirect === 'string'
+        && requestedRedirect.startsWith('/')
+        && !requestedRedirect.startsWith('//')
+        ? requestedRedirect
+        : '/';
+    const ssoToken = jwt.sign(
+        { username: req.account.username, isMaster: req.account.isMaster },
+        SSO_SECRET,
+        { expiresIn: '2m' }
+    );
+    const ssoUrl = new URL(`${PLANARALLY_URL}/api/sso`);
+    ssoUrl.searchParams.set('token', ssoToken);
+    ssoUrl.searchParams.set('redirect', redirect);
+
+    res.json({ url: ssoUrl.toString() });
+});
+
+app.get('/api/mapas', authenticateToken, async (req, res) => {
+    if (!req.account.isMaster) return res.status(403).json({ error: 'Forbidden' });
+    if (!SSO_SECRET) return res.status(503).json({ error: 'Integração PlanarAlly não configurada.' });
+
+    try {
+        const response = await fetch(`${PLANARALLY_INTERNAL_URL}/api/mapas`, {
+            headers: { 'Authorization': `Bearer ${SSO_SECRET}` },
+            signal: AbortSignal.timeout(10000)
+        });
+        if (!response.ok) {
+            console.warn(`PlanarAlly rejeitou a listagem de mapas (HTTP ${response.status}).`);
+            return res.status(502).json({ error: 'Não foi possível carregar os mapas do PlanarAlly.' });
+        }
+
+        const data = await response.json();
+        if (!data || !Array.isArray(data.mapas)) {
+            return res.status(502).json({ error: 'Resposta inválida ao carregar mapas do PlanarAlly.' });
+        }
+
+        const [accounts, fichas] = await Promise.all([
+            Account.find({}, 'username isMaster').lean(),
+            Ficha.find({}, 'nome accountUsername planarAllyMap planarAllyMaps').lean()
+        ]);
+        const linkedByAccount = new Map();
+        const associationsByKey = new Map();
+        fichas.forEach(ficha => {
+            const key = String(ficha.accountUsername || '').toLowerCase();
+            if (!linkedByAccount.has(key)) linkedByAccount.set(key, []);
+            linkedByAccount.get(key).push(ficha.nome);
+
+            const links = [
+                ...(Array.isArray(ficha.planarAllyMaps) ? ficha.planarAllyMaps : []),
+                ficha.planarAllyMap
+            ].filter(Boolean);
+            links.forEach(link => {
+                const associationKey = [
+                    ficha.nome,
+                    link.creator,
+                    link.room_name,
+                    String(link.location_id)
+                ].join('\u0000');
+                associationsByKey.set(associationKey, {
+                    ficha: ficha.nome,
+                    accountUsername: ficha.accountUsername || '',
+                    ...link
+                });
+            });
+        });
+        res.json({
+            mapas: data.mapas,
+            contas: accounts.map(account => ({
+                username: account.username,
+                isMaster: account.isMaster,
+                characters: linkedByAccount.get(account.username.toLowerCase()) || []
+            })),
+            associacoes: Array.from(associationsByKey.values())
+        });
+    } catch (error) {
+        console.error('Erro ao carregar mapas do PlanarAlly:', error.message);
+        res.status(502).json({ error: 'Erro de conexão ao carregar mapas do PlanarAlly.' });
+    }
+});
+
+app.post('/api/mapas/associar', authenticateToken, async (req, res) => {
+    if (!req.account.isMaster) return res.status(403).json({ error: 'Forbidden' });
+    if (!SSO_SECRET) return res.status(503).json({ error: 'Integração PlanarAlly não configurada.' });
+
+    const { ficha: fichaNome, accountUsername, username, personagem, creator, room_name: roomName, location_id: locationId } = req.body;
+    if (![fichaNome, accountUsername, username, personagem, creator, roomName].every(value => typeof value === 'string' && value.trim())
+        || (typeof locationId !== 'string' && typeof locationId !== 'number')) {
+        return res.status(400).json({ error: 'Informe ficha, conta, usuário PlanarAlly, personagem, campanha e localização.' });
+    }
+
+    try {
+        const account = await Account.findOne({ username: { $regex: new RegExp(`^${accountUsername.trim()}$`, 'i') } });
+        if (!account) return res.status(404).json({ error: 'Conta não encontrada.' });
+
+        const ficha = await Ficha.findOne({
+            nome: fichaNome.trim(),
+            accountUsername: { $regex: new RegExp(`^${account.username}$`, 'i') }
+        });
+        if (!ficha) return res.status(404).json({ error: 'Ficha não pertence à conta selecionada.' });
+
+        const response = await fetch(`${PLANARALLY_INTERNAL_URL}/api/associar-mapa`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${SSO_SECRET}`
+            },
+            body: JSON.stringify({
+                username: username.trim(),
+                personagem: personagem.trim(),
+                creator: creator.trim(),
+                room_name: roomName.trim(),
+                location_id: locationId
+            }),
+            signal: AbortSignal.timeout(10000)
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || !data.ok || typeof data.redirect_path !== 'string') {
+            console.warn(`PlanarAlly rejeitou o vínculo de mapa (HTTP ${response.status}).`);
+            return res.status(502).json({ error: data.error || 'PlanarAlly não confirmou o vínculo do mapa.' });
+        }
+
+        const planarAllyMap = {
+            username: username.trim(),
+            personagem: personagem.trim(),
+            creator: creator.trim(),
+            room_name: roomName.trim(),
+            location_id: locationId,
+            redirect_path: data.redirect_path,
+            location: data.location,
+            accountUsername: account.username,
+            scope: 'location'
+        };
+        const existingLinks = [
+            ...(Array.isArray(ficha.planarAllyMaps) ? ficha.planarAllyMaps : []),
+            ficha.planarAllyMap
+        ].filter(Boolean);
+        const linksByKey = new Map();
+        existingLinks.forEach(link => {
+            const key = [link.creator, link.room_name, String(link.location_id)].join('\u0000');
+            linksByKey.set(key, link);
+        });
+        const currentKey = [planarAllyMap.creator, planarAllyMap.room_name, String(planarAllyMap.location_id)].join('\u0000');
+        linksByKey.set(currentKey, planarAllyMap);
+        ficha.planarAllyMaps = Array.from(linksByKey.values());
+        ficha.planarAllyMap = planarAllyMap;
+        await ficha.save();
+
+        res.json({
+            ok: true,
+            ficha: ficha.nome,
+            tokens_vinculados: Number(data.tokens_vinculados) || 0,
+            ...planarAllyMap
+        });
+    } catch (error) {
+        console.error('Erro ao associar ficha a mapa do PlanarAlly:', error.message);
+        res.status(502).json({ error: 'Erro de conexão ao associar ficha ao mapa.' });
+    }
+});
+
+app.post('/api/mapas/revogar', authenticateToken, async (req, res) => {
+    if (!req.account.isMaster) return res.status(403).json({ error: 'Forbidden' });
+    if (!SSO_SECRET) return res.status(503).json({ error: 'Integração PlanarAlly não configurada.' });
+
+    const {
+        ficha: fichaNome,
+        accountUsername,
+        creator,
+        room_name: roomName,
+        location_id: locationId,
+        username,
+        personagem
+    } = req.body;
+    if (![fichaNome, accountUsername, creator, roomName, username, personagem].every(value => typeof value === 'string' && value.trim())
+        || (typeof locationId !== 'string' && typeof locationId !== 'number')
+        || !Number.isSafeInteger(Number(locationId)) || Number(locationId) < 1) {
+        return res.status(400).json({ error: 'Informe ficha, conta, usuário, token, campanha e localização.' });
+    }
+
+    let remoteRevoked = false;
+    try {
+        const account = await Account.findOne({ username: { $regex: new RegExp(`^${accountUsername.trim()}$`, 'i') } });
+        if (!account) return res.status(404).json({ error: 'Conta não encontrada.' });
+
+        const ficha = await Ficha.findOne({
+            nome: fichaNome.trim(),
+            accountUsername: { $regex: new RegExp(`^${account.username}$`, 'i') }
+        });
+        if (!ficha) return res.status(404).json({ error: 'Ficha não pertence à conta selecionada.' });
+
+        const linksByKey = new Map();
+        [
+            ...(Array.isArray(ficha.planarAllyMaps) ? ficha.planarAllyMaps : []),
+            ficha.planarAllyMap
+        ].filter(Boolean).forEach(link => {
+            const key = [link.creator, link.room_name, String(link.location_id)].join('\u0000');
+            linksByKey.set(key, link);
+        });
+        const currentKey = [creator.trim(), roomName.trim(), String(locationId)].join('\u0000');
+        const link = linksByKey.get(currentKey);
+        if (!link
+            || String(link.username).toLowerCase() !== username.trim().toLowerCase()
+            || String(link.personagem).toLowerCase() !== personagem.trim().toLowerCase()) {
+            return res.status(404).json({ error: 'Este vínculo não está salvo para a ficha selecionada.' });
+        }
+
+        const otherFichas = await Ficha.find({}, 'nome planarAllyMap planarAllyMaps').lean();
+        const preserveLocationIds = new Set();
+        otherFichas.forEach(otherFicha => {
+            const otherLinks = [
+                ...(Array.isArray(otherFicha.planarAllyMaps) ? otherFicha.planarAllyMaps : []),
+                otherFicha.planarAllyMap
+            ].filter(Boolean);
+            otherLinks.forEach(otherLink => {
+                const isSamePlanarAllyAccess = String(otherLink.username || '').toLowerCase() === link.username.toLowerCase()
+                    && String(otherLink.personagem || '').toLowerCase() === String(link.personagem || '').toLowerCase()
+                    && otherLink.creator === link.creator
+                    && otherLink.room_name === link.room_name;
+                const isCurrentLink = otherFicha.nome === ficha.nome
+                    && otherLink.creator === link.creator
+                    && otherLink.room_name === link.room_name
+                    && String(otherLink.location_id) === String(link.location_id)
+                    && String(otherLink.username).toLowerCase() === link.username.toLowerCase()
+                    && String(otherLink.personagem).toLowerCase() === link.personagem.toLowerCase();
+                if (isSamePlanarAllyAccess && !isCurrentLink) {
+                    const preserveLocationId = Number(otherLink.location_id);
+                    if (Number.isSafeInteger(preserveLocationId)) preserveLocationIds.add(preserveLocationId);
+                }
+            });
+        });
+
+        const response = await fetch(`${PLANARALLY_INTERNAL_URL}/api/revogar-mapa`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${SSO_SECRET}`
+            },
+            body: JSON.stringify({
+                username: link.username,
+                personagem: link.personagem,
+                creator: link.creator,
+                room_name: link.room_name,
+                location_id: Number(link.location_id),
+                scope: link.scope === 'location' ? 'location' : 'room',
+                preserve_location_ids: Array.from(preserveLocationIds)
+            }),
+            signal: AbortSignal.timeout(10000)
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || !data.ok) {
+            console.warn(`PlanarAlly rejeitou a revogação do vínculo (HTTP ${response.status}).`);
+            return res.status(502).json({ error: data.error || 'PlanarAlly não confirmou a revogação.' });
+        }
+        remoteRevoked = true;
+
+        const remainingLinks = Array.from(linksByKey.entries())
+            .filter(([key, savedLink]) => key !== currentKey || savedLink !== link)
+            .map(([, savedLink]) => savedLink);
+        ficha.planarAllyMaps = remainingLinks;
+        ficha.planarAllyMap = remainingLinks.length ? remainingLinks[remainingLinks.length - 1] : undefined;
+        await ficha.save();
+
+        await auditLog(req.account, { ip: req.ip }, 'revoke_map_access', ficha.nome, {
+            username: link.username,
+            personagem: link.personagem,
+            creator: link.creator,
+            room_name: link.room_name,
+            location_id: link.location_id,
+            tokens_revogados: Number(data.tokens_revogados) || 0
+        });
+        res.json({
+            ok: true,
+            ficha: ficha.nome,
+            tokens_revogados: Number(data.tokens_revogados) || 0
+        });
+    } catch (error) {
+        console.error('Erro ao revogar acesso ao mapa:', error.message);
+        res.status(remoteRevoked ? 500 : 502).json({
+            error: remoteRevoked
+                ? 'Acesso revogado no PlanarAlly, mas não foi possível atualizar o vínculo salvo. Atualize os mapas e tente novamente.'
+                : 'Erro de conexão ao revogar acesso no PlanarAlly.'
+        });
+    }
 });
 
 app.post('/api/deletar-ficha', authenticateToken, async (req, res) => {

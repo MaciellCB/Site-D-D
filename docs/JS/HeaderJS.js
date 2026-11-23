@@ -602,7 +602,7 @@ function openSkillSelector(count, sourceName, limitToList = null, onComplete = n
 
 
 // --- CONFIGURAÇÃO DA API E CARREGAMENTO ---
-var BASE_API_URL = (typeof API_URL !== 'undefined') ? API_URL : 'https://dandd-chan.onrender.com/api';
+var BASE_API_URL = (typeof API_URL !== 'undefined') ? API_URL : window.APP_CONFIG.apiUrl;
 
 async function carregarDadosHeader() {
     try {
@@ -3471,7 +3471,7 @@ if (socketGlobal && !window.socket) {
     window.socket = socketGlobal;
 }
 if (typeof io !== 'undefined' && !window.socket) {
-    window.socket = io('https://dandd-chan.onrender.com');
+    window.socket = io(window.APP_CONFIG.serverUrl);
 }
 
 if (window.socket) {

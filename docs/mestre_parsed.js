@@ -2,8 +2,8 @@
 
 
 
-        const API_URL = 'https://dandd-chan.onrender.com/api';
-        window.socket = io('https://dandd-chan.onrender.com');
+        const API_URL = window.APP_CONFIG.apiUrl;
+        window.socket = io(window.APP_CONFIG.serverUrl);
         let nomeDelecaoPendente = '';
         let nomeEdicaoPendente = '';
         let pastaIdDelecaoPendente = '';
@@ -199,7 +199,7 @@
             const val = parseInt(document.getElementById('manual-init-val').value) || 0;
             
             if (nome) {
-                if (!window.socket) window.socket = io('https://dandd-chan.onrender.com');
+                if (!window.socket) window.socket = io(window.APP_CONFIG.serverUrl);
 
                 window.socket.emit('add_to_tracker', {
                     id: Date.now(),
@@ -417,7 +417,7 @@
             btnClear.title = "Limpar Iniciativa de Todos";
             btnClear.style.cssText = "width: 30px; background: #3a1a1a; border: 1px solid #b71c1c; color: #ff9999; padding: 4px; font-size: 10px; cursor: pointer; border-radius: 4px;";
             btnClear.onclick = () => {
-                if (!window.socket) window.socket = io('https://dandd-chan.onrender.com');
+                if (!window.socket) window.socket = io(window.APP_CONFIG.serverUrl);
                 window.socket.emit('update_tracker', []);
             };
 
