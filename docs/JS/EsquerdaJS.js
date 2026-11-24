@@ -132,6 +132,85 @@ window.addEventListener('sheet-updated', () => {
     vincularEventosInputs();
 });
 
+const CONDICOES_FICHA = [
+    ['blinded', 'Cego', 'Não consegue enxergar e falha em testes que dependem da visão.'],
+    ['charmed', 'Enfeitiçado', 'Não pode atacar nem prejudicar quem o enfeitiçou.'],
+    ['deafened', 'Surdo', 'Não consegue ouvir e falha em testes que dependem da audição.'],
+    ['frightened', 'Amedrontado', 'Tem desvantagem enquanto vê a fonte do medo e não pode se aproximar dela voluntariamente.'],
+    ['grappled', 'Agarrado', 'Seu deslocamento fica 0 até escapar ou o agarrão terminar.'],
+    ['incapacitated', 'Incapacitado', 'Não pode realizar ações nem reações.'],
+    ['invisible', 'Invisível', 'Não pode ser visto normalmente; seus ataques têm vantagem e ataques contra você têm desvantagem.'],
+    ['paralyzed', 'Paralisado', 'Não pode se mover ou agir e falha em testes de resistência de Força e Destreza.'],
+    ['petrified', 'Petrificado', 'É transformado em pedra ou material semelhante e não pode se mover nem agir.'],
+    ['poisoned', 'Envenenado', 'Tem desvantagem em jogadas de ataque e testes de atributo.'],
+    ['prone', 'Caído', 'Precisa se levantar para não rastejar; ataques corpo a corpo próximos têm vantagem contra você.'],
+    ['restrained', 'Impedido', 'Seu deslocamento fica 0; tem desvantagem em ataques e testes de resistência de Destreza.'],
+    ['stunned', 'Atordoado', 'Não pode se mover e falha em testes de resistência de Força e Destreza.'],
+    ['unconscious', 'Inconsciente', 'Não pode agir, cai no chão e não percebe o que acontece ao redor.'],
+    ['exhaustion', 'Exaustão', 'Acumula níveis que aplicam penalidades progressivas conforme as regras da mesa.'],
+    ['concentrating', 'Concentrando', 'Mantém uma magia; sofrer dano pode exigir um teste para não perdê-la.']
+];
+
+function renderizarCondicoesFicha() {
+    const container = document.getElementById('conditions-list');
+    if (!container || typeof state === 'undefined') return;
+
+    const activeConditions = new Set(Array.isArray(state.conditions) ? state.conditions : []);
+    const canEdit = !!state._id && !!localStorage.getItem('authToken') && !!window.socket?.connected;
+    container.innerHTML = CONDICOES_FICHA.map(([id, label]) => {
+        const active = activeConditions.has(id);
+        return `<button type="button" class="condition-chip${active ? ' is-active' : ''}" data-condition="${id}" aria-pressed="${active}" ${canEdit ? '' : 'disabled'}>${label}</button>`;
+    }).join('');
+}
+
+document.addEventListener('contextmenu', (event) => {
+    const button = event.target.closest('#conditions-list [data-condition]');
+    if (!button) return;
+
+    event.preventDefault();
+    const condition = CONDICOES_FICHA.find(([id]) => id === button.dataset.condition);
+    if (condition && typeof exibirAvisoTemporario === 'function') {
+        exibirAvisoTemporario(`${condition[1]}: ${condition[2]}`);
+    }
+});
+
+document.addEventListener('click', (event) => {
+    const button = event.target.closest('#conditions-list [data-condition]');
+    if (!button || button.disabled || typeof state === 'undefined' || !state._id) return;
+
+    const condition = button.dataset.condition;
+    const conditions = new Set(Array.isArray(state.conditions) ? state.conditions : []);
+    const active = !conditions.has(condition);
+    if (active) conditions.add(condition);
+    else conditions.delete(condition);
+
+    state.conditions = [...conditions];
+    renderizarCondicoesFicha();
+    window.socket.emit('character:condition_toggle', {
+        characterId: String(state._id),
+        condition,
+        active
+    }, (result) => {
+        if (!result || !result.ok) {
+            if (active) conditions.delete(condition);
+            else conditions.add(condition);
+            state.conditions = [...conditions];
+            renderizarCondicoesFicha();
+            if (typeof exibirAvisoTemporario === 'function') {
+                exibirAvisoTemporario('Não foi possível sincronizar a condição. Verifique sua sessão.');
+            }
+            return;
+        }
+        if (!result.planarAllySynced && typeof exibirAvisoTemporario === 'function') {
+            exibirAvisoTemporario('Condição salva na ficha, mas o grid ainda não foi atualizado.');
+        }
+    });
+});
+
+window.addEventListener('sheet-updated', renderizarCondicoesFicha);
+window.addEventListener('conditions-updated', renderizarCondicoesFicha);
+renderizarCondicoesFicha();
+
 // ======================================
 // 3. Sistema de Multi-Select (Dropdowns)
 // ======================================

@@ -1,5 +1,7 @@
 from typing import Any, cast
 
+from pydantic import ValidationError
+
 from ... import auth
 from ...api.socket.constants import GAME_NS
 from ...app import app, sio
@@ -10,8 +12,9 @@ from ...db.models.shape import Shape
 from ...logs import logger
 from ...models.access import has_ownership
 from ...state.game import game_state
+from ..http.auth import sync_condition_to_site
 from ..helpers import _send_game
-from ..models.character import CharacterCreate
+from ..models.character import CONDITION_IDS, CharacterConditionToggle, CharacterCreate
 
 
 async def send_character_update(pr: PlayerRoom, character: Character):
@@ -94,3 +97,56 @@ async def remove_character(sid: str, char_id: int):
     # If the associated shape is not placed anywhere, remove it as well
     if shape.layer is None:
         shape.delete_instance(True)
+
+
+@sio.on("Character.Condition.Toggle", namespace=GAME_NS)
+@auth.login_required(app, sio, "game")
+async def toggle_character_condition(sid: str, raw_data: Any):
+    try:
+        data = CharacterConditionToggle.model_validate(raw_data)
+    except ValidationError as error:
+        logger.warning(f"Invalid condition toggle request: {error.errors()}")
+        return {"ok": False, "error": "invalid_request"}
+
+    pr: PlayerRoom = game_state.get(sid)
+    shape = Shape.get_or_none(Shape.uuid == data.shape)
+    if shape is None or shape.layer is None:
+        return {"ok": False, "error": "token_not_found"}
+    if not has_ownership(shape, pr, edit=True):
+        logger.warning("Attempt to toggle a character condition without edit access")
+        return {"ok": False, "error": "forbidden"}
+
+    try:
+        options = shape.get_options()
+    except (TypeError, ValueError):
+        logger.exception("Could not read token options for condition toggle")
+        return {"ok": False, "error": "invalid_token_options"}
+
+    if options.get("dndchanCharacterId") != data.characterId:
+        return {"ok": False, "error": "character_mismatch"}
+
+    conditions = options.get("dndchanConditions", [])
+    if not isinstance(conditions, list):
+        conditions = []
+    current_conditions = {
+        condition for condition in conditions
+        if isinstance(condition, str) and condition in CONDITION_IDS
+    }
+    if data.active:
+        current_conditions.add(data.condition)
+    else:
+        current_conditions.discard(data.condition)
+
+    options["dndchanConditions"] = sorted(current_conditions)
+    shape.set_options(options)
+    shape.save()
+
+    update = data.model_dump()
+    await _send_game("Character.Condition.Toggle", update, room=shape.layer.floor.location.get_path())
+    site_synced = await sync_condition_to_site({
+        "characterId": data.characterId,
+        "condition": data.condition,
+        "active": data.active,
+        "tokenId": data.shape,
+    })
+    return {"ok": True, "siteSynced": site_synced}

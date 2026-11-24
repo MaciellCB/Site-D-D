@@ -10,6 +10,7 @@ def load_socket_commands():
         data_block,  # noqa: F401
         dice,  # noqa: F401
         floor,  # noqa: F401
+        fog,  # noqa: F401
         groups,  # noqa: F401
         initiative,  # noqa: F401
         location,  # noqa: F401

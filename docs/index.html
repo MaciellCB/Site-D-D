@@ -496,6 +496,13 @@
             </div>
           </div>
 
+          <details class="conditions-panel" aria-labelledby="conditions-title">
+            <summary class="conditions-heading">
+              <h3 id="conditions-title">Condições</h3>
+            </summary>
+            <div id="conditions-list" class="conditions-list" role="group" aria-labelledby="conditions-title"></div>
+          </details>
+
           <div class="armadura-area">
             <div class="armadura-card">
               <div class="armadura-grid">
@@ -797,11 +804,54 @@
     /* =================================================================
        LÓGICA DO SOCKET.IO (SINCRONIZAÇÃO EM TEMPO REAL)
        ================================================================= */
-    window.socket = io(window.APP_CONFIG.serverUrl);
+    window.socket = io(window.APP_CONFIG.serverUrl, {
+      auth: { token: localStorage.getItem('authToken') || '' }
+    });
     const socket = window.socket;
+
+    function subscribeToCharacterConditions() {
+      if (!socket.connected) return;
+      const characterId = typeof state !== 'undefined' ? state._id : undefined;
+      if (!characterId) {
+        socket.emit('character:unsubscribe');
+        return;
+      }
+      socket.emit('character:subscribe', { characterId: String(characterId) }, (result) => {
+        if (!result || !result.ok) console.warn('Não foi possível assinar as condições desta ficha.');
+      });
+    }
+
+    function reconnectSocketWithAccountToken() {
+      socket.disconnect();
+      socket.auth = { token: localStorage.getItem('authToken') || '' };
+      socket.connect();
+    }
 
     socket.on('connect', () => {
       console.log("Conectado ao servidor de atualizações! ID:", socket.id);
+      subscribeToCharacterConditions();
+      window.dispatchEvent(new CustomEvent('conditions-updated'));
+    });
+
+    socket.on('disconnect', () => {
+      window.dispatchEvent(new CustomEvent('conditions-updated'));
+    });
+
+    window.addEventListener('sheet-updated', subscribeToCharacterConditions);
+
+    socket.on('character:condition_toggle', (update) => {
+      if (
+        typeof state === 'undefined' ||
+        String(state._id || '') !== String(update?.characterId || '') ||
+        typeof update?.condition !== 'string' ||
+        typeof update?.active !== 'boolean'
+      ) return;
+
+      const conditions = new Set(Array.isArray(state.conditions) ? state.conditions : []);
+      if (update.active) conditions.add(update.condition);
+      else conditions.delete(update.condition);
+      state.conditions = [...conditions];
+      window.dispatchEvent(new CustomEvent('conditions-updated'));
     });
 
     socket.on('ficha_atualizada', (novaFicha) => {
@@ -847,6 +897,7 @@
             dtMagias: 'Selecione',
             inventory: [],
             abilities: [],
+            conditions: [],
             description: { anotacoes: '', aparencia: '', personalidade: '', objetivo: '', ideais: '', vinculos: '', fraquezas: '', historia: '' }
           };
         } catch (e) {}
@@ -860,6 +911,7 @@
           dtMagias: 'Selecione',
           inventory: [],
           abilities: [],
+          conditions: [],
           description: { anotacoes: '', aparencia: '', personalidade: '', objetivo: '', ideais: '', vinculos: '', fraquezas: '', historia: '' }
         };
       }
@@ -1094,6 +1146,7 @@
         return;
       }
       localStorage.removeItem('authToken');
+      reconnectSocketWithAccountToken();
       window.currentAccount = null;
       const div = document.createElement('div');
       div.className = 'custom-toast-warning';
@@ -1127,6 +1180,7 @@
 
     window.addEventListener('storage', (event) => {
       if (event.key === 'authToken' && !localStorage.getItem('authToken')) {
+        reconnectSocketWithAccountToken();
         window.currentAccount = null;
         const loginOverlay = document.getElementById('login-overlay');
         if (loginOverlay) loginOverlay.style.display = 'flex';
@@ -1151,6 +1205,7 @@
         }
         const data = await res.json();
         localStorage.setItem('authToken', data.token);
+        reconnectSocketWithAccountToken();
         const me = await fetchWithAuth(`${API_BASE}/accounts/me`);
         if (!me.ok) {
           if (masterWindow) masterWindow.close();
@@ -1360,6 +1415,7 @@
       vidaAtual: 1,
       vidaTotalCalculada: 1,
                 idiomasList: ['Comum'],
+                conditions: [],
       inventory: [],
       abilities: [],
       spells: [],
@@ -1437,6 +1493,7 @@
 
     function logoutAccount() {
       localStorage.removeItem('authToken');
+      reconnectSocketWithAccountToken();
       window.currentAccount = null;
       resetSheetState();
       const chars = document.getElementById('chars-list');

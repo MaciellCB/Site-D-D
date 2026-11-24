@@ -1,6 +1,9 @@
-import { g2l, g2lz, g2lr, toRadians } from "../../../core/conversions";
+import type { ApiExploredRegion, FogExploredUpdate } from "../../../apiTypes";
+import { getUnitDistance, g2l, g2lz, g2lr, toRadians } from "../../../core/conversions";
+import { DEFAULT_GRID_SIZE } from "../../../core/grid";
 import type { LocalId } from "../../../core/id";
 import type { SyncMode } from "../../../core/models/types";
+import { sendFogExploredUpdate } from "../../api/emits/floor";
 import { FOG_COLOUR } from "../../colour";
 import { getShape } from "../../id";
 import type { IShape } from "../../interfaces/shape";
@@ -14,11 +17,141 @@ import { gameState } from "../../systems/game/state";
 import { positionState } from "../../systems/position/state";
 import { locationSettingsSystem } from "../../systems/settings/location";
 import { locationSettingsState } from "../../systems/settings/location/state";
-import { AMBIENT_SYMBOL, PORTAL_RANGE, visionState } from "../../vision/state";
+import { AMBIENT_SYMBOL, PORTAL_RANGE, TriangulationTarget, visionState } from "../../vision/state";
+import { computeVisibility } from "../../vision/te";
+import { createCanvas, updateCanvasDimensions, updateCanvasPixelRatio } from "../canvas";
 
 import { FowLayer } from "./fow";
 
+function getRegionKey(points: readonly [number, number][]): string {
+    let hash = 0x811c9dc5;
+    for (const [x, y] of points) {
+        for (const value of [Math.round(x * 10), Math.round(y * 10)]) {
+            hash = Math.imul(hash ^ value, 0x01000193);
+        }
+    }
+    return `${points.length}-${(hash >>> 0).toString(36)}`;
+}
+
 export class FowLightingLayer extends FowLayer {
+    private readonly exploredCanvas = createCanvas();
+    private readonly exploredCtx = this.exploredCanvas.getContext("2d")!;
+    private readonly exploredRegions = new Map<string, ApiExploredRegion>();
+    private readonly lastRecordedPositions = new Map<LocalId, { x: number; y: number; iteration: number }>();
+    private pendingExploredRegions: ApiExploredRegion[] = [];
+    private exploredSyncTimer: number | undefined;
+
+    resize(): void {
+        super.resize();
+        updateCanvasDimensions(this.exploredCanvas);
+    }
+
+    updatePixelRatio(): void {
+        super.updatePixelRatio();
+        updateCanvasPixelRatio(this.exploredCanvas);
+    }
+
+    setExploredRegions(regions: ApiExploredRegion[]): void {
+        this.mergeExploredRegions(regions, false, false);
+    }
+
+    mergeExploredRegions(regions: ApiExploredRegion[], syncToServer = false, invalidate = true): void {
+        const added: ApiExploredRegion[] = [];
+        for (const region of regions) {
+            if (region.points.length < 3 || this.exploredRegions.has(region.key)) continue;
+            const copy = {
+                key: region.key,
+                points: region.points.map(([x, y]) => [x, y] as [number, number]),
+            };
+            this.exploredRegions.set(copy.key, copy);
+            added.push(copy);
+        }
+
+        if (added.length === 0) return;
+        if (invalidate) this.invalidate(true);
+
+        if (syncToServer) {
+            this.pendingExploredRegions.push(...added);
+            this.scheduleExploredSync();
+        }
+    }
+
+    private scheduleExploredSync(): void {
+        if (this.exploredSyncTimer !== undefined) return;
+        this.exploredSyncTimer = window.setTimeout(() => {
+            this.exploredSyncTimer = undefined;
+            const floor = floorSystem.getFloor({ id: this.floor });
+            const regions = this.pendingExploredRegions.splice(0, 4);
+            if (floor !== undefined && regions.length > 0) {
+                const data: FogExploredUpdate = { floor: floor.name, regions };
+                sendFogExploredUpdate(data);
+            }
+            if (this.pendingExploredRegions.length > 0) this.scheduleExploredSync();
+        }, 500);
+    }
+
+    private recordExploredRegions(): void {
+        const regions: ApiExploredRegion[] = [];
+        const maxRange = locationSettingsState.raw.visionMaxRange.value;
+        if (maxRange <= 0) return;
+        const iteration = visionState.getVisionIteration(this.floor);
+        const minimumMovement = DEFAULT_GRID_SIZE / 2;
+        for (const tokenId of accessState.activeTokens.value.get("vision") ?? []) {
+            const shape = getShape(tokenId);
+            if (shape === undefined || shape.floorId !== this.floor || shape.layerName === LayerName.Dm) continue;
+
+            const center = shape.center;
+            const previous = this.lastRecordedPositions.get(shape.id);
+            if (
+                previous !== undefined &&
+                previous.iteration === iteration &&
+                (center.x - previous.x) ** 2 + (center.y - previous.y) ** 2 < minimumMovement ** 2
+            ) {
+                continue;
+            }
+            this.lastRecordedPositions.set(shape.id, { ...center, iteration });
+
+            const points = computeVisibility(
+                center,
+                TriangulationTarget.VISION,
+                this.floor,
+                false,
+                getUnitDistance(maxRange),
+            ).visibility.map(([x, y]) => [Math.round(x * 10) / 10, Math.round(y * 10) / 10] as [number, number]);
+            if (points.length < 3) continue;
+            const key = getRegionKey(points);
+            if (!this.exploredRegions.has(key)) regions.push({ key, points });
+        }
+
+        this.mergeExploredRegions(regions, true, false);
+    }
+
+    private drawExploredFog(): void {
+        const ctx = this.exploredCtx;
+        ctx.clearRect(0, 0, this.width, this.height);
+        ctx.globalCompositeOperation = "source-over";
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = "#fff";
+
+        for (const region of this.exploredRegions.values()) {
+            ctx.fill(polygon2path(region.points));
+        }
+
+        ctx.globalCompositeOperation = "destination-in";
+        ctx.drawImage(this.canvas, 0, 0, this.width, this.height);
+
+        this.ctx.globalCompositeOperation = "destination-out";
+        this.ctx.drawImage(this.exploredCanvas, 0, 0, this.width, this.height);
+
+        ctx.globalCompositeOperation = "source-in";
+        ctx.fillStyle = "rgba(0, 0, 0, 0.55)";
+        ctx.fillRect(0, 0, this.width, this.height);
+        ctx.globalCompositeOperation = "source-over";
+
+        this.ctx.globalCompositeOperation = "source-over";
+        this.ctx.drawImage(this.exploredCanvas, 0, 0, this.width, this.height);
+    }
+
     // We still need removeShapes as this does not inherently call .setLayer, which addShape does
     removeShape(shape: IShape, options: { sync: SyncMode; recalculate: boolean; dropShapeId: boolean }): boolean {
         let idx = -1;
@@ -99,6 +232,14 @@ export class FowLightingLayer extends FowLayer {
 
             const activeFloor = floorState.currentFloor.value!;
             const isLosActive = locationSettingsSystem.isLosActive();
+            if (
+                gameState.raw.isDm &&
+                isLosActive &&
+                locationSettingsState.raw.fullFow.value &&
+                this.floor === activeFloor.id
+            ) {
+                this.recordExploredRegions();
+            }
 
             // At all times provide a minimal vision range to prevent losing your tokens in fog.
             if (
@@ -274,6 +415,15 @@ export class FowLightingLayer extends FowLayer {
                 this.ctx.globalCompositeOperation = "source-out";
                 this.ctx.fillStyle = FOG_COLOUR;
                 this.ctx.fillRect(0, 0, this.width, this.height);
+            }
+
+            if (
+                locationSettingsState.raw.fullFow.value &&
+                isLosActive &&
+                this.floor === activeFloor.id &&
+                this.exploredRegions.size > 0
+            ) {
+                this.drawExploredFog();
             }
 
             super.draw(false);

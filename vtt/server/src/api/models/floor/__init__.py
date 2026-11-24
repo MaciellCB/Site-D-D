@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, FiniteFloat
 
 from ..helpers import TypeIdModel
 from ..shape import ApiShape
@@ -11,6 +11,11 @@ class ApiGroup(BaseModel):
     uuid: str
     character_set: str
     creation_order: str
+
+
+class ApiExploredRegion(BaseModel):
+    key: str = Field(min_length=1, max_length=64)
+    points: list[tuple[FiniteFloat, FiniteFloat]] = Field(min_length=3, max_length=8192)
 
 
 class ApiLayer(TypeIdModel):
@@ -30,6 +35,12 @@ class ApiFloor(TypeIdModel):
     type_: int
     background_color: str | None
     layers: list[ApiLayer]
+    explored_regions: list[ApiExploredRegion] = Field(default_factory=list)
+
+
+class FogExploredUpdate(BaseModel):
+    floor: str
+    regions: list[ApiExploredRegion] = Field(min_length=1, max_length=4)
 
 
 class FloorCreate(BaseModel):

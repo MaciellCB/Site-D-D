@@ -11,6 +11,7 @@ import type { PanelTab } from "./types";
 
 interface UiState {
     showUi: boolean;
+    presentationMode: boolean;
 
     annotationText: string;
 
@@ -36,8 +37,11 @@ interface UiState {
     shapeContextMenuEntries: Raw<MaybeRef<(shape: LocalId) => Section[]>>[];
 }
 
+const presentationMode = new URLSearchParams(window.location.search).get("presentation") === "1";
+
 const state = buildState<UiState>({
-    showUi: true,
+    showUi: !presentationMode,
+    presentationMode,
 
     annotationText: "",
 

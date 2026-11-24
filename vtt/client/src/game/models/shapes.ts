@@ -31,6 +31,17 @@ export interface ShapeOptions {
     ambientBarrier: boolean;
 
     mirrored: boolean;
+
+    // D&D sheet integration
+    dndchanCharacterId?: string;
+    dndchanConditions?: string[];
+    spellArea?: {
+        shape: "square" | "circle" | "cone" | "hex";
+        size: number;
+        colour: string;
+        showPublic: boolean;
+        oddHexOrientation: boolean;
+    };
 }
 
 export interface ServerShapeOptions extends ShapeOptions {

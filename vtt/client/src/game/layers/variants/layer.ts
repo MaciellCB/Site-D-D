@@ -58,6 +58,7 @@ export class Layer implements ILayer {
 
     playerEditable = false;
     selectable = false;
+    protected opacity = 1.0;
 
     isVisionLayer = false;
 
@@ -449,7 +450,9 @@ export class Layer implements ILayer {
 
             if (doClear) this.clear();
 
-            if (this.name !== LayerName.Lighting && this.selectable) {
+            if (this.opacity !== 1.0) {
+                ctx.globalAlpha = this.opacity;
+            } else if (this.name !== LayerName.Lighting && this.selectable) {
                 if (floorState.raw.layerIndex < this.index) ctx.globalAlpha = 0.3;
                 else ctx.globalAlpha = 1.0;
             }
@@ -555,6 +558,21 @@ export class Layer implements ILayer {
             }
 
             for (const cb of this.drawCallbacks) cb(ctx);
+
+            if (
+                this.name === LayerName.Tokens &&
+                (gameState.raw.isFakePlayer || !gameState.raw.isDm) &&
+                locationSettingsState.raw.fullFow.value &&
+                locationSettingsSystem.isLosActive()
+            ) {
+                const floor = floorSystem.getFloor({ id: this.floor });
+                const visionLayer = floor === undefined ? undefined : floorSystem.getLayer(floor, LayerName.Vision);
+                if (visionLayer !== undefined) {
+                    if (!visionLayer.isValid()) visionLayer.draw();
+                    ctx.globalCompositeOperation = "destination-in";
+                    ctx.drawImage(visionLayer.canvas, 0, 0, this.width, this.height);
+                }
+            }
 
             ctx.globalCompositeOperation = ogOP;
             this.valid = true;

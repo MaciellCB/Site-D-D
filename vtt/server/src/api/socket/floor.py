@@ -1,3 +1,4 @@
+import json
 from typing import Any
 
 from ... import auth
@@ -5,6 +6,7 @@ from ...api.socket.constants import GAME_NS
 from ...app import app, sio
 from ...db.create.floor import create_floor
 from ...db.db import db
+from ...db.models.explored_region import ExploredRegion
 from ...db.models.floor import Floor
 from ...db.models.player_room import PlayerRoom
 from ...logs import logger
@@ -12,7 +14,7 @@ from ...models.role import Role
 from ...state.game import game_state
 from ...transform.to_api.floor import transform_floor
 from ..helpers import _send_game
-from ..models.floor import FloorCreate, FloorRename
+from ..models.floor import ApiExploredRegion, FloorCreate, FloorRename, FogExploredUpdate
 from ..models.floor.background import FloorBackgroundSet
 from ..models.floor.type import FloorTypeSet
 from ..models.floor.visible import FloorVisibleSet
@@ -79,6 +81,18 @@ async def set_floor_visibility(sid: str, raw_data: Any):
         room=pr.active_location.get_path(),
         skip_sid=sid,
     )
+    if data.visible:
+        regions = [
+            ApiExploredRegion(key=region.key, points=json.loads(region.points))
+            for region in floor.explored_regions.order_by(ExploredRegion.id)
+        ]
+        for start in range(0, len(regions), 4):
+            await _send_game(
+                "Fog.Explored.Update",
+                FogExploredUpdate(floor=floor.name, regions=regions[start : start + 4]),
+                room=pr.active_location.get_path(),
+                skip_sid=sid,
+            )
 
 
 @sio.on("Floor.Rename", namespace=GAME_NS)

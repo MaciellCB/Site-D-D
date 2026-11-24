@@ -42,6 +42,25 @@ import type { CompactShapeCore, CompactSubShapeCore } from "./transformations";
 import type { DepShape, SHAPE_TYPE } from "./types";
 import { BoundingRect } from "./variants/simple/boundingRect";
 
+const DND_CONDITION_MARKS: Record<string, string> = {
+    blinded: "CE",
+    charmed: "EF",
+    deafened: "SU",
+    frightened: "AM",
+    grappled: "AG",
+    incapacitated: "IN",
+    invisible: "IV",
+    paralyzed: "PA",
+    petrified: "PE",
+    poisoned: "EV",
+    prone: "CA",
+    restrained: "IM",
+    stunned: "AT",
+    unconscious: "IC",
+    exhaustion: "EX",
+    concentrating: "CO",
+};
+
 export abstract class Shape implements IShape {
     // Used to create class instance from server shape data
     abstract readonly type: SHAPE_TYPE;
@@ -430,6 +449,43 @@ export abstract class Shape implements IShape {
         if (props === undefined) return console.error("Missing props");
 
         let bbox: BoundingRect | undefined;
+        const conditions =
+            this.options.dndchanConditions?.filter((condition) => condition in DND_CONDITION_MARKS) ?? [];
+        if (conditions.length > 0) {
+            bbox = this.getBoundingBox();
+            const topLeft = g2l(bbox.topLeft);
+            const markHeight = Math.max(12, Math.min(20, g2lz(Math.min(bbox.w, bbox.h) * 0.22)));
+            const markGap = 2;
+            const visibleConditions = conditions.slice(0, 3);
+
+            ctx.font = `bold ${Math.max(7, Math.min(11, markHeight * 0.55))}px sans-serif`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            visibleConditions.forEach((condition, index) => {
+                const x = topLeft.x + index * (markHeight + markGap);
+                ctx.fillStyle = "rgba(25, 16, 31, 0.9)";
+                ctx.strokeStyle = "#d6a5e8";
+                ctx.lineWidth = 1;
+                ctx.fillRect(x, topLeft.y, markHeight, markHeight);
+                ctx.strokeRect(x, topLeft.y, markHeight, markHeight);
+                ctx.fillStyle = "#f4e4ff";
+                ctx.fillText(DND_CONDITION_MARKS[condition]!, x + markHeight / 2, topLeft.y + markHeight / 2);
+            });
+
+            if (conditions.length > visibleConditions.length) {
+                const x = topLeft.x + visibleConditions.length * (markHeight + markGap);
+                ctx.fillStyle = "rgba(25, 16, 31, 0.9)";
+                ctx.strokeStyle = "#d6a5e8";
+                ctx.fillRect(x, topLeft.y, markHeight, markHeight);
+                ctx.strokeRect(x, topLeft.y, markHeight, markHeight);
+                ctx.fillStyle = "#f4e4ff";
+                ctx.fillText(
+                    `+${conditions.length - visibleConditions.length}`,
+                    x + markHeight / 2,
+                    topLeft.y + markHeight / 2,
+                );
+            }
+        }
         if (props.showBadge) {
             bbox = this.getBoundingBox();
             const location = g2l(bbox.botRight);

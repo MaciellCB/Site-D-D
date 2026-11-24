@@ -4,6 +4,7 @@ import type {
     FloorRename,
     FloorTypeSet,
     FloorVisibleSet,
+    FogExploredUpdate,
 } from "../../../apiTypes";
 import { wrapSocket } from "../socket";
 
@@ -15,3 +16,4 @@ export const sendFloorReorder = wrapSocket<string[]>("Floors.Reorder");
 export const sendRenameFloor = wrapSocket<FloorRename>("Floor.Rename");
 export const sendFloorSetType = wrapSocket<FloorTypeSet>("Floor.Type.Set");
 export const sendFloorSetBackground = wrapSocket<FloorBackgroundSet>("Floor.Background.Set");
+export const sendFogExploredUpdate = wrapSocket<FogExploredUpdate>("Fog.Explored.Update");

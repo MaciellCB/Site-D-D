@@ -112,6 +112,7 @@
         .map-card-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 16px; border-bottom: 1px solid #303030; }
         .map-card-heading h2 { margin: 0; color: #e0aaff; font-size: 17px; }
         .map-card-heading p { margin: 5px 0 0; color: #999; font-size: 12px; }
+        .map-card-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
         .map-location { padding: 14px 16px; border-bottom: 1px solid #242424; }
         .map-location:last-child { border-bottom: 0; }
         .map-location-title { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 9px; color: #eee; font-size: 13px; font-weight: 700; }
@@ -1004,11 +1005,23 @@
                 title.append(name, creator);
                 heading.appendChild(title);
                 if (mapa.redirect_path) {
+                    const actions = document.createElement('div');
+                    actions.className = 'map-card-actions';
                     const openButton = document.createElement('button');
                     openButton.className = 'account-btn';
                     openButton.textContent = 'Abrir grid';
-                    openButton.onclick = () => abrirMapaPlanarAlly(mapa.redirect_path);
-                    heading.appendChild(openButton);
+                    const initiativeLinks = associacoesPlanarAlly
+                        .filter(link => link.creator === mapa.creator && link.room_name === mapa.room_name)
+                        .map(link => ({ ficha: link.ficha, personagem: link.personagem }))
+                        .filter(link => typeof link.ficha === 'string' && typeof link.personagem === 'string');
+                    openButton.onclick = () => abrirMapaPlanarAlly(mapa.redirect_path, false, initiativeLinks);
+                    const presentationButton = document.createElement('button');
+                    presentationButton.className = 'account-btn';
+                    presentationButton.textContent = 'Modo OBS';
+                    presentationButton.title = 'Abrir o grid sem os controles do PlanarAlly';
+                    presentationButton.onclick = () => abrirMapaPlanarAlly(mapa.redirect_path, true, initiativeLinks);
+                    actions.append(openButton, presentationButton);
+                    heading.appendChild(actions);
                 }
                 card.appendChild(heading);
 
@@ -1280,10 +1293,19 @@
             }
         }
 
-        async function abrirMapaPlanarAlly(redirectPath) {
+        async function abrirMapaPlanarAlly(redirectPath, presentationMode = false, initiativeLinks = []) {
             const mapWindow = window.open('', '_blank');
             try {
-                const res = await fetchComAuth(`${API_URL}/mapa-sso?redirect=${encodeURIComponent(redirectPath)}`);
+                const targetUrl = new URL(redirectPath, window.location.origin);
+                targetUrl.searchParams.set('initiativeSocket', window.APP_CONFIG.serverUrl);
+                if (initiativeLinks.length > 0) {
+                    targetUrl.searchParams.set('initiativeLinks', JSON.stringify(initiativeLinks));
+                }
+                if (presentationMode) {
+                    targetUrl.searchParams.set('presentation', '1');
+                }
+                const targetPath = `${targetUrl.pathname}${targetUrl.search}${targetUrl.hash}`;
+                const res = await fetchComAuth(`${API_URL}/mapa-sso?redirect=${encodeURIComponent(targetPath)}`);
                 const data = await res.json().catch(() => ({}));
                 if (!res.ok || !data.url) {
                     if (mapWindow) mapWindow.close();

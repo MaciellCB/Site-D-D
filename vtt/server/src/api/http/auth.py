@@ -3,12 +3,15 @@ import os
 import random
 import secrets
 
+import aiohttp
 import jwt
 from aiohttp import web
 from aiohttp_security import authorized_userid, forget, remember
 
 from ... import stats
 from ...api.helpers import _send_game
+from ...api.models.character import CONDITION_IDS
+from ...logs import logger
 from ...auth import get_authorized_user
 from ...config import cfg
 from ...db.db import db
@@ -136,6 +139,30 @@ async def reset_password(request):
 
 
 SSO_SECRET = os.getenv("SSO_SECRET", "chave_secreta_dndchan_2026")
+DNDCHAN_INTERNAL_URL = os.getenv("DNDCHAN_INTERNAL_URL", "").rstrip("/")
+async def sync_condition_to_site(data: dict) -> bool:
+    if not DNDCHAN_INTERNAL_URL:
+        logger.warning("DNDCHAN_INTERNAL_URL nao configurada; condicao nao sincronizada com a ficha.")
+        return False
+
+    try:
+        timeout = aiohttp.ClientTimeout(total=5)
+        async with aiohttp.ClientSession(timeout=timeout) as client:
+            async with client.post(
+                f"{DNDCHAN_INTERNAL_URL}/api/sync-condition",
+                json=data,
+                headers={"Authorization": f"Bearer {SSO_SECRET}"},
+            ) as response:
+                if not response.ok:
+                    logger.warning(
+                        f"Site rejeitou a sincronizacao da condicao (HTTP {response.status}): "
+                        f"{await response.text()}"
+                    )
+                    return False
+        return True
+    except (aiohttp.ClientError, asyncio.TimeoutError):
+        logger.exception("Falha ao sincronizar condicao com o site.")
+        return False
 
 
 async def sso_login(request: web.Request) -> web.Response:
@@ -168,10 +195,22 @@ async def sync_ficha(request: web.Request) -> web.Response:
         return web.HTTPUnauthorized(text="Nao autorizado")
 
     data = await request.json()
+    if not isinstance(data, dict):
+        return web.HTTPBadRequest(text="Dados da ficha invalidos")
     personagem = data.get("personagem") or data.get("nome")
     if not personagem:
         return web.HTTPBadRequest(text="Nome do personagem ausente")
 
+    character_id = data.get("characterId")
+    conditions = data.get("conditions", [])
+    if (
+        (character_id is not None and (not isinstance(character_id, str) or not character_id.strip()))
+        or not isinstance(conditions, list)
+        or any(not isinstance(condition, str) or condition not in CONDITION_IDS for condition in conditions)
+    ):
+        return web.HTTPBadRequest(text="Dados de condicoes invalidos")
+
+    conditions = list(dict.fromkeys(conditions))
     vida_atual = int(data.get("vidaAtual", 0))
     vida_max = int(data.get("vidaTotalCalculada", 10))
     vida_temp = int(data.get("vidaTempAtual", 0))
@@ -181,6 +220,22 @@ async def sync_ficha(request: web.Request) -> web.Response:
 
     for shape in shapes:
         location_room = shape.layer.floor.location.get_path()
+        if character_id:
+            shape_options = shape.get_options()
+            shape_options["dndchanCharacterId"] = character_id
+            shape_options["dndchanConditions"] = conditions
+            shape.set_options(shape_options)
+            shape.save()
+            if shape.layer is not None:
+                await _send_game(
+                    "Character.Condition.Sync",
+                    {
+                        "shape": shape.uuid,
+                        "characterId": character_id,
+                        "conditions": conditions,
+                    },
+                    room=location_room,
+                )
 
         hp_tracker, created = Tracker.get_or_create(
             shape=shape,
@@ -239,6 +294,76 @@ async def sync_ficha(request: web.Request) -> web.Response:
         updated_count += 1
 
     return web.json_response({"ok": True, "tokens_atualizados": updated_count})
+
+
+async def sync_condition(request: web.Request) -> web.Response:
+    auth_header = request.headers.get("Authorization", "")
+    if auth_header != f"Bearer {SSO_SECRET}":
+        return web.HTTPUnauthorized(text="Nao autorizado")
+
+    data = await request.json()
+    if not isinstance(data, dict):
+        return web.HTTPBadRequest(text="Dados de condicao invalidos")
+    character_id = data.get("characterId")
+    token_id = data.get("tokenId")
+    condition = data.get("condition")
+    active = data.get("active")
+    if (
+        not isinstance(character_id, str)
+        or not character_id.strip()
+        or not isinstance(token_id, str)
+        or not token_id.strip()
+        or not isinstance(condition, str)
+        or condition not in CONDITION_IDS
+        or len(token_id) > 128
+        or not isinstance(active, bool)
+    ):
+        return web.HTTPBadRequest(text="Dados de condicao invalidos")
+
+    shape = Shape.get_or_none(Shape.uuid == token_id)
+    if shape is None:
+        return web.HTTPNotFound(text="Token nao encontrado")
+
+    shape_options = shape.get_options()
+    if shape_options.get("dndchanCharacterId") != character_id:
+        return web.HTTPForbidden(text="Token nao associado a esta ficha")
+
+    conditions = shape_options.get("dndchanConditions", [])
+    if not isinstance(conditions, list):
+        conditions = []
+    current_conditions = {
+        condition_id for condition_id in conditions
+        if isinstance(condition_id, str) and condition_id in CONDITION_IDS
+    }
+    if active:
+        current_conditions.add(condition)
+    else:
+        current_conditions.discard(condition)
+    updated_conditions = sorted(current_conditions)
+
+    shape_options["dndchanConditions"] = updated_conditions
+    shape.set_options(shape_options)
+    shape.save()
+
+    if shape.layer is not None:
+        await _send_game(
+            "Character.Condition.Toggle",
+            {
+                "shape": shape.uuid,
+                "characterId": character_id,
+                "condition": condition,
+                "active": active,
+            },
+            room=shape.layer.floor.location.get_path(),
+        )
+
+    site_synced = await sync_condition_to_site({
+        "characterId": character_id,
+        "condition": condition,
+        "active": active,
+        "tokenId": token_id,
+    })
+    return web.json_response({"ok": True, "site_synced": site_synced})
 
 
 async def list_mapas(request: web.Request) -> web.Response:

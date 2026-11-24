@@ -1,6 +1,14 @@
+from typing import Literal
+
 from pydantic import Field
 
 from ..helpers import TypeIdModel
+
+CONDITION_IDS = frozenset({
+    "blinded", "charmed", "deafened", "frightened", "grappled", "incapacitated",
+    "invisible", "paralyzed", "petrified", "poisoned", "prone", "restrained",
+    "stunned", "unconscious", "exhaustion", "concentrating",
+})
 
 
 class ApiCharacter(TypeIdModel):
@@ -13,3 +21,14 @@ class ApiCharacter(TypeIdModel):
 
 class CharacterCreate(TypeIdModel):
     shape: str = Field(json_schema_extra={"typeId": "GlobalId"})
+
+
+class CharacterConditionToggle(TypeIdModel):
+    shape: str = Field(json_schema_extra={"typeId": "GlobalId"})
+    characterId: str
+    condition: Literal[
+        "blinded", "charmed", "deafened", "frightened", "grappled", "incapacitated",
+        "invisible", "paralyzed", "petrified", "poisoned", "prone", "restrained",
+        "stunned", "unconscious", "exhaustion", "concentrating",
+    ]
+    active: bool

@@ -48,6 +48,7 @@ function generateTestFloor(name?: string): ApiFloor {
         player_visible: false,
         type_: 1,
         background_color: null,
+        explored_regions: [],
         layers: [
             {
                 groups: [],

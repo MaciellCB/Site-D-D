@@ -55,11 +55,21 @@ const AccountSchema = new mongoose.Schema({
 }, { timestamps: true });
 const Account = mongoose.model('Account', AccountSchema);
 
+const CONDITION_IDS = Object.freeze([
+    'blinded', 'charmed', 'deafened', 'frightened', 'grappled', 'incapacitated',
+    'invisible', 'paralyzed', 'petrified', 'poisoned', 'prone', 'restrained',
+    'stunned', 'unconscious', 'exhaustion', 'concentrating'
+]);
+
 // Ficha (character) may be linked to an account via `accountUsername` field
 const FichaSchema = new mongoose.Schema({
     nome: { type: String, required: true, unique: true }, 
     senha: { type: String },
     accountUsername: { type: String },
+    conditions: {
+        type: [{ type: String, enum: CONDITION_IDS }],
+        default: []
+    },
 }, { strict: false }); 
 const Ficha = mongoose.model('Ficha', FichaSchema);
 
@@ -88,6 +98,49 @@ async function auditLog(reqAccount, reqObj, action, targetName, details) {
     } catch (e) { console.warn('Falha ao gravar audit log', e.message); }
 }
 
+function canEditFicha(account, ficha) {
+    return !!account && (
+        account.isMaster ||
+        !ficha.accountUsername ||
+        ficha.accountUsername.toLowerCase() === String(account.username || '').toLowerCase()
+    );
+}
+
+function characterRoom(characterId) {
+    return `character:${characterId}`;
+}
+
+async function syncFichaToPlanarAlly(ficha) {
+    if (!SSO_SECRET) return false;
+    try {
+        const response = await fetch(`${PLANARALLY_INTERNAL_URL}/api/sync-ficha`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${SSO_SECRET}`
+            },
+            body: JSON.stringify({
+                characterId: String(ficha._id),
+                nome: ficha.nome,
+                personagem: ficha.personagem || ficha.nome,
+                vidaAtual: ficha.vidaAtual,
+                vidaTotalCalculada: ficha.vidaTotalCalculada,
+                vidaTempAtual: ficha.vidaTempAtual,
+                conditions: Array.isArray(ficha.conditions) ? ficha.conditions : []
+            }),
+            signal: AbortSignal.timeout(5000)
+        });
+        if (!response.ok) {
+            console.warn(`PlanarAlly rejeitou a sincronização da ficha (HTTP ${response.status}).`);
+            return false;
+        }
+        return true;
+    } catch (error) {
+        console.warn('Falha ao sincronizar ficha com PlanarAlly:', error.message);
+        return false;
+    }
+}
+
 const LayoutSchema = new mongoose.Schema({
     id: { type: String, default: "master_layout" },
     folders: [{ id: String, name: String, items: [String] }],
@@ -108,6 +161,18 @@ const Pin = mongoose.model('Pin', PinSchema);
 
 let serverTrackerList = []; 
 
+io.use((socket, next) => {
+    const token = socket.handshake.auth && socket.handshake.auth.token;
+    if (typeof token === 'string' && token.length > 0) {
+        try {
+            socket.data.account = jwt.verify(token, JWT_SECRET);
+        } catch {
+            socket.data.account = null;
+        }
+    }
+    next();
+});
+
 io.on('connection', (socket) => {
     console.log('Cliente conectado:', socket.id);
     socket.emit('sync_tracker_update', serverTrackerList);
@@ -122,6 +187,74 @@ io.on('connection', (socket) => {
         const idx = serverTrackerList.findIndex(x => normalizeName(x?.name) === key);
         if (idx >= 0) { serverTrackerList[idx] = item; } else { serverTrackerList.push(item); }
         io.emit('sync_tracker_update', serverTrackerList);
+    });
+
+    socket.on('character:unsubscribe', () => {
+        if (socket.data.characterRoom) socket.leave(socket.data.characterRoom);
+        socket.data.characterRoom = null;
+    });
+
+    socket.on('character:subscribe', async (payload, acknowledge) => {
+        const respond = typeof acknowledge === 'function' ? acknowledge : () => {};
+        const characterId = payload && String(payload.characterId || '');
+        if (!mongoose.Types.ObjectId.isValid(characterId) || !socket.data.account) {
+            respond({ ok: false, error: 'unauthorized' });
+            return;
+        }
+
+        try {
+            const ficha = await Ficha.findById(characterId).select('accountUsername');
+            if (!ficha || !canEditFicha(socket.data.account, ficha)) {
+                respond({ ok: false, error: 'forbidden' });
+                return;
+            }
+
+            if (socket.data.characterRoom) socket.leave(socket.data.characterRoom);
+            socket.data.characterRoom = characterRoom(characterId);
+            await socket.join(socket.data.characterRoom);
+            respond({ ok: true });
+        } catch (error) {
+            console.error('Falha ao assinar atualizacoes de condicoes:', error.message);
+            respond({ ok: false, error: 'server_error' });
+        }
+    });
+
+    socket.on('character:condition_toggle', async (payload, acknowledge) => {
+        const respond = typeof acknowledge === 'function' ? acknowledge : () => {};
+        const characterId = payload && String(payload.characterId || '');
+        const condition = payload && payload.condition;
+        const active = payload && payload.active;
+        if (
+            !mongoose.Types.ObjectId.isValid(characterId) ||
+            !CONDITION_IDS.includes(condition) ||
+            typeof active !== 'boolean' ||
+            !socket.data.account
+        ) {
+            respond({ ok: false, error: 'invalid_request' });
+            return;
+        }
+
+        try {
+            const ficha = await Ficha.findById(characterId);
+            if (!ficha || !canEditFicha(socket.data.account, ficha)) {
+                respond({ ok: false, error: 'forbidden' });
+                return;
+            }
+
+            const conditions = new Set(Array.isArray(ficha.conditions) ? ficha.conditions : []);
+            if (active) conditions.add(condition);
+            else conditions.delete(condition);
+            ficha.conditions = [...conditions];
+            await ficha.save();
+
+            const update = { characterId, condition, active };
+            io.to(characterRoom(characterId)).emit('character:condition_toggle', update);
+            const planarAllySynced = await syncFichaToPlanarAlly(ficha);
+            respond({ ok: true, planarAllySynced });
+        } catch (error) {
+            console.error('Falha ao atualizar condicao da ficha:', error.message);
+            respond({ ok: false, error: 'server_error' });
+        }
     });
 });
 
@@ -383,35 +516,53 @@ app.post('/api/save-ficha', authenticateToken, async (req, res) => {
         const savedFicha = await Ficha.findOneAndUpdate(
             { nome: { $regex: new RegExp(`^${nome}$`, 'i') } },
             fichaData,
-            { upsert: true, new: true, lean: true }
+            { upsert: true, new: true, lean: true, runValidators: true }
         );
-        io.emit('ficha_atualizada', savedFicha);
-        if (SSO_SECRET) {
-            fetch(`${PLANARALLY_INTERNAL_URL}/api/sync-ficha`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${SSO_SECRET}`
-                },
-                body: JSON.stringify({
-                    nome: savedFicha.nome,
-                    personagem: savedFicha.personagem || savedFicha.nome,
-                    vidaAtual: savedFicha.vidaAtual,
-                    vidaTotalCalculada: savedFicha.vidaTotalCalculada,
-                    vidaTempAtual: savedFicha.vidaTempAtual
-                }),
-                signal: AbortSignal.timeout(5000)
-            }).then(response => {
-                if (!response.ok) {
-                    console.warn(`PlanarAlly rejeitou a sincronização da ficha (HTTP ${response.status}).`);
-                }
-            }).catch(error => {
-                console.warn('Falha ao sincronizar ficha com PlanarAlly:', error.message);
-            });
-        }
+        io.emit('ficha_atualizada', { ...savedFicha, conditions: undefined });
+        void syncFichaToPlanarAlly(savedFicha);
         await auditLog(req.account, { ip: req.ip }, 'save_ficha', nome, { size: JSON.stringify(req.body).length });
         res.json({ ok: true });
     } catch (error) { res.status(500).json({ error: "Erro ao salvar" }); }
+});
+
+app.post('/api/sync-condition', async (req, res) => {
+    if (!SSO_SECRET || req.headers.authorization !== `Bearer ${SSO_SECRET}`) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const { characterId, condition, active, tokenId } = req.body || {};
+    if (
+        !mongoose.Types.ObjectId.isValid(characterId) ||
+        typeof condition !== 'string' ||
+        !CONDITION_IDS.includes(condition) ||
+        typeof active !== 'boolean' ||
+        (tokenId !== undefined && (typeof tokenId !== 'string' || tokenId.length > 128))
+    ) {
+        return res.status(400).json({ error: 'Invalid condition update' });
+    }
+
+    try {
+        const ficha = await Ficha.findById(characterId);
+        if (!ficha) return res.status(404).json({ error: 'Character not found' });
+
+        const conditions = new Set(Array.isArray(ficha.conditions) ? ficha.conditions : []);
+        if (active) conditions.add(condition);
+        else conditions.delete(condition);
+        ficha.conditions = [...conditions];
+        await ficha.save();
+
+        const update = {
+            characterId: String(ficha._id),
+            condition,
+            active,
+            ...(tokenId !== undefined ? { tokenId } : {})
+        };
+        io.to(characterRoom(update.characterId)).emit('character:condition_toggle', update);
+        res.json({ ok: true, conditions: ficha.conditions });
+    } catch (error) {
+        console.error('Falha ao sincronizar condição do PlanarAlly:', error.message);
+        res.status(500).json({ error: 'Failed to sync condition' });
+    }
 });
 
 app.get('/api/mapa-sso', authenticateToken, (req, res) => {

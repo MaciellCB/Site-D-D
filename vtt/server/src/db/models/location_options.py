@@ -21,7 +21,7 @@ class LocationOptions(BaseDbModel):
     vision_max_range = cast(float | None, FloatField(default=3281, null=True))
     spawn_locations = cast(str, cast(str, TextField(default="[]")))
     move_player_on_token_change = cast(bool | None, BooleanField(default=True, null=True))
-    grid_type = cast(str | None, TextField(default="SQUARE", null=True))
+    grid_type = cast(str | None, TextField(default="POINTY_HEX", null=True))
     air_map_background = cast(str | None, TextField(default="none", null=True))
     ground_map_background = cast(str | None, TextField(default="none", null=True))
     underground_map_background = cast(str | None, TextField(default="none", null=True))

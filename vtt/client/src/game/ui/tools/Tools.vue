@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import type { CSSProperties } from "vue";
 import { useI18n } from "vue-i18n";
 
 import { baseAdjust } from "../../../core/http";
@@ -27,8 +26,6 @@ import VisionTool from "./VisionTool.vue";
 
 const { t } = useI18n();
 
-const detailBottom = computed(() => (playerSettingsState.reactive.useToolIcons.value ? "7.8rem" : "6.6rem"));
-
 const visibleTools = computed(() => {
     {
         const tools = [];
@@ -36,7 +33,7 @@ const visibleTools = computed(() => {
             if (dmTools.includes(toolName) && !gameState.reactive.isDm) continue;
 
             if (toolName === ToolName.Vision) {
-                if (accessState.reactive.ownedTokens.size <= 1) continue;
+                if ((accessState.reactive.ownedTokens.get("vision")?.size ?? 0) === 0) continue;
             } else if (toolName === ToolName.Dice) {
                 if (!roomState.reactive.enableDice) continue;
             }
@@ -52,29 +49,20 @@ const visibleTools = computed(() => {
     }
 });
 
-function getStyle(tool: ToolMode): CSSProperties {
-    if (tool === activeToolMode.value) {
-        return {
-            fontWeight: "bold",
-            fontSize: "larger",
-            textDecoration: "underline",
-            textUnderlineOffset: "6px",
-            textDecorationThickness: "3px",
-        };
-    }
-    return { fontStyle: "italic" };
-}
-
 function getStaticToolImg(img: string): string {
     return baseAdjust(`/static/img/tools/${img}`);
 }
 
 const toolModes = computed(() => {
     return [
-        { name: t("tool.Build"), style: getStyle(ToolMode.Build) },
-        { name: t("tool.Play"), style: getStyle(ToolMode.Play) },
+        { name: t("tool.Build"), mode: ToolMode.Build },
+        { name: t("tool.Play"), mode: ToolMode.Play },
     ];
 });
+
+function setToolMode(mode: ToolMode): void {
+    if (activeToolMode.value !== mode) toggleActiveMode();
+}
 
 function toggleFakePlayer(): void {
     gameSystem.setFakePlayer(!gameState.raw.isFakePlayer);
@@ -87,7 +75,7 @@ function toggleLoS(): void {
 </script>
 
 <template>
-    <div id="tools" :style="{ '--detailBottom': detailBottom }">
+    <div id="tools">
         <div id="toolselect">
             <ul>
                 <li
@@ -96,48 +84,76 @@ function toggleLoS(): void {
                     :key="tool.name"
                     class="tool"
                     :class="{ 'tool-selected': activeTool === tool.name, 'tool-alert': tool.alert }"
-                    @click.prevent="activeTool = tool.name"
                 >
-                    <a href="#" :title="tool.translation">
+                    <button
+                        type="button"
+                        class="tool-button"
+                        :title="tool.translation"
+                        :aria-pressed="activeTool === tool.name"
+                        @click="activeTool = tool.name"
+                    >
                         <template v-if="playerSettingsState.reactive.useToolIcons.value">
-                            <img :src="getStaticToolImg(`${tool.name.toLowerCase()}.svg`)" :alt="tool.translation" />
+                            <img :src="getStaticToolImg(`${tool.name.toLowerCase()}.svg`)" alt="" />
+                            <span class="tool-label">{{ tool.translation }}</span>
                         </template>
-                        <template v-else>{{ tool.translation }}</template>
-                    </a>
+                        <span v-else class="tool-label">{{ tool.translation }}</span>
+                    </button>
                 </li>
-                <li id="tool-mode"></li>
             </ul>
             <div id="tool-status">
                 <div v-if="gameState.isDmOrFake.value" id="tool-status-toggles">
-                    <div
+                    <button
+                        type="button"
+                        class="tool-status-toggle"
                         :class="{ active: gameState.reactive.isFakePlayer }"
                         :title="t('game.ui.tools.tools.FP_title')"
+                        :aria-pressed="gameState.reactive.isFakePlayer"
                         @click="toggleFakePlayer"
                     >
-                        {{ t("game.ui.tools.tools.FP") }}
-                    </div>
-                    <div
+                        <span class="tool-status-code">{{ t("game.ui.tools.tools.FP") }}</span>
+                        <span>{{ t("game.ui.tools.tools.FP_title") }}</span>
+                    </button>
+                    <button
                         v-if="locationSettingsState.reactive.fowLos.value"
+                        type="button"
+                        class="tool-status-toggle"
                         :class="{
                             active: !locationSettingsState.reactive.losOverwritten,
                             disabled: locationSettingsState.reactive.losOverwritten,
                         }"
                         :title="t('game.ui.tools.tools.LOS_title')"
+                        :aria-pressed="!locationSettingsState.reactive.losOverwritten"
                         @click="toggleLoS"
                     >
-                        {{ t("game.ui.tools.tools.LOS") }}
-                    </div>
-                    <div
+                        <span class="tool-status-code">{{ t("game.ui.tools.tools.LOS") }}</span>
+                        <span>{{ t("game.ui.tools.tools.LOS_title") }}</span>
+                    </button>
+                    <button
+                        type="button"
+                        class="tool-status-toggle"
                         :class="{ active: initiativeState.reactive.isActive }"
                         :title="t('game.ui.tools.tools.INI_title')"
+                        :aria-pressed="initiativeState.reactive.isActive"
                         @click="initiativeSystem.toggleActive()"
                     >
-                        {{ t("game.ui.tools.tools.INI") }}
-                    </div>
+                        <span class="tool-status-code">{{ t("game.ui.tools.tools.INI") }}</span>
+                        <span>{{ t("game.ui.tools.tools.INI_title") }}</span>
+                    </button>
                 </div>
-                <div style="flex-grow: 1"></div>
-                <div id="tool-status-modes" :title="t('game.ui.tools.tools.change_mode')" @click="toggleActiveMode">
-                    <span v-for="mode of toolModes" :key="mode.name" :style="mode.style">{{ mode.name }}</span>
+                <div id="tool-mode-group">
+                    <div class="tool-mode-label">{{ t("game.ui.tools.tools.change_mode") }}</div>
+                    <div id="tool-status-modes" role="group" :aria-label="t('game.ui.tools.tools.change_mode')">
+                        <button
+                            v-for="mode of toolModes"
+                            :key="mode.mode"
+                            type="button"
+                            :class="{ active: activeToolMode === mode.mode }"
+                            :aria-pressed="activeToolMode === mode.mode"
+                            @click="setToolMode(mode.mode)"
+                        >
+                            {{ mode.name }}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

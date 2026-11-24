@@ -38,6 +38,11 @@ export async function addServerFloor(serverFloor: ApiFloor): Promise<void> {
         if (layer.name === LayerName.Vision) await addServerLayer(fowLayer!, floor);
     }
 
+    const lightingLayer = floorSystem.getLayer(floor, LayerName.Lighting);
+    if (lightingLayer instanceof FowLightingLayer) {
+        lightingLayer.setExploredRegions(serverFloor.explored_regions);
+    }
+
     visionState.recalculateVision(floorId);
     visionState.recalculateMovement(floorId);
 

@@ -40,7 +40,7 @@ function hideModal(): void {
 </script>
 
 <template>
-    <Modal :visible="visible" :colour="'rgba(255, 255, 255, 0.8)'" :mask="false">
+    <Modal :visible="visible" :colour="'#120e18'" :mask="false">
         <template #header="m">
             <div class="modal-header" draggable="true" @dragstart="m.dragStart" @dragend="m.dragEnd">
                 <div><slot name="title"></slot></div>
@@ -74,9 +74,13 @@ function hideModal(): void {
 
 <style scoped lang="scss">
 .modal-header {
-    background-color: #ff7052;
-    padding: 10px;
-    font-size: 20px;
+    position: relative;
+    padding: 0.85rem 2.5rem 0.85rem 1rem;
+    border-bottom: 1px solid rgba(192, 132, 212, 0.24);
+    border-radius: 0.85rem 0.85rem 0 0;
+    background: linear-gradient(110deg, #32183e, #1a1321);
+    color: #f5eafa;
+    font-size: 1.05rem;
     font-weight: bold;
     cursor: move;
 }
@@ -90,6 +94,10 @@ function hideModal(): void {
 .modal-body {
     display: flex;
     flex-direction: row;
+    max-height: min(78vh, 760px);
+    overflow: auto;
+    background: #120e18;
+    color: #eee3f3;
 }
 
 * {
@@ -97,43 +105,88 @@ function hideModal(): void {
 }
 
 #categories {
-    width: 7.5em;
-    background-color: rgba(0, 0, 0, 0);
-    border-right: solid 1px #82c8a0;
+    width: 10rem;
+    flex: 0 0 10rem;
+    padding: 0.6rem;
+    border-right: 1px solid rgba(192, 132, 212, 0.18);
+    background: #0e0b13;
 }
 
 .category {
-    border-bottom: solid 1px #82c8a0;
-    padding: 5px;
-    text-align: right;
-    background-color: white;
-    padding-right: 10px;
+    margin: 0.2rem 0;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    color: #bfb0c6;
+    text-align: left;
+    transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        color 150ms ease;
 }
 
 .selected,
 .category:hover {
-    background-color: #82c8a0;
-    font-weight: bold;
+    border-color: rgba(192, 132, 212, 0.28);
+    background: rgba(156, 39, 176, 0.2);
+    color: #fff;
     cursor: pointer;
-    padding-right: 5px;
+    font-weight: 700;
 }
 
 :deep() {
     @layer base-modals {
         .panel {
-            background-color: white;
-            padding: 1em;
+            min-width: 24rem;
+            padding: 1.1rem;
+            border: 1px solid rgba(192, 132, 212, 0.14);
+            border-radius: 0 0 0.85rem 0;
+            background: #17111f;
+            color: #eee3f3;
             display: grid;
-            grid-template-columns: [setting] 1fr [value] 1fr [end];
-            /* align-items: center; */
+            grid-template-columns: [setting] minmax(10rem, 1fr) [value] minmax(8rem, 1fr) [end];
             align-content: start;
             min-height: 10em;
 
             button {
-                padding: 6px 12px;
-                border: 1px solid lightgray;
-                border-radius: 0.25em;
-                background-color: rgb(235, 235, 228);
+                padding: 0.55rem 0.8rem;
+                border: 1px solid rgba(192, 132, 212, 0.3);
+                border-radius: 0.45rem;
+                background: #251a2d;
+                color: #f2e7f6;
+                transition:
+                    background-color 150ms ease,
+                    border-color 150ms ease;
+            }
+
+            button:hover {
+                border-color: #c879dc;
+                background: #382044;
+            }
+
+            select,
+            input[type="text"],
+            input[type="number"],
+            textarea {
+                min-height: 2.3rem;
+                padding: 0.45rem 0.6rem;
+                border: 1px solid rgba(192, 132, 212, 0.24);
+                border-radius: 0.4rem;
+                background: #0d0a11;
+                color: #f4edf8;
+            }
+
+            select:focus,
+            input[type="text"]:focus,
+            input[type="number"]:focus,
+            textarea:focus {
+                border-color: #c879dc;
+                outline: 2px solid rgba(156, 39, 176, 0.24);
+            }
+
+            input[type="checkbox"],
+            input[type="radio"] {
+                accent-color: #9c27b0;
             }
 
             input[type="number"],
@@ -181,7 +234,7 @@ function hideModal(): void {
             &:after {
                 position: relative;
                 width: 100%;
-                border-bottom: 1px solid #000;
+                border-bottom: 1px solid rgba(224, 170, 255, 0.3);
                 content: "";
                 margin-right: -100%;
                 margin-left: 10px;

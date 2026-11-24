@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import ColourPicker from "../../../core/components/ColourPicker.vue";
@@ -8,11 +9,11 @@ const { t } = useI18n();
 
 const selected = lightTool.isActiveTool;
 
-const modes = [
+const modes = computed(() => [
     { value: LightMode.PointLight, label: t("game.ui.tools.LightTool.point"), icon: "lightbulb" },
     { value: LightMode.Ambient, label: t("game.ui.tools.LightTool.ambient"), icon: "sun" },
     { value: LightMode.Barrier, label: t("game.ui.tools.LightTool.barrier"), icon: "road-barrier" },
-] as const;
+]);
 
 function selectMode(mode: LightMode): void {
     lightTool.state.mode = mode;
@@ -30,38 +31,48 @@ function onEditColourChange(colour: string): void {
 
 <template>
     <div v-if="selected" class="tool-detail light-tool">
+        <header class="light-header">
+            <strong>{{ $t("game.ui.tools.LightTool.title") }}</strong>
+            <span>{{ $t("game.ui.tools.LightTool.description") }}</span>
+        </header>
         <div class="interaction-toggle">
-            <div
+            <button
+                type="button"
                 class="interaction-btn"
                 :class="{ 'interaction-active': lightTool.state.interactionMode === 'place' }"
+                :aria-pressed="lightTool.state.interactionMode === 'place'"
                 @click="lightTool.setInteractionMode('place')"
             >
                 <font-awesome-icon icon="plus" />
                 <span>{{ $t("game.ui.tools.LightTool.place") }}</span>
-            </div>
-            <div
+            </button>
+            <button
+                type="button"
                 class="interaction-btn"
                 :class="{ 'interaction-active': lightTool.state.interactionMode === 'edit' }"
+                :aria-pressed="lightTool.state.interactionMode === 'edit'"
                 @click="lightTool.setInteractionMode('edit')"
             >
                 <font-awesome-icon icon="pencil-alt" />
                 <span>{{ $t("game.ui.tools.LightTool.edit") }}</span>
-            </div>
+            </button>
         </div>
 
         <template v-if="lightTool.state.interactionMode === 'place'">
             <div class="light-modes">
-                <div
+                <button
                     v-for="mode in modes"
                     :key="mode.value"
+                    type="button"
                     class="light-mode-tab"
                     :class="{ 'light-mode-active': lightTool.state.mode === mode.value }"
+                    :aria-pressed="lightTool.state.mode === mode.value"
                     :title="mode.label"
                     @click="selectMode(mode.value)"
                 >
                     <font-awesome-icon :icon="mode.icon" />
                     <span>{{ mode.label }}</span>
-                </div>
+                </button>
             </div>
 
             <template v-if="lightTool.state.mode === LightMode.PointLight">
@@ -190,7 +201,7 @@ function onEditColourChange(colour: string): void {
                         />
                     </div>
                 </template>
-                <button class="light-delete-btn" @click="lightTool.deleteShape()">
+                <button type="button" class="light-delete-btn" @click="lightTool.deleteShape()">
                     <font-awesome-icon icon="trash-alt" />
                     {{ $t("game.ui.tools.LightTool.delete_light") }}
                 </button>
@@ -201,39 +212,61 @@ function onEditColourChange(colour: string): void {
 </template>
 
 <style scoped lang="scss">
+.light-header {
+    display: grid;
+    gap: 0.25rem;
+
+    strong {
+        color: #f5eafa;
+        font-size: 0.95rem;
+    }
+
+    span {
+        color: #b6a8bb;
+        font-size: 0.78rem;
+        line-height: 1.4;
+    }
+}
+
 .light-tool {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    width: 350px;
+    gap: 0.65rem;
+    width: min(22rem, calc(100vw - 19rem));
 }
 
 .interaction-toggle {
     display: flex;
-    margin-bottom: 2px;
+    gap: 0.4rem;
 
     .interaction-btn {
         flex: 1;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 5px;
-        padding: 5px 4px;
+        gap: 0.4rem;
+        padding: 0.55rem 0.45rem;
         cursor: pointer;
-        border: solid 1px #82c8a0;
-        font-size: 12px;
-        font-weight: 600;
+        border: 1px solid rgba(192, 132, 212, 0.25);
+        border-radius: 0.55rem;
+        background: rgba(255, 255, 255, 0.025);
+        color: #cfc2d5;
+        font: inherit;
+        font-size: 0.78rem;
+        font-weight: 650;
 
         &:first-child {
-            border-radius: 8px 0 0 8px;
+            border-radius: 0.55rem;
         }
 
         &:last-child {
-            border-radius: 0 8px 8px 0;
+            border-radius: 0.55rem;
         }
 
         &:hover {
-            background-color: rgba(130, 200, 160, 0.25);
+            border-color: #c879dc;
+            background: rgba(156, 39, 176, 0.16);
+            color: #fff;
         }
 
         svg {
@@ -242,48 +275,56 @@ function onEditColourChange(colour: string): void {
     }
 
     .interaction-active {
-        background-color: #82c8a0;
-
-        &:hover {
-            background-color: #82c8a0;
-        }
+        border-color: rgba(224, 170, 255, 0.65);
+        background: linear-gradient(145deg, #76228b, #461252);
+        color: #fff;
+        box-shadow: inset 0 -2px #c9ad6a;
     }
 }
 
 .light-modes {
     display: flex;
-    margin-bottom: 4px;
+    gap: 0.4rem;
 
     .light-mode-tab {
         flex: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 2px;
-        padding: 6px 4px;
+        gap: 0.35rem;
+        padding: 0.6rem 0.35rem;
         cursor: pointer;
-        border: solid 1px #82c8a0;
-        font-size: 12px;
+        border: 1px solid rgba(192, 132, 212, 0.25);
+        border-radius: 0.55rem;
+        background: rgba(255, 255, 255, 0.025);
+        color: #cfc2d5;
+        font: inherit;
+        font-size: 0.72rem;
 
         &:first-child {
-            border-radius: 8px 0 0 8px;
+            border-radius: 0.55rem;
         }
 
         &:last-child {
-            border-radius: 0 8px 8px 0;
+            border-radius: 0.55rem;
         }
 
         &:hover {
-            background-color: #82c8a0;
+            border-color: #c879dc;
+            background: rgba(156, 39, 176, 0.16);
+            color: #fff;
         }
 
         svg {
-            font-size: 16px;
+            font-size: 1rem;
         }
     }
 
     .light-mode-active {
-        background-color: #82c8a0;
+        border-color: rgba(224, 170, 255, 0.65);
+        background: linear-gradient(145deg, rgba(126, 35, 148, 0.55), rgba(61, 29, 74, 0.68));
+        color: #fff;
+        box-shadow: inset 0 -2px #c9ad6a;
     }
 }
 
@@ -291,51 +332,55 @@ function onEditColourChange(colour: string): void {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: 0.75rem;
+    color: #d7cbdc;
+    font-size: 0.8rem;
 
     label {
         white-space: nowrap;
     }
 
     input[type="number"] {
-        width: 65px;
-        padding: 2px 4px;
+        width: 5rem;
+        flex: 0 0 5rem;
+        padding: 0.35rem 0.45rem;
     }
 }
 
 .light-hint {
-    font-size: 0.8em;
-    font-style: italic;
-    color: #888;
-    text-align: center;
-    margin-top: 4px;
+    padding: 0.55rem 0.65rem;
+    border-radius: 0.45rem;
+    background: rgba(255, 255, 255, 0.035);
+    color: #b6a8bb;
+    font-size: 0.76rem;
+    line-height: 1.4;
 }
 
 .barrier-stepper {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 0.25rem;
 }
 
 .barrier-step {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 4px 6px;
-    border-radius: 4px;
-    font-size: 0.85em;
-    color: #666;
+    gap: 0.55rem;
+    padding: 0.35rem 0.45rem;
+    border-radius: 0.4rem;
+    color: #82768a;
+    font-size: 0.78rem;
     transition: all 0.15s ease;
 
     .step-indicator {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 20px;
-        height: 20px;
+        width: 1.35rem;
+        height: 1.35rem;
         border-radius: 50%;
-        border: 1.5px solid #666;
-        font-size: 0.75em;
+        border: 1.5px solid #82768a;
+        font-size: 0.72rem;
         font-weight: 600;
         flex-shrink: 0;
     }
@@ -347,22 +392,22 @@ function onEditColourChange(colour: string): void {
     }
 
     &.step-active {
-        color: #222;
+        color: #f4edf8;
 
         .step-indicator {
-            border-color: #333;
-            color: #333;
-            background-color: rgba(0, 0, 0, 0.05);
+            border-color: #e0aaff;
+            color: #e0aaff;
+            background-color: rgba(156, 39, 176, 0.15);
         }
     }
 
     &.step-completed {
-        color: #82c8a0;
+        color: #c9ad6a;
 
         .step-indicator {
-            border-color: #82c8a0;
-            color: #82c8a0;
-            font-size: 0.85em;
+            border-color: #c9ad6a;
+            color: #c9ad6a;
+            font-size: 0.85rem;
         }
     }
 }
@@ -371,19 +416,26 @@ function onEditColourChange(colour: string): void {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    margin-top: 6px;
-    padding: 5px 0;
+    gap: 0.4rem;
+    margin-top: 0.25rem;
+    padding: 0.55rem 0;
     width: 100%;
-    background: none;
-    border: 1px solid #d66;
-    border-radius: 4px;
-    color: #d66;
+    background: rgba(221, 102, 102, 0.06);
+    border: 1px solid rgba(221, 102, 102, 0.6);
+    border-radius: 0.5rem;
+    color: #ffaaaa;
     cursor: pointer;
-    font-size: 0.85em;
+    font: inherit;
+    font-size: 0.78rem;
 
     &:hover {
-        background-color: rgba(221, 102, 102, 0.1);
+        background-color: rgba(221, 102, 102, 0.16);
+    }
+}
+
+@media (max-width: 700px) {
+    .light-tool {
+        width: min(22rem, calc(100vw - 1.5rem));
     }
 }
 </style>

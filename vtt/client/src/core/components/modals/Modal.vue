@@ -238,8 +238,9 @@ function toggleWindow(): void {
         position: absolute;
         width: auto;
         height: auto;
-        border-radius: 2px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+        border: 1px solid rgba(192, 132, 212, 0.24);
+        border-radius: 0.85rem;
+        box-shadow: 0 18px 56px rgba(0, 0, 0, 0.55);
         font-family:
             "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande",
             sans-serif;

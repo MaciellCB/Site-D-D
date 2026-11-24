@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { POSITION, useToast } from "vue-toastification";
 
@@ -8,6 +8,7 @@ import { baseAdjust } from "../../core/http";
 import { activeShapeStore } from "../../store/activeShape";
 import { coreStore } from "../../store/core";
 import { gameState } from "../systems/game/state";
+import { initializeSiteInitiativeSync } from "../systems/initiative/siteSync";
 import { closeInitiativeDialog } from "../systems/initiative/ui";
 import { positionSystem } from "../systems/position";
 import { positionState } from "../systems/position/state";
@@ -36,6 +37,7 @@ const uiEl = ref<HTMLDivElement | null>(null);
 const coreState = coreStore.state;
 const { t } = useI18n();
 const toast = useToast();
+let stopSiteInitiativeSync: (() => void) | undefined;
 
 const visible = reactive({
     locations: false,
@@ -85,6 +87,7 @@ function notifyNewVersion(): void {
 
 onMounted(() => {
     notifyNewVersion();
+    stopSiteInitiativeSync = initializeSiteInitiativeSync((message) => toast.error(t(message)));
     // hide all UI elements that were previously open
     activeShapeStore.setShowEditDialog(false);
     closeInitiativeDialog();
@@ -92,6 +95,8 @@ onMounted(() => {
     showShapeContextMenu.value = false;
     tokenDialogVisible.value = false;
 });
+
+onBeforeUnmount(() => stopSiteInitiativeSync?.());
 
 function toggleLocations(): void {
     const oldState = visible.locations;
@@ -462,6 +467,8 @@ function setTempZoomDisplay(value: number): void {
 </style>
 
 <style lang="scss">
+@use "./theme.scss";
+
 .slider-checkbox {
     display: block;
     box-sizing: border-box;

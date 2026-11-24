@@ -11,6 +11,7 @@ class UiSystem implements System {
     clear(): void {}
 
     toggleUi(): void {
+        if ($.presentationMode) return;
         $.showUi = !$.showUi;
     }
 

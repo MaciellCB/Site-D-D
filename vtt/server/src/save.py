@@ -15,7 +15,7 @@ When writing migrations make sure that these things are respected:
 - It's often a good idea to start the server with a clean save and use `.schema <table_name>` in sqlite to get the exact schema output that a clean save creates
 """
 
-SAVE_VERSION = 124
+SAVE_VERSION = 125
 
 import asyncio
 import json
@@ -994,6 +994,14 @@ def upgrade(
                 'CREATE INDEX IF NOT EXISTS "stats_campaign_id_user_id_timestamp" ON "stats" ("campaign_id", "user_id", "timestamp")'
             )
             db.execute_sql('CREATE INDEX IF NOT EXISTS "stats_session_id" ON "stats" ("session_id")')
+    elif version == 124:
+        with db.atomic():
+            db.execute_sql(
+                'CREATE TABLE IF NOT EXISTS "explored_region" ("id" INTEGER NOT NULL PRIMARY KEY, "floor_id" INTEGER NOT NULL, "key" TEXT NOT NULL, "points" TEXT NOT NULL, FOREIGN KEY ("floor_id") REFERENCES "floor" ("id") ON DELETE CASCADE)'
+            )
+            db.execute_sql(
+                'CREATE UNIQUE INDEX IF NOT EXISTS "explored_region_floor_id_key" ON "explored_region" ("floor_id", "key")'
+            )
     else:
         raise UnknownVersionException(f"No upgrade code for save format {version} was found.")
     inc_save_version(db)

@@ -14,7 +14,7 @@ function getInitState(): _S {
     return {
         fowLos: init(false),
         fowOpacity: init(0),
-        gridType: init(GridType.Square),
+        gridType: init(GridType.PointyHex),
         fullFow: init(false),
         movePlayerOnTokenChange: init(false),
         spawnLocations: init([]),

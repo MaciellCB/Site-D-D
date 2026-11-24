@@ -1,0 +1,146 @@
+{
+    "locale": {
+        "select": "Selecionar idioma:",
+        "pt": "Português"
+    },
+    "common": {
+        "close": "Fechar",
+        "submit": "Confirmar",
+        "create": "Criar",
+        "warning": "Aviso",
+        "value": "Valor",
+        "initiative": "Iniciativa",
+        "search": "Buscar",
+        "name": "Nome",
+        "add": "Adicionar",
+        "players": "Jogadores",
+        "exit": "Sair",
+        "notes": "Anotações",
+        "grid": "Grade",
+        "vision": "Visão",
+        "tokens": "Tokens",
+        "shape": "Forma",
+        "fill_color": "Cor de preenchimento",
+        "confirm": "Confirmar",
+        "cancel": "Cancelar",
+        "select": "Selecionar"
+    },
+    "tool": {
+        "Build": "Construção",
+        "Play": "Jogar",
+        "Select": "Selecionar",
+        "Pan": "Mover",
+        "Draw": "Desenhar",
+        "Ruler": "Medir",
+        "Ping": "Marcar",
+        "Map": "Mapa",
+        "Light": "Iluminação",
+        "Filter": "Filtro",
+        "Vision": "Visão",
+        "Spell": "Magias",
+        "Dice": "Dados"
+    },
+    "game": {
+        "ui": {
+            "site_initiative_invalid_links": "Não foi possível ler os vínculos entre fichas e tokens da iniciativa.",
+            "site_initiative_invalid_url": "O endereço do tracker de iniciativa do site é inválido.",
+            "site_initiative_connection_error": "Não foi possível conectar a iniciativa do site ao grid.",
+            "site_initiative_no_matches": "Nenhum participante da iniciativa foi associado a um token desta localização.",
+            "selection": {
+                "SelectionInfo": {
+                    "open_shape_props": "Abrir propriedades do token",
+                    "quick_edit_tracker": "Editar indicador rapidamente",
+                    "quick_edit_aura": "Editar aura rapidamente",
+                    "lock": "Bloquear ou desbloquear token",
+                    "new_value_NAME": "Novo valor de {name}:",
+                    "updating_NAME": "Atualizando {name}",
+                    "notes": "anotação(ões)",
+                    "open_note_manager_title": "Abrir gerenciador de anotações",
+                    "collapse_notes": "Recolher anotações",
+                    "expand_notes": "Expandir anotações",
+                    "unknown_shape": "Forma sem nome"
+                }
+            },
+            "settings": {
+                "VisionSettings": {
+                    "min_full_vision_UNIT": "Visão plena mínima ({unit}):",
+                    "max_vision_UNIT": "Alcance máximo de visão ({unit}):",
+                    "core": "Principal",
+                    "fake_player": "Simular jogador:",
+                    "fill_fow": "Cobrir toda a tela com névoa de guerra:",
+                    "ambient_light": "Luz ambiente (modo externo):",
+                    "only_show_lights_los": "Exibir apenas luzes na linha de visão:",
+                    "fow_opacity": "Opacidade da névoa de guerra:",
+                    "advanced": "Avançado",
+                    "vision_mode": "Modo de visão:",
+                    "default": "Padrão",
+                    "experimental": "Experimental"
+                }
+            },
+            "tools": {
+                "DrawTool": {
+                    "foreground_color": "Cor do traço",
+                    "background_color": "Cor de fundo",
+                    "mode": "Modo",
+                    "closed_polygon": "Fechar polígono?",
+                    "brush_size": "Tamanho do pincel",
+                    "font_size": "Tamanho da fonte",
+                    "square": "Quadrado",
+                    "circle": "Círculo",
+                    "cone": "Cone"
+                },
+                "LightTool": {
+                    "title": "Iluminação e barreiras",
+                    "description": "Configure fontes de luz e limites de visão neste mapa.",
+                    "place": "Adicionar",
+                    "edit": "Editar",
+                    "point": "Luz direta",
+                    "ambient": "Ambiente",
+                    "barrier": "Barreiras",
+                    "bright_radius": "Raio de luz plena",
+                    "dim_radius": "Raio de penumbra",
+                    "angle": "Ângulo (°)",
+                    "colour": "Cor da luz",
+                    "click_to_place": "Clique no mapa para posicionar a fonte de luz.",
+                    "click_to_place_ambient": "Clique no mapa para posicionar a luz ambiente.",
+                    "ambient_light_hint": "A luz ambiente simula a claridade externa e ilumina toda a área.",
+                    "click_light_on_map_to_select": "Clique em uma luz do mapa para selecioná-la e movê-la.",
+                    "delete_light": "Excluir luz",
+                    "click_on_highlighted_vertex": "Clique em um vértice destacado",
+                    "add_extra_points": "Adicione pontos extras (opcional)",
+                    "click_highlighted_point_to_close": "Clique no ponto destacado para fechar a barreira",
+                    "press_escape_to_cancel": "Pressione Esc para cancelar",
+                    "define_natural_barriers": "Desenhe barreiras entre o lado externo e o interno da luz ambiente."
+                },
+                "SpellTool": {
+                    "size": "Raio ou tamanho da área",
+                    "range": "Alcance (raio)",
+                    "area_title": "Área de efeito",
+                    "instructions": "Clique e arraste no mapa; a área e a linha de direção aparecem como prévia. Dê duplo clique em uma área para editá-la.",
+                    "edit_instructions": "Mova o cursor para ajustar a posição ou a direção e clique para salvar. Botão direito cancela.",
+                    "shape": "Forma da área",
+                    "hexagon": "Hexágono",
+                    "alternate_hexes": "Alternar orientação dos hexágonos",
+                    "show_publicly": "Exibir a área para os jogadores"
+                },
+                "VisionTool": {
+                    "title": "Visão dos tokens",
+                    "description": "Ative os tokens que revelam o mapa. A luz e as barreiras definem o que cada um enxerga.",
+                    "active": "Visão ativa",
+                    "inactive": "Desativada",
+                    "unnamed_token": "Token sem nome",
+                    "empty": "Nenhum token com visão disponível nesta localização."
+                },
+                "tools": {
+                    "change_mode": "Modo do grid",
+                    "FP": "PJ",
+                    "INI": "INI",
+                    "FP_title": "Alternar jogador simulado",
+                    "INI_title": "Ativar ou desativar a iniciativa",
+                    "LOS": "VSL",
+                    "LOS_title": "Linha de visão (apenas mestre)"
+                }
+            }
+        }
+    }
+}

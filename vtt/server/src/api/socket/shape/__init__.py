@@ -63,6 +63,9 @@ async def get_shape(sid: str, shape_id: str):
     pr: PlayerRoom = game_state.get(sid)
 
     shape = Shape.get_by_id(shape_id)
+    if pr.role != Role.DM and shape.layer is not None and not shape.layer.player_visible:
+        logger.warning(f"{pr.player.name} attempted to fetch a shape from a hidden layer.")
+        return
 
     return {"shape": transform_shape(shape, pr)}
 

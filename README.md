@@ -78,4 +78,10 @@ Ela existe somente no MongoDB local.
 
 O arquivo `backend/.env` deve definir `PLANARALLY_URL` e `SSO_SECRET`. A URL padrão local é `http://localhost:8000`; o segredo precisa ser igual ao configurado no PlanarAlly. Reinicie o backend após alterar essas variáveis.
 
-O botão **Abrir Tabuleiro VTT** usa `/api/mapa-sso` para gerar um token temporário. Ao salvar a ficha, o backend envia os dados de vida para `/api/sync-ficha` sem atrasar o salvamento principal.
+O botão **Abrir Tabuleiro VTT** usa `/api/mapa-sso` para gerar um token temporário. No painel do mestre, **Modo OBS** abre o grid sem os controles do PlanarAlly, para captura/transmissão. Ao salvar a ficha, o backend envia os dados de vida e condições para `/api/sync-ficha` sem atrasar o salvamento principal. As condições também podem ser alternadas no painel do token e são sincronizadas de volta para a ficha. Fora do Docker Compose, configure `DNDCHAN_INTERNAL_URL` no PlanarAlly para apontar ao backend do site.
+
+Ao abrir um mapa pelo painel do mestre, os valores e a ordem do tracker de iniciativa do site são enviados aos tokens correspondentes no PlanarAlly. O vínculo usa as associações de fichas e tokens configuradas para o mapa, com correspondência pelo nome como alternativa. A iniciativa do site continua sendo a fonte dos valores; rodada e turno ativo não são sincronizados.
+
+As ferramentas do grid usam português como idioma padrão; uma preferência de idioma já salva no navegador continua sendo respeitada.
+
+Novos grids usam hexágonos de ponta como padrão. Em **Configurações do Mestre > Grid** ou nas configurações de um local, escolha entre quadrados, hexágonos de ponta ou hexágonos de lado plano. Essa mudança não altera automaticamente os grids existentes.

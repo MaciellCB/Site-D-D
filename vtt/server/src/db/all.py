@@ -18,6 +18,7 @@ from .models.circle import Circle
 from .models.circular_token import CircularToken
 from .models.constants import Constants
 from .models.floor import Floor
+from .models.explored_region import ExploredRegion
 from .models.font_awesome import FontAwesome
 from .models.group import Group
 from .models.initiative import Initiative
@@ -67,6 +68,7 @@ ALL_NORMAL_MODELS: list[type[BaseDbModel]] = [
     CircularToken,
     Constants,
     Floor,
+    ExploredRegion,
     FontAwesome,
     Group,
     Initiative,

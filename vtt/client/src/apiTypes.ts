@@ -299,6 +299,15 @@ export interface ApiFloor {
   type_: number;
   background_color: string | null;
   layers: ApiLayer[];
+  explored_regions: ApiExploredRegion[];
+}
+export interface ApiExploredRegion {
+  key: string;
+  points: [number, number][];
+}
+export interface FogExploredUpdate {
+  floor: string;
+  regions: ApiExploredRegion[];
 }
 export interface ApiLayer {
   name: LayerName;

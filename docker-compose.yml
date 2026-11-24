@@ -57,6 +57,7 @@ services:
       - "127.0.0.1:8000:8000"
     environment:
       SSO_SECRET: ${SSO_SECRET:?Set SSO_SECRET in the root .env file}
+      DNDCHAN_INTERNAL_URL: http://backend:3000
     volumes:
       - ./vtt/server/data:/planarally/data
       - ./vtt/server/static/assets:/planarally/static/assets
